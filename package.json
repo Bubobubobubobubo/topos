@@ -1,0 +1,24 @@
+{
+  "name": "topos",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.2",
+    "vite": "^4.4.5"
+  },
+  "dependencies": {
+    "@codemirror/lang-javascript": "^6.1.9",
+    "@replit/codemirror-vim": "^6.0.14",
+    "autoprefixer": "^10.4.14",
+    "codemirror": "^6.0.1",
+    "postcss": "^8.4.27",
+    "tailwindcss": "^3.3.3",
+    "zzfx": "^1.2.0"
+  }
+}
