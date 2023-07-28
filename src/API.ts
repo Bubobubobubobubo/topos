@@ -36,6 +36,12 @@ export class UserAPI {
     get(name: string) { return this.variables[name] }
     
     pick<T>(...array: T[]): T { return array[Math.floor(Math.random() * array.length)] }
+    
+    bpm(bpm: number) { this.app.clock.bpm = bpm }
+
+    time_signature(numerator: number, denominator: number) {
+        this.app.clock.time_signature = [ numerator, denominator ]
+    }
 
     almostNever() { return Math.random() > 0.9 }
     sometimes() { return Math.random() > 0.5 }
@@ -70,7 +76,7 @@ export class UserAPI {
         return pulse.includes(this.app.clock.time_position.pulse) && this.app.clock.time_position.pulse == 1
     }
 
-    modPulse(pulse: number) {
+    mod(pulse: number) {
         return this.app.clock.time_position.pulse % pulse === 0
     }
 
