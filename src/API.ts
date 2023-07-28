@@ -2,8 +2,6 @@ import { Editor } from "./main";
 import { tryEvaluate } from "./Evaluator";
 // @ts-ignore
 import { ZZFX, zzfx } from "zzfx";
-// import * as Tone from 'tone';
-
 
 export class UserAPI {
 

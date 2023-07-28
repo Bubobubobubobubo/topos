@@ -10,14 +10,27 @@ export class TransportNode extends AudioWorkletNode {
         this.port.start();
         /** @type {HTMLSpanElement} */
         this.$clock = document.getElementById("clockviewer");
+        this.hasBeenEvaluated = false;
+        this.currentPulse = 0;
     }
+
     /** @type {(this: MessagePort, ev: MessageEvent<any>) => any} */
     handleMessage = (message) => {
         if (message.data && message.data.type === "bang") {
             let info = this.convertTimeToBarsBeats(message.data.currentTime);
             this.app.clock.time_position = { bar: info.bar, beat: info.beat, pulse: info.ppqn }
             this.$clock.innerHTML = `[${info.bar} | ${info.beat} | ${zeroPad(info.ppqn, '2')}]`
-            tryEvaluate( this.app, this.app.global_buffer );
+
+            // Evaluate the global buffer only once per ppqn value
+            if (this.currentPulse !== info.ppqn) {
+                this.hasBeenEvaluated = false;
+            }
+
+            if (!this.hasBeenEvaluated) {
+                tryEvaluate( this.app, this.app.global_buffer );
+                this.hasBeenEvaluated = true;
+                this.currentPulse = info.ppqn;
+            }
         }
     };
 
