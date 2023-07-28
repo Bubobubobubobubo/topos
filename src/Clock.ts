@@ -36,7 +36,7 @@ export class Clock {
         })
     }
 
-    get pulses_per_beat(): number { return this.ppqn / this.time_signature[1]; }
+    get beats_per_bar(): number { return this.time_signature[0]; }
 
     start(): void {
         // Check if the clock is already running
