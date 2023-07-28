@@ -128,7 +128,6 @@ export class Editor {
     // ================================================================================
 
     document.addEventListener('keydown', (event: KeyboardEvent) => {
-      event.preventDefault();
 
 		  // TAB should do nothing
 		  if (event.key === 'Tab') {
