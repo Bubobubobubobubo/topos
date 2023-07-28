@@ -47,10 +47,11 @@ export class TransportNode extends AudioWorkletNode {
       const beatNumber = (currentTime) / beatDuration;
 
       const beatsPerBar = this.app.clock.time_signature[0];
-      const barNumber = Math.floor(beatNumber / beatsPerBar) + 1; // Adding 1 to make it 1-indexed
-      const beatWithinBar = Math.floor(beatNumber % beatsPerBar) + 1; // Adding 1 to make it 1-indexed
+      const barNumber = Math.floor(beatNumber / beatsPerBar) + 1;
+      const beatWithinBar = Math.floor(beatNumber % beatsPerBar) + 1;
 
       const ppqnPosition = Math.floor((beatNumber % 1) * this.app.clock.ppqn);
+      this.app.clock.tick++
       return { bar: barNumber, beat: beatWithinBar, ppqn: ppqnPosition };
     }
 }

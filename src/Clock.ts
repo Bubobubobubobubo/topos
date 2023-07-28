@@ -17,8 +17,10 @@ export class Clock {
     time_signature: number[]
     time_position: TimePosition
     ppqn: number
+    tick: number
 
     constructor(public app: Editor, ctx: AudioContext) {
+        this.tick = 0;
         this.time_position = { bar: 0, beat: 0, pulse: 0 }
         this.bpm = 120;
         this.time_signature = [4, 4];
@@ -34,9 +36,7 @@ export class Clock {
         })
     }
 
-    get pulses_per_beat(): number {
-        return this.ppqn / this.time_signature[1];
-    }
+    get pulses_per_beat(): number { return this.ppqn / this.time_signature[1]; }
 
     start(): void {
         // Check if the clock is already running
@@ -48,14 +48,6 @@ export class Clock {
         }
     }
 
-    pause(): void {
-        this.transportNode?.pause();
-    }
-
-    stop(): void {
-        this.transportNode?.stop();
-    }
-
-    // Public methods
-    public toString(): string { return `` }
+    pause = (): void => this.transportNode?.pause();
+    stop = (): void => this.transportNode?.stop();
 }

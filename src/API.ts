@@ -1,154 +1,23 @@
 import { Editor } from "./main";
 import { tryEvaluate } from "./Evaluator";
+import { BasicSynth, PercussionSynth } from "./WebSynth";
+import { MidiConnection } from "./IO/MidiConnection";
+import * as Tone from 'tone';
 // @ts-ignore
 import { ZZFX, zzfx } from "zzfx";
-
-class MidiConnection{
-    private midiAccess: MIDIAccess | null = null;
-    private midiOutputs: MIDIOutput[] = [];
-    private currentOutputIndex: number = 0;
-    private scheduledNotes: { [noteNumber: number]: number } = {}; // { noteNumber: timeoutId }
-  
-    constructor() {
-      this.initializeMidiAccess();
-    }
-  
-    private async initializeMidiAccess(): Promise<void> {
-      try {
-        this.midiAccess = await navigator.requestMIDIAccess();
-        this.midiOutputs = Array.from(this.midiAccess.outputs.values());
-        if (this.midiOutputs.length === 0) {
-          console.warn('No MIDI outputs available.');
-        }
-      } catch (error) {
-        console.error('Failed to initialize MIDI:', error);
-      }
-    }
- 
-    public getCurrentMidiPort(): string | null {
-        if (this.midiOutputs.length > 0 && this.currentOutputIndex >= 0 && this.currentOutputIndex < this.midiOutputs.length) {
-            return this.midiOutputs[this.currentOutputIndex].name;
-        } else {
-            console.error('No MIDI output selected or available.');
-            return null;
-        }
-    }
-
-
-    public sendMidiClock(): void {
-      const output = this.midiOutputs[this.currentOutputIndex];
-      if (output) {
-        output.send([0xF8]); // Send a single MIDI clock message
-      } else {
-        console.error('MIDI output not available.');
-      }
-    }
-  
-    
-    public switchMidiOutput(outputName: string): boolean {
-      const index = this.midiOutputs.findIndex((output) => output.name === outputName);
-      if (index !== -1) {
-        this.currentOutputIndex = index;
-        return true;
-      } else {
-        console.error(`MIDI output "${outputName}" not found.`);
-        return false;
-      }
-    }
-  
-    public listMidiOutputs(): void {
-      console.log('Available MIDI Outputs:');
-      this.midiOutputs.forEach((output, index) => {
-        console.log(`${index + 1}. ${output.name}`);
-      });
-    }
-  
-    public sendMidiNote(noteNumber: number, velocity: number, durationMs: number): void {
-      const output = this.midiOutputs[this.currentOutputIndex];
-      if (output) {
-        const noteOnMessage = [0x90, noteNumber, velocity]; 
-        const noteOffMessage = [0x80, noteNumber, 0];
-  
-        // Send Note On
-        output.send(noteOnMessage);
-  
-        // Schedule Note Off
-        const timeoutId = setTimeout(() => {
-          output.send(noteOffMessage);
-          delete this.scheduledNotes[noteNumber];
-        }, durationMs);
-  
-        this.scheduledNotes[noteNumber] = timeoutId;
-      } else {
-        console.error('MIDI output not available.');
-      }
-    }
-  
-    public sendMidiControlChange(controlNumber: number, value: number): void {
-      const output = this.midiOutputs[this.currentOutputIndex];
-      if (output) {
-        output.send([0xB0, controlNumber, value]); // Control Change
-      } else {
-        console.error('MIDI output not available.');
-      }
-    }
-  
-    public panic(): void {
-      const output = this.midiOutputs[this.currentOutputIndex];
-      if (output) {
-        for (const noteNumber in this.scheduledNotes) {
-          const timeoutId = this.scheduledNotes[noteNumber];
-          clearTimeout(timeoutId);
-          output.send([0x80, parseInt(noteNumber), 0]); // Note Off
-        }
-        this.scheduledNotes = {};
-      } else {
-        console.error('MIDI output not available.');
-      }
-    }
-  }
 
 export class UserAPI {
 
     variables: { [key: string]: any } = {}
-    globalGain: GainNode 
-    audioNodes: AudioNode[] = []
     MidiConnection: MidiConnection = new MidiConnection()
 
     constructor(public app: Editor) {
-        this.globalGain = this.app.audioContext.createGain()
-        // Give default parameters to the reverb
-        this.globalGain.gain.value = 0.2;
-        this.globalGain.connect(this.app.audioContext.destination)
-    }
-
-    private registerNode<T extends AudioNode>(node: T): T{
-        this.audioNodes.push(node)
-        return node
     }
 
     // =============================================================
     // Utility functions
     // =============================================================
     log = console.log
-
-    public killAll():void {
-        this.audioNodes.forEach(node => {
-            node.disconnect()
-        })
-    }
-
-    // Web Audio Gain and Node Management
-    mute():void { 
-        this.globalGain.gain.value = 0 
-    }
-
-    volume(volume: number):void { 
-        this.globalGain.gain.value = volume 
-    }
-
-    vol = this.volume
-
 
     // =============================================================
     // MIDI related functions
@@ -193,7 +62,7 @@ export class UserAPI {
     // Variable related functions
     // =============================================================
 
-    public var(a: number | string, b?: number): number {
+    public v(a: number | string, b?: any): any {
         if (typeof a === 'string' && b === undefined) {
             return this.variables[a]
         } else {
@@ -202,11 +71,11 @@ export class UserAPI {
         }
     }
     
-    public delVar(name: string): void {
+    public dv(name: string): void {
         delete this.variables[name]
     }
 
-    public cleanVar(): void {
+    public cv(): void {
         this.variables = {}
     }
 
@@ -219,12 +88,51 @@ export class UserAPI {
     seqbeat<T>(...array: T[]): T { return array[this.app.clock.time_position.beat % array.length] }
     seqbar<T>(...array: T[]): T { return array[this.app.clock.time_position.bar % array.length] }
     seqpulse<T>(...array: T[]): T { return array[this.app.clock.time_position.pulse % array.length] }
+
+    // =============================================================
+    // Randomness functions
+    // =============================================================
+
+    randI(min: number, max: number): number { return Math.floor(Math.random() * (max - min + 1)) + min }
+    randF(min: number, max: number): number { return Math.random() * (max - min) + min }
+    rI = this.randI; rF = this.randF
+
+    // =============================================================
+    // Quantification functions
+    // =============================================================
+
+    quantize(value: number, quantization: number[]): number {
+      // Takes a value, and a quantization array, and returns the closest value in the quantization array
+      // Example: quantize(0.7, [0, 0.5, 1]) => 0.5
+      // If the quantization array is empty, return the value
+
+      if (quantization.length === 0) { return value }
+      let closest = quantization[0]
+      quantization.forEach(q => {
+        if (Math.abs(q - value) < Math.abs(closest - value)) { closest = q }
+      })
+      return closest
+    }
+
+    clamp(value: number, min: number, max: number): number {
+      return Math.min(Math.max(value, min), max)
+    }
+
+    // =============================================================
+    // Time functions
+    // =============================================================
     
-    bpm(bpm: number) { this.app.clock.bpm = bpm }
+    bpm(bpm: number) {
+      this.app.clock.bpm = bpm 
+    }
 
     time_signature(numerator: number, denominator: number) {
         this.app.clock.time_signature = [ numerator, denominator ]
     }
+
+    // =============================================================
+    // Probability functions
+    // =============================================================
 
     almostNever() { return Math.random() > 0.9 }
     sometimes() { return Math.random() > 0.5 }
@@ -232,81 +140,57 @@ export class UserAPI {
     often() { return Math.random() > 0.25 }
     almostAlways() { return Math.random() > 0.1 }
     randInt(min: number, max: number) { return Math.floor(Math.random() * (max - min + 1)) + min }
+    dice(sides: number) { return Math.floor(Math.random() * sides) + 1 }
 
-    // Iterators
+    // =============================================================
+    // Iterator functions (for loops, with evaluation count, etc...)
+    // =============================================================
+
     get i() { return this.app.universes[this.app.selected_universe].global.evaluations }
+    get e1() { return this.app.universes[this.app.selected_universe].locals[0].evaluations }
+    get e2() { return this.app.universes[this.app.selected_universe].locals[1].evaluations }
+    get e3() { return this.app.universes[this.app.selected_universe].locals[2].evaluations }
+    get e4() { return this.app.universes[this.app.selected_universe].locals[3].evaluations }
+    get e5() { return this.app.universes[this.app.selected_universe].locals[4].evaluations }
+    get e6() { return this.app.universes[this.app.selected_universe].locals[5].evaluations }
+    get e7() { return this.app.universes[this.app.selected_universe].locals[6].evaluations }
+    get e8() { return this.app.universes[this.app.selected_universe].locals[7].evaluations }
+    get e9() { return this.app.universes[this.app.selected_universe].locals[8].evaluations }
     e(index:number) { return this.app.universes[this.app.selected_universe].locals[index].evaluations }
 
 
     // Script launcher: can launch any number of scripts
     script(...args: number[]): void { 
         args.forEach(arg => { tryEvaluate(this.app, this.app.universes[this.app.selected_universe].locals[arg]) })
-   }
+    }
+    s = this.script
 
     // Small ZZFX interface for playing with this synth
     zzfx(...thing: number[]) {
         zzfx(...thing);
     }
 
-    beat(...beat: number[]): boolean {
+    // =============================================================
+    // Time markers
+    // =============================================================
+    get tick(): number { return this.app.clock.tick }
+    get bar(): number { return this.app.clock.time_position.bar }
+    get pulse(): number { return this.app.clock.time_position.pulse }
+    get beat(): number { return this.app.clock.time_position.beat }
+
+    onbeat(...beat: number[]): boolean {
         return (
             beat.includes(this.app.clock.time_position.beat) 
              && this.app.clock.time_position.pulse == 1
         )
     }
 
-    every(n: number): boolean { return this.i % n === 0 }
-
-    pulse(...pulse: number[]) {
-        return pulse.includes(this.app.clock.time_position.pulse) && this.app.clock.time_position.pulse == 1
+    evry(...n: number[]): boolean { 
+        return n.some(n => this.i % n === 0)
     }
+    
+    mod(...pulse: number[]): boolean {
 
-    mod(pulse: number) {
-        return this.app.clock.time_position.pulse % pulse === 0
-    }
-
-
-
-    beep(
-        frequency: number = 400, duration: number = 0.2,
-        type: OscillatorType = "sine", filter: BiquadFilterType = "lowpass",
-        cutoff: number = 10000, resonance: number = 1,
-    ) {
-        const oscillator = this.registerNode(this.app.audioContext.createOscillator());
-        const gainNode = this.registerNode(this.app.audioContext.createGain());
-        const limiterNode = this.registerNode(this.app.audioContext.createDynamicsCompressor());
-        const filterNode = this.registerNode(this.app.audioContext.createBiquadFilter());
-        // All this for the limiter
-        limiterNode.threshold.setValueAtTime(-5.0, this.app.audioContext.currentTime); 
-        limiterNode.knee.setValueAtTime(0, this.app.audioContext.currentTime); 
-        limiterNode.ratio.setValueAtTime(20.0, this.app.audioContext.currentTime); 
-        limiterNode.attack.setValueAtTime(0.001, this.app.audioContext.currentTime);
-        limiterNode.release.setValueAtTime(0.05, this.app.audioContext.currentTime);
-
-
-        // Filter
-        filterNode.type = filter;
-        filterNode.frequency.value = cutoff;
-        filterNode.Q.value = resonance;
-        
-
-        oscillator.type = type; 
-        oscillator.frequency.value = frequency || 400;
-        gainNode.gain.value = 0.25;
-        oscillator
-            .connect(filterNode)
-            .connect(gainNode)
-            .connect(limiterNode)
-            .connect(this.globalGain)
-        oscillator.start();
-        gainNode.gain.exponentialRampToValueAtTime(0.00001, this.app.audioContext.currentTime + duration);
-        oscillator.stop(this.app.audioContext.currentTime + duration);
-        // Clean everything after a node has been played
-        oscillator.onended = () => {
-            oscillator.disconnect();
-            gainNode.disconnect();
-            filterNode.disconnect();
-            limiterNode.disconnect();
-        }
+        return pulse.some(p => this.app.clock.time_position.pulse % p === 0)
     }
 }
