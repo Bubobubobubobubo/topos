@@ -4,29 +4,31 @@ class TransportProcessor extends AudioWorkletProcessor {
         super(options);
         this.port.addEventListener("message", this.handleMessage);
         this.port.start();
+        this.stated = false;
+        /*
         this.interval = 0.0001;
         this.origin = currentTime;
         this.next = this.origin + this.interval;
+        */
     }
  
     handleMessage = (message) => {
        if (message.data === "start") {
-            this.origin = currentTime;
-            this.next = this.origin + this.interval;
+            this.started = true;
+            // this.origin = currentTime;
+            // this.next = this.origin + this.interval;
         } else if (message.data === "pause") {
-            this.next = Infinity;
+            // this.next = Infinity;
+            this.started = false;
         } else if (message.data === "stop") {
-            this.origin = currentTime;
-            this.next = Infinity;
+            // this.origin = currentTime;
+            // this.next = Infinity;
+            this.started = false;
         }
     };
 
     process(inputs, outputs, parameters) {
-        if (currentTime >= this.next) {
-            while (this.next < currentTime)
-                this.next += this.interval;
-            this.port.postMessage("bang");
-        }
+        if (this.started) this.port.postMessage({ type: "bang", currentTime });
         return true;
     }
 }

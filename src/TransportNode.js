@@ -13,8 +13,8 @@ export class TransportNode extends AudioWorkletNode {
     }
     /** @type {(this: MessagePort, ev: MessageEvent<any>) => any} */
     handleMessage = (message) => {
-        if (message.data === "bang") {
-            let info = this.convertTimeToBarsBeats(this.context.currentTime);
+        if (message.data && message.data.type === "bang") {
+            let info = this.convertTimeToBarsBeats(message.data.currentTime);
             this.app.clock.time_position = { bar: info.bar, beat: info.beat, pulse: info.ppqn }
             this.$clock.innerHTML = `[${info.bar} | ${info.beat} | ${zeroPad(info.ppqn, '2')}]`
             tryEvaluate( this.app, this.app.global_buffer );
