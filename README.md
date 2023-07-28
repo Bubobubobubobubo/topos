@@ -78,9 +78,12 @@ Once evaluated, a small tune will be playing.
   - [ ] Add a way to set the clock's time signature.
   - [ ] Add a way to set the clock's swing.
   - [ ] MIDI Clock In/Out support.
-    - [ ] Performance optimisations and metrics.
+  - [ ] Performance optimisations and metrics.
+- [ ] Add a way to save the current universe as a file.
+- [ ] Add a way to load a universe from a file.
+- [ ] Add MIDI support.
 
-## UI
+## UI
 
 - [ ] Settings menu with all options.
   - [ ] Color themes (dark/light), other colors.
@@ -89,12 +92,8 @@ Once evaluated, a small tune will be playing.
 - [ ] Repair the current layout (aside + CodeMirror)
 - [ ] Optimizations for smaller screens and mobile devices.
 
-## Web Audio
+## Web Audio
 
 - [ ] Support Faut DSP integration.
 - [ ] Support Tone.js integration.
 - [ ] WebAudio based engine.
-
-- [ ] Add a way to save the current universe as a file.
-- [ ] Add a way to load a universe from a file.
-- [ ] Add MIDI support.
