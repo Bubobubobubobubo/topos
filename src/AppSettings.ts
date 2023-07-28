@@ -90,8 +90,10 @@ export class AppSettings {
     }
   }
 
-  saveApplicationToLocalStorage(universes: Universes): void{
+  saveApplicationToLocalStorage(universes: Universes, settings: Settings): void{
     this.universes = universes;
+    this.vimMode = settings.vimMode;
+    this.font = settings.font;
     localStorage.setItem('topos', JSON.stringify(this.data))
   }
 }

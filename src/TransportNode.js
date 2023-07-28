@@ -1,4 +1,5 @@
 import { evaluate, tryEvaluate, evaluateCommand } from "./Evaluator";
+const zeroPad = (num, places) => String(num).padStart(places, '0')
 
 export class TransportNode extends AudioWorkletNode {
 
@@ -16,7 +17,7 @@ export class TransportNode extends AudioWorkletNode {
         if (message.data === "bang") {
             let info = this.convertTimeToBarsBeats(this.context.currentTime);
             this.app.clock.time_position = { bar: info.bar, beat: info.beat, pulse: info.ppqn }
-            // this.$clock.innerHTML = `${info.bar} / ${info.beat} / ${info.ppqn}`
+            this.$clock.innerHTML = `[${info.bar} | ${info.beat} | ${zeroPad(info.ppqn, '2')}]`
             tryEvaluate( this.app, this.app.global_buffer );
         }
     };

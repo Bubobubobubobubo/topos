@@ -37,6 +37,7 @@ export class Editor {
   audioContext: AudioContext
   view: EditorView
   clock: Clock
+  manualPlay: boolean = false
 
   // Transport elements
   play_buttons: HTMLButtonElement[] = [
@@ -93,6 +94,9 @@ export class Editor {
     // CodeMirror Management
     // ================================================================================
 
+
+    this.userPlugins = this.settings.vimMode ? [] : [vim()]
+
     this.editorExtensions = [
       editorSetup, 
       rangeHighlighting(), 
@@ -124,20 +128,30 @@ export class Editor {
     // ================================================================================
 
     document.addEventListener('keydown', (event: KeyboardEvent) => {
+      event.preventDefault();
 
 		  // TAB should do nothing
 		  if (event.key === 'Tab') {
         event.preventDefault();
 		  }
 
+      if (event.ctrlKey && event.key === "s") {
+        event.preventDefault();
+        this.setButtonHighlighting('pause', true)
+        this.clock.pause()
+      }
+      if (event.ctrlKey && event.key === "p") {
+        event.preventDefault();
+        this.setButtonHighlighting('play', true)
+        this.clock.start()
+      }
+
       // Ctrl + Shift + V: Vim Mode
       if ((event.key === 'v' || event.key === 'V') && event.ctrlKey && event.shiftKey) {
         this.settings.vimMode = !this.settings.vimMode
         event.preventDefault();
         this.userPlugins = this.settings.vimMode ? [] : [vim()]
-        this.view.dispatch({
-          effects: dynamicPlugins.reconfigure(this.userPlugins)
-        })
+        this.view.dispatch({ effects: dynamicPlugins.reconfigure(this.userPlugins) })
       }
 
       // Ctrl + Enter or Return: Evaluate the hovered code block
@@ -166,9 +180,19 @@ export class Editor {
       }
 
       // Switch to local files
-      if (event.ctrlKey && event.key === "l") this.changeModeFromInterface('local');
-      if (event.ctrlKey && event.key === "g") this.changeModeFromInterface('global');
-      if (event.ctrlKey && event.key === "i") this.changeModeFromInterface('init');
+      if (event.ctrlKey && event.key === "l") {
+        event.preventDefault();
+        this.changeModeFromInterface('local');
+      }
+      if (event.ctrlKey && event.key === "g") {
+        event.preventDefault();
+        this.changeModeFromInterface('global');
+      }
+      if (event.ctrlKey && event.key === "i") {
+        event.preventDefault();
+        this.changeModeFromInterface('init');
+        this.changeToLocalBuffer(0)
+      }
       [112, 113, 114, 115, 116, 117, 118, 119, 120].forEach((keycode, index) => {
         if (event.keyCode === keycode) {
           event.preventDefault();
@@ -230,6 +254,7 @@ export class Editor {
     this.init_button.addEventListener('click', () => this.changeModeFromInterface('init'))
 
     this.buffer_search.addEventListener('keydown', (event) => {
+      this.changeModeFromInterface('local')
       if (event.key === "Enter") {
         let query = this.buffer_search.value
         if (query.length > 2 && query.length < 20) {
@@ -276,7 +301,6 @@ export class Editor {
       interface_buttons.forEach(button => {
         let svg = button.children[0] as HTMLElement
         if (svg.classList.contains('text-orange-300')) {
-          console.log('Fond de couleur trouvé')
           svg.classList.remove('text-orange-300')
           svg.classList.add('text-white')
         }
@@ -308,6 +332,7 @@ export class Editor {
         }
         this.currentFile.candidate = this.view.state.doc.toString() 
         changeColor(this.init_button)
+        this.changeToLocalBuffer(0)
         this.editor_mode = 'init';
         break;
     }
@@ -316,11 +341,7 @@ export class Editor {
 
 
   setButtonHighlighting(button: 'play' | 'pause' | 'clear', highlight: boolean) {
-    const possible_selectors = [
-      '[id^="play-button-"]',
-      '[id^="pause-button-"]',
-      '[id^="clear-button-"'
-    ]
+    const possible_selectors = [ '[id^="play-button-"]', '[id^="pause-button-"]', '[id^="clear-button-"]', ]
     let selector: number;
     switch (button) {
       case 'play': selector = 0; break;
@@ -505,6 +526,6 @@ window.addEventListener('beforeunload', () => {
   // Iterate over all local files and set the candidate to the committed
   app.currentFile.candidate = app.view.state.doc.toString() 
   app.currentFile.committed = app.view.state.doc.toString()
-  app.settings.saveApplicationToLocalStorage(app.universes)
+  app.settings.saveApplicationToLocalStorage(app.universes, app.settings)
   return null;
 });
