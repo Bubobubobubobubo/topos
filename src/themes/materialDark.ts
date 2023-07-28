@@ -27,7 +27,8 @@ export const materialDarkTheme = EditorView.theme(
   {
     '&': {
       color: base05,
-      backgroundColor: background
+      backgroundColor: background,
+      fontSize: '24px',
     },
 
     '.cm-content': {
