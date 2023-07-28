@@ -1,4 +1,4 @@
-# Topos
+# Topos: a Teletype inspired algorithmic sequencer
 
 Monome Teletype inspired algorithmic sequencer for live coding in the browser. This is a prototype of an (hopefully) soon to be instrument that can generate sound through WebAudio and or MIDI. This sequencer works by letting the user enter short JS code snippets that are evaluated in a _sandboxed_ environment. An API is providing tools to manipulate time, instruments and data.
 
@@ -66,3 +66,35 @@ if (sometimes()) beep(400, 0.5);
 // Local file n°2
 if (sometimes()) beep(pick(800, 1200, 1600), 0.5);
 ```
+
+Once evaluated, a small tune will be playing.
+
+# TODO
+
+## Scheduler
+
+- [ ] Stable / robust clock and script/event scheduler.
+  - [ ] Add a way to set the clock's tempo.
+  - [ ] Add a way to set the clock's time signature.
+  - [ ] Add a way to set the clock's swing.
+  - [ ] MIDI Clock In/Out support.
+    - [ ] Performance optimisations and metrics.
+
+## UI
+
+- [ ] Settings menu with all options.
+  - [ ] Color themes (dark/light), other colors.
+  - [ ] Font size and font family.
+  - [ ] Vim mode.
+- [ ] Repair the current layout (aside + CodeMirror)
+- [ ] Optimizations for smaller screens and mobile devices.
+
+## Web Audio
+
+- [ ] Support Faut DSP integration.
+- [ ] Support Tone.js integration.
+- [ ] WebAudio based engine.
+
+- [ ] Add a way to save the current universe as a file.
+- [ ] Add a way to load a universe from a file.
+- [ ] Add MIDI support.
