@@ -39,9 +39,18 @@ export class Editor {
   clock: Clock
 
   // Transport elements
-  play_button: HTMLButtonElement = document.getElementById('play-button') as HTMLButtonElement
-  pause_button: HTMLButtonElement = document.getElementById('pause-button') as HTMLButtonElement
-  clear_button: HTMLButtonElement = document.getElementById('clear-button') as HTMLButtonElement
+  play_buttons: HTMLButtonElement[] = [
+    document.getElementById('play-button-1') as HTMLButtonElement,
+    document.getElementById('play-button-2') as HTMLButtonElement
+  ]
+  pause_buttons: HTMLButtonElement[] = [
+    document.getElementById('pause-button-1') as HTMLButtonElement,
+    document.getElementById('pause-button-2') as HTMLButtonElement
+  ]
+  clear_buttons: HTMLButtonElement[] = [
+    document.getElementById('clear-button-1') as HTMLButtonElement,
+    document.getElementById('clear-button-2') as HTMLButtonElement
+  ]
 
   // Script selection elements
   local_button: HTMLButtonElement = document.getElementById('local-button') as HTMLButtonElement
@@ -148,7 +157,7 @@ export class Editor {
 		  }
 
       // This is the modal to switch between universes
-      if (event.metaKey && event.key === "b") {
+      if (event.ctrlKey && event.key === "b") {
         this.openBuffersModal()
       }
 
@@ -183,25 +192,29 @@ export class Editor {
       })
     }
 
-    this.play_button.addEventListener('click', () => {
-      this.play_button.children[0].classList.add('fill-orange-300')
-      this.pause_button.children[0].classList.remove('fill-orange-300')
-      this.clock.start()
+    this.play_buttons.forEach(button => {
+      button.addEventListener('click', () => {
+        this.setButtonHighlighting('play', true)
+        this.clock.start()
+      })
     })
 
-    this.clear_button.addEventListener('click', () => {
-      // Reset the current universe to a template
-      if (confirm('Do you want to reset the current universe?')) {
-        this.universes[this.selected_universe] = template_universe
-        this.updateEditorView()
-      }
-    });
+    this.clear_buttons.forEach(button => {
+      button.addEventListener('click', () => {
+        this.setButtonHighlighting('clear', true)
+        if (confirm('Do you want to reset the current universe?')) {
+          this.universes[this.selected_universe] = template_universe
+          this.updateEditorView()
+        }
+      })
+    })
 
-    this.pause_button.addEventListener('click', () => {
-      // Change the color of the button
-      this.play_button.children[0].classList.remove('fill-orange-300')
-      this.pause_button.children[0].classList.add('fill-orange-300')
-      this.clock.pause()
+
+    this.pause_buttons.forEach(button => {
+      button.addEventListener('click', () => {
+        this.setButtonHighlighting('pause', true)
+        this.clock.pause()
+      })
     })
 
     this.local_button.addEventListener('click', () => this.changeModeFromInterface('local'))
@@ -274,6 +287,38 @@ export class Editor {
     this.updateEditorView();
   }
 
+
+  setButtonHighlighting(button: 'play' | 'pause' | 'clear', highlight: boolean) {
+    const possible_selectors = [
+      '[id^="play-button-"]',
+      '[id^="pause-button-"]',
+      '[id^="clear-button-"'
+    ]
+    let selector: number;
+    switch (button) {
+      case 'play': selector = 0; break;
+      case 'pause': selector = 1; break;
+      case 'clear': selector = 2; break;
+    }
+    document.querySelectorAll(possible_selectors[selector]).forEach(button => {
+      if (highlight) button.children[0].classList.add('fill-orange-300')
+    });
+    // All other buttons must lose the highlighting
+    document.querySelectorAll(possible_selectors.filter(
+      (_, index) => index != selector).join(',')).forEach(button => {
+        button.children[0].classList.remove('fill-orange-300')
+        button.children[0].classList.remove('text-orange-300')
+        button.children[0].classList.remove('bg-orange-300')
+    });
+  }
+
+  unfocusPlayButtons() {
+    document.querySelectorAll('[id^="play-button-"]').forEach(button => {
+      button.children[0].classList.remove('fill-orange-300')
+    })
+  }
+
+
   updateEditorView():void {
     // Remove everything from the editor
     this.view.dispatch({
@@ -320,8 +365,6 @@ export class Editor {
     }
     this.selected_universe = selectedUniverse
     this.universe_viewer.innerHTML = `Topos: ${selectedUniverse}`
-    this.global_buffer = this.universes[this.selected_universe.toString()].global
-    this.init_buffer = this.universes[this.selected_universe.toString()].init
     // We should also update the editor accordingly
     this.view.dispatch({
       changes: { from: 0, to: this.view.state.doc.toString().length, insert:'' }
@@ -386,7 +429,6 @@ export class Editor {
   }
 
   openSettingsModal() {
-    // If the modal is hidden, unhide it and hide the editor
     if (document.getElementById('modal-settings')!.classList.contains('invisible')) {
       document.getElementById('editor')!.classList.add('invisible')
       document.getElementById('modal-settings')!.classList.remove('invisible')
@@ -415,8 +457,8 @@ export class Editor {
     // @ts-ignore
     document.getElementById('buffer-search')!.value = ''
     document.getElementById('editor')!.classList.remove('invisible')
-    document.getElementById('modal-buffers')!.classList.add('invisible')
     document.getElementById('modal')!.classList.add('invisible')
+    document.getElementById('modal-buffers')!.classList.add('invisible')
   }
 }
 
@@ -425,13 +467,12 @@ const app = new Editor()
 function startClock() {
   document.getElementById('editor')!.classList.remove('invisible')
   document.getElementById('modal')!.classList.add('hidden')
+  document.getElementById('modal-container')!.classList.remove('motion-safe:animate-pulse')
   document.getElementById('start-button')!.removeEventListener('click', startClock);
   document.removeEventListener('keydown', startOnEnter)
   app.clock.start()
   app.view.focus()
-  // Change the play button svg color to orange
-  document.getElementById('pause-button')!.children[0].classList.remove('fill-orange-300')
-  document.getElementById('play-button')!.children[0].classList.add('fill-orange-300')
+  app.setButtonHighlighting('play', true)
 }
 
 function startOnEnter(e: KeyboardEvent) {
