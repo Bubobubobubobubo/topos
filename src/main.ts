@@ -74,13 +74,13 @@ export class Editor {
 
     this.selected_universe = "Default";
     this.universe_viewer.innerHTML = `Topos: ${this.selected_universe}`
-    this.universes = {...this.settings.universes, ...template_universes}
+    this.universes = {...template_universes, ...this.settings.universes}
 
     // ================================================================================
     // Audio context and clock
     // ================================================================================
 
-    this.audioContext = new AudioContext({ sampleRate: 44100, latencyHint: 0.000001});
+    this.audioContext = new AudioContext({ latencyHint: "playback" });
     this.clock = new Clock(this, this.audioContext);
 
     // ================================================================================
@@ -98,6 +98,7 @@ export class Editor {
       rangeHighlighting(), 
       javascript(),
       EditorView.updateListener.of((v:ViewUpdate) => {
+        v
         // This is the event listener for the editor
       }),
       ...this.userPlugins
@@ -142,7 +143,7 @@ export class Editor {
       // Ctrl + Enter or Return: Evaluate the hovered code block
 		  if ((event.key === 'Enter' || event.key === 'Return') && event.ctrlKey) {
         event.preventDefault();
-		  	const code = this.getCodeBlock();
+		  	// const code = this.getCodeBlock();
         this.currentFile.candidate = this.view.state.doc.toString() 
         tryEvaluate(this, this.currentFile)
 	  }
@@ -151,7 +152,7 @@ export class Editor {
 		  if ((event.key === 'Enter' && event.shiftKey) || (event.key === 'e' && event.ctrlKey)) {
 		  	event.preventDefault(); // Prevents the addition of a new line
         this.currentFile.candidate = this.view.state.doc.toString() 
-		  	const code = this.getSelectedLines();
+		  	// const code = this.getSelectedLines();
 		  }
 
       // This is the modal to switch between universes
@@ -374,17 +375,7 @@ export class Editor {
 
   loadUniverse(universeName: string) {
     this.currentFile.candidate = this.view.state.doc.toString()
-    let editor = this;
-    
-    function whichBuffer(editor: Editor): File {
-      switch (editor.editor_mode) {
-        case 'global': return editor.global_buffer
-        case 'local': return editor.universes[
-          editor.selected_universe].locals[editor.local_index]
-        case 'init': return editor.init_buffer
-      }
-    }
-
+ 
     let selectedUniverse = universeName.trim()
     if (this.universes[selectedUniverse] === undefined) {
       this.universes[selectedUniverse] = template_universe

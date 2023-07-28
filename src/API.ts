@@ -1,6 +1,8 @@
 import { Editor } from "./main";
 import { tryEvaluate } from "./Evaluator";
+// @ts-ignore
 import { ZZFX, zzfx } from "zzfx";
+// import * as Tone from 'tone';
 
 
 export class UserAPI {
@@ -17,7 +19,7 @@ export class UserAPI {
         this.globalGain.connect(this.app.audioContext.destination)
     }
 
-    private registerNode<T>(node: T): T{
+    private registerNode<T extends AudioNode>(node: T): T{
         this.audioNodes.push(node)
         return node
     }
@@ -33,7 +35,7 @@ export class UserAPI {
     }
     get(name: string) { return this.variables[name] }
     
-    pick<T>(array: T[]): T { return array[Math.floor(Math.random() * array.length)] }
+    pick<T>(...array: T[]): T { return array[Math.floor(Math.random() * array.length)] }
 
     almostNever() { return Math.random() > 0.9 }
     sometimes() { return Math.random() > 0.5 }
@@ -57,12 +59,15 @@ export class UserAPI {
         zzfx(...thing);
     }
 
-    on(beat: number = 1, pulse: number = 1): boolean {
-        return this.app.clock.time_position.beat === beat && this.app.clock.time_position.pulse === pulse
+    beat(...beat: number[]): boolean {
+        return (
+            beat.includes(this.app.clock.time_position.beat) 
+            && this.app.clock.time_position.pulse == 1
+        )
     }
 
-    pulse(pulse: number) {
-        return this.app.clock.time_position.pulse === pulse
+    pulse(...pulse: number[]) {
+        return pulse.includes(this.app.clock.time_position.pulse) && this.app.clock.time_position.pulse == 1
     }
 
     modPulse(pulse: number) {

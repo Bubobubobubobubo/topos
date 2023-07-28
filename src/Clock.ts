@@ -34,6 +34,10 @@ export class Clock {
         })
     }
 
+    get pulses_per_beat(): number {
+        return this.ppqn / this.time_signature[1];
+    }
+
     start(): void {
         // Check if the clock is already running
         if (this.transportNode?.state === 'running') {
