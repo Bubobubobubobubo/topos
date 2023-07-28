@@ -3,7 +3,7 @@ import { Extension } from '@codemirror/state'
 import { HighlightStyle, syntaxHighlighting } from '@codemirror/language'
 import { tags as t } from '@lezer/highlight'
 
-const base00 = 'black', base01 = '#505d64',
+const base00 = '#171717', base01 = '#505d64',
       base02 = 'white', base03 = '#707d8b',
       base04 = '#a0a4ae', base05 = '#bdbdbd',
       base06 = '#e0e0e0', base07 = '#fdf6e3',

@@ -14,7 +14,7 @@ import {
 } from "./highlightSelection";
 import { UserAPI } from './API';
 import { Extension } from '@codemirror/state';
-import { Universes, File, template_universe } from './AppSettings';
+import { Universes, File, template_universe, template_universes } from './AppSettings';
 import { tryEvaluate } from './Evaluator';
 
 
@@ -22,7 +22,7 @@ import { tryEvaluate } from './Evaluator';
 export class Editor { 
 
   // Data structures for editor text management
-  universes: Universes
+  universes: Universes = template_universes
   selected_universe: string
   local_index: number = 1
   editor_mode: 'global' | 'local' | 'init' = 'local'
@@ -68,15 +68,13 @@ export class Editor {
 
   constructor() {
 
-
-
     // ================================================================================ 
     // Loading the universe from local storage
     // ================================================================================
 
     this.selected_universe = "Default";
     this.universe_viewer.innerHTML = `Topos: ${this.selected_universe}`
-    this.universes = this.settings.universes
+    this.universes = {...this.settings.universes, ...template_universes}
 
     // ================================================================================
     // Audio context and clock
@@ -147,7 +145,7 @@ export class Editor {
 		  	const code = this.getCodeBlock();
         this.currentFile.candidate = this.view.state.doc.toString() 
         tryEvaluate(this, this.currentFile)
-		  }
+	  }
 
 		  // Shift + Enter or Ctrl + E: evaluate the line
 		  if ((event.key === 'Enter' && event.shiftKey) || (event.key === 'e' && event.ctrlKey)) {
@@ -166,14 +164,23 @@ export class Editor {
         this.openSettingsModal()
       }
 
-
+      // Switch to local files
+      if (event.ctrlKey && event.key === "l") this.changeModeFromInterface('local');
+      if (event.ctrlKey && event.key === "g") this.changeModeFromInterface('global');
+      if (event.ctrlKey && event.key === "i") this.changeModeFromInterface('init');
+      [112, 113, 114, 115, 116, 117, 118, 119, 120].forEach((keycode, index) => {
+        if (event.keyCode === keycode) {
+          event.preventDefault();
+          this.changeToLocalBuffer(index)
+        }
+      })
     }); 
 
     // ================================================================================
     // Interface buttons
     // ================================================================================
 
-    let tabs = document.querySelectorAll('[id^="tab-"]');
+    const tabs = document.querySelectorAll('[id^="tab-"]');
     // Iterate over the tabs with an index
     for (let i = 0; i < tabs.length; i++) {
       tabs[i].addEventListener('click', (event) => {
@@ -241,15 +248,34 @@ export class Editor {
     return this.universes[this.selected_universe.toString()].init
   }
 
+  changeToLocalBuffer(i: number) {
+    // Updating the CSS accordingly
+    const tabs = document.querySelectorAll('[id^="tab-"]');
+    const tab = tabs[i] as HTMLElement
+    tab.classList.add('bg-orange-300')
+    for (let j = 0; j < tabs.length; j++) {
+      if (j != i) tabs[j].classList.remove('bg-orange-300')
+    }
+    this.currentFile.candidate = this.view.state.doc.toString() 
+
+    let tab_id = tab.id.split('-')[1]
+    this.local_index = parseInt(tab_id)
+    this.updateEditorView()
+  }
+
   changeModeFromInterface(mode: 'global' | 'local' | 'init') {
 
-    const interface_buttons = [this.local_button, this.global_button, this.init_button]
+    const interface_buttons: HTMLElement[] = [
+      this.local_button,
+      this.global_button, 
+      this.init_button
+    ]
 
     let changeColor = (button: HTMLElement) => {
       interface_buttons.forEach(button => {
-        // Get the child svg element of each button
         let svg = button.children[0] as HTMLElement
         if (svg.classList.contains('text-orange-300')) {
+          console.log('Fond de couleur trouvé')
           svg.classList.remove('text-orange-300')
           svg.classList.add('text-white')
         }
@@ -390,7 +416,7 @@ export class Editor {
         endLine = state.doc.line(endLine.number + 1);
       }
 
-      this.view.dispatch({selection: {anchor: 0 + startLine.from, head: endLine.to}});
+      // this.view.dispatch({selection: {anchor: 0 + startLine.from, head: endLine.to}});
       highlightSelection(this.view);
 
 		  setTimeout(() => {

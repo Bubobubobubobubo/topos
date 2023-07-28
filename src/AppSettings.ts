@@ -1,3 +1,5 @@
+import { tutorial_universe } from "./universes/tutorial"
+
 export type Universes = { [key: string]: Universe }
 
 export interface Universe {
@@ -50,7 +52,8 @@ export const template_universes = {
       9: { candidate: "", committed: "", evaluations: 0},
     },
     init: { candidate: "", committed: "", evaluations: 0 }
-  }
+  },
+  "Help": tutorial_universe,
 }
  
   
