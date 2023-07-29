@@ -30,6 +30,8 @@
     }
   </style>
   <body>
+
+		<!-- The header is hidden on smaller devices -->
     <header class="py-2 hidden xl:block text-white bg-neutral-900">
       <div class="mx-auto flex flex-wrap pl-2 py-1 flex-row items-center">
         <a class="flex title-font font-medium items-center text-black mb-0">
@@ -84,7 +86,13 @@
       <div id="modal-container" class="motion-safe:animate-pulse flex min-h-screen flex flex-col">
       <div id="modal" class="bg-neutral-900 bg-opacity-50 flex justify-center items-center absolute top-0 right-0 bottom-0 left-0">
         <div id="start-button" class="bg-white px-16 py-14 rounded-md text-center">
-         <h1 class="text-xl mb-4 font-bold text-black">Topos Prototype</h1>
+         <h1 class="text-xl mb-4 font-bold text-white rounded bg-black">Topos Prototype</h1>
+				 <div id="social-links" class="pb-4 font-bold flex flex-row space-x-4 justify-center">
+					<a href="https://google.fr">Website</a>
+					<a href="https://google.fr">Discord</a>
+					<a href="https://google.fr">Documentation</a>
+					<a href="https://google.fr">About</a>
+				 </div>
          <div id="disclaimer" class="pb-4">
 
           <p>This is Topos, an experimental live coding platform.</p>
@@ -95,8 +103,18 @@
       </div>
 
       <div class="flex flex-row">
-        <aside class="flex flex-col items-center w-14 h-screen py-2 overflow-y-auto bg-white border-r rtl:border-l rtl:border-r-0 dark:bg-neutral-900 dark:border-gray-700">
-          <nav class="flex flex-col space-y-6">
+
+				<!-- This is a lateral bar that will inherit the header buttons
+					if the window is too small.
+				-->
+        <aside class="
+					flex flex-col items-center w-14
+					h-screen py-2 overflow-y-auto
+					border-r rtl:border-l
+					rtl:border-r-0 bg-neutral-900
+					dark:border-gray-700"
+				>
+        <nav class="flex flex-col space-y-6">
             <a id="local-button" class="pl-2 p-1.5 text-gray-700 focus:outline-nones transition-colors duration-200 rounded-lg dark:text-gray-200 dark:hover:bg-gray-800 hover:bg-gray-100">
               <svg class="w-8 h-8 text-orange-300" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M10 15a5 5 0 1 0 0-10 5 5 0 0 0 0 10Zm0-11a1 1 0 0 0 1-1V1a1 1 0 0 0-2 0v2a1 1 0 0 0 1 1Zm0 12a1 1 0 0 0-1 1v2a1 1 0 1 0 2 0v-2a1 1 0 0 0-1-1ZM4.343 5.757a1 1 0 0 0 1.414-1.414L4.343 2.929a1 1 0 0 0-1.414 1.414l1.414 1.414Zm11.314 8.486a1 1 0 0 0-1.414 1.414l1.414 1.414a1 1 0 0 0 1.414-1.414l-1.414-1.414ZM4 10a1 1 0 0 0-1-1H1a1 1 0 0 0 0 2h2a1 1 0 0 0 1-1Zm15-1h-2a1 1 0 1 0 0 2h2a1 1 0 0 0 0-2ZM4.343 14.243l-1.414 1.414a1 1 0 1 0 1.414 1.414l1.414-1.414a1 1 0 0 0-1.414-1.414ZM14.95 6.05a1 1 0 0 0 .707-.293l1.414-1.414a1 1 0 1 0-1.414-1.414l-1.414 1.414a1 1 0 0 0 .707 1.707Z"/>
