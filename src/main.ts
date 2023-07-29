@@ -21,6 +21,15 @@ import {
   template_universes,
 } from "./AppSettings";
 import { tryEvaluate } from "./Evaluator";
+import { materialDark } from "./themes/materialDark";
+import { oneDark } from "@codemirror/theme-one-dark";
+
+export const fontSizeModif = EditorView.theme(
+  {
+    "&": { fontSize: "22px", }
+  }
+)
+
 
 export class Editor {
   // Data structures for editor text management
@@ -114,7 +123,9 @@ export class Editor {
     this.userPlugins = this.settings.vimMode ? [] : [vim()];
 
     this.editorExtensions = [
+      fontSizeModif,
       editorSetup,
+			oneDark,
       rangeHighlighting(),
       javascript(),
       EditorView.updateListener.of((v: ViewUpdate) => {

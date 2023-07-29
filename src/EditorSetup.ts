@@ -1,46 +1,32 @@
-import { javascript } from "@codemirror/lang-javascript"
+import { javascript } from "@codemirror/lang-javascript";
 import {
-    keymap, 
-    highlightSpecialChars, 
-    drawSelection, 
-    highlightActiveLine, 
-    dropCursor,
-    rectangularSelection, 
-    lineNumbers,
-    crosshairCursor,
-    highlightActiveLineGutter
-} from "@codemirror/view"
+  keymap,
+  highlightSpecialChars,
+  drawSelection,
+  highlightActiveLine,
+  dropCursor,
+  rectangularSelection,
+  lineNumbers,
+  crosshairCursor,
+  highlightActiveLineGutter,
+} from "@codemirror/view";
+import { Extension, EditorState } from "@codemirror/state";
 import {
-    Extension, 
-    EditorState
-} from "@codemirror/state"
+  defaultHighlightStyle,
+  syntaxHighlighting,
+  indentOnInput,
+  bracketMatching,
+  foldKeymap,
+} from "@codemirror/language";
+import { defaultKeymap, historyKeymap, history } from "@codemirror/commands";
+import { searchKeymap, highlightSelectionMatches } from "@codemirror/search";
 import {
-    defaultHighlightStyle, 
-    syntaxHighlighting, 
-    indentOnInput, 
-    bracketMatching,
-    foldKeymap
-} from "@codemirror/language"
-import {
-    defaultKeymap, 
-    historyKeymap,
-    history,
-} from "@codemirror/commands"
-import {
-    searchKeymap, 
-    highlightSelectionMatches
-} from "@codemirror/search"
-import {
-    autocompletion, 
-    completionKeymap, 
-    closeBrackets, 
-    closeBracketsKeymap
-} from "@codemirror/autocomplete"
-import {
-    lintKeymap
-} from "@codemirror/lint"
-
-import { materialDark } from "./themes/materialDark"
+  autocompletion,
+  completionKeymap,
+  closeBrackets,
+  closeBracketsKeymap,
+} from "@codemirror/autocomplete";
+import { lintKeymap } from "@codemirror/lint";
 
 // (The superfluous function calls around the list of extensions work
 // around current limitations in tree-shaking software.)
@@ -82,31 +68,30 @@ import { materialDark } from "./themes/materialDark"
 /// as desired.
 
 export const editorSetup: Extension = (() => [
-    materialDark,
-    lineNumbers(),
-    javascript(),
-    highlightActiveLineGutter(),
-    highlightSpecialChars(),
-    history(),
-    // foldGutter(),
-    drawSelection(),
-    dropCursor(),
-    EditorState.allowMultipleSelections.of(true),
-    indentOnInput(),
-    syntaxHighlighting(defaultHighlightStyle, {fallback: true}),
-    bracketMatching(),
-    closeBrackets(),
-    autocompletion(),
-    rectangularSelection(),
-    crosshairCursor(),
-    highlightActiveLine(),
-    highlightSelectionMatches(),
-    keymap.of([
-        ...closeBracketsKeymap,
-        ...defaultKeymap,
-        ...historyKeymap,
-        ...foldKeymap,
-        ...completionKeymap,
-        ...lintKeymap
-    ])
-])()
+  lineNumbers(),
+  javascript(),
+  highlightActiveLineGutter(),
+  highlightSpecialChars(),
+  history(),
+  // foldGutter(),
+  drawSelection(),
+  dropCursor(),
+  EditorState.allowMultipleSelections.of(true),
+  indentOnInput(),
+  syntaxHighlighting(defaultHighlightStyle, { fallback: true }),
+  bracketMatching(),
+  closeBrackets(),
+  autocompletion(),
+  rectangularSelection(),
+  crosshairCursor(),
+  highlightActiveLine(),
+  highlightSelectionMatches(),
+  keymap.of([
+    ...closeBracketsKeymap,
+    ...defaultKeymap,
+    ...historyKeymap,
+    ...foldKeymap,
+    ...completionKeymap,
+    ...lintKeymap,
+  ]),
+])();
