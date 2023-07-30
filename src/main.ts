@@ -313,8 +313,8 @@ export class Editor {
 
     this.settings_button.addEventListener("click", () => {
       // Query the current font size and set the slider to that value
-      const current_font_size = this.fontSize.get(this.view.state);
-      console.log(current_font_size)
+      let font_size_witness = document.getElementById("font-size-witness");
+      font_size_witness?.setAttribute('style', `font-size: ${this.settings.font_size}px;`)
       let modal_settings = document.getElementById('modal-settings');
       let editor = document.getElementById('editor');
       modal_settings?.classList.remove('invisible')
