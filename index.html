@@ -81,14 +81,60 @@
             </div>
           </form>
           </div>
-          </div>
+        </div>
       </div>
+
+      <!-- This modal is used for settings -->
+        <div id="modal-settings" class="invisible bg-neutral-900 bg-opacity-50 flex justify-center items-center absolute top-0 right-0 bottom-0 left-0">
+          <div class="flex flex flex-col w-full">
+            <div class="bg-white rounded-lg mx-48 my-48 space-y-8 px-8">
+            <h1 class="mt-12 font-semibold rounded bg-gray-800 justify-center text-center text-white mx-4 text-xl border-b border-gray-300 py-4">Topos Application Settings</h1>
+              <!-- Font Size Selection -->
+              <div class="space-y-6 w-auto min-w-screen px-4">
+                <div id="font-size-selector" class="flex flex-row space-x-4 rounded-lg">
+                  <label for="default-range" class="text-sm font-medium text-black w-1/5">Font Size</label>
+                  <input id="default-range" type="range" step=1 value="22" class="w-4/5 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700">
+                </div>
+              </div>
+              <!-- Font Family Selection -->
+              <div class="space-y-6 w-auto min-w-screen px-4">
+              </div>
+              <!-- Editor mode selection -->
+              <div class="flex flex-row space-x-4 justify-center px-4">
+                <div class="flex items-center pl-4 border border-gray-200 rounded dark:border-gray-700 w-full">
+                  <input id="bordered-radio-1" type="radio" value="" name="bordered-radio" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                  <label for="bordered-radio-1" class="w-full py-4 ml-2 text-sm font-medium text-black">Normal Editor Mode</label>
+                </div>
+                <div class="flex items-center pl-4 border border-gray-200 rounded dark:border-gray-700 w-full">
+                  <input checked id="bordered-radio-2" type="radio" value="" name="bordered-radio" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                  <label for="bordered-radio-2" class="w-full py-4 ml-2 text-sm font-medium text-black">Vim Editor Mode</label>
+                </div>
+              </div>
+              <!-- Information card -->
+              <div class="flex lg:flex-row flex-col w-auto min-w-screen px-4 pb-8 space-x-8">
+                <a class="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow bg-gray-800 border-gray-700 hover:bg-gray-700">
+                  <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">GitHub</h5>
+                  <p class="font-normal text-gray-700 dark:text-gray-400">Get involved in the dev process and or file an issue for a broken feature</p>
+                </a>
+                <a class="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow bg-gray-800 border-gray-700 hover:bg-gray-700">
+                  <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Discord</h5>
+                  <p class="font-normal text-gray-700 dark:text-gray-400">Join the community on the official Topos/Sardine Discord Server.</p>
+                </a>
+                <a class="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow bg-gray-800 border-gray-800 hover:bg-gray-700">
+                  <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Website</h5>
+                  <p class="font-normal text-gray-700 dark:text-gray-400">Documentation, videos and more on the official website.</p>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
 
       <!-- This modal pops up when the page is first loaded and then disappears forever -->
       <div id="modal-container" class="motion-safe:animate-pulse flex min-h-screen flex flex-col">
       <div id="modal" class="bg-neutral-900 bg-opacity-50 flex justify-center items-center absolute top-0 right-0 bottom-0 left-0">
         <div id="start-button" class="bg-white px-16 py-14 rounded-md text-center">
-         <h1 class="text-xl mb-4 font-bold text-white rounded bg-black">Topos Prototype</h1>
+         <h1 class="text-xl mb-4 font-bold text-white rounded bg-gray-800 py-4">Topos Prototype</h1>
 				 <div id="social-links" class="pb-4 font-bold flex flex-row space-x-4 justify-center">
 					<a href="https://google.fr">Website</a>
 					<a href="https://google.fr">Discord</a>
@@ -153,7 +199,7 @@
               </svg>
             </a>
 
-            <a id="settings-button" data-modal-show="settingsModal" class="p-2 text-gray-700 ml-1 absolute bottom-2 focus:outline-nones transition-colors duration-200 rounded-lg dark:text-gray-200 dark:bg-gray-800 bg-gray-100">
+            <a id="settings-button" class="p-2 text-gray-700 ml-1 absolute bottom-2 focus:outline-nones transition-colors duration-200 rounded-lg dark:text-gray-200 dark:bg-gray-800 bg-gray-100">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
               <path stroke-linecap="round" stroke-linejoin="round" d="M10.343 3.94c.09-.542.56-.94 1.11-.94h1.093c.55 0 1.02.398 1.11.94l.149.894c.07.424.384.764.78.93.398.164.855.142 1.205-.108l.737-.527a1.125 1.125 0 011.45.12l.773.774c.39.389.44 1.002.12 1.45l-.527.737c-.25.35-.272.806-.107 1.204.165.397.505.71.93.78l.893.15c.543.09.94.56.94 1.109v1.094c0 .55-.397 1.02-.94 1.11l-.893.149c-.425.07-.765.383-.93.78-.165.398-.143.854.107 1.204l.527.738c.32.447.269 1.06-.12 1.45l-.774.773a1.125 1.125 0 01-1.449.12l-.738-.527c-.35-.25-.806-.272-1.203-.107-.397.165-.71.505-.781.929l-.149.894c-.09.542-.56.94-1.11.94h-1.094c-.55 0-1.019-.398-1.11-.94l-.148-.894c-.071-.424-.384-.764-.781-.93-.398-.164-.854-.142-1.204.108l-.738.527c-.447.32-1.06.269-1.45-.12l-.773-.774a1.125 1.125 0 01-.12-1.45l.527-.737c.25-.35.273-.806.108-1.204-.165-.397-.505-.71-.93-.78l-.894-.15c-.542-.09-.94-.56-.94-1.109v-1.094c0-.55.398-1.02.94-1.11l.894-.149c.424-.07.765-.383.93-.78.165-.398.143-.854-.107-1.204l-.527-.738a1.125 1.125 0 01.12-1.45l.773-.773a1.125 1.125 0 011.45-.12l.737.527c.35.25.807.272 1.204.107.397-.165.71-.505.78-.929l.15-.894z" />
               <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />

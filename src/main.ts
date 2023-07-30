@@ -74,6 +74,9 @@ export class Editor {
   init_button: HTMLButtonElement = document.getElementById(
     "init-button"
   ) as HTMLButtonElement;
+  settings_button: HTMLButtonElement = document.getElementById(
+    "settings-button"
+  ) as HTMLButtonElement;
   universe_viewer: HTMLDivElement = document.getElementById(
     "universe-viewer"
   ) as HTMLDivElement;
@@ -85,9 +88,6 @@ export class Editor {
   buffer_search: HTMLInputElement = document.getElementById(
     "buffer-search"
   ) as HTMLInputElement;
-  settings_modal: HTMLDivElement = document.getElementById(
-    "modal-settings"
-  ) as HTMLDivElement;
 
   // Local script tabs
   local_script_tabs: HTMLDivElement = document.getElementById(
@@ -293,6 +293,13 @@ export class Editor {
     this.init_button.addEventListener("click", () =>
       this.changeModeFromInterface("init")
     );
+
+    this.settings_button.addEventListener("click", () => {
+      let modal_settings = document.getElementById('modal-settings');
+      let editor = document.getElementById('editor');
+      modal_settings?.classList.remove('invisible')
+      editor?.classList.add('invisible')
+    })
 
     this.buffer_search.addEventListener("keydown", (event) => {
       this.changeModeFromInterface("local");
