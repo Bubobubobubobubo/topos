@@ -21,14 +21,8 @@ import {
   template_universes,
 } from "./AppSettings";
 import { tryEvaluate } from "./Evaluator";
-import { materialDark } from "./themes/materialDark";
 import { oneDark } from "@codemirror/theme-one-dark";
 
-export const fontSizeModif = EditorView.theme(
-  {
-    "&": { fontSize: "22px", }
-  }
-)
 
 export class Editor {
   // Data structures for editor text management
@@ -37,6 +31,7 @@ export class Editor {
   local_index: number = 1;
   editor_mode: "global" | "local" | "init" = "local";
   fontSize: Compartment;
+  vimModeCompartment : Compartment;
   
 
   settings = new AppSettings();
@@ -102,6 +97,10 @@ export class Editor {
   font_size_slider: HTMLInputElement = document.getElementById('font-size-slider') as HTMLInputElement;
   font_size_witness: HTMLSpanElement = document.getElementById('font-size-witness') as HTMLSpanElement;
 
+  // Editor mode selection
+  normal_mode_button: HTMLButtonElement = document.getElementById('normal-mode') as HTMLButtonElement;
+  vim_mode_button: HTMLButtonElement = document.getElementById('vim-mode') as HTMLButtonElement;
+
   constructor() {
     // ================================================================================
     // Loading the universe from local storage
@@ -129,13 +128,20 @@ export class Editor {
     // ================================================================================
 
     this.fontSize = new Compartment();
+    this.vimModeCompartment = new Compartment();
     const vimPlugin = this.settings.vimMode ? vim() : [];
-    this.userPlugins = [
-      vimPlugin,
-    ];
+    const fontSizeModif = EditorView.theme( { 
+      "&": { 
+        fontSize: `${this.settings.font_size}px`,
+       },
+       ".cm-gutters": {
+          fontSize: `${this.settings.font_size}px`,
+       }
+    })
 
     this.editorExtensions = [
       this.fontSize.of(fontSizeModif),
+      this.vimModeCompartment.of(vimPlugin),
       editorSetup,
 			oneDark,
       rangeHighlighting(),
@@ -144,7 +150,6 @@ export class Editor {
         v;
         // This is the event listener for the editor
       }),
-      ...this.userPlugins,
     ];
 
     let dynamicPlugins = new Compartment();
@@ -307,6 +312,9 @@ export class Editor {
     );
 
     this.settings_button.addEventListener("click", () => {
+      // Query the current font size and set the slider to that value
+      const current_font_size = this.fontSize.get(this.view.state);
+      console.log(current_font_size)
       let modal_settings = document.getElementById('modal-settings');
       let editor = document.getElementById('editor');
       modal_settings?.classList.remove('invisible')
@@ -322,9 +330,9 @@ export class Editor {
 
     this.font_size_slider.addEventListener("input", () => {
       const new_value = this.font_size_slider.value;
-      // Change the font-size-witness font size to value
       this.font_size_witness.style.fontSize = `${new_value}px`;
       this.font_size_witness.innerHTML = `Font Size: ${new_value}px`;
+
       let new_font_size = EditorView.theme({
         "&": { fontSize : new_value + "px", },
         ".cm-gutters": { fontSize : new_value + "px", },
@@ -332,8 +340,17 @@ export class Editor {
       this.view.dispatch({
         effects: this.fontSize.reconfigure(new_font_size)
       });
+      this.settings.font_size = parseInt(new_value);
+    })
 
-      console.log(this.font_size_slider.value);
+    this.normal_mode_button.addEventListener("click", () => {
+      this.settings.vimMode = false;
+      this.view.dispatch({effects: this.vimModeCompartment.reconfigure([])});
+    })
+
+    this.vim_mode_button.addEventListener("click", () => {
+      this.settings.vimMode = true;
+      this.view.dispatch({effects: this.vimModeCompartment.reconfigure(vim())});
     })
 
     this.buffer_search.addEventListener("keydown", (event) => {

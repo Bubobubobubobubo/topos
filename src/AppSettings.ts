@@ -18,6 +18,7 @@ export interface Settings {
     vimMode: boolean
     theme: string
     font: string
+    font_size: number
     universes: Universes
 }
 
@@ -62,6 +63,7 @@ export class AppSettings {
   public vimMode: boolean = false
   public theme: string = "materialDark"
   public font: string = "SpaceMono"
+  public font_size: number = 22 
   public universes: Universes
 
   constructor() {
@@ -86,6 +88,7 @@ export class AppSettings {
       vimMode: this.vimMode,
       theme: this.theme,
       font: this.font,
+      font_size: this.font_size,
       universes: this.universes
     }
   }
@@ -94,6 +97,7 @@ export class AppSettings {
     this.universes = universes;
     this.vimMode = settings.vimMode;
     this.font = settings.font;
+    this.font_size = settings.font_size;
     localStorage.setItem('topos', JSON.stringify(this.data))
   }
 }
