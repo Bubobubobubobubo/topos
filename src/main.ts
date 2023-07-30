@@ -30,13 +30,14 @@ export const fontSizeModif = EditorView.theme(
   }
 )
 
-
 export class Editor {
   // Data structures for editor text management
   universes: Universes = template_universes;
   selected_universe: string;
   local_index: number = 1;
   editor_mode: "global" | "local" | "init" = "local";
+  fontSize: Compartment;
+  
 
   settings = new AppSettings();
   editorExtensions: Extension[] = [];
@@ -77,6 +78,9 @@ export class Editor {
   settings_button: HTMLButtonElement = document.getElementById(
     "settings-button"
   ) as HTMLButtonElement;
+  close_settings_button: HTMLButtonElement = document.getElementById(
+    'close-settings-button'
+  ) as HTMLButtonElement;
   universe_viewer: HTMLDivElement = document.getElementById(
     "universe-viewer"
   ) as HTMLDivElement;
@@ -93,6 +97,10 @@ export class Editor {
   local_script_tabs: HTMLDivElement = document.getElementById(
     "local-script-tabs"
   ) as HTMLDivElement;
+
+  // Font Size Slider
+  font_size_slider: HTMLInputElement = document.getElementById('font-size-slider') as HTMLInputElement;
+  font_size_witness: HTMLSpanElement = document.getElementById('font-size-witness') as HTMLSpanElement;
 
   constructor() {
     // ================================================================================
@@ -120,10 +128,14 @@ export class Editor {
     // CodeMirror Management
     // ================================================================================
 
-    this.userPlugins = this.settings.vimMode ? [] : [vim()];
+    this.fontSize = new Compartment();
+    const vimPlugin = this.settings.vimMode ? vim() : [];
+    this.userPlugins = [
+      vimPlugin,
+    ];
 
     this.editorExtensions = [
-      fontSizeModif,
+      this.fontSize.of(fontSizeModif),
       editorSetup,
 			oneDark,
       rangeHighlighting(),
@@ -299,6 +311,29 @@ export class Editor {
       let editor = document.getElementById('editor');
       modal_settings?.classList.remove('invisible')
       editor?.classList.add('invisible')
+    })
+
+    this.close_settings_button.addEventListener("click", () => {
+      let modal_settings = document.getElementById('modal-settings');
+      let editor = document.getElementById('editor');
+      modal_settings?.classList.add('invisible')
+      editor?.classList.remove('invisible')
+    })
+
+    this.font_size_slider.addEventListener("input", () => {
+      const new_value = this.font_size_slider.value;
+      // Change the font-size-witness font size to value
+      this.font_size_witness.style.fontSize = `${new_value}px`;
+      this.font_size_witness.innerHTML = `Font Size: ${new_value}px`;
+      let new_font_size = EditorView.theme({
+        "&": { fontSize : new_value + "px", },
+        ".cm-gutters": { fontSize : new_value + "px", },
+      });
+      this.view.dispatch({
+        effects: this.fontSize.reconfigure(new_font_size)
+      });
+
+      console.log(this.font_size_slider.value);
     })
 
     this.buffer_search.addEventListener("keydown", (event) => {
