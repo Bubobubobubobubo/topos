@@ -249,9 +249,7 @@ export class Editor {
         (keycode, index) => {
           if (event.keyCode === keycode) {
             event.preventDefault();
-            // Check if Ctrl is pressed as well
             if (event.ctrlKey) { 
-              // We trigger a script if ctrl is pressed
               this.api.script(keycode - 111)
             } else {
               this.changeToLocalBuffer(index);

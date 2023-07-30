@@ -57,22 +57,23 @@ export class MidiConnection{
         console.log(`${index + 1}. ${output.name}`);
       });
     }
-  
-    public sendMidiNote(noteNumber: number, velocity: number, durationMs: number): void {
+
+
+    public sendMidiNote(noteNumber: number, channel: number, velocity: number, durationMs: number): void {
       const output = this.midiOutputs[this.currentOutputIndex];
       if (output) {
-        const noteOnMessage = [0x90, noteNumber, velocity]; 
-        const noteOffMessage = [0x80, noteNumber, 0];
-  
+        const noteOnMessage = [0x90 + channel, noteNumber, velocity];
+        const noteOffMessage = [0x80 + channel, noteNumber, 0];
+    
         // Send Note On
         output.send(noteOnMessage);
-  
+    
         // Schedule Note Off
         const timeoutId = setTimeout(() => {
           output.send(noteOffMessage);
           delete this.scheduledNotes[noteNumber];
         }, durationMs);
-  
+    
         this.scheduledNotes[noteNumber] = timeoutId;
       } else {
         console.error('MIDI output not available.');
