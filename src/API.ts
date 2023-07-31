@@ -193,35 +193,31 @@ export class UserAPI {
     get beat(): number { return this.app.clock.time_position.beat }
     get beats_since_origin(): number { return this.app.clock.beats_since_origin }
 
-    onbeat(...beat: number[]): boolean {
-
-    let final_pulses: boolean[] = []
-
-    beat.forEach(b => {
-        let integral_part = Math.floor(b);
-        let decimal_part = b - integral_part;
-        final_pulses.push(
-            integral_part === this.app.clock.time_position.beat &&
-            this.app.clock.time_position.pulse === decimal_part * this.app.clock.ppqn
-        )
-    });
-
-    return final_pulses.some(p => p == true)
-    //     return (
-    //         beat.includes(this.app.clock.time_position.beat) 
-    //          && this.app.clock.time_position.pulse == 1
-    //     )
+    onbar(...bar: number[]): boolean {
+        return bar.some(b => b === this.app.clock.time_position.bar)
     }
 
+    onbeat(...beat: number[]): boolean {
+        let final_pulses: boolean[] = []
+        beat.forEach(b => {
+            b = b % this.app.clock.time_signature[0]
+            let integral_part = Math.floor(b);
+            let decimal_part = b - integral_part;
+            final_pulses.push(
+                integral_part === this.app.clock.time_position.beat &&
+                this.app.clock.time_position.pulse === decimal_part * this.app.clock.ppqn
+            )
+        });
+        return final_pulses.some(p => p == true)
+    }
 
-    evry(...n: number[]): boolean { 
+    every(...n: number[]): boolean { 
         return n.some(n => this.i % n === 0)
     }
     
-    mod(...pulse: number[]): boolean {
+    mod(...pulse: number[]): boolean { return pulse.some(p => this.app.clock.time_position.pulse % p === 0) }
 
-        return pulse.some(p => this.app.clock.time_position.pulse % p === 0)
-    }
+    modbar(...bar: number[]): boolean { return bar.some(b => this.app.clock.time_position.bar % b === 0) }
     
     // =============================================================
     // Trivial functions

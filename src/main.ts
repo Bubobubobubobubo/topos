@@ -208,7 +208,7 @@ export class Editor {
         event.preventDefault();
         // const code = this.getCodeBlock();
         this.currentFile.candidate = this.view.state.doc.toString();
-        tryEvaluate(this, this.currentFile);
+        // tryEvaluate(this, this.currentFile);
       }
 
       // Shift + Enter or Ctrl + E: evaluate the line
