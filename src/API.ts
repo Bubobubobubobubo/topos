@@ -65,10 +65,8 @@ export class UserAPI {
         this.MidiConnection.switchMidiOutput(outputName)
     }
 
-    public note(note: number, velocity: number, duration: number): void {
-        this.MidiConnection.sendMidiNote(
-            note, velocity, duration
-        )
+    public note(note: number, channel: number, velocity: number, duration: number): void {
+        this.MidiConnection.sendMidiNote( note, channel, velocity, duration)
     }
 
     public midi_clock(): void {
@@ -196,11 +194,25 @@ export class UserAPI {
     get beats_since_origin(): number { return this.app.clock.beats_since_origin }
 
     onbeat(...beat: number[]): boolean {
-        return (
-            beat.includes(this.app.clock.time_position.beat) 
-             && this.app.clock.time_position.pulse == 1
+
+    let final_pulses: boolean[] = []
+
+    beat.forEach(b => {
+        let integral_part = Math.floor(b);
+        let decimal_part = b - integral_part;
+        final_pulses.push(
+            integral_part === this.app.clock.time_position.beat &&
+            this.app.clock.time_position.pulse === decimal_part * this.app.clock.ppqn
         )
+    });
+
+    return final_pulses.some(p => p == true)
+    //     return (
+    //         beat.includes(this.app.clock.time_position.beat) 
+    //          && this.app.clock.time_position.pulse == 1
+    //     )
     }
+
 
     evry(...n: number[]): boolean { 
         return n.some(n => this.i % n === 0)

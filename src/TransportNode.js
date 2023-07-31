@@ -14,6 +14,8 @@ export class TransportNode extends AudioWorkletNode {
         this.currentPulse = 0;
     }
 
+
+
     /** @type {(this: MessagePort, ev: MessageEvent<any>) => any} */
     handleMessage = (message) => {
         if (message.data && message.data.type === "bang") {
@@ -30,6 +32,7 @@ export class TransportNode extends AudioWorkletNode {
                 tryEvaluate( this.app, this.app.global_buffer );
                 this.hasBeenEvaluated = true;
                 this.currentPulse = info.ppqn;
+                this.app.api.midi_clock();
             }
         }
     };
