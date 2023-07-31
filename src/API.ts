@@ -1,4 +1,5 @@
 import { Editor } from "./main";
+import { scale } from './Scales';
 import { tryEvaluate } from "./Evaluator";
 import { MidiConnection } from "./IO/MidiConnection";
 // @ts-ignore
@@ -16,6 +17,8 @@ export class UserAPI {
     // =============================================================
 
     log = console.log
+
+    scale = scale
 
     rate(rate: number): void {
         // TODO: Implement this. This function should change the rate at which the global script

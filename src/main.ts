@@ -258,6 +258,9 @@ export class Editor {
           }
         }
       );
+
+    if (event.keyCode == 121) { this.changeModeFromInterface("global"); }
+    if (event.keyCode == 122) { this.changeModeFromInterface("init"); }
     });
 
     // ================================================================================
