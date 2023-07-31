@@ -1,31 +1,48 @@
 import type { Editor } from './main';
 import type { File } from './AppSettings';
 
-/* This mode of evaluation can only work if the whole buffer is evaluated at once */
-export const tryEvaluate = (application: Editor, code: File): void => {
-    let isValidCode: boolean;
+const delay = (ms: number) => new Promise((resolve, reject) => setTimeout(() => reject(new Error('Operation took too long')), ms));
+
+const tryCatchWrapper = (application: Editor, code: string): Promise<boolean> => {
+  return new Promise((resolve, reject) => {
     try {
-        Function(`with (this) {try{${code.candidate}} catch (e) {console.log(e)}};`).call(application.api)
-        code.evaluations++;
-        isValidCode = true;
+      Function(`with (this) {try{${code}} catch (e) {console.log(e)}};`).call(application.api);
+      resolve(true);
     } catch (error) {
-        Function(`with (this) {try{${code.committed}} catch (e) {console.log(e)}};`).call(application.api)
-        code.evaluations++;
-        isValidCode = false;
+      console.log(error);
+      resolve(false);
     }
-
-    if (isValidCode) {
-        code.committed = code.candidate;
-    } else {
-        evaluate(application, code);
-    }
+  });
 }
 
-export const evaluate = (application: Editor, code: File): void => {
-    Function(`with (this) {try{${code.committed}} catch (e) {console.log(e)}};`).call(application.api)
+export const tryEvaluate = async (application: Editor, code: File, timeout = 5000): Promise<void> => {
+  try {
+    const isCodeValid = await Promise.race([tryCatchWrapper(application, code.candidate), delay(timeout)]);
     code.evaluations++;
+
+    if (isCodeValid) {
+      code.committed = code.candidate;
+    } else {
+      await evaluate(application, code, timeout);
+    }
+  } catch (error) {
+    console.log(error);
+  }
 }
 
-export const evaluateCommand = (application: Editor, command: string): void => {
-    Function(`with (this) {try{${command}} catch (e) {console.log(e)}};`).call(application.api)
+export const evaluate = async (application: Editor, code: File, timeout = 5000): Promise<void> => {
+  try {
+    await Promise.race([tryCatchWrapper(application, code.committed), delay(timeout)]);
+    code.evaluations++;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export const evaluateCommand = async (application: Editor, command: string, timeout = 5000): Promise<void> => {
+  try {
+    await Promise.race([tryCatchWrapper(application, command), delay(timeout)]);
+  } catch (error) {
+    console.log(error);
+  }
 }
