@@ -16,6 +16,7 @@
     "@codemirror/lang-javascript": "^6.1.9",
     "@codemirror/theme-one-dark": "^6.1.2",
     "@replit/codemirror-vim": "^6.0.14",
+    "@strudel.cycles/webaudio": "^0.8.2",
     "autoprefixer": "^10.4.14",
     "codemirror": "^6.0.1",
     "postcss": "^8.4.27",

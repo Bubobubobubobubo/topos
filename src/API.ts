@@ -3,14 +3,28 @@ import { scale } from './Scales';
 import { tryEvaluate } from "./Evaluator";
 import { MidiConnection } from "./IO/MidiConnection";
 // @ts-ignore
+import { webaudioOutput, samples } from '@strudel.cycles/webaudio';
+// @ts-ignore
 import { ZZFX, zzfx } from "zzfx";
+
+
+
+const sound = (value: any) => ({
+    value,
+    context: {},
+    ensureObjectValue: () => { }
+});
 
 export class UserAPI {
 
     variables: { [key: string]: any } = {}
     MidiConnection: MidiConnection = new MidiConnection()
+    strudelSound = webaudioOutput()
+    load: samples
 
-    constructor(public app: Editor) { }
+    constructor(public app: Editor) {
+        this.load = samples("github:tidalcycles/Dirt-Samples/master");
+    }
 
     // =============================================================
     // Utility functions
@@ -27,13 +41,15 @@ export class UserAPI {
     }
     r = this.rate
 
-    script(...args: number[]): void { 
-        args.forEach(arg => { tryEvaluate(this.app, this.app.universes[
-            this.app.selected_universe].locals[arg]) })
+    script(...args: number[]): void {
+        args.forEach(arg => {
+            tryEvaluate(this.app, this.app.universes[
+                this.app.selected_universe].locals[arg])
+        })
     }
     s = this.script
 
-    clearscript(script: number): void { 
+    clearscript(script: number): void {
         this.app.universes[this.app.selected_universe].locals[script] = {
             candidate: '', committed: '', evaluations: 0
         }
@@ -42,8 +58,8 @@ export class UserAPI {
 
     copyscript(from: number, to: number): void {
         // Copy a script to another script
-        this.app.universes[this.app.selected_universe].locals[to] = 
-        this.app.universes[this.app.selected_universe].locals[from]
+        this.app.universes[this.app.selected_universe].locals[to] =
+            this.app.universes[this.app.selected_universe].locals[from]
     }
     cps = this.copyscript
 
@@ -55,7 +71,7 @@ export class UserAPI {
     public midi_outputs(): void {
         console.log(this.MidiConnection.listMidiOutputs())
     }
-    
+
     public midi_output(outputName: string): void {
         if (!outputName) {
             console.log(this.MidiConnection.getCurrentMidiPort())
@@ -69,7 +85,7 @@ export class UserAPI {
     }
 
     public note(note: number, channel: number, velocity: number, duration: number): void {
-        this.MidiConnection.sendMidiNote( note, channel, velocity, duration)
+        this.MidiConnection.sendMidiNote(note, channel, velocity, duration)
     }
 
     public midi_clock(): void {
@@ -97,7 +113,7 @@ export class UserAPI {
         }
     }
     v = this.variable
-    
+
     public delete_variable(name: string): void {
         delete this.variables[name]
     }
@@ -111,7 +127,7 @@ export class UserAPI {
     // =============================================================
     // Small algorithmic functions
     // =============================================================
-    
+
     pick<T>(...array: T[]): T { return array[Math.floor(Math.random() * array.length)] }
     seqbeat<T>(...array: T[]): T { return array[this.app.clock.time_position.beat % array.length] }
     seqbar<T>(...array: T[]): T { return array[this.app.clock.time_position.bar % array.length] }
@@ -130,30 +146,30 @@ export class UserAPI {
     // =============================================================
 
     public quantize(value: number, quantization: number[]): number {
-      if (quantization.length === 0) { return value }
-      let closest = quantization[0]
-      quantization.forEach(q => {
-        if (Math.abs(q - value) < Math.abs(closest - value)) { closest = q }
-      })
-      return closest
+        if (quantization.length === 0) { return value }
+        let closest = quantization[0]
+        quantization.forEach(q => {
+            if (Math.abs(q - value) < Math.abs(closest - value)) { closest = q }
+        })
+        return closest
     }
     quant = this.quantize
 
     public clamp(value: number, min: number, max: number): number {
-      return Math.min(Math.max(value, min), max)
+        return Math.min(Math.max(value, min), max)
     }
     cmp = this.clamp
 
     // =============================================================
     // Transport functions
     // =============================================================
-    
-    bpm(bpm: number):void {
-      this.app.clock.bpm = bpm 
+
+    bpm(bpm: number): void {
+        this.app.clock.bpm = bpm
     }
 
-    time_signature(numerator: number, denominator: number):void {
-        this.app.clock.time_signature = [ numerator, denominator ]
+    time_signature(numerator: number, denominator: number): void {
+        this.app.clock.time_signature = [numerator, denominator]
     }
 
     // =============================================================
@@ -182,8 +198,8 @@ export class UserAPI {
     get e7() { return this.app.universes[this.app.selected_universe].locals[6].evaluations }
     get e8() { return this.app.universes[this.app.selected_universe].locals[7].evaluations }
     get e9() { return this.app.universes[this.app.selected_universe].locals[8].evaluations }
-    public evaluations_number(index:number): number { 
-        return this.app.universes[this.app.selected_universe].locals[index].evaluations 
+    public evaluations_number(index: number): number {
+        return this.app.universes[this.app.selected_universe].locals[index].evaluations
     }
     e = this.evaluations_number
 
@@ -214,19 +230,24 @@ export class UserAPI {
         return final_pulses.some(p => p == true)
     }
 
-    every(...n: number[]): boolean { 
+    every(...n: number[]): boolean {
         return n.some(n => this.i % n === 0)
     }
-    
+
     mod(...pulse: number[]): boolean { return pulse.some(p => this.app.clock.time_position.pulse % p === 0) }
 
     modbar(...bar: number[]): boolean { return bar.some(b => this.app.clock.time_position.bar % b === 0) }
-    
+
     // =============================================================
     // Trivial functions
     // =============================================================
 
     // Small ZZFX interface for playing with this synth
     zzfx = (...thing: number[]) => zzfx(...thing);
+
+    playSound = async (values: object) => {
+        await this.load;
+        webaudioOutput(sound(values), 0.01)
+    }
 
 }
