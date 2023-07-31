@@ -252,6 +252,7 @@ export class Editor {
             if (event.ctrlKey) { 
               this.api.script(keycode - 111)
             } else {
+              this.changeModeFromInterface("local");
               this.changeToLocalBuffer(index);
             }
           }
@@ -365,6 +366,8 @@ export class Editor {
           this.loadUniverse(query);
           this.buffer_search.value = "";
           this.closeBuffersModal();
+          // Focus on the editor
+          this.view.focus();
         }
       }
     });

@@ -72,7 +72,7 @@ export class MidiConnection{
         const timeoutId = setTimeout(() => {
           output.send(noteOffMessage);
           delete this.scheduledNotes[noteNumber];
-        }, durationMs);
+        }, durationMs - 100);
     
         this.scheduledNotes[noteNumber] = timeoutId;
       } else {
