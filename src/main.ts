@@ -106,7 +106,7 @@ export class Editor {
     // Loading the universe from local storage
     // ================================================================================
 
-    this.selected_universe = "Default";
+    this.selected_universe = this.settings.selected_universe;
     this.universe_viewer.innerHTML = `Topos: ${this.selected_universe}`;
     this.universes = { ...template_universes, ...this.settings.universes };
 
@@ -126,6 +126,8 @@ export class Editor {
     // ================================================================================
     // CodeMirror Management
     // ================================================================================
+
+    console.log(this.settings)
 
     this.fontSize = new Compartment();
     this.vimModeCompartment = new Compartment();
@@ -320,9 +322,9 @@ export class Editor {
     );
 
     this.settings_button.addEventListener("click", () => {
-      // Query the current font size and set the slider to that value
-      let font_size_witness = document.getElementById("font-size-witness");
-      font_size_witness?.setAttribute('style', `font-size: ${this.settings.font_size}px;`)
+      this.font_size_slider.value = this.settings.font_size.toString();
+      this.font_size_witness.innerHTML = `Font Size: ${this.settings.font_size}px`
+      this.font_size_witness?.setAttribute('style', `font-size: ${this.settings.font_size}px;`)
       let modal_settings = document.getElementById('modal-settings');
       let editor = document.getElementById('editor');
       modal_settings?.classList.remove('invisible')
@@ -338,6 +340,7 @@ export class Editor {
 
     this.font_size_slider.addEventListener("input", () => {
       const new_value = this.font_size_slider.value;
+      this.settings.font_size = parseInt(new_value);
       this.font_size_witness.style.fontSize = `${new_value}px`;
       this.font_size_witness.innerHTML = `Font Size: ${new_value}px`;
 
@@ -367,6 +370,7 @@ export class Editor {
         let query = this.buffer_search.value;
         if (query.length > 2 && query.length < 20) {
           this.loadUniverse(query);
+          this.settings.selected_universe = query;
           this.buffer_search.value = "";
           this.closeBuffersModal();
           // Focus on the editor
@@ -529,7 +533,7 @@ export class Editor {
     if (this.universes[selectedUniverse] === undefined) {
       this.universes[selectedUniverse] = template_universe;
     }
-    this.selected_universe = selectedUniverse;
+    this.selected_universe = this.settings.selected_universe;
     this.universe_viewer.innerHTML = `Topos: ${selectedUniverse}`;
     // We should also update the editor accordingly
     this.view.dispatch({

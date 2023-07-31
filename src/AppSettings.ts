@@ -20,6 +20,7 @@ export interface Settings {
     font: string
     font_size: number
     universes: Universes
+    selected_universe: string
 }
 
 export const template_universe = {
@@ -65,6 +66,7 @@ export class AppSettings {
   public font: string = "SpaceMono"
   public font_size: number = 22 
   public universes: Universes
+  public selected_universe: string = "Default"
 
   constructor() {
 
@@ -75,7 +77,9 @@ export class AppSettings {
       this.vimMode = settingsFromStorage.vimMode
       this.theme = settingsFromStorage.theme
       this.font = settingsFromStorage.font
+      this.font_size = settingsFromStorage.font_size
       this.universes = settingsFromStorage.universes
+      this.selected_universe = settingsFromStorage.selected_universe
     } else {
       this.universes = template_universes
     }
@@ -89,7 +93,8 @@ export class AppSettings {
       theme: this.theme,
       font: this.font,
       font_size: this.font_size,
-      universes: this.universes
+      universes: this.universes,
+      selected_universe: this.selected_universe
     }
   }
 
@@ -98,6 +103,7 @@ export class AppSettings {
     this.vimMode = settings.vimMode;
     this.font = settings.font;
     this.font_size = settings.font_size;
+    this.selected_universe = settings.selected_universe;
     localStorage.setItem('topos', JSON.stringify(this.data))
   }
 }
