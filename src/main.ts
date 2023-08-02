@@ -32,7 +32,6 @@ export class Editor {
   editor_mode: "global" | "local" | "init" = "local";
   fontSize: Compartment;
   vimModeCompartment : Compartment;
-  
 
   settings = new AppSettings();
   editorExtensions: Extension[] = [];
@@ -45,6 +44,11 @@ export class Editor {
   view: EditorView;
   clock: Clock;
   manualPlay: boolean = false;
+
+
+  // Mouse position
+  public _mouseX: number = 0;
+  public _mouseY: number = 0;
 
   // Transport elements
   play_buttons: HTMLButtonElement[] = [
@@ -702,6 +706,14 @@ function startOnEnter(e: KeyboardEvent) {
 document.addEventListener("keydown", startOnEnter);
 document.getElementById("start-button")!.addEventListener("click", startClock);
 
+function reportMouseCoordinates(event: MouseEvent) {
+  app._mouseX = event.clientX;
+  app._mouseY = event.clientY;
+}
+ 
+window.addEventListener('mousemove', reportMouseCoordinates);
+
+
 // When the user leaves the page, all the universes should be saved in the localStorage
 window.addEventListener("beforeunload", () => {
   event.preventDefault();
@@ -712,3 +724,4 @@ window.addEventListener("beforeunload", () => {
   app.clock.stop()
   return null;
 });
+
