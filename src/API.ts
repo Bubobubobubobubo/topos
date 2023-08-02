@@ -18,6 +18,7 @@ const sound = (value: any) => ({
 export class UserAPI {
 
     variables: { [key: string]: any } = {}
+    iterators: { [key: string]: any } = {}
     MidiConnection: MidiConnection = new MidiConnection()
     strudelSound = webaudioOutput()
     load: samples
@@ -98,6 +99,34 @@ export class UserAPI {
 
     public midi_panic(): void {
         this.MidiConnection.panic()
+    }
+
+    // =============================================================
+    // Iterator related functions
+    // =============================================================
+
+    public iterator(name: string, limit?: number, step?: number) {
+        // Check if iterator already exists
+        if (!(name in this.iterators)) {
+            // Create new iterator with default step of 1
+            this.iterators[name] = {
+                value: 0,
+                step: step ?? 1,
+                limit
+            };
+        } else {
+            // Increment existing iterator by step value
+            this.iterators[name].value += this.iterators[name].step;
+
+            // Check for limit overshoot
+            if (this.iterators[name].limit !== undefined &&
+                this.iterators[name].value > this.iterators[name].limit) {
+                this.iterators[name].value = 0;
+            }
+        }
+
+        // Return current iterator value
+        return this.iterators[name].value;
     }
 
     // =============================================================
