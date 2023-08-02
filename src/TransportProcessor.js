@@ -8,7 +8,9 @@ class TransportProcessor extends AudioWorkletProcessor {
    }
  
     handleMessage = (message) => {
-       if (message.data === "start") {
+        if (message.data && message.data.type === "ping") {
+            this.port.postMessage(message.data);
+        } else if (message.data === "start") {
             this.started = true;
        } else if (message.data === "pause") {
             this.started = false;

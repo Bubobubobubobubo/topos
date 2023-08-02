@@ -11,28 +11,45 @@ export class TransportNode extends AudioWorkletNode {
         /** @type {HTMLSpanElement} */
         this.$clock = document.getElementById("clockviewer");
         this.hasBeenEvaluated = false;
-        this.currentPulse = 0;
+        this.currentPulsePosition = 0;
+        this.nextPulsePosition = -1;
+        this.executionLatency = 0;
+        this.lastLatencies = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+        this.indexOfLastLatencies = 0;
+        setInterval(() => this.ping(), 1000);
     }
 
-
+    ping() {
+        this.port.postMessage({ type: "ping", t: performance.now() })
+    }
 
     /** @type {(this: MessagePort, ev: MessageEvent<any>) => any} */
     handleMessage = (message) => {
-        if (message.data && message.data.type === "bang") {
-            let info = this.convertTimeToBarsBeats(message.data.currentTime);
-            this.app.clock.time_position = { bar: info.bar, beat: info.beat, pulse: info.ppqn }
-            this.$clock.innerHTML = `[${info.bar} | ${info.beat} | ${zeroPad(info.ppqn, '2')}]`
+        if (message.data && message.data.type === "ping") {
+            const delay = performance.now() - message.data.t;
+            // console.log(delay);
+        } else if (message.data && message.data.type === "bang") {
+            let { futureTimeStamp, timeToNextPulse, nextPulsePosition } = this.convertTimeToNextBarsBeats(message.data.currentTime);
 
             // Evaluate the global buffer only once per ppqn value
-            if (this.currentPulse !== info.ppqn) {
-                this.hasBeenEvaluated = false;
-            }
-
-            if (!this.hasBeenEvaluated) {
-                tryEvaluate( this.app, this.app.global_buffer );
-                this.hasBeenEvaluated = true;
-                this.currentPulse = info.ppqn;
-                this.app.api.midi_clock();
+            if (this.nextPulsePosition !== nextPulsePosition) {
+                this.nextPulsePosition = nextPulsePosition;
+                setTimeout(() => {
+                    const now = performance.now();
+                    this.app.clock.time_position = futureTimeStamp;
+                    this.$clock.innerHTML = `[${futureTimeStamp.bar} | ${futureTimeStamp.beat} | ${zeroPad(futureTimeStamp.pulse, '2')}]`;
+                    tryEvaluate( 
+                        this.app, 
+                        this.app.global_buffer 
+                    );
+                    this.hasBeenEvaluated = true;
+                    this.currentPulsePosition = nextPulsePosition;
+                    const then = performance.now();
+                    this.lastLatencies[this.indexOfLastLatencies] = then - now;
+                    this.indexOfLastLatencies = (this.indexOfLastLatencies + 1) % this.lastLatencies.length;
+                    const averageLatency = this.lastLatencies.reduce((a, b) => a + b) / this.lastLatencies.length;
+                    this.executionLatency = averageLatency / 1000;
+                }, (timeToNextPulse + this.executionLatency) * 1000);    
             }
         }
     };
@@ -56,5 +73,29 @@ export class TransportNode extends AudioWorkletNode {
       const ppqnPosition = Math.floor((beatNumber % 1) * this.app.clock.ppqn);
       this.app.clock.tick++
       return { bar: barNumber, beat: beatWithinBar, ppqn: ppqnPosition };
+    }
+
+    convertTimeToNextBarsBeats(currentTime) {
+      const beatDuration = 60 / this.app.clock.bpm;
+      const beatNumber = (currentTime) / beatDuration;
+      const beatsPerBar = this.app.clock.time_signature[0];
+
+      this.currentPulsePosition = beatNumber * this.app.clock.ppqn;
+      const nextPulsePosition = Math.ceil(this.currentPulsePosition);
+      const timeToNextPulse = this.app.clock.convertPulseToSecond(this.nextPulsePosition - this.currentPulsePosition);
+
+      const futureBeatNumber = this.nextPulsePosition / this.app.clock.ppqn;
+      const futureBarNumber = futureBeatNumber / beatsPerBar;
+      const futureTimeStamp = {
+        bar: Math.floor(futureBarNumber) + 1,
+        beat: Math.floor(futureBeatNumber) % beatsPerBar + 1,
+        pulse: Math.floor(this.nextPulsePosition) % this.app.clock.ppqn
+      };
+      this.app.clock.tick++
+      return {
+        futureTimeStamp,
+        timeToNextPulse,
+        nextPulsePosition
+      };
     }
 }

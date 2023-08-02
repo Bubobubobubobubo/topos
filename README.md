@@ -43,7 +43,7 @@ To evaluate code, press `Ctrl+Enter` (no visible animation). This is true for ev
   - [x] Add a way to set the clock's time signature.
   - [ ] Add a way to set the clock's swing.
   - [ ] MIDI Clock In/Out support.
-  - [ ] Performance optimisations and metrics.
+  - [x] Performance optimisations and metrics.
 - [ ] Add a way to save the current universe as a file.
 - [ ] Add a way to load a universe from a file.
 - [x] Add MIDI support.
@@ -51,16 +51,17 @@ To evaluate code, press `Ctrl+Enter` (no visible animation). This is true for ev
 
 ## UI
 
-- [ ] Settings menu with all options.
+- [x] Settings menu with all options.
   - [ ] Color themes (dark/light), other colors.
-  - [ ] Font size and font family.
-  - [ ] Vim mode.
+  - [x] Font size.
+  - [x] Vim mode.
 - [ ] Repair the current layout (aside + CodeMirror)
 - [ ] Optimizations for smaller screens and mobile devices.
 - [ ] Add a new "note" buffer for each universe (MarkDown)
+- [ ] Find a way to visualize console logs somewhere
 
 ## Web Audio
 
 - [ ] Support Faut DSP integration.
 - [ ] Support Tone.js integration.
-- [ ] WebAudio based engine.
+- [x] WebAudio based engine.
