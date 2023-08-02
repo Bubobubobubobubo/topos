@@ -379,6 +379,13 @@ export class UserAPI {
         setTimeout(func, ms)
     }
 
+    delayr(ms: number, nb: number, func: Function): void {
+        const list = [...Array(nb).keys()].map(i => ms * i);
+        list.forEach((ms, _) => {
+            setTimeout(func, ms)
+        });
+    }
+
     mod(...pulse: number[]): boolean { return pulse.some(p => this.app.clock.time_position.pulse % p === 0) }
     modbar(...bar: number[]): boolean { return bar.some(b => this.app.clock.time_position.bar % b === 0) }
 
