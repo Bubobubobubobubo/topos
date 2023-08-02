@@ -238,6 +238,27 @@ export class UserAPI {
 
     modbar(...bar: number[]): boolean { return bar.some(b => this.app.clock.time_position.bar % b === 0) }
 
+    euclid(pulses: number, length: number, rotate: number=0): boolean { 
+        const pulse = this.app.clock.time_position.beat;
+        const nextPulse = pulse % length;
+        return this.euclidean_cycle(pulses, length, rotate)[nextPulse];
+     }
+
+    euclidean_cycle(pulses: number, length: number, rotate: number = 0): boolean[] {
+        function startsDescent(list: number[], i: number): boolean {
+            const length = list.length;
+            const nextIndex = (i + 1) % length;
+            return list[i] > list[nextIndex] ? true : false;
+        }
+        if (pulses >= length) return [true];
+        const resList = Array.from({length}, (_, i) => ((pulses * (i - 1)) % length + length) % length);
+        let cycle = resList.map((_, i) => startsDescent(resList, i));
+        if(rotate!=0) {
+            cycle = cycle.slice(rotate).concat(cycle.slice(0, rotate));
+        }
+        return cycle;
+    }
+
     // =============================================================
     // Trivial functions
     // =============================================================
