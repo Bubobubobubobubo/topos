@@ -373,10 +373,11 @@ export class Editor {
           this.closeBuffersModal();
           // Focus on the editor
           this.view.focus();
-          tryEvaluate(this, this.universes[this.selected_universe.toString()].init)
         }
       }
     });
+
+    tryEvaluate(this, this.universes[this.selected_universe.toString()].init)
   }
 
   get global_buffer() {
@@ -403,49 +404,49 @@ export class Editor {
   }
 
   changeModeFromInterface(mode: "global" | "local" | "init") {
-    const interface_buttons: HTMLElement[] = [
-      this.local_button,
-      this.global_button,
-      this.init_button,
-    ];
+
+    const interface_buttons: HTMLElement[] = [ this.local_button, this.global_button, this.init_button ];
 
     let changeColor = (button: HTMLElement) => {
       interface_buttons.forEach((button) => {
         let svg = button.children[0] as HTMLElement;
         if (svg.classList.contains("text-orange-300")) {
           svg.classList.remove("text-orange-300");
-          svg.classList.add("text-white");
+          button.classList.remove("text-orange-300");
+          console.log(svg.classList)
+          console.log(button.classList)
         }
       });
+      button.children[0].classList.remove('text-white');
       button.children[0].classList.add("text-orange-300");
+      button.classList.add("text-orange-300");
     };
 
-    if (mode === this.editor_mode) return;
     switch (mode) {
       case "local":
         if (this.local_script_tabs.classList.contains("hidden")) {
           this.local_script_tabs.classList.remove("hidden");
         }
         this.currentFile.candidate = this.view.state.doc.toString();
-        changeColor(this.local_button);
         this.editor_mode = "local";
+        changeColor(this.local_button);
         break;
       case "global":
         if (!this.local_script_tabs.classList.contains("hidden")) {
           this.local_script_tabs.classList.add("hidden");
         }
         this.currentFile.candidate = this.view.state.doc.toString();
-        changeColor(this.global_button);
         this.editor_mode = "global";
+        changeColor(this.global_button);
         break;
       case "init":
         if (!this.local_script_tabs.classList.contains("hidden")) {
           this.local_script_tabs.classList.add("hidden");
         }
         this.currentFile.candidate = this.view.state.doc.toString();
+        this.editor_mode = "init";
         changeColor(this.init_button);
         this.changeToLocalBuffer(0);
-        this.editor_mode = "init";
         break;
     }
     this.updateEditorView();
@@ -545,6 +546,7 @@ export class Editor {
     this.view.dispatch({
       changes: { from: 0, insert: this.currentFile.candidate },
     });
+    tryEvaluate(this, this.universes[this.selected_universe.toString()].init)
   }
 
   getCodeBlock(): string {
