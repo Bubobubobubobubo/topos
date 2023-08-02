@@ -20,8 +20,8 @@ import {
   template_universe,
   template_universes,
 } from "./AppSettings";
-import { tryEvaluate } from "./Evaluator";
 import { oneDark } from "@codemirror/theme-one-dark";
+import { tryEvaluate } from "./Evaluator";
 
 
 export class Editor {
@@ -373,6 +373,7 @@ export class Editor {
           this.closeBuffersModal();
           // Focus on the editor
           this.view.focus();
+          tryEvaluate(this, this.universes[this.selected_universe.toString()].init)
         }
       }
     });

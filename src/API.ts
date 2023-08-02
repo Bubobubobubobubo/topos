@@ -224,6 +224,7 @@ export class UserAPI {
         return bar.some(b => bar_list.includes(b % n))
     }
 
+    // TODO: bugfix here
     onbeat(...beat: number[]): boolean {
         let final_pulses: boolean[] = []
         beat.forEach(b => {
