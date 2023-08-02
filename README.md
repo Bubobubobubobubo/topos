@@ -34,9 +34,9 @@ To run the application:
 
 To evaluate code, press `Ctrl+Enter` (no visible animation). This is true for every buffer. To stop a buffer from playing, comment your code or delete it.
 
-# TODO
+# TODO
 
-## API
+## API
 
 - [ ] Give information about its context of execution to every script
   - knowing which internal iterator to use for each script would be nice
@@ -57,7 +57,7 @@ To evaluate code, press `Ctrl+Enter` (no visible animation). This is true for ev
 ## UI
 
 - [x] Settings menu with all options.
-  - [ ] Color themes (dark/light), other colors.
+  - [ ] Color themes (dark/light), other colors.
   - [x] Font size.
   - [x] Vim mode.
 - [ ] Repair the current layout (aside + CodeMirror)

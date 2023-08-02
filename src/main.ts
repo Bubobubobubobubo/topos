@@ -405,7 +405,6 @@ export class Editor {
     for (let j = 0; j < tabs.length; j++) {
       if (j != i) tabs[j].classList.remove("bg-orange-300");
     }
-    this.currentFile.candidate = this.view.state.doc.toString();
     let tab_id = tab.id.split("-")[1];
     this.local_index = parseInt(tab_id);
     this.updateEditorView();
@@ -438,7 +437,6 @@ export class Editor {
         if (this.local_script_tabs.classList.contains("hidden")) {
           this.local_script_tabs.classList.remove("hidden");
         }
-        this.currentFile.candidate = this.view.state.doc.toString();
         this.editor_mode = 'local'; 
         this.local_index = 0;
         this.changeToLocalBuffer(this.local_index);
@@ -448,14 +446,12 @@ export class Editor {
         if (!this.local_script_tabs.classList.contains("hidden")) {
           this.local_script_tabs.classList.add("hidden");
         }
-        this.currentFile.candidate = this.view.state.doc.toString();
         this.editor_mode = "global"; changeColor(this.global_button);
         break;
       case "init":
         if (!this.local_script_tabs.classList.contains("hidden")) {
           this.local_script_tabs.classList.add("hidden");
         }
-        this.currentFile.candidate = this.view.state.doc.toString();
         this.editor_mode = "init"; changeColor(this.init_button);
         break;
     }
