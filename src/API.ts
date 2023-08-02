@@ -10,8 +10,7 @@ import { ZZFX, zzfx } from "zzfx";
 
 
 const sound = (value: any) => ({
-    value,
-    context: {},
+    value, context: {},
     ensureObjectValue: () => { }
 });
 
@@ -41,6 +40,7 @@ export class UserAPI {
         // would be 1.0, which is the current rate (very speedy).
     }
     r = this.rate
+
 
     script(...args: number[]): void {
         args.forEach(arg => {

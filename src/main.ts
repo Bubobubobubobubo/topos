@@ -207,9 +207,8 @@ export class Editor {
       if ((event.key === "Enter" || event.key === "Return") && event.ctrlKey) {
         event.preventDefault();
         // const code = this.getCodeBlock();
-        this.currentFile.candidate = this.view.state.doc.toString();
+        this.currentFile().candidate = this.view.state.doc.toString();
         this.flashBackground('#2d313d', 200)
-        // tryEvaluate(this, this.currentFile);
       }
 
       // Shift + Enter or Ctrl + E: evaluate the line
@@ -218,7 +217,7 @@ export class Editor {
         (event.key === "e" && event.ctrlKey)
       ) {
         event.preventDefault(); // Prevents the addition of a new line
-        this.currentFile.candidate = this.view.state.doc.toString();
+        this.currentFile().candidate = this.view.state.doc.toString();
         this.flashBackground('#2d313d', 200)
         // const code = this.getSelectedLines();
       }
@@ -237,15 +236,18 @@ export class Editor {
       if (event.ctrlKey && event.key === "l") {
         event.preventDefault();
         this.changeModeFromInterface("local");
+        this.view.focus();
       }
       if (event.ctrlKey && event.key === "g") {
         event.preventDefault();
         this.changeModeFromInterface("global");
+        this.view.focus();
       }
       if (event.ctrlKey && event.key === "i") {
         event.preventDefault();
         this.changeModeFromInterface("init");
         this.changeToLocalBuffer(0);
+        this.view.focus();
       }
       [112, 113, 114, 115, 116, 117, 118, 119, 120].forEach(
         (keycode, index) => {
@@ -278,7 +280,7 @@ export class Editor {
         for (let j = 0; j < tabs.length; j++) {
           if (j != i) tabs[j].classList.remove("bg-orange-300");
         }
-        this.currentFile.candidate = this.view.state.doc.toString();
+        this.currentFile().candidate = this.view.state.doc.toString();
 
         let tab = event.target as HTMLElement;
         let tab_id = tab.id.split("-")[1];
@@ -365,7 +367,7 @@ export class Editor {
     })
 
     this.buffer_search.addEventListener("keydown", (event) => {
-      this.changeModeFromInterface("local");
+      // this.changeModeFromInterface("local");
       if (event.key === "Enter") {
         let query = this.buffer_search.value;
         if (query.length > 2 && query.length < 20) {
@@ -373,12 +375,10 @@ export class Editor {
           this.settings.selected_universe = query;
           this.buffer_search.value = "";
           this.closeBuffersModal();
-          // Focus on the editor
           this.view.focus();
         }
       }
     });
-
     tryEvaluate(this, this.universes[this.selected_universe.toString()].init)
   }
 
@@ -390,6 +390,10 @@ export class Editor {
     return this.universes[this.selected_universe.toString()].init;
   }
 
+  get local_buffer() {
+    return this.universes[this.selected_universe.toString()].locals[this.local_index];
+  }
+
   changeToLocalBuffer(i: number) {
     // Updating the CSS accordingly
     const tabs = document.querySelectorAll('[id^="tab-"]');
@@ -399,7 +403,6 @@ export class Editor {
       if (j != i) tabs[j].classList.remove("bg-orange-300");
     }
     this.currentFile.candidate = this.view.state.doc.toString();
-
     let tab_id = tab.id.split("-")[1];
     this.local_index = parseInt(tab_id);
     this.updateEditorView();
@@ -407,7 +410,11 @@ export class Editor {
 
   changeModeFromInterface(mode: "global" | "local" | "init") {
 
-    const interface_buttons: HTMLElement[] = [ this.local_button, this.global_button, this.init_button ];
+    const interface_buttons: HTMLElement[] = [
+      this.local_button, 
+      this.global_button, 
+      this.init_button
+    ];
 
     let changeColor = (button: HTMLElement) => {
       interface_buttons.forEach((button) => {
@@ -423,12 +430,15 @@ export class Editor {
     };
 
     switch (mode) {
+
       case "local":
         if (this.local_script_tabs.classList.contains("hidden")) {
           this.local_script_tabs.classList.remove("hidden");
         }
         this.currentFile.candidate = this.view.state.doc.toString();
-        this.editor_mode = "local";
+        this.editor_mode = 'local'; 
+        this.local_index = 0;
+        this.changeToLocalBuffer(this.local_index);
         changeColor(this.local_button);
         break;
       case "global":
@@ -436,17 +446,14 @@ export class Editor {
           this.local_script_tabs.classList.add("hidden");
         }
         this.currentFile.candidate = this.view.state.doc.toString();
-        this.editor_mode = "global";
-        changeColor(this.global_button);
+        this.editor_mode = "global"; changeColor(this.global_button);
         break;
       case "init":
         if (!this.local_script_tabs.classList.contains("hidden")) {
           this.local_script_tabs.classList.add("hidden");
         }
         this.currentFile.candidate = this.view.state.doc.toString();
-        this.editor_mode = "init";
-        changeColor(this.init_button);
-        this.changeToLocalBuffer(0);
+        this.editor_mode = "init"; changeColor(this.init_button);
         break;
     }
     this.updateEditorView();
@@ -498,32 +505,36 @@ export class Editor {
 
   updateEditorView(): void {
     // Remove everything from the editor
-    this.view.dispatch({
-      changes: { from: 0, to: this.view.state.doc.toString().length, insert: '', },
+    this.view.dispatch({ 
+      changes: { 
+        from: 0,
+        to: this.view.state.doc.toString().length,
+        insert: '', 
+      },
     });
 
     // Insert something
     this.view.dispatch({
       changes: {
-        from: 0,
-        insert: this.currentFile.candidate,
+        from: 0, 
+        insert: this.currentFile().candidate,
       },
     });
   }
 
-  get currentFile(): File {
+  currentFile(): File {
     switch (this.editor_mode) {
-      case "global":
+      case "global": 
         return this.global_buffer;
       case "local":
-        return this.universes[this.selected_universe].locals[this.local_index];
+        return this.local_buffer;
       case "init":
         return this.init_buffer;
     }
   }
 
   loadUniverse(universeName: string) {
-    this.currentFile.candidate = this.view.state.doc.toString();
+    this.currentFile().candidate = this.view.state.doc.toString();
 
     let selectedUniverse = universeName.trim();
     if (this.universes[selectedUniverse] === undefined) {
@@ -540,7 +551,7 @@ export class Editor {
       },
     });
     this.view.dispatch({
-      changes: { from: 0, insert: this.currentFile.candidate },
+      changes: { from: 0, insert: this.currentFile().candidate },
     });
     tryEvaluate(this, this.universes[this.selected_universe.toString()].init)
   }
@@ -695,8 +706,8 @@ document.getElementById("start-button")!.addEventListener("click", startClock);
 window.addEventListener("beforeunload", () => {
   event.preventDefault();
   // Iterate over all local files and set the candidate to the committed
-  app.currentFile.candidate = app.view.state.doc.toString();
-  app.currentFile.committed = app.view.state.doc.toString();
+  app.currentFile().candidate = app.view.state.doc.toString();
+  app.currentFile().committed = app.view.state.doc.toString();
   app.settings.saveApplicationToLocalStorage(app.universes, app.settings);
   app.clock.stop()
   return null;
