@@ -369,6 +369,15 @@ export class UserAPI {
     hush = this.stop
 
     prob(p: number): boolean { return Math.random() * 100 < p }
+    toss(): boolean { return Math.random() > 0.5 }
+    min(...values: number[]): number { return Math.min(...values) }
+    max(...values: number[]): number { return Math.max(...values) }
+    limit(value: number, min: number, max: number): number { return Math.min(Math.max(value, min), max) }
+
+
+    delay(ms: number, func: Function): void {
+        setTimeout(func, ms)
+    }
 
     mod(...pulse: number[]): boolean { return pulse.some(p => this.app.clock.time_position.pulse % p === 0) }
     modbar(...bar: number[]): boolean { return bar.some(b => this.app.clock.time_position.bar % b === 0) }
