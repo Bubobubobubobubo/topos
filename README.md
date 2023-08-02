@@ -36,6 +36,11 @@ To evaluate code, press `Ctrl+Enter` (no visible animation). This is true for ev
 
 # TODO
 
+## API
+
+- [ ] Give information about its context of execution to every script
+  - knowing which internal iterator to use for each script would be nice
+
 ## Scheduler
 
 - [ ] Stable / robust clock and script/event scheduler.

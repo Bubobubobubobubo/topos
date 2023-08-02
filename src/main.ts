@@ -45,7 +45,6 @@ export class Editor {
   clock: Clock;
   manualPlay: boolean = false;
 
-
   // Mouse position
   public _mouseX: number = 0;
   public _mouseY: number = 0;
