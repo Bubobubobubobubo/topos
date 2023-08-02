@@ -208,6 +208,7 @@ export class Editor {
         event.preventDefault();
         // const code = this.getCodeBlock();
         this.currentFile.candidate = this.view.state.doc.toString();
+        this.flashBackground('#2d313d', 200)
         // tryEvaluate(this, this.currentFile);
       }
 
@@ -218,6 +219,7 @@ export class Editor {
       ) {
         event.preventDefault(); // Prevents the addition of a new line
         this.currentFile.candidate = this.view.state.doc.toString();
+        this.flashBackground('#2d313d', 200)
         // const code = this.getSelectedLines();
       }
 
@@ -413,8 +415,6 @@ export class Editor {
         if (svg.classList.contains("text-orange-300")) {
           svg.classList.remove("text-orange-300");
           button.classList.remove("text-orange-300");
-          console.log(svg.classList)
-          console.log(button.classList)
         }
       });
       button.children[0].classList.remove('text-white');
@@ -499,11 +499,7 @@ export class Editor {
   updateEditorView(): void {
     // Remove everything from the editor
     this.view.dispatch({
-      changes: {
-        from: 0,
-        to: this.view.state.doc.toString().length,
-        insert: "",
-      },
+      changes: { from: 0, to: this.view.state.doc.toString().length, insert: '', },
     });
 
     // Insert something
@@ -653,6 +649,22 @@ export class Editor {
     document.getElementById("modal")!.classList.add("invisible");
     document.getElementById("modal-buffers")!.classList.add("invisible");
   }
+
+  flashBackground(color: string, duration: number) {
+    // Set the flashing color
+    this.view.dom.style.backgroundColor = color;
+    const gutters = this.view.dom.getElementsByClassName("cm-gutter");
+    Array.from(gutters).forEach(gutter => gutter.style.backgroundColor = color);
+  
+    // Reset to original color after duration
+    setTimeout(() => {
+      this.view.dom.style.backgroundColor = "";
+      Array.from(gutters).forEach(gutter => gutter.style.backgroundColor = "");
+    }, duration);
+  }
+
+
+
 }
 
 const app = new Editor();
@@ -682,10 +694,10 @@ document.getElementById("start-button")!.addEventListener("click", startClock);
 // When the user leaves the page, all the universes should be saved in the localStorage
 window.addEventListener("beforeunload", () => {
   event.preventDefault();
-  event.returnValue = "";
   // Iterate over all local files and set the candidate to the committed
   app.currentFile.candidate = app.view.state.doc.toString();
   app.currentFile.committed = app.view.state.doc.toString();
   app.settings.saveApplicationToLocalStorage(app.universes, app.settings);
   app.clock.stop()
+  return null;
 });
