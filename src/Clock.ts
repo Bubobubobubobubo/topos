@@ -38,6 +38,15 @@ export class Clock {
 
     get beats_per_bar(): number { return this.time_signature[0]; }
 
+    get pulse_duration(): number {
+        return 60 / this.bpm / this.ppqn;
+    }
+
+    public convertPulseToSecond(n: number): number {
+        return n * this.pulse_duration
+    }
+
+
     start(): void {
         // Check if the clock is already running
         if (this.transportNode?.state === 'running') {

@@ -210,7 +210,6 @@ export class UserAPI {
     get bar(): number { return this.app.clock.time_position.bar }
     get pulse(): number { return this.app.clock.time_position.pulse }
     get beat(): number { return this.app.clock.time_position.beat }
-    get beats_since_origin(): number { return this.app.clock.beats_since_origin }
 
     onbar(...bar: number[]): boolean {
         return bar.some(b => b === this.app.clock.time_position.bar)
@@ -247,7 +246,7 @@ export class UserAPI {
 
     playSound = async (values: object) => {
         await this.load;
-        webaudioOutput(sound(values), 0.01)
+        webaudioOutput(sound(values), 0.01) // TODO: timestamp précis du temps d'exécution
     }
 
 }
