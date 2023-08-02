@@ -14,10 +14,57 @@ const sound = (value: any) => ({
     ensureObjectValue: () => { }
 });
 
+class DrunkWalk {
+    public min: number;
+    public max: number;
+    private wrap: boolean;
+    public position: number;
+
+
+    constructor(min: number, max: number, wrap: boolean) {
+        this.min = min;
+        this.max = max;
+        this.wrap = wrap;
+        this.position = 0;
+    }
+
+    step(): void {
+        // The "drunk" makes a step: +1, 0, or -1
+        const stepSize: number = Math.floor(Math.random() * 3) - 1;
+        this.position += stepSize;
+
+        // Checks for wrap
+        if (this.wrap) {
+            if (this.position > this.max) {
+                this.position = this.min;
+            } else if (this.position < this.min) {
+                this.position = this.max;
+            }
+        } else {
+            // Enforces min and max constraints
+            if (this.position < this.min) {
+                this.position = this.min;
+            } else if (this.position > this.max) {
+                this.position = this.max;
+            }
+        }
+    }
+
+    getPosition(): number {
+        return this.position;
+    }
+
+    toggleWrap(b: boolean): void {
+        this.wrap = b;
+    }
+}
+
 export class UserAPI {
 
-    variables: { [key: string]: any } = {}
-    iterators: { [key: string]: any } = {}
+    private variables: { [key: string]: any } = {}
+    private iterators: { [key: string]: any } = {}
+    private _drunk: DrunkWalk = new DrunkWalk(-100, 100, false);
+
     MidiConnection: MidiConnection = new MidiConnection()
     strudelSound = webaudioOutput()
     load: samples
@@ -127,6 +174,32 @@ export class UserAPI {
 
         // Return current iterator value
         return this.iterators[name].value;
+    }
+    it = this.iterator
+
+    // =============================================================
+    // Drunk mechanism
+    // =============================================================
+
+    get drunk() {
+        this._drunk.step();
+        return this._drunk.getPosition();
+    }
+
+    set drunk(position: number) {
+        this._drunk.position = position;
+    }
+
+    set drunk_max(max: number) {
+        this._drunk.max = max;
+    }
+
+    set drunk_min(min: number) {
+        this._drunk.min = min;
+    }
+
+    set drunk_wrap(wrap: boolean) {
+        this._drunk.toggleWrap(wrap);
     }
 
     // =============================================================
