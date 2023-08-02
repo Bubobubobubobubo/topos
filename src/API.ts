@@ -164,9 +164,14 @@ export class UserAPI {
     // Transport functions
     // =============================================================
 
-    bpm(bpm: number): void {
+    bpm(bpm?: number): number {
+        if (bpm === undefined)
+            return this.app.clock.bpm
+
         this.app.clock.bpm = bpm
+        return bpm
     }
+    tempo = this.bpm
 
     time_signature(numerator: number, denominator: number): void {
         this.app.clock.time_signature = [numerator, denominator]
@@ -211,8 +216,12 @@ export class UserAPI {
     get pulse(): number { return this.app.clock.time_position.pulse }
     get beat(): number { return this.app.clock.time_position.beat }
 
-    onbar(...bar: number[]): boolean {
-        return bar.some(b => b === this.app.clock.time_position.bar)
+    onbar(n: number, ...bar: number[]): boolean { 
+        // n is acting as a modulo on the bar number
+        const bar_list = [...Array(n).keys()].map(i => i + 1);
+        console.log(bar_list)
+        console.log(bar.some(b => bar_list.includes(b % n)))
+        return bar.some(b => bar_list.includes(b % n))
     }
 
     onbeat(...beat: number[]): boolean {
@@ -234,7 +243,6 @@ export class UserAPI {
     }
 
     mod(...pulse: number[]): boolean { return pulse.some(p => this.app.clock.time_position.pulse % p === 0) }
-
     modbar(...bar: number[]): boolean { return bar.some(b => this.app.clock.time_position.bar % b === 0) }
 
     // =============================================================
@@ -244,9 +252,8 @@ export class UserAPI {
     // Small ZZFX interface for playing with this synth
     zzfx = (...thing: number[]) => zzfx(...thing);
 
-    playSound = async (values: object) => {
+    sound = async (values: object) => {
         await this.load;
-        webaudioOutput(sound(values), 0.01) // TODO: timestamp précis du temps d'exécution
+        webaudioOutput(sound(values), 0.00) 
     }
-
 }
