@@ -679,11 +679,11 @@ document.addEventListener("keydown", startOnEnter);
 document.getElementById("start-button")!.addEventListener("click", startClock);
 
 // When the user leaves the page, all the universes should be saved in the localStorage
-window.addEventListener("beforeunload", () => {
-  event.preventDefault();
-  event.returnValue = "";
-  // Iterate over all local files and set the candidate to the committed
-  app.currentFile.candidate = app.view.state.doc.toString();
-  app.currentFile.committed = app.view.state.doc.toString();
-  app.settings.saveApplicationToLocalStorage(app.universes, app.settings);
-});
+// window.addEventListener("beforeunload", () => {
+//   event.preventDefault();
+//   event.returnValue = "";
+//   // Iterate over all local files and set the candidate to the committed
+//   app.currentFile.candidate = app.view.state.doc.toString();
+//   app.currentFile.committed = app.view.state.doc.toString();
+//   app.settings.saveApplicationToLocalStorage(app.universes, app.settings);
+// });

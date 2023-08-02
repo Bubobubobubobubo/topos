@@ -44,7 +44,7 @@ export class TransportNode extends AudioWorkletNode {
                     this.app.api.midi_clock();
                     const then = performance.now();
                     this.lastLatencies[this.indexOfLastLatencies] = then - now;
-                    this.indexOfLastLatencies = (indexOfLastLatencies + 1) % this.lastLatencies.length;
+                    this.indexOfLastLatencies = (this.indexOfLastLatencies + 1) % this.lastLatencies.length;
                     const averageLatency = this.lastLatencies.reduce((a, b) => a + b) / this.lastLatencies.length;
                     this.executionLatency = averageLatency / 1000;
                 }, (timeToNextPulse + this.executionLatency) * 1000);    
@@ -76,6 +76,7 @@ export class TransportNode extends AudioWorkletNode {
     convertTimeToNextBarsBeats(currentTime) {
       const beatDuration = 60 / this.app.clock.bpm;
       const beatNumber = (currentTime) / beatDuration;
+      const beatsPerBar = this.app.clock.time_signature[0];
 
       this.currentPulsePosition = beatNumber * this.app.clock.ppqn;
       const nextPulsePosition = Math.ceil(this.currentPulsePosition);
@@ -86,7 +87,7 @@ export class TransportNode extends AudioWorkletNode {
       const futureTimeStamp = {
         bar: Math.floor(futureBarNumber) + 1,
         beat: Math.floor(futureBarNumber) % beatsPerBar + 1,
-        pulse: this.nextPulsePosition
+        pulse: Math.floor(this.nextPulsePosition) % this.app.clock.ppqn
       };
       this.app.clock.tick++
       return {
