@@ -16,12 +16,14 @@ export class TransportNode extends AudioWorkletNode {
         this.executionLatency = 0;
         this.lastLatencies = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
         this.indexOfLastLatencies = 0;
-        setInterval(() => this.ping(), 1000);
+        // setInterval(() => this.ping(), 1000);
+        this.startTime = null;
+        this.elapsedTime = 0;
     }
 
-    ping() {
-        this.port.postMessage({ type: "ping", t: performance.now() })
-    }
+    // ping() {
+    //     this.port.postMessage({ type: "ping", t: performance.now() })
+    // }
 
     /** @type {(this: MessagePort, ev: MessageEvent<any>) => any} */
     handleMessage = (message) => {
@@ -29,7 +31,12 @@ export class TransportNode extends AudioWorkletNode {
             const delay = performance.now() - message.data.t;
             // console.log(delay);
         } else if (message.data && message.data.type === "bang") {
-            let { futureTimeStamp, timeToNextPulse, nextPulsePosition } = this.convertTimeToNextBarsBeats(message.data.currentTime);
+            if (this.startTime === null) {
+                this.startTime = message.data.currentTime;
+            }
+            this.elapsedTime = message.data.currentTime - this.startTime;
+            this.prevCurrentTime = message.data.currentTime;
+            let { futureTimeStamp, timeToNextPulse, nextPulsePosition } = this.convertTimeToNextBarsBeats(this.elapsedTime);
 
             // Evaluate the global buffer only once per ppqn value
             if (this.nextPulsePosition !== nextPulsePosition) {
@@ -62,6 +69,13 @@ export class TransportNode extends AudioWorkletNode {
         this.port.postMessage("pause");
     }
 
+    stop() {
+        this.startTime = null;
+        this.elapsedTime = null;
+        this.app.clock.tick = 0;
+        this.port.postMessage("stop");
+    }
+
     convertTimeToBarsBeats(currentTime) {
       const beatDuration = 60 / this.app.clock.bpm;
       const beatNumber = (currentTime) / beatDuration;
@@ -76,6 +90,7 @@ export class TransportNode extends AudioWorkletNode {
     }
 
     convertTimeToNextBarsBeats(currentTime) {
+
       const beatDuration = 60 / this.app.clock.bpm;
       const beatNumber = (currentTime) / beatDuration;
       const beatsPerBar = this.app.clock.time_signature[0];
@@ -91,6 +106,7 @@ export class TransportNode extends AudioWorkletNode {
         beat: Math.floor(futureBeatNumber) % beatsPerBar + 1,
         pulse: Math.floor(this.nextPulsePosition) % this.app.clock.ppqn
       };
+
       this.app.clock.tick++
       return {
         futureTimeStamp,
