@@ -290,7 +290,8 @@ export class UserAPI {
         if (bpm === undefined)
             return this.app.clock.bpm
 
-        this.app.clock.bpm = bpm
+        if (bpm < 1 || bpm > 500)
+            this.app.clock.bpm = bpm
         return bpm
     }
     tempo = this.bpm
