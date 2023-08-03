@@ -69,7 +69,6 @@ import { lintKeymap } from "@codemirror/lint";
 
 export const editorSetup: Extension = (() => [
   lineNumbers(),
-  javascript(),
   highlightActiveLineGutter(),
   highlightSpecialChars(),
   history(),

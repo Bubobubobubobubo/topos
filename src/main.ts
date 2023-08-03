@@ -510,10 +510,8 @@ export class Editor {
   ) {
     this.flashBackground('#2d313d', 200)
     const possible_selectors = [
-      '[id^="play-button-"]',
-      '[id^="pause-button-"]',
-      '[id^="clear-button-"]',
-      '[id^="stop-button-"]',
+      '[id^="play-button-"]', '[id^="pause-button-"]',
+      '[id^="clear-button-"]', '[id^="stop-button-"]',
     ];
     let selector: number;
     switch (button) {
