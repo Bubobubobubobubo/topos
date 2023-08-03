@@ -483,6 +483,7 @@ export class Editor {
     button: "play" | "pause" | "stop" | "clear",
     highlight: boolean
   ) {
+    this.flashBackground('#2d313d', 200)
     const possible_selectors = [
       '[id^="play-button-"]',
       '[id^="pause-button-"]',

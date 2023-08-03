@@ -7,6 +7,12 @@ import { webaudioOutput, samples } from '@strudel.cycles/webaudio';
 // @ts-ignore
 import { ZZFX, zzfx } from "zzfx";
 
+interface TimePoint {
+    bar: number,
+    beat: number,
+    pulse: number
+}
+
 
 
 const sound = (value: any) => ({
@@ -69,7 +75,7 @@ export class UserAPI {
     strudelSound = webaudioOutput()
     load: samples
 
-    constructor(public app: Editor) {
+    constructor (public app: Editor) {
         this.load = samples("github:tidalcycles/Dirt-Samples/master");
     }
 
@@ -291,6 +297,7 @@ export class UserAPI {
             return this.app.clock.bpm
 
         if (bpm < 1 || bpm > 500)
+            console.log(`Setting bpm to ${bpm}`)
             this.app.clock.bpm = bpm
         return bpm
     }
@@ -412,6 +419,10 @@ export class UserAPI {
     }
 
     // =============================================================
+    // Time zones 
+    // =============================================================
+
+    // =============================================================
     // Trivial functions
     // =============================================================
 
@@ -419,7 +430,6 @@ export class UserAPI {
     zzfx = (...thing: number[]) => zzfx(...thing);
 
     sound = async (values: object) => {
-        await this.load;
         webaudioOutput(sound(values), 0.00) 
     }
 }
