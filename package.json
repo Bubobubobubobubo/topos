@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@codemirror/lang-javascript": "^6.1.9",
+    "@codemirror/lang-markdown": "^6.2.0",
     "@codemirror/theme-one-dark": "^6.1.2",
     "@replit/codemirror-vim": "^6.0.14",
     "@strudel.cycles/webaudio": "^0.8.2",

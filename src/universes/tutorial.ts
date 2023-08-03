@@ -19,6 +19,8 @@ const init_buffer=`
 // loaded!
 `
 
+const note_buffer='// Notes buffer: a buffer to write your notes.'
+
 export const tutorial_universe = {
     global: { candidate: global_text, committed: global_text, evaluations: 0 },
     locals: {
@@ -32,5 +34,6 @@ export const tutorial_universe = {
         8: { candidate: local_buffer, committed: local_buffer, evaluations: 0 },
         9: { candidate: local_buffer, committed: local_buffer, evaluations: 0 },
     },
-    init: { candidate: init_buffer, committed: init_buffer, evaluations: 0 }
+    init: { candidate: init_buffer, committed: init_buffer, evaluations: 0 },
+    notes: { candidate: note_buffer },
 }

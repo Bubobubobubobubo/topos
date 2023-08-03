@@ -3,15 +3,11 @@ import { EditorView } from "codemirror";
 import { editorSetup } from "./EditorSetup";
 import { EditorState, Compartment } from "@codemirror/state";
 import { javascript } from "@codemirror/lang-javascript";
+import { markdown } from "@codemirror/lang-markdown";
 import { Clock } from "./Clock";
 import { vim } from "@replit/codemirror-vim";
 import { AppSettings } from "./AppSettings";
 import { ViewUpdate } from "@codemirror/view";
-import {
-  highlightSelection,
-  unhighlightSelection,
-  rangeHighlighting,
-} from "./highlightSelection";
 import { UserAPI } from "./API";
 import { Extension } from "@codemirror/state";
 import {
@@ -29,9 +25,10 @@ export class Editor {
   universes: Universes = template_universes;
   selected_universe: string;
   local_index: number = 1;
-  editor_mode: "global" | "local" | "init" = "local";
+  editor_mode: "global" | "local" | "init" | "notes" = "local";
   fontSize: Compartment;
   vimModeCompartment : Compartment;
+  chosenLanguage: Compartment
 
   settings = new AppSettings();
   editorExtensions: Extension[] = [];
@@ -76,6 +73,9 @@ export class Editor {
   ) as HTMLButtonElement;
   init_button: HTMLButtonElement = document.getElementById(
     "init-button"
+  ) as HTMLButtonElement;
+  note_button: HTMLButtonElement = document.getElementById(
+    "note-button"
   ) as HTMLButtonElement;
   settings_button: HTMLButtonElement = document.getElementById(
     "settings-button"
@@ -136,6 +136,7 @@ export class Editor {
 
     this.fontSize = new Compartment();
     this.vimModeCompartment = new Compartment();
+    this.chosenLanguage = new Compartment();
     const vimPlugin = this.settings.vimMode ? vim() : [];
     const fontSizeModif = EditorView.theme( { 
       "&": { 
@@ -151,8 +152,7 @@ export class Editor {
       this.vimModeCompartment.of(vimPlugin),
       editorSetup,
 			oneDark,
-      rangeHighlighting(),
-      javascript(),
+      this.chosenLanguage.of(javascript()),
       EditorView.updateListener.of((v: ViewUpdate) => {
         v;
         // This is the event listener for the editor
@@ -221,7 +221,6 @@ export class Editor {
       // Ctrl + Enter or Return: Evaluate the hovered code block
       if ((event.key === "Enter" || event.key === "Return") && event.ctrlKey) {
         event.preventDefault();
-        // const code = this.getCodeBlock();
         this.currentFile().candidate = this.view.state.doc.toString();
         this.flashBackground('#2d313d', 200)
       }
@@ -234,7 +233,6 @@ export class Editor {
         event.preventDefault(); // Prevents the addition of a new line
         this.currentFile().candidate = this.view.state.doc.toString();
         this.flashBackground('#2d313d', 200)
-        // const code = this.getSelectedLines();
       }
 
       // This is the modal to switch between universes
@@ -250,6 +248,12 @@ export class Editor {
       if (event.ctrlKey && event.key === "l") {
         event.preventDefault();
         this.changeModeFromInterface("local");
+        this.view.focus();
+      }
+
+      if (event.ctrlKey && event.key === "n") {
+        event.preventDefault();
+        this.changeModeFromInterface("notes");
         this.view.focus();
       }
 
@@ -346,6 +350,10 @@ export class Editor {
     this.init_button.addEventListener("click", () =>
       this.changeModeFromInterface("init")
     );
+    this.note_button.addEventListener("click", () =>
+      this.changeModeFromInterface("notes")
+    );
+
 
     this.settings_button.addEventListener("click", () => {
       this.font_size_slider.value = this.settings.font_size.toString();
@@ -391,7 +399,6 @@ export class Editor {
     })
 
     this.buffer_search.addEventListener("keydown", (event) => {
-      // this.changeModeFromInterface("local");
       if (event.key === "Enter") {
         let query = this.buffer_search.value;
         if (query.length > 2 && query.length < 20) {
@@ -404,6 +411,10 @@ export class Editor {
       }
     });
     tryEvaluate(this, this.universes[this.selected_universe.toString()].init)
+  }
+
+  get note_buffer() {
+    return this.universes[this.selected_universe.toString()].notes;
   }
 
   get global_buffer() {
@@ -431,12 +442,11 @@ export class Editor {
     this.updateEditorView();
   }
 
-  changeModeFromInterface(mode: "global" | "local" | "init") {
+  changeModeFromInterface(mode: "global" | "local" | "init" | "notes") {
 
     const interface_buttons: HTMLElement[] = [
-      this.local_button, 
-      this.global_button, 
-      this.init_button
+      this.local_button, this.global_button, 
+      this.init_button, this.note_button,
     ];
 
     let changeColor = (button: HTMLElement) => {
@@ -467,15 +477,32 @@ export class Editor {
         if (!this.local_script_tabs.classList.contains("hidden")) {
           this.local_script_tabs.classList.add("hidden");
         }
-        this.editor_mode = "global"; changeColor(this.global_button);
+        this.editor_mode = "global"
+        changeColor(this.global_button);
         break;
       case "init":
         if (!this.local_script_tabs.classList.contains("hidden")) {
           this.local_script_tabs.classList.add("hidden");
         }
-        this.editor_mode = "init"; changeColor(this.init_button);
+        this.editor_mode = "init"
+        changeColor(this.init_button);
+        break;
+      case "notes":
+        if (!this.local_script_tabs.classList.contains("hidden")) {
+          this.local_script_tabs.classList.add("hidden");
+        }
+        this.editor_mode = "notes"
+        changeColor(this.note_button);
         break;
     }
+
+    // If the editor is in notes mode, we need to update the selectedLanguage
+
+    this.view.dispatch({
+      effects: this.chosenLanguage.reconfigure(this.editor_mode == "notes" ? markdown() : javascript())
+    })
+    console.log(this.chosenLanguage.get(this.view.state))
+
     this.updateEditorView();
   }
 
@@ -555,6 +582,8 @@ export class Editor {
         return this.local_buffer;
       case "init":
         return this.init_buffer;
+      case "notes":
+        return this.note_buffer;
     }
   }
 
@@ -601,15 +630,7 @@ export class Editor {
     ) {
       endLine = state.doc.line(endLine.number + 1);
     }
-
-    // this.view.dispatch({selection: {anchor: 0 + startLine.from, head: endLine.to}});
-    highlightSelection(this.view);
-
-    setTimeout(() => {
-      unhighlightSelection(this.view);
-      this.view.dispatch({ selection: { anchor: cursor, head: cursor } });
-    }, 200);
-
+    
     let result_string = state.doc.sliceString(startLine.from, endLine.to);
     result_string = result_string
       .split("\n")
@@ -639,13 +660,6 @@ export class Editor {
     });
     // Release the selection and get the cursor back to its original position
 
-    // Blink the text!
-    highlightSelection(this.view);
-
-    setTimeout(() => {
-      unhighlightSelection(this.view);
-      this.view.dispatch({ selection: { anchor: from, head: from } });
-    }, 200);
     return state.doc.sliceString(fromLine.from, toLine.to);
   };
 

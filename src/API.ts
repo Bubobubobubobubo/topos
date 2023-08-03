@@ -4,8 +4,6 @@ import { tryEvaluate } from "./Evaluator";
 import { MidiConnection } from "./IO/MidiConnection";
 // @ts-ignore
 import { webaudioOutput, samples } from '@strudel.cycles/webaudio';
-// @ts-ignore
-import { ZZFX, zzfx } from "zzfx";
 
 interface TimePoint {
     bar: number,
@@ -425,9 +423,6 @@ export class UserAPI {
     // =============================================================
     // Trivial functions
     // =============================================================
-
-    // Small ZZFX interface for playing with this synth
-    zzfx = (...thing: number[]) => zzfx(...thing);
 
     sound = async (values: object) => {
         webaudioOutput(sound(values), 0.00) 

@@ -6,12 +6,13 @@ export interface Universe {
   global: File
   locals: { [key: number]: File }
   init: File
+  notes: File
 }
 
 export interface File {
   candidate: string
-  committed: string
-  evaluations: number
+  committed?: string
+  evaluations?: number
 }
 
 export interface Settings {
@@ -36,7 +37,8 @@ export const template_universe = {
     8: { candidate: "", committed: "", evaluations: 0},
     9: { candidate: "", committed: "", evaluations: 0},
   },
-  init: { candidate: "", committed: "", evaluations: 0 }
+  init: { candidate: "", committed: "", evaluations: 0 },
+  notes: { candidate: "" },
 }
 
 export const template_universes = {
@@ -53,7 +55,8 @@ export const template_universes = {
       8: { candidate: "", committed: "", evaluations: 0},
       9: { candidate: "", committed: "", evaluations: 0},
     },
-    init: { candidate: "", committed: "", evaluations: 0 }
+    init: { candidate: "", committed: "", evaluations: 0 },
+    notes: { candidate: "// NOTES" },
   },
   "Help": tutorial_universe,
 }
