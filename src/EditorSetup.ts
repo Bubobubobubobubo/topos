@@ -1,4 +1,3 @@
-import { javascript } from "@codemirror/lang-javascript";
 import {
   keymap,
   highlightSpecialChars,
@@ -6,7 +5,6 @@ import {
   highlightActiveLine,
   dropCursor,
   rectangularSelection,
-  lineNumbers,
   crosshairCursor,
   highlightActiveLineGutter,
 } from "@codemirror/view";
@@ -16,13 +14,11 @@ import {
   syntaxHighlighting,
   indentOnInput,
   bracketMatching,
-  foldKeymap,
 } from "@codemirror/language";
 import { defaultKeymap, historyKeymap, history } from "@codemirror/commands";
-import { searchKeymap, highlightSelectionMatches } from "@codemirror/search";
+import { highlightSelectionMatches } from "@codemirror/search";
 import {
   autocompletion,
-  completionKeymap,
   closeBrackets,
   closeBracketsKeymap,
 } from "@codemirror/autocomplete";
@@ -68,11 +64,9 @@ import { lintKeymap } from "@codemirror/lint";
 /// as desired.
 
 export const editorSetup: Extension = (() => [
-  lineNumbers(),
   highlightActiveLineGutter(),
   highlightSpecialChars(),
   history(),
-  // foldGutter(),
   drawSelection(),
   dropCursor(),
   EditorState.allowMultipleSelections.of(true),
@@ -89,8 +83,6 @@ export const editorSetup: Extension = (() => [
     ...closeBracketsKeymap,
     ...defaultKeymap,
     ...historyKeymap,
-    ...foldKeymap,
-    ...completionKeymap,
     ...lintKeymap,
   ]),
 ])();

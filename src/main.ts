@@ -5,7 +5,7 @@ import { EditorState, Compartment } from "@codemirror/state";
 import { javascript } from "@codemirror/lang-javascript";
 import { markdown } from "@codemirror/lang-markdown";
 import { Extension } from "@codemirror/state";
-import { ViewUpdate } from "@codemirror/view";
+import { ViewUpdate, lineNumbers } from "@codemirror/view";
 import { oneDark } from "@codemirror/theme-one-dark";
 import { vim } from "@replit/codemirror-vim";
 import { Clock } from "./Clock";
@@ -27,6 +27,7 @@ export class Editor {
   local_index: number = 1;
   editor_mode: "global" | "local" | "init" | "notes" = "local";
   fontSize: Compartment;
+  withLineNumbers: Compartment;
   vimModeCompartment : Compartment;
   chosenLanguage: Compartment
 
@@ -104,6 +105,9 @@ export class Editor {
   font_size_slider: HTMLInputElement = document.getElementById('font-size-slider') as HTMLInputElement;
   font_size_witness: HTMLSpanElement = document.getElementById('font-size-witness') as HTMLSpanElement;
 
+  // Line Numbers checkbox
+  line_numbers_checkbox: HTMLInputElement = document.getElementById('show-line-numbers') as HTMLInputElement;
+
   // Editor mode selection
   normal_mode_button: HTMLButtonElement = document.getElementById('normal-mode') as HTMLButtonElement;
   vim_mode_button: HTMLButtonElement = document.getElementById('vim-mode') as HTMLButtonElement;
@@ -134,10 +138,12 @@ export class Editor {
     // CodeMirror Management
     // ================================================================================
 
-    this.fontSize = new Compartment();
     this.vimModeCompartment = new Compartment();
+    this.withLineNumbers = new Compartment();
     this.chosenLanguage = new Compartment();
+    this.fontSize = new Compartment();
     const vimPlugin = this.settings.vimMode ? vim() : [];
+    const lines = this.settings.line_numbers? lineNumbers() : [];
     const fontSizeModif = EditorView.theme( { 
       "&": { 
         fontSize: `${this.settings.font_size}px`,
@@ -148,6 +154,7 @@ export class Editor {
     })
 
     this.editorExtensions = [
+      this.withLineNumbers.of(lines),
       this.fontSize.of(fontSizeModif),
       this.vimModeCompartment.of(vimPlugin),
       editorSetup,
@@ -358,6 +365,7 @@ export class Editor {
       this.font_size_slider.value = this.settings.font_size.toString();
       this.font_size_witness.innerHTML = `Font Size: ${this.settings.font_size}px`
       this.font_size_witness?.setAttribute('style', `font-size: ${this.settings.font_size}px;`)
+      this.line_numbers_checkbox.checked = this.settings.line_numbers;
       let modal_settings = document.getElementById('modal-settings');
       let editor = document.getElementById('editor');
       modal_settings?.classList.remove('invisible')
@@ -391,6 +399,16 @@ export class Editor {
       this.settings.vimMode = false;
       this.view.dispatch({effects: this.vimModeCompartment.reconfigure([])});
     })
+
+    this.line_numbers_checkbox.addEventListener("change", () => {
+      let checked = this.line_numbers_checkbox.checked ? true : false;
+      this.settings.line_numbers = checked;
+      this.view.dispatch({
+        effects: this.withLineNumbers.reconfigure(
+          checked ? [lineNumbers()] : []
+        )
+      });
+    });
 
     this.vim_mode_button.addEventListener("click", () => {
       this.settings.vimMode = true;

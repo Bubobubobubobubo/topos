@@ -22,6 +22,7 @@ export interface Settings {
     font_size: number
     universes: Universes
     selected_universe: string
+    line_numbers: boolean
 }
 
 export const template_universe = {
@@ -70,6 +71,7 @@ export class AppSettings {
   public font_size: number = 22 
   public universes: Universes
   public selected_universe: string = "Default"
+  public line_numbers: boolean = true
 
   constructor() {
 
@@ -83,6 +85,7 @@ export class AppSettings {
       this.font_size = settingsFromStorage.font_size
       this.universes = settingsFromStorage.universes
       this.selected_universe = settingsFromStorage.selected_universe
+      this.line_numbers = settingsFromStorage.line_numbers
     } else {
       this.universes = template_universes
     }
@@ -97,7 +100,8 @@ export class AppSettings {
       font: this.font,
       font_size: this.font_size,
       universes: this.universes,
-      selected_universe: this.selected_universe
+      selected_universe: this.selected_universe,
+      line_numbers: this.line_numbers
     }
   }
 
@@ -107,6 +111,7 @@ export class AppSettings {
     this.font = settings.font;
     this.font_size = settings.font_size;
     this.selected_universe = settings.selected_universe;
+    this.line_numbers = settings.line_numbers;
     localStorage.setItem('topos', JSON.stringify(this.data))
   }
 }
