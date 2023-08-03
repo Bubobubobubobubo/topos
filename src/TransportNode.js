@@ -73,6 +73,7 @@ export class TransportNode extends AudioWorkletNode {
         this.startTime = null;
         this.elapsedTime = null;
         this.app.clock.tick = 0;
+        this.$clock.innerHTML = `[${1} | ${1} | ${zeroPad(1, '2')}]`;
         this.port.postMessage("stop");
     }
 

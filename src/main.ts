@@ -58,6 +58,10 @@ export class Editor {
     document.getElementById("pause-button-1") as HTMLButtonElement,
     document.getElementById("pause-button-2") as HTMLButtonElement,
   ];
+  stop_buttons: HTMLButtonElement[] = [
+    document.getElementById("stop-button-1") as HTMLButtonElement,
+    document.getElementById("stop-button-2") as HTMLButtonElement,
+  ];
   clear_buttons: HTMLButtonElement[] = [
     document.getElementById("clear-button-1") as HTMLButtonElement,
     document.getElementById("clear-button-2") as HTMLButtonElement,
@@ -186,6 +190,14 @@ export class Editor {
         this.setButtonHighlighting("pause", true);
         this.clock.pause();
       }
+
+      if (event.ctrlKey && event.key === "r") {
+        event.preventDefault();
+        this.setButtonHighlighting("stop", true);
+        this.clock.stop();
+      }
+
+
       if (event.ctrlKey && event.key === "p") {
         event.preventDefault();
         this.setButtonHighlighting("play", true);
@@ -235,23 +247,25 @@ export class Editor {
         this.openSettingsModal();
       }
 
-      // Switch to local files
       if (event.ctrlKey && event.key === "l") {
         event.preventDefault();
         this.changeModeFromInterface("local");
         this.view.focus();
       }
+
       if (event.ctrlKey && event.key === "g") {
         event.preventDefault();
         this.changeModeFromInterface("global");
         this.view.focus();
       }
+
       if (event.ctrlKey && event.key === "i") {
         event.preventDefault();
         this.changeModeFromInterface("init");
         this.changeToLocalBuffer(0);
         this.view.focus();
       }
+
       [112, 113, 114, 115, 116, 117, 118, 119, 120].forEach(
         (keycode, index) => {
           if (event.keyCode === keycode) {
@@ -313,6 +327,13 @@ export class Editor {
       button.addEventListener("click", () => {
         this.setButtonHighlighting("pause", true);
         this.clock.pause();
+      });
+    });
+
+    this.stop_buttons.forEach((button) => {
+      button.addEventListener("click", () => {
+        this.setButtonHighlighting("stop", true);
+        this.clock.stop();
       });
     });
 
@@ -459,13 +480,14 @@ export class Editor {
   }
 
   setButtonHighlighting(
-    button: "play" | "pause" | "clear",
+    button: "play" | "pause" | "stop" | "clear",
     highlight: boolean
   ) {
     const possible_selectors = [
       '[id^="play-button-"]',
       '[id^="pause-button-"]',
       '[id^="clear-button-"]',
+      '[id^="stop-button-"]',
     ];
     let selector: number;
     switch (button) {
@@ -477,6 +499,9 @@ export class Editor {
         break;
       case "clear":
         selector = 2;
+        break;
+      case "stop": 
+        selector = 3;
         break;
     }
     document
