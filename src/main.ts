@@ -1,27 +1,27 @@
 import "./style.css";
-import { EditorView } from "codemirror";
 import { editorSetup } from "./EditorSetup";
+import { EditorView } from "codemirror";
 import { EditorState, Compartment } from "@codemirror/state";
 import { javascript } from "@codemirror/lang-javascript";
 import { markdown } from "@codemirror/lang-markdown";
-import { Clock } from "./Clock";
-import { vim } from "@replit/codemirror-vim";
-import { AppSettings } from "./AppSettings";
-import { ViewUpdate } from "@codemirror/view";
-import { UserAPI } from "./API";
 import { Extension } from "@codemirror/state";
+import { ViewUpdate } from "@codemirror/view";
+import { oneDark } from "@codemirror/theme-one-dark";
+import { vim } from "@replit/codemirror-vim";
+import { Clock } from "./Clock";
+import { AppSettings } from "./AppSettings";
+import { UserAPI } from "./API";
 import {
   Universes,
   File,
   template_universe,
   template_universes,
 } from "./AppSettings";
-import { oneDark } from "@codemirror/theme-one-dark";
 import { tryEvaluate } from "./Evaluator";
 
 
 export class Editor {
-  // Data structures for editor text management
+
   universes: Universes = template_universes;
   selected_universe: string;
   local_index: number = 1;
@@ -155,7 +155,6 @@ export class Editor {
       this.chosenLanguage.of(javascript()),
       EditorView.updateListener.of((v: ViewUpdate) => {
         v;
-        // This is the event listener for the editor
       }),
     ];
 
@@ -499,9 +498,8 @@ export class Editor {
     // If the editor is in notes mode, we need to update the selectedLanguage
 
     this.view.dispatch({
-      effects: this.chosenLanguage.reconfigure(this.editor_mode == "notes" ? markdown() : javascript())
+      effects: this.chosenLanguage.reconfigure(this.editor_mode == "notes" ? [markdown()] : [javascript()])
     })
-    console.log(this.chosenLanguage.get(this.view.state))
 
     this.updateEditorView();
   }
@@ -556,24 +554,19 @@ export class Editor {
   }
 
   updateEditorView(): void {
-    // Remove everything from the editor
-    this.view.dispatch({ 
-      changes: { 
-        from: 0,
-        to: this.view.state.doc.toString().length,
-        insert: '', 
-      },
-    });
 
-    // Insert something
     this.view.dispatch({
       changes: {
         from: 0, 
+        to: this.view.state.doc.toString().length,
         insert: this.currentFile().candidate,
       },
     });
   }
 
+  /**
+   * @returns The current file being edited
+   */
   currentFile(): File {
     switch (this.editor_mode) {
       case "global": 
@@ -587,83 +580,31 @@ export class Editor {
     }
   }
 
-  loadUniverse(universeName: string) {
+  /**
+   * @param universeName: The name of the universe to load 
+   */
+  loadUniverse(universeName: string): void {
+
+    // Saving the current file before initiating the switch logic
     this.currentFile().candidate = this.view.state.doc.toString();
 
+    // Getting the new universe name and moving on
     let selectedUniverse = universeName.trim();
     if (this.universes[selectedUniverse] === undefined) {
       this.universes[selectedUniverse] = template_universe;
     }
-    this.selected_universe = this.settings.selected_universe;
+    this.selected_universe = selectedUniverse;
+    this.settings.selected_universe = this.selected_universe;
     this.universe_viewer.innerHTML = `Topos: ${selectedUniverse}`;
-    // We should also update the editor accordingly
-    this.view.dispatch({
-      changes: {
-        from: 0,
-        to: this.view.state.doc.toString().length,
-        insert: "",
-      },
-    });
-    this.view.dispatch({
-      changes: { from: 0, insert: this.currentFile().candidate },
-    });
+
+    // Updating the editor View to reflect the selected universe
+    this.updateEditorView();
+
+    // Evaluating the initialisation script for the selected universe
     tryEvaluate(this, this.universes[this.selected_universe.toString()].init)
   }
 
-  getCodeBlock(): string {
-    // Capture the position of the cursor
-    let cursor = this.view.state.selection.main.head;
-    const state = this.view.state;
-    const { head } = state.selection.main;
-    const currentLine = state.doc.lineAt(head);
-    let startLine = currentLine;
-    while (
-      startLine.number > 1 &&
-      !/^\s*$/.test(state.doc.line(startLine.number - 1).text)
-    ) {
-      startLine = state.doc.line(startLine.number - 1);
-    }
-    let endLine = currentLine;
-    while (
-      endLine.number < state.doc.lines &&
-      !/^\s*$/.test(state.doc.line(endLine.number + 1).text)
-    ) {
-      endLine = state.doc.line(endLine.number + 1);
-    }
-    
-    let result_string = state.doc.sliceString(startLine.from, endLine.to);
-    result_string = result_string
-      .split("\n")
-      .map((line, index, lines) => {
-        const trimmedLine = line.trim();
-        if (
-          index === lines.length - 1 ||
-          /^\s/.test(lines[index + 1]) ||
-          trimmedLine.startsWith("@")
-        ) {
-          return line;
-        } else {
-          return line + ";\\";
-        }
-      })
-      .join("\n");
-    return result_string;
-  }
-
-  getSelectedLines = (): string => {
-    const state = this.view.state;
-    const { from, to } = state.selection.main;
-    const fromLine = state.doc.lineAt(from);
-    const toLine = state.doc.lineAt(to);
-    this.view.dispatch({
-      selection: { anchor: 0 + fromLine.from, head: toLine.to },
-    });
-    // Release the selection and get the cursor back to its original position
-
-    return state.doc.sliceString(fromLine.from, toLine.to);
-  };
-
-  openSettingsModal() {
+  openSettingsModal(): void {
     if (
       document.getElementById("modal-settings")!.classList.contains("invisible")
     ) {
@@ -674,12 +615,12 @@ export class Editor {
     }
   }
 
-  closeSettingsModal() {
+  closeSettingsModal(): void {
     document.getElementById("editor")!.classList.remove("invisible");
     document.getElementById("modal-settings")!.classList.add("invisible");
   }
 
-  openBuffersModal() {
+  openBuffersModal():void {
     // If the modal is hidden, unhide it and hide the editor
     if (
       document.getElementById("modal-buffers")!.classList.contains("invisible")
@@ -692,7 +633,7 @@ export class Editor {
     }
   }
 
-  closeBuffersModal() {
+  closeBuffersModal():void {
     // @ts-ignore
     document.getElementById("buffer-search")!.value = "";
     document.getElementById("editor")!.classList.remove("invisible");
@@ -700,7 +641,11 @@ export class Editor {
     document.getElementById("modal-buffers")!.classList.add("invisible");
   }
 
-  flashBackground(color: string, duration: number) {
+  /**
+   * @param color the color to flash the background
+   * @param duration the duration of the flash
+   */
+  flashBackground(color: string, duration: number): void {
     // Set the flashing color
     this.view.dom.style.backgroundColor = color;
     const gutters = this.view.dom.getElementsByClassName("cm-gutter");
@@ -712,13 +657,12 @@ export class Editor {
       Array.from(gutters).forEach(gutter => gutter.style.backgroundColor = "");
     }, duration);
   }
-
-
-
 }
 
+// Creating the application
 const app = new Editor();
 
+// Starting the clock after displaying a modal
 function startClock() {
   document.getElementById("editor")!.classList.remove("invisible");
   document.getElementById("modal")!.classList.add("hidden");
@@ -741,13 +685,15 @@ function startOnEnter(e: KeyboardEvent) {
 document.addEventListener("keydown", startOnEnter);
 document.getElementById("start-button")!.addEventListener("click", startClock);
 
+/**
+ * @param event The mouse event
+ */
 function reportMouseCoordinates(event: MouseEvent) {
   app._mouseX = event.clientX;
   app._mouseY = event.clientY;
 }
  
 window.addEventListener('mousemove', reportMouseCoordinates);
-
 
 // When the user leaves the page, all the universes should be saved in the localStorage
 window.addEventListener("beforeunload", () => {
@@ -759,4 +705,3 @@ window.addEventListener("beforeunload", () => {
   app.clock.stop()
   return null;
 });
-

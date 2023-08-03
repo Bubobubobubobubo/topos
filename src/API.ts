@@ -5,18 +5,10 @@ import { MidiConnection } from "./IO/MidiConnection";
 // @ts-ignore
 import { webaudioOutput, samples } from '@strudel.cycles/webaudio';
 
-interface TimePoint {
-    bar: number,
-    beat: number,
-    pulse: number
-}
-
-
-
-const sound = (value: any) => ({
-    value, context: {},
-    ensureObjectValue: () => { }
-});
+// const sound = (value: any) => ({
+//     value, context: {},
+//     ensureObjectValue: () => {}
+// });
 
 class DrunkWalk {
     public min: number;
@@ -70,11 +62,11 @@ export class UserAPI {
     private _drunk: DrunkWalk = new DrunkWalk(-100, 100, false);
 
     MidiConnection: MidiConnection = new MidiConnection()
-    strudelSound = webaudioOutput()
+    // strudelSound = webaudioOutput()
     load: samples
 
     constructor (public app: Editor) {
-        this.load = samples("github:tidalcycles/Dirt-Samples/master");
+        // this.load = samples("github:tidalcycles/Dirt-Samples/master");
     }
 
     // =============================================================
@@ -424,7 +416,7 @@ export class UserAPI {
     // Trivial functions
     // =============================================================
 
-    sound = async (values: object) => {
-        webaudioOutput(sound(values), 0.00) 
-    }
+    // sound = async (values: object) => {
+    //     webaudioOutput(sound(values), 0.00) 
+    // }
 }
