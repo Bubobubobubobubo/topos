@@ -12,6 +12,7 @@ export interface TimePosition {
 export class Clock {
 
     evaluations: number
+    ctx: AudioContext
     transportNode: TransportNode
     bpm: number
     time_signature: number[]
@@ -20,6 +21,7 @@ export class Clock {
     tick: number
 
     constructor(public app: Editor, ctx: AudioContext) {
+        this.ctx = ctx;
         this.tick = 0;
         this.time_position = { bar: 0, beat: 0, pulse: 0 }
         this.bpm = 120;

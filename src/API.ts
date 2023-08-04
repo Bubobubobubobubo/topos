@@ -808,6 +808,78 @@ export class UserAPI {
     }
 
     // =============================================================
+    // Low Frequency Oscillators
+    // =============================================================
+
+    sine(freq: number = 1, offset: number=0): number {
+        /**
+         * Returns a sine wave between -1 and 1.
+         * 
+         * @param freq - The frequency of the sine wave
+         * @param offset - The offset of the sine wave
+         * @returns A sine wave between -1 and 1
+         */
+        return Math.sin(this.app.clock.ctx.currentTime * Math.PI * 2 * freq) + offset
+    }
+
+    saw(freq: number = 1, offset: number=0): number {
+        /**
+         * Returns a saw wave between -1 and 1.
+         * 
+         * @param freq - The frequency of the saw wave
+         * @param offset - The offset of the saw wave
+         * @returns A saw wave between -1 and 1
+         * @see triangle
+         * @see square
+         * @see sine
+         * @see noise
+         */
+        return (this.app.clock.ctx.currentTime * freq) % 1 * 2 - 1 + offset
+    }
+
+    triangle(freq: number = 1, offset: number=0): number {
+        /**
+         * Returns a triangle wave between -1 and 1.
+         * 
+         * @returns A triangle wave between -1 and 1
+         * @see saw
+         * @see square
+         * @see sine
+         * @see noise
+         */
+        return Math.abs(this.saw(freq, offset)) * 2 - 1
+    }
+
+    square(freq: number = 1, offset: number=0): number {
+        /**
+         * Returns a square wave between -1 and 1.
+         * 
+         * @returns A square wave between -1 and 1
+         * @see saw
+         * @see triangle
+         * @see sine
+         * @see noise
+         */
+        return this.saw(freq, offset) > 0 ? 1 : -1
+    }
+
+    noise(): number {
+        /**
+         * Returns a random value between -1 and 1.
+         * 
+         * @returns A random value between -1 and 1
+         * @see saw
+         * @see triangle
+         * @see square
+         * @see sine
+         * @see noise
+         */
+        return Math.random() * 2 - 1
+    }
+
+
+
+    // =============================================================
     // Trivial functions
     // =============================================================
 
