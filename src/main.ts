@@ -427,7 +427,10 @@ export class Editor {
         }
       }
     });
-    tryEvaluate(this, this.universes[this.selected_universe.toString()].init)
+    tryEvaluate(
+      this, 
+      this.universes[this.selected_universe.toString()].init,
+    )
   }
 
   get note_buffer() {
@@ -617,7 +620,9 @@ export class Editor {
     this.updateEditorView();
 
     // Evaluating the initialisation script for the selected universe
-    tryEvaluate(this, this.universes[this.selected_universe.toString()].init)
+    tryEvaluate(this, 
+      this.universes[this.selected_universe.toString()].init,
+    )
   }
 
   openSettingsModal(): void {

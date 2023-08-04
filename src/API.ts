@@ -5,10 +5,10 @@ import { MidiConnection } from "./IO/MidiConnection";
 // @ts-ignore
 import { webaudioOutput, samples } from '@strudel.cycles/webaudio';
 
-// const sound = (value: any) => ({
-//     value, context: {},
-//     ensureObjectValue: () => {}
-// });
+const sound = (value: any) => ({
+    value, context: {},
+    ensureObjectValue: () => {}
+});
 
 class DrunkWalk {
     public min: number;
@@ -66,7 +66,7 @@ export class UserAPI {
     load: samples
 
     constructor (public app: Editor) {
-        // this.load = samples("github:tidalcycles/Dirt-Samples/master");
+        this.load = samples("github:tidalcycles/Dirt-Samples/master");
     }
 
     // =============================================================
@@ -107,8 +107,10 @@ export class UserAPI {
 
     script(...args: number[]): void {
         args.forEach(arg => {
-            tryEvaluate(this.app, this.app.universes[
-                this.app.selected_universe].locals[arg])
+            tryEvaluate(
+                this.app, 
+                this.app.universes[this.app.selected_universe].locals[arg],
+            )
         })
     }
     s = this.script
@@ -314,19 +316,15 @@ export class UserAPI {
     // =============================================================
 
     get i() { return this.app.universes[this.app.selected_universe].global.evaluations }
-    get e1() { return this.app.universes[this.app.selected_universe].locals[0].evaluations }
-    get e2() { return this.app.universes[this.app.selected_universe].locals[1].evaluations }
-    get e3() { return this.app.universes[this.app.selected_universe].locals[2].evaluations }
-    get e4() { return this.app.universes[this.app.selected_universe].locals[3].evaluations }
-    get e5() { return this.app.universes[this.app.selected_universe].locals[4].evaluations }
-    get e6() { return this.app.universes[this.app.selected_universe].locals[5].evaluations }
-    get e7() { return this.app.universes[this.app.selected_universe].locals[6].evaluations }
-    get e8() { return this.app.universes[this.app.selected_universe].locals[7].evaluations }
-    get e9() { return this.app.universes[this.app.selected_universe].locals[8].evaluations }
-    public evaluations_number(index: number): number {
-        return this.app.universes[this.app.selected_universe].locals[index].evaluations
-    }
-    e = this.evaluations_number
+    get e1() { return this.app.universes[this.app.selected_universe].locals[1].evaluations }
+    get e2() { return this.app.universes[this.app.selected_universe].locals[2].evaluations }
+    get e3() { return this.app.universes[this.app.selected_universe].locals[3].evaluations }
+    get e4() { return this.app.universes[this.app.selected_universe].locals[4].evaluations }
+    get e5() { return this.app.universes[this.app.selected_universe].locals[5].evaluations }
+    get e6() { return this.app.universes[this.app.selected_universe].locals[6].evaluations }
+    get e7() { return this.app.universes[this.app.selected_universe].locals[7].evaluations }
+    get e8() { return this.app.universes[this.app.selected_universe].locals[8].evaluations }
+    get e9() { return this.app.universes[this.app.selected_universe].locals[9].evaluations }
 
     // =============================================================
     // Time markers
@@ -416,7 +414,7 @@ export class UserAPI {
     // Trivial functions
     // =============================================================
 
-    // sound = async (values: object) => {
-    //     webaudioOutput(sound(values), 0.00) 
-    // }
+    sound = async (values: object) => {
+        webaudioOutput(sound(values), 0.00) 
+    }
 }

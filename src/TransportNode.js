@@ -47,7 +47,7 @@ export class TransportNode extends AudioWorkletNode {
                     this.$clock.innerHTML = `[${futureTimeStamp.bar} | ${futureTimeStamp.beat} | ${zeroPad(futureTimeStamp.pulse, '2')}]`;
                     tryEvaluate( 
                         this.app, 
-                        this.app.global_buffer 
+                        this.app.global_buffer,
                     );
                     this.hasBeenEvaluated = true;
                     this.currentPulsePosition = nextPulsePosition;

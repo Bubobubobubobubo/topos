@@ -1,10 +1,10 @@
 import type { Editor } from './main';
 import type { File } from './AppSettings';
 
-const delay = (ms: number) => new Promise((resolve, reject) => setTimeout(() => reject(new Error('Operation took too long')), ms));
+const delay = (ms: number) => new Promise((_, reject) => setTimeout(() => reject(new Error('Operation took too long')), ms));
 
 const tryCatchWrapper = (application: Editor, code: string): Promise<boolean> => {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve, _) => {
     try {
       Function(`with (this) {try{${code}} catch (e) {console.log(e)}};`).call(application.api);
       resolve(true);
@@ -15,10 +15,17 @@ const tryCatchWrapper = (application: Editor, code: string): Promise<boolean> =>
   });
 }
 
-export const tryEvaluate = async (application: Editor, code: File, timeout = 5000): Promise<void> => {
+export const tryEvaluate = async (
+  application: Editor, 
+  code: File,
+  timeout = 5000
+  ): Promise<void> => {
   try {
-    const isCodeValid = await Promise.race([tryCatchWrapper(application, code.candidate), delay(timeout)]);
     code.evaluations++;
+    const isCodeValid = await Promise.race([tryCatchWrapper(
+      application, 
+      `let i = ${code.evaluations};` + code.candidate,
+    ), delay(timeout)]);
 
     if (isCodeValid) {
       code.committed = code.candidate;
@@ -30,10 +37,11 @@ export const tryEvaluate = async (application: Editor, code: File, timeout = 500
   }
 }
 
-export const evaluate = async (application: Editor, code: File, timeout = 5000): Promise<void> => {
+export const evaluate = async (application: Editor, code: File, timeout = 1000): Promise<void> => {
   try {
-    await Promise.race([tryCatchWrapper(application, code.committed), delay(timeout)]);
-    code.evaluations++;
+    await Promise.race([tryCatchWrapper(application, code.committed as string), delay(timeout)]);
+    if (code.evaluations)
+      code.evaluations++;
   } catch (error) {
     console.log(error);
   }
