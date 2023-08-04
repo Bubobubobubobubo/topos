@@ -400,6 +400,16 @@ export class UserAPI {
         return array[this.app.clock.time_position.beat % array.length] 
     }
 
+    mel<T>(iterator: number, array: T[]): T {
+        /**
+         * Returns an element from an array based on the current value of an iterator.
+         * 
+         * @param iterator - The name of the iterator
+         * @param array - The array of values to pick from
+         */
+        return array[iterator % array.length]
+    }
+
     seqbar<T>(...array: T[]): T {
         /**
          * Returns an element from an array based on the current bar.
@@ -805,6 +815,19 @@ export class UserAPI {
             cycle = cycle.slice(rotate).concat(cycle.slice(0, rotate));
         }
         return cycle;
+    }
+
+    bin(iterator: number, n: number): boolean {
+        /**
+         * Returns a binary cycle of size n.
+         * 
+         * @param iterator - Iteration number in the binary cycle
+         * @param n - The number to convert to binary
+         * @returns boolean value based on the binary sequence
+         */
+        let convert: string = n.toString(2);
+        let tobin: boolean[] = convert.split("").map((x: string) => x === "1");
+        return tobin[iterator % tobin.length];
     }
 
     // =============================================================
