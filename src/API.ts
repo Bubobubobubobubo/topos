@@ -329,10 +329,43 @@ export class UserAPI {
     // =============================================================
     // Time markers
     // =============================================================
-    get tick(): number { return this.app.clock.tick }
-    get bar(): number { return this.app.clock.time_position.bar }
-    get pulse(): number { return this.app.clock.time_position.pulse }
-    get beat(): number { return this.app.clock.time_position.beat }
+
+    get bar(): number { 
+        /**
+         * Returns the current bar number
+         */
+        return this.app.clock.time_position.bar 
+    }
+ 
+    get tick(): number { 
+        /**
+         * Returns the current tick number
+         */
+        return this.app.clock.tick 
+    }
+
+    get pulse(): number { 
+        /**
+         * Returns the current pulse number
+         */
+        return this.app.clock.time_position.pulse 
+    }
+
+    get beat(): number { 
+        /** 
+         * Returns the current beat number
+         */
+        return this.app.clock.time_position.beat 
+    }
+
+    get t_beat(): number {
+        /**
+         * Returns the current beat number since the origin of time
+         * TODO: fix! Why is this not working?
+         */
+        return Math.floor(this.app.clock.tick / this.app.clock.ppqn)
+    }
+
 
     onbar(n: number, ...bar: number[]): boolean { 
         // n is acting as a modulo on the bar number
@@ -385,10 +418,8 @@ export class UserAPI {
     mod(...pulse: number[]): boolean { return pulse.some(p => this.app.clock.time_position.pulse % p === 0) }
     modbar(...bar: number[]): boolean { return bar.some(b => this.app.clock.time_position.bar % b === 0) }
 
-    euclid(pulses: number, length: number, rotate: number=0): boolean { 
-        const pulse = this.app.clock.time_position.beat;
-        const nextPulse = pulse % length;
-        return this.euclidean_cycle(pulses, length, rotate)[nextPulse];
+    euclid(iterator: number, pulses: number, length: number, rotate: number=0): boolean { 
+        return this.euclidean_cycle(pulses, length, rotate)[iterator % length];
      }
 
     euclidean_cycle(pulses: number, length: number, rotate: number = 0): boolean[] {
