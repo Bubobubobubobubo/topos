@@ -655,39 +655,137 @@ export class UserAPI {
     }
 
     stop(): void { 
+        /**
+         * Stops the clock.
+         * 
+         * @see silence
+         * @see hush
+         */
         this.app.clock.pause() 
         this.app.setButtonHighlighting("pause", true);
     }
     silence = this.stop 
     hush = this.stop
 
-    prob(p: number): boolean { return Math.random() * 100 < p }
-    toss(): boolean { return Math.random() > 0.5 }
-    min(...values: number[]): number { return Math.min(...values) }
-    max(...values: number[]): number { return Math.max(...values) }
-    limit(value: number, min: number, max: number): number { return Math.min(Math.max(value, min), max) }
+    prob(p: number): boolean {
+        /**
+         * Returns true p% of the time.
+         * 
+         * @param p - The probability of returning true
+         * @returns True p% of the time
+         */
+        return Math.random() * 100 < p
+    }
+
+    toss(): boolean {
+        /**
+         * Returns true 50% of the time.
+         * 
+         * @returns True 50% of the time
+         * @see sometimes
+         * @see rarely
+         * @see often
+         * @see almostAlways
+         * @see almostNever
+         */
+        return Math.random() > 0.5
+    }
+
+    min(...values: number[]): number {
+        /**
+         * Returns the minimum value of a list of numbers.
+         * 
+         * @param values - The list of numbers
+         * @returns The minimum value of the list of numbers
+         */
+        return Math.min(...values)
+    }
+
+    max(...values: number[]): number {
+        /**
+         * Returns the maximum value of a list of numbers.
+         * 
+         * @param values - The list of numbers
+         * @returns The maximum value of the list of numbers
+         */
+        return Math.max(...values)
+    }
+
+    limit(value: number, min: number, max: number): number {
+        /**
+         * Limits a value between a minimum and a maximum.
+         * 
+         * @param value - The value to limit
+         * @param min - The minimum value
+         * @param max - The maximum value
+         * @returns The limited value
+         */
+        return Math.min(Math.max(value, min), max)
+    }
 
 
     delay(ms: number, func: Function): void {
+        /**
+         * Delays the execution of a function by a given number of milliseconds.
+         * 
+         * @param ms - The number of milliseconds to delay the function by
+         * @param func - The function to execute
+         * @returns The current time signature
+         */
         setTimeout(func, ms)
     }
 
     delayr(ms: number, nb: number, func: Function): void {
+        /**
+         * Delays the execution of a function by a given number of milliseconds, repeated a given number of times.
+         * 
+         * @param ms - The number of milliseconds to delay the function by
+         * @param nb - The number of times to repeat the delay
+         * @param func - The function to execute
+         * @returns The current time signature
+         */
         const list = [...Array(nb).keys()].map(i => ms * i);
         list.forEach((ms, _) => {
             setTimeout(func, ms)
         });
     }
 
-    mod(...pulse: number[]): boolean { return pulse.some(p => this.app.clock.time_position.pulse % p === 0) }
-    modbar(...bar: number[]): boolean { return bar.some(b => this.app.clock.time_position.bar % b === 0) }
+    mod(...pulse: number[]): boolean {
+        /**
+         * Returns true if the current pulse is a modulo of any of the given pulses.
+         * 
+         * @param pulse - The pulse to check for
+         * @returns True if the current pulse is a modulo of any of the given pulses
+         */
+        return pulse.some(p => this.app.clock.time_position.pulse % p === 0)
+    }
+
+    modbar(...bar: number[]): boolean {
+        /**
+         * Returns true if the current bar is a modulo of any of the given bars.
+         * 
+         * @param bar - The bar to check for
+         * @returns True if the current bar is a modulo of any of the given bars
+         * 
+         */
+        return bar.some(b => this.app.clock.time_position.bar % b === 0)
+    }
 
     euclid(iterator: number, pulses: number, length: number, rotate: number=0): boolean { 
-        return this.euclidean_cycle(pulses, length, rotate)[iterator % length];
+        /**
+         * Returns a euclidean cycle of size length, with n pulses, rotated or not.
+         * 
+         * @param iterator - Iteration number in the euclidian cycle
+         * @param pulses - The number of pulses in the cycle
+         * @param length - The length of the cycle
+         * @param rotate - Rotation of the euclidian sequence
+         * @returns boolean value based on the euclidian sequence
+         */
+        return this._euclidean_cycle(pulses, length, rotate)[iterator % length];
      }
 
-    euclidean_cycle(pulses: number, length: number, rotate: number = 0): boolean[] {
-        function startsDescent(list: number[], i: number): boolean {
+    _euclidean_cycle(pulses: number, length: number, rotate: number = 0): boolean[] {
+       function startsDescent(list: number[], i: number): boolean {
             const length = list.length;
             const nextIndex = (i + 1) % length;
             return list[i] > list[nextIndex] ? true : false;
