@@ -11,11 +11,22 @@ const sound = (value: any) => ({
 });
 
 class DrunkWalk {
+
+    /**
+     * A class that implements a "drunk walk" algorithm. This is useful for generating random
+     * numbers in a constrained range. The "drunk" starts at a position, and then makes a step
+     * of +1, 0, or -1. The "drunk" can be constrained to a range, and can wrap around the range.
+     * 
+     * @param min - The minimum value of the range
+     * @param max - The maximum value of the range
+     * @param wrap - Whether or not the "drunk" should wrap around the range
+     * @param position - The starting/current position of the "drunk"
+     */
+
     public min: number;
     public max: number;
     private wrap: boolean;
     public position: number;
-
 
     constructor(min: number, max: number, wrap: boolean) {
         this.min = min;
@@ -25,11 +36,14 @@ class DrunkWalk {
     }
 
     step(): void {
-        // The "drunk" makes a step: +1, 0, or -1
+
+        /**
+         * Makes a step in the "drunk walk" algorithm. This is a random step of +1, 0, or -1.
+         */
+
         const stepSize: number = Math.floor(Math.random() * 3) - 1;
         this.position += stepSize;
 
-        // Checks for wrap
         if (this.wrap) {
             if (this.position > this.max) {
                 this.position = this.min;
@@ -37,7 +51,6 @@ class DrunkWalk {
                 this.position = this.max;
             }
         } else {
-            // Enforces min and max constraints
             if (this.position < this.min) {
                 this.position = this.min;
             } else if (this.position > this.max) {
@@ -47,22 +60,36 @@ class DrunkWalk {
     }
 
     getPosition(): number {
+        /**
+         * @returns The current position of the "drunk"
+         */
         return this.position;
     }
 
     toggleWrap(b: boolean): void {
+        /**
+         * Whether or not the "drunk" should wrap around the range
+         * 
+         * @param b - Whether or not the "drunk" should wrap around the range
+         */
         this.wrap = b;
     }
 }
 
 export class UserAPI {
 
+    /**
+     * The UserAPI class is the interface between the user's code and the backend. It provides
+     * access to the AudioContext, to the MIDI Interface, to internal variables, mouse position, 
+     * useful functions, etc... This is the class that is exposed to the user's action and any 
+     * function destined to the user should be placed here.
+     */
+
     private variables: { [key: string]: any } = {}
     private iterators: { [key: string]: any } = {}
     private _drunk: DrunkWalk = new DrunkWalk(-100, 100, false);
 
     MidiConnection: MidiConnection = new MidiConnection()
-    // strudelSound = webaudioOutput()
     load: samples
 
     constructor (public app: Editor) {
@@ -74,6 +101,9 @@ export class UserAPI {
     // =============================================================
 
     get time(): number {
+        /**
+         * @returns The current time for the AudioContext
+         */
         return this.app.audioContext.currentTime
     }
 
@@ -82,10 +112,16 @@ export class UserAPI {
     // =============================================================
 
     get mouseX(): number { 
+        /**
+         * @returns The current x position of the mouse
+         */
         return this.app._mouseX 
     }
 
     get mouseY(): number { 
+        /**
+         * @returns The current y position of the mouse
+         */
         return this.app._mouseY 
     }
 
@@ -102,10 +138,15 @@ export class UserAPI {
         // is evaluated. This is useful for slowing down the script, or speeding it up. The default
         // would be 1.0, which is the current rate (very speedy).
     }
-    r = this.rate
 
 
     script(...args: number[]): void {
+        /**
+         * Evaluates 1-n local script(s)
+         * 
+         * @param args - The scripts to evaluate
+         * @returns The result of the evaluation
+         */
         args.forEach(arg => {
             tryEvaluate(
                 this.app, 
@@ -116,6 +157,11 @@ export class UserAPI {
     s = this.script
 
     clearscript(script: number): void {
+        /**
+         * Clears a local script
+         * 
+         * @param script - The script to clear
+         */
         this.app.universes[this.app.selected_universe].locals[script] = {
             candidate: '', committed: '', evaluations: 0
         }
@@ -123,7 +169,12 @@ export class UserAPI {
     cs = this.clearscript
 
     copyscript(from: number, to: number): void {
-        // Copy a script to another script
+        /**
+         * Copy from a local script to another local script
+         * 
+         * @param from - The script to copy from
+         * @param to - The script to copy to
+         */
         this.app.universes[this.app.selected_universe].locals[to] =
             this.app.universes[this.app.selected_universe].locals[from]
     }
@@ -134,11 +185,22 @@ export class UserAPI {
     // MIDI related functions
     // =============================================================
 
-    public midi_outputs(): void {
-        console.log(this.MidiConnection.listMidiOutputs())
+    public midi_outputs(): Array<MIDIOutput> {
+        /**
+         * Prints a list of available MIDI outputs in the console.
+         * 
+         * @returns A list of available MIDI outputs
+         */
+        console.log(this.MidiConnection.listMidiOutputs());
+        return this.MidiConnection.midiOutputs;
     }
 
     public midi_output(outputName: string): void {
+        /**
+         * Switches the MIDI output to the specified output.
+         * 
+         * @param outputName - The name of the MIDI output to switch to
+         */
         if (!outputName) {
             console.log(this.MidiConnection.getCurrentMidiPort())
         } else {
@@ -146,23 +208,41 @@ export class UserAPI {
         }
     }
 
-    public midi_connect(outputName: string): void {
-        this.MidiConnection.switchMidiOutput(outputName)
-    }
-
     public note(note: number, channel: number, velocity: number, duration: number): void {
+        /**
+         * Sends a MIDI note to the current MIDI output.
+         * TODO: Fix note duration
+         * 
+         * @param note - The MIDI note to send
+         * @param channel - The MIDI channel to send the note on
+         * @param velocity - The velocity of the note
+         * @param duration - The duration of the note (in ms)
+         * 
+         */
         this.MidiConnection.sendMidiNote(note, channel, velocity, duration)
     }
 
     public midi_clock(): void {
+        /**
+         * Sends a MIDI clock to the current MIDI output.
+         */
         this.MidiConnection.sendMidiClock()
     }
 
     public cc(control: number, value: number): void {
+        /**
+         * Sends a MIDI control change to the current MIDI output.
+         * 
+         * @param control - The MIDI control to send
+         * @param value - The value of the control
+         */
         this.MidiConnection.sendMidiControlChange(control, value)
     }
 
     public midi_panic(): void {
+        /**
+         * Sends a MIDI panic message to the current MIDI output.
+         */
         this.MidiConnection.panic()
     }
 
@@ -170,8 +250,16 @@ export class UserAPI {
     // Iterator related functions
     // =============================================================
 
-    public iterator(name: string, limit?: number, step?: number) {
-        // Check if iterator already exists
+    public iterator(name: string, limit?: number, step?: number): number {
+        /**
+         * Returns the current value of an iterator, and increments it by the step value.
+         * 
+         * @param name - The name of the iterator
+         * @param limit - The upper limit of the iterator
+         * @param step - The step value of the iterator
+         * @returns The current value of the iterator
+         */
+
         if (!(name in this.iterators)) {
             // Create new iterator with default step of 1
             this.iterators[name] = {
@@ -200,23 +288,50 @@ export class UserAPI {
     // =============================================================
 
     get drunk() {
+        /**
+         * 
+         * This function returns the current the drunk mechanism's
+         * current value.
+         * 
+         * @returns The current position of the drunk mechanism
+         */
         this._drunk.step();
         return this._drunk.getPosition();
     }
 
     set drunk(position: number) {
-        this._drunk.position = position;
+        /**
+         * Sets the current position of the drunk mechanism.
+         * 
+         * @param position - The value to set the drunk mechanism to
+         */
+       this._drunk.position = position;
     }
 
     set drunk_max(max: number) {
+        /**
+         * Sets the maximum value of the drunk mechanism.
+         * 
+         * @param max - The maximum value of the drunk mechanism
+         */
         this._drunk.max = max;
     }
 
     set drunk_min(min: number) {
+        /**
+         * Sets the minimum value of the drunk mechanism.
+         * 
+         * @param min - The minimum value of the drunk mechanism
+         */
         this._drunk.min = min;
     }
 
     set drunk_wrap(wrap: boolean) {
+        /**
+         * Sets whether the drunk mechanism should wrap around
+         * 
+         * @param wrap - Whether the drunk mechanism should wrap around
+         */
         this._drunk.toggleWrap(wrap);
     }
 
@@ -225,6 +340,13 @@ export class UserAPI {
     // =============================================================
 
     public variable(a: number | string, b?: any): any {
+        /**
+         * Sets or returns the value of a variable internal to API.
+         * 
+         * @param a - The name of the variable
+         * @param b - [optional] The value to set the variable to
+         * @returns The value of the variable 
+         */
         if (typeof a === 'string' && b === undefined) {
             return this.variables[a]
         } else {
@@ -235,11 +357,23 @@ export class UserAPI {
     v = this.variable
 
     public delete_variable(name: string): void {
+        /**
+         * Deletes a variable internal to API.
+         * 
+         * @param name - The name of the variable to delete
+         */
         delete this.variables[name]
     }
     dv = this.delete_variable
 
     public clear_variables(): void {
+        /**
+         * Clears all variables internal to API.
+         * 
+         * @remarks
+         * This function will delete all variables without warning. 
+         * Use with caution.
+         */
         this.variables = {}
     }
     cv = this.clear_variables
@@ -248,24 +382,81 @@ export class UserAPI {
     // Small algorithmic functions
     // =============================================================
 
-    pick<T>(...array: T[]): T { return array[Math.floor(Math.random() * array.length)] }
-    seqbeat<T>(...array: T[]): T { return array[this.app.clock.time_position.beat % array.length] }
-    seqbar<T>(...array: T[]): T { return array[this.app.clock.time_position.bar % array.length] }
-    seqpulse<T>(...array: T[]): T { return array[this.app.clock.time_position.pulse % array.length] }
+    pick<T>(...array: T[]): T {
+        /**
+         * Returns a random element from an array.
+         * 
+         * @param array - The array of values to pick from
+         */
+        return array[Math.floor(Math.random() * array.length)] 
+    }
+
+    seqbeat<T>(...array: T[]): T {
+        /**
+         * Returns an element from an array based on the current beat.
+         * 
+         * @param array - The array of values to pick from
+         */
+        return array[this.app.clock.time_position.beat % array.length] 
+    }
+
+    seqbar<T>(...array: T[]): T {
+        /**
+         * Returns an element from an array based on the current bar.
+         * 
+         * @param array - The array of values to pick from
+         */
+        return array[this.app.clock.time_position.bar % array.length] 
+    }
+
+    seqpulse<T>(...array: T[]): T {
+        /**
+         * Returns an element from an array based on the current pulse.
+         * 
+         * @param array - The array of values to pick from
+         */
+        return array[this.app.clock.time_position.pulse % array.length]
+     }
 
     // =============================================================
     // Randomness functions
     // =============================================================
 
-    randI(min: number, max: number): number { return Math.floor(Math.random() * (max - min + 1)) + min }
-    randF(min: number, max: number): number { return Math.random() * (max - min) + min }
-    rI = this.randI; rF = this.randF
+    randI(min: number, max: number): number {
+        /**
+         * Returns a random integer between min and max.
+         * 
+         * @param min - The minimum value of the random number
+         * @param max - The maximum value of the random number
+         * @returns A random integer between min and max
+         */
+        return Math.floor(Math.random() * (max - min + 1)) + min
+    }
+
+    rand(min: number, max: number): number {
+        /**
+         * Returns a random float between min and max.
+         * 
+         * @param min - The minimum value of the random number
+         * @param max - The maximum value of the random number
+         * @returns A random float between min and max
+         */
+        return Math.random() * (max - min) + min
+    }
+    rI = this.randI; r = this.rand
 
     // =============================================================
     // Quantification functions
     // =============================================================
 
     public quantize(value: number, quantization: number[]): number {
+        /**
+         * Returns the closest value in an array to a given value.
+         * 
+         * @param value - The value to quantize
+         * @param quantization - The array of values to quantize to
+         * @returns The closest value in the array to the given value
+         */
         if (quantization.length === 0) { return value }
         let closest = quantization[0]
         quantization.forEach(q => {
@@ -276,6 +467,14 @@ export class UserAPI {
     quant = this.quantize
 
     public clamp(value: number, min: number, max: number): number {
+        /**
+         * Returns a value clamped between min and max.
+         * 
+         * @param value - The value to clamp
+         * @param min - The minimum value of the clamped value
+         * @param max - The maximum value of the clamped value
+         * @returns A value clamped between min and max
+         */
         return Math.min(Math.max(value, min), max)
     }
     cmp = this.clamp
@@ -285,6 +484,12 @@ export class UserAPI {
     // =============================================================
 
     bpm(bpm?: number): number {
+        /**
+         * Sets or returns the current bpm.
+         * 
+         * @param bpm - [optional] The bpm to set
+         * @returns The current bpm
+         */
         if (bpm === undefined)
             return this.app.clock.bpm
 
@@ -296,6 +501,13 @@ export class UserAPI {
     tempo = this.bpm
 
     time_signature(numerator: number, denominator: number): void {
+        /**
+         * Sets the time signature.
+         * 
+         * @param numerator - The numerator of the time signature
+         * @param denominator - The denominator of the time signature
+         * @returns The current time signature
+         */
         this.app.clock.time_signature = [numerator, denominator]
     }
 
@@ -303,28 +515,73 @@ export class UserAPI {
     // Probability functions
     // =============================================================
 
-    public almostNever() { return Math.random() > 0.9 }
-    public sometimes() { return Math.random() > 0.5 }
-    public rarely() { return Math.random() > 0.75 }
-    public often() { return Math.random() > 0.25 }
-    public almostAlways() { return Math.random() > 0.1 }
-    public randInt(min: number, max: number) { return Math.floor(Math.random() * (max - min + 1)) + min }
-    public dice(sides: number) { return Math.floor(Math.random() * sides) + 1 }
+    public almostNever():boolean {
+        /**
+         * Returns true 10% of the time.
+         * 
+         * @returns True 10% of the time
+         */
+        return Math.random() > 0.9 
+    }
+
+    public sometimes(): boolean {
+        /**
+         * Returns true 50% of the time.
+         * 
+         * @returns True 50% of the time
+         */
+        return Math.random() > 0.5
+    }
+
+    public rarely():boolean {
+        /**
+         * Returns true 25% of the time.
+         * 
+         * @returns True 25% of the time
+         */
+        return Math.random() > 0.75
+    }
+
+    public often(): boolean {
+        /**
+         * Returns true 75% of the time.
+         * 
+         * @returns True 75% of the time
+         */
+        return Math.random() > 0.25
+    }
+
+    public almostAlways():boolean { 
+        /**
+         * Returns true 90% of the time.
+         * 
+         * @returns True 90% of the time
+         */
+        return Math.random() > 0.1 
+    }
+
+    public dice(sides: number):number {
+        /**
+         * Returns the value of a dice roll with n sides.
+         * 
+         * @param sides - The number of sides on the dice
+         * @returns The value of a dice roll with n sides
+         */
+        return Math.floor(Math.random() * sides) + 1
+    }
 
     // =============================================================
     // Iterator functions (for loops, with evaluation count, etc...)
     // =============================================================
 
-    get i() { return this.app.universes[this.app.selected_universe].global.evaluations }
-    get e1() { return this.app.universes[this.app.selected_universe].locals[1].evaluations }
-    get e2() { return this.app.universes[this.app.selected_universe].locals[2].evaluations }
-    get e3() { return this.app.universes[this.app.selected_universe].locals[3].evaluations }
-    get e4() { return this.app.universes[this.app.selected_universe].locals[4].evaluations }
-    get e5() { return this.app.universes[this.app.selected_universe].locals[5].evaluations }
-    get e6() { return this.app.universes[this.app.selected_universe].locals[6].evaluations }
-    get e7() { return this.app.universes[this.app.selected_universe].locals[7].evaluations }
-    get e8() { return this.app.universes[this.app.selected_universe].locals[8].evaluations }
-    get e9() { return this.app.universes[this.app.selected_universe].locals[9].evaluations }
+    get i() {
+        /**
+         * Returns the current iteration of global file.
+         * 
+         * @returns The current iteration of global file 
+         */
+        return this.app.universes[this.app.selected_universe].global.evaluations
+    }
 
     // =============================================================
     // Time markers
@@ -333,6 +590,8 @@ export class UserAPI {
     get bar(): number { 
         /**
          * Returns the current bar number
+         * 
+         * @returns The current bar number
          */
         return this.app.clock.time_position.bar 
     }
@@ -340,6 +599,8 @@ export class UserAPI {
     get tick(): number { 
         /**
          * Returns the current tick number
+         * 
+         * @returns The current tick number
          */
         return this.app.clock.tick 
     }
@@ -347,6 +608,8 @@ export class UserAPI {
     get pulse(): number { 
         /**
          * Returns the current pulse number
+         * 
+         * @returns The current pulse number
          */
         return this.app.clock.time_position.pulse 
     }
@@ -354,6 +617,8 @@ export class UserAPI {
     get beat(): number { 
         /** 
          * Returns the current beat number
+         * 
+         * @returns The current beat number
          */
         return this.app.clock.time_position.beat 
     }
@@ -370,7 +635,6 @@ export class UserAPI {
     onbar(n: number, ...bar: number[]): boolean { 
         // n is acting as a modulo on the bar number
         const bar_list = [...Array(n).keys()].map(i => i + 1);
-        console.log(bar_list)
         console.log(bar.some(b => bar_list.includes(b % n)))
         return bar.some(b => bar_list.includes(b % n))
     }

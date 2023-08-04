@@ -1,6 +1,6 @@
 export class MidiConnection{
     private midiAccess: MIDIAccess | null = null;
-    private midiOutputs: MIDIOutput[] = [];
+    public midiOutputs: MIDIOutput[] = [];
     private currentOutputIndex: number = 0;
     private scheduledNotes: { [noteNumber: number]: number } = {}; // { noteNumber: timeoutId }
   
