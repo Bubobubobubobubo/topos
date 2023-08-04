@@ -1,6 +1,6 @@
 // @ts-ignore
 import { TransportNode } from './TransportNode';
-
+import TransportProcessor from './TransportProcessor?url';
 import { Editor } from './main';
 
 export interface TimePosition {
@@ -26,7 +26,7 @@ export class Clock {
         this.time_signature = [4, 4];
         this.ppqn = 48;
         this.evaluations = 0;
-        ctx.audioWorklet.addModule('src/TransportProcessor.js').then((e) => {
+        ctx.audioWorklet.addModule(TransportProcessor).then((e) => {
             this.transportNode = new TransportNode(ctx, {}, this.app);
             this.transportNode.connect(ctx.destination);
             return e

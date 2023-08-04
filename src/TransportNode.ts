@@ -1,9 +1,23 @@
 import { evaluate, tryEvaluate, evaluateCommand } from "./Evaluator";
+import { Editor } from './main';
 const zeroPad = (num, places) => String(num).padStart(places, '0')
 
 export class TransportNode extends AudioWorkletNode {
 
-    constructor(context, options, application) {
+    app: Editor
+    $clock: HTMLSpanElement|null
+    hasBeenEvaluated: boolean
+    currentPulsePosition: number
+    nextPulsePosition: number
+    executionLatency: number
+    lastLatencies: number[]
+    indexOfLastLatencies: number
+    startTime: number|undefined
+    elapsedTime: number|undefined
+    prevCurrentTime: number
+
+
+    constructor(context: BaseAudioContext, options: AudioWorkletNodeOptions, application: Editor) {
         super(context, "transport", options);
         this.app = application
         this.port.addEventListener("message", this.handleMessage);
@@ -17,8 +31,9 @@ export class TransportNode extends AudioWorkletNode {
         this.lastLatencies = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
         this.indexOfLastLatencies = 0;
         // setInterval(() => this.ping(), 1000);
-        this.startTime = null;
+        this.startTime = undefined;
         this.elapsedTime = 0;
+        this.prevCurrentTime = 0;
     }
 
     // ping() {
@@ -26,12 +41,12 @@ export class TransportNode extends AudioWorkletNode {
     // }
 
     /** @type {(this: MessagePort, ev: MessageEvent<any>) => any} */
-    handleMessage = (message) => {
+    handleMessage = (message: MessageEvent) => {
         if (message.data && message.data.type === "ping") {
             const delay = performance.now() - message.data.t;
             // console.log(delay);
         } else if (message.data && message.data.type === "bang") {
-            if (this.startTime === null) {
+            if (this.startTime === undefined) {
                 this.startTime = message.data.currentTime;
             }
             this.elapsedTime = message.data.currentTime - this.startTime;
@@ -44,7 +59,7 @@ export class TransportNode extends AudioWorkletNode {
                 setTimeout(() => {
                     const now = performance.now();
                     this.app.clock.time_position = futureTimeStamp;
-                    this.$clock.innerHTML = `[${futureTimeStamp.bar} | ${futureTimeStamp.beat} | ${zeroPad(futureTimeStamp.pulse, '2')}]`;
+                    this.$clock!.innerHTML = `[${futureTimeStamp.bar} | ${futureTimeStamp.beat} | ${zeroPad(futureTimeStamp.pulse, '2')}]`;
                     tryEvaluate( 
                         this.app, 
                         this.app.global_buffer,
@@ -70,14 +85,14 @@ export class TransportNode extends AudioWorkletNode {
     }
 
     stop() {
-        this.startTime = null;
-        this.elapsedTime = null;
+        this.startTime = undefined;
+        this.elapsedTime = undefined;
         this.app.clock.tick = 0;
-        this.$clock.innerHTML = `[${1} | ${1} | ${zeroPad(1, '2')}]`;
+        this.$clock!.innerHTML = `[${1} | ${1} | ${zeroPad(1, '2')}]`;
         this.port.postMessage("stop");
     }
 
-    convertTimeToBarsBeats(currentTime) {
+    convertTimeToBarsBeats(currentTime: number) {
       const beatDuration = 60 / this.app.clock.bpm;
       const beatNumber = (currentTime) / beatDuration;
 
@@ -90,7 +105,7 @@ export class TransportNode extends AudioWorkletNode {
       return { bar: barNumber, beat: beatWithinBar, ppqn: ppqnPosition };
     }
 
-    convertTimeToNextBarsBeats(currentTime) {
+    convertTimeToNextBarsBeats(currentTime: number) {
 
       const beatDuration = 60 / this.app.clock.bpm;
       const beatNumber = (currentTime) / beatDuration;
