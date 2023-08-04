@@ -639,11 +639,19 @@ export class UserAPI {
         return bar.some(b => bar_list.includes(b % n))
     }
 
-    // TODO: bugfix here
     onbeat(...beat: number[]): boolean {
+        /**
+         * Returns true if the current beat is in the given list of beats.
+         *  
+         * @remarks
+         * This function can also operate with decimal beats!
+         *
+         * @param beat - The beats to check
+         * @returns True if the current beat is in the given list of beats
+         */
         let final_pulses: boolean[] = []
         beat.forEach(b => {
-            b = b % this.app.clock.time_signature[0]
+            b = 1 + (b % this.app.clock.time_signature[0])
             let integral_part = Math.floor(b);
             let decimal_part = b - integral_part;
             final_pulses.push(
@@ -798,10 +806,6 @@ export class UserAPI {
         }
         return cycle;
     }
-
-    // =============================================================
-    // Time zones 
-    // =============================================================
 
     // =============================================================
     // Trivial functions
