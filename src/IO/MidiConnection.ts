@@ -59,7 +59,17 @@ export class MidiConnection{
     }
 
 
-    public sendMidiNote(noteNumber: number, channel: number, velocity: number, durationMs: number): void {
+    public sendMidiNote(noteNumber: number, channel: number, velocity: number, duration: number): void {
+      /**
+       * Sending a MIDI Note on/off message with the same note number and channel. Automatically manages 
+       * the note off message after the specified duration.
+       * 
+       * @param noteNumber MIDI note number (0-127)
+       * @param channel MIDI channel (0-15)
+       * @param velocity MIDI velocity (0-127)
+       * @param duration Duration in milliseconds
+       * 
+       */
       const output = this.midiOutputs[this.currentOutputIndex];
       if (output) {
         const noteOnMessage = [0x90 + channel, noteNumber, velocity];
@@ -72,7 +82,7 @@ export class MidiConnection{
         const timeoutId = setTimeout(() => {
           output.send(noteOffMessage);
           delete this.scheduledNotes[noteNumber];
-        }, durationMs - 100);
+        }, (duration - 0.02) * 1000);
     
         this.scheduledNotes[noteNumber] = timeoutId;
       } else {
