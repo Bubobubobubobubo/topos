@@ -4,6 +4,15 @@ import type { File } from './AppSettings';
 const delay = (ms: number) => new Promise((_, reject) => setTimeout(() => reject(new Error('Operation took too long')), ms));
 
 const tryCatchWrapper = (application: Editor, code: string): Promise<boolean> => {
+  /**
+   * This function wraps a string of code in a try/catch block and returns a promise 
+   * that resolves to true if the code is valid and false if the code is invalid after
+   * being evaluated.
+   * 
+   * @param application - The main application instance 
+   * @param code - The string of code to wrap and evaluate
+   * @returns A promise that resolves to true if the code is valid and false if the code is invalid
+   */
   return new Promise((resolve, _) => {
     try {
       Function(`with (this) {try{${code}} catch (e) {console.log(e)}};`).call(application.api);
@@ -16,6 +25,16 @@ const tryCatchWrapper = (application: Editor, code: string): Promise<boolean> =>
 }
 
 export const tryEvaluate = async (
+  /**
+   * This function attempts to evaluate a string of code in the context of user API.
+   * If the code is invalid, it will attempt to evaluate the previous valid code.
+   * 
+   * @param application - The main application instance
+   * @param code - The set of files to evaluate
+   * @param timeout - The timeout in milliseconds
+   * @returns A promise that resolves to void
+   * 
+   */
   application: Editor, 
   code: File,
   timeout = 5000
@@ -38,18 +57,18 @@ export const tryEvaluate = async (
 }
 
 export const evaluate = async (application: Editor, code: File, timeout = 1000): Promise<void> => {
+  /**
+   * This function evaluates a string of code in the context of user API.
+   * 
+   * @param application - The main application instance
+   * @param code - The set of files to evaluate
+   * @param timeout - The timeout in milliseconds
+   * @returns A promise that resolves to void
+   */
   try {
     await Promise.race([tryCatchWrapper(application, code.committed as string), delay(timeout)]);
     if (code.evaluations)
       code.evaluations++;
-  } catch (error) {
-    console.log(error);
-  }
-}
-
-export const evaluateCommand = async (application: Editor, command: string, timeout = 5000): Promise<void> => {
-  try {
-    await Promise.race([tryCatchWrapper(application, command), delay(timeout)]);
   } catch (error) {
     console.log(error);
   }

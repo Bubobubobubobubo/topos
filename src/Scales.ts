@@ -54,6 +54,13 @@ const SCALES: Record<string, number[]> = {
 };
 
 export function scale(n: number, scaleName: string = 'major', octave: number = 4): number {
+    /**
+     * Returns the MIDI note number for the given scale degree in the given scale.
+     * @param {number} n - The scale degree, where 0 is the tonic.
+     * @param {string} scaleName - The name of the scale.
+     * @param {number} octave - The octave number.
+     * @returns {number} The MIDI note number.
+     */
     const scale = SCALES[scaleName];
   
     if (!scale) {
