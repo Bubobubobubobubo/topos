@@ -3,6 +3,14 @@ import { tutorial_universe } from "./universes/tutorial"
 export type Universes = { [key: string]: Universe }
 
 export interface Universe {
+  /**
+   * Universe is a collection of files.
+   * 
+   * @param global - Global file
+   * @param locals - Local files
+   * @param init - Init file
+   * @param notes - Notes file
+   */
   global: File
   locals: { [key: number]: File }
   init: File
@@ -10,12 +18,30 @@ export interface Universe {
 }
 
 export interface File {
+  /**
+   * A File is a set of the same text in different states.
+   * 
+   * @param candidate - The text that is being edited
+   * @param committed - The text that has been committed (e.g. stable)
+   * @param evaluations - The number of times the text has been evaluated
+   */
   candidate: string
   committed?: string
   evaluations?: number
 }
 
 export interface Settings {
+  /**
+   * Settings for the Topos application.
+   * 
+   * @param vimMode - Whether or not to use vim keybindings
+   * @param theme - The name of the theme to use
+   * @param font - The name of the font to use
+   * @param font_size - The size of the font to use
+   * @param universes - The set universes to use (e.g. saved files)
+   * @param selected_universe - The name of the selected universe
+   * @param line_numbers - Whether or not to show line numbers
+   */
     vimMode: boolean
     theme: string
     font: string
@@ -65,6 +91,20 @@ export const template_universes = {
   
 export class AppSettings {
 
+  /**
+   * AppSettings is a class that stores the settings for the Topos application.
+   * It is in charge of reading and writing to local storage and exposing that
+   * information to the main application.
+   * 
+   * @param vimMode - Whether or not to use vim keybindings
+   * @param theme - The name of the theme to use
+   * @param font - The name of the font to use
+   * @param font_size - The size of the font to use
+   * @param universes - The set universes to use (e.g. saved files)
+   * @param selected_universe - The name of the selected universe
+   * @param line_numbers - Whether or not to show line numbers
+   */
+
   public vimMode: boolean = false
   public theme: string = "materialDark"
   public font: string = "SpaceMono"
@@ -94,6 +134,9 @@ export class AppSettings {
 
 
   get data(): Settings {
+    /**
+     * Returns the settings as a Settings object.
+     */
     return {
       vimMode: this.vimMode,
       theme: this.theme,
@@ -106,6 +149,12 @@ export class AppSettings {
   }
 
   saveApplicationToLocalStorage(universes: Universes, settings: Settings): void{
+    /**
+     * Main method to store the application to local storage.
+     * 
+     * @param universes - The universes to save 
+     * @param settings - The settings to save
+     */
     this.universes = universes;
     this.vimMode = settings.vimMode;
     this.font = settings.font;
