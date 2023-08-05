@@ -302,6 +302,14 @@ export class UserAPI {
     }
     it = this.iterator
 
+    get _() {
+        return this.iterator('_');
+    }
+
+    get A() {
+        return this.iterator('A');
+    } 
+
     // =============================================================
     // Drunk mechanism
     // =============================================================

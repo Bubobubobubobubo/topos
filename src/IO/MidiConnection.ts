@@ -156,8 +156,6 @@ export class MidiConnection{
         console.error('MIDI output not available.');
       }
     }
-
-
   
     public sendMidiControlChange(controlNumber: number, value: number): void {
       /**

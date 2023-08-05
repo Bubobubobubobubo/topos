@@ -696,6 +696,7 @@ function startClock() {
   document
     .removeEventListener("click", startClock);
   document.removeEventListener("keydown", startOnEnter);
+  document.removeEventListener("click", startOnClick)
   app.clock.start();
   app.view.focus();
   app.setButtonHighlighting("play", true);
