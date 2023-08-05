@@ -1,4 +1,15 @@
 export class MidiConnection{
+
+    /**
+     * Wrapper class for Web MIDI API. Provides methods for sending MIDI messages.
+     * 
+     * 
+     * @param midiAccess - Web MIDI API access object
+     * @param midiOutputs - Array of MIDI output objects
+     * @param currentOutputIndex - Index of the currently selected MIDI output
+     * @param scheduledNotes - Object containing scheduled notes. Keys are note numbers and values are timeout IDs.
+     */
+
     private midiAccess: MIDIAccess | null = null;
     public midiOutputs: MIDIOutput[] = [];
     private currentOutputIndex: number = 0;
@@ -9,6 +20,11 @@ export class MidiConnection{
     }
   
     private async initializeMidiAccess(): Promise<void> {
+      /**
+       * Initializes Web MIDI API access and populates the list of MIDI outputs.
+       * 
+       * @returns Promise
+       */
       try {
         this.midiAccess = await navigator.requestMIDIAccess();
         this.midiOutputs = Array.from(this.midiAccess.outputs.values());
@@ -21,16 +37,24 @@ export class MidiConnection{
     }
  
     public getCurrentMidiPort(): string | null {
-        if (this.midiOutputs.length > 0 && this.currentOutputIndex >= 0 && this.currentOutputIndex < this.midiOutputs.length) {
-            return this.midiOutputs[this.currentOutputIndex].name;
-        } else {
-            console.error('No MIDI output selected or available.');
-            return null;
-        }
+      /**
+       * Returns the name of the currently selected MIDI output.
+       * 
+       * @returns Name of the currently selected MIDI output or null if no MIDI output is selected or available.
+       */
+      if (this.midiOutputs.length > 0 && this.currentOutputIndex >= 0 && this.currentOutputIndex < this.midiOutputs.length) {
+          return this.midiOutputs[this.currentOutputIndex].name;
+      } else {
+          console.error('No MIDI output selected or available.');
+          return null;
+      }
     }
 
 
     public sendMidiClock(): void {
+      /**
+       * Sends a single MIDI clock message to the currently selected MIDI output.
+       */
       const output = this.midiOutputs[this.currentOutputIndex];
       if (output) {
         output.send([0xF8]); // Send a single MIDI clock message
@@ -41,6 +65,12 @@ export class MidiConnection{
   
     
     public switchMidiOutput(outputName: string): boolean {
+      /**
+       * Switches the currently selected MIDI output.
+       * 
+       * @param outputName Name of the MIDI output to switch to
+       * @returns True if the MIDI output was found and switched to, false otherwise
+       */
       const index = this.midiOutputs.findIndex((output) => output.name === outputName);
       if (index !== -1) {
         this.currentOutputIndex = index;
@@ -52,6 +82,9 @@ export class MidiConnection{
     }
   
     public listMidiOutputs(): void {
+      /**
+       * Lists all available MIDI outputs to the console.
+       */
       console.log('Available MIDI Outputs:');
       this.midiOutputs.forEach((output, index) => {
         console.log(`${index + 1}. ${output.name}`);
@@ -91,6 +124,12 @@ export class MidiConnection{
     }
   
     public sendMidiControlChange(controlNumber: number, value: number): void {
+      /**
+       * Sends a MIDI Control Change message to the currently selected MIDI output.
+       * 
+       * @param controlNumber MIDI control number (0-127)
+       * @param value MIDI control value (0-127)
+       */
       const output = this.midiOutputs[this.currentOutputIndex];
       if (output) {
         output.send([0xB0, controlNumber, value]); // Control Change
@@ -100,6 +139,9 @@ export class MidiConnection{
     }
   
     public panic(): void {
+      /**
+       * Sends a Note Off message for all scheduled notes.
+       */
       const output = this.midiOutputs[this.currentOutputIndex];
       if (output) {
         for (const noteNumber in this.scheduledNotes) {
