@@ -4,6 +4,13 @@ import TransportProcessor from './TransportProcessor?url';
 import { Editor } from './main';
 
 export interface TimePosition {
+    /**
+     *  A position in time.
+     * 
+     * @param bar - The bar number
+     * @param beat - The beat number
+     * @param pulse - The pulse number
+     */
     bar: number
     beat: number
     pulse: number
@@ -11,7 +18,20 @@ export interface TimePosition {
 
 export class Clock {
 
-    evaluations: number
+    /**
+     * The Clock Class is responsible for keeping track of the current time.
+     * It is also responsible for starting and stopping the Clock TransportNode.
+     * 
+     * @param app - The main application instance
+     * @param ctx - The current AudioContext used by app
+     * @param transportNode - The TransportNode helper
+     * @param bpm - The current beats per minute value
+     * @param time_signature - The time signature
+     * @param time_position - The current time position
+     * @param ppqn - The pulses per quarter note
+     * @param tick - The current tick since origin
+     */
+
     ctx: AudioContext
     transportNode: TransportNode
     bpm: number
@@ -27,7 +47,6 @@ export class Clock {
         this.bpm = 120;
         this.time_signature = [4, 4];
         this.ppqn = 48;
-        this.evaluations = 0;
         ctx.audioWorklet.addModule(TransportProcessor).then((e) => {
             this.transportNode = new TransportNode(ctx, {}, this.app);
             this.transportNode.connect(ctx.destination);
@@ -38,19 +57,32 @@ export class Clock {
         })
     }
 
-    get beats_per_bar(): number { return this.time_signature[0]; }
+    get beats_per_bar(): number { 
+        /**
+         * Returns the number of beats per bar.
+         */
+        return this.time_signature[0]; 
+    }
 
     get pulse_duration(): number {
+        /**
+         * Returns the duration of a pulse in seconds.
+         */
         return 60 / this.bpm / this.ppqn;
     }
 
     public convertPulseToSecond(n: number): number {
+        /**
+         * Converts a pulse to a second.
+         */
         return n * this.pulse_duration
     }
 
 
     start(): void {
-        // Check if the clock is already running
+        /**
+         * Starts the TransportNode (starts the clock).
+         */
         if (this.transportNode?.state === 'running') {
             console.log('Already started')
         } else {
@@ -59,6 +91,17 @@ export class Clock {
         }
     }
 
-    pause = (): void => this.transportNode?.pause();
-    stop = (): void => this.transportNode?.stop();
+    pause(): void {
+        /**
+         * Pauses the TransportNode (pauses the clock).
+         */
+        this.transportNode?.pause();
+    }
+    
+    stop(): void {
+        /**
+         * Stops the TransportNode (stops the clock).
+         */
+        this.transportNode?.stop();
+    }
 }
