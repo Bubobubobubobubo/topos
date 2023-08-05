@@ -278,7 +278,7 @@ export class UserAPI {
          * @param step - The step value of the iterator
          * @returns The current value of the iterator
          */
-
+    
         if (!(name in this.iterators)) {
             // Create new iterator with default step of 1
             this.iterators[name] = {
@@ -287,16 +287,29 @@ export class UserAPI {
                 limit
             };
         } else {
+            // Check if limit has changed
+            if (this.iterators[name].limit !== limit) {
+                // Reset value to 0 and update limit
+                this.iterators[name].value = 0;
+                this.iterators[name].limit = limit;
+            }
+    
+            // Check if step has changed
+            if (this.iterators[name].step !== step) {
+                // Update step
+                this.iterators[name].step = step ?? this.iterators[name].step;
+            }
+    
             // Increment existing iterator by step value
             this.iterators[name].value += this.iterators[name].step;
-
+    
             // Check for limit overshoot
             if (this.iterators[name].limit !== undefined &&
                 this.iterators[name].value > this.iterators[name].limit) {
                 this.iterators[name].value = 0;
             }
         }
-
+    
         // Return current iterator value
         return this.iterators[name].value;
     }

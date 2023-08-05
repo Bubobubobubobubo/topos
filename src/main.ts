@@ -705,6 +705,7 @@ function startClock() {
 function startOnEnter(e: KeyboardEvent) {
   if (e.code === "Enter" || e.code === "Space") startClock();
 }
+
 function startOnClick(e: MouseEvent) {
   if (e.button === 0) startClock();
 }
