@@ -4,6 +4,9 @@ import { tryEvaluate } from "./Evaluator";
 import { MidiConnection } from "./IO/MidiConnection";
 // @ts-ignore
 import { webaudioOutput, samples } from '@strudel.cycles/webaudio';
+import { MiniLanguage } from "./Walker";
+import * as astring from 'astring';
+
 
 const sound = (value: any) => ({
     value, context: {},
@@ -139,7 +142,6 @@ export class UserAPI {
         // would be 1.0, which is the current rate (very speedy).
     }
 
-
     script(...args: number[]): void {
         /**
          * Evaluates 1-n local script(s)
@@ -180,7 +182,6 @@ export class UserAPI {
     }
     cps = this.copyscript
 
-
     // =============================================================
     // MIDI related functions
     // =============================================================
@@ -208,7 +209,7 @@ export class UserAPI {
         }
     }
 
-    public note(note: number, channel: number, velocity: number, duration: number): void {
+    public note(note: number, channel: number = 0, velocity: number = 100, duration: number = 0.5): void {
         /**
          * Sends a MIDI note to the current MIDI output.
          * TODO: Fix note duration
@@ -313,15 +314,7 @@ export class UserAPI {
         // Return current iterator value
         return this.iterators[name].value;
     }
-    it = this.iterator
-
-    get _() {
-        return this.iterator('_');
-    }
-
-    get A() {
-        return this.iterator('A');
-    } 
+    $ = this.iterator
 
     // =============================================================
     // Drunk mechanism
@@ -466,7 +459,7 @@ export class UserAPI {
          * @param array - The array of values to pick from
          */
         return array[this.app.clock.time_position.pulse % array.length]
-     }
+    }
 
     // =============================================================
     // Randomness functions
@@ -952,5 +945,11 @@ export class UserAPI {
 
     sound = async (values: object) => {
         webaudioOutput(sound(values), 0.00) 
+    }
+
+    ast(code: string) {
+        const ast = MiniLanguage.parse(code, { ecmaVersion: 2020 });
+        console.log(astring.generate(ast))
+        return 
     }
 }
