@@ -693,6 +693,8 @@ function startClock() {
   document
     .getElementById("start-button")!
     .removeEventListener("click", startClock);
+  document
+    .removeEventListener("click", startClock);
   document.removeEventListener("keydown", startOnEnter);
   app.clock.start();
   app.view.focus();
@@ -702,9 +704,13 @@ function startClock() {
 function startOnEnter(e: KeyboardEvent) {
   if (e.code === "Enter" || e.code === "Space") startClock();
 }
+function startOnClick(e: MouseEvent) {
+  if (e.button === 0) startClock();
+}
 
 document.addEventListener("keydown", startOnEnter);
-document.getElementById("start-button")!.addEventListener("click", startClock);
+document.addEventListener("click", startOnClick);
+// document.getElementById("start-button")!.addEventListener("click", startClock);
 
 /**
  * @param event The mouse event
