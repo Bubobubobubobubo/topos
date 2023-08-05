@@ -50,7 +50,6 @@ export class MidiConnection{
       }
     }
 
-
     public sendMidiClock(): void {
       /**
        * Sends a single MIDI clock message to the currently selected MIDI output.
@@ -62,7 +61,6 @@ export class MidiConnection{
         console.error('MIDI output not available.');
       }
     }
-  
     
     public switchMidiOutput(outputName: string): boolean {
       /**
@@ -91,7 +89,6 @@ export class MidiConnection{
       });
     }
 
-
     public sendMidiNote(noteNumber: number, channel: number, velocity: number, duration: number): void {
       /**
        * Sending a MIDI Note on/off message with the same note number and channel. Automatically manages 
@@ -118,6 +115,24 @@ export class MidiConnection{
         }, (duration - 0.02) * 1000);
     
         this.scheduledNotes[noteNumber] = timeoutId;
+      } else {
+        console.error('MIDI output not available.');
+      }
+    }
+
+    public sendSysExMessage(message: number[]): void {
+      /**
+       * Sends a SysEx message to the currently selected MIDI output.
+       * 
+       * @param message Array of SysEx message bytes
+       * 
+       * @example
+       * // Send a SysEx message to set the pitch bend range to 12 semitones
+       * sendSysExMessage([0xF0, 0x43, 0x10, 0x4C, 0x08, 0x00, 0x01, 0x00, 0x02, 0xF7]);
+       */
+      const output = this.midiOutputs[this.currentOutputIndex];
+      if (output) {
+        output.send(message);
       } else {
         console.error('MIDI output not available.');
       }
@@ -155,4 +170,3 @@ export class MidiConnection{
       }
     }
   }
-

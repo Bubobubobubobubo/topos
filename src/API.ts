@@ -222,6 +222,15 @@ export class UserAPI {
         this.MidiConnection.sendMidiNote(note, channel, velocity, duration)
     }
 
+    public sysex(data: Array<number>): void {
+        /**
+         * Sends a MIDI sysex message to the current MIDI output.
+         * 
+         * @param data - The sysex data to send
+         */
+        this.MidiConnection.sendSysExMessage(data)
+    }
+
     public midi_clock(): void {
         /**
          * Sends a MIDI clock to the current MIDI output.
