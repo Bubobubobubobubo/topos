@@ -231,6 +231,16 @@ export class UserAPI {
         this.MidiConnection.sendSysExMessage(data)
     }
 
+    public program_change(program: number, channel: number): void {
+        /**
+         * Sends a MIDI program change to the current MIDI output.
+         * 
+         * @param program - The MIDI program to send
+         * @param channel - The MIDI channel to send the program change on
+         */
+        this.MidiConnection.sendProgramChange(program, channel)
+    }
+
     public midi_clock(): void {
         /**
          * Sends a MIDI clock to the current MIDI output.

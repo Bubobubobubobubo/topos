@@ -137,6 +137,27 @@ export class MidiConnection{
         console.error('MIDI output not available.');
       }
     }
+
+    public sendProgramChange(programNumber: number, channel: number): void {
+      /**
+       * Sends a MIDI Program Change message to the currently selected MIDI output.
+       * 
+       * @param programNumber MIDI program number (0-127)
+       * @param channel MIDI channel (0-15)
+       * 
+       * @example
+       * // Send a Program Change message to select program 1 on channel 1
+       * sendProgramChange(0, 0);
+       */
+      const output = this.midiOutputs[this.currentOutputIndex];
+      if (output) {
+        output.send([0xC0 + channel, programNumber]); // Program Change
+      } else {
+        console.error('MIDI output not available.');
+      }
+    }
+
+
   
     public sendMidiControlChange(controlNumber: number, value: number): void {
       /**
