@@ -2,7 +2,7 @@
 
 Topos is an algorithmic sequencer inspired by the [Monome Teletype](https://monome.org/docs/teletype/). It is meant to be ready to use, without installation, from a web browser. Topos is still a prototype and is not ready for production use. It is not meant to be a clone of the Teletype, but rather a new take on the same concept. The goal is to provide a tool that can be used to generate music, but also to learn about live coding and algorithmic music.
 
-![Screenshot](./img/screenshot.png)
+![Screenshot](/img/screenshot.png?raw=true)
 
 Topos can generate sound through WebAudio and/or MIDI. The sequencer works by letting the user enter short JS code snippets that are evaluated in a _sandboxed_ environment. An API is providing tools to manipulate time, transport, instruments, data, etc...
 
