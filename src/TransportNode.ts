@@ -55,7 +55,7 @@ export class TransportNode extends AudioWorkletNode {
                 setTimeout(() => {
                     const now = performance.now();
                     this.app.clock.time_position = futureTimeStamp;
-                    this.$clock!.innerHTML = `[${futureTimeStamp.bar} | ${futureTimeStamp.beat} | ${zeroPad(futureTimeStamp.pulse, '2')}]`;
+                    this.$clock!.innerHTML = `[${futureTimeStamp.bar}:${futureTimeStamp.beat}:${zeroPad(futureTimeStamp.pulse, '2')}]`;
                     tryEvaluate( 
                         this.app, 
                         this.app.global_buffer,

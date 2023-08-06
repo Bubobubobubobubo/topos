@@ -6,7 +6,7 @@ Topos is an algorithmic sequencer inspired by the [Monome Teletype](https://mono
 
 Topos can generate sound through WebAudio and/or MIDI. The sequencer works by letting the user enter short JS code snippets that are evaluated in a _sandboxed_ environment. An API is providing tools to manipulate time, transport, instruments, data, etc...
 
-## How does it work?
+## How does it work?
 
 Just like the **Teletype**, **Topos** is following a **scripting** paradigm. The user is writing short snippets of code that are evaluated in a sandboxed environment. The code is evaluated in a loop, at a given tempo. There are four types of files that can be edited:
 
@@ -81,6 +81,7 @@ To build a standalone browser application using [Tauri](https://tauri.app/), you
   - [x] Vim mode.
 - [ ] Optimizations for smaller screens and mobile devices.
 - [ ] Read console log without opening the browser console.
+- [ ] Fix the bug that adds a new line everytime the app is opened
 
 ## Web Audio
 
