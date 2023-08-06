@@ -1,26 +1,25 @@
 # Topos: a Teletype inspired algorithmic sequencer
 
-[Monome Teletype](https://monome.org/docs/teletype/) inspired algorithmic sequencer for live coding in the browser. This is a prototype of an (hopefully) soon to be instrument that can generate sound through WebAudio and or MIDI. This sequencer works by letting the user enter short JS code snippets that are evaluated in a _sandboxed_ environment. An API is providing tools to manipulate time, instruments and data.
+Topos is an algorithmic sequencer inspired by the [Monome Teletype](https://monome.org/docs/teletype/). It is meant to be ready to use, without installation, from a web browser. Topos is still a prototype and is not ready for production use. It is not meant to be a clone of the Teletype, but rather a new take on the same concept. The goal is to provide a tool that can be used to generate music, but also to learn about live coding and algorithmic music.
 
-Just like the Teletype, this interface works by using the following hierarchy:
+![Screenshot](./screenshot.png)
 
-- **the global buffer** is used to sequence and activate scripts and control major global events.
-- **the local buffers** are describing some musical processes taking place when activated.
-- **the init buffer** is used to initialise the state of the universe.
+Topos can generate sound through WebAudio and/or MIDI. The sequencer works by letting the user enter short JS code snippets that are evaluated in a _sandboxed_ environment. An API is providing tools to manipulate time, transport, instruments, data, etc...
 
-A _universe_ is a set of files (global, init and locals) representing a musical composition, a song, a piece. The user can create as many universes as they want and switch between them at any time. The application is saving the state of the universe in the browser's local storage. To switch between universes, use the `Ctrl+B` keybinding that will open a modal. The clear button will delete restore the current universe to a blank slate.
+## How does it work?
 
-The application is a based on CodeMirror (for the editor), Tailwind (CSS) and Vite (bundler). The code is written in TypeScript when possible.
+Just like the **Teletype**, **Topos** is following a **scripting** paradigm. The user is writing short snippets of code that are evaluated in a sandboxed environment. The code is evaluated in a loop, at a given tempo. There are four types of files that can be edited:
 
-# Installation / Dev
+- **the global buffer**: used to sequence scripts and control major global events. This script is evaluated **at every clock tick**. This is, by default, _super fast_.
+- **the local buffers** are describing some musical logic/processes taking place. They are activated on demand, _once_ by any other script using the `script(n)` command.
+- **the init buffer** is used to initialise the state of the universe when you first load the app. Think of it as a space to set the tempo, to set default variables, etc...
+- **the note buffer**: used to document your projects and to take notes about your composition.
 
-To run the application:
+A **universe** is a set of files (global, init, locals and note) representing a musical composition, a song, a piece, an improvisation. You can create as many universes as you want and switch between them at any time. The application is saving the state of the universe in the browser's local storage.
 
-- clone the repository
-- run `yarn install`
-- run `yarn run dev`
+To switch between universes, use the `Ctrl+B` keybinding that will open a modal. The clear button will reset the current universe to a blank slate.
 
-# Keybindings
+## Keybindings
 
 - `Ctrl+P`: start the audio playback/clock.
 - `Ctrl+S`: stop the audio playback/clock.
@@ -34,12 +33,33 @@ To run the application:
 
 To evaluate code, press `Ctrl+Enter` (no visible animation). This is true for every buffer. To stop a buffer from playing, comment your code or delete it.
 
-# TODO
+## How to install locally?
 
-## API
+To run the application in dev mode, you will need to have [Node.js](https://nodejs.org/en/) and [Yarn](https://yarnpkg.com/en/) installed on your computer. Then:
 
-- [ ] Give information about its context of execution to every script
-  - knowing which internal iterator to use for each script would be nice
+- Clone the repository:
+  - run `yarn install`
+  - run `yarn run dev`
+
+To build the application for production, you will need to have [Node.js](https://nodejs.org/en/) and [Yarn](https://yarnpkg.com/en/) installed on your computer. Then:
+
+- Clone the repository:
+  - run `yarn run build`
+  - run `yarn run start`
+
+To build a standalone browser application using [Tauri](https://tauri.app/), you will need to have [Node.js](https://nodejs.org/en/), [Yarn](https://yarnpkg.com/en/) and [Rust](https://www.rust-lang.org/) installed on your computer. Then:
+
+- Clone the repository:
+  - run `yarn tauri build`
+  - run `yarn tauri dev`
+
+# Roadmap to Topos v1.0
+
+## Application User Interface
+
+- [ ] Give more information the local context of execution of every script
+  - print/display the internal iterator used in each script
+  - animate code to show which line is currently being executed
 
 ## Scheduler
 
@@ -51,22 +71,18 @@ To evaluate code, press `Ctrl+Enter` (no visible animation). This is true for ev
   - [x] Performance optimisations and metrics.
 - [ ] Add a way to save the current universe as a file.
 - [ ] Add a way to load a universe from a file.
-- [x] Add MIDI support.
-  - This is only partial, more work needed to support more messages.
 
-## UI
+## User Interface
 
 - [x] Settings menu with all options.
   - [ ] Color themes (dark/light), other colors.
   - [x] Font size.
+  - [ ] Font Family
   - [x] Vim mode.
-- [ ] Repair the current layout (aside + CodeMirror)
 - [ ] Optimizations for smaller screens and mobile devices.
-- [ ] Add a new "note" buffer for each universe (MarkDown)
-- [ ] Find a way to visualize console logs somewhere
+- [ ] Read console log without opening the browser console.
 
 ## Web Audio
 
 - [ ] Support Faut DSP integration.
-- [ ] Support Tone.js integration.
 - [x] WebAudio based engine.
