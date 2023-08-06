@@ -1,5 +1,6 @@
 import type { Editor } from './main';
 import type { File } from './AppSettings';
+import { parseUserCode } from './Walker';
 
 const delay = (ms: number) => new Promise((_, reject) => setTimeout(() => reject(new Error('Operation took too long')), ms));
 
@@ -15,7 +16,7 @@ const tryCatchWrapper = (application: Editor, code: string): Promise<boolean> =>
    */
   return new Promise((resolve, _) => {
     try {
-      Function(`with (this) {try{${code}} catch (e) {console.log(e)}};`).call(application.api);
+      Function(`with (this) {try{${parseUserCode(code)}} catch (e) {console.log(e)}};`).call(application.api);
       resolve(true);
     } catch (error) {
       console.log(error);

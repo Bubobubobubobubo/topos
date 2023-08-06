@@ -14,17 +14,14 @@ function myPlugin(Parser: typeof acorn.Parser): any {
 
         // Replace the Literal node with an ArrayExpression node
         return {
-          type: 'SpreadElement',
-          argument: {
             type: 'ArrayExpression',
             elements: transformed.map(value => ({
-              type: 'Literal',
-              value,
-              raw: value.toString()
-            }))
-          },
-          start: node.start,
-          end: node.end
+                type: 'Literal',
+                value,
+                raw: value.toString()
+            })),
+            start: node.start,
+            end: node.end
         };
       }
 
@@ -45,6 +42,13 @@ function myPlugin(Parser: typeof acorn.Parser): any {
         }
       });
 
+      matches?.forEach(match => {
+        const parts = match.split('~');
+        const begin = parseInt(parts[0])
+        const end = parseInt(parts[1])
+        values.push(Math.floor(Math.random() * (end) + begin))
+      })
+
       return values;
     }
   };
@@ -52,10 +56,13 @@ function myPlugin(Parser: typeof acorn.Parser): any {
 
 export const MiniLanguage = acorn.Parser.extend(myPlugin);
 
+export function parseUserCode(code: string): string {
+  let constructor = MiniLanguage.parse(code, { ecmaVersion: 2020 });
+  return astring.generate(constructor)
+}
+
 // Sample code
-// const code = `
-//   const a = '3!4 5'; // This should become const a = [...[3,3,3,3,5]];
-// `;
+// const code = `const a = '3!4 5'; // This should become const a = [...[3,3,3,3,5]];`;
 
 // Parse the code
 // const ast = MiniLanguage.parse(code, { ecmaVersion: 2020 });

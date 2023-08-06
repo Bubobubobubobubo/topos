@@ -4,8 +4,6 @@ import { tryEvaluate } from "./Evaluator";
 import { MidiConnection } from "./IO/MidiConnection";
 // @ts-ignore
 import { webaudioOutput, samples } from '@strudel.cycles/webaudio';
-import { MiniLanguage } from "./Walker";
-import * as astring from 'astring';
 
 
 const sound = (value: any) => ({
@@ -945,11 +943,5 @@ export class UserAPI {
 
     sound = async (values: object) => {
         webaudioOutput(sound(values), 0.00) 
-    }
-
-    ast(code: string) {
-        const ast = MiniLanguage.parse(code, { ecmaVersion: 2020 });
-        console.log(astring.generate(ast))
-        return 
     }
 }
