@@ -1,6 +1,6 @@
-import { evaluate, tryEvaluate, evaluateCommand } from "./Evaluator";
+import { tryEvaluate } from "./Evaluator";
 import { Editor } from './main';
-const zeroPad = (num, places) => String(num).padStart(places, '0')
+const zeroPad = (num: number, places: any) => String(num).padStart(places, '0')
 
 export class TransportNode extends AudioWorkletNode {
 
@@ -15,7 +15,6 @@ export class TransportNode extends AudioWorkletNode {
     startTime: number|undefined
     elapsedTime: number|undefined
     prevCurrentTime: number
-
 
     constructor(context: BaseAudioContext, options: AudioWorkletNodeOptions, application: Editor) {
         super(context, "transport", options);
@@ -42,14 +41,11 @@ export class TransportNode extends AudioWorkletNode {
 
     /** @type {(this: MessagePort, ev: MessageEvent<any>) => any} */
     handleMessage = (message: MessageEvent) => {
-        if (message.data && message.data.type === "ping") {
-            const delay = performance.now() - message.data.t;
-            // console.log(delay);
-        } else if (message.data && message.data.type === "bang") {
+        if (message.data && message.data.type === "bang") {
             if (this.startTime === undefined) {
                 this.startTime = message.data.currentTime;
             }
-            this.elapsedTime = message.data.currentTime - this.startTime;
+            this.elapsedTime = message.data.currentTime - this.startTime!;
             this.prevCurrentTime = message.data.currentTime;
             let { futureTimeStamp, timeToNextPulse, nextPulsePosition } = this.convertTimeToNextBarsBeats(this.elapsedTime);
 

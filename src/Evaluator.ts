@@ -41,7 +41,7 @@ export const tryEvaluate = async (
   timeout = 5000
   ): Promise<void> => {
   try {
-    code.evaluations++;
+    code.evaluations!++;
     const isCodeValid = await Promise.race([tryCatchWrapper(
       application, 
       `let i = ${code.evaluations};` + code.candidate,

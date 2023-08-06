@@ -726,6 +726,7 @@ window.addEventListener('mousemove', reportMouseCoordinates);
 
 // When the user leaves the page, all the universes should be saved in the localStorage
 window.addEventListener("beforeunload", () => {
+  // @ts-ignore
   event.preventDefault();
   // Iterate over all local files and set the candidate to the committed
   app.currentFile().candidate = app.view.state.doc.toString();

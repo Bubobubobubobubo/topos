@@ -33,7 +33,7 @@ export class Clock {
      */
 
     ctx: AudioContext
-    transportNode: TransportNode
+    transportNode: TransportNode | null
     bpm: number
     time_signature: number[]
     time_position: TimePosition
@@ -41,6 +41,7 @@ export class Clock {
     tick: number
 
     constructor(public app: Editor, ctx: AudioContext) {
+        this.transportNode = null;
         this.ctx = ctx;
         this.tick = 0;
         this.time_position = { bar: 0, beat: 0, pulse: 0 }
@@ -83,6 +84,7 @@ export class Clock {
         /**
          * Starts the TransportNode (starts the clock).
          */
+        // @ts-ignore
         if (this.transportNode?.state === 'running') {
             console.log('Already started')
         } else {
