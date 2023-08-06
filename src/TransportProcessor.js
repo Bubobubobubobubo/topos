@@ -1,17 +1,13 @@
 class TransportProcessor extends AudioWorkletProcessor {
 
-    started: boolean;
-    options: object;
-
-    constructor(options: AudioWorkletNodeOptions) {
-        super();
+    constructor(options) {
+        super(options);
         this.port.addEventListener("message", this.handleMessage);
         this.port.start();
-        this.started = false;
-        this.options = options;
+        this.stated = false;
    }
  
-    handleMessage = (message: MessageEvent) => {
+    handleMessage = (message) => {
         if (message.data && message.data.type === "ping") {
             this.port.postMessage(message.data);
         } else if (message.data === "start") {
@@ -20,11 +16,11 @@ class TransportProcessor extends AudioWorkletProcessor {
             this.started = false;
         } else if (message.data === "stop") {
             this.started = false;
+            this.currentTime = 0;
         }
     };
 
-    // @ts-expect-error
-    process(inputs: Float32Array[][], outputs: Float32Array[][], parameters: Record<string, Float32Array>) {
+    process(inputs, outputs, parameters) {
         if (this.started) this.port.postMessage({ type: "bang", currentTime });
         return true;
     }

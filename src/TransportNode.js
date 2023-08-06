@@ -1,22 +1,9 @@
 import { tryEvaluate } from "./Evaluator";
-import { Editor } from './main';
-const zeroPad = (num: number, places: any) => String(num).padStart(places, '0')
+const zeroPad = (num, places) => String(num).padStart(places, '0')
 
 export class TransportNode extends AudioWorkletNode {
 
-    app: Editor
-    $clock: HTMLSpanElement|null
-    hasBeenEvaluated: boolean
-    currentPulsePosition: number
-    nextPulsePosition: number
-    executionLatency: number
-    lastLatencies: number[]
-    indexOfLastLatencies: number
-    startTime: number|undefined
-    elapsedTime: number|undefined
-    prevCurrentTime: number
-
-    constructor(context: BaseAudioContext, options: AudioWorkletNodeOptions, application: Editor) {
+    constructor(context, options, application) {
         super(context, "transport", options);
         this.app = application
         this.port.addEventListener("message", this.handleMessage);
@@ -30,22 +17,17 @@ export class TransportNode extends AudioWorkletNode {
         this.lastLatencies = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
         this.indexOfLastLatencies = 0;
         // setInterval(() => this.ping(), 1000);
-        this.startTime = undefined;
+        this.startTime = null;
         this.elapsedTime = 0;
-        this.prevCurrentTime = 0;
     }
 
-    // ping() {
-    //     this.port.postMessage({ type: "ping", t: performance.now() })
-    // }
-
     /** @type {(this: MessagePort, ev: MessageEvent<any>) => any} */
-    handleMessage = (message: MessageEvent) => {
+    handleMessage = (message) => {
         if (message.data && message.data.type === "bang") {
-            if (this.startTime === undefined) {
+            if (this.startTime === null) {
                 this.startTime = message.data.currentTime;
             }
-            this.elapsedTime = message.data.currentTime - this.startTime!;
+            this.elapsedTime = message.data.currentTime - this.startTime;
             this.prevCurrentTime = message.data.currentTime;
             let { futureTimeStamp, timeToNextPulse, nextPulsePosition } = this.convertTimeToNextBarsBeats(this.elapsedTime);
 
@@ -55,7 +37,7 @@ export class TransportNode extends AudioWorkletNode {
                 setTimeout(() => {
                     const now = performance.now();
                     this.app.clock.time_position = futureTimeStamp;
-                    this.$clock!.innerHTML = `[${futureTimeStamp.bar}:${futureTimeStamp.beat}:${zeroPad(futureTimeStamp.pulse, '2')}]`;
+                    this.$clock.innerHTML = `[${futureTimeStamp.bar}:${futureTimeStamp.beat}:${zeroPad(futureTimeStamp.pulse, '2')}]`;
                     tryEvaluate( 
                         this.app, 
                         this.app.global_buffer,
@@ -81,14 +63,14 @@ export class TransportNode extends AudioWorkletNode {
     }
 
     stop() {
-        this.startTime = undefined;
-        this.elapsedTime = undefined;
+        this.startTime = null;
+        this.elapsedTime = null;
         this.app.clock.tick = 0;
-        this.$clock!.innerHTML = `[${1} | ${1} | ${zeroPad(1, '2')}]`;
+        this.$clock.innerHTML = `[${1} | ${1} | ${zeroPad(1, '2')}]`;
         this.port.postMessage("stop");
     }
 
-    convertTimeToBarsBeats(currentTime: number) {
+    convertTimeToBarsBeats(currentTime) {
       const beatDuration = 60 / this.app.clock.bpm;
       const beatNumber = (currentTime) / beatDuration;
 
@@ -101,7 +83,7 @@ export class TransportNode extends AudioWorkletNode {
       return { bar: barNumber, beat: beatWithinBar, ppqn: ppqnPosition };
     }
 
-    convertTimeToNextBarsBeats(currentTime: number) {
+    convertTimeToNextBarsBeats(currentTime) {
 
       const beatDuration = 60 / this.app.clock.bpm;
       const beatNumber = (currentTime) / beatDuration;
