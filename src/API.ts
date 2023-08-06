@@ -135,6 +135,7 @@ export class UserAPI {
     scale = scale
 
     rate(rate: number): void {
+        rate = rate;
         // TODO: Implement this. This function should change the rate at which the global script
         // is evaluated. This is useful for slowing down the script, or speeding it up. The default
         // would be 1.0, which is the current rate (very speedy).

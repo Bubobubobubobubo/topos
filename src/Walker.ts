@@ -1,11 +1,13 @@
 import * as acorn from 'acorn';
-import * as walk from 'acorn-walk';
+// import * as walk from 'acorn-walk';
 import * as astring from 'astring';
 
 // Create a custom Acorn plugin
 function myPlugin(Parser: typeof acorn.Parser): any {
   return class extends Parser {
+    // @ts-ignore
     parseLiteral(...args: Parameters<acorn.Parser['parseLiteral']>) {
+      // @ts-ignore
       const node = super.parseLiteral(...args);
       
       // Check if the literal is a string and if it's wrapped in single quotes

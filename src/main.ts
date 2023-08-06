@@ -669,7 +669,7 @@ export class Editor {
   flashBackground(color: string, duration: number): void {
     // Set the flashing color
     this.view.dom.style.backgroundColor = color;
-    const gutters = this.view.dom.getElementsByClassName("cm-gutter");
+    const gutters = this.view.dom.getElementsByClassName("cm-gutter") as HTMLCollectionOf<HTMLElement>; 
     Array.from(gutters).forEach(gutter => gutter.style.backgroundColor = color);
   
     // Reset to original color after duration

@@ -1,12 +1,14 @@
 class TransportProcessor extends AudioWorkletProcessor {
 
     started: boolean;
+    options: object;
 
     constructor(options: AudioWorkletNodeOptions) {
         super();
         this.port.addEventListener("message", this.handleMessage);
         this.port.start();
         this.started = false;
+        this.options = options;
    }
  
     handleMessage = (message: MessageEvent) => {
