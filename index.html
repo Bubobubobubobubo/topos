@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Topos</title>
+    
+    <script type="module" crossorigin src="/assets/index-63fdba11.js"></script>
+    <link rel="stylesheet" href="/assets/index-a0b9bfcd.css">
+  </head>
+  <style>
+
+    body {
+      background-color: #111827;
+      margin: 0;
+      padding: 0;
+    }
+
+    .app {
+      max-height: 100vh;
+    }
+ 
+    .cm-editor {
+      width: 100%;
+      max-height: 100vh;
+    }
+
+    .cm-scroller {
+      display: block !important;
+      width: 100% !important;
+    }
+  </style>
+  <body>
+
+		<!-- The header is hidden on smaller devices -->
+    <header class="py-2 hidden xl:block text-white bg-neutral-900">
+      <div class="mx-auto flex flex-wrap pl-2 py-1 flex-row items-center">
+        <a class="flex title-font font-medium items-center text-black mb-0">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-10 h-10 text-black p-2 bg-white rounded-full" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
+          </svg>
+          <span id="universe-viewer" class="ml-4 text-2xl text-white">Topos</span>
+
+        </a>
+        <nav class="py-0 flex flex-wrap items-center text-base absolute right-0">
+        <!-- 
+          <div id="blinkers" class="flex flex-row space-x-2 pr-4 pb-1.5 justify-center items-center">
+            <p id="blinker-1" class="text-white text-5xl">•</p>
+            <p id="blinker-2" class="text-white text-5xl">•</p>
+            <p id="blinker-3" class="text-white text-5xl">•</p>
+            <p id="blinker-4" class="text-white text-5xl">•</p>
+            <p id="blinker-5" class="text-white text-5xl">•</p>
+            <p id="blinker-6" class="text-white text-5xl">•</p>
+            <p id="blinker-7" class="text-white text-5xl">•</p>
+            <p id="blinker-8" class="text-white text-5xl">•</p>
+            <p id="blinker-9" class="text-white text-5xl">•</p>
+          </div>
+          -->
+          <span id="clockviewer" class="font-mono font-semibold mr-6 py-1 bg-white text-black rounded align-center text-normal px-2">
+            Clock
+          </span>
+          <a id="play-button-1" class="mr-5">
+            <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 14 16">
+              <path d="M0 .984v14.032a1 1 0 0 0 1.506.845l12.006-7.016a.974.974 0 0 0 0-1.69L1.506.139A1 1 0 0 0 0 .984Z"/>
+            </svg>
+          </a>
+          <a id="pause-button-1" class="mr-5 hover:text-gray-900">
+            <svg class="fill-orange-300 w-8 h-8 text-gray-800 dark:text-white" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9 13a1 1 0 0 1-2 0V7a1 1 0 0 1 2 0v6Zm4 0a1 1 0 0 1-2 0V7a1 1 0 0 1 2 0v6Z"/>
+            </svg>
+          </a>
+          <a id="stop-button-1" class="mr-5 hover:text-gray-900">
+            <svg class="w-8 h-8 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 12 16">
+              <path d="M10.819.4a1.974 1.974 0 0 0-2.147.33l-6.5 5.773A2.014 2.014 0 0 0 2 6.7V1a1 1 0 0 0-2 0v14a1 1 0 1 0 2 0V9.3c.055.068.114.133.177.194l6.5 5.773a1.982 1.982 0 0 0 2.147.33A1.977 1.977 0 0 0 12 13.773V2.227A1.977 1.977 0 0 0 10.819.4Z"/>
+            </svg>
+          </a>
+          <a id="clear-button-1" class="mr-5 hover:text-gray-900">
+            <svg class="w-8 h-8 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 17 20">
+              <path d="M7.958 19.393a7.7 7.7 0 0 1-6.715-3.439c-2.868-4.832 0-9.376.944-10.654l.091-.122a3.286 3.286 0 0 0 .765-3.288A1 1 0 0 1 4.6.8c.133.1.313.212.525.347A10.451 10.451 0 0 1 10.6 9.3c.5-1.06.772-2.213.8-3.385a1 1 0 0 1 1.592-.758c1.636 1.205 4.638 6.081 2.019 10.441a8.177 8.177 0 0 1-7.053 3.795Z"/>
+            </svg>
+          </a>
+        </nav>
+        </nav>
+      </div>
+    </header>
+
+    <div id="app">
+
+      <!-- This modal is used for switching between buffers -->
+      <div id="modal-buffers" class="invisible bg-neutral-900 bg-opacity-50 flex justify-center items-center absolute top-0 right-0 bottom-0 left-0">
+        <div id="start-button" class="px-16 py-14 rounded-md text-center">
+          <div id="disclaimer" class="pb-4">
+          <form>   
+            <label for="search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
+            <div class="relative">
+            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+            </svg>
+        </div>
+              <input minlength="2" type="text" id="buffer-search" class="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 outline-0 rounded-lg bg-neutral-900 dark:bg-neutral-900 dark:text-white" placeholder="Buffer..." required>
+              <button disabled class="text-black absolute right-2.5 bottom-2.5 bg-white hover:bg-white focus:outline-none font-medium rounded-lg text-sm px-4 py-2">Go</button>
+            </div>
+          </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- This modal is used for settings -->
+        <div id="modal-settings" class="invisible bg-neutral-900 bg-opacity-50 flex justify-center items-center absolute top-0 right-0 bottom-0 left-0">
+          <div class="flex flex flex-col w-full">
+            <div class="bg-white rounded-lg mx-48 my-48 space-y-8 px-8">
+            <h1 class="mt-12 font-semibold rounded bg-gray-800 justify-center text-center text-white mx-4 text-xl border-b border-gray-300 py-4">Topos Application Settings</h1>
+              <!-- Font Size Selection -->
+              <div class="space-y-6 w-auto min-w-screen px-4">
+                <div id="font-size-selector" class="flex flex-row space-x-4 rounded-lg">
+                  <label id="font-size-witness" for="default-range" class="text-xs lg:text-sm font-medium text-black w-2/5 lg:w-1/5">Font Size: 22px</label>
+                  <input id="font-size-slider" type="range" step=1 value="22" class="align-middle w-3/5 lg:w-4/5 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700">
+                </div>
+              </div>
+              <!-- Font Family Selection -->
+              <div class="space-y-6 w-auto min-w-screen px-4">
+              </div>
+              <!-- Editor mode selection -->
+              <div class="flex flex-row space-x-4 justify-center px-2 mx-2">
+                <div class="flex items-center pl-4 border border-gray-200 rounded dark:border-gray-700 w-full">
+                  <input id="bordered-radio-1" type="radio" value="" name="bordered-radio" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                  <label id="normal-mode" for="bordered-radio-1" class="w-full py-4 ml-2 text-sm font-medium text-black">Normal Mode</label>
+                </div>
+                <div class="flex items-center pl-4 border border-gray-200 rounded dark:border-gray-700 w-full">
+                  <input checked id="bordered-radio-2" type="radio" value="" name="bordered-radio" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                  <label id="vim-mode" for="bordered-radio-2" class="w-full py-4 ml-2 text-sm font-medium text-black">Vim Mode</label>
+                </div>
+              </div>
+              <!-- Line Numbers  -->
+              <div class="flex items-center mb-4 ml-8">
+                  <input id="show-line-numbers" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                  <label for="default-checkbox" class="ml-2 text-sm font-medium text-dark">Show Line Numbers</label>
+              </div>
+              <!-- Information card -->
+              <div class="flex lg:flex-row space-y-2 lg:space-y-0 flex-col w-auto min-w-screen px-4 lg:space-x-8 space-x-0">
+                <a href="https://github.com/Bubobubobubobubo/Topos" class="block max-w-sm p-6 border border-gray-200 rounded-lg shadow bg-gray-800 border-gray-700 hover:bg-gray-700">
+                  <h5 class="mb-2 lg:text-2xl text-xl font-bold tracking-tight text-gray-900 dark:text-white">GitHub</h5>
+                  <p class="font-normal text-gray-700 dark:text-gray-400">Get involved in the dev process and or file an issue for a broken feature</p>
+                </a>
+                <a href="https://discord.gg/aPgV7mSFZh" class="block max-w-sm p-6  border border-gray-200 rounded-lg shadow bg-gray-800 border-gray-700 hover:bg-gray-700">
+                  <h5 class="mb-2 lg:text-2xl text-xl font-bold tracking-tight text-gray-900 dark:text-white">Discord</h5>
+                  <p class="font-normal text-gray-700 dark:text-gray-400">Join the community on the official Topos/Sardine Discord Server.</p>
+                </a>
+                <a href="https://topos.raphaelforment.fr" class="block max-w-sm p-6 border border-gray-200 rounded-lg shadow bg-gray-800 border-gray-800 hover:bg-gray-700">
+                  <h5 class="mb-2 text-xl lg:text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Website</h5>
+                  <p class="font-normal text-gray-700 dark:text-gray-400">Documentation, videos and more on the official website.</p>
+                </a>
+              </div>
+              <div class="flex space-x-6 border-t border-gray-200 rounded-b dark:border-gray-600 mx-4 border-spacing-y-4">
+                <button id="close-settings-button" data-modal-hide="defaultModal" type="button" class="hover:bg-gray-700 bg-gray-800 mt-4 mb-4 text-white focus:ring-4  font-medium rounded-lg text-sm px-5 py-2.5 text-center">OK</button>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+
+      <!-- This modal pops up when the page is first loaded and then disappears forever -->
+      <div id="modal-container" class="motion-safe:animate-pulse flex min-h-screen flex flex-col">
+      <div id="modal" class="bg-neutral-900 bg-opacity-50 flex justify-center items-center absolute top-0 right-0 bottom-0 left-0">
+        <div id="start-button" class="bg-white px-12 py-12 rounded-md text-center">
+         <h1 class="text-xl mb-4 font-bold text-white rounded bg-gray-800 py-4 mb-8">Topos Prototype</h1>
+          <div class="flex ml-0 lg:flex-row space-y-4 lg:space-y-0 flex-col w-auto min-w-screen px-0 lg:space-x-8 space-x-0">
+            <a href="https://github.com/Bubobubobubobubo/Topos" class="block max-w-sm p-6 border border-gray-200 rounded-lg shadow bg-gray-800 border-gray-700 hover:bg-gray-700">
+              <h5 class="mb-2 lg:text-2xl text-xl font-bold tracking-tight text-gray-900 dark:text-white">GitHub</h5>
+              <p class="font-normal text-gray-700 dark:text-gray-400">Get involved in the dev process and or file an issue for a broken feature</p>
+            </a>
+            <a href="https://discord.gg/aPgV7mSFZh" class="block max-w-sm p-6  border border-gray-200 rounded-lg shadow bg-gray-800 border-gray-700 hover:bg-gray-700">
+              <h5 class="mb-2 lg:text-2xl text-xl font-bold tracking-tight text-gray-900 dark:text-white">Discord</h5>
+              <p class="font-normal text-gray-700 dark:text-gray-400">Join the community on the official Topos/Sardine Discord Server.</p>
+            </a>
+            <a href="https://topos.raphaelforment.fr" class="block max-w-sm p-6 border border-gray-200 rounded-lg shadow bg-gray-800 border-gray-800 hover:bg-gray-700">
+              <h5 class="mb-2 text-xl lg:text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Website</h5>
+              <p class="font-normal text-gray-700 dark:text-gray-400">Documentation, videos and more on the official website.</p>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex flex-row">
+
+				<!-- This is a lateral bar that will inherit the header buttons
+					if the window is too small.
+				-->
+        <aside class="
+					flex flex-col items-center w-14
+					h-screen py-2 overflow-y-auto
+					border-r rtl:border-l
+					rtl:border-r-0 bg-neutral-900
+					dark:border-gray-700"
+				>
+        <nav class="flex flex-col space-y-6">
+            <a id="local-button" class="pl-2 p-1.5 text-gray-700 focus:outline-nones transition-colors duration-200 rounded-lg dark:text-gray-200 dark:hover:bg-gray-800 hover:bg-gray-100">
+              <svg class="w-8 h-8 text-orange-300" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M10 15a5 5 0 1 0 0-10 5 5 0 0 0 0 10Zm0-11a1 1 0 0 0 1-1V1a1 1 0 0 0-2 0v2a1 1 0 0 0 1 1Zm0 12a1 1 0 0 0-1 1v2a1 1 0 1 0 2 0v-2a1 1 0 0 0-1-1ZM4.343 5.757a1 1 0 0 0 1.414-1.414L4.343 2.929a1 1 0 0 0-1.414 1.414l1.414 1.414Zm11.314 8.486a1 1 0 0 0-1.414 1.414l1.414 1.414a1 1 0 0 0 1.414-1.414l-1.414-1.414ZM4 10a1 1 0 0 0-1-1H1a1 1 0 0 0 0 2h2a1 1 0 0 0 1-1Zm15-1h-2a1 1 0 1 0 0 2h2a1 1 0 0 0 0-2ZM4.343 14.243l-1.414 1.414a1 1 0 1 0 1.414 1.414l1.414-1.414a1 1 0 0 0-1.414-1.414ZM14.95 6.05a1 1 0 0 0 .707-.293l1.414-1.414a1 1 0 1 0-1.414-1.414l-1.414 1.414a1 1 0 0 0 .707 1.707Z"/>
+              </svg>
+            </a>
+          
+            <a id="global-button" class="pl-2 p-1.5 text-gray-700 focus:outline-nones transition-colors duration-200 rounded-lg dark:text-gray-200 dark:hover:bg-gray-800 hover:bg-gray-100">
+              <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 18 20">
+                <path d="M17.8 13.75a1 1 0 0 0-.859-.5A7.488 7.488 0 0 1 10.52 2a1 1 0 0 0 0-.969A1.035 1.035 0 0 0 9.687.5h-.113a9.5 9.5 0 1 0 8.222 14.247 1 1 0 0 0 .004-.997Z"/>
+              </svg>
+            </a>
+          
+            <a id="init-button" class="pl-2 p-1.5 text-gray-700 focus:outline-nones transition-colors duration-200 rounded-lg dark:text-gray-200 dark:hover:bg-gray-800 hover:bg-gray-100">
+              <svg class="w-8 h-8 text-white " fill="none" viewBox="0 0 21 20">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6.487 1.746c0 4.192 3.592 1.66 4.592 5.754 0 .828 1 1.5 2 1.5s2-.672 2-1.5a1.5 1.5 0 0 1 1.5-1.5h1.5m-16.02.471c4.02 2.248 1.776 4.216 4.878 5.645C10.18 13.61 9 19 9 19m9.366-6h-2.287a3 3 0 0 0-3 3v2m6-8a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+              </svg>
+            </a>
+
+            <a id="note-button" class="pl-2 p-1.5 text-gray-700 focus:outline-nones transition-colors duration-200 rounded-lg dark:text-gray-200 dark:hover:bg-gray-800 hover:bg-gray-100">
+              <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 16 20">
+                <path d="M16 14V2a2 2 0 0 0-2-2H2a2 2 0 0 0-2 2v15a3 3 0 0 0 3 3h12a1 1 0 0 0 0-2h-1v-2a2 2 0 0 0 2-2ZM4 2h2v12H4V2Zm8 16H3a1 1 0 0 1 0-2h9v2Z"/>
+              </svg>
+            </a>
+
+            <!-- Other buttons -->
+         
+            <a id="play-button-2" class="pl-2 p-1.5 text-gray-700 focus:outline-nones transition-colors duration-200 rounded-lg dark:text-gray-200 dark:hover:bg-gray-800 hover:bg-gray-100">
+              <svg class="w-8 h-8 text-white block xl:hidden" fill="currentColor" viewBox="0 0 14 16">
+                <path d="M0 .984v14.032a1 1 0 0 0 1.506.845l12.006-7.016a.974.974 0 0 0 0-1.69L1.506.139A1 1 0 0 0 0 .984Z"/>
+              </svg>
+            </a>
+        
+            <a id="pause-button-2" class="pl-2 p-1.5 text-gray-700 focus:outline-nones transition-colors duration-200 rounded-lg dark:text-gray-200 dark:hover:bg-gray-800 hover:bg-gray-100">
+              <svg class="fill-orange-300 w-8 h-8 block xl:hidden" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9 13a1 1 0 0 1-2 0V7a1 1 0 0 1 2 0v6Zm4 0a1 1 0 0 1-2 0V7a1 1 0 0 1 2 0v6Z"/>
+              </svg>
+            </a>
+       
+            <a id="stop-button-2" class="pl-2 p-1.5 text-gray-700 focus:outline-nones transition-colors duration-200 rounded-lg dark:text-gray-200 dark:hover:bg-gray-800 hover:bg-gray-100">
+              <svg class="w-8 h-8 text-gray-800 dark:text-white block xl:hidden" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 12 16">
+                <path d="M10.819.4a1.974 1.974 0 0 0-2.147.33l-6.5 5.773A2.014 2.014 0 0 0 2 6.7V1a1 1 0 0 0-2 0v14a1 1 0 1 0 2 0V9.3c.055.068.114.133.177.194l6.5 5.773a1.982 1.982 0 0 0 2.147.33A1.977 1.977 0 0 0 12 13.773V2.227A1.977 1.977 0 0 0 10.819.4Z"/>
+              </svg>
+            </a>
+       
+            <a id="clear-button-2" class="pl-2 p-1.5 text-gray-700 focus:outline-nones transition-colors duration-200 rounded-lg dark:text-gray-200 dark:hover:bg-gray-800 hover:bg-gray-100">
+              <svg class="w-8 h-8 text-white block xl:hidden" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 17 20">
+              <path d="M7.958 19.393a7.7 7.7 0 0 1-6.715-3.439c-2.868-4.832 0-9.376.944-10.654l.091-.122a3.286 3.286 0 0 0 .765-3.288A1 1 0 0 1 4.6.8c.133.1.313.212.525.347A10.451 10.451 0 0 1 10.6 9.3c.5-1.06.772-2.213.8-3.385a1 1 0 0 1 1.592-.758c1.636 1.205 4.638 6.081 2.019 10.441a8.177 8.177 0 0 1-7.053 3.795Z"/>
+              </svg>
+            </a>
+
+            <a id="settings-button" class="p-2 text-gray-700 ml-1 absolute bottom-2 focus:outline-nones transition-colors duration-200 rounded-lg dark:text-gray-200 dark:bg-gray-800 bg-gray-100">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M10.343 3.94c.09-.542.56-.94 1.11-.94h1.093c.55 0 1.02.398 1.11.94l.149.894c.07.424.384.764.78.93.398.164.855.142 1.205-.108l.737-.527a1.125 1.125 0 011.45.12l.773.774c.39.389.44 1.002.12 1.45l-.527.737c-.25.35-.272.806-.107 1.204.165.397.505.71.93.78l.893.15c.543.09.94.56.94 1.109v1.094c0 .55-.397 1.02-.94 1.11l-.893.149c-.425.07-.765.383-.93.78-.165.398-.143.854.107 1.204l.527.738c.32.447.269 1.06-.12 1.45l-.774.773a1.125 1.125 0 01-1.449.12l-.738-.527c-.35-.25-.806-.272-1.203-.107-.397.165-.71.505-.781.929l-.149.894c-.09.542-.56.94-1.11.94h-1.094c-.55 0-1.019-.398-1.11-.94l-.148-.894c-.071-.424-.384-.764-.781-.93-.398-.164-.854-.142-1.204.108l-.738.527c-.447.32-1.06.269-1.45-.12l-.773-.774a1.125 1.125 0 01-.12-1.45l.527-.737c.25-.35.273-.806.108-1.204-.165-.397-.505-.71-.93-.78l-.894-.15c-.542-.09-.94-.56-.94-1.109v-1.094c0-.55.398-1.02.94-1.11l.894-.149c.424-.07.765-.383.93-.78.165-.398.143-.854-.107-1.204l-.527-.738a1.125 1.125 0 01.12-1.45l.773-.773a1.125 1.125 0 011.45-.12l.737.527c.35.25.807.272 1.204.107.397-.165.71-.505.78-.929l.15-.894z" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+            </a>
+        </aside>
+
+        <!-- Tabs for local files -->
+        <div class="min-w-screen flex grow flex-col">
+          <ul id="local-script-tabs" class="text-xl flex text-sm font-medium text-center text-white dark:text-white bg-neutral-900 space-x-2 lg:space-x-8">
+            <li class="pl-5">
+                <a id="tab-1" class="bg-orange-300 inline-block px-4 py-1 text-white hover:bg-gray-800">1</a>
+            </li>
+            <li class="">
+                <a id="tab-2" class="inline-block px-4 py-1 hover:bg-gray-800">2</a>
+            </li>
+            <li class="">
+                <a id="tab-3" class="inline-block px-4 py-1 hover:bg-gray-800">3</a>
+            </li>
+            <li class="">
+                <a id="tab-4" class="inline-block px-4 py-1 hover:bg-gray-800">4</a>
+            </li>
+            <li class="">
+                <a id="tab-5" class="inline-block px-4 py-1 hover:bg-gray-800">5</a>
+            </li>
+            <li class="">
+                <a id="tab-6" class="inline-block px-4 py-1 hover:bg-gray-800">6</a>
+            </li>
+            <li class="">
+                <a id="tab-7" class="inline-block px-4 py-1 hover:bg-gray-800">7</a>
+            </li>
+            <li class="">
+                <a id="tab-8" class="inline-block px-4 py-1 hover:bg-gray-800">8</a>
+            </li>
+            <li class="">
+                <a id="tab-9" class="inline-block px-4 py-1 hover:bg-gray-800">9</a>
+            </li>
+ 
+         </ul>
+         <!-- Here comes the editor itself -->
+          <div id="editor" class="invisible relative flex flex-row flex-grow overflow-hidden overflow-y-hidden">
+        </div>
+        </div>
+      </div>
+      
+  </body>
+</html>
