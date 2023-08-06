@@ -23,7 +23,8 @@ class TransportProcessor extends AudioWorkletProcessor {
         }
     };
 
-    process() {
+    // @ts-expect-error
+    process(inputs: Float32Array[][], outputs: Float32Array[][], parameters: Record<string, Float32Array>) {
         if (this.started) this.port.postMessage({ type: "bang", currentTime });
         return true;
     }

@@ -1,6 +1,6 @@
 // @ts-ignore
 import { TransportNode } from './TransportNode';
-import TransportProcessor from './TransportProcessor?url';
+import TransportProcessor from './TransportProcessor?worker&url';
 import { Editor } from './main';
 
 export interface TimePosition {
