@@ -2,6 +2,8 @@ import { Editor } from "./main";
 import { scale } from './Scales';
 import { tryEvaluate } from "./Evaluator";
 import { MidiConnection } from "./IO/MidiConnection";
+import { next } from "zifferjs";
+
 // @ts-ignore
 import { webaudioOutput, samples } from '@strudel.cycles/webaudio';
 
@@ -222,6 +224,16 @@ export class UserAPI {
         this.MidiConnection.sendMidiNote(note, channel, velocity, duration)
     }
 
+    public zn(input: string, options: object = {}): void {
+        const node = next(input, options);
+        const channel = options.channel ? options.channel : 0;
+        const velocity = options.velocity ? options.velocity : 100;
+        const sustain = options.sustain ? options.sustain : 0.5;
+        if(node.bend) this.MidiConnection.sendPitchBend(node.bend, channel);
+        this.MidiConnection.sendMidiNote(node.note, channel, velocity, sustain);
+        if(node.bend) this.MidiConnection.sendPitchBend(8192, channel);
+    }
+
     public sysex(data: Array<number>): void {
         /**
          * Sends a MIDI sysex message to the current MIDI output.
@@ -230,6 +242,19 @@ export class UserAPI {
          */
         this.MidiConnection.sendSysExMessage(data)
     }
+
+    public pitch_bend(value: number, channel: number): void {
+        /**
+         * Sends a MIDI pitch bend to the current MIDI output.
+         *  
+         * @param value - The value of the pitch bend
+         * @param channel - The MIDI channel to send the pitch bend on
+         *  
+         * @returns The value of the pitch bend
+         */
+        this.MidiConnection.sendPitchBend(value, channel)
+    }
+
 
     public program_change(program: number, channel: number): void {
         /**
@@ -703,6 +728,13 @@ export class UserAPI {
         });
         return final_pulses.some(p => p == true)
     }
+
+    z(string: String, options: object = {}): void {
+        const parsed = zget(string, options);
+        if(options && options.s) {
+            sound(options.s);
+        }
+    } 
 
     stop(): void { 
         /**

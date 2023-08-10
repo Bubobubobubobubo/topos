@@ -101,6 +101,7 @@ export class MidiConnection{
        * 
        */
       const output = this.midiOutputs[this.currentOutputIndex];
+      noteNumber = Math.min(Math.max(noteNumber, 0), 127);
       if (output) {
         const noteOnMessage = [0x90 + channel, noteNumber, velocity];
         const noteOffMessage = [0x80 + channel, noteNumber, 0];
@@ -133,6 +134,30 @@ export class MidiConnection{
       const output = this.midiOutputs[this.currentOutputIndex];
       if (output) {
         output.send(message);
+      } else {
+        console.error('MIDI output not available.');
+      }
+    }
+
+    public sendPitchBend(value: number, channel: number): void {
+      /**
+       * Sends a MIDI Pitch Bend message to the currently selected MIDI output.
+       *  
+       * @param value MIDI pitch bend value (0-16383)
+       * @param channel MIDI channel (0-15)
+       * 
+       */
+      if (value < 0 || value > 16383) {
+        console.error('Invalid pitch bend value. Value must be in the range 0-16383.');
+      }
+      if (channel < 0 || channel > 15) {
+        console.error('Invalid MIDI channel. Channel must be in the range 0-15.');
+      }
+      const output = this.midiOutputs[this.currentOutputIndex];
+      if (output) {
+        const lsb = value & 0x7F;
+        const msb = (value >> 7) & 0x7F;
+        output.send([0xE0 | channel, lsb, msb]);
       } else {
         console.error('MIDI output not available.');
       }
