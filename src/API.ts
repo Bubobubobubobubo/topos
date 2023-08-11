@@ -224,13 +224,13 @@ export class UserAPI {
         this.MidiConnection.sendMidiNote(note, channel, velocity, duration)
     }
 
-    public zn(input: string, options: object = {}): void {
+    public zn(input: string, options: {[key: string]: any} = {}): void {
         const node = next(input, options);
         const channel = options.channel ? options.channel : 0;
         const velocity = options.velocity ? options.velocity : 100;
         const sustain = options.sustain ? options.sustain : 0.5;
         if(node.bend) this.MidiConnection.sendPitchBend(node.bend, channel);
-        this.MidiConnection.sendMidiNote(node.note, channel, velocity, sustain);
+        this.MidiConnection.sendMidiNote(node.note!, channel, velocity, sustain);
         if(node.bend) this.MidiConnection.sendPitchBend(8192, channel);
     }
 
@@ -728,13 +728,6 @@ export class UserAPI {
         });
         return final_pulses.some(p => p == true)
     }
-
-    z(string: String, options: object = {}): void {
-        const parsed = zget(string, options);
-        if(options && options.s) {
-            sound(options.s);
-        }
-    } 
 
     stop(): void { 
         /**
