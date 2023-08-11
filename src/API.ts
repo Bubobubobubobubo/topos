@@ -3,15 +3,21 @@ import { scale } from './Scales';
 import { tryEvaluate } from "./Evaluator";
 import { MidiConnection } from "./IO/MidiConnection";
 import { next } from "zifferjs";
+import { 
+    superdough, 
+    samples, 
+    initAudioOnFirstClick, 
+    registerSynthSounds 
+} from 'superdough';
 
-// @ts-ignore
-import { webaudioOutput, samples } from '@strudel.cycles/webaudio';
+
+const init = Promise.all([
+    initAudioOnFirstClick(),
+    samples('github:tidalcycles/Dirt-Samples/master'),
+    registerSynthSounds(),
+]);
 
 
-const sound = (value: any) => ({
-    value, context: {},
-    ensureObjectValue: () => {}
-});
 
 class DrunkWalk {
 
@@ -967,7 +973,7 @@ export class UserAPI {
     // Trivial functions
     // =============================================================
 
-    sound = async (values: object) => {
-        webaudioOutput(sound(values), 0.00) 
+    sound = async (values: object, delay: number = 0.00) => {
+        superdough(values, delay) 
     }
 }
