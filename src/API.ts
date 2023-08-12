@@ -2,7 +2,7 @@ import { Editor } from "./main";
 import { scale } from './Scales';
 import { tryEvaluate } from "./Evaluator";
 import { MidiConnection } from "./IO/MidiConnection";
-import { next } from "zifferjs";
+import { next, Pitch, Chord, Rest } from "zifferjs";
 
 // @ts-ignore
 import { webaudioOutput, samples } from '@strudel.cycles/webaudio';
@@ -225,13 +225,23 @@ export class UserAPI {
     }
 
     public zn(input: string, options: {[key: string]: any} = {}): void {
-        const node = next(input, options);
+        const node = next(input, options) as any;
         const channel = options.channel ? options.channel : 0;
         const velocity = options.velocity ? options.velocity : 100;
         const sustain = options.sustain ? options.sustain : 0.5;
-        if(node.bend) this.MidiConnection.sendPitchBend(node.bend, channel);
-        this.MidiConnection.sendMidiNote(node.note!, channel, velocity, sustain);
-        if(node.bend) this.MidiConnection.sendPitchBend(8192, channel);
+        if(node instanceof Pitch) {
+            if(node.bend) this.MidiConnection.sendPitchBend(node.bend, channel);
+            this.MidiConnection.sendMidiNote(node.note!, channel, velocity, sustain);
+            if(node.bend) this.MidiConnection.sendPitchBend(8192, channel);
+        } else if(node instanceof Chord) {
+            node.pitches.forEach(pitch => {
+                if(pitch.bend) this.MidiConnection.sendPitchBend(pitch.bend, channel);
+                this.MidiConnection.sendMidiNote(pitch.note!, channel, velocity, sustain);
+                if(pitch.bend) this.MidiConnection.sendPitchBend(8192, channel);
+            });
+        } else if(node instanceof Rest) {
+            // do nothing for now ...
+        }
     }
 
     public sysex(data: Array<number>): void {
