@@ -47,7 +47,7 @@ export class Clock {
         this.time_position = { bar: 0, beat: 0, pulse: 0 }
         this.bpm = 120;
         this.time_signature = [4, 4];
-        this.ppqn = 48;
+        this.ppqn = 48*2;
         ctx.audioWorklet.addModule(TransportProcessor).then((e) => {
             this.transportNode = new TransportNode(ctx, {}, this.app);
             this.transportNode.connect(ctx.destination);

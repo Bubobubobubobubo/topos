@@ -3,15 +3,18 @@ import { scale } from './Scales';
 import { tryEvaluate } from "./Evaluator";
 import { MidiConnection } from "./IO/MidiConnection";
 import { next, Pitch, Chord, Rest } from "zifferjs";
+import { 
+    superdough, samples, 
+    initAudioOnFirstClick, 
+    registerSynthSounds 
+} from 'superdough';
 
-// @ts-ignore
-import { webaudioOutput, samples } from '@strudel.cycles/webaudio';
 
-
-const sound = (value: any) => ({
-    value, context: {},
-    ensureObjectValue: () => {}
-});
+const init = Promise.all([
+    initAudioOnFirstClick(),
+    samples('github:tidalcycles/Dirt-Samples/master'),
+    registerSynthSounds(),
+]);
 
 class DrunkWalk {
 
@@ -224,11 +227,11 @@ export class UserAPI {
         this.MidiConnection.sendMidiNote(note, channel, velocity, duration)
     }
 
-    public zn(input: string, options: {[key: string]: any} = {}): void {
+    public zn(input: string, options: {[key: string]: string|number} = {}): void {
         const node = next(input, options) as any;
-        const channel = options.channel ? options.channel : 0;
-        const velocity = options.velocity ? options.velocity : 100;
-        const sustain = options.sustain ? options.sustain : 0.5;
+        const channel = (options.channel ? options.channel : 0) as number;
+        const velocity = (options.velocity ? options.velocity : 100) as number;
+        const sustain = (options.sustain ? options.sustain : 0.5) as number;
         if(node instanceof Pitch) {
             if(node.bend) this.MidiConnection.sendPitchBend(node.bend, channel);
             this.MidiConnection.sendMidiNote(node.note!, channel, velocity, sustain);
@@ -264,7 +267,6 @@ export class UserAPI {
          */
         this.MidiConnection.sendPitchBend(value, channel)
     }
-
 
     public program_change(program: number, channel: number): void {
         /**
@@ -560,20 +562,20 @@ export class UserAPI {
     // Transport functions
     // =============================================================
 
-    bpm(bpm?: number): number {
+    bpm(n?: number): number {
         /**
          * Sets or returns the current bpm.
          * 
          * @param bpm - [optional] The bpm to set
          * @returns The current bpm
          */
-        if (bpm === undefined)
+        if (n === undefined)
             return this.app.clock.bpm
 
-        if (bpm < 1 || bpm > 500)
-            console.log(`Setting bpm to ${bpm}`)
-            this.app.clock.bpm = bpm
-        return bpm
+        if (n < 1 || n > 500)
+            console.log(`Setting bpm to ${n}`)
+            this.app.clock.bpm = n
+        return n
     }
     tempo = this.bpm
 
@@ -977,7 +979,8 @@ export class UserAPI {
     // Trivial functions
     // =============================================================
 
-    sound = async (values: object) => {
-        webaudioOutput(sound(values), 0.00) 
+    sound = async (values: object, delay: number = 0.00) => {
+        superdough(values, delay) 
     }
+    d = this.sound
 }
