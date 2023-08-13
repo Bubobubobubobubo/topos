@@ -609,7 +609,7 @@ export class UserAPI {
          * 
          * @returns The current iteration of global file 
          */
-        return this.app.universes[this.app.selected_universe].global.evaluations
+        return this.app.universes[this.app.selected_universe].global.evaluations as number;
     }
 
     set i(n: number) {
