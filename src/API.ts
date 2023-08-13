@@ -10,6 +10,19 @@ import {
     registerSynthSounds 
 } from 'superdough';
 
+/**
+ * We are overriding the includes method which is rather
+ * useful to check the position of an event on a specific beat.
+ */
+declare global {
+    interface Array<T> {
+        in(value: T): boolean;
+    }
+}
+Array.prototype.in = function<T>(this: T[], value: T): boolean {
+    return this.includes(value);
+};
+
 
 const init = Promise.all([
     initAudioOnFirstClick(),
@@ -828,6 +841,28 @@ export class UserAPI {
     // =============================================================
     // Low Frequency Oscillators
     // =============================================================
+
+    line(start: number, end: number, step: number = 1): number[] {
+        /**
+         * Returns an array of values between start and end, with a given step.
+         * 
+         * @param start - The start value of the array
+         * @param end - The end value of the array
+         * @param step - The step value of the array
+         * @returns An array of values between start and end, with a given step
+         */
+        const result: number[] = [];
+    
+        if ((end > start && step > 0) || (end < start && step < 0)) {
+            for (let value = start; value <= end; value += step) {
+                result.push(value);
+            }
+        } else {
+            console.error("Invalid range or step provided.");
+        }
+    
+        return result;
+    }
 
     sine(freq: number = 1, offset: number=0): number {
         /**
