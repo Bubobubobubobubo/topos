@@ -227,7 +227,7 @@ export class UserAPI {
         this.MidiConnection.sendMidiNote(note, channel, velocity, duration)
     }
 
-    public zn(input: string, options: {[key: string]: string|number} = {}): void {
+    public zn(input: string, options: {[key: string]: string|number} = {}): Pitch|Chord|Rest {
         const node = next(input, options) as any;
         const channel = (options.channel ? options.channel : 0) as number;
         const velocity = (options.velocity ? options.velocity : 100) as number;
@@ -245,6 +245,7 @@ export class UserAPI {
         } else if(node instanceof Rest) {
             // do nothing for now ...
         }
+        return node;
     }
 
     public sysex(data: Array<number>): void {
