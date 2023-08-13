@@ -7,7 +7,7 @@ function codeInterceptor(code: string): string {
     .replace(/t\[(\d+),(\d+)\]/g, 'mod($1,$2)')
     .replace(/b\[(\d+),(\d+)\]/g, '[$1,$2].includes(beat)')
     .replace(/eb\[(\d+),(\d+)\]/g, '[$1,$2].includes(ebeat)')
-    .replace(/m\[(\d+),(\d+)\]/g, '[$1,$2].includes(bar)');
+    .replace(/m\[(\d+),(\d+)\]/g, '[$1,$2].includes(bar)')
 }
 
 const delay = (ms: number) => new Promise((_, reject) => setTimeout(() => reject(new Error('Operation took too long')), ms));

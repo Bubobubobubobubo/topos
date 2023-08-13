@@ -8,6 +8,7 @@ import {
     superdough, samples, 
     initAudioOnFirstClick, 
     registerSynthSounds 
+// @ts-ignore
 } from 'superdough';
 
 /**
@@ -24,7 +25,7 @@ Array.prototype.in = function<T>(this: T[], value: T): boolean {
 };
 
 
-const init = Promise.all([
+Promise.all([
     initAudioOnFirstClick(),
     samples('github:tidalcycles/Dirt-Samples/master'),
     samples('github:kindohm/expedition/tree/master/samples'),

@@ -29,7 +29,7 @@
     "superdough": "^0.9.3",
     "tailwindcss": "^3.3.3",
     "tone": "^14.8.49",
-    "zifferjs": "file:../zifferjs",
+    "zifferjs": "https://github.com/amiika/zifferjs.git",
     "zzfx": "^1.2.0"
   }
 }
