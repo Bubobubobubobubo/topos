@@ -602,7 +602,7 @@ export class UserAPI {
     }
 
     set i(n: number) {
-        this.app.universes[this.app.selected_universe].global.evaluations = 0;
+        this.app.universes[this.app.selected_universe].global.evaluations = n;
     }
 
     // =============================================================
