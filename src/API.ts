@@ -28,7 +28,6 @@ Array.prototype.in = function<T>(this: T[], value: T): boolean {
 Promise.all([
     initAudioOnFirstClick(),
     samples('github:tidalcycles/Dirt-Samples/master'),
-    samples('github:kindohm/expedition/tree/master/samples'),
     registerSynthSounds(),
 ]);
 
