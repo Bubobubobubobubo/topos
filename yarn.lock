@@ -1160,7 +1160,11 @@ yaml@^2.1.1:
 
 "zifferjs@https://github.com/amiika/zifferjs.git":
   version "0.0.0"
+<<<<<<< HEAD
   resolved "https://github.com/amiika/zifferjs.git#374ee4edb0b07d9968b635f899f9f88d79ddaa07"
+=======
+  resolved "https://github.com/amiika/zifferjs.git#0254770c19db8772a9c3cb6b0571f2b5007593e6"
+>>>>>>> 3effb4f456592922e3e97e1e7b16f6f8929a90b4
   dependencies:
     "@types/seedrandom" "^3.0.5"
     lru-cache "^10.0.0"

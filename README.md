@@ -62,6 +62,8 @@ To build a standalone browser application using [Tauri](https://tauri.app/), you
 - [ ] Give more information the local context of execution of every script
   - print/display the internal iterator used in each script
   - animate code to show which line is currently being executed
+- [ ] More rhythmic generators
+- [ ] Rendering static files (MIDI, MOD, etc...)
 
 ## Scheduler
 
