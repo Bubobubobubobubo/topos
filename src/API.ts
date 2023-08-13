@@ -645,12 +645,12 @@ export class UserAPI {
         return this.app.clock.time_position.beat 
     }
 
-    get t_beat(): number {
+    get ebeat(): number {
         /**
          * Returns the current beat number since the origin of time
          * TODO: fix! Why is this not working?
          */
-        return Math.floor(this.app.clock.tick / this.app.clock.ppqn)
+        return this.app.clock.beats_since_origin
     }
 
 
