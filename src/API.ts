@@ -2,6 +2,7 @@ import { Editor } from "./main";
 import { scale } from './Scales';
 import { tryEvaluate } from "./Evaluator";
 import { MidiConnection } from "./IO/MidiConnection";
+import { DrunkWalk } from './Utils/Drunk';
 import { next, Pitch, Chord, Rest } from "zifferjs";
 import { 
     superdough, samples, 
@@ -9,78 +10,26 @@ import {
     registerSynthSounds 
 } from 'superdough';
 
+/**
+ * We are overriding the includes method which is rather
+ * useful to check the position of an event on a specific beat.
+ */
+declare global {
+    interface Array<T> {
+        in(value: T): boolean;
+    }
+}
+Array.prototype.in = function<T>(this: T[], value: T): boolean {
+    return this.includes(value);
+};
+
 
 const init = Promise.all([
     initAudioOnFirstClick(),
     samples('github:tidalcycles/Dirt-Samples/master'),
+    samples('github:kindohm/expedition/tree/master/samples'),
     registerSynthSounds(),
 ]);
-
-class DrunkWalk {
-
-    /**
-     * A class that implements a "drunk walk" algorithm. This is useful for generating random
-     * numbers in a constrained range. The "drunk" starts at a position, and then makes a step
-     * of +1, 0, or -1. The "drunk" can be constrained to a range, and can wrap around the range.
-     * 
-     * @param min - The minimum value of the range
-     * @param max - The maximum value of the range
-     * @param wrap - Whether or not the "drunk" should wrap around the range
-     * @param position - The starting/current position of the "drunk"
-     */
-
-    public min: number;
-    public max: number;
-    private wrap: boolean;
-    public position: number;
-
-    constructor(min: number, max: number, wrap: boolean) {
-        this.min = min;
-        this.max = max;
-        this.wrap = wrap;
-        this.position = 0;
-    }
-
-    step(): void {
-
-        /**
-         * Makes a step in the "drunk walk" algorithm. This is a random step of +1, 0, or -1.
-         */
-
-        const stepSize: number = Math.floor(Math.random() * 3) - 1;
-        this.position += stepSize;
-
-        if (this.wrap) {
-            if (this.position > this.max) {
-                this.position = this.min;
-            } else if (this.position < this.min) {
-                this.position = this.max;
-            }
-        } else {
-            if (this.position < this.min) {
-                this.position = this.min;
-            } else if (this.position > this.max) {
-                this.position = this.max;
-            }
-        }
-    }
-
-    getPosition(): number {
-        /**
-         * @returns The current position of the "drunk"
-         */
-        return this.position;
-    }
-
-    toggleWrap(b: boolean): void {
-        /**
-         * Whether or not the "drunk" should wrap around the range
-         * 
-         * @param b - Whether or not the "drunk" should wrap around the range
-         */
-        this.wrap = b;
-    }
-}
 
 export class UserAPI {
 
@@ -213,17 +162,17 @@ export class UserAPI {
         }
     }
 
-    public note(note: number, channel: number = 0, velocity: number = 100, duration: number = 0.5): void {
+    public note(note: number, options: {[key: string]: number} = {}): void {
         /**
          * Sends a MIDI note to the current MIDI output.
-         * TODO: Fix note duration
          * 
-         * @param note - The MIDI note to send
-         * @param channel - The MIDI channel to send the note on
-         * @param velocity - The velocity of the note
-         * @param duration - The duration of the note (in ms)
-         * 
+         * @param note - the MIDI note number to send
+         * @param options - an object containing options for that note
+         *                { channel: 0, velocity: 100, duration: 0.5 }
          */
+        const channel = options.channel ? options.channel : 0;
+        const velocity = options.velocity ? options.velocity : 100;
+        const duration = options.duration ? options.duration: 0.5;
         this.MidiConnection.sendMidiNote(note, channel, velocity, duration)
     }
 
@@ -663,6 +612,10 @@ export class UserAPI {
         return this.app.universes[this.app.selected_universe].global.evaluations
     }
 
+    set i(n: number) {
+        this.app.universes[this.app.selected_universe].global.evaluations = n;
+    }
+
     // =============================================================
     // Time markers
     // =============================================================
@@ -703,12 +656,12 @@ export class UserAPI {
         return this.app.clock.time_position.beat 
     }
 
-    get t_beat(): number {
+    get ebeat(): number {
         /**
          * Returns the current beat number since the origin of time
          * TODO: fix! Why is this not working?
          */
-        return Math.floor(this.app.clock.tick / this.app.clock.ppqn)
+        return this.app.clock.beats_since_origin
     }
 
 
@@ -903,6 +856,28 @@ export class UserAPI {
     // =============================================================
     // Low Frequency Oscillators
     // =============================================================
+
+    line(start: number, end: number, step: number = 1): number[] {
+        /**
+         * Returns an array of values between start and end, with a given step.
+         * 
+         * @param start - The start value of the array
+         * @param end - The end value of the array
+         * @param step - The step value of the array
+         * @returns An array of values between start and end, with a given step
+         */
+        const result: number[] = [];
+    
+        if ((end > start && step > 0) || (end < start && step < 0)) {
+            for (let value = start; value <= end; value += step) {
+                result.push(value);
+            }
+        } else {
+            console.error("Invalid range or step provided.");
+        }
+    
+        return result;
+    }
 
     sine(freq: number = 1, offset: number=0): number {
         /**

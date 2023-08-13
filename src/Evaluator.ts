@@ -1,6 +1,10 @@
 import type { Editor } from './main';
 import type { File } from './AppSettings';
 
+function codeInterceptor(code: string) {
+  return code.replace(/->/g, "&&")
+}
+
 const delay = (ms: number) => new Promise((_, reject) => setTimeout(() => reject(new Error('Operation took too long')), ms));
 
 const tryCatchWrapper = (application: Editor, code: string): Promise<boolean> => {
@@ -15,7 +19,7 @@ const tryCatchWrapper = (application: Editor, code: string): Promise<boolean> =>
    */
   return new Promise((resolve, _) => {
     try {
-      Function(`with (this) {try{${code}} catch (e) {console.log(e)}};`).call(application.api);
+      Function(`with (this) {try{${codeInterceptor(code)}} catch (e) {console.log(e)}};`).call(application.api);
       resolve(true);
     } catch (error) {
       console.log(error);
@@ -43,7 +47,7 @@ export const tryEvaluate = async (
     code.evaluations!++;
     const isCodeValid = await Promise.race([tryCatchWrapper(
       application, 
-      `let i = ${code.evaluations};` + code.candidate,
+      `let i = ${code.evaluations};` + codeInterceptor(code.candidate as string),
     ), delay(timeout)]);
 
     if (isCodeValid) {
@@ -66,7 +70,7 @@ export const evaluate = async (application: Editor, code: File, timeout = 1000):
    * @returns A promise that resolves to void
    */
   try {
-    await Promise.race([tryCatchWrapper(application, code.committed as string), delay(timeout)]);
+    await Promise.race([tryCatchWrapper(application, codeInterceptor(code.committed as string)), delay(timeout)]);
     if (code.evaluations)
       code.evaluations++;
   } catch (error) {
