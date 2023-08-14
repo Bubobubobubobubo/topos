@@ -451,11 +451,6 @@
   resolved "https://registry.npmjs.org/@types/audioworklet/-/audioworklet-0.0.49.tgz"
   integrity sha512-Njo9vdkdTPwBTplwWgIXQk7Xoo5xAErxOfNXoq5pYHcYOZ1Yyp4M23TfeavaLZ+qqQo3y9xIigfWckizkyCKSw==
 
-"@types/seedrandom@^3.0.5":
-  version "3.0.5"
-  resolved "https://registry.yarnpkg.com/@types/seedrandom/-/seedrandom-3.0.5.tgz#31fb257427742a9cc33fcf0c25dacca92e8f45a1"
-  integrity sha512-kopEpYpFQvQdYsZkZVwht/0THHmTFFYXDaqV/lM45eweJ8kcGVDgZHs0RVTolSq55UPZNmjhKc9r7UvLu/mQQg==
-
 acorn-walk@^8.2.0:
   version "8.2.0"
   resolved "https://registry.npmjs.org/acorn-walk/-/acorn-walk-8.2.0.tgz"
@@ -1158,15 +1153,11 @@ yaml@^2.1.1:
   resolved "https://registry.npmjs.org/yaml/-/yaml-2.3.1.tgz"
   integrity sha512-2eHWfjaoXgTBC2jNM1LRef62VQa0umtvRiDSk6HSzW7RvS5YtkabJrwYLLEKWBc8a5U2PTSCs+dJjUTJdlHsWQ==
 
-"zifferjs@https://github.com/amiika/zifferjs.git":
-  version "0.0.0"
-<<<<<<< HEAD
-  resolved "https://github.com/amiika/zifferjs.git#374ee4edb0b07d9968b635f899f9f88d79ddaa07"
-=======
-  resolved "https://github.com/amiika/zifferjs.git#0254770c19db8772a9c3cb6b0571f2b5007593e6"
->>>>>>> 3effb4f456592922e3e97e1e7b16f6f8929a90b4
+zifferjs@^0.0.1:
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/zifferjs/-/zifferjs-0.0.1.tgz#9ddd0e56efb1652105fa11f9496fe61b228c8862"
+  integrity sha512-D7y79/RfHyMD5bWN0DD3VDWRk/XXuknvYBFuuZ77xe3heOiTZ6j+g3MS9AMewCDoTWIgWN79vPs2VYey89DdOQ==
   dependencies:
-    "@types/seedrandom" "^3.0.5"
     lru-cache "^10.0.0"
     seedrandom "^3.0.5"
 
