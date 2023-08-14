@@ -177,34 +177,34 @@ export class UserAPI {
     this.MidiConnection.sendMidiNote(note, channel, velocity, duration);
   }
 
-    public zn(input: string, 
-        options: {[key: string]: string|number} = {}): Event {
-        const event = cachedStart(input, options);
-        if(event instanceof Start) {
-            // do nothing for now ...
-        } else {
-            let node = event;
-            if(node.modifiedEvent) node = node.modifiedEvent;
-            const channel = (options.channel ? options.channel : 0) as number;
-            const velocity = (options.velocity ? options.velocity : 100) as number;
-            const sustain = (options.sustain ? options.sustain : 0.5) as number;
-            if(node instanceof Pitch) {
-                if(node.bend) this.MidiConnection.sendPitchBend(node.bend, channel);
-                this.MidiConnection.sendMidiNote(node.note!, channel, velocity, sustain);
-                if(node.bend) this.MidiConnection.sendPitchBend(8192, channel);
-            } else if(node instanceof Chord) {
-                node.pitches.forEach((pitch: Pitch) => {
-                    if(pitch.bend) this.MidiConnection.sendPitchBend(pitch.bend, channel);
-                    this.MidiConnection.sendMidiNote(pitch.note!, channel, velocity, sustain);
-                    if(pitch.bend) this.MidiConnection.sendPitchBend(8192, channel);
-                });
-            } else if(node instanceof Rest) {
-                // do nothing for now ...
-            }
-            if(node.modifiedEvent) node.modifiedEvent = undefined;
-        }
-        return event.next();
-    }
+  public zn(input: string, 
+      options: {[key: string]: string|number} = {}): Event {
+      const event = cachedStart(input, options);
+      if(event instanceof Start) {
+          // do nothing for now ...
+      } else {
+          let node = event;
+          if(node.modifiedEvent) node = node.modifiedEvent;
+          const channel = (options.channel ? options.channel : 0) as number;
+          const velocity = (options.velocity ? options.velocity : 100) as number;
+          const sustain = (options.sustain ? options.sustain : 0.5) as number;
+          if(node instanceof Pitch) {
+              if(node.bend) this.MidiConnection.sendPitchBend(node.bend, channel);
+              this.MidiConnection.sendMidiNote(node.note!, channel, velocity, sustain);
+              if(node.bend) this.MidiConnection.sendPitchBend(8192, channel);
+          } else if(node instanceof Chord) {
+              node.pitches.forEach((pitch: Pitch) => {
+                  if(pitch.bend) this.MidiConnection.sendPitchBend(pitch.bend, channel);
+                  this.MidiConnection.sendMidiNote(pitch.note!, channel, velocity, sustain);
+                  if(pitch.bend) this.MidiConnection.sendPitchBend(8192, channel);
+              });
+          } else if(node instanceof Rest) {
+              // do nothing for now ...
+          }
+          if(node.modifiedEvent) node.modifiedEvent = undefined;
+      }
+      return event.next();
+  }
 
   public sysex(data: Array<number>): void {
     /**
@@ -543,6 +543,20 @@ export class UserAPI {
   }
   tempo = this.bpm;
 
+  bpb(n?: number): number {
+    /**
+     * Sets or returns the number of beats per bar. 
+     *
+     * @param bpb - [optional] The number of beats per bar to set
+     * @returns The current bpb
+     */
+    if (n === undefined) return this.app.clock.time_signature[0];
+
+    if (n < 1) console.log(`Setting bpb to ${n}`);
+    this.app.clock.time_signature[0] = n;
+    return n;
+  }
+
   time_signature(numerator: number, denominator: number): void {
     /**
      * Sets the time signature.
@@ -698,7 +712,7 @@ export class UserAPI {
      */
     let final_pulses: boolean[] = [];
     beat.forEach((b) => {
-      b = 1 + (b % this.app.clock.time_signature[0]);
+      b = (b % this.app.clock.time_signature[0]);
       let integral_part = Math.floor(b);
       let decimal_part = b - integral_part;
       final_pulses.push(
