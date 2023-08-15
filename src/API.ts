@@ -433,6 +433,56 @@ export class UserAPI {
     return btoa(JSON.stringify(pattern));
   }
 
+  public seqmod(...input: any[]) {
+    if (cache.has(this._sequence_key_generator(input))) {
+      let sequence = cache.get(
+        this._sequence_key_generator(input)
+      ) as Pattern<any>;
+
+      sequence.options.currentIteration++;
+
+      if (sequence.options.currentIteration === sequence.options.nextTarget) {
+        sequence.options.index++;
+        sequence.options.nextTarget = input[sequence.options.index % input.length];
+        sequence.options.currentIteration = 0;
+      }
+
+      cache.set(this._sequence_key_generator(input), {
+        pattern: input as any[], 
+        options: sequence.options
+      });
+
+      return sequence.options.currentIteration === 0;
+
+    } else {
+      let pattern_options = { 
+        index: 0, nextTarget: input[0], 
+        currentIteration: 0 
+      };
+      if (typeof input[input.length - 1] === "object") {
+        pattern_options = { 
+          ...input.pop(), 
+          ...pattern_options as object 
+        };
+      } 
+
+      pattern_options.currentIteration++;
+
+      if (pattern_options.currentIteration === pattern_options.nextTarget) {
+        pattern_options.index++;
+        pattern_options.nextTarget = input[pattern_options.index % input.length];
+        pattern_options.currentIteration = 0;
+      }
+
+      cache.set(this._sequence_key_generator(input), {
+        pattern: input as any[], 
+        options: pattern_options
+      });
+
+      return pattern_options.currentIteration === 0;
+    }
+  }
+
   public seq(...input: any[]) {
     /**
      * Returns a value in a sequence stored using an LRU Cache.
@@ -447,9 +497,7 @@ export class UserAPI {
      *       containing options for the sequence function.
      * @returns A value in a sequence stored using an LRU Cache
      */
-
     if (cache.has(this._sequence_key_generator(input))) {
-
       let sequence = cache.get(this._sequence_key_generator(input)) as Pattern<any>;
       sequence.options.index += 1;
       cache.set(this._sequence_key_generator(input), sequence);
@@ -465,7 +513,6 @@ export class UserAPI {
         pattern: input as any[], 
         options: pattern_options
       });
-
       return cache.get(this._sequence_key_generator(input));
     }
   }
