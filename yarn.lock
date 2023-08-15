@@ -1153,10 +1153,10 @@ yaml@^2.1.1:
   resolved "https://registry.npmjs.org/yaml/-/yaml-2.3.1.tgz"
   integrity sha512-2eHWfjaoXgTBC2jNM1LRef62VQa0umtvRiDSk6HSzW7RvS5YtkabJrwYLLEKWBc8a5U2PTSCs+dJjUTJdlHsWQ==
 
-zifferjs@^0.0.1:
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/zifferjs/-/zifferjs-0.0.1.tgz#9ddd0e56efb1652105fa11f9496fe61b228c8862"
-  integrity sha512-D7y79/RfHyMD5bWN0DD3VDWRk/XXuknvYBFuuZ77xe3heOiTZ6j+g3MS9AMewCDoTWIgWN79vPs2VYey89DdOQ==
+zifferjs@^0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/zifferjs/-/zifferjs-0.0.2.tgz#17abcba0874da603908baefd00bee764300e5cb9"
+  integrity sha512-NQ9JxMDA5dBQF6kiTFJxDQKxpFn5qklDLu6ow/53V+E8RVEbpSsYcSBhcJ893u5Re4vSooJDJOcMsQwcF4GYww==
   dependencies:
     lru-cache "^10.0.0"
     seedrandom "^3.0.5"

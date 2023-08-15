@@ -3,7 +3,7 @@ import { scale } from "./Scales";
 import { tryEvaluate } from "./Evaluator";
 import { MidiConnection } from "./IO/MidiConnection";
 import { DrunkWalk } from "./Utils/Drunk";
-import { Pitch, Chord, Rest, Event, Start, cachedStart, pattern } from "zifferjs";
+import { Pitch, Chord, Rest, Event, cachedEvent} from "zifferjs";
 import {
   superdough,
   samples,
@@ -189,31 +189,33 @@ export class UserAPI {
 
   public zn(input: string, 
       options: {[key: string]: string|number} = {}): Event {
-      const event = cachedStart(input, options);
-      if(event instanceof Start) {
+      let event = cachedEvent(input, options);
+      
+      // Check if event is modified
+      const node = event.modifiedEvent ? event.modifiedEvent : event;
+
+      const channel = (options.channel ? options.channel : 0) as number;
+      const velocity = (options.velocity ? options.velocity : 100) as number;
+      const sustain = (options.sustain ? options.sustain : 0.5) as number;
+
+      if(node instanceof Pitch) {
+          if(node.bend) this.MidiConnection.sendPitchBend(node.bend, channel);
+          this.MidiConnection.sendMidiNote(node.note!, channel, velocity, sustain);
+          if(node.bend) this.MidiConnection.sendPitchBend(8192, channel);
+      } else if(node instanceof Chord) {
+          node.pitches.forEach((pitch: Pitch) => {
+              if(pitch.bend) this.MidiConnection.sendPitchBend(pitch.bend, channel);
+              this.MidiConnection.sendMidiNote(pitch.note!, channel, velocity, sustain);
+              if(pitch.bend) this.MidiConnection.sendPitchBend(8192, channel);
+          });
+      } else if(node instanceof Rest) {
           // do nothing for now ...
-      } else {
-          let node = event;
-          if(node.modifiedEvent) node = node.modifiedEvent;
-          const channel = (options.channel ? options.channel : 0) as number;
-          const velocity = (options.velocity ? options.velocity : 100) as number;
-          const sustain = (options.sustain ? options.sustain : 0.5) as number;
-          if(node instanceof Pitch) {
-              if(node.bend) this.MidiConnection.sendPitchBend(node.bend, channel);
-              this.MidiConnection.sendMidiNote(node.note!, channel, velocity, sustain);
-              if(node.bend) this.MidiConnection.sendPitchBend(8192, channel);
-          } else if(node instanceof Chord) {
-              node.pitches.forEach((pitch: Pitch) => {
-                  if(pitch.bend) this.MidiConnection.sendPitchBend(pitch.bend, channel);
-                  this.MidiConnection.sendMidiNote(pitch.note!, channel, velocity, sustain);
-                  if(pitch.bend) this.MidiConnection.sendPitchBend(8192, channel);
-              });
-          } else if(node instanceof Rest) {
-              // do nothing for now ...
-          }
-          if(node.modifiedEvent) node.modifiedEvent = undefined;
       }
-      return event.next();
+      
+      // Remove old modified event
+      if(event.modifiedEvent) event.modifiedEvent = undefined;
+
+      return node.next();
   }
 
   public sysex(data: Array<number>): void {
