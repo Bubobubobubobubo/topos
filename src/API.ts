@@ -11,6 +11,9 @@ import {
   registerSynthSounds,
   // @ts-ignore
 } from "superdough";
+import { LRUCache } from 'lru-cache';
+
+const cache = new LRUCache({max: 1000, ttl: 1000 * 60 * 5});
 
 /**
  * We are overriding the includes method which is rather
@@ -411,6 +414,52 @@ export class UserAPI {
   // =============================================================
   // Small algorithmic functions
   // =============================================================
+
+  _sequence_key_generator(pattern: any[]) {
+    /**
+     * Generates a key for the sequence function.
+     * 
+     * @param input - The input to generate a key for
+     * @returns A key for the sequence function
+     */
+    // Make the pattern base64
+    return btoa(JSON.stringify(pattern));
+  }
+
+  sequence(input: any[]) {
+    /**
+     * Returns a value in a sequence stored using an LRU Cache.
+     * The sequence is stored in the cache with an hash identifier
+     * made from a base64 encoding of the pattern. The pattern itself
+     * is composed of the pattern itself (a list of arbitrary typed 
+     * values) and a set of options (an object) detailing how the pattern
+     * should be iterated on.
+     * 
+     * @param input - The input to generate a key for
+     *        Note that the last element of the input can be an object
+     *       containing options for the sequence function.
+     * @returns A value in a sequence stored using an LRU Cache
+     */
+    const default_options: object = { index: 0 }
+    if (typeof input[input.length - 1] === "object") {
+      const pattern_options: object = {
+        ...input.pop(),
+        ...default_options as object
+      };
+    }  else {
+      const pattern_options = default_options;
+    }
+    const sequence_key = this._sequence_key_generator(input);
+    if (cache.has(sequence_key)) {
+      return cache.get(sequence_key);
+    } else {
+      cache.set(sequence_key, {
+        pattern: input, 
+        options: pattern_options 
+      });
+    }
+    return cache.get(sequence_key);
+  }
 
   pick<T>(...array: T[]): T {
     /**
