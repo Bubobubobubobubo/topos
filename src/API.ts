@@ -3,7 +3,7 @@ import { scale } from "./Scales";
 import { tryEvaluate } from "./Evaluator";
 import { MidiConnection } from "./IO/MidiConnection";
 import { DrunkWalk } from "./Utils/Drunk";
-import { Pitch, Chord, Rest, Event, Start, cachedStart } from "zifferjs";
+import { Pitch, Chord, Rest, Event, Start, cachedStart, pattern } from "zifferjs";
 import {
   superdough,
   samples,
@@ -12,6 +12,13 @@ import {
   // @ts-ignore
 } from "superdough";
 import { LRUCache } from 'lru-cache';
+
+interface Pattern<T> {
+  pattern: any[];
+  options: {
+    [key: string]: T;
+  };
+}
 
 const cache = new LRUCache({max: 1000, ttl: 1000 * 60 * 5});
 
@@ -426,7 +433,7 @@ export class UserAPI {
     return btoa(JSON.stringify(pattern));
   }
 
-  sequence(input: any[]) {
+  seq(...input: any[]) {
     /**
      * Returns a value in a sequence stored using an LRU Cache.
      * The sequence is stored in the cache with an hash identifier
@@ -440,25 +447,27 @@ export class UserAPI {
      *       containing options for the sequence function.
      * @returns A value in a sequence stored using an LRU Cache
      */
-    const default_options: object = { index: 0 }
-    if (typeof input[input.length - 1] === "object") {
-      const pattern_options: object = {
-        ...input.pop(),
-        ...default_options as object
-      };
-    }  else {
-      const pattern_options = default_options;
-    }
-    const sequence_key = this._sequence_key_generator(input);
-    if (cache.has(sequence_key)) {
-      return cache.get(sequence_key);
+
+    if (cache.has(this._sequence_key_generator(input))) {
+
+      let sequence = cache.get(this._sequence_key_generator(input)) as Pattern<any>;
+      sequence.options.index += 1;
+      cache.set(this._sequence_key_generator(input), sequence);
+      return sequence.pattern[
+        sequence.options.index % sequence.pattern.length
+      ];
     } else {
-      cache.set(sequence_key, {
-        pattern: input, 
-        options: pattern_options 
+      let pattern_options = { index: 0 };
+      if (typeof input[input.length - 1] === "object") {
+        pattern_options = { ...input.pop(), ...pattern_options as object };
+      } 
+      cache.set(this._sequence_key_generator(input), {
+        pattern: input as any[], 
+        options: pattern_options
       });
+
+      return cache.get(this._sequence_key_generator(input));
     }
-    return cache.get(sequence_key);
   }
 
   pick<T>(...array: T[]): T {
