@@ -38,6 +38,7 @@ Array.prototype.in = function <T>(this: T[], value: T): boolean {
 Promise.all([
   initAudioOnFirstClick(),
   samples("github:tidalcycles/Dirt-Samples/master"),
+  samples("github:Bubobubobubobubo/Topos-Samples/main"),
   registerSynthSounds(),
 ]);
 
@@ -830,7 +831,7 @@ export class UserAPI {
      */
     let final_pulses: boolean[] = [];
     beat.forEach((b) => {
-      b = (b % this.app.clock.time_signature[0]);
+      b = (b  % this.app.clock.time_signature[0]) + 1;
       let integral_part = Math.floor(b);
       let decimal_part = b - integral_part;
       final_pulses.push(
