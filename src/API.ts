@@ -422,7 +422,7 @@ export class UserAPI {
   // Small algorithmic functions
   // =============================================================
 
-  _sequence_key_generator(pattern: any[]) {
+  private _sequence_key_generator(pattern: any[]) {
     /**
      * Generates a key for the sequence function.
      * 
@@ -433,7 +433,7 @@ export class UserAPI {
     return btoa(JSON.stringify(pattern));
   }
 
-  seq(...input: any[]) {
+  public seq(...input: any[]) {
     /**
      * Returns a value in a sequence stored using an LRU Cache.
      * The sequence is stored in the cache with an hash identifier
@@ -612,6 +612,17 @@ export class UserAPI {
 
     if (n < 1) console.log(`Setting bpb to ${n}`);
     this.app.clock.time_signature[0] = n;
+    return n;
+  }
+
+  ppqn(n?: number) {
+    /**
+     * Sets or returns the number of pulses per quarter note.
+     */
+    if (n === undefined) return this.app.clock.ppqn;
+
+    if (n < 1) console.log(`Setting ppqn to ${n}`);
+    this.app.clock.ppqn = n;
     return n;
   }
 
