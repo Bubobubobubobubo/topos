@@ -466,7 +466,7 @@ export class UserAPI {
         };
       } 
 
-      pattern_options.currentIteration++;
+      // pattern_options.currentIteration++;
       // TEST
       pattern_options.nextTarget = this.app.clock.ticks_before_new_bar
 
