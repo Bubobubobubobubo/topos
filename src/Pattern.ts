@@ -4,7 +4,7 @@ export class Pattern {
     _current : Event | undefined = undefined;
 
     constructor(values: number[]) {
-        this.events = values.map((value, index) => new Event(value));
+        this.events = values.map((value) => new Event(value));
         this.buildLinks();
     }
 
