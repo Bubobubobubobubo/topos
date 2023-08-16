@@ -8,7 +8,7 @@
 - Do not expect stable features and/or support!
 - Contributors are welcome!
 
-## Presentation
+## Presentation
 
 Topos is an algorithmic sequencer inspired by the [Monome Teletype](https://monome.org/docs/teletype/). It is meant to use from a web browser, without installation. It is not meant to be a clone of the Teletype but rather a new take based on the same concept. The goal is to provide a tool that can be used to generate music but also to learn about live coding and algorithmic music. A desktop based version is also available, using [Tauri](https://tauri.app/). Hopefully, it will support MIDI and OSC in the future for a better integration with musical hardware.
 
@@ -20,10 +20,10 @@ Topos is based on the manipulation of short code snippets, each of them stored i
 
 Like the **Teletype**, A **Topos universe** contains a set of files:
 
-- **the global script**: evaluated on a loop for every pulse! Used to call scripts, introduce major changes, etc... The global script really is the conductor of the piece. It can also be used to test short code snippets when you don't feel like programming anything too complex.
-- **the local scripts** are parts / are describing some kind of logic or process that you would like to play with. The local scripts are activated on demand by any other script (including themselves) using the `script(n)` command.
-- **the init buffer** is used to initialise the state of the _universe_ when you first load the app. Think of it as a script used to set the tempo, to set some default variables or state for your composition.
-- **the note file**: used to document your _universe_ (project) and to take notes about your composition.
+- **the global script** (`Ctrl+G`): evaluated on a loop for every pulse! Used to call scripts, introduce major changes, etc... The global script really is the conductor of the piece. It can also be used to test short code snippets when you don't feel like programming anything too complex.
+- **the local scripts** (`Ctrl+L`) are parts / are describing some kind of logic or process that you would like to play with. The local scripts are activated on demand by any other script (including themselves) using the `script(n)` command.
+- **the init buffer** (`Ctrl+I`) is used to initialise the state of the _universe_ when you first load the app. Think of it as a script used to set the tempo, to set some default variables or state for your composition.
+- **the note file** (`Ctrl+N`)`: used to document your _universe_ (project) and to take notes about your composition.
 
 A **universe** is a set of files (global, init, locals and note) representing a musical composition, a song, a piece, an improvisation. You can create as many universes as you want and switch between them at any time. The application is saving the state of the universe in the browser's local storage. To switch between universes, open the selector by pressing the `Ctrl+B` . The clear button can be used to reset the currently selected universe to a blank slate.
 
