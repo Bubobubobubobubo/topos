@@ -5,7 +5,6 @@ import { DrunkWalk } from "./Utils/Drunk";
 import { LRUCache } from 'lru-cache';
 import { scale } from "./Scales";
 import { Editor } from "./main";
-import { Pitch, Chord, Rest, Event, cachedEvent} from "zifferjs";
 import {
   superdough,
   samples,
