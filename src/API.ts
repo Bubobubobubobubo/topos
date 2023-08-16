@@ -250,10 +250,11 @@ export class UserAPI {
       options: {[key: string]: string|number} = {}): Event {
       const pattern = cachedPattern(input, options);
       
+      //@ts-ignore
       if(pattern.hasStarted()) {
         const event = pattern.peek();
         // Check if event is modified
-        const node = event.modifiedEvent ? event.modifiedEvent : event;
+        const node = event!.modifiedEvent ? event!.modifiedEvent : event;
         
         const channel = (options.channel ? options.channel : 0) as number;
         const velocity = (options.velocity ? options.velocity : 100) as number;
@@ -274,8 +275,9 @@ export class UserAPI {
         }
         
         // Remove old modified event
-        if(event.modifiedEvent) event.modifiedEvent = undefined;
+        if(event!.modifiedEvent) event!.modifiedEvent = undefined;
       }
+      //@ts-ignore
       return pattern.next();
   }
 
