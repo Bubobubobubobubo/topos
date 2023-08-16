@@ -96,16 +96,6 @@ export class UserAPI {
   // Utility functions
   // =============================================================
 
-  log = console.log;
-
-  scale = scale;
-
-  rate(rate: number): void {
-    rate = rate;
-    // TODO: Implement this. This function should change the rate at which the global script
-    // is evaluated. This is useful for slowing down the script, or speeding it up. The default
-    // would be 1.0, which is the current rate (very speedy).
-  }
 
   script(...args: number[]): void {
     /**
@@ -190,37 +180,6 @@ export class UserAPI {
     this.MidiConnection.sendMidiNote(note, channel, velocity, duration);
   }
 
-  public zn(input: string, 
-      options: {[key: string]: string|number} = {}): Event {
-      let event = cachedEvent(input, options);
-      
-      // Check if event is modified
-      const node = event.modifiedEvent ? event.modifiedEvent : event;
-
-      const channel = (options.channel ? options.channel : 0) as number;
-      const velocity = (options.velocity ? options.velocity : 100) as number;
-      const sustain = (options.sustain ? options.sustain : 0.5) as number;
-
-      if(node instanceof Pitch) {
-          if(node.bend) this.MidiConnection.sendPitchBend(node.bend, channel);
-          this.MidiConnection.sendMidiNote(node.note!, channel, velocity, sustain);
-          if(node.bend) this.MidiConnection.sendPitchBend(8192, channel);
-      } else if(node instanceof Chord) {
-          node.pitches.forEach((pitch: Pitch) => {
-              if(pitch.bend) this.MidiConnection.sendPitchBend(pitch.bend, channel);
-              this.MidiConnection.sendMidiNote(pitch.note!, channel, velocity, sustain);
-              if(pitch.bend) this.MidiConnection.sendPitchBend(8192, channel);
-          });
-      } else if(node instanceof Rest) {
-          // do nothing for now ...
-      }
-      
-      // Remove old modified event
-      if(event.modifiedEvent) event.modifiedEvent = undefined;
-
-      return node.next();
-  }
-
   public sysex(data: Array<number>): void {
     /**
      * Sends a MIDI sysex message to the current MIDI output.
@@ -274,6 +233,42 @@ export class UserAPI {
      * Sends a MIDI panic message to the current MIDI output.
      */
     this.MidiConnection.panic();
+  }
+
+  // =============================================================
+  // Ziffers related functions
+  // =============================================================
+
+
+  public zn(input: string, 
+      options: {[key: string]: string|number} = {}): Event {
+      let event = cachedEvent(input, options);
+      
+      // Check if event is modified
+      const node = event.modifiedEvent ? event.modifiedEvent : event;
+
+      const channel = (options.channel ? options.channel : 0) as number;
+      const velocity = (options.velocity ? options.velocity : 100) as number;
+      const sustain = (options.sustain ? options.sustain : 0.5) as number;
+
+      if(node instanceof Pitch) {
+          if(node.bend) this.MidiConnection.sendPitchBend(node.bend, channel);
+          this.MidiConnection.sendMidiNote(node.note!, channel, velocity, sustain);
+          if(node.bend) this.MidiConnection.sendPitchBend(8192, channel);
+      } else if(node instanceof Chord) {
+          node.pitches.forEach((pitch: Pitch) => {
+              if(pitch.bend) this.MidiConnection.sendPitchBend(pitch.bend, channel);
+              this.MidiConnection.sendMidiNote(pitch.note!, channel, velocity, sustain);
+              if(pitch.bend) this.MidiConnection.sendPitchBend(8192, channel);
+          });
+      } else if(node instanceof Rest) {
+          // do nothing for now ...
+      }
+      
+      // Remove old modified event
+      if(event.modifiedEvent) event.modifiedEvent = undefined;
+
+      return node.next();
   }
 
   // =============================================================
@@ -424,7 +419,7 @@ export class UserAPI {
   cv = this.clear_variables;
 
   // =============================================================
-  // Small algorithmic functions
+  // Sequencer related functions
   // =============================================================
 
   private _sequence_key_generator(pattern: any[]) {
@@ -961,6 +956,10 @@ export class UserAPI {
     return bar.some((b) => this.app.clock.time_position.bar % b === 0);
   }
 
+  // =============================================================
+  // Rythmic generators
+  // =============================================================
+
   euclid(
     iterator: number,
     pulses: number,
@@ -1132,4 +1131,17 @@ export class UserAPI {
   d = this.sound;
 
   samples = samples;
+
+  log = console.log;
+
+  scale = scale;
+
+  rate(rate: number): void {
+    rate = rate;
+    // TODO: Implement this. This function should change the rate at which the global script
+    // is evaluated. This is useful for slowing down the script, or speeding it up. The default
+    // would be 1.0, which is the current rate (very speedy).
+  }
+
+
 }
