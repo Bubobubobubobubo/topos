@@ -4,7 +4,7 @@
 
 ## Disclaimer
 
-**Topos is only a POC:**
+**Topos is only a proof of concept:**
 
 - It is not ready for users.
 - Do not expect stable features and/or support!
@@ -63,16 +63,18 @@ To build a standalone browser application using [Tauri](https://tauri.app/), you
 
 # Roadmap to Topos v1.0 (first release)
 
+Sure you can already play music with Topos but it feels like throwing pebbles on a drumset. Help us make it better!
+
 ## Application User Interface
 
 - [ ] Visual feedback for script execution
-  - [ ] add blinking dots in the upper-right corner of the editor
-  - [ ] visual warning when an error is detected (blinking red?)
-  - [ ] more variety in visual signals when evaluating code
-- [ ] Code animation for rhythmic functions on certain lines (show that a statement is true)
-- [ ] More/Better rhythmic generators
-  - [ ] Ability to write simple musical sequences
-  - [ ] Ability to create musical structures easily
+  - [ ] add blinking dots in the upper-right corner of the editor corresponding to the script being executed.
+  - [ ] visual warning when an error is detected (blinking red?) and reading logs directly from the interface.
+  - [ ] more variety in visual signals when evaluating code (errors, warnings, etc...).
+- [ ] Animating code in rhythm! Show when code gets executed, etc...
+- [ ] Better rhythmic generators
+  - [ ] Ability to write simple linear sequences
+  - [ ] Ability to manipulate musical structures / objects
 - [ ] Rendering static files (MIDI, MOD, etc...)
 - [ ] Add a way to save the current universe as a file.
 - [ ] Add a way to load a universe from a file.
@@ -81,7 +83,7 @@ To build a standalone browser application using [Tauri](https://tauri.app/), you
 ## Scheduler
 
 - [ ] Stable / robust clock and script/event scheduler.
-  - [ ] There is still a tiny bit of imprecision left.
+  - [ ] There is still a tiny bit of imprecision left in the scheduling mechanism used.
   - [ ] Add a way to set the clock's swing.
   - [ ] MIDI Clock In/Out support.
 
