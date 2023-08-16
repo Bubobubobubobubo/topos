@@ -1,4 +1,4 @@
-import { Pitch, Chord, Rest, Event, Start, cachedStart, pattern } from "zifferjs";
+import { Pitch, Chord, Rest, Event, cachedEvent } from "zifferjs";
 import { MidiConnection } from "./IO/MidiConnection";
 import { tryEvaluate } from "./Evaluator";
 import { DrunkWalk } from "./Utils/Drunk";

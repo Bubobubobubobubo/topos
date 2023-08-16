@@ -993,11 +993,6 @@ run-parallel@^1.1.9:
   dependencies:
     queue-microtask "^1.2.2"
 
-seedrandom@^3.0.5:
-  version "3.0.5"
-  resolved "https://registry.yarnpkg.com/seedrandom/-/seedrandom-3.0.5.tgz#54edc85c95222525b0c7a6f6b3543d8e0b3aa0a7"
-  integrity sha512-8OwmbklUNzwezjGInmZ+2clQmExQPvomqjL7LFqOYqtmuxRgQYqOD3mHaU+MvZn5FLUeVxVfQjwLZW/n/JFuqg==
-
 source-map-js@^1.0.2:
   version "1.0.2"
   resolved "https://registry.npmjs.org/source-map-js/-/source-map-js-1.0.2.tgz"
@@ -1153,13 +1148,12 @@ yaml@^2.1.1:
   resolved "https://registry.npmjs.org/yaml/-/yaml-2.3.1.tgz"
   integrity sha512-2eHWfjaoXgTBC2jNM1LRef62VQa0umtvRiDSk6HSzW7RvS5YtkabJrwYLLEKWBc8a5U2PTSCs+dJjUTJdlHsWQ==
 
-zifferjs@^0.0.2:
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/zifferjs/-/zifferjs-0.0.2.tgz#17abcba0874da603908baefd00bee764300e5cb9"
-  integrity sha512-NQ9JxMDA5dBQF6kiTFJxDQKxpFn5qklDLu6ow/53V+E8RVEbpSsYcSBhcJ893u5Re4vSooJDJOcMsQwcF4GYww==
+zifferjs@^0.0.4:
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/zifferjs/-/zifferjs-0.0.4.tgz#e6a2055bca9b60a22db9ac88a2bce777ce08945a"
+  integrity sha512-p+i8y4Edq8V1tp9+eEtUvCcNTQQfLHjiMrDAB9NS/62c3bPi0eZ5VujHLmNdTwjK8ZT5nzElLRq7hA5C7YRplQ==
   dependencies:
     lru-cache "^10.0.0"
-    seedrandom "^3.0.5"
 
 zzfx@^1.2.0:
   version "1.2.0"
