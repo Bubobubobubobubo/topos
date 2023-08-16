@@ -2,6 +2,8 @@
 
 ![Screenshot](https://github.com/Bubobubobubobubo/Topos/blob/main/img/screnshot.png)
 
+## Disclaimer
+
 **Topos is only a POC:**
 
 - It is not ready for users.
@@ -23,7 +25,7 @@ Like the **Teletype**, A **Topos universe** contains a set of files:
 - **the global script** (`Ctrl+G`): evaluated on a loop for every pulse! Used to call scripts, introduce major changes, etc... The global script really is the conductor of the piece. It can also be used to test short code snippets when you don't feel like programming anything too complex.
 - **the local scripts** (`Ctrl+L`) are parts / are describing some kind of logic or process that you would like to play with. The local scripts are activated on demand by any other script (including themselves) using the `script(n)` command.
 - **the init buffer** (`Ctrl+I`) is used to initialise the state of the _universe_ when you first load the app. Think of it as a script used to set the tempo, to set some default variables or state for your composition.
-- **the note file** (`Ctrl+N`)`: used to document your _universe_ (project) and to take notes about your composition.
+- **the note file** (`Ctrl+N`): used to document your _universe_ (project) and to take notes about your composition.
 
 A **universe** is a set of files (global, init, locals and note) representing a musical composition, a song, a piece, an improvisation. You can create as many universes as you want and switch between them at any time. The application is saving the state of the universe in the browser's local storage. To switch between universes, open the selector by pressing the `Ctrl+B` . The clear button can be used to reset the currently selected universe to a blank slate.
 
@@ -42,25 +44,22 @@ A **universe** is a set of files (global, init, locals and note) representing a 
 
 To evaluate code, press `Ctrl+Enter`. The screen will flash to indicate that the code was transmitted. This is true for every script, including the note script. To stop a script from playing, just comment your code or stop calling it!
 
-## How to install locally?
+## Local installation
 
-To run the application in dev mode, you will need to have [Node.js](https://nodejs.org/en/) and [Yarn](https://yarnpkg.com/en/) installed on your computer. Then:
+To run the application for dev purposes, you will need to install [Node.js](https://nodejs.org/en/) and [Yarn](https://yarnpkg.com/en/). Then, clone the repository and run:
 
-- Clone the repository:
-  - run `yarn install`
-  - run `yarn run dev`
+- `yarn install`
+- `yarn run dev`
 
-To build the application for production, you will need to have [Node.js](https://nodejs.org/en/) and [Yarn](https://yarnpkg.com/en/) installed on your computer. Then:
+To build the application for production, you will need to install [Node.js](https://nodejs.org/en/) and [Yarn](https://yarnpkg.com/en/). Then, clone the repository and run:
 
-- Clone the repository:
-  - run `yarn run build`
-  - run `yarn run start`
+- `yarn run build`
+- `yarn run start`
 
-To build a standalone browser application using [Tauri](https://tauri.app/), you will need to have [Node.js](https://nodejs.org/en/), [Yarn](https://yarnpkg.com/en/) and [Rust](https://www.rust-lang.org/) installed on your computer. Then:
+To build a standalone browser application using [Tauri](https://tauri.app/), you will need to have [Node.js](https://nodejs.org/en/), [Yarn](https://yarnpkg.com/en/) and [Rust](https://www.rust-lang.org/) installed. Then, clone the repository and run:
 
-- Clone the repository:
-  - run `yarn tauri build`
-  - run `yarn tauri dev`
+- `yarn tauri build`
+- `yarn tauri dev`
 
 # Roadmap to Topos v1.0 (first release)
 
