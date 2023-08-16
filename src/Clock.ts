@@ -78,11 +78,22 @@ export class Clock {
     }
 
     get beats_since_origin(): number {
+        /**
+         * Returns the number of beats since the origin.
+         * 
+         * @returns number of beats since origin
+         */
         return (this.time_position.bar - 1) * this.beats_per_bar + this.time_position.beat;
     }
 
     get pulses_since_origin(): number {
+        /**
+         * Returns the number of pulses since the origin.
+         * 
+         * @returns number of pulses since origin
+         */
         return (this.beats_since_origin * this.ppqn) + this.time_position.pulse
+
     }
 
     get pulse_duration(): number {
@@ -100,7 +111,7 @@ export class Clock {
     }
 
 
-    start(): void {
+    public start(): void {
         /**
          * Starts the TransportNode (starts the clock).
          */
@@ -113,14 +124,14 @@ export class Clock {
         }
     }
 
-    pause(): void {
+    public pause(): void {
         /**
          * Pauses the TransportNode (pauses the clock).
          */
         this.transportNode?.pause();
     }
     
-    stop(): void {
+    public stop(): void {
         /**
          * Stops the TransportNode (stops the clock).
          */

@@ -16,6 +16,13 @@ import {
 // This is an LRU cache used for storing persistent patterns
 const cache = new LRUCache({max: 1000, ttl: 1000 * 60 * 5});
 
+interface ControlChange {
+    channel: number
+    control: number
+    value: number
+  }
+
+
 interface Pattern<T> {
   pattern: any[];
   options: {
@@ -68,7 +75,7 @@ export class UserAPI {
 
   get time(): number {
     /**
-     * @returns The current time for the AudioContext
+     * @returns the current AudioContext time (wall clock)
      */
     return this.app.audioContext.currentTime;
   }
@@ -112,7 +119,7 @@ export class UserAPI {
   }
   s = this.script;
 
-  clearscript(script: number): void {
+  clear_script(script: number): void {
     /**
      * Clears a local script
      *
@@ -124,9 +131,9 @@ export class UserAPI {
       evaluations: 0,
     };
   }
-  cs = this.clearscript;
+  cs = this.clear_script;
 
-  copyscript(from: number, to: number): void {
+  copy_script(from: number, to: number): void {
     /**
      * Copy from a local script to another local script
      *
@@ -136,7 +143,7 @@ export class UserAPI {
     this.app.universes[this.app.selected_universe].locals[to] =
       this.app.universes[this.app.selected_universe].locals[from];
   }
-  cps = this.copyscript;
+  cps = this.copy_script;
 
   // =============================================================
   // MIDI related functions
@@ -217,14 +224,15 @@ export class UserAPI {
     this.MidiConnection.sendMidiClock();
   }
 
-  public cc(control: number, value: number): void {
+
+  public control_change({ control= 20, value= 0, channel=0 }: ControlChange): void {
     /**
      * Sends a MIDI control change to the current MIDI output.
      *
      * @param control - The MIDI control to send
      * @param value - The value of the control
      */
-    this.MidiConnection.sendMidiControlChange(control, value);
+    this.MidiConnection.sendMidiControlChange(control, value, channel);
   }
 
   public midi_panic(): void {

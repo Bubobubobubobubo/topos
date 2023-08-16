@@ -182,16 +182,17 @@ export class MidiConnection{
       }
     }
   
-    public sendMidiControlChange(controlNumber: number, value: number): void {
+    public sendMidiControlChange(controlNumber: number, value: number, channel: number): void {
       /**
        * Sends a MIDI Control Change message to the currently selected MIDI output.
        * 
        * @param controlNumber MIDI control number (0-127)
        * @param value MIDI control value (0-127)
+       * @param channel MIDI channel (0-15)
        */
       const output = this.midiOutputs[this.currentOutputIndex];
       if (output) {
-        output.send([0xB0, controlNumber, value]); // Control Change
+        output.send([0xB0 + channel, controlNumber, value]); // Control Change
       } else {
         console.error('MIDI output not available.');
       }
