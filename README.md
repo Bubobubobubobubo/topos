@@ -55,26 +55,29 @@ To build a standalone browser application using [Tauri](https://tauri.app/), you
   - run `yarn tauri build`
   - run `yarn tauri dev`
 
-# Roadmap to Topos v1.0
+# Roadmap to Topos v1.0 (first release)
 
 ## Application User Interface
 
-- [ ] Give more information the local context of execution of every script
-  - print/display the internal iterator used in each script
-  - animate code to show which line is currently being executed
-- [ ] More rhythmic generators
-- [ ] Rendering static files (MIDI, MOD, etc...)
+- [ ] Visual feedback for script execution
+  - [ ] add blinking dots in the upper-right corner of the editor
+  - [ ] visual warning when an error is detected (blinking red?)
+  - [ ] more variety in visual signals when evaluating code
+- [ ] Code animation for rhythmic functions on certain lines (show that a statement is true)
+- [ ] More/Better rhythmic generators
+  - [ ] Ability to write simple musical sequences
+  - [ ] Ability to create musical structures easily
+- [ ] Rendering static files (MIDI, MOD, etc...)
+- [ ] Add a way to save the current universe as a file.
+- [ ] Add a way to load a universe from a file.
+- [ ] Add a way to share the universe using a link.
 
 ## Scheduler
 
 - [ ] Stable / robust clock and script/event scheduler.
-  - [x] Add a way to set the clock's tempo.
-  - [x] Add a way to set the clock's time signature.
+  - [ ] There is still a tiny bit of imprecision left.
   - [ ] Add a way to set the clock's swing.
   - [ ] MIDI Clock In/Out support.
-  - [x] Performance optimisations and metrics.
-- [ ] Add a way to save the current universe as a file.
-- [ ] Add a way to load a universe from a file.
 
 ## User Interface
 

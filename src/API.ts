@@ -1,9 +1,10 @@
-import { Editor } from "./main";
-import { scale } from "./Scales";
-import { tryEvaluate } from "./Evaluator";
-import { MidiConnection } from "./IO/MidiConnection";
-import { DrunkWalk } from "./Utils/Drunk";
 import { Pitch, Chord, Rest, Event, Start, cachedStart, pattern } from "zifferjs";
+import { MidiConnection } from "./IO/MidiConnection";
+import { tryEvaluate } from "./Evaluator";
+import { DrunkWalk } from "./Utils/Drunk";
+import { LRUCache } from 'lru-cache';
+import { scale } from "./Scales";
+import { Editor } from "./main";
 import {
   superdough,
   samples,
@@ -11,7 +12,9 @@ import {
   registerSynthSounds,
   // @ts-ignore
 } from "superdough";
-import { LRUCache } from 'lru-cache';
+
+// This is an LRU cache used for storing persistent patterns
+const cache = new LRUCache({max: 1000, ttl: 1000 * 60 * 5});
 
 interface Pattern<T> {
   pattern: any[];
@@ -20,11 +23,9 @@ interface Pattern<T> {
   };
 }
 
-const cache = new LRUCache({max: 1000, ttl: 1000 * 60 * 5});
 
 /**
- * We are overriding the includes method which is rather
- * useful to check the position of an event on a specific beat.
+ * This is an override of the basic "includes" method.
  */
 declare global {
   interface Array<T> {
@@ -35,6 +36,7 @@ Array.prototype.in = function <T>(this: T[], value: T): boolean {
   return this.includes(value);
 };
 
+// Loading the Strudel sampler
 Promise.all([
   initAudioOnFirstClick(),
   samples("github:tidalcycles/Dirt-Samples/master"),
