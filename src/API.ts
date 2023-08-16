@@ -239,7 +239,6 @@ export class UserAPI {
   // Ziffers related functions
   // =============================================================
 
-
   public zn(input: string, 
       options: {[key: string]: string|number} = {}): Event {
       let event = cachedEvent(input, options);
@@ -455,8 +454,9 @@ export class UserAPI {
       return sequence.options.currentIteration === 0;
 
     } else {
+
       let pattern_options = { 
-        index: 0, nextTarget: input[0], 
+        index: -1, nextTarget: this.app.clock.ticks_before_new_bar, 
         currentIteration: 0 
       };
       if (typeof input[input.length - 1] === "object") {
@@ -467,6 +467,8 @@ export class UserAPI {
       } 
 
       pattern_options.currentIteration++;
+      // TEST
+      pattern_options.nextTarget = this.app.clock.ticks_before_new_bar
 
       if (pattern_options.currentIteration === pattern_options.nextTarget) {
         pattern_options.index++;
