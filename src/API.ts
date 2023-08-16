@@ -23,7 +23,6 @@ interface Pattern<T> {
   };
 }
 
-
 /**
  * This is an override of the basic "includes" method.
  */
@@ -806,9 +805,15 @@ export class UserAPI {
   get ebeat(): number {
     /**
      * Returns the current beat number since the origin of time
-     * TODO: fix! Why is this not working?
      */
     return this.app.clock.beats_since_origin;
+  }
+
+  get epulse(): number {
+    /**
+     * Returns the current number of pulses elapsed since origin of time
+     */
+    return this.app.clock.pulses_since_origin;
   }
 
   onbar(n: number, ...bar: number[]): boolean {

@@ -41,13 +41,13 @@ export class Clock {
     tick: number
 
     constructor(public app: Editor, ctx: AudioContext) {
+        this.time_position = { bar: 0, beat: 0, pulse: 0 }
+        this.time_signature = [4, 4];
+        this.tick = 0;
+        this.bpm = 120;
+        this.ppqn = 48;
         this.transportNode = null;
         this.ctx = ctx;
-        this.tick = 0;
-        this.time_position = { bar: 0, beat: 0, pulse: 0 }
-        this.bpm = 120;
-        this.time_signature = [4, 4];
-        this.ppqn = 48;
         ctx.audioWorklet.addModule(TransportProcessor).then((e) => {
             this.transportNode = new TransportNode(ctx, {}, this.app);
             this.transportNode.connect(ctx.destination);
@@ -70,7 +70,6 @@ export class Clock {
         return nextBarinTicks - currentBeatInTicks
     }
 
-
     get beats_per_bar(): number { 
         /**
          * Returns the number of beats per bar.
@@ -80,6 +79,10 @@ export class Clock {
 
     get beats_since_origin(): number {
         return (this.time_position.bar - 1) * this.beats_per_bar + this.time_position.beat;
+    }
+
+    get pulses_since_origin(): number {
+        return (this.beats_since_origin * this.ppqn) + this.time_position.pulse
     }
 
     get pulse_duration(): number {
