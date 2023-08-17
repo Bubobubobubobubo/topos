@@ -1,30 +1,39 @@
 # Topos
 
-**Topos is only a Proof of Concept. It is not ready for users. Please feel free to contribute but do not expect stable features and/or support! Having fun developing it, join the team if you want to have fun!**
-
-Topos is an algorithmic sequencer inspired by the [Monome Teletype](https://monome.org/docs/teletype/). It is meant to be ready to use, without installation, from a web browser. Topos is still a prototype and is not ready for production use. It is not meant to be a clone of the Teletype, but rather a new take on the same concept. The goal is to provide a tool that can be used to generate music, but also to learn about live coding and algorithmic music.
-
 ![Screenshot](https://github.com/Bubobubobubobubo/Topos/blob/main/img/screnshot.png)
 
-Topos can generate sound through WebAudio and/or MIDI. The sequencer works by letting the user enter short JS code snippets that are evaluated in a _sandboxed_ environment. An API is providing tools to manipulate time, transport, instruments, data, etc...
+## Disclaimer
+
+**Topos is only a proof of concept:**
+
+- It is not ready for users.
+- Do not expect stable features and/or support!
+- Contributors are welcome!
+
+## Presentation
+
+Topos is an algorithmic sequencer inspired by the [Monome Teletype](https://monome.org/docs/teletype/). It is meant to use from a web browser, without installation. It is not meant to be a clone of the Teletype but rather a new take based on the same concept. The goal is to provide a tool that can be used to generate music but also to learn about live coding and algorithmic music. A desktop based version is also available, using [Tauri](https://tauri.app/). Hopefully, it will support MIDI and OSC in the future for a better integration with musical hardware.
+
+Topos can generate sound through [WebAudio](https://www.npmjs.com/package/superdough) and/or [MIDI](https://developer.mozilla.org/en-US/docs/Web/API/Web_MIDI_API). Users can enter short JS code snippets evaluated in a _sandboxed_ environment. A simple to use API provides tools to manipulate time, transport, instruments, data, etc...
 
 ## How does it work?
 
-Just like the **Teletype**, **Topos** is following a **scripting** paradigm. The user is writing short snippets of code that are evaluated in a sandboxed environment. The code is evaluated in a loop, at a given tempo. There are four types of files that can be edited:
+Topos is based on the manipulation of short code snippets, each of them stored in their own file. A set of files is called a **universe**. You can switch from universe to universe _anytime_, even while the application is running. The application is saving the state of the universe in the browser's local storage.
 
-- **the global buffer**: used to sequence scripts and control major global events. This script is evaluated **at every clock tick**. This is, by default, _super fast_.
-- **the local buffers** are describing some musical logic/processes taking place. They are activated on demand, _once_ by any other script using the `script(n)` command.
-- **the init buffer** is used to initialise the state of the universe when you first load the app. Think of it as a space to set the tempo, to set default variables, etc...
-- **the note buffer**: used to document your projects and to take notes about your composition.
+Like the **Teletype**, A **Topos universe** contains a set of files:
 
-A **universe** is a set of files (global, init, locals and note) representing a musical composition, a song, a piece, an improvisation. You can create as many universes as you want and switch between them at any time. The application is saving the state of the universe in the browser's local storage.
+- **the global script** (`Ctrl+G`): evaluated on a loop for every pulse! Used to call scripts, introduce major changes, etc... The global script really is the conductor of the piece. It can also be used to test short code snippets when you don't feel like programming anything too complex.
+- **the local scripts** (`Ctrl+L`) are parts / are describing some kind of logic or process that you would like to play with. The local scripts are activated on demand by any other script (including themselves) using the `script(n)` command.
+- **the init buffer** (`Ctrl+I`) is used to initialise the state of the _universe_ when you first load the app. Think of it as a script used to set the tempo, to set some default variables or state for your composition.
+- **the note file** (`Ctrl+N`): used to document your _universe_ (project) and to take notes about your composition.
 
-To switch between universes, use the `Ctrl+B` keybinding that will open a modal. The clear button will reset the current universe to a blank slate.
+A **universe** is a set of files (global, init, locals and note) representing a musical composition, a song, a piece, an improvisation. You can create as many universes as you want and switch between them at any time. The application is saving the state of the universe in the browser's local storage. To switch between universes, open the selector by pressing the `Ctrl+B` . The clear button can be used to reset the currently selected universe to a blank slate.
 
 ## Keybindings
 
 - `Ctrl+P`: start the audio playback/clock.
 - `Ctrl+S`: stop the audio playback/clock.
+- `Ctrl+R`: rewind the audio playblack/clock to the beginning.
 - `Ctrl+G`: global buffer.
 - `Ctrl+I`: initialisation buffer.
 - `Ctrl+L`: local buffers.
@@ -33,40 +42,39 @@ To switch between universes, use the `Ctrl+B` keybinding that will open a modal.
 - `Ctrl+B`: switch between universes.
 - `Ctrl+Shift+V`: toggle Vim editor mode.
 
-To evaluate code, press `Ctrl+Enter` (no visible animation). This is true for every buffer. To stop a buffer from playing, comment your code or delete it.
+To evaluate code, press `Ctrl+Enter`. The screen will flash to indicate that the code was transmitted. This is true for every script, including the note script. To stop a script from playing, just comment your code or stop calling it!
 
-## How to install locally?
+## Local installation
 
-To run the application in dev mode, you will need to have [Node.js](https://nodejs.org/en/) and [Yarn](https://yarnpkg.com/en/) installed on your computer. Then:
+To run the application for dev purposes, you will need to install [Node.js](https://nodejs.org/en/) and [Yarn](https://yarnpkg.com/en/). Then, clone the repository and run:
 
-- Clone the repository:
-  - run `yarn install`
-  - run `yarn run dev`
+- `yarn install`
+- `yarn run dev`
 
-To build the application for production, you will need to have [Node.js](https://nodejs.org/en/) and [Yarn](https://yarnpkg.com/en/) installed on your computer. Then:
+To build the application for production, you will need to install [Node.js](https://nodejs.org/en/) and [Yarn](https://yarnpkg.com/en/). Then, clone the repository and run:
 
-- Clone the repository:
-  - run `yarn run build`
-  - run `yarn run start`
+- `yarn run build`
+- `yarn run start`
 
-To build a standalone browser application using [Tauri](https://tauri.app/), you will need to have [Node.js](https://nodejs.org/en/), [Yarn](https://yarnpkg.com/en/) and [Rust](https://www.rust-lang.org/) installed on your computer. Then:
+To build a standalone browser application using [Tauri](https://tauri.app/), you will need to have [Node.js](https://nodejs.org/en/), [Yarn](https://yarnpkg.com/en/) and [Rust](https://www.rust-lang.org/) installed. Then, clone the repository and run:
 
-- Clone the repository:
-  - run `yarn tauri build`
-  - run `yarn tauri dev`
+- `yarn tauri build`
+- `yarn tauri dev`
 
 # Roadmap to Topos v1.0 (first release)
+
+Sure you can already play music with Topos but it feels like throwing pebbles on a drumset. Help us make it better!
 
 ## Application User Interface
 
 - [ ] Visual feedback for script execution
-  - [ ] add blinking dots in the upper-right corner of the editor
-  - [ ] visual warning when an error is detected (blinking red?)
-  - [ ] more variety in visual signals when evaluating code
-- [ ] Code animation for rhythmic functions on certain lines (show that a statement is true)
-- [ ] More/Better rhythmic generators
-  - [ ] Ability to write simple musical sequences
-  - [ ] Ability to create musical structures easily
+  - [ ] add blinking dots in the upper-right corner of the editor corresponding to the script being executed.
+  - [ ] visual warning when an error is detected (blinking red?) and reading logs directly from the interface.
+  - [ ] more variety in visual signals when evaluating code (errors, warnings, etc...).
+- [ ] Animating code in rhythm! Show when code gets executed, etc...
+- [ ] Better rhythmic generators
+  - [ ] Ability to write simple linear sequences
+  - [ ] Ability to manipulate musical structures / objects
 - [ ] Rendering static files (MIDI, MOD, etc...)
 - [ ] Add a way to save the current universe as a file.
 - [ ] Add a way to load a universe from a file.
@@ -75,7 +83,7 @@ To build a standalone browser application using [Tauri](https://tauri.app/), you
 ## Scheduler
 
 - [ ] Stable / robust clock and script/event scheduler.
-  - [ ] There is still a tiny bit of imprecision left.
+  - [ ] There is still a tiny bit of imprecision left in the scheduling mechanism used.
   - [ ] Add a way to set the clock's swing.
   - [ ] MIDI Clock In/Out support.
 

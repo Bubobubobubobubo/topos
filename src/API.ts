@@ -5,6 +5,7 @@ import { DrunkWalk } from "./Utils/Drunk";
 import { LRUCache } from 'lru-cache';
 import { scale } from "./Scales";
 import { Editor } from "./main";
+import { Sound } from './Sound';
 import {
   superdough,
   samples,
@@ -249,12 +250,13 @@ export class UserAPI {
   public zn(input: string, 
       options: {[key: string]: string|number} = {}): Event {
       const pattern = cachedPattern(input, options);
-       if(pattern.hasStarted()) {
+       //@ts-ignore
+      if(pattern.hasStarted()) {
         
         const event = pattern.peek();
         
         // Check if event is modified
-        const node = event.modifiedEvent ? event.modifiedEvent : event;
+        const node = event!.modifiedEvent ? event!.modifiedEvent : event;
         const channel = (options.channel ? options.channel : 0) as number;
         const velocity = (options.velocity ? options.velocity : 100) as number;
         const sustain = (options.sustain ? options.sustain : 0.5) as number;
@@ -274,8 +276,9 @@ export class UserAPI {
         }
         
         // Remove old modified event
-        if(event.modifiedEvent) event.modifiedEvent = undefined;
+        if(event!.modifiedEvent) event!.modifiedEvent = undefined;
       }
+      //@ts-ignore
       return pattern.next();
   }
 
@@ -1000,6 +1003,7 @@ export class UserAPI {
     length: number,
     rotate: number = 0
   ): boolean[] {
+    if (pulses == length) return Array.from({ length }, () => true);
     function startsDescent(list: number[], i: number): boolean {
       const length = list.length;
       const nextIndex = (i + 1) % length;
@@ -1033,7 +1037,7 @@ export class UserAPI {
   gold() {
     /**
      * Essayer de générer des séquences tirées du truc de Puckette
-     * Faire ça avec des lazy lists, ça ne devrait pas être trop difficle.
+     * Faire ça avec des lazy lists, ça ne devrait pas être trop difficile.
      *
      */
   }
@@ -1077,6 +1081,18 @@ export class UserAPI {
     );
   }
 
+  usine(freq: number = 1, offset: number = 0): number {
+    /**
+     * Returns a sine wave between 0 and 1.
+     * 
+     * @param freq - The frequency of the sine wave
+     * @param offset - The offset of the sine wave
+     * @returns A sine wave between 0 and 1
+     * @see sine
+     */
+    return (this.sine(freq, offset) + 1) / 2;
+  }
+
   saw(freq: number = 1, offset: number = 0): number {
     /**
      * Returns a saw wave between -1 and 1.
@@ -1092,6 +1108,18 @@ export class UserAPI {
     return ((this.app.clock.ctx.currentTime * freq) % 1) * 2 - 1 + offset;
   }
 
+  usaw(freq: number = 1, offset: number = 0): number {
+    /**
+     * Returns a saw wave between 0 and 1.
+     * 
+     * @param freq - The frequency of the saw wave
+     * @param offset - The offset of the saw wave
+     * @returns A saw wave between 0 and 1
+     * @see saw
+     */
+    return (this.saw(freq, offset) + 1) / 2;
+  }
+
   triangle(freq: number = 1, offset: number = 0): number {
     /**
      * Returns a triangle wave between -1 and 1.
@@ -1105,6 +1133,18 @@ export class UserAPI {
     return Math.abs(this.saw(freq, offset)) * 2 - 1;
   }
 
+  utriangle(freq: number = 1, offset: number = 0): number {
+    /**
+     * Returns a triangle wave between 0 and 1.
+     * 
+     * @param freq - The frequency of the triangle wave
+     * @param offset - The offset of the triangle wave
+     * @returns A triangle wave between 0 and 1
+     * @see triangle
+     */
+    return (this.triangle(freq, offset) + 1) / 2;
+  }
+
   square(freq: number = 1, offset: number = 0): number {
     /**
      * Returns a square wave between -1 and 1.
@@ -1116,6 +1156,18 @@ export class UserAPI {
      * @see noise
      */
     return this.saw(freq, offset) > 0 ? 1 : -1;
+  }
+
+  usquare(freq: number = 1, offset: number = 0): number {
+    /**
+     * Returns a square wave between 0 and 1.
+     * 
+     * @param freq - The frequency of the square wave
+     * @param offset - The offset of the square wave
+     * @returns A square wave between 0 and 1
+     * @see square
+     */
+    return (this.square(freq, offset) + 1) / 2;
   }
 
   noise(): number {
@@ -1142,10 +1194,14 @@ export class UserAPI {
   // Trivial functions
   // =============================================================
 
-  sound = async (values: object, delay: number = 0.0) => {
+  d = async (values: object, delay: number = 0.0) => {
     superdough(values, delay);
   };
-  d = this.sound;
+
+
+  sound = (sound: string) => {
+    return new Sound(sound, this.app);
+  }
 
   samples = samples;
 
