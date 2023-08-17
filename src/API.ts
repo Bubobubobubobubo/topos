@@ -1003,6 +1003,7 @@ export class UserAPI {
     length: number,
     rotate: number = 0
   ): boolean[] {
+    if (pulses == length) return Array.from({ length }, () => true);
     function startsDescent(list: number[], i: number): boolean {
       const length = list.length;
       const nextIndex = (i + 1) % length;
@@ -1199,7 +1200,7 @@ export class UserAPI {
 
 
   sound = (sound: string) => {
-    return new Sound(sound);
+    return new Sound(sound, this.app);
   }
 
   samples = samples;

@@ -1,3 +1,5 @@
+import { type Editor } from './main';
+
 import {
   superdough,
   // @ts-ignore
@@ -7,7 +9,7 @@ export class Sound {
 
     values: { [key: string]: any }
 
-    constructor(sound: string) {
+    constructor(sound: string, public app: Editor) {
         this.values = { 's': sound }
     }
 
@@ -162,6 +164,6 @@ export class Sound {
     }
 
     out = (): object => {
-        return superdough(this.values, 0.0);
+        return superdough(this.values, this.app.clock.pulse_duration);
     }
 }
