@@ -21,9 +21,7 @@ const tryCatchWrapper = (
    */
   return new Promise((resolve, _) => {
     try {
-      Function(`with (this) {try{${code}} catch (e) {console.log(e)}};`).call(
-        application.api
-      );
+     Function(`"use strict";try{${code}} catch (e) {console.log(e)};`).call(application.api);
       resolve(true);
     } catch (error) {
       console.log(error);

@@ -65,6 +65,11 @@ To build a standalone browser application using [Tauri](https://tauri.app/), you
 
 Sure you can already play music with Topos but it feels like throwing pebbles on a drumset. Help us make it better!
 
+## Urgent
+
+- [ ] Using `globalThis` instead of `with(this)`.
+- [ ] Evaluating once each script or on change.
+
 ## Application User Interface
 
 - [ ] Visual feedback for script execution

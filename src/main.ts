@@ -431,6 +431,11 @@ export class Editor {
       this, 
       this.universes[this.selected_universe.toString()].init,
     )
+
+    // Passing the API to the User
+    Object.entries(this.api).forEach(([name, value]) => {
+      (globalThis as Record<string, any>)[name] = value;
+    });
   }
 
   get note_buffer() {

@@ -7,7 +7,6 @@ import { scale } from "./Scales";
 import { Editor } from "./main";
 import { Sound } from './Sound';
 import {
-  superdough,
   samples,
   initAudioOnFirstClick,
   registerSynthSounds,
@@ -74,7 +73,7 @@ export class UserAPI {
   // Time functions
   // =============================================================
 
-  get time(): number {
+  public time = (): number => {
     /**
      * @returns the current AudioContext time (wall clock)
      */
@@ -85,14 +84,14 @@ export class UserAPI {
   // Mouse functions
   // =============================================================
 
-  get mouseX(): number {
+  public mouseX = (): number => {
     /**
      * @returns The current x position of the mouse
      */
     return this.app._mouseX;
   }
 
-  get mouseY(): number {
+  public mouseY = (): number => {
     /**
      * @returns The current y position of the mouse
      */
@@ -103,8 +102,7 @@ export class UserAPI {
   // Utility functions
   // =============================================================
 
-
-  script(...args: number[]): void {
+  script = (...args: number[]): void => {
     /**
      * Evaluates 1-n local script(s)
      *
@@ -120,7 +118,7 @@ export class UserAPI {
   }
   s = this.script;
 
-  clear_script(script: number): void {
+  clear_script = (script: number): void => {
     /**
      * Clears a local script
      *
@@ -134,7 +132,7 @@ export class UserAPI {
   }
   cs = this.clear_script;
 
-  copy_script(from: number, to: number): void {
+  copy_script = (from: number, to: number): void => {
     /**
      * Copy from a local script to another local script
      *
@@ -150,7 +148,7 @@ export class UserAPI {
   // MIDI related functions
   // =============================================================
 
-  public midi_outputs(): Array<MIDIOutput> {
+  public midi_outputs = (): Array<MIDIOutput> => {
     /**
      * Prints a list of available MIDI outputs in the console.
      *
@@ -160,7 +158,7 @@ export class UserAPI {
     return this.MidiConnection.midiOutputs;
   }
 
-  public midi_output(outputName: string): void {
+  public midi_output = (outputName: string): void => {
     /**
      * Switches the MIDI output to the specified output.
      *
@@ -173,7 +171,7 @@ export class UserAPI {
     }
   }
 
-  public note(note: number, options: { [key: string]: number } = {}): void {
+  public note = (note: number, options: { [key: string]: number } = {}): void => {
     /**
      * Sends a MIDI note to the current MIDI output.
      *
@@ -187,7 +185,7 @@ export class UserAPI {
     this.MidiConnection.sendMidiNote(note, channel, velocity, duration);
   }
 
-  public sysex(data: Array<number>): void {
+  public sysex = (data: Array<number>): void => {
     /**
      * Sends a MIDI sysex message to the current MIDI output.
      *
@@ -196,7 +194,7 @@ export class UserAPI {
     this.MidiConnection.sendSysExMessage(data);
   }
 
-  public pitch_bend(value: number, channel: number): void {
+  public pitch_bend = (value: number, channel: number): void => {
     /**
      * Sends a MIDI pitch bend to the current MIDI output.
      *
@@ -208,7 +206,7 @@ export class UserAPI {
     this.MidiConnection.sendPitchBend(value, channel);
   }
 
-  public program_change(program: number, channel: number): void {
+  public program_change = (program: number, channel: number): void => {
     /**
      * Sends a MIDI program change to the current MIDI output.
      *
@@ -218,7 +216,7 @@ export class UserAPI {
     this.MidiConnection.sendProgramChange(program, channel);
   }
 
-  public midi_clock(): void {
+  public midi_clock = (): void => {
     /**
      * Sends a MIDI clock to the current MIDI output.
      */
@@ -226,7 +224,7 @@ export class UserAPI {
   }
 
 
-  public control_change({ control= 20, value= 0, channel=0 }: ControlChange): void {
+  public control_change = ({ control= 20, value= 0, channel=0 }: ControlChange): void => {
     /**
      * Sends a MIDI control change to the current MIDI output.
      *
@@ -236,7 +234,7 @@ export class UserAPI {
     this.MidiConnection.sendMidiControlChange(control, value, channel);
   }
 
-  public midi_panic(): void {
+  public midi_panic = (): void => {
     /**
      * Sends a MIDI panic message to the current MIDI output.
      */
@@ -247,8 +245,8 @@ export class UserAPI {
   // Ziffers related functions
   // =============================================================
 
-  public zn(input: string, 
-      options: {[key: string]: string|number} = {}): Event {
+  public zn = (input: string, 
+      options: {[key: string]: string|number} = {}): Event => {
       const pattern = cachedPattern(input, options);
       
       //@ts-ignore
@@ -286,7 +284,7 @@ export class UserAPI {
   // Iterator related functions
   // =============================================================
 
-  public iterator(name: string, limit?: number, step?: number): number {
+  public iterator = (name: string, limit?: number, step?: number): number => {
     /**
      * Returns the current value of an iterator, and increments it by the step value.
      *
@@ -338,28 +336,24 @@ export class UserAPI {
   // Drunk mechanism
   // =============================================================
 
-  get drunk() {
+  public drunk = (n?: number) => {
     /**
      *
-     * This function returns the current the drunk mechanism's
-     * current value.
+     * This function sets or returns the current drunk
+     * mechanism's value.
      *
-     * @returns The current position of the drunk mechanism
+     * @param n - [optional] The value to set the drunk mechanism to
+     * @returns The current value of the drunk mechanism
      */
+    if (n !== undefined) {
+      this._drunk.position = n;
+      return this._drunk.getPosition();
+    }
     this._drunk.step();
     return this._drunk.getPosition();
   }
 
-  set drunk(position: number) {
-    /**
-     * Sets the current position of the drunk mechanism.
-     *
-     * @param position - The value to set the drunk mechanism to
-     */
-    this._drunk.position = position;
-  }
-
-  set drunk_max(max: number) {
+  public drunk_max = (max: number) => {
     /**
      * Sets the maximum value of the drunk mechanism.
      *
@@ -368,7 +362,7 @@ export class UserAPI {
     this._drunk.max = max;
   }
 
-  set drunk_min(min: number) {
+  public drunk_min = (min: number) => {
     /**
      * Sets the minimum value of the drunk mechanism.
      *
@@ -377,7 +371,7 @@ export class UserAPI {
     this._drunk.min = min;
   }
 
-  set drunk_wrap(wrap: boolean) {
+  public drunk_wrap = (wrap: boolean) => {
     /**
      * Sets whether the drunk mechanism should wrap around
      *
@@ -390,7 +384,7 @@ export class UserAPI {
   // Variable related functions
   // =============================================================
 
-  public variable(a: number | string, b?: any): any {
+  public variable = (a: number | string, b?: any): any => {
     /**
      * Sets or returns the value of a variable internal to API.
      *
@@ -407,7 +401,7 @@ export class UserAPI {
   }
   v = this.variable;
 
-  public delete_variable(name: string): void {
+  public delete_variable = (name: string): void => {
     /**
      * Deletes a variable internal to API.
      *
@@ -417,7 +411,7 @@ export class UserAPI {
   }
   dv = this.delete_variable;
 
-  public clear_variables(): void {
+  public clear_variables = (): void => {
     /**
      * Clears all variables internal to API.
      *
@@ -444,7 +438,7 @@ export class UserAPI {
     return btoa(JSON.stringify(pattern));
   }
 
-  public seqmod(...input: any[]) {
+  public seqmod = (...input: any[]) => {
     if (cache.has(this._sequence_key_generator(input))) {
       let sequence = cache.get(
         this._sequence_key_generator(input)
@@ -497,7 +491,7 @@ export class UserAPI {
     }
   }
 
-  public seq(...input: any[]) {
+  public seq = (...input: any[]) => {
     /**
      * Returns a value in a sequence stored using an LRU Cache.
      * The sequence is stored in the cache with an hash identifier
@@ -531,7 +525,7 @@ export class UserAPI {
     }
   }
 
-  pick<T>(...array: T[]): T {
+  pick = <T>(...array: T[]): T => {
     /**
      * Returns a random element from an array.
      *
@@ -540,16 +534,16 @@ export class UserAPI {
     return array[Math.floor(Math.random() * array.length)];
   }
 
-  seqbeat<T>(...array: T[]): T {
+  seqbeat = <T>(...array: T[]): T => {
     /**
      * Returns an element from an array based on the current beat.
      *
      * @param array - The array of values to pick from
      */
-    return array[this.ebeat % array.length];
+    return array[this.ebeat() % array.length];
   }
 
-  mel<T>(iterator: number, array: T[]): T {
+  mel = <T>(iterator: number, array: T[]): T => {
     /**
      * Returns an element from an array based on the current value of an iterator.
      *
@@ -559,7 +553,7 @@ export class UserAPI {
     return array[iterator % array.length];
   }
 
-  seqbar<T>(...array: T[]): T {
+  seqbar = <T>(...array: T[]): T => {
     /**
      * Returns an element from an array based on the current bar.
      *
@@ -568,7 +562,7 @@ export class UserAPI {
     return array[(this.app.clock.time_position.bar + 1) % array.length];
   }
 
-  seqpulse<T>(...array: T[]): T {
+  seqpulse = <T>(...array: T[]): T => {
     /**
      * Returns an element from an array based on the current pulse.
      *
@@ -581,7 +575,7 @@ export class UserAPI {
   // Randomness functions
   // =============================================================
 
-  randI(min: number, max: number): number {
+  randI = (min: number, max: number): number => {
     /**
      * Returns a random integer between min and max.
      *
@@ -592,7 +586,7 @@ export class UserAPI {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 
-  rand(min: number, max: number): number {
+  rand = (min: number, max: number): number => {
     /**
      * Returns a random float between min and max.
      *
@@ -609,7 +603,7 @@ export class UserAPI {
   // Quantification functions
   // =============================================================
 
-  public quantize(value: number, quantization: number[]): number {
+  public quantize = (value: number, quantization: number[]): number => {
     /**
      * Returns the closest value in an array to a given value.
      *
@@ -630,7 +624,7 @@ export class UserAPI {
   }
   quant = this.quantize;
 
-  public clamp(value: number, min: number, max: number): number {
+  public clamp = (value: number, min: number, max: number): number => {
     /**
      * Returns a value clamped between min and max.
      *
@@ -647,7 +641,7 @@ export class UserAPI {
   // Transport functions
   // =============================================================
 
-  bpm(n?: number): number {
+  public bpm = (n?: number): number => {
     /**
      * Sets or returns the current bpm.
      *
@@ -662,7 +656,7 @@ export class UserAPI {
   }
   tempo = this.bpm;
 
-  bpb(n?: number): number {
+  public bpb = (n?: number): number => {
     /**
      * Sets or returns the number of beats per bar. 
      *
@@ -676,7 +670,7 @@ export class UserAPI {
     return n;
   }
 
-  ppqn(n?: number) {
+  public ppqn = (n?: number) => {
     /**
      * Sets or returns the number of pulses per quarter note.
      */
@@ -687,7 +681,7 @@ export class UserAPI {
     return n;
   }
 
-  time_signature(numerator: number, denominator: number): void {
+  public time_signature = (numerator: number, denominator: number): void => {
     /**
      * Sets the time signature.
      *
@@ -702,7 +696,7 @@ export class UserAPI {
   // Probability functions
   // =============================================================
 
-  public almostNever(): boolean {
+  public almostNever = (): boolean => {
     /**
      * Returns true 10% of the time.
      *
@@ -711,7 +705,7 @@ export class UserAPI {
     return Math.random() > 0.9;
   }
 
-  public sometimes(): boolean {
+  public sometimes = (): boolean => {
     /**
      * Returns true 50% of the time.
      *
@@ -720,7 +714,7 @@ export class UserAPI {
     return Math.random() > 0.5;
   }
 
-  public rarely(): boolean {
+  public rarely = (): boolean => {
     /**
      * Returns true 25% of the time.
      *
@@ -729,7 +723,7 @@ export class UserAPI {
     return Math.random() > 0.75;
   }
 
-  public often(): boolean {
+  public often = (): boolean => {
     /**
      * Returns true 75% of the time.
      *
@@ -738,7 +732,7 @@ export class UserAPI {
     return Math.random() > 0.25;
   }
 
-  public almostAlways(): boolean {
+  public almostAlways = (): boolean => {
     /**
      * Returns true 90% of the time.
      *
@@ -747,7 +741,7 @@ export class UserAPI {
     return Math.random() > 0.1;
   }
 
-  public dice(sides: number): number {
+  public dice = (sides: number): number => {
     /**
      * Returns the value of a dice roll with n sides.
      *
@@ -761,25 +755,26 @@ export class UserAPI {
   // Iterator functions (for loops, with evaluation count, etc...)
   // =============================================================
 
-  get i() {
+  i = (n?: number) => {
     /**
      * Returns the current iteration of global file.
      *
      * @returns The current iteration of global file
      */
-    return this.app.universes[this.app.selected_universe].global
+    if (n !== undefined) {
+      this.app.universes[this.app.selected_universe].global.evaluations = n;
+      return this.app.universes[this.app.selected_universe]
+    }
+    return this.app.universes[this.app.selected_universe]
+      .global
       .evaluations as number;
-  }
-
-  set i(n: number) {
-    this.app.universes[this.app.selected_universe].global.evaluations = n;
   }
 
   // =============================================================
   // Time markers
   // =============================================================
 
-  get bar(): number {
+  bar = (): number => {
     /**
      * Returns the current bar number
      *
@@ -788,7 +783,7 @@ export class UserAPI {
     return this.app.clock.time_position.bar;
   }
 
-  get tick(): number {
+  tick = (): number => {
     /**
      * Returns the current tick number
      *
@@ -797,7 +792,7 @@ export class UserAPI {
     return this.app.clock.tick;
   }
 
-  get pulse(): number {
+  pulse = (): number => {
     /**
      * Returns the current pulse number
      *
@@ -806,7 +801,7 @@ export class UserAPI {
     return this.app.clock.time_position.pulse;
   }
 
-  get beat(): number {
+  beat = (): number => {
     /**
      * Returns the current beat number
      *
@@ -815,28 +810,28 @@ export class UserAPI {
     return this.app.clock.time_position.beat;
   }
 
-  get ebeat(): number {
+  ebeat = (): number => {
     /**
      * Returns the current beat number since the origin of time
      */
     return this.app.clock.beats_since_origin;
   }
 
-  get epulse(): number {
+  epulse = (): number => {
     /**
      * Returns the current number of pulses elapsed since origin of time
      */
     return this.app.clock.pulses_since_origin;
   }
 
-  onbar(n: number, ...bar: number[]): boolean {
+  onbar = (n: number, ...bar: number[]): boolean => {
     // n is acting as a modulo on the bar number
     const bar_list = [...Array(n).keys()].map((i) => i + 1);
     console.log(bar.some((b) => bar_list.includes(b % n)));
     return bar.some((b) => bar_list.includes(b % n));
   }
 
-  onbeat(...beat: number[]): boolean {
+  onbeat = (...beat: number[]): boolean => {
     /**
      * Returns true if the current beat is in the given list of beats.
      *
@@ -860,7 +855,7 @@ export class UserAPI {
     return final_pulses.some((p) => p == true);
   }
 
-  stop(): void {
+  stop = (): void => {
     /**
      * Stops the clock.
      *
@@ -873,7 +868,7 @@ export class UserAPI {
   silence = this.stop;
   hush = this.stop;
 
-  prob(p: number): boolean {
+  prob = (p: number): boolean => {
     /**
      * Returns true p% of the time.
      *
@@ -883,7 +878,7 @@ export class UserAPI {
     return Math.random() * 100 < p;
   }
 
-  toss(): boolean {
+  toss = (): boolean => {
     /**
      * Returns true 50% of the time.
      *
@@ -897,7 +892,7 @@ export class UserAPI {
     return Math.random() > 0.5;
   }
 
-  min(...values: number[]): number {
+  min = (...values: number[]): number => {
     /**
      * Returns the minimum value of a list of numbers.
      *
@@ -907,7 +902,7 @@ export class UserAPI {
     return Math.min(...values);
   }
 
-  max(...values: number[]): number {
+  max = (...values: number[]): number => {
     /**
      * Returns the maximum value of a list of numbers.
      *
@@ -917,7 +912,7 @@ export class UserAPI {
     return Math.max(...values);
   }
 
-  limit(value: number, min: number, max: number): number {
+  limit = (value: number, min: number, max: number): number => {
     /**
      * Limits a value between a minimum and a maximum.
      *
@@ -929,7 +924,7 @@ export class UserAPI {
     return Math.min(Math.max(value, min), max);
   }
 
-  delay(ms: number, func: Function): void {
+  delay = (ms: number, func: Function): void => {
     /**
      * Delays the execution of a function by a given number of milliseconds.
      *
@@ -940,7 +935,7 @@ export class UserAPI {
     setTimeout(func, ms);
   }
 
-  delayr(ms: number, nb: number, func: Function): void {
+  delayr = (ms: number, nb: number, func: Function): void => {
     /**
      * Delays the execution of a function by a given number of milliseconds, repeated a given number of times.
      *
@@ -955,7 +950,7 @@ export class UserAPI {
     });
   }
 
-  mod(...pulse: number[]): boolean {
+  mod = (...pulse: number[]): boolean => {
     /**
      * Returns true if the current pulse is a modulo of any of the given pulses.
      *
@@ -965,7 +960,7 @@ export class UserAPI {
     return pulse.some((p) => this.app.clock.time_position.pulse % p === 0);
   }
 
-  modbar(...bar: number[]): boolean {
+  modbar = (...bar: number[]): boolean => {
     /**
      * Returns true if the current bar is a modulo of any of the given bars.
      *
@@ -980,12 +975,12 @@ export class UserAPI {
   // Rythmic generators
   // =============================================================
 
-  euclid(
+  euclid = (
     iterator: number,
     pulses: number,
     length: number,
     rotate: number = 0
-  ): boolean {
+  ): boolean => {
     /**
      * Returns a euclidean cycle of size length, with n pulses, rotated or not.
      *
@@ -1021,7 +1016,7 @@ export class UserAPI {
     return cycle;
   }
 
-  bin(iterator: number, n: number): boolean {
+  bin = (iterator: number, n: number): boolean => {
     /**
      * Returns a binary cycle of size n.
      *
@@ -1034,19 +1029,11 @@ export class UserAPI {
     return tobin[iterator % tobin.length];
   }
 
-  gold() {
-    /**
-     * Essayer de générer des séquences tirées du truc de Puckette
-     * Faire ça avec des lazy lists, ça ne devrait pas être trop difficile.
-     *
-     */
-  }
-
   // =============================================================
   // Low Frequency Oscillators
   // =============================================================
 
-  line(start: number, end: number, step: number = 1): number[] {
+  line = (start: number, end: number, step: number = 1): number[] => {
     /**
      * Returns an array of values between start and end, with a given step.
      *
@@ -1068,7 +1055,7 @@ export class UserAPI {
     return result;
   }
 
-  sine(freq: number = 1, offset: number = 0): number {
+  sine = (freq: number = 1, offset: number = 0): number => {
     /**
      * Returns a sine wave between -1 and 1.
      *
@@ -1081,7 +1068,7 @@ export class UserAPI {
     );
   }
 
-  usine(freq: number = 1, offset: number = 0): number {
+  usine = (freq: number = 1, offset: number = 0): number => {
     /**
      * Returns a sine wave between 0 and 1.
      * 
@@ -1093,7 +1080,7 @@ export class UserAPI {
     return (this.sine(freq, offset) + 1) / 2;
   }
 
-  saw(freq: number = 1, offset: number = 0): number {
+  saw = (freq: number = 1, offset: number = 0): number => {
     /**
      * Returns a saw wave between -1 and 1.
      *
@@ -1108,7 +1095,7 @@ export class UserAPI {
     return ((this.app.clock.ctx.currentTime * freq) % 1) * 2 - 1 + offset;
   }
 
-  usaw(freq: number = 1, offset: number = 0): number {
+  usaw = (freq: number = 1, offset: number = 0): number => {
     /**
      * Returns a saw wave between 0 and 1.
      * 
@@ -1120,7 +1107,7 @@ export class UserAPI {
     return (this.saw(freq, offset) + 1) / 2;
   }
 
-  triangle(freq: number = 1, offset: number = 0): number {
+  triangle = (freq: number = 1, offset: number = 0): number => {
     /**
      * Returns a triangle wave between -1 and 1.
      *
@@ -1133,7 +1120,7 @@ export class UserAPI {
     return Math.abs(this.saw(freq, offset)) * 2 - 1;
   }
 
-  utriangle(freq: number = 1, offset: number = 0): number {
+  utriangle = (freq: number = 1, offset: number = 0): number => {
     /**
      * Returns a triangle wave between 0 and 1.
      * 
@@ -1145,7 +1132,7 @@ export class UserAPI {
     return (this.triangle(freq, offset) + 1) / 2;
   }
 
-  square(freq: number = 1, offset: number = 0): number {
+  square = (freq: number = 1, offset: number = 0): number => {
     /**
      * Returns a square wave between -1 and 1.
      *
@@ -1158,7 +1145,7 @@ export class UserAPI {
     return this.saw(freq, offset) > 0 ? 1 : -1;
   }
 
-  usquare(freq: number = 1, offset: number = 0): number {
+  usquare = (freq: number = 1, offset: number = 0): number => {
     /**
      * Returns a square wave between 0 and 1.
      * 
@@ -1170,7 +1157,7 @@ export class UserAPI {
     return (this.square(freq, offset) + 1) / 2;
   }
 
-  noise(): number {
+  noise = (): number => {
     /**
      * Returns a random value between -1 and 1.
      *
@@ -1194,11 +1181,6 @@ export class UserAPI {
   // Trivial functions
   // =============================================================
 
-  d = async (values: object, delay: number = 0.0) => {
-    superdough(values, delay);
-  };
-
-
   sound = (sound: string) => {
     return new Sound(sound, this.app);
   }
@@ -1209,7 +1191,7 @@ export class UserAPI {
 
   scale = scale;
 
-  rate(rate: number): void {
+  rate = (rate: number): void => {
     rate = rate;
     // TODO: Implement this. This function should change the rate at which the global script
     // is evaluated. This is useful for slowing down the script, or speeding it up. The default
