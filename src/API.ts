@@ -248,17 +248,17 @@ export class UserAPI {
   public zn = (input: string, 
       options: {[key: string]: string|number} = {}): Event => {
       const pattern = cachedPattern(input, options);
-      
-      //@ts-ignore
+       //@ts-ignore
       if(pattern.hasStarted()) {
+        
         const event = pattern.peek();
+        
         // Check if event is modified
         const node = event!.modifiedEvent ? event!.modifiedEvent : event;
-        
         const channel = (options.channel ? options.channel : 0) as number;
         const velocity = (options.velocity ? options.velocity : 100) as number;
         const sustain = (options.sustain ? options.sustain : 0.5) as number;
-
+        
         if(node instanceof Pitch) {
             if(node.bend) this.MidiConnection.sendPitchBend(node.bend, channel);
             this.MidiConnection.sendMidiNote(node.note!, channel, velocity, sustain);
