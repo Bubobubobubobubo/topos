@@ -45,9 +45,7 @@ export const tryEvaluate = async (
     if (cache.has(candidateCode)) {
       // If the code is already in cache, use it
       cache.get(candidateCode)!.call(application.api);
-      console.log('Using cached code')
     } else {
-      console.log('Evaluating code')
       const wrappedCode = `let i = ${code.evaluations};` + candidateCode;
       // Otherwise, evaluate the code and if valid, add it to the cache
       const isCodeValid = await Promise.race([

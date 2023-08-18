@@ -42,13 +42,23 @@ Array.prototype.in = function <T>(this: T[], value: T): boolean {
   return this.includes(value);
 };
 
-// Loading the Strudel sampler
-Promise.all([
-  initAudioOnFirstClick(),
-  samples("github:tidalcycles/Dirt-Samples/master"),
-  samples("github:Bubobubobubobubo/Topos-Samples/main"),
-  registerSynthSounds(),
-]);
+
+async function loadSamples() {
+  const ds = "https://raw.githubusercontent.com/felixroos/dough-samples/main/";
+  return Promise.all([
+    initAudioOnFirstClick(),
+    samples("github:Bubobubobubobubo/Topos-Samples/main"),
+    samples(`${ds}/tidal-drum-machines.json`),
+    samples(`${ds}/piano.json`),
+    samples(`${ds}/Dirt-Samples.json`),
+    samples(`${ds}/EmuSP12.json`),
+    samples(`${ds}/vcsl.json`),
+    registerSynthSounds(),
+  ]);
+}
+
+loadSamples()
+
 
 export class UserAPI {
   /**
