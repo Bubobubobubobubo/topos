@@ -64,6 +64,7 @@ export class Editor {
     document.getElementById("clear-button-1") as HTMLButtonElement,
     document.getElementById("clear-button-2") as HTMLButtonElement,
   ];
+  documentation_button: HTMLButtonElement = document.getElementById("doc-button-1") as HTMLButtonElement;
 
   // Script selection elements
   local_button: HTMLButtonElement = document.getElementById(
@@ -269,6 +270,12 @@ export class Editor {
         this.view.focus();
       }
 
+      if (event.ctrlKey && event.key === "d") {
+        event.preventDefault();
+        this.showDocumentation();
+      }
+
+
       if (event.ctrlKey && event.key === "i") {
         event.preventDefault();
         this.changeModeFromInterface("init");
@@ -332,6 +339,10 @@ export class Editor {
         }
       });
     });
+
+    this.documentation_button.addEventListener("click", () => {
+      this.showDocumentation();
+    })
 
     this.pause_buttons.forEach((button) => {
       button.addEventListener("click", () => {
@@ -452,6 +463,16 @@ export class Editor {
 
   get local_buffer() {
     return this.universes[this.selected_universe.toString()].locals[this.local_index];
+  }
+
+  showDocumentation() {
+      if (document.getElementById("app")?.classList.contains("hidden")) {
+        document.getElementById('app')?.classList.remove('hidden');
+        document.getElementById('documentation')?.classList.add('hidden');
+      } else {
+        document.getElementById('app')?.classList.add('hidden');
+        document.getElementById('documentation')?.classList.remove('hidden');
+      }
   }
 
   changeToLocalBuffer(i: number) {

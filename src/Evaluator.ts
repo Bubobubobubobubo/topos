@@ -52,7 +52,6 @@ export const tryEvaluate = async (
         tryCatchWrapper(application, wrappedCode as string),
         delay(timeout),
       ]);
-
       if (isCodeValid) {
         code.committed = code.candidate;
         const newFunction = new Function(`"use strict";try{${wrappedCode}} catch (e) {console.log(e)};`);
