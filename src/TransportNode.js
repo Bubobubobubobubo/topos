@@ -14,7 +14,12 @@ export class TransportNode extends AudioWorkletNode {
         this.currentPulsePosition = 0;
         this.nextPulsePosition = -1;
         this.executionLatency = 0;
-        this.lastLatencies = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+        this.lastLatencies = [
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        ];
         this.indexOfLastLatencies = 0;
         // setInterval(() => this.ping(), 1000);
         this.startTime = null;
@@ -35,17 +40,12 @@ export class TransportNode extends AudioWorkletNode {
             if (this.nextPulsePosition !== nextPulsePosition) {
                 this.nextPulsePosition = nextPulsePosition;
                 setTimeout(() => {
-                    // const now = performance.now(); // Use AudioContext time instead
                     const now = this.app.audioContext.currentTime;
                     this.app.clock.time_position = futureTimeStamp;
                     // this.$clock.innerHTML = `[${futureTimeStamp.bar}:${futureTimeStamp.beat}:${zeroPad(futureTimeStamp.pulse, '2')}]`;
-                    tryEvaluate( 
-                        this.app, 
-                        this.app.global_buffer,
-                    );
+                    tryEvaluate(this.app, this.app.global_buffer);
                     this.hasBeenEvaluated = true;
                     this.currentPulsePosition = nextPulsePosition;
-                    // const then = performance.now(); // Use AudioContext time instead
                     const then = this.app.audioContext.currentTime;
                     this.lastLatencies[this.indexOfLastLatencies] = then - now;
                     this.indexOfLastLatencies = (this.indexOfLastLatencies + 1) % this.lastLatencies.length;
