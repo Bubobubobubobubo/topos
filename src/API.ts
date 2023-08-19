@@ -76,6 +76,23 @@ export class UserAPI {
     return this.app.audioContext.currentTime;
   };
 
+  public play = (): void => {
+    this.app.setButtonHighlighting("play", true);
+    this.app.clock.start();
+  };
+
+  public pause = (): void => {
+    this.app.setButtonHighlighting("pause", true);
+    this.app.clock.pause();
+  };
+
+  public stop = (): void => {
+    this.app.setButtonHighlighting("stop", true);
+    this.app.clock.stop();
+  };
+  silence = this.stop;
+  hush = this.stop;
+
   // =============================================================
   // Mouse functions
   // =============================================================
@@ -800,19 +817,6 @@ export class UserAPI {
     });
     return final_pulses.some((p) => p == true);
   };
-
-  stop = (): void => {
-    /**
-     * Stops the clock.
-     *
-     * @see silence
-     * @see hush
-     */
-    this.app.clock.pause();
-    this.app.setButtonHighlighting("pause", true);
-  };
-  silence = this.stop;
-  hush = this.stop;
 
   prob = (p: number): boolean => {
     /**

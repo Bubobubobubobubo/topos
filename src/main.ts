@@ -28,8 +28,8 @@ import showdown from "showdown";
 showdown.setFlavor("github");
 import showdownHighlight from "showdown-highlight";
 const classMap = {
-  h1: "text-4xl text-white ml-4 mx-4 my-4 mb-8",
-  h2: "text-3xl text-white mx-4 my-4 mt-12 mb-6",
+  h1: "text-white text-4xl ml-4 mx-4 my-4 mb-8 bg-neutral-900 rounded-lg py-2 px-2",
+  h2: "text-white text-3xl mx-4 my-4 mt-12 mb-6 bg-neutral-900 rounded-lg py-2 px-2",
   ul: "text-underline",
   li: "ml-12 list-disc text-2xl text-white mx-4 my-4 leading-normal",
   p: "text-2xl text-white mx-4 my-4 leading-normal",
