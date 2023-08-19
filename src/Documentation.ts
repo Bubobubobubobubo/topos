@@ -126,6 +126,51 @@ You can use the time functions as conditionals. The following example will play 
 
 const midi: string = `
 # MIDI
+
+You can use Topos to play MIDI thanks to the [WebMIDI API](https://developer.mozilla.org/en-US/docs/Web/API/Web_MIDI_API). You can currently send notes, control change, program change and so on. You can also send a MIDI Clock to your MIDI devices or favorite DAW. Note that Topos is also capable of playing MIDI using **Ziffers** which provides a better syntax for melodic expression.
+
+
+
+## Notes
+- <icode>note(note: number, options: {})</icode>: send a MIDI Note. This function can take an object as a second argument to specify the MIDI channel, velocity, etc... (_e.g._ <icode>note(60, {channel: 1, velocity: 127})</icode>).
+
+\`\`\`javascript
+    bpm(80) // Setting a default BPM
+    mod(24) && note(36 + seqbeat(0,12), {duration: 0.02})
+    mod(12) && note(pick(64, 76), {duration: 0.05})
+    mod(36) && note(seqbeat(64, 67, 69), {duration: 0.05})
+    sometimes() && mod(12) && note(seqbeat(64, 67, 69) + 24, {duration: 0.5})
+\`\`\`
+
+## Control and Program Changes
+
+- <icode>control_change({control: number, value: number, channel: number})</icode>: send a MIDI Control Change. This function takes a single object argument to specify the control message (_e.g._ <icode>control_change({control: 1, value: 127, channel: 1})</icode>).
+
+\`\`\`javascript
+    control_change({control: pick(24,25), value: rI(1,120), channel: 1}))})
+    control_change({control: pick(30,35), value: rI(1,120) / 2, channel: 1}))})
+\`\`\`
+
+
+- <icode>program_change(program: number, channel: number)</icode>: send a MIDI Program Change. This function takes two arguments to specify the program and the channel (_e.g._ <icode>program_change(1, 1)</icode>).
+
+\`\`\`javascript
+    program_change(pick(1,2,3,4,5,6,7,8), 1)
+\`\`\`
+
+
+## System Exclusive Messages
+
+- <icode>sysex(...number[])</icode>: send a MIDI System Exclusive message. This function takes any number of arguments to specify the message (_e.g._ <icode>sysex(0x90, 0x40, 0x7f)</icode>).
+
+## Clock
+
+- <icode>midi_clock()</icode>: send a MIDI Clock message. This function is used to synchronize Topos with other MIDI devices or DAWs.
+
+\`\`\`javascript
+    mod(12) && midi_clock() // Sending clock to MIDI device from the global buffer
+\`\`\`
+
 `
 
 const sound: string = `

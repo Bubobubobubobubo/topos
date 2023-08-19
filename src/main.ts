@@ -40,15 +40,9 @@ const classMap = {
   table: "justify-center my-8 mx-8 text-2xl w-full text-left text-white border-collapse",
   thead: "text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400",
   th: "px-6 py-6",
-  td: "py-2"
+  td: "py-2",
+  tr: "py-0",
 }
-// const bindings = Object.keys(classMap)
-//   .map(key => ({
-//     type: 'output',
-//     regex: new RegExp(`<${key}(.*)>`, 'g'),
-//     //@ts-ignore
-//     replace: `<${key} class="${classMap[key]}" $1>`
-//   }));
 const bindings = Object.keys(classMap)
   .map(key => ({
     type: 'output',

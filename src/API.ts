@@ -234,7 +234,7 @@ export class UserAPI {
   }
 
 
-  public control_change = ({ control= 20, value= 0, channel=0 }: ControlChange): void => {
+  public control_change = ({control= 20, value= 0, channel=0 }: ControlChange): void => {
     /**
      * Sends a MIDI control change to the current MIDI output.
      *
