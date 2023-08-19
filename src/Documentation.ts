@@ -284,9 +284,7 @@ const about: string = `
 
 ## The Topos Project
 
-Topos is an experimental web based algorithmic sequencer programmed by **BuboBubo** (Raphaël Forment) and **Amiika** (Miika Alonen). It is written using [TypeScript](https://google.fr) and [Vite](https://google.fr). Many thanks to Felix Roos for making the [Superdough](https://www.npmjs.com/package/superdough) audio backend available for experimentation. 
-
-This project is based on the [Monome Teletype](https://monome.org) by Brian Crabtree. We hope to follow and honor the same spirit of sharing and experimentation. How much can the Teletype be extended while staying accessible and installation-free?
+Topos is an experimental web based algorithmic sequencer programmed by **BuboBubo** ([Raphaël Forment](https://raphaelforment.fr) and **Amiika** ([Miika Alonen](https//github.com/amiika). It is written using [TypeScript](https://google.fr) and [Vite](https://google.fr). Many thanks to Felix Roos for making the [Superdough](https://www.npmjs.com/package/superdough) audio backend available for experimentation. This project is based on the [Monome Teletype](https://monome.org) by [Brian Crabtree](https://nnnnnnnn.co/) and [Kelli Cain](https://kellicain.com/). We hope to follow and honor the same spirit of sharing and experimentation. How much can the Teletype be extended while staying accessible and installation-free?
 
 ## About Live Coding
 
@@ -294,9 +292,7 @@ This project is based on the [Monome Teletype](https://monome.org) by Brian Crab
 
 ## Free and open-source software
 
-Topos is a free and open-source software distributed under [GPL-3.0](https://github.com/Bubobubobubobubo/Topos/blob/main/LICENSE) licence.
-We welcome all contributions and ideas. You can find the source code on [GitHub](https://github.com/Bubobubobubobubo/topos).
-You can also join us on [Discord](https://discord.gg/8Q2QV6Z6) to discuss about the project and live coding in general.
+Topos is a free and open-source software distributed under [GPL-3.0](https://github.com/Bubobubobubobubo/Topos/blob/main/LICENSE) licence. We welcome all contributions and ideas. You can find the source code on [GitHub](https://github.com/Bubobubobubobubo/topos). You can also join us on [Discord](https://discord.gg/8Q2QV6Z6) to discuss about the project and live coding in general.
  
 **Have fun!**
 `;
@@ -304,7 +300,7 @@ You can also join us on [Discord](https://discord.gg/8Q2QV6Z6) to discuss about 
 const code: string = `
 # Code
 
-Topos is using the [JavaScript](https://en.wikipedia.org/wiki/JavaScript) syntax because it lives in a web browser where JS is the default programming language. It is also a language that you can learn to speak quite fast if you are already familiar with other programming lanugages. You are not going to write a lot of code anyway but familiarity with the language can help. Here are some good resources:
+Topos is using the [JavaScript](https://en.wikipedia.org/wiki/JavaScript) syntax because it lives in a web browser where JS is the default programming language. It is also a language that you can learn to speak quite fast if you are already familiar with other programming languages. You are not going to write a lot of code anyway but familiarity with the language can help. Here are some good resources:
 
 - [MDN (Mozilla Web Docs)](https://developer.mozilla.org/): it covers pretty much anything and is considered to be a reliable source to learn how the web currently works. We use it quite a lot to develop Topos. 
 
@@ -319,7 +315,9 @@ You **do not need to have any prior knowledge of programming** to use Topos. It 
 The code you enter in any of the scripts is evaluated in strict mode. This tells your browser that the code you run can be optimized quite agressively. We need this because by default, **the global script is evaluated 48 times per beat**. It also means that you can crash at the speed of light :smile:. The local and initialisation scripts are evaluated on demand, one run at a time. There are some things to keep in mind:
 
 - **about variables:** the state of your variables is not kept between iterations. If you write <icode>let a = 2</icode> and change the value later on, the value will be reset to <icode>2</icode> after each run! There are other ways to deal with variables and to share variables between scripts! Some variables like **iterators** can keep their state between iterations because they are saved **with the file itself**.
-- **about errors and printing:** your code will crash! Don't worry, it will hopefully try to crash in the most gracious way possible. To check if your code is erroring, you will have to open the dev console with ${key_shortcut( "Ctrl + Shift + I")}. You cannot directly use <icode>console.log('hello, world')</icode> in the interface. You will have to open the console as well to see your messages being printed there!
+- **about errors and printing:** your code will crash! Don't worry, it will hopefully try to crash in the most gracious way possible. To check if your code is erroring, you will have to open the dev console with ${key_shortcut(
+  "Ctrl + Shift + I"
+)}. You cannot directly use <icode>console.log('hello, world')</icode> in the interface. You will have to open the console as well to see your messages being printed there!
 `;
 
 const functions: string = `
