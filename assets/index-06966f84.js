@@ -231,6 +231,11 @@ You can use Topos to play MIDI thanks to the [WebMIDI API](https://developer.moz
     mod(12) && midi_clock() // Sending clock to MIDI device from the global buffer
 \`\`\`
 
+## MIDI Output Selection
+
+- <icode>midi_outputs()</icode>: Prints a list of available MIDI outputs. You can then use any output name to select the MIDI output you wish to use. **Note:** this function will print to the console. You can open the console by pressing ${key_shortcut("Ctrl + Shift + I")} in many web browsers.
+- <icode>midi_output(output_name: string)</icode>: Selects the MIDI output to use. You can use the <icode>midi_outputs()</icode> function to get a list of available MIDI outputs first. If the MIDI output is not available, the function will do nothing and keep on with the currently selected MIDI Port.
+
 `,sound=`
 # Sample playback
 
