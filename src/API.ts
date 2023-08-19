@@ -989,15 +989,20 @@ export class UserAPI {
     });
   };
 
-  mod = (...pulse: number[]): boolean => {
-    /**
-     * Returns true if the current pulse is a modulo of any of the given pulses.
-     *
-     * @param pulse - The pulse to check for
-     * @returns True if the current pulse is a modulo of any of the given pulses
-     */
-    return pulse.some((p) => this.app.clock.time_position.pulse % p === 0);
+  public mod = (...n: number[]): boolean[] => {
+    const results: boolean[] = n.map((value) => epulse() % value === 0);
+    return results.some((value) => value === true);
   };
+
+  // mod = (...pulse: number[]): boolean => {
+  //   /**
+  //    * Returns true if the current pulse is a modulo of any of the given pulses.
+  //    *
+  //    * @param pulse - The pulse to check for
+  //    * @returns True if the current pulse is a modulo of any of the given pulses
+  //    */
+  //   return pulse.some((p) => this.app.clock.time_position.pulse % p === 0);
+  // };
 
   modbar = (...bar: number[]): boolean => {
     /**
