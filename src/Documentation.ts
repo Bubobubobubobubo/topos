@@ -129,34 +129,39 @@ const midi: string = `
 `
 
 const sound: string = `
-# Sound and Notes
+# Sample playback
 
-Topos is capable of:
-- sending MIDI to your hardware or software synthesizers.
-- playing sound samples and internal synths using the [SuperDough](https://www.npmjs.com/package/superdough) audio backend.
+The Topos audio engine is based on the [SuperDough](https://www.npmjs.com/package/superdough) audio backend. It is a very powerful and flexible audio backend. It is based on the [Web Audio API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API) and is capable of playing samples, synths, and effects. It is also capable of playing samples and synths in a polyphonic way. It is a very powerful tool to create complex sounds and textures. A set of default sounds are already provided by default but you can also load your own audio samples. They will be loaded through a special URL scheme using the <icode>sample</icode> function.
 
-As a first test, try to evaluate the following scripts in the global script (${key_shortcut('Ctrl + G')}). We will first learn about the audio engine.
+I recommended you to run the following scripts in the global script (${key_shortcut('Ctrl + G')}).
 
 ## Audio Engine
 
-To play a very basic kick drum, evaluate the following script:
+The basic function to play a sound is <icode>sound('sample/synth').out()</icode>. If the given sound exists in the database, it will be automatically queried and will start playing once loaded. To play a very basic beat, evaluate the following script:
 
 \`\`\`javascript
 mod(48) && sound('bd').out()
-\`\`\`
-
-And for good measure, let's add a high-hat:
-
-\`\`\`javascript
 mod(24) && sound('hh').out()
 \`\`\`
 
-The sounds will be loaded automatically and start playing when they are ready. Let's translate these instructions to plain english. It reads like :
+In plain english, this translates to:
 
 > Every 48 pulses, play a kick drum.
 > Every 24 pulses, play a high-hat.
 
 If you remove the **mod** instruction, you will end up with a deluge of kick drums and high-hats. The **mod** instruction is used to filter out pulses. It is a very useful instruction to create basic rhythms. The **mod** function checks if the current pulse is a multiple of the given number. If it is, it returns <icode>true</icode>, otherwise it returns <icode>false</icode>. You will find a lot of these kind of logical functions in Topos.
+
+## Pick a sample
+
+The <icode>.n(number)</icode> method can be used to pick a sample from the currently selected sample folder. For instance, the following script will play a random sample from the _kick_ folder:
+
+\`\`\`javascript
+mod(48) && sound('kick').n(pick(1,2,3,4,5,6,7,8)).out()
+\`\`\`
+
+Don't worry about the number. If it gets too big, it will be automatically wrapped to the number of samples in the folder.
+
+## Sound Chains
 
 The <icode>sound('sample_name')</icode> function can be chained to _specify_ a sound more. For instance, you can add a filter and some effects to your high-hat:
 \`\`\`javascript
@@ -169,39 +174,39 @@ mod(24) && sound('hh')
 
 No sound will play until you add <icode>.out()</icode> at the end of the chain. Chaining sounds makes it easy to compose and think about sound samples and synthesis. There are many possible arguments that you can add to your sounds.
 
-## Sound modifiers
-- <icode>unit(value: number)</icode>: Sets the unit value of the sound.
-- <icode>frequency(value: number)</icode>: Sets the playback sample frequency. 
-- <icode>nudge(value: number)</icode>: Adjusts the start time of the sound by the given value.
-- <icode>cut(value: number)</icode>: Cut the sample if it overlaps on the same orbit.
-- <icode>loop(value: number)</icode>: Loops the sample.
-- <icode>clip(value: number)</icode>: Sets the clip value of the sound.
-- <icode>n(value: number)</icode>: Choose a sample in the selected sample folder.
-- <icode>note(value: number)</icode>: Sets the note value of the sound.
-- <icode>speed(value: number)</icode>: Sets the playback speed for the given sound.
-- <icode>begin(value: number)</icode>: Sets the beginning of sample (between <icode>0.0</icode> and <icode>1.0</icode>).
-- <icode>end(value: number)</icode>: Sets the end of sample (between <icode>0.0</icode> and <icode>1.0</icode>).
-- <icode>gain(value: number)</icode>: Sets the gain value of the given sound.
-- <icode>cutoff(value: number)</icode>: Sets the cutoff frequency of the low-pass filter.
-- <icode>resonance(value: number)</icode>: Sets the resonance value of the low-pass filter.
-- <icode>hcutoff(value: number)</icode>: Sets the high cutoff frequency value of high-pass filter.
-- <icode>hresonance(value: number)</icode>: Sets the high resonance value of high-pass filter.
-- <icode>bandf(value: number)</icode>: Sets the band frequency value of the bandpass filter.
-- <icode>bandq(value: number)</icode>: Sets the band Q value of the bandpass filter.
-- <icode>coarse(value: number)</icode>: Sets the coarse value of the given sound.
-- <icode>crush(value: number)</icode>: Sets some amount of bitcrush on the given sound.
-- <icode>shape(value: number)</icode>: Sets some distortion on the given sound.
-- <icode>pan(value: number)</icode>: Sets the pan value of the sound (between <icode>0.0</icode> and <icode>1.0</icode>).
-- <icode>vowel(value: number)</icode>: Sets a formant vowel filter on the given sound(<icode>'a'</icode>, <icode>'e'</icode>, <icode>'i'</icode>, <icode>'o'</icode>, <icode>'u'</icode>.).
-- <icode>delay(value: number)</icode>: Sets the delay value of the sound.
-- <icode>delayfeedback(value: number)</icode>: Sets the delay feedback value of the sound.
-- <icode>delaytime(value: number)</icode>: Sets the delay time value of the sound.
-- <icode>orbit(value: number)</icode>: Sets the orbit value of the sound.
-- <icode>room(value: number)</icode>: Sets the room value of the sound.
-- <icode>size(value: number)</icode>: Sets the size value of the sound.
-- <icode>velocity(value: number)</icode>: Sets the velocity value of the sound.
-- <icode>out()</icode>: Returns an object processed by the <icode>superdough</icode> function, using the current values in the <icode>values</icode> object and the <icode>pulse_duration</icode> from the <icode>app.clock</icode>.
-
+| Method                                 | Description |
+| -------------------------------------- | ----------- |
+| <icode>unit(value: number)</icode>     | Sets the unit value  |
+| <icode>frequency(value: number)</icode>| Sets the playback sample frequency |
+| <icode>nudge(value: number)</icode>    | Adjusts the start time of the sound by the given value |
+| <icode>cut(value: number)</icode>| Cut the sample if it overlaps on the same orbit. |
+| <icode>loop(value: number)</icode>| Loops the sample. |
+| <icode>clip(value: number)</icode>| Sets the clip value of the sound. |
+| <icode>n(value: number)</icode>| Sample number in the sample folder. |
+| <icode>note(value: number)</icode>| Sets the note value of the sound. |
+| <icode>speed(value: number)</icode>| Sets the playback speed. |
+| <icode>begin(value: number)</icode>| Sets the beginning of sample (between <icode>0.0</icode> and <icode>1.0</icode>). |
+| <icode>end(value: number)</icode>| Sets the end of sample (between <icode>0.0</icode> and <icode>1.0</icode>). |
+| <icode>gain(value: number)</icode>| Sets the gain. |
+| <icode>cutoff(value: number)</icode>| Sets the cutoff frequency of the low-pass filter. |
+| <icode>resonance(value: number)</icode>| Sets the resonance value of the low-pass filter. |
+| <icode>hcutoff(value: number)</icode>| Sets the cutoff frequency value of high-pass filter. |
+| <icode>hresonance(value: number)</icode>| Sets the resonance value of high-pass filter. |
+| <icode>bandf(value: number)</icode>| Sets the frequency value of the bandpass filter. |
+| <icode>bandq(value: number)</icode>| Sets the Q value of the bandpass filter. |
+| <icode>coarse(value: number)</icode>| Adds some flavor of saturation. |
+| <icode>crush(value: number)</icode>| Adds some amount of bitcrush on the given sound. |
+| <icode>shape(value: number)</icode>| Adds some distortion. |
+| <icode>pan(value: number)</icode>| Sets the panoramic value of the sound (in stereo, between <icode>0.0</icode> and <icode>1.0</icode>). |
+| <icode>vowel(value: number)</icode>| Sets a formant vowel filter on the given sound(<icode>'a'</icode>, <icode>'e'</icode>, <icode>'i'</icode>, <icode>'o'</icode>, <icode>'u'</icode>.). |
+| <icode>delay(value: number)</icode>| Sets the delay wet/dry value. |
+| <icode>delayfeedback(value: number)</icode>| Sets delay feedback. |
+| <icode>delaytime(value: number)</icode>| Sets delay time (in seconds). |
+| <icode>orbit(value: number)</icode>| Sets the orbit value of the sound. |
+| <icode>room(value: number)</icode>| Sets reverb room. |
+| <icode>size(value: number)</icode>| Sets reverb size. |
+| <icode>velocity(value: number)</icode>| Sets velocity. |
+| <icode>out()</icode> | Returns an object processed by the <icode>superdough</icode> function, using the current values in the <icode>values</icode> object and the <icode>pulse_duration</icode> from the <icode>app.clock</icode>. |
 `
 
 

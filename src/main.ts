@@ -37,6 +37,10 @@ const classMap = {
   code: "my-4 block whitespace-pre overflow-x-scroll",
   icode: "my-4 text-white font-mono bg-neutral-600",
   blockquote: "text-neutral-200 border-l-4 border-neutral-500 pl-4 my-4 mx-4",
+  table: "justify-center my-8 mx-8 text-2xl w-full text-left text-white border-collapse",
+  thead: "text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400",
+  th: "px-6 py-6",
+  td: "py-2"
 }
 // const bindings = Object.keys(classMap)
 //   .map(key => ({
