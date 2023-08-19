@@ -26,16 +26,16 @@ Press ${key_shortcut(
 
 <pre><code class="language-javascript">
 if (bar() % 4 > 2 ) {
-    often() && mod(48) && sound('808bd').out()
-    mod(24) && euclid($('a'), 3, 8) && sound('808sd').out()
-    mod(seqbeat(24,12)) && euclid($('a'), 7, 8) && sound('hh')
+    often() && mod(.5) && sound('808bd').out()
+    mod(.5) && euclid($('a'), 3, 8) && sound('808sd').out()
+    mod(seqbeat(.5,.25)) && euclid($('a'), 7, 8) && sound('hh')
       .delay(0.75).delaytime(0.75)
       .speed(seqbeat(1,2,3,4)).out()
-    mod(48) && sound('bd').n(6).out()
+    mod(.5) && sound('bd').n(6).out()
 } else {
-      mod(24) && sound('hh').n(seqbeat(1,2,3,4)).end(.01).out()
-      mod(48) && sound('kick').out()
-      mod(24) && euclid($('ba'), 5, 8) && sound('cp').out()
+      mod(.5) && sound('hh').n(seqbeat(1,2,3,4)).end(.01).out()
+      mod(1) && sound('kick').out()
+      mod(.5) && euclid($('ba'), 5, 8) && sound('cp').out()
 }
 </code></pre>
 `;
@@ -112,12 +112,12 @@ Some functions are used very often as time primitives. They are used to create m
     onbeat(3) && sound('sd').out()
 \`\`\`
 
-- <icode>mod(...values: number[])</icode>: returns <icode>true</icode> if the current pulse is a multiple of the given value. You can add any number of values, (_e.g._ <icode>mod(12,36)</icode>).
+- <icode>mod(...values: number[])</icode>: returns <icode>true</icode> if the current pulse is a multiple of the given value. You can add any number of values, (_e.g._ <icode>mod(.25,.75)</icode>).
 
 \`\`\`javascript
-    mod(48) && sound('bd').out()
-    mod(pick(12,24)) && sound('hh').out()
-    mod(24) && sound('jvbass').out()
+    mod(1) && sound('bd').out()
+    mod(pick(.25,.5)) && sound('hh').out()
+    mod(.5) && sound('jvbass').out()
 \`\`\`
 
 - <icode>onbar(...values: number[])</icode>: returns <icode>true</icode> if the bar is currently equal to any of the specified values.
@@ -129,13 +129,13 @@ You can use the time functions as conditionals. The following example will play 
 
 \`\`\`javascript
     if((bar() % 4) > 1) {
-      mod(48) && sound('kick').out()
-      rarely() && mod(24) && sound('sd').out()
-      mod(24) && sound('jvbass').freq(500).out()
+      mod(1) && sound('kick').out()
+      rarely() && mod(.5) && sound('sd').out()
+      mod(.5) && sound('jvbass').freq(500).out()
     } else {
-      mod(24) && sound('hh').out()
-      mod(36) && sound('cp').out()
-      mod(24) && sound('jvbass').freq(250).out()
+      mod(.5) && sound('hh').out()
+      mod(.75) && sound('cp').out()
+      mod(.5) && sound('jvbass').freq(250).out()
     }
 \`\`\`
 `;
@@ -152,10 +152,10 @@ You can use Topos to play MIDI thanks to the [WebMIDI API](https://developer.moz
 
 \`\`\`javascript
     bpm(80) // Setting a default BPM
-    mod(24) && note(36 + seqbeat(0,12), {duration: 0.02})
-    mod(12) && note(pick(64, 76), {duration: 0.05})
-    mod(36) && note(seqbeat(64, 67, 69), {duration: 0.05})
-    sometimes() && mod(12) && note(seqbeat(64, 67, 69) + 24, {duration: 0.5})
+    mod(.5) && note(36 + seqbeat(0,12), {duration: 0.02})
+    mod(.25) && note(pick(64, 76), {duration: 0.05})
+    mod(.75) && note(seqbeat(64, 67, 69), {duration: 0.05})
+    sometimes() && mod(.25) && note(seqbeat(64, 67, 69) + 24, {duration: 0.5})
 \`\`\`
 
 ## Control and Program Changes
@@ -184,7 +184,7 @@ You can use Topos to play MIDI thanks to the [WebMIDI API](https://developer.moz
 - <icode>midi_clock()</icode>: send a MIDI Clock message. This function is used to synchronize Topos with other MIDI devices or DAWs.
 
 \`\`\`javascript
-    mod(12) && midi_clock() // Sending clock to MIDI device from the global buffer
+    mod(.25) && midi_clock() // Sending clock to MIDI device from the global buffer
 \`\`\`
 
 ## MIDI Output Selection
@@ -210,8 +210,8 @@ I recommended you to run the following scripts in the global script (${key_short
 The basic function to play a sound is <icode>sound('sample/synth').out()</icode>. If the given sound exists in the database, it will be automatically queried and will start playing once loaded. To play a very basic beat, evaluate the following script:
 
 \`\`\`javascript
-mod(48) && sound('bd').out()
-mod(24) && sound('hh').out()
+mod(1) && sound('bd').out()
+mod(0.5) && sound('hh').out()
 \`\`\`
 
 In plain english, this translates to:
@@ -226,7 +226,7 @@ If you remove the **mod** instruction, you will end up with a deluge of kick dru
 The <icode>.n(number)</icode> method can be used to pick a sample from the currently selected sample folder. For instance, the following script will play a random sample from the _kick_ folder:
 
 \`\`\`javascript
-mod(48) && sound('kick').n(pick(1,2,3,4,5,6,7,8)).out()
+mod(1) && sound('kick').n(pick(1,2,3,4,5,6,7,8)).out()
 \`\`\`
 
 Don't worry about the number. If it gets too big, it will be automatically wrapped to the number of samples in the folder.
@@ -235,7 +235,7 @@ Don't worry about the number. If it gets too big, it will be automatically wrapp
 
 The <icode>sound('sample_name')</icode> function can be chained to _specify_ a sound more. For instance, you can add a filter and some effects to your high-hat:
 \`\`\`javascript
-mod(24) && sound('hh')
+mod(0.5) && sound('hh')
     .speed(pick(1,2,3))
     .room(0.5)
     .cutoff(usine(2) * 5000)
