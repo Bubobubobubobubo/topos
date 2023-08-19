@@ -478,7 +478,7 @@ export class UserAPI {
   public seqslice = (...args: any): any => {
     const chunk_size = args[0]; // Get the first argument (chunk size)
     const elements = args.slice(1); // Get the rest of the arguments as an array
-    const timepos = epulse();
+    const timepos = this.epulse();
     const slice_count = Math.floor(timepos / chunk_size);
     return elements[slice_count % elements.length];
   };
@@ -995,13 +995,13 @@ export class UserAPI {
     });
   };
 
-  public mod = (...n: number[]): boolean[] => {
-    const results: boolean[] = n.map((value) => epulse() % value === 0);
+  public mod = (...n: number[]): boolean => {
+    const results: boolean[] = n.map((value) => this.epulse() % value === 0);
     return results.some((value) => value === true);
   };
 
-  public modbar = (...n: number[]): boolean[] => {
-    const results: boolean[] = n.map((value) => bar() % value === 0);
+  public modbar = (...n: number[]): boolean => {
+    const results: boolean[] = n.map((value) => this.bar() % value === 0);
     return results.some((value) => value === true);
   };
 
