@@ -1,16 +1,17 @@
-import "./style.css";
-import { editorSetup } from "./EditorSetup";
-import { EditorView } from "codemirror";
 import { EditorState, Compartment } from "@codemirror/state";
+import { ViewUpdate, lineNumbers } from "@codemirror/view";
 import { javascript } from "@codemirror/lang-javascript";
+import { oneDark } from "@codemirror/theme-one-dark";
 import { markdown } from "@codemirror/lang-markdown";
 import { Extension } from "@codemirror/state";
-import { ViewUpdate, lineNumbers } from "@codemirror/view";
-import { oneDark } from "@codemirror/theme-one-dark";
 import { vim } from "@replit/codemirror-vim";
-import { Clock } from "./Clock";
 import { AppSettings } from "./AppSettings";
+import { editorSetup } from "./EditorSetup";
+import { documentation} from './Documentation';
+import { EditorView } from "codemirror";
+import { Clock } from "./Clock";
 import { UserAPI } from "./API";
+import "./style.css";
 import {
   Universes,
   File,
@@ -19,6 +20,31 @@ import {
 } from "./AppSettings";
 import { tryEvaluate } from "./Evaluator";
 
+type Documentation = { [key: string]: string };
+const Docs: Documentation = documentation;
+
+// Importing showdown and setting up the markdown converter
+import showdown from 'showdown';
+showdown.setFlavor('github')
+import showdownHighlight from 'showdown-highlight';
+const classMap = {
+  h1: 'text-4xl text-white ml-4 mx-4 my-4 mb-8',
+  h2: 'text-3xl text-white mx-4 my-4 mt-8',
+  ul: 'text-underline',
+  li: 'ml-12 list-disc text-2xl text-white mx-4 my-4 leading-normal',
+  p:  'text-2xl text-white mx-4 my-4 leading-normal',
+  a:  'text-2xl text-orange-300',
+  code: "block whitespace-pre overflow-x-scroll",
+}
+const bindings = Object.keys(classMap)
+  .map(key => ({
+    type: 'output',
+    regex: new RegExp(`<${key}(.*)>`, 'g'),
+    //@ts-ignore
+    replace: `<${key} class="${classMap[key]}" $1>`
+  }));
+
+// Importing the documentation from separate files in the ./src/documentation/* folder
 
 export class Editor {
 
@@ -30,6 +56,7 @@ export class Editor {
   withLineNumbers: Compartment;
   vimModeCompartment : Compartment;
   chosenLanguage: Compartment
+  currentDocumentationPane: string = "introduction"
 
   settings = new AppSettings();
   editorExtensions: Extension[] = [];
@@ -244,6 +271,7 @@ export class Editor {
 
       // This is the modal to switch between universes
       if (event.ctrlKey && event.key === "b") {
+        this.hideDocumentation();
         this.openBuffersModal();
       }
 
@@ -255,32 +283,35 @@ export class Editor {
       if (event.ctrlKey && event.key === "l") {
         event.preventDefault();
         this.changeModeFromInterface("local");
+        this.hideDocumentation();
         this.view.focus();
       }
 
       if (event.ctrlKey && event.key === "n") {
         event.preventDefault();
         this.changeModeFromInterface("notes");
+        this.hideDocumentation();
         this.view.focus();
       }
 
       if (event.ctrlKey && event.key === "g") {
         event.preventDefault();
         this.changeModeFromInterface("global");
+        this.hideDocumentation();
+        this.view.focus();
+      }
+
+      if (event.ctrlKey && event.key === "i") {
+        event.preventDefault();
+        this.changeModeFromInterface("init");
+        this.hideDocumentation();
+        this.changeToLocalBuffer(0);
         this.view.focus();
       }
 
       if (event.ctrlKey && event.key === "d") {
         event.preventDefault();
         this.showDocumentation();
-      }
-
-
-      if (event.ctrlKey && event.key === "i") {
-        event.preventDefault();
-        this.changeModeFromInterface("init");
-        this.changeToLocalBuffer(0);
-        this.view.focus();
       }
 
       [112, 113, 114, 115, 116, 117, 118, 119, 120].forEach(
@@ -292,13 +323,20 @@ export class Editor {
             } else {
               this.changeModeFromInterface("local");
               this.changeToLocalBuffer(index);
+              this.hideDocumentation();
             }
           }
         }
       );
 
-    if (event.keyCode == 121) { this.changeModeFromInterface("global"); }
-    if (event.keyCode == 122) { this.changeModeFromInterface("init"); }
+    if (event.keyCode == 121) { 
+      this.changeModeFromInterface("global"); 
+      this.hideDocumentation();
+    }
+    if (event.keyCode == 122) { 
+      this.changeModeFromInterface("init"); 
+      this.hideDocumentation();
+    }
     });
 
     // ================================================================================
@@ -443,6 +481,44 @@ export class Editor {
       this.universes[this.selected_universe.toString()].init,
     )
 
+    // Setting up the documentation page
+    document.getElementById('docs_introduction')!.addEventListener('click', () => {
+      this.currentDocumentationPane = 'introduction';
+      this.updateDocumentationContent();
+    });
+    document.getElementById('docs_interface')!.addEventListener('click', () => {
+      this.currentDocumentationPane = 'interface';
+      this.updateDocumentationContent();
+    });
+    document.getElementById('docs_time')!.addEventListener('click', () => {
+      this.currentDocumentationPane = 'time';
+      this.updateDocumentationContent();
+    });
+    document.getElementById('docs_sound')!.addEventListener('click', () => {
+      this.currentDocumentationPane = 'sound';
+      this.updateDocumentationContent();
+    });
+    document.getElementById('docs_functions')!.addEventListener('click', () => {
+      this.currentDocumentationPane = 'functions';
+      this.updateDocumentationContent();
+    });
+    document.getElementById('docs_reference')!.addEventListener('click', () => {
+      this.currentDocumentationPane = 'reference';
+      this.updateDocumentationContent();
+    });
+    document.getElementById('docs_shortcuts')!.addEventListener('click', () => {
+      this.currentDocumentationPane = 'shortcuts';
+      this.updateDocumentationContent();
+    });
+    document.getElementById('docs_about')!.addEventListener('click', () => {
+      this.currentDocumentationPane = 'about';
+      this.updateDocumentationContent();
+    });
+
+
+
+
+
     // Passing the API to the User
     Object.entries(this.api).forEach(([name, value]) => {
       (globalThis as Record<string, any>)[name] = value;
@@ -472,7 +548,35 @@ export class Editor {
       } else {
         document.getElementById('app')?.classList.add('hidden');
         document.getElementById('documentation')?.classList.remove('hidden');
+
+        // Load and convert Markdown content from the documentation file
+        this.updateDocumentationContent();
       }
+  }
+
+  hideDocumentation() {
+      if (document.getElementById("app")?.classList.contains("hidden")) {
+        document.getElementById('app')?.classList.remove('hidden');
+        document.getElementById('documentation')?.classList.add('hidden');
+      }
+  }
+
+  updateDocumentationContent() {
+    const converter = new showdown.Converter({
+      extensions: [
+        showdownHighlight({}),
+        ...bindings,
+      ]
+    });
+    const converted_markdown = converter.makeHtml(
+      Docs[this.currentDocumentationPane]
+    );
+    function wrapCodeWithPre(inputString: string): string {
+      let newString = inputString.replace(/<code>/g, '<pre><code>');
+      newString = newString.replace(/<\/code>/g, '</code></pre>');
+      return newString;
+    }
+    document.getElementById('documentation-content')!.innerHTML = wrapCodeWithPre(converted_markdown);
   }
 
   changeToLocalBuffer(i: number) {

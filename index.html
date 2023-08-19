@@ -29,7 +29,7 @@
       width: 100% !important;
     }
   </style>
-  <body>
+  <body class="bg-neutral-800 overflow-y-hidden">
 
 		<!-- The header is hidden on smaller devices -->
     <header class="py-2 hidden xl:block text-white bg-neutral-900">
@@ -73,26 +73,32 @@
     </header>
 
     <div id="documentation" class="hidden">
-      <div class="text-sm font-medium text-center text-gray-200 border-b border-gray-200 ">
-        <ul class="flex flex-wrap -mb-px">
-          <li class="mr-2">
-            <a href="#" class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-white hover:border-gray-100 ">Basics</a>
-          </li>
-          <li class="mr-2">
-            <a href="#" class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-white hover:border-gray-100 ">Universes</a>
-          </li>
-          <li class="mr-2">
-            <a href="#" class="inline-block p-4 text-white border-b-2 border-blue-600 rounded-t-lg active" aria-current="page">Notes and sounds</a>
-          </li>
-          <li class="mr-2">
-            <a href="#" class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-white hover:border-gray-100">Functions</a>
-          </li>
-          <li class="mr-2">
-            <a href="#" class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-white hover:border-gray-100">Reference</a>
-          </li>
-       </ul>
+      <div id="documentation-page" class="flex flex-row">
+        <aside class="h-screen w-50 p-8 h-100 bg-neutral-900 text-white">
+          <nav class="space-y-8 text-xl">
+            <div class="space-y-2">
+              <h2 class="font-semibold dark:text-gray-400">Basics</h2>
+              <div class="flex flex-col">
+                <p rel="noopener noreferrer" id="docs_introduction" class="pl-2 pr-2 text-xl hover:bg-neutral-800 py-1 my-1 rounded-lg">Introduction </p>
+                <p rel="noopener noreferrer" id="docs_interface" class="pl-2 pr-2 text-xl hover:bg-neutral-800 py-1 my-1 rounded-lg">Interface</p>
+                <p rel="noopener noreferrer" id="docs_time" class="pl-2 pr-2 text-xl hover:bg-neutral-800 py-1 my-1 rounded-lg">Time</p>
+                <p rel="noopener noreferrer" id="docs_sound" class="pl-2 pr-2 text-xl hover:bg-neutral-800 py-1 my-1 rounded-lg">Sound</p>
+                <p rel="noopener noreferrer" id="docs_functions" class="pl-2 pr-2 text-xl hover:bg-neutral-800 py-1 my-1 rounded-lg">Functions</p>
+                <p rel="noopener noreferrer" id="docs_shortcuts" class="pl-2 pr-2 text-xl hover:bg-neutral-800 py-1 my-1 rounded-lg">Shortcuts</p>
+                <p rel="noopener noreferrer" id="docs_reference" class="pl-2 pr-2 text-xl hover:bg-neutral-800 py-1 my-1 rounded-lg">Reference</p>
+              </div>
+            </div>
+            <div class="space-y-2">
+              <h2 class="font-semibold dark:text-gray-400">Learning More</h2>
+              <div class="flex flex-col">
+                <a rel="noopener noreferrer" id="docs_about" class="pl-2 pr-2 text-xl hover:bg-neutral-800 py-1 my-1 rounded-lg">About Topos</a>
+              </div>
+            </div>
+         </nav>
+        </aside>
+        <div id="documentation-content" class="h-screen mx-16 my-8 break-words overflow-y-scroll pb-32">
+        </div>
       </div>
-      <p class="text-xl text-white ml-4 mr-4 mt-4">There is nothing to see! Come back later!</p>
     </div>
 
     <div id="app">
