@@ -55,7 +55,7 @@ export class UserAPI {
    */
 
   private variables: { [key: string]: any } = {};
-  private iterators: { [key: string]: any } = {};
+  private counters: { [key: string]: any } = {};
   private _drunk: DrunkWalk = new DrunkWalk(-100, 100, false);
 
   MidiConnection: MidiConnection = new MidiConnection();
@@ -298,56 +298,60 @@ export class UserAPI {
   };
 
   // =============================================================
-  // Iterator related functions
+  // Counter related functions
   // =============================================================
 
-  public iterator = (name: string, limit?: number, step?: number): number => {
+  public counter = (
+    name: string | number,
+    limit?: number,
+    step?: number
+  ): number => {
     /**
-     * Returns the current value of an iterator, and increments it by the step value.
+     * Returns the current value of a counter, and increments it by the step value.
      *
-     * @param name - The name of the iterator
-     * @param limit - The upper limit of the iterator
-     * @param step - The step value of the iterator
-     * @returns The current value of the iterator
+     * @param name - The name of the counter
+     * @param limit - The upper limit of the counter
+     * @param step - The step value of the counter
+     * @returns The current value of the counter
      */
 
-    if (!(name in this.iterators)) {
-      // Create new iterator with default step of 1
-      this.iterators[name] = {
+    if (!(name in this.counters)) {
+      // Create new counter with default step of 1
+      this.counters[name] = {
         value: 0,
         step: step ?? 1,
         limit,
       };
     } else {
       // Check if limit has changed
-      if (this.iterators[name].limit !== limit) {
+      if (this.counters[name].limit !== limit) {
         // Reset value to 0 and update limit
-        this.iterators[name].value = 0;
-        this.iterators[name].limit = limit;
+        this.counters[name].value = 0;
+        this.counters[name].limit = limit;
       }
 
       // Check if step has changed
-      if (this.iterators[name].step !== step) {
+      if (this.counters[name].step !== step) {
         // Update step
-        this.iterators[name].step = step ?? this.iterators[name].step;
+        this.counters[name].step = step ?? this.counters[name].step;
       }
 
       // Increment existing iterator by step value
-      this.iterators[name].value += this.iterators[name].step;
+      this.counters[name].value += this.counters[name].step;
 
       // Check for limit overshoot
       if (
-        this.iterators[name].limit !== undefined &&
-        this.iterators[name].value > this.iterators[name].limit
+        this.counters[name].limit !== undefined &&
+        this.counters[name].value > this.counters[name].limit
       ) {
-        this.iterators[name].value = 0;
+        this.counters[name].value = 0;
       }
     }
 
     // Return current iterator value
-    return this.iterators[name].value;
+    return this.counters[name].value;
   };
-  $ = this.iterator;
+  $ = this.counter;
 
   // =============================================================
   // Drunk mechanism
@@ -910,7 +914,7 @@ export class UserAPI {
   // Rythmic generators
   // =============================================================
 
-  euclid = (
+  public euclid = (
     iterator: number,
     pulses: number,
     length: number,
@@ -927,6 +931,7 @@ export class UserAPI {
      */
     return this._euclidean_cycle(pulses, length, rotate)[iterator % length];
   };
+  ec = this.euclid;
 
   _euclidean_cycle(
     pulses: number,
@@ -1119,7 +1124,7 @@ export class UserAPI {
   sound = (sound: string) => {
     return new Sound(sound, this.app);
   };
-
+  snd = this.sound;
   samples = samples;
 
   log = console.log;

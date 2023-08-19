@@ -6,6 +6,10 @@ const delay = (ms: number) =>
     setTimeout(() => reject(new Error("Operation took too long")), ms)
   );
 
+const codeReplace = (code: string): string => {
+  let new_code = code.replace(/->/g, "&&").replace(/::/g, "&&");
+  return new_code;
+};
 
 const tryCatchWrapper = (
   application: Editor,
@@ -13,7 +17,9 @@ const tryCatchWrapper = (
 ): Promise<boolean> => {
   return new Promise((resolve, _) => {
     try {
-      Function(`"use strict";try{${code}} catch (e) {console.log(e)};`).call(application.api);
+      Function(
+        `"use strict";try{${codeReplace(code)}} catch (e) {console.log(e)};`
+      ).call(application.api);
       resolve(true);
     } catch (error) {
       console.log(error);
@@ -31,7 +37,7 @@ const addFunctionToCache = (code: string, fn: Function) => {
     cache.delete(cache.keys().next().value);
   }
   cache.set(code, fn);
-}
+};
 
 export const tryEvaluate = async (
   application: Editor,
@@ -41,7 +47,7 @@ export const tryEvaluate = async (
   try {
     code.evaluations!++;
     const candidateCode = code.candidate;
-    
+
     if (cache.has(candidateCode)) {
       // If the code is already in cache, use it
       cache.get(candidateCode)!.call(application.api);
@@ -54,7 +60,11 @@ export const tryEvaluate = async (
       ]);
       if (isCodeValid) {
         code.committed = code.candidate;
-        const newFunction = new Function(`"use strict";try{${wrappedCode}} catch (e) {console.log(e)};`);
+        const newFunction = new Function(
+          `"use strict";try{${codeReplace(
+            wrappedCode
+          )}} catch (e) {console.log(e)};`
+        );
         addFunctionToCache(candidateCode, newFunction);
       } else {
         await evaluate(application, code, timeout);
