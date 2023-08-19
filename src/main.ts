@@ -34,14 +34,23 @@ const classMap = {
   li: 'ml-12 list-disc text-2xl text-white mx-4 my-4 leading-normal',
   p:  'text-2xl text-white mx-4 my-4 leading-normal',
   a:  'text-2xl text-orange-300',
-  code: "block whitespace-pre overflow-x-scroll",
+  code: "my-4 block whitespace-pre overflow-x-scroll",
+  icode: "my-4 text-white font-mono bg-neutral-600",
+  blockquote: "text-neutral-200 border-l-4 border-neutral-500 pl-4 my-4 mx-4",
 }
+// const bindings = Object.keys(classMap)
+//   .map(key => ({
+//     type: 'output',
+//     regex: new RegExp(`<${key}(.*)>`, 'g'),
+//     //@ts-ignore
+//     replace: `<${key} class="${classMap[key]}" $1>`
+//   }));
 const bindings = Object.keys(classMap)
   .map(key => ({
     type: 'output',
-    regex: new RegExp(`<${key}(.*)>`, 'g'),
+    regex: new RegExp(`<${key}([^>]*)>`, 'g'),
     //@ts-ignore
-    replace: `<${key} class="${classMap[key]}" $1>`
+    replace: (match, p1) => `<${key} class="${classMap[key]}" ${p1}>`
   }));
 
 // Importing the documentation from separate files in the ./src/documentation/* folder
@@ -563,8 +572,9 @@ export class Editor {
 
   updateDocumentationContent() {
     const converter = new showdown.Converter({
+      moreStyling: true,
       extensions: [
-        showdownHighlight({}),
+        showdownHighlight({auto_detection: true}),
         ...bindings,
       ]
     });

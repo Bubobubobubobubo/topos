@@ -37,7 +37,7 @@ if (bar() % 4 > 2 ) {
 const software_interface: string = `
 # Interface
 
-The Topos interface is molded around the core concepts at play: _scripts_ and _universes_.
+The Topos interface is molded around the core concepts at play: _scripts_ and _universes_. By mastering them, you will be able to compose complex algorithmic musical compositions.
 
 ## Scripts
 
@@ -72,20 +72,93 @@ The **pulse** is also known as the [PPQN](https://en.wikipedia.org/wiki/Pulses_p
 
 Every script can access the current time by using the following functions:
 
-- \`bar(n: number)\` returns the current bar since the origin of time.
+- <icode>bar(n: number)</icode>: returns the current bar since the origin of time.
 
-- \`beat(n: number)\` returns the current beat since the origin of the bar.
+- <icode>beat(n: number)</icode>: returns the current beat since the origin of the bar.
 
-- \`ebeat()\` returns the current beat since the origin of time.
+- <icode>ebeat()</icode>: returns the current beat since the origin of time.
 
-- \`pulse()\` returns the current bar since the origin of the beat.
+- <icode>pulse()</icode>: returns the current bar since the origin of the beat.
 
-- \`epulse()\` returns the current bar since the origin of time.
+- <icode>epulse()</icode>: returns the current bar since the origin of time.
 
 `
 const sound: string = `
 # Sound and Notes
+
+Topos is capable of:
+- sending MIDI to your hardware or software synthesizers.
+- playing sound samples and internal synths using the [SuperDough](https://www.npmjs.com/package/superdough) audio backend.
+
+As a first test, try to evaluate the following scripts in the global script (${key_shortcut('Ctrl + G')}). We will first learn about the audio engine.
+
+## Audio Engine
+
+To play a very basic kick drum, evaluate the following script:
+
+\`\`\`javascript
+mod(48) && sound('bd').out()
+\`\`\`
+
+And for good measure, let's add a high-hat:
+
+\`\`\`javascript
+mod(24) && sound('hh').out()
+\`\`\`
+
+The sounds will be loaded automatically and start playing when they are ready. Let's translate these instructions to plain english. It reads like :
+
+> Every 48 pulses, play a kick drum.
+> Every 24 pulses, play a high-hat.
+
+If you remove the **mod** instruction, you will end up with a deluge of kick drums and high-hats. The **mod** instruction is used to filter out pulses. It is a very useful instruction to create basic rhythms. The **mod** function checks if the current pulse is a multiple of the given number. If it is, it returns <icode>true</icode>, otherwise it returns <icode>false</icode>. You will find a lot of these kind of logical functions in Topos.
+
+The <icode>sound('sample_name')</icode> function can be chained to _specify_ a sound more. For instance, you can add a filter and some effects to your high-hat:
+\`\`\`javascript
+mod(24) && sound('hh')
+    .speed(pick(1,2,3))
+    .room(0.5)
+    .cutoff(usine(2) * 5000)
+    .out()
+\`\`\`
+
+No sound will play until you add <icode>.out()</icode> at the end of the chain. Chaining sounds makes it easy to compose and think about sound samples and synthesis. There are many possible arguments that you can add to your sounds.
+
+## Sound modifiers
+- <icode>unit(value: number)</icode>: Sets the unit value of the sound.
+- <icode>frequency(value: number)</icode>: Sets the playback sample frequency. 
+- <icode>nudge(value: number)</icode>: Adjusts the start time of the sound by the given value.
+- <icode>cut(value: number)</icode>: Cut the sample if it overlaps on the same orbit.
+- <icode>loop(value: number)</icode>: Loops the sample.
+- <icode>clip(value: number)</icode>: Sets the clip value of the sound.
+- <icode>n(value: number)</icode>: Choose a sample in the selected sample folder.
+- <icode>note(value: number)</icode>: Sets the note value of the sound.
+- <icode>speed(value: number)</icode>: Sets the playback speed for the given sound.
+- <icode>begin(value: number)</icode>: Sets the beginning of sample (between <icode>0.0</icode> and <icode>1.0</icode>).
+- <icode>end(value: number)</icode>: Sets the end of sample (between <icode>0.0</icode> and <icode>1.0</icode>).
+- <icode>gain(value: number)</icode>: Sets the gain value of the given sound.
+- <icode>cutoff(value: number)</icode>: Sets the cutoff frequency of the low-pass filter.
+- <icode>resonance(value: number)</icode>: Sets the resonance value of the low-pass filter.
+- <icode>hcutoff(value: number)</icode>: Sets the high cutoff frequency value of high-pass filter.
+- <icode>hresonance(value: number)</icode>: Sets the high resonance value of high-pass filter.
+- <icode>bandf(value: number)</icode>: Sets the band frequency value of the bandpass filter.
+- <icode>bandq(value: number)</icode>: Sets the band Q value of the bandpass filter.
+- <icode>coarse(value: number)</icode>: Sets the coarse value of the given sound.
+- <icode>crush(value: number)</icode>: Sets some amount of bitcrush on the given sound.
+- <icode>shape(value: number)</icode>: Sets some distortion on the given sound.
+- <icode>pan(value: number)</icode>: Sets the pan value of the sound (between <icode>0.0</icode> and <icode>1.0</icode>).
+- <icode>vowel(value: number)</icode>: Sets a formant vowel filter on the given sound(<icode>'a'</icode>, <icode>'e'</icode>, <icode>'i'</icode>, <icode>'o'</icode>, <icode>'u'</icode>.).
+- <icode>delay(value: number)</icode>: Sets the delay value of the sound.
+- <icode>delayfeedback(value: number)</icode>: Sets the delay feedback value of the sound.
+- <icode>delaytime(value: number)</icode>: Sets the delay time value of the sound.
+- <icode>orbit(value: number)</icode>: Sets the orbit value of the sound.
+- <icode>room(value: number)</icode>: Sets the room value of the sound.
+- <icode>size(value: number)</icode>: Sets the size value of the sound.
+- <icode>velocity(value: number)</icode>: Sets the velocity value of the sound.
+- <icode>out()</icode>: Returns an object processed by the <icode>superdough</icode> function, using the current values in the <icode>values</icode> object and the <icode>pulse_duration</icode> from the <icode>app.clock</icode>.
+
 `
+
 
 const about: string = `
 # About Topos
