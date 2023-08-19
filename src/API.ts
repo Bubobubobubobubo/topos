@@ -469,6 +469,12 @@ export class UserAPI {
     return current_chunk % 2 === 0;
   };
 
+  public barslice = (chunk: number): boolean => {
+    const time_pos = this.bar() - 1;
+    const current_chunk = Math.floor(time_pos / chunk);
+    return current_chunk % 2 === 0;
+  };
+
   public seqslice = (...args: any): any => {
     const chunk_size = args[0]; // Get the first argument (chunk size)
     const elements = args.slice(1); // Get the rest of the arguments as an array
@@ -994,6 +1000,11 @@ export class UserAPI {
     return results.some((value) => value === true);
   };
 
+  public modbar = (...n: number[]): boolean[] => {
+    const results: boolean[] = n.map((value) => bar() % value === 0);
+    return results.some((value) => value === true);
+  };
+
   // mod = (...pulse: number[]): boolean => {
   //   /**
   //    * Returns true if the current pulse is a modulo of any of the given pulses.
@@ -1003,17 +1014,6 @@ export class UserAPI {
   //    */
   //   return pulse.some((p) => this.app.clock.time_position.pulse % p === 0);
   // };
-
-  modbar = (...bar: number[]): boolean => {
-    /**
-     * Returns true if the current bar is a modulo of any of the given bars.
-     *
-     * @param bar - The bar to check for
-     * @returns True if the current bar is a modulo of any of the given bars
-     *
-     */
-    return bar.some((b) => this.app.clock.time_position.bar % b === 0);
-  };
 
   // =============================================================
   // Rythmic generators
