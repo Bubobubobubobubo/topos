@@ -191,7 +191,10 @@ export class UserAPI {
      */
     const channel = options.channel ? options.channel : 0;
     const velocity = options.velocity ? options.velocity : 100;
-    const duration = options.duration ? options.duration : 0.5;
+    const duration = options.duration
+      ? options.duration *
+        Math.floor(this.app.clock.pulse_duration * this.ppqn())
+      : this.app.clock.pulse_duration * this.ppqn();
     this.MidiConnection.sendMidiNote(note, channel, velocity, duration);
   };
 
@@ -465,7 +468,9 @@ export class UserAPI {
 
   public slice = (chunk: number): boolean => {
     const time_pos = this.epulse();
-    const current_chunk = Math.floor(time_pos / chunk);
+    const current_chunk = Math.floor(
+      time_pos / Math.floor(chunk * this.ppqn())
+    );
     return current_chunk % 2 === 0;
   };
 
@@ -479,96 +484,10 @@ export class UserAPI {
     const chunk_size = args[0]; // Get the first argument (chunk size)
     const elements = args.slice(1); // Get the rest of the arguments as an array
     const timepos = this.epulse();
-    const slice_count = Math.floor(timepos / chunk_size);
+    const slice_count = Math.floor(
+      timepos / Math.floor(chunk_size * this.ppqn())
+    );
     return elements[slice_count % elements.length];
-  };
-
-  public seqmod = (...input: any[]) => {
-    if (cache.has(this._sequence_key_generator(input))) {
-      let sequence = cache.get(
-        this._sequence_key_generator(input)
-      ) as Pattern<any>;
-
-      sequence.options.currentIteration++;
-
-      if (sequence.options.currentIteration === sequence.options.nextTarget) {
-        sequence.options.index++;
-        sequence.options.nextTarget =
-          input[sequence.options.index % input.length];
-        sequence.options.currentIteration = 0;
-      }
-
-      cache.set(this._sequence_key_generator(input), {
-        pattern: input as any[],
-        options: sequence.options,
-      });
-
-      return sequence.options.currentIteration === 0;
-    } else {
-      let pattern_options = {
-        index: -1,
-        nextTarget: this.app.clock.ticks_before_new_bar,
-        currentIteration: 0,
-      };
-      if (typeof input[input.length - 1] === "object") {
-        pattern_options = {
-          ...input.pop(),
-          ...(pattern_options as object),
-        };
-      }
-
-      // pattern_options.currentIteration++;
-      // TEST
-      pattern_options.nextTarget = this.app.clock.ticks_before_new_bar;
-
-      if (pattern_options.currentIteration === pattern_options.nextTarget) {
-        pattern_options.index++;
-        pattern_options.nextTarget =
-          input[pattern_options.index % input.length];
-        pattern_options.currentIteration = 0;
-      }
-
-      cache.set(this._sequence_key_generator(input), {
-        pattern: input as any[],
-        options: pattern_options,
-      });
-
-      return pattern_options.currentIteration === 0;
-    }
-  };
-
-  public seq = (...input: any[]) => {
-    /**
-     * Returns a value in a sequence stored using an LRU Cache.
-     * The sequence is stored in the cache with an hash identifier
-     * made from a base64 encoding of the pattern. The pattern itself
-     * is composed of the pattern itself (a list of arbitrary typed
-     * values) and a set of options (an object) detailing how the pattern
-     * should be iterated on.
-     *
-     * @param input - The input to generate a key for
-     *        Note that the last element of the input can be an object
-     *       containing options for the sequence function.
-     * @returns A value in a sequence stored using an LRU Cache
-     */
-    if (cache.has(this._sequence_key_generator(input))) {
-      let sequence = cache.get(
-        this._sequence_key_generator(input)
-      ) as Pattern<any>;
-      sequence.options.index += 1;
-      cache.set(this._sequence_key_generator(input), sequence);
-      return sequence.pattern[sequence.options.index % sequence.pattern.length];
-    } else {
-      let pattern_options = { index: 0 };
-      if (typeof input[input.length - 1] === "object") {
-        pattern_options = { ...input.pop(), ...(pattern_options as object) };
-      }
-      cache.set(this._sequence_key_generator(input), {
-        pattern: input as any[],
-        options: pattern_options,
-      });
-      return cache.get(this._sequence_key_generator(input));
-    }
   };
 
   pick = <T>(...array: T[]): T => {
@@ -996,12 +915,16 @@ export class UserAPI {
   };
 
   public mod = (...n: number[]): boolean => {
-    const results: boolean[] = n.map((value) => this.epulse() % value === 0);
+    const results: boolean[] = n.map(
+      (value) => this.epulse() % Math.floor(value * ppqn()) === 0
+    );
     return results.some((value) => value === true);
   };
 
   public modbar = (...n: number[]): boolean => {
-    const results: boolean[] = n.map((value) => this.bar() % value === 0);
+    const results: boolean[] = n.map(
+      (value) => this.bar() % Math.floor(value * ppqn()) === 0
+    );
     return results.some((value) => value === true);
   };
 
