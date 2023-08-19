@@ -1,11 +1,13 @@
 const key_shortcut = (shortcut: string): string => {
-    return `<kbd class="px-2 py-1.5 text-sm font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg dark:bg-gray-600 dark:text-gray-100 dark:border-gray-500">${shortcut}</kbd>`
-}
+  return `<kbd class="px-2 py-1.5 text-sm font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg dark:bg-gray-600 dark:text-gray-100 dark:border-gray-500">${shortcut}</kbd>`;
+};
 
 const introduction: string = `
 # Welcome
 
-Welcome to the Topos documentation. This documentation companion is made to help you understand the software and the ideas behind Topos. You can summon it anytime by pressing ${key_shortcut('Ctrl + D')}.  Press again to make the documentation disappear.
+Welcome to the Topos documentation. This documentation companion is made to help you understand the software and the ideas behind Topos. You can summon it anytime by pressing ${key_shortcut(
+  "Ctrl + D"
+)}.  Press again to make the documentation disappear.
 
 ## What is Topos?
 
@@ -16,7 +18,11 @@ Topos is deeply inspired by the [Monome Teletype](https://monome.org/). The Tele
 
 ## Example
 
-Press ${key_shortcut('Ctrl + G')} to switch to the global file. This is where everything starts! Evaluate the following script there by pasting and pressing ${key_shortcut('Ctrl + Enter')}:
+Press ${key_shortcut(
+  "Ctrl + G"
+)} to switch to the global file. This is where everything starts! Evaluate the following script there by pasting and pressing ${key_shortcut(
+  "Ctrl + Enter"
+)}:
 
 <pre><code class="language-javascript">
 if (bar() % 4 > 2 ) {
@@ -32,7 +38,7 @@ if (bar() % 4 > 2 ) {
       mod(24) && euclid($('ba'), 5, 8) && sound('cp').out()
 }
 </code></pre>
-`
+`;
 
 const software_interface: string = `
 # Interface
@@ -43,19 +49,29 @@ The Topos interface is molded around the core concepts at play: _scripts_ and _u
 
 Topos works by linking together several scripts into what is called a _universe_:
 
-- the global script (${key_shortcut('Ctrl + G')}): Evaluated for every clock pulse.
-- the local scripts (${key_shortcut('Ctrl + L')}): Evaluated _on demand_. Local scripts are storing musical parts, logic or whatever you need!
-- the init script (${key_shortcut('Ctrl + I')}): Evaluated on program load. Used to set up the software (_bpm_, etc...).
-- the note file (${key_shortcut('Ctrl + N')}): Not evaluated. Used to store thoughts and ideas about the music you are making.
+- the global script (${key_shortcut(
+  "Ctrl + G"
+)}): Evaluated for every clock pulse.
+- the local scripts (${key_shortcut(
+  "Ctrl + L"
+)}): Evaluated _on demand_. Local scripts are storing musical parts, logic or whatever you need!
+- the init script (${key_shortcut(
+  "Ctrl + I"
+)}): Evaluated on program load. Used to set up the software (_bpm_, etc...).
+- the note file (${key_shortcut(
+  "Ctrl + N"
+)}): Not evaluated. Used to store thoughts and ideas about the music you are making.
 
 ## Universes
 
-A set of files is called a _universe_. Topos can store several universes and switch immediately from one to another. You can switch between universes by pressing ${key_shortcut('Ctrl + B')}. You can also create a new universe by entering a name that has never been used before. _Universes_ are only known by their names.
+A set of files is called a _universe_. Topos can store several universes and switch immediately from one to another. You can switch between universes by pressing ${key_shortcut(
+  "Ctrl + B"
+)}. You can also create a new universe by entering a name that has never been used before. _Universes_ are only known by their names.
 
 Switching between universes will not stop the transport nor reset the clock. You are switching the context but time keeps flowing. This can be useful to prepare immediate transitions between songs and parts. Think of universes as an algorithmic set of music. All scripts in a given universe are aware about how many times they have been runned already. You can reset that value programatically.
 
 You can clear the current universe by pressing the flame button on the top right corner of the interface. This will clear all the scripts and the note file. **Note:** there is no shortcut for clearing a universe. We do not want to loose your work by mistake!
-`
+`;
 
 const time: string = `
 # Time
@@ -122,7 +138,7 @@ You can use the time functions as conditionals. The following example will play 
       mod(24) && sound('jvbass').freq(250).out()
     }
 \`\`\`
-`
+`;
 
 const midi: string = `
 # MIDI
@@ -173,17 +189,21 @@ You can use Topos to play MIDI thanks to the [WebMIDI API](https://developer.moz
 
 ## MIDI Output Selection
 
-- <icode>midi_outputs()</icode>: Prints a list of available MIDI outputs. You can then use any output name to select the MIDI output you wish to use. **Note:** this function will print to the console. You can open the console by pressing ${key_shortcut('Ctrl + Shift + I')} in many web browsers.
+- <icode>midi_outputs()</icode>: Prints a list of available MIDI outputs. You can then use any output name to select the MIDI output you wish to use. **Note:** this function will print to the console. You can open the console by pressing ${key_shortcut(
+  "Ctrl + Shift + I"
+)} in many web browsers.
 - <icode>midi_output(output_name: string)</icode>: Selects the MIDI output to use. You can use the <icode>midi_outputs()</icode> function to get a list of available MIDI outputs first. If the MIDI output is not available, the function will do nothing and keep on with the currently selected MIDI Port.
 
-`
+`;
 
 const sound: string = `
 # Sample playback
 
 The Topos audio engine is based on the [SuperDough](https://www.npmjs.com/package/superdough) audio backend. It is a very powerful and flexible audio backend. It is based on the [Web Audio API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API) and is capable of playing samples, synths, and effects. It is also capable of playing samples and synths in a polyphonic way. It is a very powerful tool to create complex sounds and textures. A set of default sounds are already provided by default but you can also load your own audio samples. They will be loaded through a special URL scheme using the <icode>sample</icode> function.
 
-I recommended you to run the following scripts in the global script (${key_shortcut('Ctrl + G')}).
+I recommended you to run the following scripts in the global script (${key_shortcut(
+  "Ctrl + G"
+)}).
 
 ## Audio Engine
 
@@ -257,8 +277,7 @@ No sound will play until you add <icode>.out()</icode> at the end of the chain. 
 | <icode>size(value: number)</icode>| Sets reverb size. |
 | <icode>velocity(value: number)</icode>| Sets velocity. |
 | <icode>out()</icode> | Returns an object processed by the <icode>superdough</icode> function, using the current values in the <icode>values</icode> object and the <icode>pulse_duration</icode> from the <icode>app.clock</icode>. |
-`
-
+`;
 
 const about: string = `
 # About Topos
@@ -280,14 +299,36 @@ We welcome all contributions and ideas. You can find the source code on [GitHub]
 You can also join us on [Discord](https://discord.gg/8Q2QV6Z6) to discuss about the project and live coding in general.
  
 **Have fun!**
-`
+`;
+
+const code: string = `
+# Code
+
+Topos is using the [JavaScript](https://en.wikipedia.org/wiki/JavaScript) syntax because it lives in a web browser where JS is the default programming language. It is also a language that you can learn to speak quite fast if you are already familiar with other programming lanugages. You are not going to write a lot of code anyway but familiarity with the language can help. Here are some good resources:
+
+- [MDN (Mozilla Web Docs)](https://developer.mozilla.org/): it covers pretty much anything and is considered to be a reliable source to learn how the web currently works. We use it quite a lot to develop Topos. 
+
+- [Learn JS in Y Minutes](https://learnxinyminutes.com/docs/javascript/): a good tour of the language. Can be useful as a refresher.
+
+- [The Modern JavaScript Tutorial](https://javascript.info/): another well known source to learn the language.
+
+You **do not need to have any prior knowledge of programming** to use Topos. It can also be used as a **valuable resource** to learn some basic programming.
+
+## How is the code evaluated?
+
+The code you enter in any of the scripts is evaluated in strict mode. This tells your browser that the code you run can be optimized quite agressively. We need this because by default, **the global script is evaluated 48 times per beat**. It also means that you can crash at the speed of light :smile:. The local and initialisation scripts are evaluated on demand, one run at a time. There are some things to keep in mind:
+
+- **about variables:** the state of your variables is not kept between iterations. If you write <icode>let a = 2</icode> and change the value later on, the value will be reset to <icode>2</icode> after each run! There are other ways to deal with variables and to share variables between scripts! Some variables like **iterators** can keep their state between iterations because they are saved **with the file itself**.
+- **about errors and printing:** your code will crash! Don't worry, it will hopefully try to crash in the most gracious way possible. To check if your code is erroring, you will have to open the dev console with ${key_shortcut( "Ctrl + Shift + I")}. You cannot directly use <icode>console.log('hello, world')</icode> in the interface. You will have to open the console as well to see your messages being printed there!
+`;
 
 const functions: string = `
 # Functions
-`
+`;
+
 const reference: string = `
 # Reference
-`
+`;
 
 const shortcuts: string = `
 # Keybindings
@@ -296,39 +337,45 @@ Topos is made to be controlled entirely with a keyboard. It is recommanded to st
 
 ## Transport
 
-- **Start** the transport: ${key_shortcut('Ctrl + P')}.
-- **Pause** the transport: ${key_shortcut('Ctrl + S')}.
-- **Rewind** the transport: ${key_shortcut('Ctrl + R')}.
+- **Start** the transport: ${key_shortcut("Ctrl + P")}.
+- **Pause** the transport: ${key_shortcut("Ctrl + S")}.
+- **Rewind** the transport: ${key_shortcut("Ctrl + R")}.
 
 ## Moving in the interface
 
-- Switch to a different universe: ${key_shortcut('Ctrl + B')}.
-- Switch to the global script: ${key_shortcut('Ctrl + G')} or ${key_shortcut('F10')}.
-- Switch to the local scripts: ${key_shortcut('Ctrl + L')} or ${key_shortcut('F11')}.
-- Switch to the init script: ${key_shortcut('Ctrl + L')}.
-- Switch to the note file: ${key_shortcut('Ctrl + N')}.
-- Switch to a local file: ${key_shortcut('F1')} to ${key_shortcut('F9')}.
-- Toggle the documentation: ${key_shortcut('Ctrl + D')}.
+- Switch to a different universe: ${key_shortcut("Ctrl + B")}.
+- Switch to the global script: ${key_shortcut("Ctrl + G")} or ${key_shortcut(
+  "F10"
+)}.
+- Switch to the local scripts: ${key_shortcut("Ctrl + L")} or ${key_shortcut(
+  "F11"
+)}.
+- Switch to the init script: ${key_shortcut("Ctrl + L")}.
+- Switch to the note file: ${key_shortcut("Ctrl + N")}.
+- Switch to a local file: ${key_shortcut("F1")} to ${key_shortcut("F9")}.
+- Toggle the documentation: ${key_shortcut("Ctrl + D")}.
 
 ## Evaluating code
 
-- Evaluate the current script: ${key_shortcut('Ctrl + Enter')}.
-- Evaluate a local script: ${key_shortcut('Ctrl + F1')} to ${key_shortcut('Ctrl + F9')}.
+- Evaluate the current script: ${key_shortcut("Ctrl + Enter")}.
+- Evaluate a local script: ${key_shortcut("Ctrl + F1")} to ${key_shortcut(
+  "Ctrl + F9"
+)}.
 
 ## Special
 
-- Switch the editor to Vim Mode: ${key_shortcut('Ctrl + V')}.
-`
+- Switch the editor to Vim Mode: ${key_shortcut("Ctrl + V")}.
+`;
 
 export const documentation = {
-    introduction: introduction,
-    interface: software_interface,
-    time: time,
-    sound: sound,
-    midi: midi,
-    functions: functions,
-    reference: reference,
-    shortcuts: shortcuts,
-    about: about,
-}
-
+  introduction: introduction,
+  interface: software_interface,
+  code: code,
+  time: time,
+  sound: sound,
+  midi: midi,
+  functions: functions,
+  reference: reference,
+  shortcuts: shortcuts,
+  about: about,
+};

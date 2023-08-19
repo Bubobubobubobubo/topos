@@ -7,7 +7,7 @@ import { Extension } from "@codemirror/state";
 import { vim } from "@replit/codemirror-vim";
 import { AppSettings } from "./AppSettings";
 import { editorSetup } from "./EditorSetup";
-import { documentation} from './Documentation';
+import { documentation } from "./Documentation";
 import { EditorView } from "codemirror";
 import { Clock } from "./Clock";
 import { UserAPI } from "./API";
@@ -24,46 +24,46 @@ type Documentation = { [key: string]: string };
 const Docs: Documentation = documentation;
 
 // Importing showdown and setting up the markdown converter
-import showdown from 'showdown';
-showdown.setFlavor('github')
-import showdownHighlight from 'showdown-highlight';
+import showdown from "showdown";
+showdown.setFlavor("github");
+import showdownHighlight from "showdown-highlight";
 const classMap = {
-  h1: 'text-4xl text-white ml-4 mx-4 my-4 mb-8',
-  h2: 'text-3xl text-white mx-4 my-4 mt-12 mb-6',
-  ul: 'text-underline',
-  li: 'ml-12 list-disc text-2xl text-white mx-4 my-4 leading-normal',
-  p:  'text-2xl text-white mx-4 my-4 leading-normal',
-  a:  'text-2xl text-orange-300',
+  h1: "text-4xl text-white ml-4 mx-4 my-4 mb-8",
+  h2: "text-3xl text-white mx-4 my-4 mt-12 mb-6",
+  ul: "text-underline",
+  li: "ml-12 list-disc text-2xl text-white mx-4 my-4 leading-normal",
+  p: "text-2xl text-white mx-4 my-4 leading-normal",
+  a: "text-2xl text-orange-300",
   code: "my-4 block whitespace-pre overflow-x-scroll",
   icode: "my-4 text-white font-mono bg-neutral-600",
   blockquote: "text-neutral-200 border-l-4 border-neutral-500 pl-4 my-4 mx-4",
-  table: "justify-center my-8 mx-8 text-2xl w-full text-left text-white border-collapse",
-  thead: "text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400",
+  table:
+    "justify-center my-8 mx-8 text-2xl w-full text-left text-white border-collapse",
+  thead:
+    "text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400",
   th: "px-6 py-6",
   td: "py-2",
   tr: "py-0",
-}
-const bindings = Object.keys(classMap)
-  .map(key => ({
-    type: 'output',
-    regex: new RegExp(`<${key}([^>]*)>`, 'g'),
-    //@ts-ignore
-    replace: (match, p1) => `<${key} class="${classMap[key]}" ${p1}>`
-  }));
+};
+const bindings = Object.keys(classMap).map((key) => ({
+  type: "output",
+  regex: new RegExp(`<${key}([^>]*)>`, "g"),
+  //@ts-ignore
+  replace: (match, p1) => `<${key} class="${classMap[key]}" ${p1}>`,
+}));
 
 // Importing the documentation from separate files in the ./src/documentation/* folder
 
 export class Editor {
-
   universes: Universes = template_universes;
   selected_universe: string;
   local_index: number = 1;
   editor_mode: "global" | "local" | "init" | "notes" = "local";
   fontSize: Compartment;
   withLineNumbers: Compartment;
-  vimModeCompartment : Compartment;
-  chosenLanguage: Compartment
-  currentDocumentationPane: string = "introduction"
+  vimModeCompartment: Compartment;
+  chosenLanguage: Compartment;
+  currentDocumentationPane: string = "introduction";
 
   settings = new AppSettings();
   editorExtensions: Extension[] = [];
@@ -98,7 +98,9 @@ export class Editor {
     document.getElementById("clear-button-1") as HTMLButtonElement,
     document.getElementById("clear-button-2") as HTMLButtonElement,
   ];
-  documentation_button: HTMLButtonElement = document.getElementById("doc-button-1") as HTMLButtonElement;
+  documentation_button: HTMLButtonElement = document.getElementById(
+    "doc-button-1"
+  ) as HTMLButtonElement;
 
   // Script selection elements
   local_button: HTMLButtonElement = document.getElementById(
@@ -117,7 +119,7 @@ export class Editor {
     "settings-button"
   ) as HTMLButtonElement;
   close_settings_button: HTMLButtonElement = document.getElementById(
-    'close-settings-button'
+    "close-settings-button"
   ) as HTMLButtonElement;
   universe_viewer: HTMLDivElement = document.getElementById(
     "universe-viewer"
@@ -137,15 +139,25 @@ export class Editor {
   ) as HTMLDivElement;
 
   // Font Size Slider
-  font_size_slider: HTMLInputElement = document.getElementById('font-size-slider') as HTMLInputElement;
-  font_size_witness: HTMLSpanElement = document.getElementById('font-size-witness') as HTMLSpanElement;
+  font_size_slider: HTMLInputElement = document.getElementById(
+    "font-size-slider"
+  ) as HTMLInputElement;
+  font_size_witness: HTMLSpanElement = document.getElementById(
+    "font-size-witness"
+  ) as HTMLSpanElement;
 
   // Line Numbers checkbox
-  line_numbers_checkbox: HTMLInputElement = document.getElementById('show-line-numbers') as HTMLInputElement;
+  line_numbers_checkbox: HTMLInputElement = document.getElementById(
+    "show-line-numbers"
+  ) as HTMLInputElement;
 
   // Editor mode selection
-  normal_mode_button: HTMLButtonElement = document.getElementById('normal-mode') as HTMLButtonElement;
-  vim_mode_button: HTMLButtonElement = document.getElementById('vim-mode') as HTMLButtonElement;
+  normal_mode_button: HTMLButtonElement = document.getElementById(
+    "normal-mode"
+  ) as HTMLButtonElement;
+  vim_mode_button: HTMLButtonElement = document.getElementById(
+    "vim-mode"
+  ) as HTMLButtonElement;
 
   constructor() {
     // ================================================================================
@@ -178,22 +190,22 @@ export class Editor {
     this.chosenLanguage = new Compartment();
     this.fontSize = new Compartment();
     const vimPlugin = this.settings.vimMode ? vim() : [];
-    const lines = this.settings.line_numbers? lineNumbers() : [];
-    const fontSizeModif = EditorView.theme( { 
-      "&": { 
+    const lines = this.settings.line_numbers ? lineNumbers() : [];
+    const fontSizeModif = EditorView.theme({
+      "&": {
         fontSize: `${this.settings.font_size}px`,
-       },
-       ".cm-gutters": {
-          fontSize: `${this.settings.font_size}px`,
-       }
-    })
+      },
+      ".cm-gutters": {
+        fontSize: `${this.settings.font_size}px`,
+      },
+    });
 
     this.editorExtensions = [
       this.withLineNumbers.of(lines),
       this.fontSize.of(fontSizeModif),
       this.vimModeCompartment.of(vimPlugin),
       editorSetup,
-			oneDark,
+      oneDark,
       this.chosenLanguage.of(javascript()),
       EditorView.updateListener.of((v: ViewUpdate) => {
         v;
@@ -238,7 +250,6 @@ export class Editor {
         this.clock.stop();
       }
 
-
       if (event.ctrlKey && event.key === "p") {
         event.preventDefault();
         this.setButtonHighlighting("play", true);
@@ -263,7 +274,7 @@ export class Editor {
       if ((event.key === "Enter" || event.key === "Return") && event.ctrlKey) {
         event.preventDefault();
         this.currentFile().candidate = this.view.state.doc.toString();
-        this.flashBackground('#2d313d', 200)
+        this.flashBackground("#2d313d", 200);
       }
 
       // Shift + Enter or Ctrl + E: evaluate the line
@@ -273,7 +284,7 @@ export class Editor {
       ) {
         event.preventDefault(); // Prevents the addition of a new line
         this.currentFile().candidate = this.view.state.doc.toString();
-        this.flashBackground('#2d313d', 200)
+        this.flashBackground("#2d313d", 200);
       }
 
       // This is the modal to switch between universes
@@ -325,8 +336,8 @@ export class Editor {
         (keycode, index) => {
           if (event.keyCode === keycode) {
             event.preventDefault();
-            if (event.ctrlKey) { 
-              this.api.script(keycode - 111)
+            if (event.ctrlKey) {
+              this.api.script(keycode - 111);
             } else {
               this.changeModeFromInterface("local");
               this.changeToLocalBuffer(index);
@@ -336,14 +347,14 @@ export class Editor {
         }
       );
 
-    if (event.keyCode == 121) { 
-      this.changeModeFromInterface("global"); 
-      this.hideDocumentation();
-    }
-    if (event.keyCode == 122) { 
-      this.changeModeFromInterface("init"); 
-      this.hideDocumentation();
-    }
+      if (event.keyCode == 121) {
+        this.changeModeFromInterface("global");
+        this.hideDocumentation();
+      }
+      if (event.keyCode == 122) {
+        this.changeModeFromInterface("init");
+        this.hideDocumentation();
+      }
     });
 
     // ================================================================================
@@ -387,7 +398,7 @@ export class Editor {
 
     this.documentation_button.addEventListener("click", () => {
       this.showDocumentation();
-    })
+    });
 
     this.pause_buttons.forEach((button) => {
       button.addEventListener("click", () => {
@@ -416,24 +427,26 @@ export class Editor {
       this.changeModeFromInterface("notes")
     );
 
-
     this.settings_button.addEventListener("click", () => {
       this.font_size_slider.value = this.settings.font_size.toString();
-      this.font_size_witness.innerHTML = `Font Size: ${this.settings.font_size}px`
-      this.font_size_witness?.setAttribute('style', `font-size: ${this.settings.font_size}px;`)
+      this.font_size_witness.innerHTML = `Font Size: ${this.settings.font_size}px`;
+      this.font_size_witness?.setAttribute(
+        "style",
+        `font-size: ${this.settings.font_size}px;`
+      );
       this.line_numbers_checkbox.checked = this.settings.line_numbers;
-      let modal_settings = document.getElementById('modal-settings');
-      let editor = document.getElementById('editor');
-      modal_settings?.classList.remove('invisible')
-      editor?.classList.add('invisible')
-    })
+      let modal_settings = document.getElementById("modal-settings");
+      let editor = document.getElementById("editor");
+      modal_settings?.classList.remove("invisible");
+      editor?.classList.add("invisible");
+    });
 
     this.close_settings_button.addEventListener("click", () => {
-      let modal_settings = document.getElementById('modal-settings');
-      let editor = document.getElementById('editor');
-      modal_settings?.classList.add('invisible')
-      editor?.classList.remove('invisible')
-    })
+      let modal_settings = document.getElementById("modal-settings");
+      let editor = document.getElementById("editor");
+      modal_settings?.classList.add("invisible");
+      editor?.classList.remove("invisible");
+    });
 
     this.font_size_slider.addEventListener("input", () => {
       const new_value = this.font_size_slider.value;
@@ -442,19 +455,19 @@ export class Editor {
       this.font_size_witness.innerHTML = `Font Size: ${new_value}px`;
 
       let new_font_size = EditorView.theme({
-        "&": { fontSize : new_value + "px", },
-        ".cm-gutters": { fontSize : new_value + "px", },
+        "&": { fontSize: new_value + "px" },
+        ".cm-gutters": { fontSize: new_value + "px" },
       });
       this.view.dispatch({
-        effects: this.fontSize.reconfigure(new_font_size)
+        effects: this.fontSize.reconfigure(new_font_size),
       });
       this.settings.font_size = parseInt(new_value);
-    })
+    });
 
     this.normal_mode_button.addEventListener("click", () => {
       this.settings.vimMode = false;
-      this.view.dispatch({effects: this.vimModeCompartment.reconfigure([])});
-    })
+      this.view.dispatch({ effects: this.vimModeCompartment.reconfigure([]) });
+    });
 
     this.line_numbers_checkbox.addEventListener("change", () => {
       let checked = this.line_numbers_checkbox.checked ? true : false;
@@ -462,14 +475,16 @@ export class Editor {
       this.view.dispatch({
         effects: this.withLineNumbers.reconfigure(
           checked ? [lineNumbers()] : []
-        )
+        ),
       });
     });
 
     this.vim_mode_button.addEventListener("click", () => {
       this.settings.vimMode = true;
-      this.view.dispatch({effects: this.vimModeCompartment.reconfigure(vim())});
-    })
+      this.view.dispatch({
+        effects: this.vimModeCompartment.reconfigure(vim()),
+      });
+    });
 
     this.buffer_search.addEventListener("keydown", (event) => {
       if (event.key === "Enter") {
@@ -483,53 +498,52 @@ export class Editor {
         }
       }
     });
-    tryEvaluate(
-      this, 
-      this.universes[this.selected_universe.toString()].init,
-    )
+    tryEvaluate(this, this.universes[this.selected_universe.toString()].init);
 
     // Setting up the documentation page
-    document.getElementById('docs_introduction')!.addEventListener('click', () => {
-      this.currentDocumentationPane = 'introduction';
+    document
+      .getElementById("docs_introduction")!
+      .addEventListener("click", () => {
+        this.currentDocumentationPane = "introduction";
+        this.updateDocumentationContent();
+      });
+    document.getElementById("docs_interface")!.addEventListener("click", () => {
+      this.currentDocumentationPane = "interface";
       this.updateDocumentationContent();
     });
-    document.getElementById('docs_interface')!.addEventListener('click', () => {
-      this.currentDocumentationPane = 'interface';
+    document.getElementById("docs_code")!.addEventListener("click", () => {
+      this.currentDocumentationPane = "code";
       this.updateDocumentationContent();
     });
-    document.getElementById('docs_time')!.addEventListener('click', () => {
-      this.currentDocumentationPane = 'time';
+    document.getElementById("docs_time")!.addEventListener("click", () => {
+      this.currentDocumentationPane = "time";
       this.updateDocumentationContent();
     });
-    document.getElementById('docs_sound')!.addEventListener('click', () => {
-      this.currentDocumentationPane = 'sound';
+    document.getElementById("docs_sound")!.addEventListener("click", () => {
+      this.currentDocumentationPane = "sound";
       this.updateDocumentationContent();
     });
-    document.getElementById('docs_midi')!.addEventListener('click', () => {
-      this.currentDocumentationPane = 'midi';
-      this.updateDocumentationContent();
-    });
- 
-    document.getElementById('docs_functions')!.addEventListener('click', () => {
-      this.currentDocumentationPane = 'functions';
-      this.updateDocumentationContent();
-    });
-    document.getElementById('docs_reference')!.addEventListener('click', () => {
-      this.currentDocumentationPane = 'reference';
-      this.updateDocumentationContent();
-    });
-    document.getElementById('docs_shortcuts')!.addEventListener('click', () => {
-      this.currentDocumentationPane = 'shortcuts';
-      this.updateDocumentationContent();
-    });
-    document.getElementById('docs_about')!.addEventListener('click', () => {
-      this.currentDocumentationPane = 'about';
+    document.getElementById("docs_midi")!.addEventListener("click", () => {
+      this.currentDocumentationPane = "midi";
       this.updateDocumentationContent();
     });
 
-
-
-
+    document.getElementById("docs_functions")!.addEventListener("click", () => {
+      this.currentDocumentationPane = "functions";
+      this.updateDocumentationContent();
+    });
+    document.getElementById("docs_reference")!.addEventListener("click", () => {
+      this.currentDocumentationPane = "reference";
+      this.updateDocumentationContent();
+    });
+    document.getElementById("docs_shortcuts")!.addEventListener("click", () => {
+      this.currentDocumentationPane = "shortcuts";
+      this.updateDocumentationContent();
+    });
+    document.getElementById("docs_about")!.addEventListener("click", () => {
+      this.currentDocumentationPane = "about";
+      this.updateDocumentationContent();
+    });
 
     // Passing the API to the User
     Object.entries(this.api).forEach(([name, value]) => {
@@ -550,46 +564,47 @@ export class Editor {
   }
 
   get local_buffer() {
-    return this.universes[this.selected_universe.toString()].locals[this.local_index];
+    return this.universes[this.selected_universe.toString()].locals[
+      this.local_index
+    ];
   }
 
   showDocumentation() {
-      if (document.getElementById("app")?.classList.contains("hidden")) {
-        document.getElementById('app')?.classList.remove('hidden');
-        document.getElementById('documentation')?.classList.add('hidden');
-      } else {
-        document.getElementById('app')?.classList.add('hidden');
-        document.getElementById('documentation')?.classList.remove('hidden');
+    if (document.getElementById("app")?.classList.contains("hidden")) {
+      document.getElementById("app")?.classList.remove("hidden");
+      document.getElementById("documentation")?.classList.add("hidden");
+    } else {
+      document.getElementById("app")?.classList.add("hidden");
+      document.getElementById("documentation")?.classList.remove("hidden");
 
-        // Load and convert Markdown content from the documentation file
-        this.updateDocumentationContent();
-      }
+      // Load and convert Markdown content from the documentation file
+      this.updateDocumentationContent();
+    }
   }
 
   hideDocumentation() {
-      if (document.getElementById("app")?.classList.contains("hidden")) {
-        document.getElementById('app')?.classList.remove('hidden');
-        document.getElementById('documentation')?.classList.add('hidden');
-      }
+    if (document.getElementById("app")?.classList.contains("hidden")) {
+      document.getElementById("app")?.classList.remove("hidden");
+      document.getElementById("documentation")?.classList.add("hidden");
+    }
   }
 
   updateDocumentationContent() {
     const converter = new showdown.Converter({
+      emoji: true,
       moreStyling: true,
-      extensions: [
-        showdownHighlight({auto_detection: true}),
-        ...bindings,
-      ]
+      extensions: [showdownHighlight({ auto_detection: true }), ...bindings],
     });
     const converted_markdown = converter.makeHtml(
       Docs[this.currentDocumentationPane]
     );
     function wrapCodeWithPre(inputString: string): string {
-      let newString = inputString.replace(/<code>/g, '<pre><code>');
-      newString = newString.replace(/<\/code>/g, '</code></pre>');
+      let newString = inputString.replace(/<code>/g, "<pre><code>");
+      newString = newString.replace(/<\/code>/g, "</code></pre>");
       return newString;
     }
-    document.getElementById('documentation-content')!.innerHTML = wrapCodeWithPre(converted_markdown);
+    document.getElementById("documentation-content")!.innerHTML =
+      wrapCodeWithPre(converted_markdown);
   }
 
   changeToLocalBuffer(i: number) {
@@ -606,10 +621,11 @@ export class Editor {
   }
 
   changeModeFromInterface(mode: "global" | "local" | "init" | "notes") {
-
     const interface_buttons: HTMLElement[] = [
-      this.local_button, this.global_button, 
-      this.init_button, this.note_button,
+      this.local_button,
+      this.global_button,
+      this.init_button,
+      this.note_button,
     ];
 
     let changeColor = (button: HTMLElement) => {
@@ -620,18 +636,17 @@ export class Editor {
           button.classList.remove("text-orange-300");
         }
       });
-      button.children[0].classList.remove('text-white');
+      button.children[0].classList.remove("text-white");
       button.children[0].classList.add("text-orange-300");
       button.classList.add("text-orange-300");
     };
 
     switch (mode) {
-
       case "local":
         if (this.local_script_tabs.classList.contains("hidden")) {
           this.local_script_tabs.classList.remove("hidden");
         }
-        this.editor_mode = 'local'; 
+        this.editor_mode = "local";
         this.local_index = 0;
         this.changeToLocalBuffer(this.local_index);
         changeColor(this.local_button);
@@ -640,21 +655,21 @@ export class Editor {
         if (!this.local_script_tabs.classList.contains("hidden")) {
           this.local_script_tabs.classList.add("hidden");
         }
-        this.editor_mode = "global"
+        this.editor_mode = "global";
         changeColor(this.global_button);
         break;
       case "init":
         if (!this.local_script_tabs.classList.contains("hidden")) {
           this.local_script_tabs.classList.add("hidden");
         }
-        this.editor_mode = "init"
+        this.editor_mode = "init";
         changeColor(this.init_button);
         break;
       case "notes":
         if (!this.local_script_tabs.classList.contains("hidden")) {
           this.local_script_tabs.classList.add("hidden");
         }
-        this.editor_mode = "notes"
+        this.editor_mode = "notes";
         changeColor(this.note_button);
         break;
     }
@@ -662,8 +677,10 @@ export class Editor {
     // If the editor is in notes mode, we need to update the selectedLanguage
 
     this.view.dispatch({
-      effects: this.chosenLanguage.reconfigure(this.editor_mode == "notes" ? [markdown()] : [javascript()])
-    })
+      effects: this.chosenLanguage.reconfigure(
+        this.editor_mode == "notes" ? [markdown()] : [javascript()]
+      ),
+    });
 
     this.updateEditorView();
   }
@@ -672,10 +689,12 @@ export class Editor {
     button: "play" | "pause" | "stop" | "clear",
     highlight: boolean
   ) {
-    this.flashBackground('#2d313d', 200)
+    this.flashBackground("#2d313d", 200);
     const possible_selectors = [
-      '[id^="play-button-"]', '[id^="pause-button-"]',
-      '[id^="clear-button-"]', '[id^="stop-button-"]',
+      '[id^="play-button-"]',
+      '[id^="pause-button-"]',
+      '[id^="clear-button-"]',
+      '[id^="stop-button-"]',
     ];
     let selector: number;
     switch (button) {
@@ -688,7 +707,7 @@ export class Editor {
       case "clear":
         selector = 2;
         break;
-      case "stop": 
+      case "stop":
         selector = 3;
         break;
     }
@@ -716,10 +735,9 @@ export class Editor {
   }
 
   updateEditorView(): void {
-
     this.view.dispatch({
       changes: {
-        from: 0, 
+        from: 0,
         to: this.view.state.doc.toString().length,
         insert: this.currentFile().candidate,
       },
@@ -731,7 +749,7 @@ export class Editor {
    */
   currentFile(): File {
     switch (this.editor_mode) {
-      case "global": 
+      case "global":
         return this.global_buffer;
       case "local":
         return this.local_buffer;
@@ -743,10 +761,9 @@ export class Editor {
   }
 
   /**
-   * @param universeName: The name of the universe to load 
+   * @param universeName: The name of the universe to load
    */
   loadUniverse(universeName: string): void {
-
     // Saving the current file before initiating the switch logic
     this.currentFile().candidate = this.view.state.doc.toString();
 
@@ -763,9 +780,7 @@ export class Editor {
     this.updateEditorView();
 
     // Evaluating the initialisation script for the selected universe
-    tryEvaluate(this, 
-      this.universes[this.selected_universe.toString()].init,
-    )
+    tryEvaluate(this, this.universes[this.selected_universe.toString()].init);
   }
 
   openSettingsModal(): void {
@@ -784,7 +799,7 @@ export class Editor {
     document.getElementById("modal-settings")!.classList.add("invisible");
   }
 
-  openBuffersModal():void {
+  openBuffersModal(): void {
     // If the modal is hidden, unhide it and hide the editor
     if (
       document.getElementById("modal-buffers")!.classList.contains("invisible")
@@ -797,7 +812,7 @@ export class Editor {
     }
   }
 
-  closeBuffersModal():void {
+  closeBuffersModal(): void {
     // @ts-ignore
     document.getElementById("buffer-search")!.value = "";
     document.getElementById("editor")!.classList.remove("invisible");
@@ -812,13 +827,19 @@ export class Editor {
   flashBackground(color: string, duration: number): void {
     // Set the flashing color
     this.view.dom.style.backgroundColor = color;
-    const gutters = this.view.dom.getElementsByClassName("cm-gutter") as HTMLCollectionOf<HTMLElement>; 
-    Array.from(gutters).forEach(gutter => gutter.style.backgroundColor = color);
-  
+    const gutters = this.view.dom.getElementsByClassName(
+      "cm-gutter"
+    ) as HTMLCollectionOf<HTMLElement>;
+    Array.from(gutters).forEach(
+      (gutter) => (gutter.style.backgroundColor = color)
+    );
+
     // Reset to original color after duration
     setTimeout(() => {
       this.view.dom.style.backgroundColor = "";
-      Array.from(gutters).forEach(gutter => gutter.style.backgroundColor = "");
+      Array.from(gutters).forEach(
+        (gutter) => (gutter.style.backgroundColor = "")
+      );
     }, duration);
   }
 }
@@ -836,10 +857,9 @@ function startClock() {
   document
     .getElementById("start-button")!
     .removeEventListener("click", startClock);
-  document
-    .removeEventListener("click", startClock);
+  document.removeEventListener("click", startClock);
   document.removeEventListener("keydown", startOnEnter);
-  document.removeEventListener("click", startOnClick)
+  document.removeEventListener("click", startOnClick);
   app.clock.start();
   app.view.focus();
   app.setButtonHighlighting("play", true);
@@ -864,8 +884,8 @@ function reportMouseCoordinates(event: MouseEvent) {
   app._mouseX = event.clientX;
   app._mouseY = event.clientY;
 }
- 
-window.addEventListener('mousemove', reportMouseCoordinates);
+
+window.addEventListener("mousemove", reportMouseCoordinates);
 
 // When the user leaves the page, all the universes should be saved in the localStorage
 window.addEventListener("beforeunload", () => {
@@ -875,6 +895,6 @@ window.addEventListener("beforeunload", () => {
   app.currentFile().candidate = app.view.state.doc.toString();
   app.currentFile().committed = app.view.state.doc.toString();
   app.settings.saveApplicationToLocalStorage(app.universes, app.settings);
-  app.clock.stop()
+  app.clock.stop();
   return null;
 });
