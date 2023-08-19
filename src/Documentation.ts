@@ -50,7 +50,7 @@ Topos works by linking together several scripts into what is called a _universe_
 
 ## Universes
 
-A set of files is called a _universe_. Topos can store several universes and switch immediately from one to another. You can switch between universes by pressing ${key_shortcut('Ctrl + B')}. You can also creating a new universe by entering a name that has never been used before. _Universes_ are only known by their names.
+A set of files is called a _universe_. Topos can store several universes and switch immediately from one to another. You can switch between universes by pressing ${key_shortcut('Ctrl + B')}. You can also create a new universe by entering a name that has never been used before. _Universes_ are only known by their names.
 
 Switching between universes will not stop the transport nor reset the clock. You are switching the context but time keeps flowing. This can be useful to prepare immediate transitions between songs and parts. Think of universes as an algorithmic set of music. All scripts in a given universe are aware about how many times they have been runned already. You can reset that value programatically.
 
@@ -68,6 +68,8 @@ Time in Topos is handled by a _transport_ system. It allows you to **play**, **p
 
 The **pulse** is also known as the [PPQN](https://en.wikipedia.org/wiki/Pulses_per_quarter_note). By default, Topos is using a pulses per quarter note of 48. It means that the lowest possible rhythmic value is 1/48 of a quarter note. That's plenty of time already. Music is sequenced by playing around with these core time values.
 
+**Note:** you will also learn how to manipulate time to backtrack, jump forward, etc... Your traditional timeline based playback will progressively get more spicy.
+
 ## Programming with time
 
 Every script can access the current time by using the following functions:
@@ -82,7 +84,50 @@ Every script can access the current time by using the following functions:
 
 - <icode>epulse()</icode>: returns the current bar since the origin of time.
 
+## Useful basic functions
+
+Some functions are used very often as time primitives. They are used to create more complex rhythms and patterns:
+
+- <icode>beat(...values: number[])</icode>: returns <icode>true</icode> on the given beat. You can add any number of beat values, (_e.g._ <icode>onbeat(1.2,1.5,2.3,2.5)</icode>). The function will return <icode>true</icode> only for a given pulse, which makes this function very useful for drumming.
+
+\`\`\`javascript
+    onbeat(1,2,3,4) && sound('bd').out()
+    onbeat(.5,.75,1) && sound('hh').out()
+    onbeat(3) && sound('sd').out()
+\`\`\`
+
+- <icode>mod(...values: number[])</icode>: returns <icode>true</icode> if the current pulse is a multiple of the given value. You can add any number of values, (_e.g._ <icode>mod(12,36)</icode>).
+
+\`\`\`javascript
+    mod(48) && sound('bd').out()
+    mod(pick(12,24)) && sound('hh').out()
+    mod(24) && sound('jvbass').out()
+\`\`\`
+
+- <icode>onbar(...values: number[])</icode>: returns <icode>true</icode> if the bar is currently equal to any of the specified values.
+- <icode>modbar(...values: number[])</icode>: returns <icode>true</icode> if the bar is currently a multiple of any of the specified values.
+
+## Using time as a conditional
+
+You can use the time functions as conditionals. The following example will play a pattern A for 2 bars and a pattern B for 2 bars:
+
+\`\`\`javascript
+    if((bar() % 4) > 1) {
+      mod(48) && sound('kick').out()
+      rarely() && mod(24) && sound('sd').out()
+      mod(24) && sound('jvbass').freq(500).out()
+    } else {
+      mod(24) && sound('hh').out()
+      mod(36) && sound('cp').out()
+      mod(24) && sound('jvbass').freq(250).out()
+    }
+\`\`\`
 `
+
+const midi: string = `
+# MIDI
+`
+
 const sound: string = `
 # Sound and Notes
 
@@ -225,6 +270,7 @@ export const documentation = {
     interface: software_interface,
     time: time,
     sound: sound,
+    midi: midi,
     functions: functions,
     reference: reference,
     shortcuts: shortcuts,

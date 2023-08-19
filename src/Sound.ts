@@ -18,8 +18,8 @@ export class Sound {
         return this;
     }
 
-    frequency = (value: number): this => {
-        this.values['frequency'] = value
+    freq = (value: number): this => {
+        this.values['freq'] = value
         return this;
     }
 

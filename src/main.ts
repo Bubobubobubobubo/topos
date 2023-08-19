@@ -507,6 +507,11 @@ export class Editor {
       this.currentDocumentationPane = 'sound';
       this.updateDocumentationContent();
     });
+    document.getElementById('docs_midi')!.addEventListener('click', () => {
+      this.currentDocumentationPane = 'midi';
+      this.updateDocumentationContent();
+    });
+ 
     document.getElementById('docs_functions')!.addEventListener('click', () => {
       this.currentDocumentationPane = 'functions';
       this.updateDocumentationContent();
