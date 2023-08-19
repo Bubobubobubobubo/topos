@@ -2,7 +2,6 @@ import { Pitch, Chord, Rest, Event, cachedPattern } from "zifferjs";
 import { MidiConnection } from "./IO/MidiConnection";
 import { tryEvaluate } from "./Evaluator";
 import { DrunkWalk } from "./Utils/Drunk";
-import { LRUCache } from "lru-cache";
 import { scale } from "./Scales";
 import { Editor } from "./main";
 import { Sound } from "./Sound";
@@ -13,20 +12,10 @@ import {
   // @ts-ignore
 } from "superdough";
 
-// This is an LRU cache used for storing persistent patterns
-const cache = new LRUCache({ max: 1000, ttl: 1000 * 60 * 5 });
-
 interface ControlChange {
   channel: number;
   control: number;
   value: number;
-}
-
-interface Pattern<T> {
-  pattern: any[];
-  options: {
-    [key: string]: T;
-  };
 }
 
 /**
@@ -454,17 +443,6 @@ export class UserAPI {
   // =============================================================
   // Sequencer related functions
   // =============================================================
-
-  private _sequence_key_generator(pattern: any[]) {
-    /**
-     * Generates a key for the sequence function.
-     *
-     * @param input - The input to generate a key for
-     * @returns A key for the sequence function
-     */
-    // Make the pattern base64
-    return btoa(JSON.stringify(pattern));
-  }
 
   public slice = (chunk: number): boolean => {
     const time_pos = this.epulse();
@@ -916,27 +894,17 @@ export class UserAPI {
 
   public mod = (...n: number[]): boolean => {
     const results: boolean[] = n.map(
-      (value) => this.epulse() % Math.floor(value * ppqn()) === 0
+      (value) => this.epulse() % Math.floor(value * this.ppqn()) === 0
     );
     return results.some((value) => value === true);
   };
 
   public modbar = (...n: number[]): boolean => {
     const results: boolean[] = n.map(
-      (value) => this.bar() % Math.floor(value * ppqn()) === 0
+      (value) => this.bar() % Math.floor(value * this.ppqn()) === 0
     );
     return results.some((value) => value === true);
   };
-
-  // mod = (...pulse: number[]): boolean => {
-  //   /**
-  //    * Returns true if the current pulse is a modulo of any of the given pulses.
-  //    *
-  //    * @param pulse - The pulse to check for
-  //    * @returns True if the current pulse is a modulo of any of the given pulses
-  //    */
-  //   return pulse.some((p) => this.app.clock.time_position.pulse % p === 0);
-  // };
 
   // =============================================================
   // Rythmic generators
