@@ -37,7 +37,11 @@ if (bar() % 4 > 2 ) {
 const software_interface: string = `
 # Interface
 
-Topos works by linking together several scripts:
+The Topos interface is molded around the core concepts at play: _scripts_ and _universes_.
+
+## Scripts
+
+Topos works by linking together several scripts into what is called a _universe_:
 
 - the global script (${key_shortcut('Ctrl + G')}): Evaluated for every clock pulse.
 - the local scripts (${key_shortcut('Ctrl + L')}): Evaluated _on demand_. Local scripts are storing musical parts, logic or whatever you need!
@@ -59,19 +63,23 @@ const time: string = `
 Time in Topos is handled by a _transport_ system. It allows you to **play**, **pause** and **reset** time. Time is quite simple to understand:
 
 - **bars**: how many bars have elapsed since the origin of time.
-- **beats**: how many beats have elapsed since the origin of time.
+- **beats**: how many beats have elapsed since the beginning of the bar.
 - **pulse**: how many pulses have elapsed since the last beat.
 
-The **pulse** is also known as the [PPQN](https://en.wikipedia.org/wiki/Pulses_per_quarter_note). By default, Topos is using a PPQN of 48. It means that the lowest possible rhythmic value is 1/48 of a quarter note. That's plenty of time already.
+The **pulse** is also known as the [PPQN](https://en.wikipedia.org/wiki/Pulses_per_quarter_note). By default, Topos is using a pulses per quarter note of 48. It means that the lowest possible rhythmic value is 1/48 of a quarter note. That's plenty of time already. Music is sequenced by playing around with these core time values.
 
 ## Programming with time
 
 Every script can access the current time by using the following functions:
 
-- \`bar()\` returns the current bar since the origin of time.
-- \`beat()\` returns the current beat since the origin of the bar.
+- \`bar(n: number)\` returns the current bar since the origin of time.
+
+- \`beat(n: number)\` returns the current beat since the origin of the bar.
+
 - \`ebeat()\` returns the current beat since the origin of time.
+
 - \`pulse()\` returns the current bar since the origin of the beat.
+
 - \`epulse()\` returns the current bar since the origin of time.
 
 `
@@ -81,6 +89,24 @@ const sound: string = `
 
 const about: string = `
 # About Topos
+
+## The Topos Project
+
+Topos is an experimental web based algorithmic sequencer programmed by **BuboBubo** (Raphaël Forment) and **Amiika** (Miika Alonen). It is written using [TypeScript](https://google.fr) and [Vite](https://google.fr). Many thanks to Felix Roos for making the [Superdough](https://www.npmjs.com/package/superdough) audio backend available for experimentation. 
+
+This project is based on the [Monome Teletype](https://monome.org) by Brian Crabtree. We hope to follow and honor the same spirit of sharing and experimentation. How much can the Teletype be extended while staying accessible and installation-free?
+
+## About Live Coding
+
+**Amiika** and I are both very involved in the [TOPLAP](https://toplap.org) and [Algorave](https://algorave.com) scenes. We previously worked on the [Sardine](https://sardine.raphaelforment.fr) live coding environment for Python. **Amiika** has been working hard on its own algorithmic pattern language called [Ziffers](https://github.com/amiika/ziffers). A version of it is available in Topos! **Raphaël** is doing live coding with other folks from the [Cookie Collective](https://cookie.paris) and from the city of Lyon (France).
+
+## Free and open-source software
+
+Topos is a free and open-source software distributed under [GPL-3.0](https://github.com/Bubobubobubobubo/Topos/blob/main/LICENSE) licence.
+We welcome all contributions and ideas. You can find the source code on [GitHub](https://github.com/Bubobubobubobubo/topos).
+You can also join us on [Discord](https://discord.gg/8Q2QV6Z6) to discuss about the project and live coding in general.
+ 
+**Have fun!**
 `
 
 const functions: string = `
