@@ -89,18 +89,20 @@ These pages have been conceived to introduce the core concepts first before divi
 Press ${key_shortcut("Ctrl + G")} to switch to the global file. This is where everything starts! Evaluate the following script there by pasting and pressing ${key_shortcut("Ctrl + Enter")}. You are now making music:
 
 <pre><code class="language-javascript">
-if (bar() % 4 > 2 ) {
-    often() && mod(.5) && sound('808bd').out()
-    mod(.5) && euclid($('a'), 3, 8) && sound('808sd').out()
-    mod(seqbeat(.5,.25)) && euclid($('a'), 7, 8) && sound('hh')
-      .delay(0.75).delaytime(0.75)
-      .speed(seqbeat(1,2,3,4)).out()
-    mod(.5) && sound('bd').n(6).out()
-} else {
-      mod(.5) && sound('hh').n(seqbeat(1,2,3,4)).end(.01).out()
-      mod(1) && sound('kick').out()
-      mod(.5) && euclid($('ba'), 5, 8) && sound('cp').out()
-}
+bpm(80)
+mod(0.25) :: sound('sawtooth')
+  .note(seqbar(
+    pick(60, 67, 63) - 12,  pick(60, 67, 63) - 12, 
+    pick(60, 67, 63) - 12 + 5, pick(60, 67, 63) - 12 + 5,
+    pick(60, 67, 63) - 12 + 7, pick(60, 67, 63) - 12 + 7) + (sometimes() ? 24 : 12))
+  .dur(0.1).fmi(8).fmh(4).room(0.9)
+  .gain(0.25).cutoff(500 + usine(8) * 10000)
+  .delay(0.5).delaytime(bpm() / 60 / 4 / 3)
+  .delayfeedback(0.25)
+  .out()
+mod(1) && snd('kick').out()
+mod(2) && snd('snare').out()
+mod(.5) && snd('hat').out()
 </code></pre>
 `,software_interface=`
 # Interface
