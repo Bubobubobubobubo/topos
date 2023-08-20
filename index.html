@@ -32,13 +32,13 @@
   <body class="bg-neutral-800 overflow-y-hidden">
 
 		<!-- The header is hidden on smaller devices -->
-    <header class="py-2 hidden xl:block text-white bg-neutral-900">
+    <header class="py-2 block text-white bg-neutral-900">
       <div class="mx-auto flex flex-wrap pl-2 py-1 flex-row items-center">
         <a class="flex title-font font-medium items-center text-black mb-0">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-10 h-10 text-black p-2 bg-white rounded-full" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
           </svg>
-          <span id="universe-viewer" class="ml-4 text-2xl text-white">Topos</span>
+          <span id="universe-viewer" class="hidden xl:block ml-4 text-2xl text-white">Topos</span>
 
         </a>
         <nav class="py-2 flex flex-wrap items-center text-base absolute right-0">
@@ -182,18 +182,18 @@
       <!-- This modal pops up when the page is first loaded and then disappears forever -->
       <div id="modal-container" class="motion-safe:animate-pulse flex min-h-screen flex flex-col">
       <div id="modal" class="bg-neutral-900 bg-opacity-50 flex justify-center items-center absolute top-0 right-0 bottom-0 left-0">
-        <div id="start-button" class="bg-white px-12 py-12 rounded-md text-center">
-         <h1 class="text-xl mb-4 font-bold text-white rounded bg-gray-800 py-4 mb-8">Topos Prototype</h1>
+        <div id="start-button" class="bg-white px-2 py-2 lg:px-12 lg:py-12 rounded-md text-center">
+         <h1 class="text-xl mb-4 font-bold text-white rounded bg-gray-800 py-4 mb-6">Topos Prototype</h1>
           <div class="flex ml-0 lg:flex-row space-y-4 lg:space-y-0 flex-col w-auto min-w-screen px-0 lg:space-x-8 space-x-0">
-            <a href="https://github.com/Bubobubobubobubo/Topos" class="block max-w-sm p-6 border border-gray-200 rounded-lg shadow bg-gray-800 border-gray-700 hover:bg-gray-700">
+            <a href="https://github.com/Bubobubobubobubo/Topos" class="block max-w-sm lg:p-6 border border-gray-200 rounded-lg shadow bg-gray-800 border-gray-700 hover:bg-gray-700">
               <h5 class="mb-2 lg:text-2xl text-xl font-bold tracking-tight text-white">GitHub</h5>
               <p class="font-normal text-white">Get involved in the dev process and or file an issue for a broken feature</p>
             </a>
-            <a href="https://discord.gg/aPgV7mSFZh" class="block max-w-sm p-6  border border-gray-200 rounded-lg shadow bg-gray-800 border-gray-700 hover:bg-gray-700">
+            <a href="https://discord.gg/aPgV7mSFZh" class="block max-w-sm lg:p-6 border border-gray-200 rounded-lg shadow bg-gray-800 border-gray-700 hover:bg-gray-700">
               <h5 class="mb-2 lg:text-2xl text-xl font-bold tracking-tight text-white">Discord</h5>
               <p class="font-normal text-white">Join the community on the official Topos/Sardine Discord Server.</p>
             </a>
-            <a href="https://topos.raphaelforment.fr" class="block max-w-sm p-6 border border-gray-200 rounded-lg shadow bg-gray-800 border-gray-800 hover:bg-gray-700">
+            <a href="https://topos.raphaelforment.fr" class="block max-w-sm lg:p-6 border border-gray-200 rounded-lg shadow bg-gray-800 border-gray-800 hover:bg-gray-700">
               <h5 class="mb-2 text-xl lg:text-2xl font-bold tracking-tight text-white">Website</h5>
               <p class="font-normal text-white">Documentation, videos and more on the official website.</p>
             </a>
