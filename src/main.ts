@@ -28,13 +28,13 @@ import showdown from "showdown";
 showdown.setFlavor("github");
 import showdownHighlight from "showdown-highlight";
 const classMap = {
-  h1: "text-white lg:text-4xl text-xl lg:ml-4 sml-2 lg:mx-4 mx-2 lg:my-4 my-2 lg:mb-8 mb-4 bg-neutral-900 rounded-lg py-2 px-2",
-  h2: "text-white lg:text-3xl text-lg mx-4 mx-2 lg:my-4 my-2 lg:mt-12 mb-2 mb-6 bg-neutral-900 rounded-lg py-2 px-2",
+  h1: "text-white lg:text-4xl text-xl lg:ml-4 lg:mx-4 mx-2 lg:my-4 my-2 lg:mb-8 mb-4 bg-neutral-900 rounded-lg py-2 px-2",
+  h2: "text-white lg:text-3xl text-xl lg:ml-4 lg:mx-4 mx-2 lg:my-4 my-2 lg:mb-8 mb-4 bg-neutral-900 rounded-lg py-2 px-2",
   ul: "text-underline",
-  li: "ml-12 list-disc text-2xl sm:text-base text-white mx-4 my-4 leading-normal",
-  p: "text-2xl sm:text-base text-white mx-4 my-4 leading-normal",
-  a: "text-2xl sm:text-base text-orange-300",
-  code: "my-4 block whitespace-pre overflow-x-scroll",
+  li: "ml-12 list-disc lg:text-2xl text-base text-white mx-4 my-4 leading-normal",
+  p: "lg:text-2xl text-base text-white lg:mx-4 mx-2 my-4 leading-normal",
+  a: "lg:text-2xl text-base text-orange-300",
+  code: "my-4 text-base lg:text-xl block whitespace-pre overflow-x-scroll",
   icode: "my-4 text-white font-mono bg-neutral-600",
   blockquote: "text-neutral-200 border-l-4 border-neutral-500 pl-4 my-4 mx-4",
   table:
