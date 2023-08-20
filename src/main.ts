@@ -715,6 +715,7 @@ export class Editor {
       .querySelectorAll(possible_selectors[selector])
       .forEach((button) => {
         if (highlight) button.children[0].classList.add("fill-orange-300");
+        if (highlight) button.children[0].classList.add("animate-pulse");
       });
     // All other buttons must lose the highlighting
     document
@@ -725,12 +726,14 @@ export class Editor {
         button.children[0].classList.remove("fill-orange-300");
         button.children[0].classList.remove("text-orange-300");
         button.children[0].classList.remove("bg-orange-300");
+        button.children[0].classList.remove("animate-pulse");
       });
   }
 
   unfocusPlayButtons() {
     document.querySelectorAll('[id^="play-button-"]').forEach((button) => {
       button.children[0].classList.remove("fill-orange-300");
+      button.children[0].classList.remove("animate-pulse");
     });
   }
 
