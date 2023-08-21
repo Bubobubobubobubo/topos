@@ -2,6 +2,8 @@ const key_shortcut = (shortcut: string): string => {
   return `<kbd class="lg:px-2 lg:py-1.5 px-1 py-1 lg:text-sm text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg dark:bg-gray-600 dark:text-gray-100 dark:border-gray-500">${shortcut}</kbd>`;
 };
 
+const injectAvailableSamples = (): string => {};
+
 const introduction: string = `
 # Welcome
 
@@ -315,6 +317,15 @@ No sound will play until you add <icode>.out()</icode> at the end of the chain. 
 | <icode>size(value: number)</icode>| Sets reverb size. |
 | <icode>velocity(value: number)</icode>| Sets velocity. |
 | <icode>out()</icode> | Returns an object processed by the <icode>superdough</icode> function, using the current values in the <icode>values</icode> object and the <icode>pulse_duration</icode> from the <icode>app.clock</icode>. |
+`;
+
+const samples: string = `
+# Audio Samples
+
+## Available audio samples
+
+${injectAvailableSamples()}
+
 `;
 
 const about: string = `

@@ -9,6 +9,7 @@ import {
   samples,
   initAudioOnFirstClick,
   registerSynthSounds,
+  soundMap,
   // @ts-ignore
 } from "superdough";
 
@@ -59,7 +60,7 @@ export class UserAPI {
   load: samples;
 
   constructor(public app: Editor) {
-    this.load = samples("github:tidalcycles/Dirt-Samples/master");
+    //this.load = samples("github:tidalcycles/Dirt-Samples/master");
   }
 
   // =============================================================
@@ -1151,6 +1152,7 @@ export class UserAPI {
   };
   snd = this.sound;
   samples = samples;
+  soundMap = soundMap;
 
   log = console.log;
 

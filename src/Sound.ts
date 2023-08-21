@@ -46,6 +46,17 @@ export class Sound {
     return this;
   };
 
+  fm = (value: number | string): this => {
+    if (typeof value === "number") {
+      this.values["fmi"] = value;
+    } else {
+      let values = value.split(":");
+      this.values["fmi"] = parseFloat(values[0]);
+      if (values.length > 1) this.values["fmh"] = parseFloat(values[1]);
+    }
+    return this;
+  };
+
   fmi = (value: number): this => {
     this.values["fmi"] = value;
     return this;
