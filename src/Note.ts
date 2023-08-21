@@ -17,6 +17,11 @@ export class Note extends Event {
         return this;
     }
 
+    duration = (value: number): this => {
+        this.values['duration'] = value;
+        return this;
+    }
+
     channel = (value: number): this => {
         this.values['channel'] = value;
         return this;
@@ -33,12 +38,18 @@ export class Note extends Event {
     }
 
     modify = (func: Function): this => {
+        if(typeof func === 'function') {
         const funcResult = func(this);
-        if(funcResult instanceof Object) return funcResult;
+        if(funcResult instanceof Object) {
+            console.log("IS OBJECT?");
+            return funcResult;
+            
+        }
         else {
             func(this.values);
             return this;
         }
+    }
     }
 
     // TODO: Add bend
@@ -63,7 +74,11 @@ export class Note extends Event {
         const note = this.values.note ? this.values.note : 60;
         const channel = this.values.channel ? this.values.channel : 0;
         const velocity = this.values.velocity ? this.values.velocity : 100;
-        const duration = this.values.duration ? this.values.duration : 0.5;
+        
+        const duration = this.values.duration ? 
+        this.values.duration * Math.floor(this.app.clock.pulse_duration * this.app.api.ppqn()) : 
+        this.app.clock.pulse_duration * this.app.api.ppqn();
+        
         const bend = this.values.bend ? this.values.bend : undefined;
         
         const port = this.values.port ? 

@@ -28,20 +28,21 @@ import showdown from "showdown";
 showdown.setFlavor("github");
 import showdownHighlight from "showdown-highlight";
 const classMap = {
-  h1: "text-4xl text-white ml-4 mx-4 my-4 mb-8",
-  h2: "text-3xl text-white mx-4 my-4 mt-12 mb-6",
+  h1: "text-white lg:text-4xl text-xl lg:ml-4 lg:mx-4 mx-2 lg:my-4 my-2 lg:mb-8 mb-4 bg-neutral-900 rounded-lg py-2 px-2",
+  h2: "text-white lg:text-3xl text-xl lg:ml-4 lg:mx-4 mx-2 lg:my-4 my-2 lg:mb-8 mb-4 bg-neutral-900 rounded-lg py-2 px-2",
   ul: "text-underline",
-  li: "ml-12 list-disc text-2xl text-white mx-4 my-4 leading-normal",
-  p: "text-2xl text-white mx-4 my-4 leading-normal",
-  a: "text-2xl text-orange-300",
-  code: "my-4 block whitespace-pre overflow-x-scroll",
-  icode: "my-4 text-white font-mono bg-neutral-600",
+  li: "ml-12 list-disc lg:text-2xl text-base text-white lg:mx-4 mx-2 my-4 lg:pl-4 my-2 leading-normal",
+  p: "lg:text-2xl text-base text-white lg:mx-4 mx-2 my-4 leading-normal",
+  a: "lg:text-2xl text-base text-orange-300",
+  code: "lg:my-4 sm:my-1 text-base lg:text-xl block whitespace-pre overflow-x-scroll",
+  icode:
+    "lg:my-4 my-1 lg:text-xl sm:text-xs text-white font-mono bg-neutral-600",
   blockquote: "text-neutral-200 border-l-4 border-neutral-500 pl-4 my-4 mx-4",
   table:
-    "justify-center my-8 mx-8 text-2xl w-full text-left text-white border-collapse",
+    "justify-center lg:my-8 my-2 lg:mx-8 mx-2 lg:text-2xl text-base w-full text-left text-white border-collapse",
   thead:
     "text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400",
-  th: "px-6 py-6",
+  th: "lg:px-6 lg:py-6 px-2 py-2",
   td: "py-2",
   tr: "py-0",
 };
@@ -101,6 +102,9 @@ export class Editor {
   documentation_button: HTMLButtonElement = document.getElementById(
     "doc-button-1"
   ) as HTMLButtonElement;
+	eval_button: HTMLButtonElement = document.getElementById(
+		"eval-button-1"
+	) as HTMLButtonElement;
 
   // Script selection elements
   local_button: HTMLButtonElement = document.getElementById(
@@ -159,6 +163,10 @@ export class Editor {
     "vim-mode"
   ) as HTMLButtonElement;
 
+  // Error line
+  error_line: HTMLElement = document.getElementById("error_line") as HTMLElement
+  show_error: boolean = false
+ 
   constructor() {
     // ================================================================================
     // Loading the universe from local storage
@@ -400,6 +408,11 @@ export class Editor {
       this.showDocumentation();
     });
 
+    this.eval_button.addEventListener("click", () => {
+      this.currentFile().candidate = this.view.state.doc.toString();
+      this.flashBackground("#2d313d", 200);
+    });
+
     this.pause_buttons.forEach((button) => {
       button.addEventListener("click", () => {
         this.setButtonHighlighting("pause", true);
@@ -500,55 +513,31 @@ export class Editor {
     });
     tryEvaluate(this, this.universes[this.selected_universe.toString()].init);
 
-    // Setting up the documentation page
-    document
-      .getElementById("docs_introduction")!
-      .addEventListener("click", () => {
-        this.currentDocumentationPane = "introduction";
-        this.updateDocumentationContent();
-      });
-    document.getElementById("docs_interface")!.addEventListener("click", () => {
-      this.currentDocumentationPane = "interface";
-      this.updateDocumentationContent();
-    });
-    document.getElementById("docs_code")!.addEventListener("click", () => {
-      this.currentDocumentationPane = "code";
-      this.updateDocumentationContent();
-    });
-    document.getElementById("docs_time")!.addEventListener("click", () => {
-      this.currentDocumentationPane = "time";
-      this.updateDocumentationContent();
-    });
-    document.getElementById("docs_sound")!.addEventListener("click", () => {
-      this.currentDocumentationPane = "sound";
-      this.updateDocumentationContent();
-    });
-    document.getElementById("docs_midi")!.addEventListener("click", () => {
-      this.currentDocumentationPane = "midi";
-      this.updateDocumentationContent();
-    });
+    [
+      "introduction",
+      "interface",
+      "code",
+      "time",
+      "sound",
+      "samples",
+      "midi",
+      "functions",
+      "reference",
+      "shortcuts",
+      "about",
+    ].forEach((e) => {
+      let name = `docs_` + e;
+      document.getElementById(name)!
+        .addEventListener("click", () => {
+          this.currentDocumentationPane = e;
+          this.updateDocumentationContent();
+        });
+   });
 
-    document.getElementById("docs_functions")!.addEventListener("click", () => {
-      this.currentDocumentationPane = "functions";
-      this.updateDocumentationContent();
-    });
-    document.getElementById("docs_reference")!.addEventListener("click", () => {
-      this.currentDocumentationPane = "reference";
-      this.updateDocumentationContent();
-    });
-    document.getElementById("docs_shortcuts")!.addEventListener("click", () => {
-      this.currentDocumentationPane = "shortcuts";
-      this.updateDocumentationContent();
-    });
-    document.getElementById("docs_about")!.addEventListener("click", () => {
-      this.currentDocumentationPane = "about";
-      this.updateDocumentationContent();
-    });
-
-    // Passing the API to the User
-    Object.entries(this.api).forEach(([name, value]) => {
-      (globalThis as Record<string, any>)[name] = value;
-    });
+   // Passing the API to the User
+   Object.entries(this.api).forEach(([name, value]) => {
+     (globalThis as Record<string, any>)[name] = value;
+   });
   }
 
   get note_buffer() {
@@ -715,6 +704,7 @@ export class Editor {
       .querySelectorAll(possible_selectors[selector])
       .forEach((button) => {
         if (highlight) button.children[0].classList.add("fill-orange-300");
+        if (highlight) button.children[0].classList.add("animate-pulse");
       });
     // All other buttons must lose the highlighting
     document
@@ -725,12 +715,14 @@ export class Editor {
         button.children[0].classList.remove("fill-orange-300");
         button.children[0].classList.remove("text-orange-300");
         button.children[0].classList.remove("bg-orange-300");
+        button.children[0].classList.remove("animate-pulse");
       });
   }
 
   unfocusPlayButtons() {
     document.querySelectorAll('[id^="play-button-"]').forEach((button) => {
       button.children[0].classList.remove("fill-orange-300");
+      button.children[0].classList.remove("animate-pulse");
     });
   }
 

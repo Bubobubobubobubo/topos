@@ -2,7 +2,6 @@ import { Pitch, Chord, Rest, Event, cachedPattern, seededRandom } from "zifferjs
 import { MidiConnection } from "./IO/MidiConnection";
 import { tryEvaluate } from "./Evaluator";
 import { DrunkWalk } from "./Utils/Drunk";
-import { LRUCache } from "lru-cache";
 import { scale } from "./Scales";
 import { Editor } from "./main";
 import { Sound } from "./Sound";
@@ -11,23 +10,14 @@ import {
   samples,
   initAudioOnFirstClick,
   registerSynthSounds,
+  soundMap,
   // @ts-ignore
 } from "superdough";
-
-// This is an LRU cache used for storing persistent patterns
-const cache = new LRUCache({ max: 1000, ttl: 1000 * 60 * 5 });
 
 interface ControlChange {
   channel: number;
   control: number;
   value: number;
-}
-
-interface Pattern<T> {
-  pattern: any[];
-  options: {
-    [key: string]: T;
-  };
 }
 
 /**
@@ -43,16 +33,13 @@ Array.prototype.in = function <T>(this: T[], value: T): boolean {
 };
 
 async function loadSamples() {
-  const ds = "https://raw.githubusercontent.com/felixroos/dough-samples/main/";
+  // const ds = "https://raw.githubusercontent.com/felixroos/dough-samples/main/";
   return Promise.all([
     initAudioOnFirstClick(),
     samples("github:Bubobubobubobubo/Topos-Samples/main"),
-    samples(`${ds}/tidal-drum-machines.json`),
-    samples(`${ds}/piano.json`),
-    samples(`${ds}/Dirt-Samples.json`),
-    samples(`${ds}/EmuSP12.json`),
-    samples(`${ds}/vcsl.json`),
-    registerSynthSounds(),
+    samples("github:tidalcycles/Dirt-Samples/master").then(() =>
+      registerSynthSounds()
+    ),
   ]);
 }
 
@@ -67,7 +54,7 @@ export class UserAPI {
    */
 
   private variables: { [key: string]: any } = {};
-  private iterators: { [key: string]: any } = {};
+  private counters: { [key: string]: any } = {};
   private _drunk: DrunkWalk = new DrunkWalk(-100, 100, false);
   public randomGen = Math.random;
   public currentSeed: string|undefined = undefined;
@@ -77,7 +64,16 @@ export class UserAPI {
   load: samples;
 
   constructor(public app: Editor) {
-    this.load = samples("github:tidalcycles/Dirt-Samples/master");
+    //this.load = samples("github:tidalcycles/Dirt-Samples/master");
+  }
+
+  _reportError = (error: any): void => {
+    console.log(error)
+    if (!this.app.show_error) {
+      this.app.error_line.innerHTML = error as string;
+      this.app.error_line.classList.remove('hidden');
+      setInterval(() => this.app.error_line.classList.add('hidden'), 2000)
+    }
   }
 
   // =============================================================
@@ -90,6 +86,23 @@ export class UserAPI {
      */
     return this.app.audioContext.currentTime;
   };
+
+  public play = (): void => {
+    this.app.setButtonHighlighting("play", true);
+    this.app.clock.start();
+  };
+
+  public pause = (): void => {
+    this.app.setButtonHighlighting("pause", true);
+    this.app.clock.pause();
+  };
+
+  public stop = (): void => {
+    this.app.setButtonHighlighting("stop", true);
+    this.app.clock.stop();
+  };
+  silence = this.stop;
+  hush = this.stop;
 
   // =============================================================
   // Mouse functions
@@ -320,56 +333,60 @@ export class UserAPI {
   };
 
   // =============================================================
-  // Iterator related functions
+  // Counter related functions
   // =============================================================
 
-  public iterator = (name: string, limit?: number, step?: number): number => {
+  public counter = (
+    name: string | number,
+    limit?: number,
+    step?: number
+  ): number => {
     /**
-     * Returns the current value of an iterator, and increments it by the step value.
+     * Returns the current value of a counter, and increments it by the step value.
      *
-     * @param name - The name of the iterator
-     * @param limit - The upper limit of the iterator
-     * @param step - The step value of the iterator
-     * @returns The current value of the iterator
+     * @param name - The name of the counter
+     * @param limit - The upper limit of the counter
+     * @param step - The step value of the counter
+     * @returns The current value of the counter
      */
 
-    if (!(name in this.iterators)) {
-      // Create new iterator with default step of 1
-      this.iterators[name] = {
+    if (!(name in this.counters)) {
+      // Create new counter with default step of 1
+      this.counters[name] = {
         value: 0,
         step: step ?? 1,
         limit,
       };
     } else {
       // Check if limit has changed
-      if (this.iterators[name].limit !== limit) {
+      if (this.counters[name].limit !== limit) {
         // Reset value to 0 and update limit
-        this.iterators[name].value = 0;
-        this.iterators[name].limit = limit;
+        this.counters[name].value = 0;
+        this.counters[name].limit = limit;
       }
 
       // Check if step has changed
-      if (this.iterators[name].step !== step) {
+      if (this.counters[name].step !== step) {
         // Update step
-        this.iterators[name].step = step ?? this.iterators[name].step;
+        this.counters[name].step = step ?? this.counters[name].step;
       }
 
       // Increment existing iterator by step value
-      this.iterators[name].value += this.iterators[name].step;
+      this.counters[name].value += this.counters[name].step;
 
       // Check for limit overshoot
       if (
-        this.iterators[name].limit !== undefined &&
-        this.iterators[name].value > this.iterators[name].limit
+        this.counters[name].limit !== undefined &&
+        this.counters[name].value > this.counters[name].limit
       ) {
-        this.iterators[name].value = 0;
+        this.counters[name].value = 0;
       }
     }
 
     // Return current iterator value
-    return this.iterators[name].value;
+    return this.counters[name].value;
   };
-  $ = this.iterator;
+  $ = this.counter;
 
   // =============================================================
   // Drunk mechanism
@@ -466,20 +483,11 @@ export class UserAPI {
   // Sequencer related functions
   // =============================================================
 
-  private _sequence_key_generator(pattern: any[]) {
-    /**
-     * Generates a key for the sequence function.
-     *
-     * @param input - The input to generate a key for
-     * @returns A key for the sequence function
-     */
-    // Make the pattern base64
-    return btoa(JSON.stringify(pattern));
-  }
-
   public slice = (chunk: number): boolean => {
     const time_pos = this.epulse();
-    const current_chunk = Math.floor(time_pos / chunk);
+    const current_chunk = Math.floor(
+      time_pos / Math.floor(chunk * this.ppqn())
+    );
     return current_chunk % 2 === 0;
   };
 
@@ -493,96 +501,10 @@ export class UserAPI {
     const chunk_size = args[0]; // Get the first argument (chunk size)
     const elements = args.slice(1); // Get the rest of the arguments as an array
     const timepos = this.epulse();
-    const slice_count = Math.floor(timepos / chunk_size);
+    const slice_count = Math.floor(
+      timepos / Math.floor(chunk_size * this.ppqn())
+    );
     return elements[slice_count % elements.length];
-  };
-
-  public seqmod = (...input: any[]) => {
-    if (cache.has(this._sequence_key_generator(input))) {
-      let sequence = cache.get(
-        this._sequence_key_generator(input)
-      ) as Pattern<any>;
-
-      sequence.options.currentIteration++;
-
-      if (sequence.options.currentIteration === sequence.options.nextTarget) {
-        sequence.options.index++;
-        sequence.options.nextTarget =
-          input[sequence.options.index % input.length];
-        sequence.options.currentIteration = 0;
-      }
-
-      cache.set(this._sequence_key_generator(input), {
-        pattern: input as any[],
-        options: sequence.options,
-      });
-
-      return sequence.options.currentIteration === 0;
-    } else {
-      let pattern_options = {
-        index: -1,
-        nextTarget: this.app.clock.ticks_before_new_bar,
-        currentIteration: 0,
-      };
-      if (typeof input[input.length - 1] === "object") {
-        pattern_options = {
-          ...input.pop(),
-          ...(pattern_options as object),
-        };
-      }
-
-      // pattern_options.currentIteration++;
-      // TEST
-      pattern_options.nextTarget = this.app.clock.ticks_before_new_bar;
-
-      if (pattern_options.currentIteration === pattern_options.nextTarget) {
-        pattern_options.index++;
-        pattern_options.nextTarget =
-          input[pattern_options.index % input.length];
-        pattern_options.currentIteration = 0;
-      }
-
-      cache.set(this._sequence_key_generator(input), {
-        pattern: input as any[],
-        options: pattern_options,
-      });
-
-      return pattern_options.currentIteration === 0;
-    }
-  };
-
-  public seq = (...input: any[]) => {
-    /**
-     * Returns a value in a sequence stored using an LRU Cache.
-     * The sequence is stored in the cache with an hash identifier
-     * made from a base64 encoding of the pattern. The pattern itself
-     * is composed of the pattern itself (a list of arbitrary typed
-     * values) and a set of options (an object) detailing how the pattern
-     * should be iterated on.
-     *
-     * @param input - The input to generate a key for
-     *        Note that the last element of the input can be an object
-     *       containing options for the sequence function.
-     * @returns A value in a sequence stored using an LRU Cache
-     */
-    if (cache.has(this._sequence_key_generator(input))) {
-      let sequence = cache.get(
-        this._sequence_key_generator(input)
-      ) as Pattern<any>;
-      sequence.options.index += 1;
-      cache.set(this._sequence_key_generator(input), sequence);
-      return sequence.pattern[sequence.options.index % sequence.pattern.length];
-    } else {
-      let pattern_options = { index: 0 };
-      if (typeof input[input.length - 1] === "object") {
-        pattern_options = { ...input.pop(), ...(pattern_options as object) };
-      }
-      cache.set(this._sequence_key_generator(input), {
-        pattern: input as any[],
-        options: pattern_options,
-      });
-      return cache.get(this._sequence_key_generator(input));
-    }
   };
 
   pick = <T>(...array: T[]): T => {
@@ -940,19 +862,6 @@ export class UserAPI {
     return final_pulses.some((p) => p == true);
   };
 
-  stop = (): void => {
-    /**
-     * Stops the clock.
-     *
-     * @see silence
-     * @see hush
-     */
-    this.app.clock.pause();
-    this.app.setButtonHighlighting("pause", true);
-  };
-  silence = this.stop;
-  hush = this.stop;
-
   prob = (p: number): boolean => {
     /**
      * Returns true p% of the time.
@@ -977,7 +886,7 @@ export class UserAPI {
     return this.randomGen() > 0.5;
   };
 
-  min = (...values: number[]): number => {
+  public min = (...values: number[]): number => {
     /**
      * Returns the minimum value of a list of numbers.
      *
@@ -987,7 +896,7 @@ export class UserAPI {
     return Math.min(...values);
   };
 
-  max = (...values: number[]): number => {
+  public max = (...values: number[]): number => {
     /**
      * Returns the maximum value of a list of numbers.
      *
@@ -995,6 +904,20 @@ export class UserAPI {
      * @returns The maximum value of the list of numbers
      */
     return Math.max(...values);
+  };
+
+  public mean = (...values: number[]): number => {
+    /**
+     * Returns the mean of a list of numbers.
+     *
+     * @param values - The list of numbers
+     * @returns The mean value of the list of numbers
+     */
+    const sum = values.reduce(
+      (accumulator, currentValue) => accumulator + currentValue,
+      0
+    );
+    return sum / values.length;
   };
 
   limit = (value: number, min: number, max: number): number => {
@@ -1036,30 +959,24 @@ export class UserAPI {
   };
 
   public mod = (...n: number[]): boolean => {
-    const results: boolean[] = n.map((value) => this.epulse() % value === 0);
+    const results: boolean[] = n.map(
+      (value) => this.epulse() % Math.floor(value * this.ppqn()) === 0
+    );
     return results.some((value) => value === true);
   };
 
   public modbar = (...n: number[]): boolean => {
-    const results: boolean[] = n.map((value) => this.bar() % value === 0);
+    const results: boolean[] = n.map(
+      (value) => this.bar() % Math.floor(value * this.ppqn()) === 0
+    );
     return results.some((value) => value === true);
   };
-
-  // mod = (...pulse: number[]): boolean => {
-  //   /**
-  //    * Returns true if the current pulse is a modulo of any of the given pulses.
-  //    *
-  //    * @param pulse - The pulse to check for
-  //    * @returns True if the current pulse is a modulo of any of the given pulses
-  //    */
-  //   return pulse.some((p) => this.app.clock.time_position.pulse % p === 0);
-  // };
 
   // =============================================================
   // Rythmic generators
   // =============================================================
 
-  euclid = (
+  public euclid = (
     iterator: number,
     pulses: number,
     length: number,
@@ -1076,6 +993,7 @@ export class UserAPI {
      */
     return this._euclidean_cycle(pulses, length, rotate)[iterator % length];
   };
+  ec = this.euclid;
 
   _euclidean_cycle(
     pulses: number,
@@ -1216,20 +1134,30 @@ export class UserAPI {
     return (this.triangle(freq, offset) + 1) / 2;
   };
 
-  square = (freq: number = 1, offset: number = 0): number => {
+  square = (
+    freq: number = 1,
+    offset: number = 0,
+    duty: number = 0.5
+  ): number => {
     /**
-     * Returns a square wave between -1 and 1.
+     * Returns a square wave with a specified duty cycle between -1 and 1.
      *
-     * @returns A square wave between -1 and 1
+     * @returns A square wave with a specified duty cycle between -1 and 1
      * @see saw
      * @see triangle
      * @see sine
      * @see noise
      */
-    return this.saw(freq, offset) > 0 ? 1 : -1;
+    const period = 1 / freq;
+    const t = (Date.now() / 1000 + offset) % period;
+    return t / period < duty ? 1 : -1;
   };
 
-  usquare = (freq: number = 1, offset: number = 0): number => {
+  usquare = (
+    freq: number = 1,
+    offset: number = 0,
+    duty: number = 0.5
+  ): number => {
     /**
      * Returns a square wave between 0 and 1.
      *
@@ -1238,7 +1166,7 @@ export class UserAPI {
      * @returns A square wave between 0 and 1
      * @see square
      */
-    return (this.square(freq, offset) + 1) / 2;
+    return (this.square(freq, offset, duty) + 1) / 2;
   };
 
   noise = (): number => {
@@ -1268,8 +1196,9 @@ export class UserAPI {
   sound = (sound: string) => {
     return new Sound(sound, this.app);
   };
-
+  snd = this.sound;
   samples = samples;
+  soundMap = soundMap;
 
   log = console.log;
 
