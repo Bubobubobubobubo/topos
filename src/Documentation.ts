@@ -405,6 +405,44 @@ You can get the current position of the mouse on the screen by using the followi
 - <icode>mouseX()</icode>: the horizontal position of the mouse on the screen (as a floating point number).
 - <icode>mouseY()</icode>: the vertical position of the mouse on the screen (as a floating point number).
 
+## Low Frequency Oscillators
+
+Low Frequency Oscillators (_LFOs_) are an important piece in any digital audio workstation or synthesizer. Topos implements some basic waveforms you can play with to automatically modulate your paremeters. 
+
+- <icode>sine(freq: number = 1, offset: number= 0): number</icode>: returns a sinusoïdal oscillation between <icode>-1</icode> and <icode>1</icode>.
+- <icode>usine(freq: number = 1, offset: number= 0): number</icode>: returns a sinusoïdal oscillation between <icode>0</icode> and <icode>1</icode>. The <icode>u</icode> stands for _unipolar_.
+
+\`\`\`javascript
+		mod(.25) && snd('cp').speed(1 + usine(0.25) * 2).out()
+\`\`\`
+
+- <icode>triangle(freq: number = 1, offset: number= 0): number</icode>: returns a triangle oscillation between <icode>-1</icode> and <icode>1</icode>.
+- <icode>utriangle(freq: number = 1, offset: number= 0): number</icode>: returns a triangle oscillation between <icode>0</icode> and <icode>1</icode>. The <icode>u</icode> stands for _unipolar_.
+
+\`\`\`javascript
+		mod(.25) && snd('cp').speed(1 + utriangle(0.25) * 2).out()
+\`\`\`
+
+- <icode>saw(freq: number = 1, offset: number= 0): number</icode>: returns a sawtooth-like oscillation between <icode>-1</icode> and <icode>1</icode>.
+- <icode>usaw(freq: number = 1, offset: number= 0): number</icode>: returns a sawtooth-like oscillation between <icode>0</icode> and <icode>1</icode>. The <icode>u</icode> stands for _unipolar_.
+
+\`\`\`javascript
+		mod(.25) && snd('cp').speed(1 + usaw(0.25) * 2).out()
+\`\`\`
+
+- <icode>square(freq: number = 1, offset: number= 0, duty: number = .5): number</icode>: returns a square wave oscillation between <icode>-1</icode> and <icode>1</icode>. You can also control the duty cycle using the <icode>duty</icode> parameter.
+- <icode>usquare(freq: number = 1, offset: number= 0, duty: number = .5): number</icode>: returns a square wave oscillation between <icode>0</icode> and <icode>1</icode>. The <icode>u</icode> stands for _unipolar_. You can also control the duty cycle using the <icode>duty</icode> parameter.
+
+\`\`\`javascript
+		mod(.25) && snd('cp').speed(1 + usquare(0.25, 0, 0.25) * 2).out()
+\`\`\`
+
+- <icode>noise()</icode>: returns a random value between -1 and 1.
+
+\`\`\`javascript
+		mod(.25) && snd('cp').speed(1 + noise() * 2).out()
+\`\`\`
+
 ## Probabilities
 
 There are some simple functions to play with probabilities.

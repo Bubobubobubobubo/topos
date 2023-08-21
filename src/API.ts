@@ -1090,20 +1090,30 @@ export class UserAPI {
     return (this.triangle(freq, offset) + 1) / 2;
   };
 
-  square = (freq: number = 1, offset: number = 0): number => {
+  square = (
+    freq: number = 1,
+    offset: number = 0,
+    duty: number = 0.5
+  ): number => {
     /**
-     * Returns a square wave between -1 and 1.
+     * Returns a square wave with a specified duty cycle between -1 and 1.
      *
-     * @returns A square wave between -1 and 1
+     * @returns A square wave with a specified duty cycle between -1 and 1
      * @see saw
      * @see triangle
      * @see sine
      * @see noise
      */
-    return this.saw(freq, offset) > 0 ? 1 : -1;
+    const period = 1 / freq;
+    const t = (Date.now() / 1000 + offset) % period;
+    return t / period < dutyCycle ? 1 : -1;
   };
 
-  usquare = (freq: number = 1, offset: number = 0): number => {
+  usquare = (
+    freq: number = 1,
+    offset: number = 0,
+    duty: number = 0.5
+  ): number => {
     /**
      * Returns a square wave between 0 and 1.
      *
@@ -1112,7 +1122,7 @@ export class UserAPI {
      * @returns A square wave between 0 and 1
      * @see square
      */
-    return (this.square(freq, offset) + 1) / 2;
+    return (this.square(freq, offset, duty) + 1) / 2;
   };
 
   noise = (): number => {
