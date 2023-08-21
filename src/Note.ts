@@ -73,7 +73,7 @@ export class Note extends Event {
         const velocity = this.values.velocity ? this.values.velocity : 100;
         
         const duration = this.values.duration ? 
-        this.values.duration * Math.floor(this.app.clock.pulse_duration * this.app.api.ppqn()) : 
+        this.values.duration * this.app.clock.pulse_duration * this.app.api.ppqn() : 
         this.app.clock.pulse_duration * this.app.api.ppqn();
         
         const bend = this.values.bend ? this.values.bend : undefined;
@@ -84,7 +84,7 @@ export class Note extends Event {
 
         if (bend) this.midiConnection.sendPitchBend(bend, channel);
         this.midiConnection.sendMidiNote(note, channel, velocity, duration, port);
-        if (bend) this.midiConnection.sendPitchBend(8192, channel);
+        //if (bend) this.midiConnection.sendPitchBend(8192, channel);
     }
     
 }

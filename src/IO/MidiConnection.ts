@@ -129,7 +129,7 @@ export class MidiConnection{
       });
     }
 
-    public sendMidiNote(noteNumber: number, channel: number, velocity: number, duration: number, port: number|string = this.currentOutputIndex): void {
+    public sendMidiNote(noteNumber: number, channel: number, velocity: number, duration: number, port: number|string = this.currentOutputIndex, bend: number|undefined = undefined): void {
       /**
        * Sending a MIDI Note on/off message with the same note number and channel. Automatically manages 
        * the note off message after the specified duration.
@@ -151,9 +151,12 @@ export class MidiConnection{
         // Send Note On
         output.send(noteOnMessage);
     
+        if(bend) this.sendPitchBend(bend, channel, port);
+
         // Schedule Note Off
         const timeoutId = setTimeout(() => {
           output.send(noteOffMessage);
+          if(bend) this.sendPitchBend(8192, channel, port);
           delete this.scheduledNotes[noteNumber];
         }, (duration - 0.02) * 1000);
     
@@ -181,7 +184,7 @@ export class MidiConnection{
       }
     }
 
-    public sendPitchBend(value: number, channel: number): void {
+    public sendPitchBend(value: number, channel: number, port: number|string = this.currentOutputIndex): void {
       /**
        * Sends a MIDI Pitch Bend message to the currently selected MIDI output.
        *  
@@ -195,7 +198,8 @@ export class MidiConnection{
       if (channel < 0 || channel > 15) {
         console.error('Invalid MIDI channel. Channel must be in the range 0-15.');
       }
-      const output = this.midiOutputs[this.currentOutputIndex];
+      if(typeof port === 'string') port = this.getMidiOutputIndex(port);
+      const output = this.midiOutputs[port];
       if (output) {
         const lsb = value & 0x7F;
         const msb = (value >> 7) & 0x7F;
