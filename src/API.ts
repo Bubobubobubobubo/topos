@@ -63,6 +63,15 @@ export class UserAPI {
     //this.load = samples("github:tidalcycles/Dirt-Samples/master");
   }
 
+  _reportError = (error: any): void => {
+    console.log(error)
+    if (!this.app.show_error) {
+      this.app.error_line.innerHTML = error as string;
+      this.app.error_line.classList.remove('hidden');
+      setInterval(() => this.app.error_line.classList.add('hidden'), 2000)
+    }
+  }
+
   // =============================================================
   // Time functions
   // =============================================================

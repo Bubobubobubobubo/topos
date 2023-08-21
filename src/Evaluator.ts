@@ -18,10 +18,11 @@ const tryCatchWrapper = (
   return new Promise((resolve, _) => {
     try {
       Function(
-        `"use strict";try{${codeReplace(code)}} catch (e) {console.log(e)};`
+        `"use strict";try{${codeReplace(code)}} catch (e) {console.log(e); _reportError(e);};`
       ).call(application.api);
       resolve(true);
     } catch (error) {
+      application.error_line.innerHTML = error as string;
       console.log(error);
       resolve(false);
     }
@@ -71,6 +72,7 @@ export const tryEvaluate = async (
       }
     }
   } catch (error) {
+    application.error_line.innerHTML = error as string;
     console.log(error);
   }
 };
@@ -87,6 +89,7 @@ export const evaluate = async (
     ]);
     if (code.evaluations) code.evaluations++;
   } catch (error) {
+    application.error_line.innerHTML = error as string;
     console.log(error);
   }
 };

@@ -163,6 +163,10 @@ export class Editor {
     "vim-mode"
   ) as HTMLButtonElement;
 
+  // Error line
+  error_line: HTMLElement = document.getElementById("error_line") as HTMLElement
+  show_error: boolean = false
+ 
   constructor() {
     // ================================================================================
     // Loading the universe from local storage
