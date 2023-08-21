@@ -1106,7 +1106,7 @@ export class UserAPI {
      */
     const period = 1 / freq;
     const t = (Date.now() / 1000 + offset) % period;
-    return t / period < dutyCycle ? 1 : -1;
+    return t / period < duty ? 1 : -1;
   };
 
   usquare = (

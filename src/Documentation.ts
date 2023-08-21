@@ -36,7 +36,7 @@ mod(0.25) :: sound('sawtooth')
     pick(60, 67, 63) - 12 + 5, pick(60, 67, 63) - 12 + 5,
     pick(60, 67, 63) - 12 + 7, pick(60, 67, 63) - 12 + 7) + (sometimes() ? 24 : 12))
   .dur(0.1).fmi(8).fmh(4).room(0.9)
-  .gain(0.25).cutoff(500 + usine(8) * 10000)
+  .gain(0.75).cutoff(500 + usine(8) * 10000)
   .delay(0.5).delaytime(bpm() / 60 / 4 / 3)
   .delayfeedback(0.25)
   .out()
