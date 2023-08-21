@@ -6,8 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Topos</title>
     
-    <script type="module" crossorigin src="/assets/index-3d18ee00.js"></script>
-    <link rel="stylesheet" href="/assets/index-6d386aac.css">
+    <script type="module" crossorigin src="/assets/index-6485f1cf.js"></script>
+    <link rel="stylesheet" href="/assets/index-7c4c00d0.css">
   </head>
   <style>
 
@@ -217,10 +217,10 @@
 				-->
         <aside class="
 					flex flex-col items-center w-14
-					h-screen py-2 overflow-y-auto
+					h-screen py-2 overflow-y-scroll
 					border-r rtl:border-l
 					rtl:border-r-0 bg-neutral-900
-					dark:border-gray-700"
+					dark:border-neutral-700 border-none"
 				>
         <nav class="flex flex-col space-y-6">
             <a id="local-button" class="pl-2 p-1.5 text-gray-700 focus:outline-nones transition-colors duration-200 rounded-lg dark:text-gray-200 hover:bg-gray-800">
@@ -314,8 +314,9 @@
  
          </ul>
          <!-- Here comes the editor itself -->
-          <div id="editor" class="invisible relative flex flex-row flex-grow overflow-hidden overflow-y-hidden z-10">
+          <div id="editor" class="invisible relative flex flex-row h-screen overflow-y-scroll">
 					</div>
+          <p id="error_line" class="hidden text-red-400 w-screen bg-neutral-900 font-mono absolute bottom-0 pl-2 py-2">Hello kids</p>
         </div>
       </div>
       
