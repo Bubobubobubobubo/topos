@@ -578,9 +578,10 @@ export class UserAPI {
      */
     return this.randomGen() * (max - min) + min;
   };
-  irand = this.randI
+  irand = this.randI;
   rI = this.randI;
   r = this.rand;
+  ir = this.randI;
 
   seed = (seed: string | number): void => {
     /**

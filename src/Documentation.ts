@@ -200,7 +200,7 @@ You can use Topos to play MIDI thanks to the [WebMIDI API](https://developer.moz
     sometimes() && mod(.25) && note(seqbeat(64, 67, 69) + 24).duration(0.05).out()
 \`\`\`
 
-### Note chaining
+## Note chaining
 
 The <icode>note(number)</icode> function can be chained to _specify_ a midi note more. For instance, you can add a duration, a velocity, a channel, etc...:
 
@@ -431,6 +431,11 @@ You can get the current position of the mouse on the screen by using the followi
 - <icode>mouseX()</icode>: the horizontal position of the mouse on the screen (as a floating point number).
 - <icode>mouseY()</icode>: the vertical position of the mouse on the screen (as a floating point number).
 
+Current mouse position can also be used to generate notes:
+
+- <icode>noteX()</icode>: returns a MIDI note number (0-127) based on the horizontal position of the mouse on the screen.
+- <icode>noteY()</icode>: returns a MIDI note number (0-127) based on the vertical position of the mouse on the screen.
+
 ## Low Frequency Oscillators
 
 Low Frequency Oscillators (_LFOs_) are an important piece in any digital audio workstation or synthesizer. Topos implements some basic waveforms you can play with to automatically modulate your paremeters. 
@@ -473,8 +478,11 @@ Low Frequency Oscillators (_LFOs_) are an important piece in any digital audio w
 
 There are some simple functions to play with probabilities.
 
+- <icode>rand(min: number, max:number)</icode>: returns a random number between <icode>min</icode> and <icode>max</icode>. Shorthand _r()_.
+- <icode>irand(min: number, max:number)</icode>: returns a random integer between <icode>min</icode> and <icode>max</icode>. Shorthands _ir()_ or _rI()_.
 - <icode>prob(p: number)</icode>: return <icode>true</icode> _p_% of time, <icode>false</icode> in other cases.
 - <icode>toss()</icode>: throwing a coin. Head (<icode>true</icode>) or tails (<icode>false</icode>).
+- <icode>seed(val: number|string)</icode>: sets the seed of the random number generator. You can use a number or a string. The same seed will always return the same sequence of random numbers.
 
 ## Math functions
 
