@@ -501,55 +501,31 @@ export class Editor {
     });
     tryEvaluate(this, this.universes[this.selected_universe.toString()].init);
 
-    // Setting up the documentation page
-    document
-      .getElementById("docs_introduction")!
-      .addEventListener("click", () => {
-        this.currentDocumentationPane = "introduction";
-        this.updateDocumentationContent();
-      });
-    document.getElementById("docs_interface")!.addEventListener("click", () => {
-      this.currentDocumentationPane = "interface";
-      this.updateDocumentationContent();
-    });
-    document.getElementById("docs_code")!.addEventListener("click", () => {
-      this.currentDocumentationPane = "code";
-      this.updateDocumentationContent();
-    });
-    document.getElementById("docs_time")!.addEventListener("click", () => {
-      this.currentDocumentationPane = "time";
-      this.updateDocumentationContent();
-    });
-    document.getElementById("docs_sound")!.addEventListener("click", () => {
-      this.currentDocumentationPane = "sound";
-      this.updateDocumentationContent();
-    });
-    document.getElementById("docs_midi")!.addEventListener("click", () => {
-      this.currentDocumentationPane = "midi";
-      this.updateDocumentationContent();
-    });
+    [
+      "introduction",
+      "interface",
+      "code",
+      "time",
+      "sound",
+      "samples",
+      "midi",
+      "functions",
+      "reference",
+      "shortcuts",
+      "about",
+    ].forEach((e) => {
+      let name = `docs_` + e;
+      document.getElementById(name)!
+        .addEventListener("click", () => {
+          this.currentDocumentationPane = e;
+          this.updateDocumentationContent();
+        });
+   });
 
-    document.getElementById("docs_functions")!.addEventListener("click", () => {
-      this.currentDocumentationPane = "functions";
-      this.updateDocumentationContent();
-    });
-    document.getElementById("docs_reference")!.addEventListener("click", () => {
-      this.currentDocumentationPane = "reference";
-      this.updateDocumentationContent();
-    });
-    document.getElementById("docs_shortcuts")!.addEventListener("click", () => {
-      this.currentDocumentationPane = "shortcuts";
-      this.updateDocumentationContent();
-    });
-    document.getElementById("docs_about")!.addEventListener("click", () => {
-      this.currentDocumentationPane = "about";
-      this.updateDocumentationContent();
-    });
-
-    // Passing the API to the User
-    Object.entries(this.api).forEach(([name, value]) => {
-      (globalThis as Record<string, any>)[name] = value;
-    });
+   // Passing the API to the User
+   Object.entries(this.api).forEach(([name, value]) => {
+     (globalThis as Record<string, any>)[name] = value;
+   });
   }
 
   get note_buffer() {
