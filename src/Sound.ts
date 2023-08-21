@@ -1,17 +1,27 @@
 import { type Editor } from './main';
+import { Event } from './Event';
 
 import {
   superdough,
   // @ts-ignore
 } from "superdough";
 
-export class Sound {
+export class Sound extends Event {
 
     values: { [key: string]: any }
 
-    constructor(sound: string, public app: Editor) {
-        this.values = { 's': sound }
+    constructor(sound: string|object, public app: Editor) {
+        super(app);
+        if (typeof sound === 'string') this.values = { 's': sound };
+        else this.values = sound;
     }
+
+    sound = (value: string): this => {
+        this.values['s'] = value
+        return this;
+    }
+
+    snd = this.sound;
 
     unit = (value: number): this => {
         this.values['unit'] = value
@@ -163,7 +173,16 @@ export class Sound {
         return this;
     }
 
-    out = (): object => {
-        return superdough(this.values, this.app.clock.pulse_duration);
+    modify = (func: Function): this => {
+        const funcResult = func(this);
+        if(funcResult instanceof Object) return funcResult;
+        else {
+            func(this.values);
+            return this;
+        }
+    }
+
+    out = (): void => {
+        superdough(this.values, this.app.clock.pulse_duration);
     }
 }

@@ -30,6 +30,7 @@ export class MidiConnection{
         this.midiOutputs = Array.from(this.midiAccess.outputs.values());
         if (this.midiOutputs.length === 0) {
           console.warn('No MIDI outputs available.');
+          this.currentOutputIndex = -1;
         }
       } catch (error) {
         console.error('Failed to initialize MIDI:', error);
@@ -47,6 +48,20 @@ export class MidiConnection{
       } else {
           console.error('No MIDI output selected or available.');
           return null;
+      }
+    }
+
+    public getCurrentMidiPortIndex(): number {
+      /**
+       * Returns the index of the currently selected MIDI output.
+       *  
+       * @returns Index of the currently selected MIDI output or -1 if no MIDI output is selected or available.
+       */
+      if(this.midiOutputs.length > 0 && this.currentOutputIndex >= 0 && this.currentOutputIndex < this.midiOutputs.length) {
+          return this.currentOutputIndex;
+      } else {
+          console.error('No MIDI output selected or available.');
+          return -1;
       }
     }
 
@@ -69,13 +84,38 @@ export class MidiConnection{
        * @param outputName Name of the MIDI output to switch to
        * @returns True if the MIDI output was found and switched to, false otherwise
        */
-      const index = this.midiOutputs.findIndex((output) => output.name === outputName);
+      const index = this.getMidiOutputIndex(outputName);
       if (index !== -1) {
         this.currentOutputIndex = index;
         return true;
       } else {
-        console.error(`MIDI output "${outputName}" not found.`);
         return false;
+      }
+    }
+
+    public getMidiOutputIndex(output: string|number): number {
+      /**
+       * Returns the index of the MIDI output with the specified name.
+       *
+       * @param outputName Name of the MIDI output
+       * @returns Index of the new MIDI output or current output if new is not valid
+       * 
+       */
+      if(typeof output === 'number') {
+        if (output < 0 || output >= this.midiOutputs.length) {
+          console.error(`Invalid MIDI output index. Index must be in the range 0-${this.midiOutputs.length - 1}.`);
+          return this.currentOutputIndex;
+        } else {
+          return output;
+        }
+      } else {
+        const index = this.midiOutputs.findIndex((o) => o.name === output);
+        if (index !== -1) {
+          return index;
+        } else {
+          console.error(`MIDI output "${output}" not found.`);
+          return this.currentOutputIndex;
+        }
       }
     }
   
@@ -89,7 +129,7 @@ export class MidiConnection{
       });
     }
 
-    public sendMidiNote(noteNumber: number, channel: number, velocity: number, duration: number): void {
+    public sendMidiNote(noteNumber: number, channel: number, velocity: number, duration: number, port: number|string = this.currentOutputIndex): void {
       /**
        * Sending a MIDI Note on/off message with the same note number and channel. Automatically manages 
        * the note off message after the specified duration.
@@ -100,7 +140,9 @@ export class MidiConnection{
        * @param duration Duration in milliseconds
        * 
        */
-      const output = this.midiOutputs[this.currentOutputIndex];
+     
+      if(typeof port === 'string') port = this.getMidiOutputIndex(port);
+      const output = this.midiOutputs[port];
       noteNumber = Math.min(Math.max(noteNumber, 0), 127);
       if (output) {
         const noteOnMessage = [0x90 + channel, noteNumber, velocity];

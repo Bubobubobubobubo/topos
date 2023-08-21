@@ -1,4 +1,4 @@
-import { Pitch, Chord, Rest, Event, cachedPattern } from "zifferjs";
+import { Pitch, Chord, Rest, Event, cachedPattern, seededRandom } from "zifferjs";
 import { MidiConnection } from "./IO/MidiConnection";
 import { tryEvaluate } from "./Evaluator";
 import { DrunkWalk } from "./Utils/Drunk";
@@ -6,6 +6,7 @@ import { LRUCache } from "lru-cache";
 import { scale } from "./Scales";
 import { Editor } from "./main";
 import { Sound } from "./Sound";
+import { Note } from "./Note";
 import {
   samples,
   initAudioOnFirstClick,
@@ -68,6 +69,9 @@ export class UserAPI {
   private variables: { [key: string]: any } = {};
   private iterators: { [key: string]: any } = {};
   private _drunk: DrunkWalk = new DrunkWalk(-100, 100, false);
+  public randomGen = Math.random;
+  public currentSeed: string|undefined = undefined;
+  public localSeeds = new Map<string, Function>();
 
   MidiConnection: MidiConnection = new MidiConnection();
   load: samples;
@@ -104,6 +108,21 @@ export class UserAPI {
      */
     return this.app._mouseY;
   };
+
+  public noteX = (): number => {
+    /**
+     * @returns The current x position scaled to 0-127 using screen width
+     */
+    return Math.floor((this.app._mouseX / document.body.clientWidth) * 127);
+  };
+
+  public noteY = (): number => {
+    /**
+     * @returns The current y position scaled to 0-127 using screen height
+     */
+    return Math.floor((this.app._mouseY / document.body.clientHeight) * 127);
+  };
+    
 
   // =============================================================
   // Utility functions
@@ -179,9 +198,8 @@ export class UserAPI {
   };
 
   public note = (
-    note: number,
-    options: { [key: string]: number } = {}
-  ): void => {
+    value: number = 60
+  ): Note => {
     /**
      * Sends a MIDI note to the current MIDI output.
      *
@@ -189,10 +207,7 @@ export class UserAPI {
      * @param options - an object containing options for that note
      *                { channel: 0, velocity: 100, duration: 0.5 }
      */
-    const channel = options.channel ? options.channel : 0;
-    const velocity = options.velocity ? options.velocity : 100;
-    const duration = options.duration ? options.duration : 0.5;
-    this.MidiConnection.sendMidiNote(note, channel, velocity, duration);
+    return new Note(value, this.app);
   };
 
   public sysex = (data: Array<number>): void => {
@@ -261,27 +276,26 @@ export class UserAPI {
   public zn = (
     input: string,
     options: { [key: string]: string | number } = {}
-  ): Event => {
+  ): Event|object => {
     const pattern = cachedPattern(input, options);
     //@ts-ignore
     if (pattern.hasStarted()) {
       const event = pattern.peek();
-
-      // Check if event is modified
-      const node = event!.modifiedEvent ? event!.modifiedEvent : event;
+     // Check if event is modified
+      const node = event.modifiedEvent ? event.modifiedEvent : event;
       const channel = (options.channel ? options.channel : 0) as number;
       const velocity = (options.velocity ? options.velocity : 100) as number;
       const sustain = (options.sustain ? options.sustain : 0.5) as number;
 
       if (node instanceof Pitch) {
         if (node.bend) this.MidiConnection.sendPitchBend(node.bend, channel);
-        this.MidiConnection.sendMidiNote(
-          node.note!,
-          channel,
-          velocity,
-          sustain
-        );
-        if (node.bend) this.MidiConnection.sendPitchBend(8192, channel);
+          this.MidiConnection.sendMidiNote(
+            node.note!,
+            channel,
+            velocity,
+            sustain
+          );
+          if (node.bend) this.MidiConnection.sendPitchBend(8192, channel);
       } else if (node instanceof Chord) {
         node.pitches.forEach((pitch: Pitch) => {
           if (pitch.bend)
@@ -299,7 +313,7 @@ export class UserAPI {
       }
 
       // Remove old modified event
-      if (event!.modifiedEvent) event!.modifiedEvent = undefined;
+      if (event.modifiedEvent) event.modifiedEvent = undefined;
     }
     //@ts-ignore
     return pattern.next();
@@ -577,7 +591,7 @@ export class UserAPI {
      *
      * @param array - The array of values to pick from
      */
-    return array[Math.floor(Math.random() * array.length)];
+    return array[Math.floor(this.randomGen() * array.length)];
   };
 
   seqbeat = <T>(...array: T[]): T => {
@@ -629,7 +643,7 @@ export class UserAPI {
      * @param max - The maximum value of the random number
      * @returns A random integer between min and max
      */
-    return Math.floor(Math.random() * (max - min + 1)) + min;
+    return Math.floor(this.randomGen() * (max - min + 1)) + min;
   };
 
   rand = (min: number, max: number): number => {
@@ -640,10 +654,36 @@ export class UserAPI {
      * @param max - The maximum value of the random number
      * @returns A random float between min and max
      */
-    return Math.random() * (max - min) + min;
+    return this.randomGen() * (max - min) + min;
   };
+  irand = this.randI
   rI = this.randI;
   r = this.rand;
+
+  seed = (seed: string | number): void => {
+    /**
+     * Seed the random numbers globally in UserAPI.
+     *  @param seed - The seed to use
+     */
+    if(typeof seed === "number") seed = seed.toString();
+    if(this.currentSeed!==seed) {
+      this.currentSeed = seed;
+      this.randomGen = seededRandom(seed);
+    }
+  }
+
+  localSeededRandom = (seed: string | number): Function => {
+    if(typeof seed === "number") seed = seed.toString();
+    if(this.localSeeds.has(seed)) return this.localSeeds.get(seed) as Function;
+    const newSeededRandom = seededRandom(seed)
+    this.localSeeds.set(seed,newSeededRandom);
+    return newSeededRandom;
+  }
+
+  clearLocalSeed = (seed: string | number | undefined = undefined): void => {
+    if(seed) this.localSeeds.delete(seed.toString());
+    this.localSeeds.clear();
+  }
 
   // =============================================================
   // Quantification functions
@@ -748,7 +788,7 @@ export class UserAPI {
      *
      * @returns True 10% of the time
      */
-    return Math.random() > 0.9;
+    return this.randomGen() > 0.9;
   };
 
   public sometimes = (): boolean => {
@@ -757,7 +797,7 @@ export class UserAPI {
      *
      * @returns True 50% of the time
      */
-    return Math.random() > 0.5;
+    return this.randomGen() > 0.5;
   };
 
   public rarely = (): boolean => {
@@ -766,7 +806,7 @@ export class UserAPI {
      *
      * @returns True 25% of the time
      */
-    return Math.random() > 0.75;
+    return this.randomGen() > 0.75;
   };
 
   public often = (): boolean => {
@@ -775,7 +815,7 @@ export class UserAPI {
      *
      * @returns True 75% of the time
      */
-    return Math.random() > 0.25;
+    return this.randomGen() > 0.25;
   };
 
   public almostAlways = (): boolean => {
@@ -784,7 +824,7 @@ export class UserAPI {
      *
      * @returns True 90% of the time
      */
-    return Math.random() > 0.1;
+    return this.randomGen() > 0.1;
   };
 
   public dice = (sides: number): number => {
@@ -794,7 +834,7 @@ export class UserAPI {
      * @param sides - The number of sides on the dice
      * @returns The value of a dice roll with n sides
      */
-    return Math.floor(Math.random() * sides) + 1;
+    return Math.floor(this.randomGen() * sides) + 1;
   };
 
   // =============================================================
@@ -920,7 +960,7 @@ export class UserAPI {
      * @param p - The probability of returning true
      * @returns True p% of the time
      */
-    return Math.random() * 100 < p;
+    return this.randomGen() * 100 < p;
   };
 
   toss = (): boolean => {
@@ -934,7 +974,7 @@ export class UserAPI {
      * @see almostAlways
      * @see almostNever
      */
-    return Math.random() > 0.5;
+    return this.randomGen() > 0.5;
   };
 
   min = (...values: number[]): number => {
@@ -1212,7 +1252,7 @@ export class UserAPI {
      * @see sine
      * @see noise
      */
-    return Math.random() * 2 - 1;
+    return this.randomGen() * 2 - 1;
   };
 
   // =============================================================
