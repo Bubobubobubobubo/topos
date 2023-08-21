@@ -483,7 +483,7 @@ export class UserAPI {
   // Sequencer related functions
   // =============================================================
 
-  public slice = (chunk: number): boolean => {
+  public div = (chunk: number): boolean => {
     const time_pos = this.epulse();
     const current_chunk = Math.floor(
       time_pos / Math.floor(chunk * this.ppqn())
@@ -491,13 +491,13 @@ export class UserAPI {
     return current_chunk % 2 === 0;
   };
 
-  public barslice = (chunk: number): boolean => {
+  public divbar = (chunk: number): boolean => {
     const time_pos = this.bar() - 1;
     const current_chunk = Math.floor(time_pos / chunk);
     return current_chunk % 2 === 0;
   };
 
-  public seqslice = (...args: any): any => {
+  public divseq = (...args: any): any => {
     const chunk_size = args[0]; // Get the first argument (chunk size)
     const elements = args.slice(1); // Get the rest of the arguments as an array
     const timepos = this.epulse();
@@ -1002,12 +1002,19 @@ export class UserAPI {
     return results.some((value) => value === true);
   };
 
+  public modpulse = (...n: number[]): boolean => {
+    const results: boolean[] = n.map((value) => this.epulse() % value === 0);
+    return results.some((value) => value === true);
+  };
+  pmod = this.modpulse;
+
   public modbar = (...n: number[]): boolean => {
     const results: boolean[] = n.map(
       (value) => this.bar() % Math.floor(value * this.ppqn()) === 0
     );
     return results.some((value) => value === true);
   };
+  bmod = this.modbar;
 
   // =============================================================
   // Rythmic generators

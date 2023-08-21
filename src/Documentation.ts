@@ -143,7 +143,12 @@ Some functions can be leveraged to play rhythms without thinking too much about 
 \`\`\`
 
 - <icode>onbar(...values: number[])</icode>: returns <icode>true</icode> if the bar is currently equal to any of the specified values.
-- <icode>modbar(...values: number[])</icode>: returns <icode>true</icode> if the bar is currently a multiple of any of the specified values.
+- <icode>modbar(...values: number[]) or bmod(...)</icode>: returns <icode>true</icode> if the bar is currently a multiple of any of the specified values.
+- <icode>modpulse(...values: number[]) or pmod(...)</icode>: returns <icode>true</icode> if the pulse is currently a multiple of any of the specified values.
+
+- <icode>div(chunk: number)</icode>: returns <icode>true</icode> for every pulse in intervals of given number of beats
+- <icode>divbar(chunk: number)</icode>: returns <icode>true</icode> for every pulse in intervals of given number of bars
+- <icode>divseq(...values: number[])</icode>: returns <icode>true</icode> for every pulse in intervals of given number of beats returning different value each time.
 
 ## Rhythm generators
 
