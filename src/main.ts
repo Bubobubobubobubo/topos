@@ -102,6 +102,9 @@ export class Editor {
   documentation_button: HTMLButtonElement = document.getElementById(
     "doc-button-1"
   ) as HTMLButtonElement;
+	eval_button: HTMLButtonElement = document.getElementById(
+		"eval-button-1"
+	) as HTMLButtonElement;
 
   // Script selection elements
   local_button: HTMLButtonElement = document.getElementById(
@@ -399,6 +402,11 @@ export class Editor {
 
     this.documentation_button.addEventListener("click", () => {
       this.showDocumentation();
+    });
+
+    this.eval_button.addEventListener("click", () => {
+      this.currentFile().candidate = this.view.state.doc.toString();
+      this.flashBackground("#2d313d", 200);
     });
 
     this.pause_buttons.forEach((button) => {
