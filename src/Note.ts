@@ -38,10 +38,8 @@ export class Note extends Event {
     }
 
     modify = (func: Function): this => {
-        if(typeof func === 'function') {
         const funcResult = func(this);
         if(funcResult instanceof Object) {
-            console.log("IS OBJECT?");
             return funcResult;
             
         }
@@ -49,7 +47,6 @@ export class Note extends Event {
             func(this.values);
             return this;
         }
-    }
     }
 
     // TODO: Add bend
