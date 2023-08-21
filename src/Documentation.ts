@@ -98,7 +98,6 @@ To make a beat, you need a certain number of time grains or **pulses**. The **pu
 
 **Note:** the <icode>ppqn(number)</icode> function can serve both for getting and setting the **PPQN** value.
 
-
 ## Time Primitives
 
 Every script can access the current time by using the following functions:
@@ -141,6 +140,25 @@ Some functions can be leveraged to play rhythms without thinking too much about 
 
 - <icode>onbar(...values: number[])</icode>: returns <icode>true</icode> if the bar is currently equal to any of the specified values.
 - <icode>modbar(...values: number[])</icode>: returns <icode>true</icode> if the bar is currently a multiple of any of the specified values.
+
+## Rhythm generators
+
+We included a bunch of popular rhythm generators in Topos such as the euclidian rhythms algorithms or the one to generate rhythms based on a binary sequence. They all work using _iterators_ that you will gradually learn to use for iterating over lists.
+
+- <icode>euclid(iterator: number, pulses: number, length: number, rotate: number): boolean</icode>: generates <icode>true</icode> or <icode>false</icode> values from an euclidian rhythm sequence. This algorithm is very popular in the electronic music making world.
+
+\`\`\`javascript
+    mod(.5) && euclid($(1), 5, 8) && snd('kick').out()
+    mod(.5) && euclid($(2), 2, 8) && snd('sd').out()
+\`\`\`
+
+- <icode>bin(iterator: number, n: number): boolean</icode>: a binary rhythm generator. It transforms the given number into its binary representation (_e.g_ <icode>34</icode> becomes <icode>100010</icode>). It then returns a boolean value based on the iterator in order to generate a rhythm.
+
+
+\`\`\`javascript
+    mod(.5) && euclid($(1), 34) && snd('kick').out()
+    mod(.5) && euclid($(2), 48) && snd('sd').out()
+\`\`\`
 
 ## Using time as a conditional
 
@@ -386,6 +404,25 @@ You can get the current position of the mouse on the screen by using the followi
 
 - <icode>mouseX()</icode>: the horizontal position of the mouse on the screen (as a floating point number).
 - <icode>mouseY()</icode>: the vertical position of the mouse on the screen (as a floating point number).
+
+## Probabilities
+
+There are some simple functions to play with probabilities.
+
+- <icode>prob(p: number)</icode>: return <icode>true</icode> _p_% of time, <icode>false</icode> in other cases.
+- <icode>toss()</icode>: throwing a coin. Head (<icode>true</icode>) or tails (<icode>false</icode>).
+
+## Math functions
+
+- <icode>max(...values: number[]): number</icode>: returns the maximum value of a list of numbers.
+- <icode>min(...values: number[]): number</icode>: returns the minimum value of a list of numbers.
+- <icode>mean(...values: number[]): number</icode>: returns the arithmetic mean of a list of numbers.
+- <icode>limit(value: number, min: number, max: number): number</icode>: Limits a value between a minimum and a maximum. 
+
+## Delay functions
+
+- <icode>delay(ms: number, func: Function): void</icode>: Delays the execution of a function by a given number of milliseconds.
+- <icode>delayr(ms: number, nb: number, func: Function): void</icode>: Delays the execution of a function by a given number of milliseconds, repeated a given number of times.
 
 
 `;

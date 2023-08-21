@@ -842,7 +842,7 @@ export class UserAPI {
     return Math.random() > 0.5;
   };
 
-  min = (...values: number[]): number => {
+  public min = (...values: number[]): number => {
     /**
      * Returns the minimum value of a list of numbers.
      *
@@ -852,7 +852,7 @@ export class UserAPI {
     return Math.min(...values);
   };
 
-  max = (...values: number[]): number => {
+  public max = (...values: number[]): number => {
     /**
      * Returns the maximum value of a list of numbers.
      *
@@ -860,6 +860,20 @@ export class UserAPI {
      * @returns The maximum value of the list of numbers
      */
     return Math.max(...values);
+  };
+
+  public mean = (...values: number[]): number => {
+    /**
+     * Returns the mean of a list of numbers.
+     *
+     * @param values - The list of numbers
+     * @returns The mean value of the list of numbers
+     */
+    const sum = values.reduce(
+      (accumulator, currentValue) => accumulator + currentValue,
+      0
+    );
+    return sum / values.length;
   };
 
   limit = (value: number, min: number, max: number): number => {

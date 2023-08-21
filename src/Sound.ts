@@ -12,6 +12,30 @@ export class Sound {
     this.values = { s: sound, dur: 0.5 };
   }
 
+  attack = (value: number): this => {
+    this.values["attack"] = value;
+    return this;
+  };
+  atk = this.attack;
+
+  decay = (value: number): this => {
+    this.values["decay"] = value;
+    return this;
+  };
+  dec = this.decay;
+
+  sustain = (value: number): this => {
+    this.values["sustain"] = value;
+    return this;
+  };
+  sus = this.sustain;
+
+  release = (value: number): this => {
+    this.values["release"] = value;
+    return this;
+  };
+  rel = this.release;
+
   unit = (value: number): this => {
     this.values["unit"] = value;
     return this;
