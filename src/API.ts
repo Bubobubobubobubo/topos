@@ -705,55 +705,91 @@ export class UserAPI {
   // Probability functions
   // =============================================================
 
-  public almostNever = (): boolean => {
+  public odds = (n: number, sec: number = 15): boolean => {
+    /**
+     * Returns true n% of the time.
+     * 
+     * @param n - The probability of returning true. 1/4 = 25% = 0.25, 80/127 = 62.9% = 0.6299212598425197, etc...
+     * @param sec - The time frame in seconds
+     * @returns True n% of the time
+     */
+    return this.randomGen() < n*this.ppqn()/(this.ppqn()*sec);
+  };
+
+  public almostNever = (sec: number = 15): boolean => {
+    /**
+     * Returns true 2.5% of the time in given time frame.
+     * 
+     * @param sec - The time frame in seconds
+     * @returns True 2.5% of the time
+     */
+    return this.randomGen() < 0.025*this.ppqn()/(this.ppqn()*sec);
+  };
+
+  public rarely = (sec: number = 15): boolean => {
     /**
      * Returns true 10% of the time.
-     *
-     * @returns True 10% of the time
+     * 
+     * @param sec - The time frame in seconds
+     * @returns True 10% of the time. 
      */
-    return this.randomGen() > 0.9;
+    return this.randomGen() < 0.1*this.ppqn()/(this.ppqn()*sec);
   };
 
-  public sometimes = (): boolean => {
-    /**
-     * Returns true 50% of the time.
-     *
-     * @returns True 50% of the time
-     */
-    return this.randomGen() > 0.5;
-  };
-
-  public rarely = (): boolean => {
+  public scarcely = (sec: number = 15): boolean => {
     /**
      * Returns true 25% of the time.
-     *
+     * 
+     * @param sec - The time frame in seconds
      * @returns True 25% of the time
      */
-    return this.randomGen() > 0.75;
+    return this.randomGen() < 0.25*this.ppqn()/(this.ppqn()*sec);
   };
 
-  public often = (): boolean => {
+  public sometimes = (sec: number = 15): boolean => {
+    /**
+     * Returns true 50% of the time.
+     * 
+     * @param sec - The time frame in seconds
+     * @returns True 50% of the time
+     */
+    return this.randomGen() < 0.5*this.ppqn()/(this.ppqn()*sec);
+  };
+
+  public often = (sec: number = 15): boolean => {
     /**
      * Returns true 75% of the time.
-     *
+     * 
+     * @param sec - The time frame in seconds
      * @returns True 75% of the time
      */
-    return this.randomGen() > 0.25;
+    return this.randomGen() < 0.75*this.ppqn()/(this.ppqn()*sec);
   };
 
-  public almostAlways = (): boolean => {
+  public frequently = (sec: number = 15): boolean => {
     /**
      * Returns true 90% of the time.
-     *
+     * 
+     * @param sec - The time frame in seconds
      * @returns True 90% of the time
      */
-    return this.randomGen() > 0.1;
+    return this.randomGen() < 0.9*this.ppqn()/(this.ppqn()*sec);
+  };
+
+  public almostAlways = (sec: number = 15): boolean => {
+    /**
+     * Returns true 98.5% of the time.
+     * 
+     * @param sec - The time frame in seconds
+     * @returns True 98.5% of the time
+     */
+    return this.randomGen() < 0.985*this.ppqn()/(this.ppqn()*sec);
   };
 
   public dice = (sides: number): number => {
     /**
      * Returns the value of a dice roll with n sides.
-     *
+     * 
      * @param sides - The number of sides on the dice
      * @returns The value of a dice roll with n sides
      */

@@ -484,6 +484,17 @@ There are some simple functions to play with probabilities.
 - <icode>toss()</icode>: throwing a coin. Head (<icode>true</icode>) or tails (<icode>false</icode>).
 - <icode>seed(val: number|string)</icode>: sets the seed of the random number generator. You can use a number or a string. The same seed will always return the same sequence of random numbers.
 
+Chance operators returning a boolean value are also available:
+
+- <icode>odds(n: number, sec?: number)</icode>: returns true for every n (odds) (eg. 1/4 = 0.25) in given seconds (sec)
+- <icode>almostNever(sec?: number)</icode>: returns true 0.1% in given seconds (sec)
+- <icode>rarely(sec?: number)</icode>: returns true 1% in given seconds (sec)
+- <icode>scaresly(sec?: number)</icode>: returns true 10% in given seconds (sec)
+- <icode>sometimes(sec?: number)</icode>: returns true 50% in given seconds (sec)
+- <icode>often(sec?: number)</icode>: returns true 75% in given seconds (sec)
+- <icode>frequently(sec?: number)</icode>: returns true 90% in given seconds (sec)
+- <icode>almostAlways(sec?: number)</icode>: returns true 99% in given seconds (sec)
+
 ## Math functions
 
 - <icode>max(...values: number[]): number</icode>: returns the maximum value of a list of numbers.
