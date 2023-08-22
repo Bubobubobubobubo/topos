@@ -483,7 +483,7 @@ export class UserAPI {
   // Sequencer related functions
   // =============================================================
 
-  public slice = (chunk: number): boolean => {
+  public div = (chunk: number): boolean => {
     const time_pos = this.epulse();
     const current_chunk = Math.floor(
       time_pos / Math.floor(chunk * this.ppqn())
@@ -491,13 +491,13 @@ export class UserAPI {
     return current_chunk % 2 === 0;
   };
 
-  public barslice = (chunk: number): boolean => {
+  public divbar = (chunk: number): boolean => {
     const time_pos = this.bar() - 1;
     const current_chunk = Math.floor(time_pos / chunk);
     return current_chunk % 2 === 0;
   };
 
-  public seqslice = (...args: any): any => {
+  public divseq = (...args: any): any => {
     const chunk_size = args[0]; // Get the first argument (chunk size)
     const elements = args.slice(1); // Get the rest of the arguments as an array
     const timepos = this.epulse();
@@ -578,9 +578,10 @@ export class UserAPI {
      */
     return this.randomGen() * (max - min) + min;
   };
-  irand = this.randI
+  irand = this.randI;
   rI = this.randI;
   r = this.rand;
+  ir = this.randI;
 
   seed = (seed: string | number): void => {
     /**
@@ -704,55 +705,91 @@ export class UserAPI {
   // Probability functions
   // =============================================================
 
-  public almostNever = (): boolean => {
+  public odds = (n: number, sec: number = 15): boolean => {
+    /**
+     * Returns true n% of the time.
+     * 
+     * @param n - The probability of returning true. 1/4 = 25% = 0.25, 80/127 = 62.9% = 0.6299212598425197, etc...
+     * @param sec - The time frame in seconds
+     * @returns True n% of the time
+     */
+    return this.randomGen() < n*this.ppqn()/(this.ppqn()*sec);
+  };
+
+  public almostNever = (sec: number = 15): boolean => {
+    /**
+     * Returns true 2.5% of the time in given time frame.
+     * 
+     * @param sec - The time frame in seconds
+     * @returns True 2.5% of the time
+     */
+    return this.randomGen() < 0.025*this.ppqn()/(this.ppqn()*sec);
+  };
+
+  public rarely = (sec: number = 15): boolean => {
     /**
      * Returns true 10% of the time.
-     *
-     * @returns True 10% of the time
+     * 
+     * @param sec - The time frame in seconds
+     * @returns True 10% of the time. 
      */
-    return this.randomGen() > 0.9;
+    return this.randomGen() < 0.1*this.ppqn()/(this.ppqn()*sec);
   };
 
-  public sometimes = (): boolean => {
-    /**
-     * Returns true 50% of the time.
-     *
-     * @returns True 50% of the time
-     */
-    return this.randomGen() > 0.5;
-  };
-
-  public rarely = (): boolean => {
+  public scarcely = (sec: number = 15): boolean => {
     /**
      * Returns true 25% of the time.
-     *
+     * 
+     * @param sec - The time frame in seconds
      * @returns True 25% of the time
      */
-    return this.randomGen() > 0.75;
+    return this.randomGen() < 0.25*this.ppqn()/(this.ppqn()*sec);
   };
 
-  public often = (): boolean => {
+  public sometimes = (sec: number = 15): boolean => {
+    /**
+     * Returns true 50% of the time.
+     * 
+     * @param sec - The time frame in seconds
+     * @returns True 50% of the time
+     */
+    return this.randomGen() < 0.5*this.ppqn()/(this.ppqn()*sec);
+  };
+
+  public often = (sec: number = 15): boolean => {
     /**
      * Returns true 75% of the time.
-     *
+     * 
+     * @param sec - The time frame in seconds
      * @returns True 75% of the time
      */
-    return this.randomGen() > 0.25;
+    return this.randomGen() < 0.75*this.ppqn()/(this.ppqn()*sec);
   };
 
-  public almostAlways = (): boolean => {
+  public frequently = (sec: number = 15): boolean => {
     /**
      * Returns true 90% of the time.
-     *
+     * 
+     * @param sec - The time frame in seconds
      * @returns True 90% of the time
      */
-    return this.randomGen() > 0.1;
+    return this.randomGen() < 0.9*this.ppqn()/(this.ppqn()*sec);
+  };
+
+  public almostAlways = (sec: number = 15): boolean => {
+    /**
+     * Returns true 98.5% of the time.
+     * 
+     * @param sec - The time frame in seconds
+     * @returns True 98.5% of the time
+     */
+    return this.randomGen() < 0.985*this.ppqn()/(this.ppqn()*sec);
   };
 
   public dice = (sides: number): number => {
     /**
      * Returns the value of a dice roll with n sides.
-     *
+     * 
      * @param sides - The number of sides on the dice
      * @returns The value of a dice roll with n sides
      */
@@ -965,12 +1002,19 @@ export class UserAPI {
     return results.some((value) => value === true);
   };
 
+  public modpulse = (...n: number[]): boolean => {
+    const results: boolean[] = n.map((value) => this.epulse() % value === 0);
+    return results.some((value) => value === true);
+  };
+  pmod = this.modpulse;
+
   public modbar = (...n: number[]): boolean => {
     const results: boolean[] = n.map(
       (value) => this.bar() % Math.floor(value * this.ppqn()) === 0
     );
     return results.some((value) => value === true);
   };
+  bmod = this.modbar;
 
   // =============================================================
   // Rythmic generators

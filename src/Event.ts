@@ -12,23 +12,39 @@ export class Event {
         }
     }
 
-    sometimesBy = (probability: number, func: Function): Event => {
+    odds = (probability: number, func: Function): Event => {
         if(this.randomGen() < probability) {
             return this.modify(func);
         }
         return this;
     }
 
-    sometimes = (func: Function): Event => {
-        return this.sometimesBy(0.5, func);
+    almostNever = (func: Function): Event => {
+        return this.odds(0.025, func);
     }
 
     rarely = (func: Function): Event => {
-        return this.sometimesBy(0.1, func);
+        return this.odds(0.1, func);
+    }
+
+    scarcely = (func: Function): Event => {
+        return this.odds(0.25, func);
+    }
+
+    sometimes = (func: Function): Event => {
+        return this.odds(0.5, func);
     }
 
     often = (func: Function): Event => {
-        return this.sometimesBy(0.9, func);
+        return this.odds(0.75, func);
+    }
+
+    frequently = (func: Function): Event => {
+        return this.odds(0.9, func);
+    }
+
+    almostAlways = (func: Function): Event => {
+        return this.odds(0.985, func);
     }
 
     modify = (func: Function): Event => {

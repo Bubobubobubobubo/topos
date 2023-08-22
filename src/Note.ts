@@ -1,6 +1,8 @@
 import { Event } from './Event';
 import { type Editor } from './main';
 import { MidiConnection } from "./IO/MidiConnection";
+import { freqToMidi, resolvePitchBend } from 'zifferjs';
+
 export class Note extends Event {
     values: { [key: string]: any };
     midiConnection: MidiConnection;
@@ -49,9 +51,15 @@ export class Note extends Event {
         }
     }
 
-    // TODO: Add bend
     freq = (value: number): this => {
         this.values['freq'] = value;
+        const midiNote = freqToMidi(value);
+        if(midiNote % 1 !== 0) {
+            this.values['note'] = Math.floor(midiNote);
+            this.values['bend'] = resolvePitchBend(midiNote)[1];
+        } else {
+            this.values['note'] = midiNote;
+        }
         return this;
     }
 
@@ -73,7 +81,7 @@ export class Note extends Event {
         const velocity = this.values.velocity ? this.values.velocity : 100;
         
         const duration = this.values.duration ? 
-        this.values.duration * Math.floor(this.app.clock.pulse_duration * this.app.api.ppqn()) : 
+        this.values.duration * this.app.clock.pulse_duration * this.app.api.ppqn() : 
         this.app.clock.pulse_duration * this.app.api.ppqn();
         
         const bend = this.values.bend ? this.values.bend : undefined;
@@ -82,9 +90,7 @@ export class Note extends Event {
         this.midiConnection.getMidiOutputIndex(this.values.port) : 
         this.midiConnection.getCurrentMidiPortIndex();
 
-        if (bend) this.midiConnection.sendPitchBend(bend, channel);
-        this.midiConnection.sendMidiNote(note, channel, velocity, duration, port);
-        if (bend) this.midiConnection.sendPitchBend(8192, channel);
+        this.midiConnection.sendMidiNote(note, channel, velocity, duration, port, bend);
     }
     
 }

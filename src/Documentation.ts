@@ -143,7 +143,12 @@ Some functions can be leveraged to play rhythms without thinking too much about 
 \`\`\`
 
 - <icode>onbar(...values: number[])</icode>: returns <icode>true</icode> if the bar is currently equal to any of the specified values.
-- <icode>modbar(...values: number[])</icode>: returns <icode>true</icode> if the bar is currently a multiple of any of the specified values.
+- <icode>modbar(...values: number[]) or bmod(...)</icode>: returns <icode>true</icode> if the bar is currently a multiple of any of the specified values.
+- <icode>modpulse(...values: number[]) or pmod(...)</icode>: returns <icode>true</icode> if the pulse is currently a multiple of any of the specified values.
+
+- <icode>div(chunk: number)</icode>: returns <icode>true</icode> for every pulse in intervals of given number of beats
+- <icode>divbar(chunk: number)</icode>: returns <icode>true</icode> for every pulse in intervals of given number of bars
+- <icode>divseq(...values: number[])</icode>: returns <icode>true</icode> for every pulse in intervals of given number of beats returning different value each time.
 
 ## Rhythm generators
 
@@ -200,7 +205,7 @@ You can use Topos to play MIDI thanks to the [WebMIDI API](https://developer.moz
     sometimes() && mod(.25) && note(seqbeat(64, 67, 69) + 24).duration(0.05).out()
 \`\`\`
 
-### Note chaining
+## Note chaining
 
 The <icode>note(number)</icode> function can be chained to _specify_ a midi note more. For instance, you can add a duration, a velocity, a channel, etc...:
 
@@ -431,6 +436,11 @@ You can get the current position of the mouse on the screen by using the followi
 - <icode>mouseX()</icode>: the horizontal position of the mouse on the screen (as a floating point number).
 - <icode>mouseY()</icode>: the vertical position of the mouse on the screen (as a floating point number).
 
+Current mouse position can also be used to generate notes:
+
+- <icode>noteX()</icode>: returns a MIDI note number (0-127) based on the horizontal position of the mouse on the screen.
+- <icode>noteY()</icode>: returns a MIDI note number (0-127) based on the vertical position of the mouse on the screen.
+
 ## Low Frequency Oscillators
 
 Low Frequency Oscillators (_LFOs_) are an important piece in any digital audio workstation or synthesizer. Topos implements some basic waveforms you can play with to automatically modulate your paremeters. 
@@ -473,8 +483,22 @@ Low Frequency Oscillators (_LFOs_) are an important piece in any digital audio w
 
 There are some simple functions to play with probabilities.
 
+- <icode>rand(min: number, max:number)</icode>: returns a random number between <icode>min</icode> and <icode>max</icode>. Shorthand _r()_.
+- <icode>irand(min: number, max:number)</icode>: returns a random integer between <icode>min</icode> and <icode>max</icode>. Shorthands _ir()_ or _rI()_.
 - <icode>prob(p: number)</icode>: return <icode>true</icode> _p_% of time, <icode>false</icode> in other cases.
 - <icode>toss()</icode>: throwing a coin. Head (<icode>true</icode>) or tails (<icode>false</icode>).
+- <icode>seed(val: number|string)</icode>: sets the seed of the random number generator. You can use a number or a string. The same seed will always return the same sequence of random numbers.
+
+Chance operators returning a boolean value are also available:
+
+- <icode>odds(n: number, sec?: number)</icode>: returns true for every n (odds) (eg. 1/4 = 0.25) in given seconds (sec)
+- <icode>almostNever(sec?: number)</icode>: returns true 0.1% in given seconds (sec)
+- <icode>rarely(sec?: number)</icode>: returns true 1% in given seconds (sec)
+- <icode>scaresly(sec?: number)</icode>: returns true 10% in given seconds (sec)
+- <icode>sometimes(sec?: number)</icode>: returns true 50% in given seconds (sec)
+- <icode>often(sec?: number)</icode>: returns true 75% in given seconds (sec)
+- <icode>frequently(sec?: number)</icode>: returns true 90% in given seconds (sec)
+- <icode>almostAlways(sec?: number)</icode>: returns true 99% in given seconds (sec)
 
 ## Math functions
 
