@@ -80,8 +80,8 @@ export class Note extends Event {
     }
 
     update = (): void => {
-        console.log(this.values.type);
-        if(this.values.type === 'Pitch') {
+        // TODO: Figure out why _ is sometimes added?
+        if(this.values.type === 'Pitch' || this.values.type === '_Pitch') {
             const [note,bend] = noteFromPc(this.values.key!, this.values.pitch!, this.values.parsedScale!, this.values.octave!);
             this.values.note = note;
             this.values.freq = midiToFreq(note);
@@ -115,7 +115,6 @@ export class Note extends Event {
     }
 
     out = (): void => {
-        console.log("NOTE OUT", this.values);
         const note = this.values.note ? this.values.note : 60;
         const channel = this.values.channel ? this.values.channel : 0;
         const velocity = this.values.velocity ? this.values.velocity : 100;

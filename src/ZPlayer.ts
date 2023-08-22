@@ -32,6 +32,7 @@ export class Player extends Event {
         if(this.areWeThereYet()) {
             const event = this.next() as Pitch|Chord|ZRest;
             if(event instanceof Pitch) {
+                // TODO: Quick hack. Select which attributes to use, but some ziffers stuff is needed for chaining key change etc.
                 return new Sound(event.asObject(), this.app).sound(name);
             } else if(event instanceof Rest) {
                 return Rest.createRestProxy(event.duration, this.app);
@@ -46,7 +47,7 @@ export class Player extends Event {
          if(this.areWeThereYet()) {
             const event = this.next() as Pitch|Chord|ZRest;
             if(event instanceof Pitch) {
-                console.log(event.asObject());
+                  // TODO: Quick hack. Select which attributes to use, but some ziffers stuff is needed for chaining key change etc.
                 const note = new Note(event.asObject(), this.app);
                 return value ? note.note(value) : note;
             } else if(event instanceof ZRest) {
