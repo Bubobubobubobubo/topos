@@ -31,7 +31,7 @@
       width: 100% !important;
     }
   </style>
-  <body class="bg-neutral-800 overflow-y-hidden">
+  <body class="bg-neutral-800 overflow-y-scroll">
 
 		<!-- The header is hidden on smaller devices -->
     <header class="py-2 block text-white bg-neutral-900">
@@ -216,30 +216,30 @@
 				>
         <nav class="flex flex-col space-y-6">
             <a title="Local Scripts" id="local-button" class="pl-2 p-1.5 text-gray-700 focus:outline-nones transition-colors duration-200 rounded-lg dark:text-gray-200 hover:bg-gray-800">
-							<p class="grid font-mono font-semibold text-4xl content-center justify-center">L</p>
 							<!--
+							<p class="grid font-mono font-semibold text-4xl content-center justify-center">L</p>
+							-->
               <svg class="w-8 h-8 text-orange-300" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M10 15a5 5 0 1 0 0-10 5 5 0 0 0 0 10Zm0-11a1 1 0 0 0 1-1V1a1 1 0 0 0-2 0v2a1 1 0 0 0 1 1Zm0 12a1 1 0 0 0-1 1v2a1 1 0 1 0 2 0v-2a1 1 0 0 0-1-1ZM4.343 5.757a1 1 0 0 0 1.414-1.414L4.343 2.929a1 1 0 0 0-1.414 1.414l1.414 1.414Zm11.314 8.486a1 1 0 0 0-1.414 1.414l1.414 1.414a1 1 0 0 0 1.414-1.414l-1.414-1.414ZM4 10a1 1 0 0 0-1-1H1a1 1 0 0 0 0 2h2a1 1 0 0 0 1-1Zm15-1h-2a1 1 0 1 0 0 2h2a1 1 0 0 0 0-2ZM4.343 14.243l-1.414 1.414a1 1 0 1 0 1.414 1.414l1.414-1.414a1 1 0 0 0-1.414-1.414ZM14.95 6.05a1 1 0 0 0 .707-.293l1.414-1.414a1 1 0 1 0-1.414-1.414l-1.414 1.414a1 1 0 0 0 .707 1.707Z"/>
               </svg>
-							-->
             </a>
           
             <a title="Global Script" id="global-button" class="pl-2 p-1.5 text-gray-700 focus:outline-nones transition-colors duration-200 rounded-lg dark:text-gray-200 hover:bg-gray-800">
-							<p class="grid font-mono font-semibold text-4xl content-center justify-center">G</p>
 							<!--
+							<p class="grid font-mono font-semibold text-4xl content-center justify-center">G</p>
+							-->
               <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 18 20">
                 <path d="M17.8 13.75a1 1 0 0 0-.859-.5A7.488 7.488 0 0 1 10.52 2a1 1 0 0 0 0-.969A1.035 1.035 0 0 0 9.687.5h-.113a9.5 9.5 0 1 0 8.222 14.247 1 1 0 0 0 .004-.997Z"/>
               </svg>
-							-->
             </a>
           
             <a title="Initialisation Script" id="init-button" class="pl-2 p-1.5 text-gray-700 focus:outline-nones transition-colors duration-200 rounded-lg dark:text-gray-200 bg-gray-800">
-							<p class="grid font-mono font-semibold text-4xl content-center justify-center">I</p>
 							<!--
+							<p class="grid font-mono font-semibold text-4xl content-center justify-center">I</p>
+							-->
               <svg class="w-8 h-8 text-white " fill="none" viewBox="0 0 21 20">
                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6.487 1.746c0 4.192 3.592 1.66 4.592 5.754 0 .828 1 1.5 2 1.5s2-.672 2-1.5a1.5 1.5 0 0 1 1.5-1.5h1.5m-16.02.471c4.02 2.248 1.776 4.216 4.878 5.645C10.18 13.61 9 19 9 19m9.366-6h-2.287a3 3 0 0 0-3 3v2m6-8a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
               </svg>
-							-->
             </a>
 
             <a title="Project notes" id="note-button" class="pl-2 p-1.5 text-gray-700 focus:outline-nones transition-colors duration-200 rounded-lg dark:text-gray-200 hover:bg-gray-800">
@@ -315,7 +315,7 @@
  
          </ul>
          <!-- Here comes the editor itself -->
-          <div id="editor" class="invisible relative flex flex-row h-screen overflow-y-scroll">
+          <div id="editor" class="invisible relative flex flex-row h-screen overflow-y-hidden">
 					</div>
           <p id="error_line" class="hidden text-red-400 w-screen bg-neutral-900 font-mono absolute bottom-0 pl-2 py-2">Hello kids</p>
         </div>
