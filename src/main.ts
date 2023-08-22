@@ -4,6 +4,7 @@ import { javascript } from "@codemirror/lang-javascript";
 import { oneDark } from "@codemirror/theme-one-dark";
 import { markdown } from "@codemirror/lang-markdown";
 import { Extension, Prec } from "@codemirror/state";
+import {indentWithTab} from "@codemirror/commands"
 import { vim } from "@replit/codemirror-vim";
 import { AppSettings } from "./AppSettings";
 import { editorSetup } from "./EditorSetup";
@@ -231,6 +232,7 @@ export class Editor {
 				Prec.highest(keymap.of([
 					{ key:"Ctrl-Enter", run: ()=>{return true} }
 				])),
+        keymap.of([indentWithTab]),
       ],
       doc: this.universes[this.selected_universe].locals[this.local_index]
         .candidate,
