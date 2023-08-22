@@ -1,9 +1,10 @@
 import { EditorState, Compartment } from "@codemirror/state";
-import { ViewUpdate, lineNumbers } from "@codemirror/view";
+import { ViewUpdate, lineNumbers, keymap } from "@codemirror/view";
 import { javascript } from "@codemirror/lang-javascript";
 import { oneDark } from "@codemirror/theme-one-dark";
 import { markdown } from "@codemirror/lang-markdown";
-import { Extension } from "@codemirror/state";
+import { Extension, Prec } from "@codemirror/state";
+import {indentWithTab} from "@codemirror/commands"
 import { vim } from "@replit/codemirror-vim";
 import { AppSettings } from "./AppSettings";
 import { editorSetup } from "./EditorSetup";
@@ -102,9 +103,9 @@ export class Editor {
   documentation_button: HTMLButtonElement = document.getElementById(
     "doc-button-1"
   ) as HTMLButtonElement;
-	eval_button: HTMLButtonElement = document.getElementById(
-		"eval-button-1"
-	) as HTMLButtonElement;
+  eval_button: HTMLButtonElement = document.getElementById(
+    "eval-button-1"
+  ) as HTMLButtonElement;
 
   // Script selection elements
   local_button: HTMLButtonElement = document.getElementById(
@@ -164,9 +165,11 @@ export class Editor {
   ) as HTMLButtonElement;
 
   // Error line
-  error_line: HTMLElement = document.getElementById("error_line") as HTMLElement
-  show_error: boolean = false
- 
+  error_line: HTMLElement = document.getElementById(
+    "error_line"
+  ) as HTMLElement;
+  show_error: boolean = false;
+
   constructor() {
     // ================================================================================
     // Loading the universe from local storage
@@ -226,6 +229,10 @@ export class Editor {
         ...this.editorExtensions,
         EditorView.lineWrapping,
         dynamicPlugins.of(this.userPlugins),
+				Prec.highest(keymap.of([
+					{ key:"Ctrl-Enter", run: ()=>{return true} }
+				])),
+        keymap.of([indentWithTab]),
       ],
       doc: this.universes[this.selected_universe].locals[this.local_index]
         .candidate,
@@ -527,17 +534,16 @@ export class Editor {
       "about",
     ].forEach((e) => {
       let name = `docs_` + e;
-      document.getElementById(name)!
-        .addEventListener("click", () => {
-          this.currentDocumentationPane = e;
-          this.updateDocumentationContent();
-        });
-   });
+      document.getElementById(name)!.addEventListener("click", () => {
+        this.currentDocumentationPane = e;
+        this.updateDocumentationContent();
+      });
+    });
 
-   // Passing the API to the User
-   Object.entries(this.api).forEach(([name, value]) => {
-     (globalThis as Record<string, any>)[name] = value;
-   });
+    // Passing the API to the User
+    Object.entries(this.api).forEach(([name, value]) => {
+      (globalThis as Record<string, any>)[name] = value;
+    });
   }
 
   get note_buffer() {
