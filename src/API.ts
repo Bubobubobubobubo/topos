@@ -1,4 +1,4 @@
-import { Pitch, Chord, Rest, Event, cachedPattern, seededRandom } from "zifferjs";
+import { seededRandom } from "zifferjs";
 import { MidiConnection } from "./IO/MidiConnection";
 import { tryEvaluate } from "./Evaluator";
 import { DrunkWalk } from "./Utils/Drunk";
@@ -6,6 +6,8 @@ import { scale } from "./Scales";
 import { Editor } from "./main";
 import { Sound } from "./Sound";
 import { Note } from "./Note";
+import { LRUCache } from "lru-cache";
+import { Player } from "./ZPlayer";
 import {
   samples,
   initAudioOnFirstClick,
@@ -45,6 +47,10 @@ async function loadSamples() {
 
 loadSamples();
 
+export const generateCacheKey = (...args: any[]): string => {
+  return args.map(arg => JSON.stringify(arg)).join(',');
+};
+
 export class UserAPI {
   /**
    * The UserAPI class is the interface between the user's code and the backend. It provides
@@ -59,6 +65,7 @@ export class UserAPI {
   public randomGen = Math.random;
   public currentSeed: string|undefined = undefined;
   public localSeeds = new Map<string, Function>();
+  public patternCache = new LRUCache({max: 1000, ttl: 1000 * 60 * 5});
 
   MidiConnection: MidiConnection = new MidiConnection();
   load: samples;
@@ -74,7 +81,7 @@ export class UserAPI {
       this.app.error_line.classList.remove('hidden');
       setInterval(() => this.app.error_line.classList.add('hidden'), 2000)
     }
-  }
+  };
 
   // =============================================================
   // Time functions
@@ -286,51 +293,21 @@ export class UserAPI {
   // Ziffers related functions
   // =============================================================
 
-  public zn = (
-    input: string,
-    options: { [key: string]: string | number } = {}
-  ): Event|object => {
-    const pattern = cachedPattern(input, options);
-    //@ts-ignore
-    if (pattern.hasStarted()) {
-      const event = pattern.peek();
-     // Check if event is modified
-      const node = event.modifiedEvent ? event.modifiedEvent : event;
-      const channel = (options.channel ? options.channel : 0) as number;
-      const velocity = (options.velocity ? options.velocity : 100) as number;
-      const sustain = (options.sustain ? options.sustain : 0.5) as number;
-
-      if (node instanceof Pitch) {
-        if (node.bend) this.MidiConnection.sendPitchBend(node.bend, channel);
-          this.MidiConnection.sendMidiNote(
-            node.note!,
-            channel,
-            velocity,
-            sustain
-          );
-          if (node.bend) this.MidiConnection.sendPitchBend(8192, channel);
-      } else if (node instanceof Chord) {
-        node.pitches.forEach((pitch: Pitch) => {
-          if (pitch.bend)
-            this.MidiConnection.sendPitchBend(pitch.bend, channel);
-          this.MidiConnection.sendMidiNote(
-            pitch.note!,
-            channel,
-            velocity,
-            sustain
-          );
-          if (pitch.bend) this.MidiConnection.sendPitchBend(8192, channel);
-        });
-      } else if (node instanceof Rest) {
-        // do nothing for now ...
+  public z = (input: string, options: { [key: string]: string | number } = {}) => {
+    const key = generateCacheKey(input, options);
+    let player;
+      if(this.app.api.patternCache.has(key)) {
+        player = this.app.api.patternCache.get(key) as Player;
+      } else {
+        player = new Player(input, options, this.app);
+        this.app.api.patternCache.set(key, player);
       }
-
-      // Remove old modified event
-      if (event.modifiedEvent) event.modifiedEvent = undefined;
+      if(player && player.ziffers.index === -1 || player.played) {
+        player.callTime = this.epulse();
+        player.played = false;
+      }
+      return player;
     }
-    //@ts-ignore
-    return pattern.next();
-  };
 
   // =============================================================
   // Counter related functions

@@ -957,7 +957,7 @@ lodash.merge@^4.6.2:
   resolved "https://registry.yarnpkg.com/lodash.merge/-/lodash.merge-4.6.2.tgz#558aa53b43b661e1925a0afdfa36a9a1085fe57a"
   integrity sha512-0KpjqXRVvrYyCsX1swR/XTK0va6VQkQM6MNo7PqW77ByjAhoARA8EfrP1N4+KlKj8YS0ZUCtRT/YUuhyYDujIQ==
 
-lru-cache@^10.0.0, lru-cache@^10.0.1:
+lru-cache@^10.0.0:
   version "10.0.1"
   resolved "https://registry.yarnpkg.com/lru-cache/-/lru-cache-10.0.1.tgz#0a3be479df549cca0e5d693ac402ff19537a6b7a"
   integrity sha512-IJ4uwUTi2qCccrioU6g9g/5rvvVl13bsdczUUcqbciD9iLr095yj8DQKdObriEvuNSx325N1rV1O0sJFszx75g==
@@ -1441,10 +1441,10 @@ yaml@^2.1.1:
   resolved "https://registry.yarnpkg.com/yaml/-/yaml-2.3.1.tgz#02fe0975d23cd441242aa7204e09fc28ac2ac33b"
   integrity sha512-2eHWfjaoXgTBC2jNM1LRef62VQa0umtvRiDSk6HSzW7RvS5YtkabJrwYLLEKWBc8a5U2PTSCs+dJjUTJdlHsWQ==
 
-zifferjs@^0.0.10:
-  version "0.0.10"
-  resolved "https://registry.yarnpkg.com/zifferjs/-/zifferjs-0.0.10.tgz#b8c2617f5fc8fb4422f311702785c47b752a920e"
-  integrity sha512-kaMWRZcsAXXpPFjDoVtS3sQ5bZs+S7t3ejd8+WZV/nc52y/vXe/QcKAjT+jYCHGq8J1WMCITDn6OnVfswqJ8Ig==
+zifferjs@^0.0.11:
+  version "0.0.11"
+  resolved "https://registry.yarnpkg.com/zifferjs/-/zifferjs-0.0.11.tgz#76cd8f371b65f2176606987cf6fe8e2d156d7d2d"
+  integrity sha512-JABze3JRHMIzO++4M1EKOJsrG/MzuLMN4ev6XqwJrCGXu7OVyRi3FG4fgA1WAesiuCr/ped/9zHIuodLNMlUOw==
   dependencies:
     lru-cache "^10.0.0"
 

@@ -7,7 +7,6 @@ import {
 } from "superdough";
 
 export class Sound extends Event {
-    values: { [key: string]: any };
 
     constructor(sound: string|object, public app: Editor) {
         super(app);

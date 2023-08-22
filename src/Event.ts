@@ -4,6 +4,7 @@ export class Event {
     seedValue: string|undefined = undefined;
     randomGen: Function = Math.random;
     app: Editor;
+    values: { [key: string]: any } = {};
 
     constructor(app: Editor) {
         this.app = app;
@@ -64,6 +65,11 @@ export class Event {
 
     apply = (func: Function): Event => {
         return this.modify(func);
+    }
+
+    duration = (value: number): Event => {
+        this.values['duration'] = value;
+        return this;
     }
 
 }
