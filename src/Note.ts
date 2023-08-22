@@ -90,9 +90,7 @@ export class Note extends Event {
         this.midiConnection.getMidiOutputIndex(this.values.port) : 
         this.midiConnection.getCurrentMidiPortIndex();
 
-        if (bend) this.midiConnection.sendPitchBend(bend, channel);
         this.midiConnection.sendMidiNote(note, channel, velocity, duration, port, bend);
-        //if (bend) this.midiConnection.sendPitchBend(8192, channel);
     }
     
 }
