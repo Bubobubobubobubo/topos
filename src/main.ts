@@ -578,8 +578,9 @@ export class Editor {
       if (url !== null) {
         const universeParam = url.get("universe");
         if (universeParam !== null) {
-          new_universe = JSON.parse(universeParam);
+          new_universe = JSON.parse(atob(universeParam));
           this.loadUniverse("imported", new_universe["universe"]);
+          this.emptyUrl();
         }
       }
     }
@@ -610,13 +611,15 @@ export class Editor {
   };
 
   parseHash = (hash: string) => {
-    return JSON.parse(atob(hash));
+    return JSON.parse(hash);
   };
 
   share() {
-    const hashed_table = JSON.stringify({
-      universe: this.settings.universes[this.selected_universe],
-    });
+    const hashed_table = btoa(JSON.stringify(
+      {
+        universe: this.settings.universes[this.selected_universe],
+      }
+    ));
     const url = new URL(window.location.href);
     url.searchParams.set("universe", hashed_table);
     window.history.replaceState({}, "", url.toString());
