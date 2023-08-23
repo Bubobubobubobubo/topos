@@ -574,6 +574,7 @@ export class Editor {
     // Loading from URL bar
     let url = new URLSearchParams(window.location.search);
     if (url === null) {
+			//@ts-ignore
       let new_universe = JSON.parse(url.get("universe"));
       console.log((this.universes["imported"] = new_universe));
       this.loadUniverse("imported");
