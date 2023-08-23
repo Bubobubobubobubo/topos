@@ -579,11 +579,12 @@ export class Editor {
         const universeParam = url.get("universe");
         if (universeParam !== null) {
           new_universe = JSON.parse(universeParam);
+          this.loadUniverse("imported", new_universe["universe"]);
         }
       }
-      this.settings.universes["imported"] = new_universe;
-      this.loadUniverse("imported", false, new_universe);
     }
+    console.log(this.universes[this.selected_universe]);
+    console.log(this.universes["imported"]);
   }
 
   get note_buffer() {
@@ -820,19 +821,15 @@ export class Editor {
    */
   loadUniverse(
     universeName: string,
-    saving: boolean = true,
     universe: Universe = template_universe
   ): void {
-    console.log(universeName, saving, universe);
-
-    if (saving) {
-      // Saving the current file before initiating the switch logic
-      this.currentFile().candidate = this.view.state.doc.toString();
-    }
+    console.log(universeName, universe);
+    this.currentFile().candidate = this.view.state.doc.toString();
 
     // Getting the new universe name and moving on
     let selectedUniverse = universeName.trim();
     if (this.universes[selectedUniverse] === undefined) {
+      this.settings.universes[selectedUniverse] = universe;
       this.universes[selectedUniverse] = universe;
     }
     this.selected_universe = selectedUniverse;
