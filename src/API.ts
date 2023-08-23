@@ -83,6 +83,7 @@ export class UserAPI {
   public currentSeed: string | undefined = undefined;
   public localSeeds = new Map<string, Function>();
   public patternCache = new LRUCache({ max: 1000, ttl: 1000 * 60 * 5 });
+  private errorTimeoutID: number = 0;
 
   MidiConnection: MidiConnection = new MidiConnection();
   load: samples;
@@ -93,11 +94,13 @@ export class UserAPI {
 
   _reportError = (error: any): void => {
     console.log(error);
-    if (!this.app.show_error) {
-      this.app.error_line.innerHTML = error as string;
-      this.app.error_line.classList.remove("hidden");
-      setTimeout(() => this.app.error_line.classList.add("hidden"), 2000);
-    }
+    clearTimeout(this.errorTimeoutID);
+    this.app.error_line.innerHTML = error as string;
+    this.app.error_line.classList.remove("hidden");
+    this.errorTimeoutID = setTimeout(
+      () => this.app.error_line.classList.add("hidden"),
+      2000
+    );
   };
 
   // =============================================================
