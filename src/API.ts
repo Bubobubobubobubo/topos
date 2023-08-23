@@ -22,6 +22,18 @@ interface ControlChange {
   value: number;
 }
 
+// @ts-ignore
+Array.prototype.loop = function (index) {
+  return this[index % this.length];
+};
+
+// @ts-ignore
+Array.prototype.random = function (index) {
+  return this[Math.floor(Math.random() * this.length)];
+};
+// @ts-ignore
+Array.prototype.rand = Array.prototype.random;
+
 /**
  * This is an override of the basic "includes" method.
  */
@@ -48,7 +60,7 @@ async function loadSamples() {
 loadSamples();
 
 export const generateCacheKey = (...args: any[]): string => {
-  return args.map(arg => JSON.stringify(arg)).join(',');
+  return args.map((arg) => JSON.stringify(arg)).join(",");
 };
 
 export class UserAPI {
@@ -63,9 +75,9 @@ export class UserAPI {
   private counters: { [key: string]: any } = {};
   private _drunk: DrunkWalk = new DrunkWalk(-100, 100, false);
   public randomGen = Math.random;
-  public currentSeed: string|undefined = undefined;
+  public currentSeed: string | undefined = undefined;
   public localSeeds = new Map<string, Function>();
-  public patternCache = new LRUCache({max: 1000, ttl: 1000 * 60 * 5});
+  public patternCache = new LRUCache({ max: 1000, ttl: 1000 * 60 * 5 });
 
   MidiConnection: MidiConnection = new MidiConnection();
   load: samples;
@@ -75,11 +87,11 @@ export class UserAPI {
   }
 
   _reportError = (error: any): void => {
-    console.log(error)
+    console.log(error);
     if (!this.app.show_error) {
       this.app.error_line.innerHTML = error as string;
-      this.app.error_line.classList.remove('hidden');
-      setInterval(() => this.app.error_line.classList.add('hidden'), 2000)
+      this.app.error_line.classList.remove("hidden");
+      setTimeout(() => this.app.error_line.classList.add("hidden"), 2000);
     }
   };
 
@@ -142,7 +154,6 @@ export class UserAPI {
      */
     return Math.floor((this.app._mouseY / document.body.clientHeight) * 127);
   };
-    
 
   // =============================================================
   // Utility functions
@@ -217,9 +228,7 @@ export class UserAPI {
     }
   };
 
-  public note = (
-    value: number = 60
-  ): Note => {
+  public note = (value: number = 60): Note => {
     /**
      * Sends a MIDI note to the current MIDI output.
      *
@@ -293,21 +302,24 @@ export class UserAPI {
   // Ziffers related functions
   // =============================================================
 
-  public z = (input: string, options: { [key: string]: string | number } = {}) => {
+  public z = (
+    input: string,
+    options: { [key: string]: string | number } = {}
+  ) => {
     const key = generateCacheKey(input, options);
     let player;
-      if(this.app.api.patternCache.has(key)) {
-        player = this.app.api.patternCache.get(key) as Player;
-      } else {
-        player = new Player(input, options, this.app);
-        this.app.api.patternCache.set(key, player);
-      }
-      if(player && player.ziffers.index === -1 || player.played) {
-        player.callTime = this.epulse();
-        player.played = false;
-      }
-      return player;
+    if (this.app.api.patternCache.has(key)) {
+      player = this.app.api.patternCache.get(key) as Player;
+    } else {
+      player = new Player(input, options, this.app);
+      this.app.api.patternCache.set(key, player);
     }
+    if ((player && player.ziffers.index === -1) || player.played) {
+      player.callTime = this.epulse();
+      player.played = false;
+    }
+    return player;
+  };
 
   // =============================================================
   // Counter related functions
@@ -565,25 +577,25 @@ export class UserAPI {
      * Seed the random numbers globally in UserAPI.
      *  @param seed - The seed to use
      */
-    if(typeof seed === "number") seed = seed.toString();
-    if(this.currentSeed!==seed) {
+    if (typeof seed === "number") seed = seed.toString();
+    if (this.currentSeed !== seed) {
       this.currentSeed = seed;
       this.randomGen = seededRandom(seed);
     }
-  }
+  };
 
   localSeededRandom = (seed: string | number): Function => {
-    if(typeof seed === "number") seed = seed.toString();
-    if(this.localSeeds.has(seed)) return this.localSeeds.get(seed) as Function;
-    const newSeededRandom = seededRandom(seed)
-    this.localSeeds.set(seed,newSeededRandom);
+    if (typeof seed === "number") seed = seed.toString();
+    if (this.localSeeds.has(seed)) return this.localSeeds.get(seed) as Function;
+    const newSeededRandom = seededRandom(seed);
+    this.localSeeds.set(seed, newSeededRandom);
     return newSeededRandom;
-  }
+  };
 
   clearLocalSeed = (seed: string | number | undefined = undefined): void => {
-    if(seed) this.localSeeds.delete(seed.toString());
+    if (seed) this.localSeeds.delete(seed.toString());
     this.localSeeds.clear();
-  }
+  };
 
   // =============================================================
   // Quantification functions
@@ -685,88 +697,88 @@ export class UserAPI {
   public odds = (n: number, sec: number = 15): boolean => {
     /**
      * Returns true n% of the time.
-     * 
+     *
      * @param n - The probability of returning true. 1/4 = 25% = 0.25, 80/127 = 62.9% = 0.6299212598425197, etc...
      * @param sec - The time frame in seconds
      * @returns True n% of the time
      */
-    return this.randomGen() < n*this.ppqn()/(this.ppqn()*sec);
+    return this.randomGen() < (n * this.ppqn()) / (this.ppqn() * sec);
   };
 
   public almostNever = (sec: number = 15): boolean => {
     /**
      * Returns true 2.5% of the time in given time frame.
-     * 
+     *
      * @param sec - The time frame in seconds
      * @returns True 2.5% of the time
      */
-    return this.randomGen() < 0.025*this.ppqn()/(this.ppqn()*sec);
+    return this.randomGen() < (0.025 * this.ppqn()) / (this.ppqn() * sec);
   };
 
   public rarely = (sec: number = 15): boolean => {
     /**
      * Returns true 10% of the time.
-     * 
+     *
      * @param sec - The time frame in seconds
-     * @returns True 10% of the time. 
+     * @returns True 10% of the time.
      */
-    return this.randomGen() < 0.1*this.ppqn()/(this.ppqn()*sec);
+    return this.randomGen() < (0.1 * this.ppqn()) / (this.ppqn() * sec);
   };
 
   public scarcely = (sec: number = 15): boolean => {
     /**
      * Returns true 25% of the time.
-     * 
+     *
      * @param sec - The time frame in seconds
      * @returns True 25% of the time
      */
-    return this.randomGen() < 0.25*this.ppqn()/(this.ppqn()*sec);
+    return this.randomGen() < (0.25 * this.ppqn()) / (this.ppqn() * sec);
   };
 
   public sometimes = (sec: number = 15): boolean => {
     /**
      * Returns true 50% of the time.
-     * 
+     *
      * @param sec - The time frame in seconds
      * @returns True 50% of the time
      */
-    return this.randomGen() < 0.5*this.ppqn()/(this.ppqn()*sec);
+    return this.randomGen() < (0.5 * this.ppqn()) / (this.ppqn() * sec);
   };
 
   public often = (sec: number = 15): boolean => {
     /**
      * Returns true 75% of the time.
-     * 
+     *
      * @param sec - The time frame in seconds
      * @returns True 75% of the time
      */
-    return this.randomGen() < 0.75*this.ppqn()/(this.ppqn()*sec);
+    return this.randomGen() < (0.75 * this.ppqn()) / (this.ppqn() * sec);
   };
 
   public frequently = (sec: number = 15): boolean => {
     /**
      * Returns true 90% of the time.
-     * 
+     *
      * @param sec - The time frame in seconds
      * @returns True 90% of the time
      */
-    return this.randomGen() < 0.9*this.ppqn()/(this.ppqn()*sec);
+    return this.randomGen() < (0.9 * this.ppqn()) / (this.ppqn() * sec);
   };
 
   public almostAlways = (sec: number = 15): boolean => {
     /**
      * Returns true 98.5% of the time.
-     * 
+     *
      * @param sec - The time frame in seconds
      * @returns True 98.5% of the time
      */
-    return this.randomGen() < 0.985*this.ppqn()/(this.ppqn()*sec);
+    return this.randomGen() < (0.985 * this.ppqn()) / (this.ppqn() * sec);
   };
 
   public dice = (sides: number): number => {
     /**
      * Returns the value of a dice roll with n sides.
-     * 
+     *
      * @param sides - The number of sides on the dice
      * @returns The value of a dice roll with n sides
      */

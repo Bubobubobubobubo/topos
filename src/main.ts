@@ -570,6 +570,15 @@ export class Editor {
     Object.entries(this.api).forEach(([name, value]) => {
       (globalThis as Record<string, any>)[name] = value;
     });
+
+    // Loading from URL bar
+    // let url = new URLSearchParams(window.location.search).toString();
+    // const queryString = url.split("universe=");
+    // console.log(queryString);
+    // const encodedData = queryString.split("=")[1];
+    // const decodedData = decodeURIComponent(queryString);
+    // console.log(decodedData);
+    // console.log(decodedData);
   }
 
   get note_buffer() {
@@ -594,15 +603,16 @@ export class Editor {
     window.history.replaceState({}, document.title, "/");
   };
 
+  parseHash = (hash: string) => {
+    return JSON.parse(atob(hash));
+  };
+
   share() {
     const hashed_table = JSON.stringify(
       this.settings.universes[this.selected_universe]
     );
     const url = new URL(window.location.href);
-    url.searchParams.set(
-      "universe",
-      this.selected_universe + "-" + hashed_table
-    );
+    url.searchParams.set("universe", hashed_table);
     window.history.replaceState({}, "", url.toString());
   }
 

@@ -130,7 +130,7 @@ export class AppSettings {
     }
   }
 
-  get_universe(universe_name: string) {
+  get_universe() {
     this.universes.universe_name;
   }
 
