@@ -4,7 +4,7 @@ import { javascript } from "@codemirror/lang-javascript";
 import { oneDark } from "@codemirror/theme-one-dark";
 import { markdown } from "@codemirror/lang-markdown";
 import { Extension, Prec } from "@codemirror/state";
-import {indentWithTab} from "@codemirror/commands"
+import { indentWithTab } from "@codemirror/commands";
 import { vim } from "@replit/codemirror-vim";
 import { AppSettings } from "./AppSettings";
 import { editorSetup } from "./EditorSetup";
@@ -164,6 +164,11 @@ export class Editor {
     "vim-mode"
   ) as HTMLButtonElement;
 
+  // Share button
+  share_button: HTMLElement = document.getElementById(
+    "share_button"
+  ) as HTMLElement;
+
   // Error line
   error_line: HTMLElement = document.getElementById(
     "error_line"
@@ -229,9 +234,16 @@ export class Editor {
         ...this.editorExtensions,
         EditorView.lineWrapping,
         dynamicPlugins.of(this.userPlugins),
-				Prec.highest(keymap.of([
-					{ key:"Ctrl-Enter", run: ()=>{return true} }
-				])),
+        Prec.highest(
+          keymap.of([
+            {
+              key: "Ctrl-Enter",
+              run: () => {
+                return true;
+              },
+            },
+          ])
+        ),
         keymap.of([indentWithTab]),
       ],
       doc: this.universes[this.selected_universe].locals[this.local_index]
@@ -484,6 +496,20 @@ export class Editor {
       this.settings.font_size = parseInt(new_value);
     });
 
+    this.share_button.addEventListener("click", () => {
+      this.share_button.classList.add("animate-spin");
+      setInterval(
+        () => this.share_button.classList.remove("animate-spin"),
+        1000
+      );
+      // trigger a manual save
+      this.currentFile().candidate = app.view.state.doc.toString();
+      this.currentFile().committed = app.view.state.doc.toString();
+      this.settings.saveApplicationToLocalStorage(app.universes, app.settings);
+      // encode as a blob!
+      this.share();
+    });
+
     this.normal_mode_button.addEventListener("click", () => {
       this.settings.vimMode = false;
       this.view.dispatch({ effects: this.vimModeCompartment.reconfigure([]) });
@@ -562,6 +588,22 @@ export class Editor {
     return this.universes[this.selected_universe.toString()].locals[
       this.local_index
     ];
+  }
+
+  emptyUrl = () => {
+    window.history.replaceState({}, document.title, "/");
+  };
+
+  share() {
+    const hashed_table = JSON.stringify(
+      this.settings.universes[this.selected_universe]
+    );
+    const url = new URL(window.location.href);
+    url.searchParams.set(
+      "universe",
+      this.selected_universe + "-" + hashed_table
+    );
+    window.history.replaceState({}, "", url.toString());
   }
 
   showDocumentation() {
