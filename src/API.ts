@@ -4,10 +4,10 @@ import { tryEvaluate } from "./Evaluator";
 import { DrunkWalk } from "./Utils/Drunk";
 import { scale } from "./Scales";
 import { Editor } from "./main";
-import { Sound } from "./Sound";
-import { Note } from "./Note";
+import { Sound } from "./classes/Sound";
+import { Note } from "./classes/Note";
 import { LRUCache } from "lru-cache";
-import { Player } from "./ZPlayer";
+import { Player } from "./classes/ZPlayer";
 import {
   samples,
   initAudioOnFirstClick,

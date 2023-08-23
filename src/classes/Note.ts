@@ -1,9 +1,9 @@
-import { Event } from './Event';
-import { type Editor } from './main';
-import { MidiConnection } from "./IO/MidiConnection";
-import { freqToMidi, midiToFreq, resolvePitchBend, noteFromPc, getScale, isScale, parseScala } from 'zifferjs';
+import { SoundEvent } from './Event';
+import { type Editor } from '../main';
+import { MidiConnection } from "../IO/MidiConnection";
+import { midiToFreq, noteFromPc } from 'zifferjs';
 
-export class Note extends Event {
+export class Note extends SoundEvent {
     midiConnection: MidiConnection;
 
     constructor(input: number|object, public app: Editor) {
@@ -15,11 +15,6 @@ export class Note extends Event {
 
     note = (value: number): this => {
         this.values['note'] = value;
-        return this;
-    }
-
-    duration = (value: number): this => {
-        this.values['duration'] = value;
         return this;
     }
 
@@ -55,18 +50,6 @@ export class Note extends Event {
         }
     }
 
-    freq = (value: number): this => {
-        this.values['freq'] = value;
-        const midiNote = freqToMidi(value);
-        if(midiNote % 1 !== 0) {
-            this.values['note'] = Math.floor(midiNote);
-            this.values['bend'] = resolvePitchBend(midiNote)[1];
-        } else {
-            this.values['note'] = midiNote;
-        }
-        return this;
-    }
-
     bend = (value: number): this => {
         this.values['bend'] = value;
         return this;
@@ -80,38 +63,12 @@ export class Note extends Event {
     }
 
     update = (): void => {
-        // TODO: Figure out why _ is sometimes added?
-        if(this.values.type === 'Pitch' || this.values.type === '_Pitch') {
-            const [note,bend] = noteFromPc(this.values.key!, this.values.pitch!, this.values.parsedScale!, this.values.octave!);
+        if(this.values.key && this.values.pitch && this.values.parsedScale && this.values.octave) {
+            const [note,bend] = noteFromPc(this.values.key, this.values.pitch, this.values.parsedScale, this.values.octave);
             this.values.note = note;
             this.values.freq = midiToFreq(note);
-            if(bend) {
-                this.values.bend = bend;
-            }
+            if(bend) this.values.bend = bend;
         }
-    }
-
-    octave = (value: number): this => {
-        this.values['octave'] = value;
-        this.update();
-        return this;
-    }
-
-    key = (value: string): this => {
-        this.values['key'] = value;
-        this.update();
-        return this;
-    }
-
-    scale = (value: string): this => {
-            if(!isScale(value)) {
-               this.values.parsedScale = parseScala(value) as number[];
-           } else {
-               this.values.scaleName = value;
-               this.values.parsedScale = getScale(value) as number[];
-           }
-        this.update();
-        return this;
     }
 
     out = (): void => {

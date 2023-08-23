@@ -1,12 +1,13 @@
-import { type Editor } from './main';
-import { Event } from './Event';
+import { type Editor } from '../main';
+import { SoundEvent } from './Event';
+import { midiToFreq, noteFromPc } from 'zifferjs';
 
 import {
   superdough,
   // @ts-ignore
 } from "superdough";
 
-export class Sound extends Event {
+export class Sound extends SoundEvent {
 
     constructor(sound: string|object, public app: Editor) {
         super(app);
@@ -25,12 +26,6 @@ export class Sound extends Event {
         return this;
     };
     dec = this.decay;
-
-    sustain = (value: number): this => {
-        this.values["sustain"] = value;
-        return this;
-    };
-    sus = this.sustain;
 
     release = (value: number): this => {
         this.values["release"] = value;
@@ -223,10 +218,18 @@ export class Sound extends Event {
         }
     };
 
-    dur = (value: number): this => {
+    // NOTE: Sustain of the sound. duration() from the superclass Event is used to change the note length.
+    sustain = (value: number): this => {
         this.values["dur"] = value;
         return this;
     };
+
+    update = (): void => {
+        if(this.values.key && this.values.pitch && this.values.parsedScale && this.values.octave) {
+            const [note,_] = noteFromPc(this.values.key, this.values.pitch, this.values.parsedScale, this.values.octave);
+            this.values.freq = midiToFreq(note);
+        }
+    }
 
     out = (): object => {
         return superdough(
@@ -235,6 +238,5 @@ export class Sound extends Event {
             this.values.dur
         );
     };
-
 
 }

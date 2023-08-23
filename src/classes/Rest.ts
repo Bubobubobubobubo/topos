@@ -1,4 +1,4 @@
-import { type Editor } from './main';
+import { type Editor } from '../main';
 import { Event } from "./Event";
 
 export class Rest extends Event {
@@ -23,6 +23,10 @@ export class Rest extends Event {
               // @ts-ignore
               return target[propKey];
             },
+            // @ts-ignore
+            set(target, propKey, value, receiver) {
+              return false;
+            }
           });
     }
 

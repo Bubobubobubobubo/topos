@@ -1,5 +1,5 @@
 import { Chord, Pitch, Rest as ZRest, Ziffers } from "zifferjs";
-import { Editor } from "./main";
+import { Editor } from "../main";
 import { Event } from "./Event";
 import { Sound } from "./Sound";
 import { Note } from "./Note";
@@ -11,6 +11,8 @@ export class Player extends Event {
     callTime: number = 0;
     played: boolean = false;
     current!: Pitch|Chord|ZRest;
+    retro: boolean = false;
+    tick: number = 0;
 
     constructor(input: string, options: object, public app: Editor) {
         super(app);
@@ -25,7 +27,13 @@ export class Player extends Event {
     }
 
     areWeThereYet = (): boolean => {
-        return (this.ziffers.notStarted() || this.app.api.epulse() > this.callTime+(this.current.duration*this.app.api.ppqn()))
+        const howAboutNow = (this.ziffers.notStarted() || this.app.api.epulse() > this.callTime+(this.current.duration*this.app.api.ppqn()));
+        if(howAboutNow) {
+            this.tick = 0;
+        } else {
+            this.tick++;
+        }
+        return howAboutNow;
     }
 
     sound(name: string) {
@@ -33,7 +41,8 @@ export class Player extends Event {
             const event = this.next() as Pitch|Chord|ZRest;
             if(event instanceof Pitch) {
                 // TODO: Quick hack. Select which attributes to use, but some ziffers stuff is needed for chaining key change etc.
-                return new Sound(event.asObject(), this.app).sound(name);
+                const obj = event.getExisting("freq","pitch","key","scale","octave");
+                return new Sound(obj, this.app).sound(name);
             } else if(event instanceof Rest) {
                 return Rest.createRestProxy(event.duration, this.app);
             }
@@ -48,7 +57,8 @@ export class Player extends Event {
             const event = this.next() as Pitch|Chord|ZRest;
             if(event instanceof Pitch) {
                   // TODO: Quick hack. Select which attributes to use, but some ziffers stuff is needed for chaining key change etc.
-                const note = new Note(event.asObject(), this.app);
+                const obj = event.getExisting("note","pitch","bend","key","scale","octave");
+                const note = new Note(obj, this.app);
                 return value ? note.note(value) : note;
             } else if(event instanceof ZRest) {
                 return Rest.createRestProxy(event.duration, this.app);
@@ -57,6 +67,28 @@ export class Player extends Event {
             // Not really a rest, but calling for skipping undefined methods
             return Rest.createRestProxy(0, this.app);
         }
+    }
+
+    scale(name: string) {
+        this.ziffers.scale(name);
+        return this;
+    }
+
+    key(name: string) {
+        this.ziffers.key(name);
+        return this;
+    }
+
+    octave(value: number) {
+        this.ziffers.octave(value);
+        return this;
+    }
+
+    retrograde() {
+        if(this.tick === 0 && this.ziffers.index === 0) {
+            this.ziffers.retrograde();
+        }
+        return this;
     }
 
     out = (): void => {

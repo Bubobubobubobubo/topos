@@ -1,6 +1,7 @@
-import { type Editor } from './main';
+import { type Editor } from '../main';
+import { freqToMidi, resolvePitchBend, getScale, isScale, parseScala } from 'zifferjs';
 
-export class Event {
+export abstract class Event {
     seedValue: string|undefined = undefined;
     randomGen: Function = Math.random;
     app: Editor;
@@ -70,6 +71,52 @@ export class Event {
     duration = (value: number): Event => {
         this.values['duration'] = value;
         return this;
+    }
+
+}
+
+export abstract class SoundEvent extends Event {
+    constructor(app: Editor) {
+        super(app);
+    }
+
+    octave = (value: number): this => {
+        this.values['octave'] = value;
+        this.update();
+        return this;
+    }
+
+    key = (value: string): this => {
+        this.values['key'] = value;
+        this.update();
+        return this;
+    }
+
+    scale = (value: string): this => {
+            if(!isScale(value)) {
+               this.values.parsedScale = parseScala(value) as number[];
+           } else {
+               this.values.scaleName = value;
+               this.values.parsedScale = getScale(value) as number[];
+           }
+        this.update();
+        return this;
+    }
+
+    freq = (value: number): this => {
+        this.values['freq'] = value;
+        const midiNote = freqToMidi(value);
+        if(midiNote % 1 !== 0) {
+            this.values['note'] = Math.floor(midiNote);
+            this.values['bend'] = resolvePitchBend(midiNote)[1];
+        } else {
+            this.values['note'] = midiNote;
+        }
+        return this;
+    }
+
+    update = (): void => {
+        // Overwrite in subclasses
     }
 
 }
