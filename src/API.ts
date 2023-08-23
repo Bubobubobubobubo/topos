@@ -23,13 +23,18 @@ interface ControlChange {
 }
 
 // @ts-ignore
-Array.prototype.loop = function (index) {
-  return this[index % this.length];
+Array.prototype.palindrome = function (index) {
+  let left_to_right = Array.from(this);
+  let right_to_left = Array.from(this.reverse());
+  return left_to_right.concat(right_to_left);
 };
-
 // @ts-ignore
 Array.prototype.random = function (index) {
   return this[Math.floor(Math.random() * this.length)];
+};
+// @ts-ignore
+Array.prototype.loop = function (index) {
+  return this[index % this.length];
 };
 // @ts-ignore
 Array.prototype.rand = Array.prototype.random;
