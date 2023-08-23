@@ -1,6 +1,6 @@
 import { Chord, Pitch, Rest as ZRest, Ziffers } from "zifferjs";
 import { Editor } from "../main";
-import { Event } from "./Event";
+import { Event, Skip } from "./Event";
 import { Sound } from "./Sound";
 import { Note } from "./Note";
 import { Rest } from "./Rest";
@@ -43,12 +43,11 @@ export class Player extends Event {
                 // TODO: Quick hack. Select which attributes to use, but some ziffers stuff is needed for chaining key change etc.
                 const obj = event.getExisting("freq","pitch","key","scale","octave");
                 return new Sound(obj, this.app).sound(name);
-            } else if(event instanceof Rest) {
+            } else if(event instanceof ZRest) {
                 return Rest.createRestProxy(event.duration, this.app);
-            }
+            } 
         } else {
-            // Not really a rest, but calling for skipping undefined methods
-            return Rest.createRestProxy(0, this.app);
+            return Skip.createRestProxy();
         }
     }
 
@@ -62,10 +61,9 @@ export class Player extends Event {
                 return value ? note.note(value) : note;
             } else if(event instanceof ZRest) {
                 return Rest.createRestProxy(event.duration, this.app);
-            }
+            } 
         } else {
-            // Not really a rest, but calling for skipping undefined methods
-            return Rest.createRestProxy(0, this.app);
+            return Skip.createRestProxy();
         }
     }
 
