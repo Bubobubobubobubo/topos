@@ -572,13 +572,12 @@ export class Editor {
     });
 
     // Loading from URL bar
-    // let url = new URLSearchParams(window.location.search).toString();
-    // const queryString = url.split("universe=");
-    // console.log(queryString);
-    // const encodedData = queryString.split("=")[1];
-    // const decodedData = decodeURIComponent(queryString);
-    // console.log(decodedData);
-    // console.log(decodedData);
+    let url = new URLSearchParams(window.location.search);
+    if (url === null) {
+      let new_universe = JSON.parse(url.get("universe"));
+      console.log((this.universes["imported"] = new_universe));
+      this.loadUniverse("imported");
+    }
   }
 
   get note_buffer() {
@@ -608,9 +607,9 @@ export class Editor {
   };
 
   share() {
-    const hashed_table = JSON.stringify(
-      this.settings.universes[this.selected_universe]
-    );
+    const hashed_table = JSON.stringify({
+      universe: this.settings.universes[this.selected_universe],
+    });
     const url = new URL(window.location.href);
     url.searchParams.set("universe", hashed_table);
     window.history.replaceState({}, "", url.toString());
