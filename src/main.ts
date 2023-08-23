@@ -1,3 +1,9 @@
+import {
+  uniqueNamesGenerator,
+  adjectives,
+  colors,
+  animals,
+} from "unique-names-generator";
 import { EditorState, Compartment } from "@codemirror/state";
 import { ViewUpdate, lineNumbers, keymap } from "@codemirror/view";
 import { javascript } from "@codemirror/lang-javascript";
@@ -579,13 +585,14 @@ export class Editor {
         const universeParam = url.get("universe");
         if (universeParam !== null) {
           new_universe = JSON.parse(atob(universeParam));
-          this.loadUniverse("imported", new_universe["universe"]);
+          const randomName: string = uniqueNamesGenerator({
+            dictionaries: [adjectives, colors, animals],
+          });
+          this.loadUniverse(randomName, new_universe["universe"]);
           this.emptyUrl();
         }
       }
     }
-    console.log(this.universes[this.selected_universe]);
-    console.log(this.universes["imported"]);
   }
 
   get note_buffer() {
@@ -615,14 +622,16 @@ export class Editor {
   };
 
   share() {
-    const hashed_table = btoa(JSON.stringify(
-      {
+    const hashed_table = btoa(
+      JSON.stringify({
         universe: this.settings.universes[this.selected_universe],
-      }
-    ));
+      })
+    );
     const url = new URL(window.location.href);
     url.searchParams.set("universe", hashed_table);
     window.history.replaceState({}, "", url.toString());
+    // Copy the text inside the text field
+    navigator.clipboard.writeText(url.toString());
   }
 
   showDocumentation() {
