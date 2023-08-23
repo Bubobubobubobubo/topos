@@ -1,6 +1,5 @@
 import {
   uniqueNamesGenerator,
-  Config,
   adjectives,
   colors,
   animals,
