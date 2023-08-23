@@ -6,7 +6,7 @@ import { markdown } from "@codemirror/lang-markdown";
 import { Extension, Prec } from "@codemirror/state";
 import { indentWithTab } from "@codemirror/commands";
 import { vim } from "@replit/codemirror-vim";
-import { AppSettings } from "./AppSettings";
+import { AppSettings, Universe } from "./AppSettings";
 import { editorSetup } from "./EditorSetup";
 import { documentation } from "./Documentation";
 import { EditorView } from "codemirror";
@@ -573,11 +573,16 @@ export class Editor {
 
     // Loading from URL bar
     let url = new URLSearchParams(window.location.search);
-    if (url === null) {
-			//@ts-ignore
-      let new_universe = JSON.parse(url.get("universe"));
-      console.log((this.universes["imported"] = new_universe));
-      this.loadUniverse("imported");
+    if (url !== undefined) {
+      let new_universe;
+      if (url !== null) {
+        const universeParam = url.get("universe");
+        if (universeParam !== null) {
+          new_universe = JSON.parse(universeParam);
+        }
+      }
+      this.settings.universes["imported"] = new_universe;
+      this.loadUniverse("imported", false, new_universe);
     }
   }
 
@@ -813,14 +818,22 @@ export class Editor {
   /**
    * @param universeName: The name of the universe to load
    */
-  loadUniverse(universeName: string): void {
-    // Saving the current file before initiating the switch logic
-    this.currentFile().candidate = this.view.state.doc.toString();
+  loadUniverse(
+    universeName: string,
+    saving: boolean = true,
+    universe: Universe = template_universe
+  ): void {
+    console.log(universeName, saving, universe);
+
+    if (saving) {
+      // Saving the current file before initiating the switch logic
+      this.currentFile().candidate = this.view.state.doc.toString();
+    }
 
     // Getting the new universe name and moving on
     let selectedUniverse = universeName.trim();
     if (this.universes[selectedUniverse] === undefined) {
-      this.universes[selectedUniverse] = template_universe;
+      this.universes[selectedUniverse] = universe;
     }
     this.selected_universe = selectedUniverse;
     this.settings.selected_universe = this.selected_universe;
