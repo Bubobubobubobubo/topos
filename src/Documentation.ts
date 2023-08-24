@@ -81,6 +81,13 @@ A set of files is called a _universe_. Topos can store several universes and swi
 Switching between universes will not stop the transport nor reset the clock. You are switching the context but time keeps flowing. This can be useful to prepare immediate transitions between songs and parts. Think of universes as an algorithmic set of music. All scripts in a given universe are aware about how many times they have been runned already. You can reset that value programatically.
 
 You can clear the current universe by pressing the flame button on the top right corner of the interface. This will clear all the scripts and the note file. **Note:** there is no shortcut for clearing a universe. We do not want to loose your work by mistake!
+
+# Sharing your work
+
+Click on the Topos logo in the top bar. Your URL will change to something much longer and complex. The same URL will be copied to your clipboard. Send this link to your friends to share the universe you are currently working on with them. 
+
+- The imported universe will always get a randomly generated name such as: <icode>random_silly_llama</icode>.
+- Topos will automatically fetch and switch to the universe that was sent to you. Your previous universe is still there, don't worry.
 `;
 
 const time: string = `
