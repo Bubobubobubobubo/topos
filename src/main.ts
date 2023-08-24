@@ -49,9 +49,9 @@ const classMap = {
     "justify-center lg:my-8 my-2 lg:mx-8 mx-2 lg:text-2xl text-base w-full text-left text-white border-collapse",
   thead:
     "text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400",
-  th: "lg:px-6 lg:py-6 px-2 py-2",
-  td: "py-2",
-  tr: "py-0",
+  th: "",
+  td: "",
+  tr: "",
 };
 const bindings = Object.keys(classMap).map((key) => ({
   type: "output",

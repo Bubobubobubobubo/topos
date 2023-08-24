@@ -406,28 +406,14 @@ mod(0.5) && sound('hh')
 
 There are many possible arguments that you can add to your sounds. Learning them can take a long time but it will open up a lot of possibilities. Let's try to make it through all of them. They can all be used both with synthesizers and audio samples, which is kind of unconventional with normal / standard electronic music softwares.
 
-## Orbits and audio busses
-
-Topos is inheriting some audio bus management principles taken from the [SuperDirt](https://github.com/musikinformatik/SuperDirt) and [Superdough](https://www.npmjs.com/package/superdough) engine, a WebAudio based recreation of the same engine. Each sound that you play is associated with an audio bus, called an _orbit_. Some effects are affecting **all sounds currently playing on that bus**. These are called **global effects**, to distinguish from **local effects**:
-
-- **global effects**: _reverberation_ and _delay_.
-- **local effects**: everything else :smile:
-
-There is a special method to choose the _orbit_ that your sound is going to use:
-
-| Method   | Alias | Description                                                |
-|----------|-------|------------------------------------------------------------|
-| orbit    |       | Orbit number                                               |
-
-
 ## Amplitude
 
 Simple controls over the amplitude (volume) of a given sound.
 
-| Method   | Alias | Description                                                |
-|----------|-------|------------------------------------------------------------|
-| gain     |       | Volume of the synth/sample (exponential)                   |
-| velocity | vel   | Velocity (amplitude) from 0 to 1. Multipled with gain      |
+| Method  | Alias | Description                                                |
+|---------|-------|------------------------------------------------------------|
+| gain    |       | Volume of the synth/sample (exponential)                   |
+| velocity| vel   | Velocity (amplitude) from 0 to 1. Multipled with gain      |
 
 ## Amplitude Enveloppe
 
@@ -462,7 +448,6 @@ There are some basic controls over the playback of each sample. This allows you 
 | speed   |       | Playback speed (<icode>2</icode> = twice as fast)         |
 | cut     |       | Set with <icode>0</icode> or <icode>1</icode>. Will cut the sample as soon as another sample is played on the same bus |
 | clip    |       | Multiply the duration of the sample with the given number |
-| pan     |       | Stereo position of the audio playback (<icode>0</icode> = left, <icode>1</icode> = right)|
 
 ## Filters
 
@@ -500,38 +485,28 @@ mod(2)::snd('cp').room(1).size(0.9).out()
 
 ## Delay
 
-A good sounding delay unit that can go into feedback territory. Use it without moderation.
 
-| Method     | Alias     | Description                     |
-|------------|-----------|---------------------------------|
-| delay      |           | Delay _wet/dry_ (between <icode>0</icode> and <icode>1</icode>) |
-| delaytime  | delayt    | Delay time (in milliseconds)    |
-| delayfeedback| delayfb | Delay feedback (between <icode>0</icode> and <icode>1</icode>) |
-
-\`\`\`javascript
-mod(2)::snd('cp').delay(0.5).delaytime(0.75).delayfb(0.8).out()
-mod(4)::snd('snare').out()
-mod(1)::snd('kick').out()
-\`\`\`
-
-## Distorsion, saturation, destruction
-
-| Method     | Alias     | Description                     |
-|------------|-----------|---------------------------------|
-| coarse     |           | Artificial sample-rate lowering |
-| crush      |           | bitcrushing. <icode>1</icode> is extreme, the more you go up, the less it takes effect.  |
-| shape      |           | Waveshaping distortion (between <icode>0</icode> and <icode>1</icode>)          |
-
-
-## Undocumented
-
+| Method     | Alias | Description                     |
+|------------|-------|---------------------------------|
+| delay      |       | Delay _wet/dry_ (between <icode>0</icode> and <icode>1</icode> |
+| delaytime | delayt    |  |
+| delayfeedback| delayfb |  |
 
 | Method                                 | Description |
 | -------------------------------------- | ----------- |
 | <icode>unit(value: number)</icode>     | Sets the unit value  |
 | <icode>frequency(value: number)</icode>| Sets the playback sample frequency |
 | <icode>nudge(value: number)</icode>    | Adjusts the start time of the sound by the given value |
+| <icode>cut(value: number)</icode>| Cut the sample if it overlaps on the same orbit. |
 | <icode>loop(value: number)</icode>| Loops the sample. |
+| <icode>note(value: number)</icode>| Sets the note value of the sound. |
+| <icode>coarse(value: number)</icode>| Adds some flavor of saturation. |
+| <icode>crush(value: number)</icode>| Adds some amount of bitcrush on the given sound. |
+| <icode>shape(value: number)</icode>| Adds some distortion. |
+| <icode>pan(value: number)</icode>| Sets the panoramic value of the sound (in stereo, between <icode>0.0</icode> and <icode>1.0</icode>). |
+| <icode>delay(value: number)</icode>| Sets the delay wet/dry value. |
+| <icode>delayfeedback(value: number)</icode>| Sets delay feedback. |
+| <icode>delaytime(value: number)</icode>| Sets delay time (in seconds). |
 | <icode>orbit(value: number)</icode>| Sets the orbit value of the sound. |
 `;
 
