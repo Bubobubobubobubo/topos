@@ -27,8 +27,15 @@ export class Player extends Event {
         return this.current;
     }
 
+    pulseToSecond = (pulse: number): number => {
+        return this.app.clock.convertPulseToSecond(pulse);
+    }
+
     areWeThereYet = (): boolean => {
-        const howAboutNow = (this.ziffers.notStarted() || this.app.api.epulse() > this.callTime+(this.current.duration*this.app.api.ppqn()));
+        const howAboutNow = (this.ziffers.notStarted() || 
+        this.pulseToSecond(this.app.api.epulse()) > 
+        this.pulseToSecond(this.callTime) +
+        this.current.duration * this.pulseToSecond(this.app.api.ppqn() * 4))
         if(howAboutNow) {
             this.tick = 0;
         } else {
