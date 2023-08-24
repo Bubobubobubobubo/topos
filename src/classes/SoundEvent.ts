@@ -255,7 +255,7 @@ export class SoundEvent extends AudibleEvent {
     return superdough(
       this.values,
       this.app.clock.pulse_duration,
-      this.values.dur
+      this.values.dur || 0.5
     );
   };
 }
