@@ -93,15 +93,68 @@ Click on the Topos logo in the top bar. Your URL will change to something much l
 const time: string = `
 # Time
 
-Time in Topos can be **paused** and/or **resetted**. Musical time is flowing at a given **BPM** (_beats per minute_) like a regular drum machine. There are three core values that you will often interact with in one form or another:
+Time in Topos is flowing just like on a drum machine. Topos is counting bars, beats and pulses. The time can be **paused**, **resumed** and/or **resetted**. Pulses are flowing at a given **BPM** (_beats per minute_). There are three core values that you will often interact with in one form or another:
 
 - **bars**: how many bars have elapsed since the origin of time.
 - **beats**: how many beats have elapsed since the beginning of the bar.
 - **pulse**: how many pulses have elapsed since the last beat.
 
-To change the tempo, use the <icode>bpm(number)</icode> function. You can interact with time using interface buttons, keyboard shortcuts but also by using the <icode>play()</icode>, <icode>pause()</icode> and <icode>stop()</icode> functions. You will soon learn how to manipulate time to your liking for backtracking, jumping forward, etc... The traditional timeline model has little value when you can script everything.
+To change the tempo, use the <icode>bpm(number)</icode> function. The transport is controlled by the interface buttons, by the keyboard shortcuts or using the <icode>play()</icode>, <icode>pause()</icode> and <icode>stop()</icode> functions. You will soon learn how to manipulate time to your liking for backtracking, jumping forward, etc... The traditional timeline model has little value when you can script everything.
 
 **Note:** the <icode>bpm(number)</icode> function can serve both for getting and setting the **BPM** value.
+
+## Simple rhythms
+
+Let's study two very simple rhythmic functions, <icode>mod(n: ...number[])</icode> and <icode>onbeat(...n:number[])</icode>. They are both easy to understand and powerful enough to get you to play your first rhythms.
+
+- <icode>mod(...n: number[])</icode>: this function will return true every _n_ pulsations. The value <icode>1</icode> will return <icode>true</icode> at the beginning of each beat. Floating point numbers like <icode>0.5</icode> or <icode>0.25</icode> are also accepted. Multiple values can be passed to <icode>mod</icode> to generate more complex rhythms.
+
+
+\`\`\`javascript
+	mod(1) :: sound('kick').out() // A kickdrum played every beat
+	mod(.5) :: sound('kick').out() // A kickdrum played twice per beat
+	mod(.25) :: sound('kick').out() // A kickdrum played four times every beat
+	mod(1/3) :: sound('kick').out() // A funnier ratio!
+	mod(1, 2.5)::sound('hh').out() // A great high-hat pattern
+	mod(1,3.25,2.5)::snd('hh').out() // A somewhat weirder pattern
+\`\`\`
+
+- <icode>onbeat(...n: number[])</icode>: By default, the bar is set in <icode>4/4</icode> with four beats per bar. The <icode>onbeat</icode> function allows you to lock on to a specific beat to execute some code. It can accept multiple arguments. It's usage is very straightforward and not hard to understand. You can pass integers or floating point numbers.
+
+\`\`\`javascript
+	onbeat(1,2,3,4)::snd('kick').out() // Bassdrum on each beat
+	onbeat(2,4)::snd('snare').out() // Snare on acccentuated beats
+	onbeat(1.5,2.5,3.5, 3.75)::snd('hat').out() // Cool high-hats
+\`\`\`
+
+## Rhythm generators
+
+We included a bunch of popular rhythm generators in Topos such as the euclidian rhythms algorithms or the one to generate rhythms based on a binary sequence. They all work using _iterators_ that you will gradually learn to use for iterating over lists. Note that they are levaraging <icode>mod(...n:number[])</icode> that you just learned about!
+
+- <icode>euclid(iterator: number, pulses: number, length: number, rotate: number): boolean</icode>: generates <icode>true</icode> or <icode>false</icode> values from an euclidian rhythm sequence. This algorithm is very popular in the electronic music making world.
+
+\`\`\`javascript
+	mod(.5) && euclid($(1), 5, 8) && snd('kick').out()
+	mod(.5) && euclid($(2), 2, 8) && snd('sd').out()
+\`\`\`
+
+- <icode>bin(iterator: number, n: number): boolean</icode>: a binary rhythm generator. It transforms the given number into its binary representation (_e.g_ <icode>34</icode> becomes <icode>100010</icode>). It then returns a boolean value based on the iterator in order to generate a rhythm.
+
+
+\`\`\`javascript
+	mod(.5) && bin($(1), 34) && snd('kick').out()
+	mod(.5) && bin($(2), 48) && snd('sd').out()
+\`\`\`
+
+If you don't find it spicy enough, you can add some more probabilities to your rhythms by taking advantage of the probability functions. See the functions documentation page to learn more about them. 
+
+\`\`\`javascript
+	prob(60)::mod(.5) && euclid($(1), 5, 8) && snd('kick').out()
+	prob(60)::mod(.5) && euclid($(2), 3, 8) && snd('sd').out()
+	prob(80)::mod(.5) && sound('hh').out()
+\`\`\`
+
+## Larger time divisions
 
 ## Pulses
 
@@ -129,25 +182,7 @@ Every script can access the current time by using the following functions:
 
 These values are **extremely useful** to craft more complex syntax or to write musical scores. However, Topos is also offering more high-level sequencing functions to make it easier to play music.
 
-## Useful Basic Functions
-
-Some functions can be leveraged to play rhythms without thinking too much about the clock. Learn them well:
-
-- <icode>beat(...values: number[])</icode>: returns <icode>true</icode> on the given beat. You can add any number of beat values, (_e.g._ <icode>onbeat(1.2,1.5,2.3,2.5)</icode>). The function will return <icode>true</icode> only for a given pulse, which makes this function very useful for drumming.
-
-\`\`\`javascript
-    onbeat(1,2,3,4) && sound('bd').out()
-    onbeat(.5,.75,1) && sound('hh').out()
-    onbeat(3) && sound('sd').out()
-\`\`\`
-
-- <icode>mod(...values: number[])</icode>: returns <icode>true</icode> if the current pulse is a multiple of the given value. You can add any number of values, (_e.g._ <icode>mod(.25,.75)</icode>). Note that <icode>1</icode> will equal to <icode>ppqn()</icode> pulses by default. Thus, <icode>mod(.5)</icode> for a **PPQN** of 48 will be <icode>24</icode> pulses.
-
-\`\`\`javascript
-    mod(1) && sound('bd').out()
-    mod(pick(.25,.5)) && sound('hh').out()
-    mod(.5) && sound('jvbass').out()
-\`\`\`
+## To document!
 
 - <icode>onbar(...values: number[])</icode>: returns <icode>true</icode> if the bar is currently equal to any of the specified values.
 - <icode>modbar(...values: number[]) or bmod(...)</icode>: returns <icode>true</icode> if the bar is currently a multiple of any of the specified values.
@@ -156,25 +191,6 @@ Some functions can be leveraged to play rhythms without thinking too much about 
 - <icode>div(chunk: number)</icode>: returns <icode>true</icode> for every pulse in intervals of given number of beats
 - <icode>divbar(chunk: number)</icode>: returns <icode>true</icode> for every pulse in intervals of given number of bars
 - <icode>divseq(...values: number[])</icode>: returns <icode>true</icode> for every pulse in intervals of given number of beats returning different value each time.
-
-## Rhythm generators
-
-We included a bunch of popular rhythm generators in Topos such as the euclidian rhythms algorithms or the one to generate rhythms based on a binary sequence. They all work using _iterators_ that you will gradually learn to use for iterating over lists.
-
-- <icode>euclid(iterator: number, pulses: number, length: number, rotate: number): boolean</icode>: generates <icode>true</icode> or <icode>false</icode> values from an euclidian rhythm sequence. This algorithm is very popular in the electronic music making world.
-
-\`\`\`javascript
-    mod(.5) && euclid($(1), 5, 8) && snd('kick').out()
-    mod(.5) && euclid($(2), 2, 8) && snd('sd').out()
-\`\`\`
-
-- <icode>bin(iterator: number, n: number): boolean</icode>: a binary rhythm generator. It transforms the given number into its binary representation (_e.g_ <icode>34</icode> becomes <icode>100010</icode>). It then returns a boolean value based on the iterator in order to generate a rhythm.
-
-
-\`\`\`javascript
-    mod(.5) && euclid($(1), 34) && snd('kick').out()
-    mod(.5) && euclid($(2), 48) && snd('sd').out()
-\`\`\`
 
 ## Using time as a conditional
 

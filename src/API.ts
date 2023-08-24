@@ -236,7 +236,7 @@ export class UserAPI {
     }
   };
 
-  public midi = (value: number|object = 60): NoteEvent => {
+  public midi = (value: number | object = 60): NoteEvent => {
     /**
      * Sends a MIDI note to the current MIDI output.
      *
@@ -489,6 +489,12 @@ export class UserAPI {
       time_pos / Math.floor(chunk * this.ppqn())
     );
     return current_chunk % 2 === 0;
+  };
+
+  public babou = (chunk: number): boolean => {
+    const time_pos = this.epulse();
+    const chunkSize = Math.floor(chunk * this.ppqn());
+    return time_pos % chunkSize === 0;
   };
 
   public divbar = (chunk: number): boolean => {
@@ -869,10 +875,8 @@ export class UserAPI {
   };
 
   onbar = (n: number, ...bar: number[]): boolean => {
-    // n is acting as a modulo on the bar number
-    const bar_list = [...Array(n).keys()].map((i) => i + 1);
-    console.log(bar.some((b) => bar_list.includes(b % n)));
-    return bar.some((b) => bar_list.includes(b % n));
+    let bar_modulo = (this.bar() % n) + 1;
+    return bar.some((b) => b == bar_modulo);
   };
 
   onbeat = (...beat: number[]): boolean => {
@@ -1237,10 +1241,10 @@ export class UserAPI {
   // Trivial functions
   // =============================================================
 
-  sound = (sound: string|object) => {
+  sound = (sound: string | object) => {
     return new SoundEvent(sound, this.app);
   };
-  
+
   snd = this.sound;
   samples = samples;
   soundMap = soundMap;
