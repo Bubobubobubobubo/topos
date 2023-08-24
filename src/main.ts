@@ -41,7 +41,7 @@ const classMap = {
   li: "ml-12 list-disc lg:text-2xl text-base text-white lg:mx-4 mx-2 my-4 lg:pl-4 my-2 leading-normal",
   p: "lg:text-2xl text-base text-white lg:mx-4 mx-2 my-4 leading-normal",
   a: "lg:text-2xl text-base text-orange-300",
-  code: "lg:my-4 sm:my-1 text-base lg:text-xl block whitespace-pre overflow-x-scroll",
+  code: "lg:my-4 sm:my-1 text-base lg:text-xl block whitespace-pre overflow-x-hidden",
   icode:
     "lg:my-4 my-1 lg:text-xl sm:text-xs text-white font-mono bg-neutral-600",
   blockquote: "text-neutral-200 border-l-4 border-neutral-500 pl-4 my-4 mx-4",
