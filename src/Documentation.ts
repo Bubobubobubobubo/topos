@@ -9,9 +9,9 @@ const injectAvailableSamples = (): string => {
 const introduction: string = `
 # Welcome
 
-Welcome to the Topos documentation. These pages are made to help you understand the software and the ideas behind Topos. You can jump here anytime by pressing ${key_shortcut(
+Welcome to the Topos documentation. These pages are offering you an introduction to the software and to the ideas behind it. You can jump here anytime by pressing ${key_shortcut(
   "Ctrl + D"
-)}.  Press again to make the documentation disappear.
+)}.  Press again to make the documentation disappear. All your contributions are welcome!
 
 ## What is Topos?
 
@@ -19,10 +19,6 @@ Topos is an _algorithmic_ sequencer. Topos uses small algorithms to represent mu
 
 
 Topos is deeply inspired by the [Monome Teletype](https://monome.org/). The Teletype is/was an open source hardware module for Eurorack synthesizers. While the Teletype was initially born as an hardware module, Topos aims to be a web-browser based software sequencer from the same family! It is a sequencer, a scriptable interface, a companion for algorithmic music-making.  Topos wishes to fullfill the same goal than the Teletype, keeping the same spirit alive on the web. It is free, open-source, and made to be shared and used by everyone.
-
-## How to read this documentation
-
-These pages have been conceived to introduce the core concepts first before diving to the more arcane bits. You can read them in order if you just found out about this software! Later on, this documentation will only help you to refresh your memory about some function, etc...
 
 ## Example
 
@@ -53,24 +49,30 @@ mod(.5) && snd('hat').out()
 const software_interface: string = `
 # Interface
 
-The Topos interface is molded around the core concepts of the software: _scripts_ and _universes_. By mastering the interface, you will already understand quite a lot about Topos and how to play music with it.
+The Topos interface is entirely dedicated to highlight the core concepts at play: _scripts_ and _universes_. By understanding the interface, you will already understand quite a lot about Topos and how to play music with it. Make sure to learn the dedicated keybindings as well and you will fly!
 
 ## Scripts
 
-Every Topos session is composed of several scripts. A set of scripts is called a _universe_. Every script is written using the JavaScript programming language and describes a musical or algorithmic process that takes place over time.
+Every Topos session is composed of several small scripts. A set of scripts is called a _universe_. Every script is written using the JavaScript programming language and describes a musical or algorithmic process that takes place over time.
 
-- the global script (${key_shortcut(
+- **the global script** (${key_shortcut(
   "Ctrl + G"
-)}): **Evaluated for every clock pulse**. The central piece, acting as the conductor for all the other scripts. You can also jam directly from the global script to test your ideas before pushing them to a separate script.
-- the local scripts (${key_shortcut(
+)}): _Evaluated for every clock pulse_. The central piece, acting as the conductor for all the other scripts. You can also jam directly from the global script to test your ideas before pushing them to a separate script. You can also access that script using the ${key_shortcut(
+  "F10"
+)} key.
+- **the local scripts** (${key_shortcut(
   "Ctrl + L"
-)}): **Evaluated on demand**. Local scripts are used to store anything too complex to sit in the global script. It can be a musical process, a whole section of your composition, a complex controller that you've built for your hardware, etc...
-- the init script (${key_shortcut(
+)}): _Evaluated on demand_. Local scripts are used to store anything too complex to sit in the global script. It can be a musical process, a whole section of your composition, a complex controller that you've built for your hardware, etc... You can also switch to one of the local scripts by using the function keys (${key_shortcut(
+  "F1"
+)} to ${key_shortcut("F9")}).
+- **the init script** (${key_shortcut(
   "Ctrl + I"
-)}): **Evaluated on program load**. Used to set up the software the session to the desired state before playing (_bpm_, etc...).
-- the note file (${key_shortcut(
+)}): _Evaluated on program load_. Used to set up the software the session to the desired state before playing (_bpm_, etc...). You can also access that script using the ${key_shortcut(
+  "F11"
+)} key.
+- **the note file** (${key_shortcut(
   "Ctrl + N"
-)}): **Not evaluated**. Used to store your thoughts or commentaries about the session you are currently playing. It is nothing more than a scratchpad really!
+)}): _Not evaluated_. Used to store your thoughts or commentaries about the session you are currently playing. It is nothing more than a scratchpad really!
 
 ## Universes
 
@@ -87,7 +89,7 @@ You can clear the current universe by pressing the flame button on the top right
 Click on the Topos logo in the top bar. Your URL will change to something much longer and complex. The same URL will be copied to your clipboard. Send this link to your friends to share the universe you are currently working on with them. 
 
 - The imported universe will always get a randomly generated name such as: <icode>random_silly_llama</icode>.
-- Topos will automatically fetch and switch to the universe that was sent to you. Your previous universe is still there, don't worry.
+- Topos will automatically fetch and switch to the universe that was sent to you. Your previous universe is still accessible if you switch to it, don't worry!
 `;
 
 const time: string = `
