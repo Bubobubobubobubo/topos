@@ -60,7 +60,7 @@ export class Clock {
 
     get ticks_before_new_bar(): number {
         /**
-         * This function returns the number of ticks sepaating the current moment
+         * This function returns the number of ticks separating the current moment
          * from the beginning of the next bar. 
          * 
          * @returns number of ticks until next bar

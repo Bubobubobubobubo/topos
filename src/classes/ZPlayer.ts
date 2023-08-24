@@ -10,6 +10,7 @@ export class Player extends Event {
     input: string;
     ziffers: Ziffers;
     callTime: number = 0;
+    startBeat: number = 0;
     played: boolean = false;
     current!: Pitch|Chord|ZRest;
     retro: boolean = false;
@@ -19,6 +20,10 @@ export class Player extends Event {
         super(app);
         this.input = input;
         this.ziffers = new Ziffers(input, options);
+    }
+
+    notStarted(): boolean {
+        return this.ziffers.notStarted();
     }
 
     next = (): Pitch|Chord|ZRest => {
@@ -32,10 +37,15 @@ export class Player extends Event {
     }
 
     areWeThereYet = (): boolean => {
-        const howAboutNow = (this.ziffers.notStarted() || 
-        this.pulseToSecond(this.app.api.epulse()) > 
-        this.pulseToSecond(this.callTime) +
-        this.current.duration * this.pulseToSecond(this.app.api.ppqn() * 4))
+        const howAboutNow = (
+            (this.notStarted()) ||
+            (
+                this.current && 
+                this.pulseToSecond(this.app.api.epulse()+1) >= 
+                this.pulseToSecond(this.callTime) +
+                (this.current.duration*4) * this.pulseToSecond(this.app.api.ppqn())
+            )
+        );
         if(howAboutNow) {
             this.tick = 0;
         } else {
