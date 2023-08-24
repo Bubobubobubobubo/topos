@@ -255,6 +255,7 @@ export class UserAPI {
      */
     this.MidiConnection.sendSysExMessage(data);
   };
+  sy = this.sysex;
 
   public pitch_bend = (value: number, channel: number): void => {
     /**
@@ -277,6 +278,7 @@ export class UserAPI {
      */
     this.MidiConnection.sendProgramChange(program, channel);
   };
+  pc = this.program_change;
 
   public midi_clock = (): void => {
     /**
@@ -298,6 +300,7 @@ export class UserAPI {
      */
     this.MidiConnection.sendMidiControlChange(control, value, channel);
   };
+  cc = this.control_change;
 
   public midi_panic = (): void => {
     /**
@@ -1034,7 +1037,7 @@ export class UserAPI {
      */
     return this._euclidean_cycle(pulses, length, rotate)[iterator % length];
   };
-  ec = this.euclid;
+  eu = this.euclid;
 
   _euclidean_cycle(
     pulses: number,

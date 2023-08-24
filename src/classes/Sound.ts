@@ -122,31 +122,37 @@ export class Sound extends SoundEvent {
     this.values["cutoff"] = value;
     return this;
   };
+  lpf = this.cutoff;
 
   resonance = (value: number): this => {
     this.values["resonance"] = value;
     return this;
   };
+  lpq = this.resonance;
 
   hcutoff = (value: number): this => {
     this.values["hcutoff"] = value;
     return this;
   };
+  hpf = this.hcutoff;
 
   hresonance = (value: number): this => {
     this.values["hresonance"] = value;
     return this;
   };
+  hpq = this.hresonance;
 
   bandf = (value: number): this => {
     this.values["bandf"] = value;
     return this;
   };
+  bpf = this.bandf;
 
   bandq = (value: number): this => {
     this.values["bandq"] = value;
     return this;
   };
+  bpq = this.bandq;
 
   coarse = (value: number): this => {
     this.values["coarse"] = value;
@@ -182,11 +188,13 @@ export class Sound extends SoundEvent {
     this.values["delayfeedback"] = value;
     return this;
   };
+  delayfb = this.delayfeedback;
 
   delaytime = (value: number): this => {
     this.values["delaytime"] = value;
     return this;
   };
+  delayt = this.delaytime;
 
   orbit = (value: number): this => {
     this.values["orbit"] = value;
@@ -207,6 +215,7 @@ export class Sound extends SoundEvent {
     this.values["velocity"] = value;
     return this;
   };
+  vel = this.velocity;
 
   modify = (func: Function): this => {
     const funcResult = func(this);
