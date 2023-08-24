@@ -460,6 +460,10 @@ Simple controls over the amplitude (volume) of a given sound.
 | gain     |       | Volume of the synth/sample (exponential)                   |
 | velocity | vel   | Velocity (amplitude) from 0 to 1. Multipled with gain      |
 
+\`\`\`javascript
+mod(.5)::snd('cp').vel($(1)%10 / 10).out()
+\`\`\`
+
 ## Amplitude Enveloppe
 
 **Superdough** is applying an **ADSR** envelope to every sound being played. This is a very standard and conventional amplitude envelope composed of four stages: _attack_, _decay_, _sustain_ and _release_. You will find the same parameters on most synthesizers.
@@ -494,6 +498,17 @@ There are some basic controls over the playback of each sample. This allows you 
 | cut     |       | Set with <icode>0</icode> or <icode>1</icode>. Will cut the sample as soon as another sample is played on the same bus |
 | clip    |       | Multiply the duration of the sample with the given number |
 | pan     |       | Stereo position of the audio playback (<icode>0</icode> = left, <icode>1</icode> = right)|
+
+\`\`\`javascript
+// Using some of the modifiers described above :)
+mod(.5)::snd('pad').begin(0.2)
+  .speed(divseq(4, 1, 0.9, 0.8))
+  .n(divseq(2, 0, 0, 2, 4)).pan(usine(.5))
+  .end(rand(0.3,0.8))
+  .room(0.8).size(0.5)
+  .clip(1).out()
+\`\`\`
+
 
 ## Filters
 
@@ -554,16 +569,10 @@ mod(1)::snd('kick').out()
 | shape      |           | Waveshaping distortion (between <icode>0</icode> and <icode>1</icode>)          |
 
 
-## Undocumented
-
-
-| Method                                 | Description |
-| -------------------------------------- | ----------- |
-| <icode>unit(value: number)</icode>     | Sets the unit value  |
-| <icode>frequency(value: number)</icode>| Sets the playback sample frequency |
-| <icode>nudge(value: number)</icode>    | Adjusts the start time of the sound by the given value |
-| <icode>loop(value: number)</icode>| Loops the sample. |
-| <icode>orbit(value: number)</icode>| Sets the orbit value of the sound. |
+\`\`\`javascript
+mod(.5)::snd('pad').coarse($(1) % 16).clip(.5).out(); // Comment me
+mod(.5)::snd('pad').crush(divseq(2, 16, 8, 4)).clip(.5).out()
+\`\`\`
 `,vk=`
 # Audio Samples
 
