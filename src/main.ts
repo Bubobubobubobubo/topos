@@ -559,6 +559,7 @@ export class Editor {
       "time",
       "sound",
       "samples",
+      "synths",
       "midi",
       "functions",
       "reference",

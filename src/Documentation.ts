@@ -81,6 +81,13 @@ A set of files is called a _universe_. Topos can store several universes and swi
 Switching between universes will not stop the transport nor reset the clock. You are switching the context but time keeps flowing. This can be useful to prepare immediate transitions between songs and parts. Think of universes as an algorithmic set of music. All scripts in a given universe are aware about how many times they have been runned already. You can reset that value programatically.
 
 You can clear the current universe by pressing the flame button on the top right corner of the interface. This will clear all the scripts and the note file. **Note:** there is no shortcut for clearing a universe. We do not want to loose your work by mistake!
+
+# Sharing your work
+
+Click on the Topos logo in the top bar. Your URL will change to something much longer and complex. The same URL will be copied to your clipboard. Send this link to your friends to share the universe you are currently working on with them. 
+
+- The imported universe will always get a randomly generated name such as: <icode>random_silly_llama</icode>.
+- Topos will automatically fetch and switch to the universe that was sent to you. Your previous universe is still there, don't worry.
 `;
 
 const time: string = `
@@ -346,6 +353,51 @@ ${injectAvailableSamples()}
 
 `;
 
+const synths: string = `
+# Synthesizers
+
+Topos comes with a small number of basic synthesizers. These synths are based on a basic [WebAudio](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API) design. For heavy synthesis duties, please use MIDI and speak to more complex instruments.
+
+# Substractive Synthesis
+
+The <icode>sound</icode> function can take the name of a synthesizer as first argument.
+- <icode>sine</icode>, <icode>sawtooth</icode>,<icode>triangle</icode>, <icode>square</icode> for the waveform selection.
+- <icode>cutoff</icode> and <icode>resonance</icode> for adding a low-pass filter with cutoff frequency and filter resonance.
+  - <icode>hcutoff</icode> or <icode>bandf</icode> to switch to a high-pass or bandpass filter.
+	- <icode>hresonance</icode> and <icode>bandq</icode> for the resonance parameter of these filters.
+
+Here is a simple example of a substractive synth:
+
+\`\`\`javascript
+mod(.5) && snd('sawtooth')
+	.cutoff(pick(2000,500)) + usine(.5) * 4000)
+	.resonance(0.9).freq(pick(100,150))
+	.out()
+\`\`\`
+
+
+# Frequency Modulation Synthesis (FM)
+
+The same basic waveforms can take additional methods to switch to a basic two operators FM synth design (with _carrier_ and _modulator_). FM Synthesis is a complex topic but take this advice: simple ratios will yield stable and harmonic sounds, complex ratios will generate noises, percussions and gritty sounds.
+
+- <icode>fmi</icode> (_frequency modulation index_): a floating point value between <icode>1</icode> and <icode>n</icode>.
+- <icode>fmh</icode> (_frequency modulation harmonic ratio_): a floating point value between <icode>1</icode> and <icode>n</icode>.
+
+And here is a simple example:
+
+\`\`\`javascript
+mod(.25) && snd('sine')
+  .fmi(pick(1,2,4,8))
+  .fmh(divseq(2, 1,2,4,8))
+  .freq(pick(100,150))
+  .sustain(0.1)
+  .out()
+\`\`\`
+
+**Note::** you can also set the _modulation index_ and the _harmonic ratio_ with the <icode>fm</icode> argument. You will have to feed both as a string: <icode>fm('2:4')</icode>. If you only feed one number, only the _modulation index_ will be updated.
+
+`;
+
 const about: string = `
 # About Topos
 
@@ -561,6 +613,7 @@ export const documentation = {
   time: time,
   sound: sound,
   samples: samples,
+  synths: synths,
   midi: midi,
   functions: functions,
   reference: reference,
