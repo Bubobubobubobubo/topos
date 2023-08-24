@@ -21,20 +21,14 @@ export class TransportNode extends AudioWorkletNode {
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         ];
         this.indexOfLastLatencies = 0;
+        this.logicalTime = 0;
         // setInterval(() => this.ping(), 1000);
-        this.startTime = null;
-        this.elapsedTime = 0;
     }
 
     /** @type {(this: MessagePort, ev: MessageEvent<any>) => any} */
     handleMessage = (message) => {
         if (message.data && message.data.type === "bang") {
-            if (this.startTime === null) {
-                this.startTime = message.data.currentTime;
-            }
-            this.elapsedTime = message.data.currentTime - this.startTime;
-            this.prevCurrentTime = message.data.currentTime;
-            let { futureTimeStamp, timeToNextPulse, nextPulsePosition } = this.convertTimeToNextBarsBeats(this.elapsedTime);
+            let { futureTimeStamp, timeToNextPulse, nextPulsePosition } = this.convertTimeToNextBarsBeats(message.data.logicalTime);
 
             // Evaluate the global buffer only once per ppqn value
             if (this.nextPulsePosition !== nextPulsePosition) {
@@ -65,8 +59,6 @@ export class TransportNode extends AudioWorkletNode {
     }
 
     stop() {
-        this.startTime = null;
-        this.elapsedTime = null;
         this.app.clock.tick = 0;
         // this.$clock.innerHTML = `[${1} | ${1} | ${zeroPad(1, '2')}]`;
         this.port.postMessage("stop");

@@ -37,6 +37,12 @@ export class Player extends Event {
     }
 
     areWeThereYet = (): boolean => {
+        // If clock has stopped
+        if(this.app.clock.pulses_since_origin<this.callTime) {
+            this.callTime = 0;
+            this.tick = 0;
+        }
+
         const howAboutNow = (
             (this.notStarted() && this.app.clock.time_position.pulse === 1) ||
             (
@@ -46,11 +52,9 @@ export class Player extends Event {
                 (this.current.duration*4) * this.pulseToSecond(this.app.api.ppqn())
             )
         );
-        if(howAboutNow) {
-            this.tick = 0;
-        } else {
-            this.tick++;
-        }
+        
+        this.tick = howAboutNow ? 0 : this.tick+1;
+        
         return howAboutNow;
     }
 
