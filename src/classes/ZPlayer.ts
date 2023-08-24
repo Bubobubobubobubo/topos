@@ -38,9 +38,9 @@ export class Player extends Event {
 
     areWeThereYet = (): boolean => {
         const howAboutNow = (
-            (this.notStarted()) ||
+            (this.notStarted() && this.app.clock.time_position.pulse === 1) ||
             (
-                this.current && 
+                this.current &&
                 this.pulseToSecond(this.app.api.epulse()+1) >= 
                 this.pulseToSecond(this.callTime) +
                 (this.current.duration*4) * this.pulseToSecond(this.app.api.ppqn())

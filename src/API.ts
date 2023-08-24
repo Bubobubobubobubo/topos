@@ -884,11 +884,12 @@ export class UserAPI {
      */
     let final_pulses: boolean[] = [];
     beat.forEach((b) => {
-      b = (b % this.app.clock.time_signature[0]) + 1;
+      const _mod = b % this.app.clock.time_signature[0];
+      b = _mod === 0 ? b : _mod;
       let integral_part = Math.floor(b);
       let decimal_part = b - integral_part;
       final_pulses.push(
-        integral_part === this.app.clock.time_position.beat &&
+        integral_part === this.app.clock.time_position.beat && 
           this.app.clock.time_position.pulse ===
             decimal_part * this.app.clock.ppqn
       );
