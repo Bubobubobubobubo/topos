@@ -183,7 +183,6 @@ We included a bunch of popular rhythm generators in Topos such as the euclidian 
 
 - <icode>bin(iterator: number, n: number): boolean</icode>: a binary rhythm generator. It transforms the given number into its binary representation (_e.g_ <icode>34</icode> becomes <icode>100010</icode>). It then returns a boolean value based on the iterator in order to generate a rhythm.
 
-
 \`\`\`javascript
 	mod(.5) && bin($(1), 34) && snd('kick').out()
 	mod(.5) && bin($(2), 48) && snd('sd').out()
@@ -198,6 +197,64 @@ If you don't find it spicy enough, you can add some more probabilities to your r
 \`\`\`
 
 ## Larger time divisions
+
+Now you know how to play some basic rhythmic music but you are a bit stuck in a one-bar long loop. Let's see how we can think about time flowing on longer periods. The functions you are going to learn now are _very fundamental_ and all the fun comes from mastering them. **Read and experiment a lot with the following examples**.
+
+- <icode>div(n: number)</icode>: the <icode>div</icode> is a temporal switch. If the value <icode>2</icode> is given, the function will return <icode>true</icode> for two beats and <icode>false</icode> for two beats. There are multiple ways to use it effectively. You can pass an integer or a floating point number. Here are some examples.
+
+\`\`\`javascript
+	mod(1)::snd('kick').out(); // Playing on every beat
+	div(2)::mod(.75)::snd('hat').out(); // Playing only every two beats
+\`\`\`
+
+You can also use it to think about **longer durations** spanning over multiple bars.
+
+\`\`\`javascript
+	// Rap God VS Lil Wild -- Adel Faure
+	if (div(16)) {
+	  // Playing this part for two bars
+	  mod(1.5)::snd('kick').out()
+	  mod(2)::snd('snare').out()
+	  mod(.5)::snd('hh').out()
+	} else {
+	  // Now adding some birds and tablas
+	  mod(1.5)::snd('kick').out()
+	  mod(2)::snd('snare').out()
+	  mod(.5)::snd('hh').out()
+	  mod(.5)::snd('tabla').speed(pick(1,2)).end(0.5).out()
+	  mod(2.34)::snd('birds').n(irand(1,10))
+	    .delay(0.5).delaytime(0.5).delayfb(0.25).out()
+	  mod(.5)::snd('diphone').end(0.5).n(pick(1,2,3,4)).out()
+	}
+\`\`\`
+
+And you can use it for other things inside a method parameter:
+
+\`\`\`javascript
+	mod(.5)::snd(div(2) ? 'kick' : 'hat').out()
+\`\`\`
+
+- <icode>divbar(n: number)</icode>: works just like <icode>div</icode> but at the level of bars instead of beats. It allows you to think about even bigger time cycles. You can also pair it with regular <icode>div</icode> for making complex algorithmic beats.
+
+\`\`\`javascript
+	divbar(2)::mod(1)::snd('kick').out()
+	divbar(3)::mod(.5)::snd('hat').out()
+\`\`\`
+
+- <icode>onbar(n: number, ...bar: number[])</icode>: The first argument, <icode>n</icode>, is used to divide the time in a period of <icode>n</icode> consecutive bars. The following arguments are bar numbers to play on. For example, <icode>onbar(5, 1, 4)</icode> will return <icode>true</icode> on bar <icode>1</icode> and <icode>4</icode> but return <icode>false</icode> the rest of the time. You can easily divide time that way.
+
+
+\`\`\`javascript
+	// Only play on the fourth bar of a four bar cycle.
+	onbar(4, 4)::mod(.5)::snd('hh').out(); 
+	
+	// Here comes a longer version using JavaScript normal control flow
+	if (onbar(4, 1, 3)) { 
+		mod(1)::snd('kick').out();
+	} else {
+		mod(.5)::snd('sd').out();
+	}
+\`\`\`
 
 ## Pulses
 
@@ -227,12 +284,8 @@ These values are **extremely useful** to craft more complex syntax or to write m
 
 ## To document!
 
-- <icode>onbar(...values: number[])</icode>: returns <icode>true</icode> if the bar is currently equal to any of the specified values.
-- <icode>modbar(...values: number[]) or bmod(...)</icode>: returns <icode>true</icode> if the bar is currently a multiple of any of the specified values.
-- <icode>modpulse(...values: number[]) or pmod(...)</icode>: returns <icode>true</icode> if the pulse is currently a multiple of any of the specified values.
-
-- <icode>div(chunk: number)</icode>: returns <icode>true</icode> for every pulse in intervals of given number of beats
 - <icode>divbar(chunk: number)</icode>: returns <icode>true</icode> for every pulse in intervals of given number of bars
+
 - <icode>divseq(...values: number[])</icode>: returns <icode>true</icode> for every pulse in intervals of given number of beats returning different value each time.
 
 ## Using time as a conditional
