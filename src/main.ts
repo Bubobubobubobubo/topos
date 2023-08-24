@@ -560,6 +560,7 @@ export class Editor {
       "sound",
       "samples",
       "synths",
+      "patterns",
       "midi",
       "functions",
       "reference",

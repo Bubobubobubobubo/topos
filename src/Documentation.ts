@@ -553,6 +553,14 @@ ${injectAvailableSamples()}
 
 `;
 
+const patterns: string = `
+# Patterns
+
+## Simple patterns 
+
+- <icode>divseq(div: number, ...values:any[])</icode>
+`;
+
 const synths: string = `
 # Synthesizers
 
@@ -814,6 +822,7 @@ export const documentation = {
   sound: sound,
   samples: samples,
   synths: synths,
+  patterns: patterns,
   midi: midi,
   functions: functions,
   reference: reference,
