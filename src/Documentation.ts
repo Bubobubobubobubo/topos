@@ -213,7 +213,7 @@ And you can use it for other things inside a method parameter:
 	}
 \`\`\`
 
-## Pulses
+## What are pulses?
 
 To make a beat, you need a certain number of time grains or **pulses**. The **pulse** is also known as the [PPQN](https://en.wikipedia.org/wiki/Pulses_per_quarter_note). By default, Topos is using a _pulses per quarter note_ of 48. You can change it by using the <icode>ppqn(number)</icode> function. It means that the lowest possible rhythmic value is 1/48 of a quarter note. That's plenty of time already.
 
@@ -237,17 +237,7 @@ Every script can access the current time by using the following functions:
 
 - <icode>time()</icode>: returns the current wall clock time, the real time of the system.
 
-These values are **extremely useful** to craft more complex syntax or to write musical scores. However, Topos is also offering more high-level sequencing functions to make it easier to play music.
-
-## To document!
-
-- <icode>divbar(chunk: number)</icode>: returns <icode>true</icode> for every pulse in intervals of given number of bars
-
-- <icode>divseq(...values: number[])</icode>: returns <icode>true</icode> for every pulse in intervals of given number of beats returning different value each time.
-
-## Using time as a conditional
-
-You can use the time functions as conditionals. The following example will play a pattern A for 2 bars and a pattern B for 2 bars:
+These values are **extremely useful** to craft more complex syntax or to write musical scores. However, Topos is also offering more high-level sequencing functions to make it easier to play music. You can use the time functions as conditionals. The following example will play a pattern A for 2 bars and a pattern B for 2 bars:
 
 \`\`\`javascript
     if((bar() % 4) > 1) {
@@ -260,7 +250,6 @@ You can use the time functions as conditionals. The following example will play 
       mod(.5) && sound('jvbass').freq(250).out()
     }
 \`\`\`
-
 `;
 
 const midi: string = `
