@@ -4,8 +4,8 @@ import { tryEvaluate } from "./Evaluator";
 import { DrunkWalk } from "./Utils/Drunk";
 import { scale } from "./Scales";
 import { Editor } from "./main";
-import { Sound } from "./classes/Sound";
-import { Note } from "./classes/Note";
+import { SoundEvent } from "./classes/SoundEvent";
+import { NoteEvent } from "./classes/MidiEvent";
 import { LRUCache } from "lru-cache";
 import { Player } from "./classes/ZPlayer";
 import {
@@ -236,7 +236,7 @@ export class UserAPI {
     }
   };
 
-  public note = (value: number = 60): Note => {
+  public midi = (value: number|object = 60): NoteEvent => {
     /**
      * Sends a MIDI note to the current MIDI output.
      *
@@ -244,7 +244,7 @@ export class UserAPI {
      * @param options - an object containing options for that note
      *                { channel: 0, velocity: 100, duration: 0.5 }
      */
-    return new Note(value, this.app);
+    return new NoteEvent(value, this.app);
   };
 
   public sysex = (data: Array<number>): void => {
@@ -1234,9 +1234,10 @@ export class UserAPI {
   // Trivial functions
   // =============================================================
 
-  sound = (sound: string) => {
-    return new Sound(sound, this.app);
+  sound = (sound: string|object) => {
+    return new SoundEvent(sound, this.app);
   };
+  
   snd = this.sound;
   samples = samples;
   soundMap = soundMap;

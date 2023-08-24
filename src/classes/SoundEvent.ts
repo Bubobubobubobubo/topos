@@ -1,5 +1,5 @@
 import { type Editor } from '../main';
-import { SoundEvent } from './Event';
+import { AudibleEvent } from './AbstractEvents';
 import { midiToFreq, noteFromPc } from 'zifferjs';
 
 import {
@@ -7,7 +7,7 @@ import {
   // @ts-ignore
 } from "superdough";
 
-export class Sound extends SoundEvent {
+export class SoundEvent extends AudibleEvent {
 
     constructor(sound: string|object, public app: Editor) {
         super(app);

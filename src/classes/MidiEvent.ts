@@ -1,9 +1,9 @@
-import { SoundEvent } from './Event';
+import { AudibleEvent } from './AbstractEvents';
 import { type Editor } from '../main';
 import { MidiConnection } from "../IO/MidiConnection";
 import { midiToFreq, noteFromPc } from 'zifferjs';
 
-export class Note extends SoundEvent {
+export class NoteEvent extends AudibleEvent {
     midiConnection: MidiConnection;
 
     constructor(input: number|object, public app: Editor) {

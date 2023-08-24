@@ -1,7 +1,7 @@
 import { type Editor } from '../main';
-import { Event } from "./Event";
+import { Event } from "./AbstractEvents";
 
-export class Rest extends Event {
+export class RestEvent extends Event {
     constructor(duration: number, app: Editor) {
         super(app);
         this.values["duration"] = duration;
@@ -12,7 +12,7 @@ export class Rest extends Event {
     }
 
     public static createRestProxy = (duration: number, app: Editor) => {
-        const instance = new Rest(duration, app);
+        const instance = new RestEvent(duration, app);
         return new Proxy(instance, {
             // @ts-ignore
             get(target, propKey, receiver) {

@@ -35,11 +35,11 @@ Press ${key_shortcut(
 <pre><code class="language-javascript">
 bpm(80)
 mod(0.25) :: sound('sawtooth')
-  .note(seqbar(
+  .midi(seqbar(
     pick(60, 67, 63) - 12,  pick(60, 67, 63) - 12, 
     pick(60, 67, 63) - 12 + 5, pick(60, 67, 63) - 12 + 5,
     pick(60, 67, 63) - 12 + 7, pick(60, 67, 63) - 12 + 7) + (sometimes() ? 24 : 12))
-  .dur(0.1).fmi(8).fmh(4).room(0.9)
+  .sustain(0.1).fmi(8).fmh(4).room(0.9)
   .gain(0.75).cutoff(500 + usine(8) * 10000)
   .delay(0.5).delaytime(bpm() / 60 / 4 / 3)
   .delayfeedback(0.25)
@@ -192,27 +192,25 @@ const midi: string = `
 
 You can use Topos to play MIDI thanks to the [WebMIDI API](https://developer.mozilla.org/en-US/docs/Web/API/Web_MIDI_API). You can currently send notes, control change, program change and so on. You can also send a MIDI Clock to your MIDI devices or favorite DAW. Note that Topos is also capable of playing MIDI using **Ziffers** which provides a better syntax for melodic expression.
 
-
-
 ## Notes
-- <icode>note(note: number, options: {})</icode>: send a MIDI Note. This function can take an object as a second argument to specify the MIDI channel, velocity, etc... (_e.g._ <icode>note(60, {channel: 1, velocity: 127})</icode>).
+- <icode>midi(note: number|object)</icode>: send a MIDI Note. Object can take parameters {note: number, channel: number, port: number|string, velocity: number}.
 
 \`\`\`javascript
     bpm(80) // Setting a default BPM
-    mod(.5) && note(36 + seqbeat(0,12)).duration(0.02).out()
-    mod(.25) && note(pick(64, 76)).duration(0.05).out()
-    mod(.75) && note(seqbeat(64, 67, 69)).duration(0.05).out()
-    sometimes() && mod(.25) && note(seqbeat(64, 67, 69) + 24).duration(0.05).out()
+    mod(.5) && midi(36 + seqbeat(0,12)).sustain(0.02).out()
+    mod(.25) && midi(pick(64, 76)).sustain(0.05).out()
+    mod(.75) && midi(seqbeat(64, 67, 69)).sustain(0.05).out()
+    sometimes() && mod(.25) && midi(seqbeat(64, 67, 69) + 24).sustain(0.05).out()
 \`\`\`
 
 ## Note chaining
 
-The <icode>note(number)</icode> function can be chained to _specify_ a midi note more. For instance, you can add a duration, a velocity, a channel, etc...:
+The <icode>midi(number|object)</icode> function can be chained to _specify_ a midi note more. For instance, you can add a duration, a velocity, a channel, etc... by chaining:
 
 \`\`\`javascript
-mod(0.25) && note(60)
+mod(0.25) && midi(60)
   .sometimes(n=>n.note(irand(40,60)))
-  .duration(0.05)
+  .sustain(0.05)
   .channel(2)
   .port("bespoke")
   .out()

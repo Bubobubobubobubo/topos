@@ -1,9 +1,10 @@
 import { Chord, Pitch, Rest as ZRest, Ziffers } from "zifferjs";
 import { Editor } from "../main";
-import { Event, Skip } from "./Event";
-import { Sound } from "./Sound";
-import { Note } from "./Note";
-import { Rest } from "./Rest";
+import { Event } from "./AbstractEvents";
+import { SkipEvent } from "./SkipEvent";
+import { SoundEvent } from "./SoundEvent";
+import { NoteEvent } from "./MidiEvent";
+import { RestEvent } from "./RestEvent";
 
 export class Player extends Event {
     input: string;
@@ -40,30 +41,28 @@ export class Player extends Event {
         if(this.areWeThereYet()) {
             const event = this.next() as Pitch|Chord|ZRest;
             if(event instanceof Pitch) {
-                // TODO: Quick hack. Select which attributes to use, but some ziffers stuff is needed for chaining key change etc.
                 const obj = event.getExisting("freq","pitch","key","scale","octave");
-                return new Sound(obj, this.app).sound(name);
+                return new SoundEvent(obj, this.app).sound(name);
             } else if(event instanceof ZRest) {
-                return Rest.createRestProxy(event.duration, this.app);
+                return RestEvent.createRestProxy(event.duration, this.app);
             } 
         } else {
-            return Skip.createRestProxy();
+            return SkipEvent.createSkipProxy();
         }
     }
 
-    note(value: number|undefined = undefined) {
+    midi(value: number|undefined = undefined) {
          if(this.areWeThereYet()) {
             const event = this.next() as Pitch|Chord|ZRest;
             if(event instanceof Pitch) {
-                  // TODO: Quick hack. Select which attributes to use, but some ziffers stuff is needed for chaining key change etc.
                 const obj = event.getExisting("note","pitch","bend","key","scale","octave");
-                const note = new Note(obj, this.app);
+                const note = new NoteEvent(obj, this.app);
                 return value ? note.note(value) : note;
             } else if(event instanceof ZRest) {
-                return Rest.createRestProxy(event.duration, this.app);
+                return RestEvent.createRestProxy(event.duration, this.app);
             } 
         } else {
-            return Skip.createRestProxy();
+            return SkipEvent.createSkipProxy();
         }
     }
 
