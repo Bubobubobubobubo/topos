@@ -559,23 +559,6 @@ export class Editor {
       (globalThis as Record<string, any>)[name] = value;
     });
 
-    // Loading from URL bar
-    let url = new URLSearchParams(window.location.search);
-    if (url !== undefined) {
-      let new_universe;
-      if (url !== null) {
-        const universeParam = url.get("universe");
-        if (universeParam !== null) {
-          new_universe = JSON.parse(atob(universeParam));
-          const randomName: string = uniqueNamesGenerator({
-            dictionaries: [adjectives, colors, animals],
-          });
-          this.loadUniverse(randomName, new_universe["universe"]);
-          this.emptyUrl();
-        }
-      }
-    }
-
     this.state = EditorState.create({
       extensions: [
         ...this.editorExtensions,
@@ -602,6 +585,23 @@ export class Editor {
     });
 
     this.changeModeFromInterface("global");
+
+    // Loading from URL bar
+    let url = new URLSearchParams(window.location.search);
+    if (url !== undefined) {
+      let new_universe;
+      if (url !== null) {
+        const universeParam = url.get("universe");
+        if (universeParam !== null) {
+          new_universe = JSON.parse(atob(universeParam));
+          const randomName: string = uniqueNamesGenerator({
+            dictionaries: [adjectives, colors, animals],
+          });
+          this.loadUniverse(randomName, new_universe["universe"]);
+          this.emptyUrl();
+        }
+      }
+    }
   }
 
   get note_buffer() {

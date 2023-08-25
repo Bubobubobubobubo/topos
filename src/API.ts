@@ -22,21 +22,175 @@ interface ControlChange {
   value: number;
 }
 
+declare global {
+  interface Array<T> {
+    palindrome(): T[];
+    random(index: number): T;
+    rand(index: number): T;
+    degrade(amount: number): T;
+    repeatAll(amount: number): T;
+    repeatPair(amount: number): T;
+    repeatOdd(amount: number): T;
+    loop(index: number): T;
+    div(division: number): T;
+    shuffle(): this;
+    rotate(steps: number): this;
+    unique(): this;
+  }
+}
+
+Array.prototype.shuffle = function () {
+  let currentIndex = this.length,
+    randomIndex;
+  while (currentIndex !== 0) {
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex--;
+    [this[currentIndex], this[randomIndex]] = [
+      this[randomIndex],
+      this[currentIndex],
+    ];
+  }
+  return this;
+};
+
+Array.prototype.rotate = function (steps: number) {
+  const length = this.length;
+  if (steps < 0) {
+    steps = length + (steps % length);
+  } else if (steps > 0) {
+    steps = steps % length;
+  } else {
+    return this;
+  }
+  const rotated = this.splice(-steps, steps);
+  this.unshift(...rotated);
+  return this;
+};
+
+Array.prototype.unique = function () {
+  const seen = new Set();
+  let writeIndex = 0;
+  for (let readIndex = 0; readIndex < this.length; readIndex++) {
+    const value = this[readIndex];
+    if (!seen.has(value)) {
+      seen.add(value);
+      this[writeIndex++] = value;
+    }
+  }
+  this.length = writeIndex;
+  return this;
+};
+
+Array.prototype.degrade = function <T>(this: T[], amount: number) {
+  if (amount < 0 || amount > 100) {
+    throw new Error("Amount should be between 0 and 100");
+  }
+  if (this.length <= 1) {
+    return this;
+  }
+  for (let i = 0; i < this.length; ) {
+    const rand = Math.random() * 100;
+    if (rand < amount) {
+      if (this.length > 1) {
+        this.splice(i, 1);
+      } else {
+        return this;
+      }
+    } else {
+      i++;
+    }
+  }
+  return this;
+};
+
+Array.prototype.repeatAll = function <T>(this: T[], amount: number) {
+  if (amount < 1) {
+    throw new Error("Amount should be at least 1");
+  }
+  let result = [];
+  for (let i = 0; i < this.length; i++) {
+    for (let j = 0; j < amount; j++) {
+      result.push(this[i]);
+    }
+  }
+  this.length = 0;
+  this.push(...result);
+  return this;
+};
+
+Array.prototype.repeatPair = function <T>(this: T[], amount: number) {
+  if (amount < 1) {
+    throw new Error("Amount should be at least 1");
+  }
+
+  let result = [];
+
+  for (let i = 0; i < this.length; i++) {
+    // If the index is even, repeat the element
+    if (i % 2 === 0) {
+      for (let j = 0; j < amount; j++) {
+        result.push(this[i]);
+      }
+    } else {
+      result.push(this[i]);
+    }
+  }
+
+  // Update the original array
+  this.length = 0;
+  this.push(...result);
+  return this;
+};
+
+Array.prototype.repeatOdd = function <T>(this: T[], amount: number) {
+  if (amount < 1) {
+    throw new Error("Amount should be at least 1");
+  }
+
+  let result = [];
+
+  for (let i = 0; i < this.length; i++) {
+    // If the index is odd, repeat the element
+    if (i % 2 !== 0) {
+      for (let j = 0; j < amount; j++) {
+        result.push(this[i]);
+      }
+    } else {
+      result.push(this[i]);
+    }
+  }
+
+  // Update the original array
+  this.length = 0;
+  this.push(...result);
+  return this;
+};
+
 // @ts-ignore
-Array.prototype.palindrome = function (index) {
+Array.prototype.palindrome = function <T>() {
   let left_to_right = Array.from(this);
   let right_to_left = Array.from(this.reverse());
   return left_to_right.concat(right_to_left);
 };
+
+// @ts-ignore
+Array.prototype.random = function <T>(this: T[], index: number): T {
+  return this[Math.floor(Math.random() * this.length)];
+};
+
+Array.prototype.loop = function <T>(this: T[], index: number): T {
+  return this[index % this.length];
+};
+
 // @ts-ignore
 Array.prototype.random = function (index) {
   return this[Math.floor(Math.random() * this.length)];
 };
-// @ts-ignore
+
 Array.prototype.loop = function (index) {
   return this[index % this.length];
 };
-// @ts-ignore
+
 Array.prototype.rand = Array.prototype.random;
 
 /**
@@ -52,13 +206,12 @@ Array.prototype.in = function <T>(this: T[], value: T): boolean {
 };
 
 export async function loadSamples() {
-  // const ds = "https://raw.githubusercontent.com/felixroos/dough-samples/main/";
   return Promise.all([
     initAudioOnFirstClick(),
-    samples("github:Bubobubobubobubo/Topos-Samples/main"),
     samples("github:tidalcycles/Dirt-Samples/master").then(() =>
       registerSynthSounds()
     ),
+    samples("github:Bubobubobubobubo/Topos-Samples/main"),
   ]);
 }
 

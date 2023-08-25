@@ -523,7 +523,7 @@ There are three basic filters: a _lowpass_, _highpass_ and _bandpass_ filters wi
 
 \`\`\`javascript
 mod(.5) && snd('sawtooth')
-	.cutoff(pick(2000,500)) + usine(.5) * 4000)
+	.cutoff(pick(2000,500) + usine(.5) * 4000)
 	.resonance(0.9).freq(pick(100,150))
 	.out()
 \`\`\`
