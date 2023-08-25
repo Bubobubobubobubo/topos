@@ -28,19 +28,20 @@ export class TransportNode extends AudioWorkletNode {
     /** @type {(this: MessagePort, ev: MessageEvent<any>) => any} */
     handleMessage = (message) => {
         if (message.data && message.data.type === "bang") {
-            let { futureTimeStamp, timeToNextPulse, nextPulsePosition } = this.convertTimeToNextBarsBeats(message.data.logicalTime);
+            this.logicalTime = message.data.logicalTime;
+            let { futureTimeStamp, timeToNextPulse, nextPulsePosition } = this.convertTimeToNextBarsBeats(this.logicalTime);
 
             // Evaluate the global buffer only once per ppqn value
             if (this.nextPulsePosition !== nextPulsePosition) {
                 this.nextPulsePosition = nextPulsePosition;
                 setTimeout(() => {
-                    const now = this.app.audioContext.currentTime;
+                    const now = this.logicalTime;
                     this.app.clock.time_position = futureTimeStamp;
-                    // this.$clock.innerHTML = `[${futureTimeStamp.bar}:${futureTimeStamp.beat}:${zeroPad(futureTimeStamp.pulse, '2')}]`;
+                    //this.$clock.innerHTML = `[${futureTimeStamp.bar}:${futureTimeStamp.beat}:${zeroPad(futureTimeStamp.pulse, '2')}]`;
                     tryEvaluate(this.app, this.app.global_buffer);
                     this.hasBeenEvaluated = true;
                     this.currentPulsePosition = nextPulsePosition;
-                    const then = this.app.audioContext.currentTime;
+                    const then = this.logicalTime;
                     this.lastLatencies[this.indexOfLastLatencies] = then - now;
                     this.indexOfLastLatencies = (this.indexOfLastLatencies + 1) % this.lastLatencies.length;
                     const averageLatency = this.lastLatencies.reduce((a, b) => a + b) / this.lastLatencies.length;
