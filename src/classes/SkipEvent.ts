@@ -1,10 +1,10 @@
 export class SkipEvent {
 
     _fallbackMethod = (): SkipEvent => {
-        return this;
+        return SkipEvent.createSkipProxy();
     }
   
-    public static createSkipProxy = () => {
+    public static createSkipProxy = (): SkipEvent => {
         const instance = new SkipEvent();
         return new Proxy(instance, {
             // @ts-ignore
