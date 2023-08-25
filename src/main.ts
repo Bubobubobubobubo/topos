@@ -92,19 +92,19 @@ export class Editor {
   // Transport elements
   play_buttons: HTMLButtonElement[] = [
     document.getElementById("play-button-1") as HTMLButtonElement,
-    document.getElementById("play-button-2") as HTMLButtonElement,
+    //document.getElementById("play-button-2") as HTMLButtonElement,
   ];
   pause_buttons: HTMLButtonElement[] = [
     document.getElementById("pause-button-1") as HTMLButtonElement,
-    document.getElementById("pause-button-2") as HTMLButtonElement,
+    //document.getElementById("pause-button-2") as HTMLButtonElement,
   ];
   stop_buttons: HTMLButtonElement[] = [
     document.getElementById("stop-button-1") as HTMLButtonElement,
-    document.getElementById("stop-button-2") as HTMLButtonElement,
+    //document.getElementById("stop-button-2") as HTMLButtonElement,
   ];
   clear_buttons: HTMLButtonElement[] = [
     document.getElementById("clear-button-1") as HTMLButtonElement,
-    document.getElementById("clear-button-2") as HTMLButtonElement,
+    //document.getElementById("clear-button-2") as HTMLButtonElement,
   ];
   documentation_button: HTMLButtonElement = document.getElementById(
     "doc-button-1"
@@ -597,7 +597,6 @@ export class Editor {
     });
 
     this.changeModeFromInterface("global");
-
   }
 
   get note_buffer() {
