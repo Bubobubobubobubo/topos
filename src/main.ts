@@ -66,7 +66,7 @@ export class Editor {
   universes: Universes = template_universes;
   selected_universe: string;
   local_index: number = 1;
-  editor_mode: "global" | "local" | "init" | "notes" = "local";
+  editor_mode: "global" | "local" | "init" | "notes" = "global";
   fontSize: Compartment;
   withLineNumbers: Compartment;
   vimModeCompartment: Compartment;
@@ -235,31 +235,6 @@ export class Editor {
     ];
 
     let dynamicPlugins = new Compartment();
-    this.state = EditorState.create({
-      extensions: [
-        ...this.editorExtensions,
-        EditorView.lineWrapping,
-        dynamicPlugins.of(this.userPlugins),
-        Prec.highest(
-          keymap.of([
-            {
-              key: "Ctrl-Enter",
-              run: () => {
-                return true;
-              },
-            },
-          ])
-        ),
-        keymap.of([indentWithTab]),
-      ],
-      doc: this.universes[this.selected_universe].locals[this.local_index]
-        .candidate,
-    });
-
-    this.view = new EditorView({
-      parent: document.getElementById("editor") as HTMLElement,
-      state: this.state,
-    });
 
     // ================================================================================
     // Application event listeners
@@ -595,6 +570,34 @@ export class Editor {
         }
       }
     }
+
+    this.state = EditorState.create({
+      extensions: [
+        ...this.editorExtensions,
+        EditorView.lineWrapping,
+        dynamicPlugins.of(this.userPlugins),
+        Prec.highest(
+          keymap.of([
+            {
+              key: "Ctrl-Enter",
+              run: () => {
+                return true;
+              },
+            },
+          ])
+        ),
+        keymap.of([indentWithTab]),
+      ],
+      doc: this.universes[this.selected_universe].global.candidate,
+    });
+
+    this.view = new EditorView({
+      parent: document.getElementById("editor") as HTMLElement,
+      state: this.state,
+    });
+
+    this.changeModeFromInterface("global");
+
   }
 
   get note_buffer() {
