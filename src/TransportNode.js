@@ -35,13 +35,12 @@ export class TransportNode extends AudioWorkletNode {
             if (this.nextPulsePosition !== nextPulsePosition) {
                 this.nextPulsePosition = nextPulsePosition;
                 setTimeout(() => {
-                    const now = this.logicalTime;
+                    const now = this.app.audioContext.currentTime;
                     this.app.clock.time_position = futureTimeStamp;
-                    //this.$clock.innerHTML = `[${futureTimeStamp.bar}:${futureTimeStamp.beat}:${zeroPad(futureTimeStamp.pulse, '2')}]`;
                     tryEvaluate(this.app, this.app.global_buffer);
                     this.hasBeenEvaluated = true;
                     this.currentPulsePosition = nextPulsePosition;
-                    const then = this.logicalTime;
+                    const then = this.app.audioContext.currentTime;
                     this.lastLatencies[this.indexOfLastLatencies] = then - now;
                     this.indexOfLastLatencies = (this.indexOfLastLatencies + 1) % this.lastLatencies.length;
                     const averageLatency = this.lastLatencies.reduce((a, b) => a + b) / this.lastLatencies.length;
