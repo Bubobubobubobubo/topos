@@ -32,23 +32,28 @@ declare global {
     repeatPair(amount: number): T;
     repeatOdd(amount: number): T;
     loop(index: number): T;
+    div(division: number): T;
     shuffle(): this;
     rotate(steps: number): this;
     unique(): this;
   }
 }
 
-Array.prototype.shuffle = function() {
-  let currentIndex = this.length, randomIndex;
+Array.prototype.shuffle = function () {
+  let currentIndex = this.length,
+    randomIndex;
   while (currentIndex !== 0) {
     randomIndex = Math.floor(Math.random() * currentIndex);
     currentIndex--;
-    [this[currentIndex], this[randomIndex]] = [this[randomIndex], this[currentIndex]];
+    [this[currentIndex], this[randomIndex]] = [
+      this[randomIndex],
+      this[currentIndex],
+    ];
   }
   return this;
 };
 
-Array.prototype.rotate = function(steps: number) {
+Array.prototype.rotate = function (steps: number) {
   const length = this.length;
   if (steps < 0) {
     steps = length + (steps % length);
@@ -62,7 +67,7 @@ Array.prototype.rotate = function(steps: number) {
   return this;
 };
 
-Array.prototype.unique = function() {
+Array.prototype.unique = function () {
   const seen = new Set();
   let writeIndex = 0;
   for (let readIndex = 0; readIndex < this.length; readIndex++) {
@@ -92,25 +97,25 @@ Array.prototype.degrade = function <T>(this: T[], amount: number) {
         return this;
       }
     } else {
-      i++; 
+      i++;
     }
   }
   return this;
 };
 
 Array.prototype.repeatAll = function <T>(this: T[], amount: number) {
-    if (amount < 1) {
-      throw new Error("Amount should be at least 1");
+  if (amount < 1) {
+    throw new Error("Amount should be at least 1");
+  }
+  let result = [];
+  for (let i = 0; i < this.length; i++) {
+    for (let j = 0; j < amount; j++) {
+      result.push(this[i]);
     }
-    let result = [];
-    for (let i = 0; i < this.length; i++) {
-      for (let j = 0; j < amount; j++) {
-        result.push(this[i]);
-      }
-    }
-    this.length = 0;
-    this.push(...result);
-    return this;
+  }
+  this.length = 0;
+  this.push(...result);
+  return this;
 };
 
 Array.prototype.repeatPair = function <T>(this: T[], amount: number) {
@@ -119,7 +124,7 @@ Array.prototype.repeatPair = function <T>(this: T[], amount: number) {
   }
 
   let result = [];
-  
+
   for (let i = 0; i < this.length; i++) {
     // If the index is even, repeat the element
     if (i % 2 === 0) {
@@ -135,7 +140,7 @@ Array.prototype.repeatPair = function <T>(this: T[], amount: number) {
   this.length = 0;
   this.push(...result);
   return this;
-}
+};
 
 Array.prototype.repeatOdd = function <T>(this: T[], amount: number) {
   if (amount < 1) {
@@ -159,9 +164,7 @@ Array.prototype.repeatOdd = function <T>(this: T[], amount: number) {
   this.length = 0;
   this.push(...result);
   return this;
-}
-
-
+};
 
 Array.prototype.palindrome = function <T>() {
   let left_to_right = Array.from(this);
@@ -200,13 +203,12 @@ Array.prototype.in = function <T>(this: T[], value: T): boolean {
 };
 
 export async function loadSamples() {
-  // const ds = "https://raw.githubusercontent.com/felixroos/dough-samples/main/";
   return Promise.all([
     initAudioOnFirstClick(),
-    samples("github:Bubobubobubobubo/Topos-Samples/main"),
     samples("github:tidalcycles/Dirt-Samples/master").then(() =>
       registerSynthSounds()
     ),
+    samples("github:Bubobubobubobubo/Topos-Samples/main"),
   ]);
 }
 
