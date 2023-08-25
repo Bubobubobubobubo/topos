@@ -61,17 +61,18 @@ Press ${key_shortcut(
 bpm(80)
 mod(0.25) :: sound('sawtooth')
   .note(seqbar(
-		pick(60, 67, 63) - 12,  pick(60, 67, 63) - 12, 
+    pick(60, 67, 63) - 12,  pick(60, 67, 63) - 12, 
     pick(60, 67, 63) - 12 + 5, pick(60, 67, 63) - 12 + 5,
-    pick(60, 67, 63) - 12 + 7, pick(60, 67, 63) - 12 + 7) + (sometimes() ? 24 : 12))
-	  .sustain(0.1).fmi(8).fmh(4).room(0.9)
-	  .gain(0.75).cutoff(500 + usine(8) * 10000)
-	  .delay(0.5).delaytime(bpm() / 60 / 4 / 3)
-	  .delayfeedback(0.25)
-	  .out()
-	mod(1) && snd('kick').out()
-	mod(2) && snd('snare').out()
-	mod(.5) && snd('hat').out()
+    pick(60, 67, 63) - 12 + 7, pick(60, 67, 63) - 12 + 7) + (sometimes() ? 24 : 12)
+  )
+  .sustain(0.1).fmi(8).fmh(4).room(0.9)
+  .gain(0.75).cutoff(500 + usine(8) * 10000)
+  .delay(0.5).delaytime(bpm() / 60 / 4 / 3)
+  .delayfeedback(0.25)
+  .out()
+mod(1) && snd('kick').out()
+mod(2) && snd('snare').out()
+mod(.5) && snd('hat').out()
 </code></pre>
 	`;
 
@@ -219,29 +220,29 @@ if (div(16)) {
 And you can use it for other things inside a method parameter:
 	
 \`\`\`javascript
-	mod(.5)::snd(div(2) ? 'kick' : 'hat').out()
+mod(.5)::snd(div(2) ? 'kick' : 'hat').out()
 \`\`\`
 	
 - <icode>divbar(n: number)</icode>: works just like <icode>div</icode> but at the level of bars instead of beats. It allows you to think about even bigger time cycles. You can also pair it with regular <icode>div</icode> for making complex algorithmic beats.
 	
 \`\`\`javascript
-	divbar(2)::mod(1)::snd('kick').out()
-	divbar(3)::mod(.5)::snd('hat').out()
+divbar(2)::mod(1)::snd('kick').out()
+divbar(3)::mod(.5)::snd('hat').out()
 \`\`\`
 	
 - <icode>onbar(n: number, ...bar: number[])</icode>: The first argument, <icode>n</icode>, is used to divide the time in a period of <icode>n</icode> consecutive bars. The following arguments are bar numbers to play on. For example, <icode>onbar(5, 1, 4)</icode> will return <icode>true</icode> on bar <icode>1</icode> and <icode>4</icode> but return <icode>false</icode> the rest of the time. You can easily divide time that way.
 	
 	
 \`\`\`javascript
-	// Only play on the fourth bar of a four bar cycle.
-	onbar(4, 4)::mod(.5)::snd('hh').out(); 
+// Only play on the fourth bar of a four bar cycle.
+onbar(4, 4)::mod(.5)::snd('hh').out(); 
 		
-	// Here comes a longer version using JavaScript normal control flow
-	if (onbar(4, 1, 3)) { 
-		mod(1)::snd('kick').out();
-	} else {
-		mod(.5)::snd('sd').out();
-	}
+// Here comes a longer version using JavaScript normal control flow
+if (onbar(4, 1, 3)) { 
+	mod(1)::snd('kick').out();
+} else {
+	mod(.5)::snd('sd').out();
+}
 \`\`\`
 	
 ## What are pulses?
@@ -610,7 +611,7 @@ Here is a simple example of a substractive synth:
 	
 \`\`\`javascript
 mod(.5) && snd('sawtooth')
-  .cutoff(pick(2000,500)) + usine(.5) * 4000)
+  .cutoff(pick(2000,500) + usine(.5) * 4000)
   .resonance(0.9).freq(pick(100,150))
   .out()
 \`\`\`

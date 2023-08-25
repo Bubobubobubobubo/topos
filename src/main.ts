@@ -34,8 +34,8 @@ import showdownHighlight from "showdown-highlight";
 const classMap = {
   h1: "text-white lg:text-4xl text-xl lg:ml-4 lg:mx-4 mx-2 lg:my-4 my-2 lg:mb-8 mb-4 bg-neutral-900 rounded-lg py-2 px-2",
   h2: "text-white lg:text-3xl text-xl lg:ml-4 lg:mx-4 mx-2 lg:my-4 my-2 lg:mb-8 mb-4 bg-neutral-900 rounded-lg py-2 px-2",
-  ul: "text-underline",
-  li: "ml-12 list-disc lg:text-2xl text-base text-white lg:mx-4 mx-2 my-4 lg:pl-4 my-2 leading-normal",
+  ul: "text-underline pl-6",
+  li: "list-disc lg:text-2xl text-base text-white lg:mx-4 mx-2 my-4 my-2 leading-normal",
   p: "lg:text-2xl text-base text-white lg:mx-4 mx-2 my-4 leading-normal",
   a: "lg:text-2xl text-base text-orange-300",
   code: "lg:my-4 sm:my-1 text-base lg:text-xl block whitespace-pre overflow-x-hidden",
