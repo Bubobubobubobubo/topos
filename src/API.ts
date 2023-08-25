@@ -391,7 +391,11 @@ export class UserAPI {
     }
   };
 
-  public midi = (value: number | object = 60): NoteEvent => {
+  public midi = (
+    value: number | object = 60,
+    velocity?: number,
+    channel?: number
+  ): NoteEvent => {
     /**
      * Sends a MIDI note to the current MIDI output.
      *
@@ -399,6 +403,24 @@ export class UserAPI {
      * @param options - an object containing options for that note
      *                { channel: 0, velocity: 100, duration: 0.5 }
      */
+
+    if (velocity !== undefined) {
+      // Check if value is of type number
+      if (typeof value === "number") {
+        value = { note: value };
+      }
+      // @ts-ignore
+      value["velocity"] = velocity;
+    }
+
+    if (channel !== undefined) {
+      if (typeof value === "number") {
+        value = { note: value };
+      }
+      // @ts-ignore
+      value["channel"] = channel;
+    }
+
     return new NoteEvent(value, this.app);
   };
 
