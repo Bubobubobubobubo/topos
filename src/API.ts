@@ -166,12 +166,14 @@ Array.prototype.repeatOdd = function <T>(this: T[], amount: number) {
   return this;
 };
 
+// @ts-ignore
 Array.prototype.palindrome = function <T>() {
   let left_to_right = Array.from(this);
   let right_to_left = Array.from(this.reverse());
   return left_to_right.concat(right_to_left);
 };
 
+// @ts-ignore
 Array.prototype.random = function <T>(this: T[], index: number): T {
   return this[Math.floor(Math.random() * this.length)];
 };
@@ -180,6 +182,7 @@ Array.prototype.loop = function <T>(this: T[], index: number): T {
   return this[index % this.length];
 };
 
+// @ts-ignore
 Array.prototype.random = function (index) {
   return this[Math.floor(Math.random() * this.length)];
 };
