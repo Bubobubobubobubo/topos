@@ -14,10 +14,10 @@ import { indentWithTab } from "@codemirror/commands";
 import { vim } from "@replit/codemirror-vim";
 import { AppSettings, Universe } from "./AppSettings";
 import { editorSetup } from "./EditorSetup";
-import { documentation } from "./Documentation";
+import { documentation_factory } from "./Documentation";
 import { EditorView } from "codemirror";
 import { Clock } from "./Clock";
-import { UserAPI } from "./API";
+import { loadSamples, UserAPI } from "./API";
 import "./style.css";
 import {
   Universes,
@@ -26,9 +26,6 @@ import {
   template_universes,
 } from "./AppSettings";
 import { tryEvaluate } from "./Evaluator";
-
-type Documentation = { [key: string]: string };
-const Docs: Documentation = documentation;
 
 // Importing showdown and setting up the markdown converter
 import showdown from "showdown";
@@ -78,6 +75,7 @@ export class Editor {
   userPlugins: Extension[] = [];
   state: EditorState;
   api: UserAPI;
+  docs: { [key: string]: string } = {};
 
   // Audio stuff
   audioContext: AudioContext;
@@ -235,6 +233,13 @@ export class Editor {
     ];
 
     let dynamicPlugins = new Compartment();
+
+    // ================================================================================
+    // Building the documentation
+    loadSamples().then(() => {
+      this.docs = documentation_factory(this);
+    });
+    // ================================================================================
 
     // ================================================================================
     // Application event listeners
@@ -662,10 +667,11 @@ export class Editor {
     const converter = new showdown.Converter({
       emoji: true,
       moreStyling: true,
+      backslashEscapesHTMLTags: true,
       extensions: [showdownHighlight({ auto_detection: true }), ...bindings],
     });
     const converted_markdown = converter.makeHtml(
-      Docs[this.currentDocumentationPane]
+      this.docs[this.currentDocumentationPane]
     );
     function wrapCodeWithPre(inputString: string): string {
       let newString = inputString.replace(/<code>/g, "<pre><code>");

@@ -51,7 +51,7 @@ Array.prototype.in = function <T>(this: T[], value: T): boolean {
   return this.includes(value);
 };
 
-async function loadSamples() {
+export async function loadSamples() {
   // const ds = "https://raw.githubusercontent.com/felixroos/dough-samples/main/";
   return Promise.all([
     initAudioOnFirstClick(),
@@ -61,8 +61,6 @@ async function loadSamples() {
     ),
   ]);
 }
-
-loadSamples();
 
 export const generateCacheKey = (...args: any[]): string => {
   return args.map((arg) => JSON.stringify(arg)).join(",");
@@ -91,6 +89,10 @@ export class UserAPI {
   constructor(public app: Editor) {
     //this.load = samples("github:tidalcycles/Dirt-Samples/master");
   }
+
+  _all_samples = (): object => {
+    return soundMap.get();
+  };
 
   _reportError = (error: any): void => {
     console.log(error);
@@ -236,7 +238,7 @@ export class UserAPI {
     }
   };
 
-  public midi = (value: number|object = 60): NoteEvent => {
+  public midi = (value: number | object = 60): NoteEvent => {
     /**
      * Sends a MIDI note to the current MIDI output.
      *
@@ -323,8 +325,8 @@ export class UserAPI {
       this.app.api.patternCache.set(key, player);
     }
     if ((player && player.notStarted()) || player.played) {
-     player.callTime = this.epulse();
-     player.played = false;
+      player.callTime = this.epulse();
+      player.played = false;
     }
     return player;
   };
@@ -889,7 +891,7 @@ export class UserAPI {
       let integral_part = Math.floor(b);
       let decimal_part = b - integral_part;
       final_pulses.push(
-        integral_part === this.app.clock.time_position.beat && 
+        integral_part === this.app.clock.time_position.beat &&
           this.app.clock.time_position.pulse ===
             decimal_part * this.app.clock.ppqn
       );
@@ -1235,7 +1237,7 @@ export class UserAPI {
   // Trivial functions
   // =============================================================
 
-  sound = (sound: string|object) => {
+  sound = (sound: string | object) => {
     return new SoundEvent(sound, this.app);
   };
 
