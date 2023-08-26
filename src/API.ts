@@ -554,10 +554,7 @@ export class UserAPI {
       player = new Player(input, options, this.app);
       this.app.api.patternCache.set(key, player);
     }
-    if ((player && player.notStarted()) || player.played) {
-      player.callTime = this.epulse();
-      player.played = false;
-    }
+    if(player) player.updateLastCallTime();
     return player;
   };
 

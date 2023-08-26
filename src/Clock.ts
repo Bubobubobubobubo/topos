@@ -121,7 +121,6 @@ export class Clock {
         return n * this.pulse_duration
     }
 
-
     public start(): void {
         /**
          * Starts the TransportNode (starts the clock).
