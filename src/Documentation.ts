@@ -582,10 +582,13 @@ The Topos audio engine is based on the [SuperDough](https://www.npmjs.com/packag
 	
 The basic function to play a sound is... <icode>sound(name: string)</icode> (you can also write <icode>snd</icode> to save some precious time). If the given sound or synthesizer exists in the database, it will be automatically queried/started and will start playing. Evaluate the following script in the global window:
 	
-\`\`\`javascript
-mod(1) && sound('bd').out()
+${makeExample(
+  "Playing sounds is easy",
+  `mod(1) && sound('bd').out()
 mod(0.5) && sound('hh').out()
-\`\`\`
+`,
+  true
+)}
 	
 In plain english, this translates to:
 	
@@ -594,10 +597,13 @@ In plain english, this translates to:
 	
 Let's make it slightly more complex:
 
-\`\`\`javascript
-mod(1) && sound('bd').coarse(0.25).out()
-mod(0.5) && sound('hh').delay(0.25).delaytime(0.125).out()
-\`\`\`
+${makeExample(
+  "Adding some effects",
+  `mod(1) && sound('bd').coarse(0.25).out();
+mod(0.5) && sound('hh').delay(0.25).delaytime(0.125).out();
+`,
+  true
+)}
 	
 Now, it reads as follow:
 	
@@ -610,6 +616,17 @@ Let's pause for a moment to explain what we just wrote. There are many things to
 - Playing a sound always ends up with the <icode>.out()</icode> method that gives the instruction to send a message to the audio engine.
 - Sounds are **composed** by adding qualifiers that will modify the sound or synthesizer being played (_e.g_ <icode>sound('...').blabla(...)..something(...).out()</icode>.
 	
+${makeExample(
+  '"Composing" a sound or making a sound chain',
+  `mod(1) :: sound('pad')
+  .begin(rand(0, 0.4))
+  .freq([50,52].beat())
+  .size(0.9)
+  .room(0.9)
+  .pan(sine()).release(2).out()`,
+  true
+)}
+
 ## Audio Sample Folders / Sample Files
 	
 When you type <icode>kick</icode> in the <icode>sound('kick').out()</icode> expression, you are referring to a sample folder containing multiple audio samples. If you look at the sample folder, it would look something like this:
@@ -631,30 +648,35 @@ When you type <icode>kick</icode> in the <icode>sound('kick').out()</icode> expr
 \`\`\`
 	
 The <icode>.n(number)</icode> method can be used to pick a sample from the currently selected sample folder. For instance, the following script will play a random sample from the _kick_ folder:
-	
-\`\`\`javascript
-mod(1) && sound('kick').n([1,2,3,4,5,6,7,8].pick()).out()
-\`\`\`
+${makeExample(
+  "Picking a sample",
+  `mod(1) && sound('kick').n([1,2,3,4,5,6,7,8].pick()).out()`,
+  true
+)}
 	
 Don't worry about the number. If it gets too big, it will be automatically wrapped to the number of samples in the folder. You can type any number, it will always fall on a sample. Let's use our mouse to select a sample number in a folder:
 	
-\`\`\`javascript
-// Move your mouse to change the sample being used!
-mod(.25) && sound('numbers').n(Math.floor(mouseX())).out()
-\`\`\`
+${makeExample(
+  "Picking a sample... with your mouse!",
+  `// Move your mouse to change the sample being used!
+mod(.25) && sound('numbers').n(Math.floor(mouseX())).out()`,
+  true
+)}
 	
 **Note:** the <icode>sound</icode> function can also be used to play synthesizers (see the **Synthesizers** page). In that case, the <icode>.n(n: number)</icode> becomes totally useless!
 	
 ## Learning about sound modifiers
 	
 As we said earlier, the <icode>sound('sample_name')</icode> function can be chained to _specify_ a sound more. For instance, you can add a filter and some effects to your high-hat:
-\`\`\`javascript
-mod(0.5) && sound('hh')
-    .sometimes(s=>s.speed([1,5,10].pick()))
-    .room(0.5)
-    .cutoff(usine(2) * 5000)
-    .out()
-\`\`\`
+${makeExample(
+  "Learning through repetition",
+  `mod(0.5) && sound('hh')
+	.sometimes(s=>s.speed([1,5,10].pick()))
+	.room(0.5)
+	.cutoff(usine(2) * 5000)
+	.out()`,
+  true
+)}
 	
 There are many possible arguments that you can add to your sounds. Learning them can take a long time but it will open up a lot of possibilities. Let's try to make it through all of them. They can all be used both with synthesizers and audio samples, which is kind of unconventional with normal / standard electronic music softwares.
 	
@@ -681,9 +703,12 @@ Simple controls over the amplitude (volume) of a given sound.
 | gain     |       | Volume of the synth/sample (exponential)                   |
 | velocity | vel   | Velocity (amplitude) from 0 to 1. Multipled with gain      |
 	
-\`\`\`javascript
-mod(.5)::snd('cp').vel($(1)%10 / 10).out()
-\`\`\`
+${makeExample(
+  "Velocity manipulated by a counter",
+  `
+mod(.5)::snd('cp').vel($(1)%10 / 10).out()`,
+  true
+)}
 	
 ## Amplitude Enveloppe
 	
@@ -707,7 +732,7 @@ mod(1)::sound('sawtooth').note(50+12).decay(0.5).sustain(0.7).release(2).out();
 mod(.25)::sound('sawtooth').note([50,57,62].pick() + [12, 24, 0].div(2))
   .cutoff(5000).sustain(0.5).release(0.1).out()
 	`,
-  false
+  true
 )};
 	
 ## Sample Controls
@@ -735,7 +760,7 @@ mod(.5)::snd('pad').begin(0.2)
   .room(0.8).size(0.5)
   .clip(1).out()
 	`,
-  false
+  true
 )};
 	
 	
@@ -761,7 +786,7 @@ mod(.5) && snd('sawtooth')
 	.resonance(0.9).freq([100,150].pick())
 	.out()
 	`,
-  false
+  true
 )};
 	
 ## Reverb
@@ -778,7 +803,7 @@ ${makeExample(
   `
 mod(2)::snd('cp').room(1).size(0.9).out()
 	`,
-  false
+  true
 )};
 
 	
@@ -799,7 +824,7 @@ mod(2)::snd('cp').delay(0.5).delaytime(0.75).delayfb(0.8).out()
 mod(4)::snd('snare').out()
 mod(1)::snd('kick').out()
 	`,
-  false
+  true
 )};
 	
 ## Distorsion, saturation, destruction
@@ -817,7 +842,7 @@ ${makeExample(
 mod(.5)::snd('pad').coarse($(1) % 16).clip(.5).out(); // Comment me
 mod(.5)::snd('pad').crush([16, 8, 4].div(2)).clip(.5).out()
 	`,
-  false
+  true
 )};
 `;
 
