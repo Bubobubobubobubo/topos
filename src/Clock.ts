@@ -65,12 +65,23 @@ export class Clock {
          * 
          * @returns number of ticks until next bar
          */
-        const currentBeatInTicks = ((this.app.clock.beats_since_origin - 1) * 48) + this.time_position.pulse + 1
+        const currentBeatInTicks = ((this.app.clock.beats_since_origin - 1) * this.ppqn) + this.time_position.pulse + 1
         const nextBarinTicks =  (this.beats_per_bar * this.ppqn) * this.time_position.bar + 1
-        return nextBarinTicks - currentBeatInTicks
+        return nextBarinTicks - currentBeatInTicks;
     }
 
-    get beats_per_bar(): number { 
+    get next_beat_in_ticks(): number {
+        /**
+         * This function returns the number of ticks separating the current moment
+         * from the beginning of the next beat.
+         * 
+         * @returns number of ticks until next beat
+         */
+        const ticksMissingToNextBeat = (this.time_position.pulse + 1) % this.ppqn;
+        return this.app.clock.pulses_since_origin + ticksMissingToNextBeat;
+    }
+
+    get beats_per_bar(): number {
         /**
          * Returns the number of beats per bar.
          */

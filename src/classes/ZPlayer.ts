@@ -36,23 +36,30 @@ export class Player extends Event {
         return this.app.clock.convertPulseToSecond(pulse);
     }
 
+    // Check if it's time to play the event
     areWeThereYet = (): boolean => {
         // If clock has stopped
         if(this.app.clock.pulses_since_origin<this.callTime) {
             this.callTime = 0;
             this.tick = 0;
         }
-
+        // Main logic
         const howAboutNow = (
-            (this.notStarted() && this.app.clock.time_position.pulse === 1) ||
-            (
+            (   // If pattern is just starting
+                this.notStarted() && 
+                (this.app.clock.time_position.pulse === 1 ||
+                this.app.clock.pulses_since_origin+1 >= this.app.clock.next_beat_in_ticks)
+            )
+            ||
+            (   // If pattern is already playing
                 this.current &&
-                this.pulseToSecond(this.app.api.epulse()+1) >= 
+                this.pulseToSecond(this.app.clock.pulses_since_origin+1) >= 
                 this.pulseToSecond(this.callTime) +
                 (this.current.duration*4) * this.pulseToSecond(this.app.api.ppqn())
             )
         );
-        
+
+        // Increment local tick (how many times sound/midi has been called)
         this.tick = howAboutNow ? 0 : this.tick+1;
         
         return howAboutNow;
