@@ -170,6 +170,26 @@ Every Topos session is composed of several small scripts. A set of scripts is ca
     "Ctrl + N"
   )}): _Not evaluated_. Used to store your thoughts or commentaries about the session you are currently playing. It is nothing more than a scratchpad really!
 	
+
+${makeExample(
+  "To take the most out of Topos...",
+  `// Write your code in multiple scripts. Use all the code buffers!
+mod(1) :: script(1)
+div(4) :: mod(.5) :: script(2)
+`,
+  true
+)}
+
+${makeExample(
+  "Script execution can become musical too!",
+  `// You can play your scripts... algorithmically.
+mod(1) :: script([1,3,5].pick())
+div(4) :: mod([.5, .25].div(16)) :: script([5,6,7,8].loop($(2)))
+`,
+  false
+)}
+
+
 ## Universes
 	
 A set of files is called a _universe_. Topos can store several universes and switch immediately from one to another. You can switch between universes by pressing ${key_shortcut(
@@ -182,10 +202,12 @@ You can clear the current universe by pressing the flame button on the top right
 	
 # Sharing your work
 	
-Click on the Topos logo in the top bar. Your URL will change to something much longer and complex. The same URL will be copied to your clipboard. Send this link to your friends to share the universe you are currently working on with them. 
+**Click on the Topos logo in the top bar**. Your URL will change to something much longer and complex. The same URL will be copied to your clipboard. Send this link to your friends to share the universe you are currently working on with them. 
 	
 - The imported universe will always get a randomly generated name such as: <icode>random_silly_llama</icode>.
 - Topos will automatically fetch and switch to the universe that was sent to you. Your previous universe is still accessible if you switch to it, don't worry!
+
+**Note:** links are currently super long and unsharable! Sorry about that, minifying takes a server and we don't have one yet. We will fix that soon. In the meantime, you can use a service like [tinyurl](https://tinyurl.com/) to shorten your links.
 `;
 
   const time: string = `
@@ -224,8 +246,7 @@ mod(1,3.25,2.5)::snd('hh').out() // A somewhat weirder pattern
 
 ${makeExample(
   "Some simple yet detailed rhythms",
-  `
-onbeat(1,2,3,4)::snd('kick').out() // Bassdrum on each beat
+  `onbeat(1,2,3,4)::snd('kick').out() // Bassdrum on each beat
 onbeat(2,4)::snd('snare').out() // Snare on acccentuated beats
 onbeat(1.5,2.5,3.5, 3.75)::snd('hat').out() // Cool high-hats
 `,
@@ -1005,9 +1026,52 @@ The code you enter in any of the scripts is evaluated in strict mode. This tells
   )}. You cannot directly use <icode>console.log('hello, world')</icode> in the interface. You will have to open the console as well to see your messages being printed there!
 - **about new syntax:** sometimes, we have taken liberties with the JavaScript syntax in order to make it easier/faster to write on stage. <icode>&&</icode> can also be written <icode>::</icode> or <icode>-></icode> because it is faster to type or better for the eyes!
 	
+## Common idioms
+
+There are some techniques that Topos players are using to keep their JavaScript short and tidy. Don't try to write the shortest possible code but use shortcuts when it makes sense. It's sometimes very comforting to take time to write utilities and scripts that you will often reuse. Take a look at the following examples:
+
+${makeExample(
+  "Shortening your if conditions",
+  `// The && symbol (overriden by :: in Topos) is very often used for conditions!
+mod(.75) :: snd('zap').out()
+//if (true) && log('very true')
+`,
+  true
+)}
+
+${makeExample(
+  "More complex conditions using ?",
+  `// The ? symbol can be used to write a if/true/false condition
+mod(4) ? snd('kick').out() : mod(2)::snd('snare').out()
+// (true) ? log('very true') : log('very false')
+`,
+  false
+)}
+
+
+${makeExample(
+  "Using not and other short symbols",
+  `// The ! symbol can be used to reverse a condition
+mod(4) ? snd('kick').out() : mod(2)::snd('snare').out()
+!mod(2) :: mod(0.5)::snd('clap').out()
+`,
+  false
+)}
+
+
+
 ## About crashes and bugs
 	
 Things will crash, that's also part of the show. You will learn progressively to avoid mistakes and to write safer code. Do not hesitate to kill the page or to stop the transport if you feel overwhelmed by an algorithm blowing up. There are no safeties in place to save you. This is to ensure that you have all the available possible room to write bespoke code and experiment with your ideas through code.
+
+${makeExample(
+  "This example will crash! Who cares?",
+  `// This is crashing. Open your console!
+qjldfqsdklqsjdlkqjsdlqkjdlksjd
+`,
+  false
+)}
+
 `;
 
   const functions: string = `
