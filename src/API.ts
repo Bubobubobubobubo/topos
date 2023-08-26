@@ -316,7 +316,7 @@ export class UserAPI {
       player = new Player(input, options, this.app);
       this.app.api.patternCache.set(key, player);
     }
-    if(player) player.updateLastCallTime();
+    if (player) player.updateLastCallTime();
     return player;
   };
 
@@ -1191,5 +1191,37 @@ export class UserAPI {
     // TODO: Implement this. This function should change the rate at which the global script
     // is evaluated. This is useful for slowing down the script, or speeding it up. The default
     // would be 1.0, which is the current rate (very speedy).
+  };
+
+  // =============================================================
+  // Legacy functions
+  // =============================================================
+
+  public divseq = (...args: any): any => {
+    const chunk_size = args[0]; // Get the first argument (chunk size)
+    const elements = args.slice(1); // Get the rest of the arguments as an array
+    const timepos = this.epulse();
+    const slice_count = Math.floor(
+      timepos / Math.floor(chunk_size * this.ppqn())
+    );
+    return elements[slice_count % elements.length];
+  };
+
+  public seqbeat = <T>(...array: T[]): T => {
+    /**
+     * Returns an element from an array based on the current beat.
+     *
+     * @param array - The array of values to pick from
+     */
+    return array[this.ebeat() % array.length];
+  };
+
+  public seqbar = <T>(...array: T[]): T => {
+    /**
+     * Returns an element from an array based on the current bar.
+     *
+     * @param array - The array of values to pick from
+     */
+    return array[(this.app.clock.time_position.bar + 1) % array.length];
   };
 }

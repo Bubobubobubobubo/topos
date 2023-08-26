@@ -705,14 +705,43 @@ Music really comes to life when you start playing with algorithmic patterns. The
 
 JavaScript is using [Arrays](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array) as a data structure for lists. Topos is extending them with custom methods that allow you to enter softly into a universe of musical patterns. These methods can often be chained to compose a more complex expression: <icode>[1, 2, 3].repeatOdd(5).palindrome().beat()</icode>.
 
-- <icode>div(division: number)</icode>:
+- <icode>div(division: number)</icode>: this method will return the next value in the list every _n_ pulses. By default, <icode>1</icode> equals to one beat but integer and floating point number values are supported as well. This method is extremely powerful and can be used for many different purposes. Check out the examples.
 
 ${makeExample(
-  "div is the greatest method ever",
-  `
+  "Light drumming",
+  `// Every bar, use a different rhythm
+mod([1, 0.75].div(4)) :: sound('cp').out()
+mod([0.5, 1].div(4)) :: sound('kick').out()
+mod(2)::snd('snare').shape(.5).out()
 `,
   true
 )}
+${makeExample(
+  "Using div to create arpeggios",
+  `// Arpeggio using pulse divisions
+mod([.5, .25].div(2)) :: sound('sine')
+  .hcutoff(400)
+  .fmi([1,2].div(8))
+  .fmh([0.5,0.25,1].div(2))
+  .note([50,53,57].div(.25) + [12,24].div(2))
+  .sustain([0.25, 0.5].div(8))
+  .room(0.9).size(0.5)
+  .delay(0.25).delayt([0.5,0.25].div(16))
+  .delayfb(0.5)
+  .out()
+`,
+  false
+)}
+${makeExample(
+  "Cool ambiance",
+  `mod(.5) :: snd(['kick', 'hat'].div(4)).out()
+mod([2,4].div(2)) :: snd('shaker').delay(.5).delayfb(.75).delayt(0.125).out()
+div(2)::mod(1)::snd('clap').out()
+div(4)::mod(2)::snd('pad').n(2).shape(.5).orbit(2).room(0.9).size(0.9).release(0.5).out()
+`,
+  false
+)}
+
 
 
 - <icode>beat()</icode>: returns the index of the list corresponding to current beat (with wrapping). This allows you to return a different value for each beat.
