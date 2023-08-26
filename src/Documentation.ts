@@ -61,9 +61,9 @@ Press ${key_shortcut(
 bpm(80)
 mod(0.25) :: sound('sawtooth')
   .note(seqbar(
-    pick(60, 67, 63) - 12,  pick(60, 67, 63) - 12, 
-    pick(60, 67, 63) - 12 + 5, pick(60, 67, 63) - 12 + 5,
-    pick(60, 67, 63) - 12 + 7, pick(60, 67, 63) - 12 + 7) + (sometimes() ? 24 : 12)
+    [60, 67, 63].pick() - 12,  [60, 67, 63].pick() - 12, 
+    [60, 67, 63].pick() - 12 + 5, [60, 67, 63].pick() - 12 + 5,
+    [60, 67, 63].pick() - 12 + 7, [60, 67, 63].pick() - 12 + 7) + (sometimes() ? 24 : 12)
   )
   .sustain(0.1).fmi(8).fmh(4).room(0.9)
   .gain(0.75).cutoff(500 + usine(8) * 10000)
@@ -210,10 +210,10 @@ if (div(16)) {
   mod(1.5)::snd('kick').out()
   mod(2)::snd('snare').out()
   mod(.5)::snd('hh').out()
-  mod(.5)::snd('tabla').speed(pick(1,2)).end(0.5).out()
+  mod(.5)::snd('tabla').speed([1,2].pick()).end(0.5).out()
   mod(2.34)::snd('birds').n(irand(1,10))
     .delay(0.5).delaytime(0.5).delayfb(0.25).out()
-  mod(.5)::snd('diphone').end(0.5).n(pick(1,2,3,4)).out()
+  mod(.5)::snd('diphone').end(0.5).n([1,2,3,4].pick()).out()
 }
 \`\`\`
 	
@@ -295,7 +295,7 @@ You can use Topos to play MIDI thanks to the [WebMIDI API](https://developer.moz
 \`\`\`javascript
 bpm(80) // Setting a default BPM
 mod(.5) && midi(36 + seqbeat(0,12)).sustain(0.02).out()
-mod(.25) && midi(pick(64, 76)).sustain(0.05).out()
+mod(.25) && midi([64, 76].pick()).sustain(0.05).out()
 mod(.75) && midi(seqbeat(64, 67, 69)).sustain(0.05).out()
 sometimes() && mod(.25) && midi(seqbeat(64, 67, 69) + 24).sustain(0.05).out()
 \`\`\`
@@ -318,15 +318,15 @@ mod(0.25) && midi(60)
 - <icode>control_change({control: number, value: number, channel: number})</icode>: send a MIDI Control Change. This function takes a single object argument to specify the control message (_e.g._ <icode>control_change({control: 1, value: 127, channel: 1})</icode>).
 	
 \`\`\`javascript
-   control_change({control: pick(24,25), value: rI(1,120), channel: 1}))})
-   control_change({control: pick(30,35), value: rI(1,120) / 2, channel: 1}))})
+   control_change({control: [24,25].pick(), value: rI(1,120), channel: 1}))})
+   control_change({control: [30,35].pick(), value: rI(1,120) / 2, channel: 1}))})
 \`\`\`
 	
 	
 - <icode>program_change(program: number, channel: number)</icode>: send a MIDI Program Change. This function takes two arguments to specify the program and the channel (_e.g._ <icode>program_change(1, 1)</icode>).
 	
 \`\`\`javascript
-program_change(pick(1,2,3,4,5,6,7,8), 1)
+program_change([1,2,3,4,5,6,7,8].pick(), 1)
 \`\`\`
 	
 	
@@ -410,7 +410,7 @@ When you type <icode>kick</icode> in the <icode>sound('kick').out()</icode> expr
 The <icode>.n(number)</icode> method can be used to pick a sample from the currently selected sample folder. For instance, the following script will play a random sample from the _kick_ folder:
 	
 \`\`\`javascript
-mod(1) && sound('kick').n(pick(1,2,3,4,5,6,7,8)).out()
+mod(1) && sound('kick').n([1,2,3,4,5,6,7,8].pick()).out()
 \`\`\`
 	
 Don't worry about the number. If it gets too big, it will be automatically wrapped to the number of samples in the folder. You can type any number, it will always fall on a sample. Let's use our mouse to select a sample number in a folder:
@@ -427,7 +427,7 @@ mod(.25) && sound('numbers').n(Math.floor(mouseX())).out()
 As we said earlier, the <icode>sound('sample_name')</icode> function can be chained to _specify_ a sound more. For instance, you can add a filter and some effects to your high-hat:
 \`\`\`javascript
 mod(0.5) && sound('hh')
-    .sometimes(s=>s.speed(pick(1,5,10)))
+    .sometimes(s=>s.speed([1,5,10].pick()))
     .room(0.5)
     .cutoff(usine(2) * 5000)
     .out()
@@ -479,7 +479,7 @@ Note that the **sustain** value is not a duration but an amplitude value (how lo
 mod(4)::sound('sawtooth').note(50).decay(0.5).sustain(0.5).release(2).out();
 mod(2)::sound('sawtooth').note(50+7).decay(0.5).sustain(0.6).release(2).out();
 mod(1)::sound('sawtooth').note(50+12).decay(0.5).sustain(0.7).release(2).out();
-mod(.25)::sound('sawtooth').note(pick(50,57,62)+divseq(2, 12, 24, 0))
+mod(.25)::sound('sawtooth').note([50,57,62].pick() + [12, 24, 0].div(2))
   .cutoff(5000).sustain(0.5).release(0.1).out()
 \`\`\`
 	
@@ -500,8 +500,8 @@ There are some basic controls over the playback of each sample. This allows you 
 \`\`\`javascript
 // Using some of the modifiers described above :)
 mod(.5)::snd('pad').begin(0.2)
-  .speed(divseq(4, 1, 0.9, 0.8))
-  .n(divseq(2, 0, 0, 2, 4)).pan(usine(.5))
+  .speed([1, 0.9, 0.8].div(4))
+  .n([0, 0, 2, 4].div(4)).pan(usine(.5))
   .end(rand(0.3,0.8))
   .room(0.8).size(0.5)
   .clip(1).out()
@@ -524,8 +524,8 @@ There are three basic filters: a _lowpass_, _highpass_ and _bandpass_ filters wi
 
 \`\`\`javascript
 mod(.5) && snd('sawtooth')
-	.cutoff(pick(2000,500) + usine(.5) * 4000)
-	.resonance(0.9).freq(pick(100,150))
+	.cutoff([2000,500].pick() + usine(.5) * 4000)
+	.resonance(0.9).freq([100,150].pick())
 	.out()
 \`\`\`
 	
@@ -569,7 +569,7 @@ mod(1)::snd('kick').out()
 	
 \`\`\`javascript
 mod(.5)::snd('pad').coarse($(1) % 16).clip(.5).out(); // Comment me
-mod(.5)::snd('pad').crush(divseq(2, 16, 8, 4)).clip(.5).out()
+mod(.5)::snd('pad').crush([16, 8, 4].div(2)).clip(.5).out()
 \`\`\`
 `;
 
@@ -589,9 +589,15 @@ ${injectAvailableSamples(application)}
   const patterns: string = `
 # Patterns
 	
+## New array methods
+
+- <icode>beat</icode>
+
+
 ## Simple patterns 
 	
 - <icode>divseq(div: number, ...values:any[])</icode>
+
 `;
 
   const synths: string = `
@@ -611,8 +617,8 @@ Here is a simple example of a substractive synth:
 	
 \`\`\`javascript
 mod(.5) && snd('sawtooth')
-  .cutoff(pick(2000,500) + usine(.5) * 4000)
-  .resonance(0.9).freq(pick(100,150))
+  .cutoff([2000,500].pick() + usine(.5) * 4000)
+  .resonance(0.9).freq([100,150].pick())
   .out()
 \`\`\`
 	
@@ -628,9 +634,9 @@ And here is a simple example:
 	
 \`\`\`javascript
 mod(.25) && snd('sine')
-  .fmi(pick(1,2,4,8))
-  .fmh(divseq(2, 1,2,4,8))
-  .freq(pick(100,150))
+  .fmi([1,2,4,8].pick())
+  .fmh([1,2,4,8].div(8))
+  .freq([100,150].pick())
   .sustain(0.1)
   .out()
 \`\`\`

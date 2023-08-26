@@ -18,6 +18,7 @@ import { documentation_factory } from "./Documentation";
 import { EditorView } from "codemirror";
 import { Clock } from "./Clock";
 import { loadSamples, UserAPI } from "./API";
+import { makeArrayExtensions } from "./ArrayExtensions";
 import "./style.css";
 import {
   Universes,
@@ -200,6 +201,7 @@ export class Editor {
     // ================================================================================
 
     this.api = new UserAPI(this);
+    makeArrayExtensions(this.api);
 
     // ================================================================================
     // CodeMirror Management

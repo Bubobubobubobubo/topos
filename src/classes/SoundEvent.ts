@@ -183,6 +183,7 @@ export class SoundEvent extends AudibleEvent {
     this.values["delay"] = value;
     return this;
   };
+  del = this.delay;
 
   delayfeedback = (value: number): this => {
     this.values["delayfeedback"] = value;
@@ -200,6 +201,7 @@ export class SoundEvent extends AudibleEvent {
     this.values["orbit"] = value;
     return this;
   };
+  o = this.orbit;
 
   room = (value: number): this => {
     this.values["room"] = value;
@@ -210,6 +212,7 @@ export class SoundEvent extends AudibleEvent {
     this.values["size"] = value;
     return this;
   };
+  sz = this.size;
 
   velocity = (value: number): this => {
     this.values["velocity"] = value;
