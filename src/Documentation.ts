@@ -1,22 +1,8 @@
 import { type Editor } from "./main";
+import { tryEvaluate } from "./Evaluator";
 
 const key_shortcut = (shortcut: string): string => {
   return `<kbd class="lg:px-2 lg:py-1.5 px-1 py-1 lg:text-sm text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg dark:bg-gray-600 dark:text-gray-100 dark:border-gray-500">${shortcut}</kbd>`;
-};
-
-const makeExample = (
-  description: string,
-  code: string,
-  open: boolean = false
-): string => {
-  return `
-<details ${open ? "open" : ""}>
-	<summary>${description}</summary>
-\`\`\`javascript
-${code}
-\`\`\`
-</details>
-`;
 };
 
 const samples_to_markdown = (samples: object) => {
@@ -51,6 +37,24 @@ const injectAvailableSamples = (application: Editor): string => {
 };
 
 export const documentation_factory = (application: Editor) => {
+  const makeExample = (
+    description: string,
+    code: string,
+    open: boolean = false
+  ): string => {
+    return `
+<details ${open ? "open" : ""}>
+<summary>${description}<button class="inline-block pl-2" onclick="(()=>_executeCodeExample(${code})})()">▶</button>
+<button class="inline-block pl-2" onclick="(()=>stop)()">⏹</button>
+</summary>
+
+\`\`\`javascript
+${code}
+\`\`\`
+</details>
+`;
+  };
+
   const introduction: string = `
 # Welcome
 	

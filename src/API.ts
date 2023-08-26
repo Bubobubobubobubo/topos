@@ -56,6 +56,18 @@ export class UserAPI {
     //this.load = samples("github:tidalcycles/Dirt-Samples/master");
   }
 
+	_executeCodeExample = (code: string) => {
+	  console.log("Executing documentation example");
+	  this.app.universes[
+	    this.app.selected_universe as string
+	  ].global.candidate = code as string;
+	  tryEvaluate(
+	    this.app,
+	    this.app.universes[this.app.selected_universe as string].global
+	  );
+	};
+
+
   _all_samples = (): object => {
     return soundMap.get();
   };
