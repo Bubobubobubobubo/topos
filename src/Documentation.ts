@@ -302,8 +302,6 @@ mod(.5) && euclid($(1), 5, 9) && snd('kick').out()
 mod(.5) && euclid($(2), 2, 3, 1) && snd('pluck').end(0.5).n(5).out()
 mod(.5) && euclid($(3), 6, 9, 1) && snd('pluck').end(0.5).n(5).freq(200).out()
 mod(.25) && euclid($(4), 7, 9, 1) && snd('hh').out()
-
-
 `,
   false
 )}
@@ -319,6 +317,23 @@ mod(.5) && bin($(1), 34) && snd('kick').out()
 mod(.5) && bin($(2), 48) && snd('sd').out()
 `,
   true
+)}
+
+${makeExample(
+  "Calling 911",
+  `mod(.5) && bin($(1), 911) && snd('pluck').n(4).delay(0.5).delayt(0.25).out()
+mod(1) && sound('kick').shape(0.5).out()
+`,
+  false
+)}
+
+${makeExample(
+  "Playing around with simple numbers",
+  `mod(.5) && bin($(1), [123, 456, 789].div(4)) 
+	&& snd('tabla').n($(2)).delay(0.5).delayt(0.25).out()
+mod(1) && sound('kick').shape(0.5).out()
+`,
+  false
 )}
 	
 If you don't find it spicy enough, you can add some more probabilities to your rhythms by taking advantage of the probability functions. See the functions documentation page to learn more about them. 
@@ -343,7 +358,8 @@ Now you know how to play some basic rhythmic music but you are a bit stuck in a 
 ${makeExample(
   "Creating two beats of silence",
   `
-mod(1)::snd('kick').out(); // Playing on every beat
+div(3)::mod([1,.5].beat())::sound('kick').shape(0.3).out(); // Playing every three beats
+mod(1)::snd('snare').out(); // Playing on every beat
 div(2)::mod(.75)::snd('hat').out(); // Playing only every two beats
 `,
   true
@@ -383,6 +399,20 @@ mod(.5)::snd(div(2) ? 'kick' : 'hat').out()
 `,
   true
 )}
+
+${makeExample(
+  "div is great for pretty much everything",
+  `div([1, .5].beat()) :: mod(.25) :: sound('shaker').out();
+div([4, .5].beat()) :: mod(.25) :: sound('shaker').speed(2).out();
+div([1, 2].beat()) :: mod(1.75) :: sound('snare').out();
+div(4) :: mod(.5) :: sound('tom').out()
+div(.125) :: mod(.5) :: sound('amencutup')
+  .hcutoff(500).pan(sine())
+  .n($(1)).shape(0.5).out()
+`,
+  true
+)}
+
 	
 - <icode>divbar(n: number)</icode>: works just like <icode>div</icode> but at the level of bars instead of beats. It allows you to think about even bigger time cycles. You can also pair it with regular <icode>div</icode> for making complex algorithmic beats.
 	
@@ -441,7 +471,7 @@ Every script can access the current time by using the following functions:
 These values are **extremely useful** to craft more complex syntax or to write musical scores. However, Topos is also offering more high-level sequencing functions to make it easier to play music. You can use the time functions as conditionals. The following example will play a pattern A for 2 bars and a pattern B for 2 bars:
 	
 ${makeExample(
-  "Calculating time by hand... a weird hobby",
+  "Manual mode: using time primitives!",
   `
 if((bar() % 4) > 1) {
   mod(1) && sound('kick').out()
