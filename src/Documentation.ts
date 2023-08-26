@@ -44,8 +44,8 @@ export const documentation_factory = (application: Editor) => {
   ): string => {
     return `
 <details ${open ? "open" : ""}>
-<summary>${description}<button class="inline-block pl-2" onclick="(()=>_executeCodeExample(${code})})()">▶</button>
-<button class="inline-block pl-2" onclick="(()=>stop)()">⏹</button>
+<summary>${description}<button class="inline-block pl-2" onclick="(()=>_executeCodeExample(${code})})()">&#9654;</button>
+<button class="inline-block pl-2" onclick="(()=>stop)()">&#10074;&#10074;</button>
 </summary>
 
 \`\`\`javascript
