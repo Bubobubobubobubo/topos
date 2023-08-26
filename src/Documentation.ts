@@ -37,6 +37,22 @@ const injectAvailableSamples = (application: Editor): string => {
 };
 
 export const documentation_factory = (application: Editor) => {
+  function convert(template: string): string {
+    // Escape special characters in the string
+    const escapedString = template
+      .replace(/\\/g, "\\\\")
+      .replace(/'/g, "\\'")
+      .replace(/"/g, '\\"');
+
+    // Split the template string by line breaks
+    const lines = escapedString.split("\n");
+
+    // Concatenate the lines using the + operator
+    const concatenatedString = lines.map((line) => `'${line}'`).join(" +\n");
+
+    return concatenatedString;
+  }
+
   const makeExample = (
     description: string,
     code: string,
@@ -44,7 +60,9 @@ export const documentation_factory = (application: Editor) => {
   ): string => {
     return `
 <details ${open ? "open" : ""}>
-<summary>${description}<button class="inline-block pl-2" onclick="(()=>_executeCodeExample(${code})})()">&#9654;</button>
+<summary>${description}<button class="inline-block pl-2" onclick="()=>_executeCodeExample(${convert(
+      code
+    )})()">&#9654;</button>
 <button class="inline-block pl-2" onclick="(()=>stop)()">&#10074;&#10074;</button>
 </summary>
 
