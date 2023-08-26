@@ -4,6 +4,21 @@ const key_shortcut = (shortcut: string): string => {
   return `<kbd class="lg:px-2 lg:py-1.5 px-1 py-1 lg:text-sm text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg dark:bg-gray-600 dark:text-gray-100 dark:border-gray-500">${shortcut}</kbd>`;
 };
 
+const makeExample = (
+  description: string,
+  code: string,
+  open: boolean = false
+): string => {
+  return `
+<details ${open ? "open" : ""}>
+	<summary>${description}</summary>
+\`\`\`javascript
+${code}
+\`\`\`
+</details>
+`;
+};
+
 const samples_to_markdown = (samples: object) => {
   let markdownList = "";
   let keys = Object.keys(samples);
@@ -50,14 +65,17 @@ Topos is an _algorithmic_ sequencer. Topos uses small algorithms to represent mu
 	
 Topos is deeply inspired by the [Monome Teletype](https://monome.org/). The Teletype is/was an open source hardware module for Eurorack synthesizers. While the Teletype was initially born as an hardware module, Topos aims to be a web-browser based software sequencer from the same family! It is a sequencer, a scriptable interface, a companion for algorithmic music-making.  Topos wishes to fullfill the same goal than the Teletype, keeping the same spirit alive on the web. It is free, open-source, and made to be shared and used by everyone.
 	
-## Example
+## Demo Songs
 	
 Press ${key_shortcut(
     "Ctrl + G"
   )} to switch to the global file. This is where everything starts! Evaluate the following script there by pasting and pressing ${key_shortcut(
     "Ctrl + Enter"
   )}. You are now making music:
-<pre><code class="language-javascript">
+
+${makeExample(
+  "Drums and arpeggios",
+  `
 bpm(80)
 mod(0.25) :: sound('sawtooth')
   .note(seqbar(
@@ -69,12 +87,14 @@ mod(0.25) :: sound('sawtooth')
   .gain(0.75).cutoff(500 + usine(8) * 10000)
   .delay(0.5).delaytime(bpm() / 60 / 4 / 3)
   .delayfeedback(0.25)
-  .out()
-mod(1) && snd('kick').out()
-mod(2) && snd('snare').out()
-mod(.5) && snd('hat').out()
-</code></pre>
-	`;
+  .out();
+mod(1) && snd('kick').out();
+mod(2) && snd('snare').out();
+mod(.5) && snd('hat').out();
+`,
+  true
+)}
+`;
 
   const software_interface: string = `
 # Interface
@@ -141,23 +161,31 @@ Let's study two very simple rhythmic functions, <icode>mod(n: ...number[])</icod
 	
 - <icode>mod(...n: number[])</icode>: this function will return true every _n_ pulsations. The value <icode>1</icode> will return <icode>true</icode> at the beginning of each beat. Floating point numbers like <icode>0.5</icode> or <icode>0.25</icode> are also accepted. Multiple values can be passed to <icode>mod</icode> to generate more complex rhythms.
 	
-	
-\`\`\`javascript
+${makeExample(
+  "Using different mod values",
+  `
 mod(1) :: sound('kick').out() // A kickdrum played every beat
 mod(.5) :: sound('kick').out() // A kickdrum played twice per beat
 mod(.25) :: sound('kick').out() // A kickdrum played four times every beat
 mod(1/3) :: sound('kick').out() // A funnier ratio!
 mod(1, 2.5)::sound('hh').out() // A great high-hat pattern
 mod(1,3.25,2.5)::snd('hh').out() // A somewhat weirder pattern
-\`\`\`
+`,
+  true
+)}
 	
 - <icode>onbeat(...n: number[])</icode>: By default, the bar is set in <icode>4/4</icode> with four beats per bar. The <icode>onbeat</icode> function allows you to lock on to a specific beat to execute some code. It can accept multiple arguments. It's usage is very straightforward and not hard to understand. You can pass integers or floating point numbers.
-	
-\`\`\`javascript
+
+${makeExample(
+  "Some simple yet detailed rhythms",
+  `
 onbeat(1,2,3,4)::snd('kick').out() // Bassdrum on each beat
 onbeat(2,4)::snd('snare').out() // Snare on acccentuated beats
 onbeat(1.5,2.5,3.5, 3.75)::snd('hat').out() // Cool high-hats
-\`\`\`
+`,
+  true
+)}
+
 	
 ## Rhythm generators
 	
@@ -165,25 +193,38 @@ We included a bunch of popular rhythm generators in Topos such as the euclidian 
 	
 - <icode>euclid(iterator: number, pulses: number, length: number, rotate: number): boolean</icode>: generates <icode>true</icode> or <icode>false</icode> values from an euclidian rhythm sequence. This algorithm is very popular in the electronic music making world.
 	
-\`\`\`javascript
+${makeExample(
+  "Classic euclidian club music patterns",
+  `
 mod(.5) && euclid($(1), 5, 8) && snd('kick').out()
 mod(.5) && euclid($(2), 2, 8) && snd('sd').out()
-\`\`\`
+`,
+  true
+)}
 	
 - <icode>bin(iterator: number, n: number): boolean</icode>: a binary rhythm generator. It transforms the given number into its binary representation (_e.g_ <icode>34</icode> becomes <icode>100010</icode>). It then returns a boolean value based on the iterator in order to generate a rhythm.
 	
-\`\`\`javascript
+${makeExample(
+  "Change the integers for a surprise rhythm!",
+  `
 mod(.5) && bin($(1), 34) && snd('kick').out()
 mod(.5) && bin($(2), 48) && snd('sd').out()
-\`\`\`
+`,
+  true
+)}
 	
 If you don't find it spicy enough, you can add some more probabilities to your rhythms by taking advantage of the probability functions. See the functions documentation page to learn more about them. 
 	
-\`\`\`javascript
+${makeExample(
+  "Probablistic drums in one line!",
+  `
 prob(60)::mod(.5) && euclid($(1), 5, 8) && snd('kick').out()
 prob(60)::mod(.5) && euclid($(2), 3, 8) && snd('sd').out()
 prob(80)::mod(.5) && sound('hh').out()
-\`\`\`
+`,
+  true
+)}
+
 	
 ## Larger time divisions
 	
@@ -191,14 +232,20 @@ Now you know how to play some basic rhythmic music but you are a bit stuck in a 
 	
 - <icode>div(n: number)</icode>: the <icode>div</icode> is a temporal switch. If the value <icode>2</icode> is given, the function will return <icode>true</icode> for two beats and <icode>false</icode> for two beats. There are multiple ways to use it effectively. You can pass an integer or a floating point number. Here are some examples.
 	
-\`\`\`javascript
+${makeExample(
+  "Creating two beats of silence",
+  `
 mod(1)::snd('kick').out(); // Playing on every beat
 div(2)::mod(.75)::snd('hat').out(); // Playing only every two beats
-\`\`\`
+`,
+  true
+)}
 	
 You can also use it to think about **longer durations** spanning over multiple bars.
 	
-\`\`\`javascript
+${makeExample(
+  "Clunky algorithmic rap music",
+  `
 // Rap God VS Lil Wild -- Adel Faure
 if (div(16)) {
   // Playing this part for two bars
@@ -215,25 +262,37 @@ if (div(16)) {
     .delay(0.5).delaytime(0.5).delayfb(0.25).out()
   mod(.5)::snd('diphone').end(0.5).n([1,2,3,4].pick()).out()
 }
-\`\`\`
+`,
+  true
+)}
 	
 And you can use it for other things inside a method parameter:
 	
-\`\`\`javascript
+${makeExample(
+  "div is great for parameter variation",
+  `
 mod(.5)::snd(div(2) ? 'kick' : 'hat').out()
-\`\`\`
+`,
+  true
+)}
 	
 - <icode>divbar(n: number)</icode>: works just like <icode>div</icode> but at the level of bars instead of beats. It allows you to think about even bigger time cycles. You can also pair it with regular <icode>div</icode> for making complex algorithmic beats.
 	
-\`\`\`javascript
+${makeExample(
+  "Thinking music over bars",
+  `
 divbar(2)::mod(1)::snd('kick').out()
 divbar(3)::mod(.5)::snd('hat').out()
-\`\`\`
+`,
+  true
+)}
 	
 - <icode>onbar(n: number, ...bar: number[])</icode>: The first argument, <icode>n</icode>, is used to divide the time in a period of <icode>n</icode> consecutive bars. The following arguments are bar numbers to play on. For example, <icode>onbar(5, 1, 4)</icode> will return <icode>true</icode> on bar <icode>1</icode> and <icode>4</icode> but return <icode>false</icode> the rest of the time. You can easily divide time that way.
 	
 	
-\`\`\`javascript
+${makeExample(
+  "Using onbar for filler drums",
+  `
 // Only play on the fourth bar of a four bar cycle.
 onbar(4, 4)::mod(.5)::snd('hh').out(); 
 		
@@ -243,7 +302,9 @@ if (onbar(4, 1, 3)) {
 } else {
 	mod(.5)::snd('sd').out();
 }
-\`\`\`
+`,
+  true
+)}
 	
 ## What are pulses?
 	
@@ -271,7 +332,9 @@ Every script can access the current time by using the following functions:
 	
 These values are **extremely useful** to craft more complex syntax or to write musical scores. However, Topos is also offering more high-level sequencing functions to make it easier to play music. You can use the time functions as conditionals. The following example will play a pattern A for 2 bars and a pattern B for 2 bars:
 	
-\`\`\`javascript
+${makeExample(
+  "Calculating time by hand... a weird hobby",
+  `
 if((bar() % 4) > 1) {
   mod(1) && sound('kick').out()
   rarely() && mod(.5) && sound('sd').out()
@@ -281,7 +344,9 @@ if((bar() % 4) > 1) {
   mod(.75) && sound('cp').out()
   mod(.5) && sound('jvbass').freq(250).out()
 }
-\`\`\`
+`,
+  true
+)}
 `;
 
   const midi: string = `
@@ -292,42 +357,57 @@ You can use Topos to play MIDI thanks to the [WebMIDI API](https://developer.moz
 ## Notes
 - <icode>midi(note: number|object)</icode>: send a MIDI Note. Object can take parameters {note: number, channel: number, port: number|string, velocity: number}.
 	
-\`\`\`javascript
+${makeExample(
+  "Playing some piano",
+  `
 bpm(80) // Setting a default BPM
 mod(.5) && midi(36 + seqbeat(0,12)).sustain(0.02).out()
 mod(.25) && midi([64, 76].pick()).sustain(0.05).out()
 mod(.75) && midi(seqbeat(64, 67, 69)).sustain(0.05).out()
 sometimes() && mod(.25) && midi(seqbeat(64, 67, 69) + 24).sustain(0.05).out()
-\`\`\`
+`,
+  true
+)}
 	
 ## Note chaining
 	
 The <icode>midi(number|object)</icode> function can be chained to _specify_ a midi note more. For instance, you can add a duration, a velocity, a channel, etc... by chaining:
 	
-\`\`\`javascript
+${makeExample(
+  "MIDI Caterpillar",
+  `
 mod(0.25) && midi(60)
   .sometimes(n=>n.note(irand(40,60)))
   .sustain(0.05)
   .channel(2)
   .port("bespoke")
   .out()
-\`\`\`
+`,
+  true
+)}
 	
 ## Control and Program Changes
 	
 - <icode>control_change({control: number, value: number, channel: number})</icode>: send a MIDI Control Change. This function takes a single object argument to specify the control message (_e.g._ <icode>control_change({control: 1, value: 127, channel: 1})</icode>).
 	
-\`\`\`javascript
-   control_change({control: [24,25].pick(), value: rI(1,120), channel: 1}))})
-   control_change({control: [30,35].pick(), value: rI(1,120) / 2, channel: 1}))})
-\`\`\`
-	
+${makeExample(
+  "Imagine that I am tweaking an hardware synthesizer!",
+  `
+control_change({control: [24,25].pick(), value: rI(1,120), channel: 1}))})
+control_change({control: [30,35].pick(), value: rI(1,120) / 2, channel: 1}))})
+`,
+  true
+)}
 	
 - <icode>program_change(program: number, channel: number)</icode>: send a MIDI Program Change. This function takes two arguments to specify the program and the channel (_e.g._ <icode>program_change(1, 1)</icode>).
 	
-\`\`\`javascript
+${makeExample(
+  "Crashing old synthesizers: a hobby",
+  `
 program_change([1,2,3,4,5,6,7,8].pick(), 1)
-\`\`\`
+`,
+  true
+)}
 	
 	
 ## System Exclusive Messages
@@ -338,9 +418,14 @@ program_change([1,2,3,4,5,6,7,8].pick(), 1)
 	
 - <icode>midi_clock()</icode>: send a MIDI Clock message. This function is used to synchronize Topos with other MIDI devices or DAWs.
 	
-\`\`\`javascript
+${makeExample(
+  "Tic, tac, tic, tac...",
+  `
 mod(.25) && midi_clock() // Sending clock to MIDI device from the global buffer
-\`\`\`
+`,
+  true
+)}
+
 	
 ## MIDI Output Selection
 	
@@ -475,13 +560,17 @@ mod(.5)::snd('cp').vel($(1)%10 / 10).out()
 	
 Note that the **sustain** value is not a duration but an amplitude value (how loud). The other values are the time for each stage to take place. Here is a fairly complete example using the <icode>sawtooth</icode> basic waveform.
 	
-\`\`\`javascript
+${makeExample(
+  "Simple synthesizer",
+  `
 mod(4)::sound('sawtooth').note(50).decay(0.5).sustain(0.5).release(2).out();
 mod(2)::sound('sawtooth').note(50+7).decay(0.5).sustain(0.6).release(2).out();
 mod(1)::sound('sawtooth').note(50+12).decay(0.5).sustain(0.7).release(2).out();
 mod(.25)::sound('sawtooth').note([50,57,62].pick() + [12, 24, 0].div(2))
   .cutoff(5000).sustain(0.5).release(0.1).out()
-\`\`\`
+	`,
+  false
+)};
 	
 ## Sample Controls
 
@@ -497,7 +586,9 @@ There are some basic controls over the playback of each sample. This allows you 
 | clip    |       | Multiply the duration of the sample with the given number |
 | pan     |       | Stereo position of the audio playback (<icode>0</icode> = left, <icode>1</icode> = right)|
 	
-\`\`\`javascript
+${makeExample(
+  "Complex sampling duties",
+  `
 // Using some of the modifiers described above :)
 mod(.5)::snd('pad').begin(0.2)
   .speed([1, 0.9, 0.8].div(4))
@@ -505,7 +596,9 @@ mod(.5)::snd('pad').begin(0.2)
   .end(rand(0.3,0.8))
   .room(0.8).size(0.5)
   .clip(1).out()
-\`\`\`
+	`,
+  false
+)};
 	
 	
 ## Filters
@@ -522,12 +615,16 @@ There are three basic filters: a _lowpass_, _highpass_ and _bandpass_ filters wi
 | bandq      | bpq   | Resonance of the bandpass filter        |
 | vowel			 |       | Formant filter with (vocal quality)     |
 
-\`\`\`javascript
+${makeExample(
+  "Filter sweep using a low frequency oscillator",
+  `
 mod(.5) && snd('sawtooth')
 	.cutoff([2000,500].pick() + usine(.5) * 4000)
 	.resonance(0.9).freq([100,150].pick())
 	.out()
-\`\`\`
+	`,
+  false
+)};
 	
 ## Reverb
 	
@@ -538,9 +635,14 @@ A basic reverberator that you can use to give some depth to your sounds. This si
 | room |     | The more, the bigger the reverb (between <icode>0</icode> and <icode>1</icode>.|
 | size |     | Reverberation amount |
 
-\`\`\`javascript
+${makeExample(
+  "Clapping in the cavern",
+  `
 mod(2)::snd('cp').room(1).size(0.9).out()
-\`\`\`
+	`,
+  false
+)};
+
 	
 ## Delay
 	
@@ -552,11 +654,15 @@ A good sounding delay unit that can go into feedback territory. Use it without m
 | delaytime  | delayt    | Delay time (in milliseconds)    |
 | delayfeedback| delayfb | Delay feedback (between <icode>0</icode> and <icode>1</icode>) |
 	
-\`\`\`javascript
+${makeExample(
+  "Who doesn't like delay?",
+  `
 mod(2)::snd('cp').delay(0.5).delaytime(0.75).delayfb(0.8).out()
 mod(4)::snd('snare').out()
 mod(1)::snd('kick').out()
-\`\`\`
+	`,
+  false
+)};
 	
 ## Distorsion, saturation, destruction
 	
@@ -567,10 +673,14 @@ mod(1)::snd('kick').out()
 | shape      |           | Waveshaping distortion (between <icode>0</icode> and <icode>1</icode>)          |
 	
 	
-\`\`\`javascript
+${makeExample(
+  "Crunch... crunch... crunch!",
+  `
 mod(.5)::snd('pad').coarse($(1) % 16).clip(.5).out(); // Comment me
 mod(.5)::snd('pad').crush([16, 8, 4].div(2)).clip(.5).out()
-\`\`\`
+	`,
+  false
+)};
 `;
 
   const samples: string = `
@@ -588,10 +698,136 @@ ${injectAvailableSamples(application)}
 
   const patterns: string = `
 # Patterns
-	
-## New array methods
 
-- <icode>beat</icode>
+Music really comes to life when you start playing with algorithmic patterns. They can be used to describe a melody, a rhythm, a texture, a set of custom parameters or anything else you can think of. Topos comes with a lot of different abstractions to deal with musical patterns of increasing complexity. Some knowledge of patterns and how to use them will help you to break out of simple loops and repeating structures.
+
+## Working with Arrays
+
+JavaScript is using [Arrays](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array) as a data structure for lists. Topos is extending them with custom methods that allow you to enter softly into a universe of musical patterns. These methods can often be chained to compose a more complex expression: <icode>[1, 2, 3].repeatOdd(5).palindrome().beat()</icode>.
+
+- <icode>beat()</icode>: returns the index of the list corresponding to current beat (with wrapping). This allows you to return a different value for each beat.
+- <icode>pulse()</icode>: returns the index of the list corresponding to the current pulse (with wrapping). This method will return a different value for each pulse.
+- <icode>bar()</icode>: returns the index of the list corresponding to the current bar (with wrapping). This method will return a different value for each bar.
+
+${makeExample(
+  "This is a test example",
+  `
+mod(1)::sound(['kick', 'hat', 'snare', 'hat'].beat()).out()
+mod(1.5)::sound(['jvbass', 'clap'].beat()).out()
+`,
+  true
+)}
+
+${makeExample(
+  "This is another example",
+  `
+mod(2)::snd('snare').out()
+mod([1, 0.5].beat()) :: sound(['bass3'].bar())
+  .freq(100).n([12, 14].bar())
+  .speed([1,2,3].pulse())
+  .out()
+`
+)}
+
+
+- <icode>palindrome()</icode>:
+
+\`\`\`javascript
+// Add example
+\`\`\`
+
+- <icode>random(index: number)</icode>:
+
+\`\`\`javascript
+// Add example
+\`\`\`
+
+- <icode>rand(index: number)</icode>:
+
+\`\`\`javascript
+// Add example
+\`\`\`
+
+- <icode>degrade(amount: number)</icode>:
+
+\`\`\`javascript
+// Add example
+\`\`\`
+
+- <icode>repeatAll(amount: number)</icode>:
+
+\`\`\`javascript
+// Add example
+\`\`\`
+
+
+- <icode>repeatPair(amount: number)</icode>:
+
+\`\`\`javascript
+// Add example
+\`\`\`
+
+
+- <icode>repeatOdd(amount: number)</icode>:
+
+\`\`\`javascript
+// Add example
+\`\`\`
+
+- <icode>beat()</icode>:
+
+\`\`\`javascript
+// Add example
+\`\`\`
+
+- <icode>bar()</icode>:
+
+\`\`\`javascript
+// Add example
+\`\`\`
+
+
+- <icode>pick()</icode>:
+
+\`\`\`javascript
+// Add example
+\`\`\`
+
+- <icode>loop(index: number)</icode>:
+
+\`\`\`javascript
+// Add example
+\`\`\`
+
+- <icode>div(division: number)</icode>:
+
+\`\`\`javascript
+// Add example
+\`\`\`
+
+- <icode>shuffle(): this</icode>:
+
+\`\`\`javascript
+// Add example
+\`\`\`
+
+- <icode>rotate(steps: number)</icode>:
+
+\`\`\`javascript
+// Add example
+\`\`\`
+
+- <icode>unique()</icode>:
+
+\`\`\`javascript
+// Add example
+\`\`\`
+
+- <icode>in(value: T)</icode>:
+
+\`\`\`javascript
+// Add example
+\`\`\`
 
 
 ## Simple patterns 
@@ -613,14 +849,16 @@ The <icode>sound</icode> function can take the name of a synthesizer as first ar
   - <icode>hcutoff</icode> or <icode>bandf</icode> to switch to a high-pass or bandpass filter.
 	- <icode>hresonance</icode> and <icode>bandq</icode> for the resonance parameter of these filters.
 	
-Here is a simple example of a substractive synth:
-	
-\`\`\`javascript
+${makeExample(
+  "Simple synthesizer voice with filter",
+  `
 mod(.5) && snd('sawtooth')
   .cutoff([2000,500].pick() + usine(.5) * 4000)
   .resonance(0.9).freq([100,150].pick())
   .out()
-\`\`\`
+	`,
+  true
+)}
 	
 	
 # Frequency Modulation Synthesis (FM)
@@ -630,18 +868,20 @@ The same basic waveforms can take additional methods to switch to a basic two op
 - <icode>fmi</icode> (_frequency modulation index_): a floating point value between <icode>1</icode> and <icode>n</icode>.
 - <icode>fmh</icode> (_frequency modulation harmonic ratio_): a floating point value between <icode>1</icode> and <icode>n</icode>.
 
-And here is a simple example:
-	
-\`\`\`javascript
+${makeExample(
+  "80s nostalgia",
+  `
 mod(.25) && snd('sine')
   .fmi([1,2,4,8].pick())
   .fmh([1,2,4,8].div(8))
   .freq([100,150].pick())
   .sustain(0.1)
   .out()
-\`\`\`
+	`,
+  true
+)}
 
-**Note::** you can also set the _modulation index_ and the _harmonic ratio_ with the <icode>fm</icode> argument. You will have to feed both as a string: <icode>fm('2:4')</icode>. If you only feed one number, only the _modulation index_ will be updated.
+**Note:** you can also set the _modulation index_ and the _harmonic ratio_ with the <icode>fm</icode> argument. You will have to feed both as a string: <icode>fm('2:4')</icode>. If you only feed one number, only the _modulation index_ will be updated.
 	
 `;
 
