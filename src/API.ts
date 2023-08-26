@@ -22,6 +22,10 @@ interface ControlChange {
   value: number;
 }
 
+// ======================================================================
+// Array prototype extensions: easier work with lists
+// ======================================================================
+
 declare global {
   interface Array<T> {
     palindrome(): T[];
@@ -40,6 +44,11 @@ declare global {
 }
 
 Array.prototype.shuffle = function () {
+  /**
+   * Shuffles the array in place.
+   * 
+   * @returns The shuffled array
+   */
   let currentIndex = this.length,
     randomIndex;
   while (currentIndex !== 0) {
@@ -54,6 +63,12 @@ Array.prototype.shuffle = function () {
 };
 
 Array.prototype.rotate = function (steps: number) {
+  /**
+   * Rotates the array in place.
+   * 
+   * @param steps - The number of steps to rotate the array by
+   * @returns The rotated array
+   */
   const length = this.length;
   if (steps < 0) {
     steps = length + (steps % length);
@@ -68,6 +83,11 @@ Array.prototype.rotate = function (steps: number) {
 };
 
 Array.prototype.unique = function () {
+  /**
+   * Removes duplicate elements from the array in place.
+   * 
+   * @returns The array without duplicates
+   */
   const seen = new Set();
   let writeIndex = 0;
   for (let readIndex = 0; readIndex < this.length; readIndex++) {
@@ -82,6 +102,13 @@ Array.prototype.unique = function () {
 };
 
 Array.prototype.degrade = function <T>(this: T[], amount: number) {
+  /**
+   * Removes elements from the array at random. If the array has 
+   * only one element left, it will not be removed.
+   * 
+   * @param amount - The amount of elements to remove
+   * @returns The degraded array
+   */
   if (amount < 0 || amount > 100) {
     throw new Error("Amount should be between 0 and 100");
   }
@@ -104,6 +131,12 @@ Array.prototype.degrade = function <T>(this: T[], amount: number) {
 };
 
 Array.prototype.repeatAll = function <T>(this: T[], amount: number) {
+  /**
+   * Repeats all elements in the array n times.
+   * 
+   * @param amount - The amount of times to repeat the elements
+   * @returns The repeated array
+   */
   if (amount < 1) {
     throw new Error("Amount should be at least 1");
   }
@@ -119,6 +152,13 @@ Array.prototype.repeatAll = function <T>(this: T[], amount: number) {
 };
 
 Array.prototype.repeatPair = function <T>(this: T[], amount: number) {
+  /**
+   * Repeats all elements in the array n times, except for the
+   * elements at odd indexes.
+   * 
+   * @param amount - The amount of times to repeat the elements
+   * @returns The repeated array
+   */
   if (amount < 1) {
     throw new Error("Amount should be at least 1");
   }
@@ -136,13 +176,22 @@ Array.prototype.repeatPair = function <T>(this: T[], amount: number) {
     }
   }
 
-  // Update the original array
   this.length = 0;
   this.push(...result);
   return this;
 };
 
 Array.prototype.repeatOdd = function <T>(this: T[], amount: number) {
+  /**
+   * Repeats all elements in the array n times, except for the
+   * elements at even indexes.
+   * 
+   * @param amount - The amount of times to repeat the elements
+   * @returns The repeated array
+   * 
+   * @remarks
+   * This function is the opposite of repeatPair.
+   */
   if (amount < 1) {
     throw new Error("Amount should be at least 1");
   }
@@ -168,29 +217,35 @@ Array.prototype.repeatOdd = function <T>(this: T[], amount: number) {
 
 // @ts-ignore
 Array.prototype.palindrome = function <T>() {
+  /**
+   * Returns a palindrome of the array.
+   * 
+   * @returns The palindrome of the array
+   */
   let left_to_right = Array.from(this);
   let right_to_left = Array.from(this.reverse());
   return left_to_right.concat(right_to_left);
 };
 
-// @ts-ignore
-Array.prototype.random = function <T>(this: T[], index: number): T {
-  return this[Math.floor(Math.random() * this.length)];
-};
-
 Array.prototype.loop = function <T>(this: T[], index: number): T {
+  /**
+   * Returns an element from the array based on the index.
+   * The index will wrap over the array.
+   * 
+   * @param index - The index of the element to return
+   * @returns The element at the given index
+   */
   return this[index % this.length];
 };
 
-// @ts-ignore
-Array.prototype.random = function (index) {
+Array.prototype.random = function () {
+  /**
+   * Returns a random element from the array.
+   * 
+   * @returns A random element from the array
+   */
   return this[Math.floor(Math.random() * this.length)];
 };
-
-Array.prototype.loop = function (index) {
-  return this[index % this.length];
-};
-
 Array.prototype.rand = Array.prototype.random;
 
 /**
@@ -879,6 +934,30 @@ export class UserAPI {
   // Probability functions
   // =============================================================
 
+  public prob = (p: number): boolean => {
+    /**
+     * Returns true p% of the time.
+     *
+     * @param p - The probability of returning true
+     * @returns True p% of the time
+     */
+    return this.randomGen() * 100 < p;
+  };
+
+  public toss = (): boolean => {
+    /**
+     * Returns true 50% of the time.
+     *
+     * @returns True 50% of the time
+     * @see sometimes
+     * @see rarely
+     * @see often
+     * @see almostAlways
+     * @see almostNever
+     */
+    return this.randomGen() > 0.5;
+  };
+
   public odds = (n: number, sec: number = 15): boolean => {
     /**
      * Returns true n% of the time.
@@ -1042,6 +1121,10 @@ export class UserAPI {
     return this.app.clock.pulses_since_origin;
   };
 
+  // =============================================================
+  // Time Filters
+  // =============================================================
+
   onbar = (n: number, ...bar: number[]): boolean => {
     // n is acting as a modulo on the bar number
     const bar_list = [...Array(n).keys()].map((i) => i + 1);
@@ -1072,30 +1155,6 @@ export class UserAPI {
       );
     });
     return final_pulses.some((p) => p == true);
-  };
-
-  prob = (p: number): boolean => {
-    /**
-     * Returns true p% of the time.
-     *
-     * @param p - The probability of returning true
-     * @returns True p% of the time
-     */
-    return this.randomGen() * 100 < p;
-  };
-
-  toss = (): boolean => {
-    /**
-     * Returns true 50% of the time.
-     *
-     * @returns True 50% of the time
-     * @see sometimes
-     * @see rarely
-     * @see often
-     * @see almostAlways
-     * @see almostNever
-     */
-    return this.randomGen() > 0.5;
   };
 
   public min = (...values: number[]): number => {
@@ -1418,7 +1477,6 @@ export class UserAPI {
 
   snd = this.sound;
   samples = samples;
-  soundMap = soundMap;
 
   log = console.log;
 
