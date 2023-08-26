@@ -8,10 +8,10 @@ export class RestEvent extends Event {
     }
 
     _fallbackMethod = (): Event => {
-        return this;
+        return RestEvent.createRestProxy(this.values["duration"], this.app);
     }
 
-    public static createRestProxy = (duration: number, app: Editor) => {
+    public static createRestProxy = (duration: number, app: Editor): RestEvent => {
         const instance = new RestEvent(duration, app);
         return new Proxy(instance, {
             // @ts-ignore

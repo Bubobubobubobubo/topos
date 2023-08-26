@@ -1,6 +1,6 @@
-import { type Editor } from '../main';
-import { AudibleEvent } from './AbstractEvents';
-import { midiToFreq, noteFromPc } from 'zifferjs';
+import { type Editor } from "../main";
+import { AudibleEvent } from "./AbstractEvents";
+import { midiToFreq, noteFromPc } from "zifferjs";
 
 import {
   superdough,
@@ -8,7 +8,6 @@ import {
 } from "superdough";
 
 export class SoundEvent extends AudibleEvent {
-
   constructor(sound: string | object, public app: Editor) {
     super(app);
     if (typeof sound === "string") this.values = { s: sound, dur: 0.5 };

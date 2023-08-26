@@ -14,10 +14,10 @@ import { indentWithTab } from "@codemirror/commands";
 import { vim } from "@replit/codemirror-vim";
 import { AppSettings, Universe } from "./AppSettings";
 import { editorSetup } from "./EditorSetup";
-import { documentation } from "./Documentation";
+import { documentation_factory } from "./Documentation";
 import { EditorView } from "codemirror";
 import { Clock } from "./Clock";
-import { UserAPI } from "./API";
+import { loadSamples, UserAPI } from "./API";
 import "./style.css";
 import {
   Universes,
@@ -27,9 +27,6 @@ import {
 } from "./AppSettings";
 import { tryEvaluate } from "./Evaluator";
 
-type Documentation = { [key: string]: string };
-const Docs: Documentation = documentation;
-
 // Importing showdown and setting up the markdown converter
 import showdown from "showdown";
 showdown.setFlavor("github");
@@ -37,8 +34,8 @@ import showdownHighlight from "showdown-highlight";
 const classMap = {
   h1: "text-white lg:text-4xl text-xl lg:ml-4 lg:mx-4 mx-2 lg:my-4 my-2 lg:mb-8 mb-4 bg-neutral-900 rounded-lg py-2 px-2",
   h2: "text-white lg:text-3xl text-xl lg:ml-4 lg:mx-4 mx-2 lg:my-4 my-2 lg:mb-8 mb-4 bg-neutral-900 rounded-lg py-2 px-2",
-  ul: "text-underline",
-  li: "ml-12 list-disc lg:text-2xl text-base text-white lg:mx-4 mx-2 my-4 lg:pl-4 my-2 leading-normal",
+  ul: "text-underline pl-6",
+  li: "list-disc lg:text-2xl text-base text-white lg:mx-4 mx-2 my-4 my-2 leading-normal",
   p: "lg:text-2xl text-base text-white lg:mx-4 mx-2 my-4 leading-normal",
   a: "lg:text-2xl text-base text-orange-300",
   code: "lg:my-4 sm:my-1 text-base lg:text-xl block whitespace-pre overflow-x-hidden",
@@ -66,7 +63,7 @@ export class Editor {
   universes: Universes = template_universes;
   selected_universe: string;
   local_index: number = 1;
-  editor_mode: "global" | "local" | "init" | "notes" = "local";
+  editor_mode: "global" | "local" | "init" | "notes" = "global";
   fontSize: Compartment;
   withLineNumbers: Compartment;
   vimModeCompartment: Compartment;
@@ -78,6 +75,7 @@ export class Editor {
   userPlugins: Extension[] = [];
   state: EditorState;
   api: UserAPI;
+  docs: { [key: string]: string } = {};
 
   // Audio stuff
   audioContext: AudioContext;
@@ -92,19 +90,19 @@ export class Editor {
   // Transport elements
   play_buttons: HTMLButtonElement[] = [
     document.getElementById("play-button-1") as HTMLButtonElement,
-    document.getElementById("play-button-2") as HTMLButtonElement,
+    //document.getElementById("play-button-2") as HTMLButtonElement,
   ];
   pause_buttons: HTMLButtonElement[] = [
     document.getElementById("pause-button-1") as HTMLButtonElement,
-    document.getElementById("pause-button-2") as HTMLButtonElement,
+    //document.getElementById("pause-button-2") as HTMLButtonElement,
   ];
   stop_buttons: HTMLButtonElement[] = [
     document.getElementById("stop-button-1") as HTMLButtonElement,
-    document.getElementById("stop-button-2") as HTMLButtonElement,
+    //document.getElementById("stop-button-2") as HTMLButtonElement,
   ];
   clear_buttons: HTMLButtonElement[] = [
     document.getElementById("clear-button-1") as HTMLButtonElement,
-    document.getElementById("clear-button-2") as HTMLButtonElement,
+    //document.getElementById("clear-button-2") as HTMLButtonElement,
   ];
   documentation_button: HTMLButtonElement = document.getElementById(
     "doc-button-1"
@@ -235,31 +233,13 @@ export class Editor {
     ];
 
     let dynamicPlugins = new Compartment();
-    this.state = EditorState.create({
-      extensions: [
-        ...this.editorExtensions,
-        EditorView.lineWrapping,
-        dynamicPlugins.of(this.userPlugins),
-        Prec.highest(
-          keymap.of([
-            {
-              key: "Ctrl-Enter",
-              run: () => {
-                return true;
-              },
-            },
-          ])
-        ),
-        keymap.of([indentWithTab]),
-      ],
-      doc: this.universes[this.selected_universe].locals[this.local_index]
-        .candidate,
-    });
 
-    this.view = new EditorView({
-      parent: document.getElementById("editor") as HTMLElement,
-      state: this.state,
+    // ================================================================================
+    // Building the documentation
+    loadSamples().then(() => {
+      this.docs = documentation_factory(this);
     });
+    // ================================================================================
 
     // ================================================================================
     // Application event listeners
@@ -579,6 +559,33 @@ export class Editor {
       (globalThis as Record<string, any>)[name] = value;
     });
 
+    this.state = EditorState.create({
+      extensions: [
+        ...this.editorExtensions,
+        EditorView.lineWrapping,
+        dynamicPlugins.of(this.userPlugins),
+        Prec.highest(
+          keymap.of([
+            {
+              key: "Ctrl-Enter",
+              run: () => {
+                return true;
+              },
+            },
+          ])
+        ),
+        keymap.of([indentWithTab]),
+      ],
+      doc: this.universes[this.selected_universe].global.candidate,
+    });
+
+    this.view = new EditorView({
+      parent: document.getElementById("editor") as HTMLElement,
+      state: this.state,
+    });
+
+    this.changeModeFromInterface("global");
+
     // Loading from URL bar
     let url = new URLSearchParams(window.location.search);
     if (url !== undefined) {
@@ -660,10 +667,11 @@ export class Editor {
     const converter = new showdown.Converter({
       emoji: true,
       moreStyling: true,
+      backslashEscapesHTMLTags: true,
       extensions: [showdownHighlight({ auto_detection: true }), ...bindings],
     });
     const converted_markdown = converter.makeHtml(
-      Docs[this.currentDocumentationPane]
+      this.docs[this.currentDocumentationPane]
     );
     function wrapCodeWithPre(inputString: string): string {
       let newString = inputString.replace(/<code>/g, "<pre><code>");
