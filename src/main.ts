@@ -78,6 +78,7 @@ export class Editor {
   userPlugins: Extension[] = [];
   state: EditorState;
   api: UserAPI;
+  selectedExample: string | null = "";
   docs: { [key: string]: string } = {};
 
   // Audio stuff
@@ -677,13 +678,8 @@ export class Editor {
     const converted_markdown = converter.makeHtml(
       this.docs[this.currentDocumentationPane]
     );
-    function wrapCodeWithPre(inputString: string): string {
-      let newString = inputString.replace(/<code>/g, "<pre><code>");
-      newString = newString.replace(/<\/code>/g, "</code></pre>");
-      return newString;
-    }
     document.getElementById("documentation-content")!.innerHTML =
-      wrapCodeWithPre(converted_markdown);
+      converted_markdown;
   }
 
   changeToLocalBuffer(i: number) {

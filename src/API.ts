@@ -41,6 +41,7 @@ export class UserAPI {
    */
 
   private variables: { [key: string]: any } = {};
+  public codeExamples: { [key: string]: string } = {};
   private counters: { [key: string]: any } = {};
   private _drunk: DrunkWalk = new DrunkWalk(-100, 100, false);
   public randomGen = Math.random;
@@ -52,21 +53,18 @@ export class UserAPI {
   MidiConnection: MidiConnection = new MidiConnection();
   load: samples;
 
-  constructor(public app: Editor) {
-    //this.load = samples("github:tidalcycles/Dirt-Samples/master");
-  }
+  constructor(public app: Editor) {}
 
-	_executeCodeExample = (code: string) => {
-	  console.log("Executing documentation example");
-	  this.app.universes[
-	    this.app.selected_universe as string
-	  ].global.candidate = code as string;
-	  tryEvaluate(
-	    this.app,
-	    this.app.universes[this.app.selected_universe as string].global
-	  );
-	};
-
+  _playDocExample = (code?: string) => {
+    this.play();
+    console.log("Executing documentation example: " + this.app.selectedExample);
+    this.app.universes[this.app.selected_universe as string].global.candidate =
+      code ? code : (this.app.selectedExample as string);
+    tryEvaluate(
+      this.app,
+      this.app.universes[this.app.selected_universe as string].global
+    );
+  };
 
   _all_samples = (): object => {
     return soundMap.get();

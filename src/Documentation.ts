@@ -37,38 +37,30 @@ const injectAvailableSamples = (application: Editor): string => {
 };
 
 export const documentation_factory = (application: Editor) => {
-  function convert(template: string): string {
-    // Escape special characters in the string
-    const escapedString = template
-      .replace(/\\/g, "\\\\")
-      .replace(/'/g, "\\'")
-      .replace(/"/g, '\\"');
+  let counter = 0; // Counter to generate unique IDs for code snippets
 
-    // Split the template string by line breaks
-    const lines = escapedString.split("\n");
-
-    // Concatenate the lines using the + operator
-    const concatenatedString = lines.map((line) => `'${line}'`).join(" +\n");
-
-    return concatenatedString;
-  }
+  // Initialize a data structure to store code examples by their unique IDs
+  application.api.codeExamples = {};
 
   const makeExample = (
     description: string,
     code: string,
     open: boolean = false
   ): string => {
+    const codeId = `codeExample${counter++}`;
+
+    // Store the code snippet in the data structure
+    application.api.codeExamples[codeId] = code;
+
     return `
 <details ${open ? "open" : ""}>
-<summary>${description}<button class="inline-block pl-2" onclick="()=>_executeCodeExample(${convert(
-      code
-    )})()">&#9654;</button>
-<button class="inline-block pl-2" onclick="(()=>stop)()">&#10074;&#10074;</button>
-</summary>
-
-\`\`\`javascript
-${code}
-\`\`\`
+  <summary>${description}
+    <button class="inline-block pl-2" onclick="app.api._playDocExample(app.api.codeExamples['${codeId}'])">&#9654;</button>
+    <button class="inline-block pl-2" onclick="stop()">&#10074;&#10074;</button>
+  </summary>
+  \`\`\`javascript
+  ${code}
+  \`\`\`
 </details>
 `;
   };
@@ -99,7 +91,7 @@ ${makeExample(
   "Drums and arpeggios",
   `
 bpm(80)
-mod(0.25) :: sound('sawtooth')
+mod(0.25) && sound('sawtooth')
   .note(seqbar(
     [60, 67, 63].pick() - 12,  [60, 67, 63].pick() - 12, 
     [60, 67, 63].pick() - 12 + 5, [60, 67, 63].pick() - 12 + 5,
