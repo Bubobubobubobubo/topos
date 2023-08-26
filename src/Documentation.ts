@@ -231,15 +231,21 @@ Let's study two very simple rhythmic functions, <icode>mod(n: ...number[])</icod
 	
 ${makeExample(
   "Using different mod values",
-  `
-mod(1) :: sound('kick').out() // A kickdrum played every beat
-mod(.5) :: sound('kick').out() // A kickdrum played twice per beat
-mod(.25) :: sound('kick').out() // A kickdrum played four times every beat
-mod(1/3) :: sound('kick').out() // A funnier ratio!
-mod(1, 2.5)::sound('hh').out() // A great high-hat pattern
-mod(1,3.25,2.5)::snd('hh').out() // A somewhat weirder pattern
+  `// This code is alternating between different mod values
+mod([1,1/2,1/4,1/8,1/16].div(4)) :: sound('kick').out()
 `,
   true
+)}
+
+${makeExample(
+  "Some sort of ringtone",
+  `let blip = (freq) => {return sound('sine').sustain(0.1).freq(freq)};
+mod(1) :: blip(200).out();
+mod(1/3) :: blip(400).out();
+div(3) :: mod(1/6) :: blip(800).out();
+mod([1,0.75].div(2)) :: blip([50, 100].div(2)).out();
+`,
+  false
 )}
 	
 - <icode>onbeat(...n: number[])</icode>: By default, the bar is set in <icode>4/4</icode> with four beats per bar. The <icode>onbeat</icode> function allows you to lock on to a specific beat to execute some code. It can accept multiple arguments. It's usage is very straightforward and not hard to understand. You can pass integers or floating point numbers.
@@ -251,6 +257,17 @@ onbeat(2,4)::snd('snare').out() // Snare on acccentuated beats
 onbeat(1.5,2.5,3.5, 3.75)::snd('hat').out() // Cool high-hats
 `,
   true
+)}
+
+${makeExample(
+  "Let's do something more complex",
+  `onbeat(0.5, 1.5, 2, 3, 3.75)::snd('kick').n(2).out()
+onbeat(2, [1.5, 3].pick(), 4)::snd('snare').n(7).out()
+mod([.25, 1/8].div(1.5))::snd('hat').n(2)
+  .gain(rand(0.4, 0.7))
+  .pan(usine()).out()
+`,
+  false
 )}
 
 	
@@ -268,6 +285,30 @@ mod(.5) && euclid($(2), 2, 8) && snd('sd').out()
 `,
   true
 )}
+
+${makeExample(
+  "And now for more interesting rhythmic constructions",
+  `
+mod(.5) && euclid($(1), 5, 9) && snd('kick').out()
+mod(.5) && euclid($(2), 2, 3, 1) && snd('pluck').end(0.5).n(5).out()
+`,
+  false
+)}
+
+${makeExample(
+  "Adding more rhythmic density",
+  `
+mod(.5) && euclid($(1), 5, 9) && snd('kick').out()
+mod(.5) && euclid($(2), 2, 3, 1) && snd('pluck').end(0.5).n(5).out()
+mod(.5) && euclid($(3), 6, 9, 1) && snd('pluck').end(0.5).n(5).freq(200).out()
+mod(.25) && euclid($(4), 7, 9, 1) && snd('hh').out()
+
+
+`,
+  false
+)}
+
+
 	
 - <icode>bin(iterator: number, n: number): boolean</icode>: a binary rhythm generator. It transforms the given number into its binary representation (_e.g_ <icode>34</icode> becomes <icode>100010</icode>). It then returns a boolean value based on the iterator in order to generate a rhythm.
 	
