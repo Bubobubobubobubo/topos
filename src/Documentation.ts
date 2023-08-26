@@ -705,23 +705,31 @@ Music really comes to life when you start playing with algorithmic patterns. The
 
 JavaScript is using [Arrays](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array) as a data structure for lists. Topos is extending them with custom methods that allow you to enter softly into a universe of musical patterns. These methods can often be chained to compose a more complex expression: <icode>[1, 2, 3].repeatOdd(5).palindrome().beat()</icode>.
 
+- <icode>div(division: number)</icode>:
+
+${makeExample(
+  "div is the greatest method ever",
+  `
+`,
+  true
+)}
+
+
 - <icode>beat()</icode>: returns the index of the list corresponding to current beat (with wrapping). This allows you to return a different value for each beat.
 - <icode>pulse()</icode>: returns the index of the list corresponding to the current pulse (with wrapping). This method will return a different value for each pulse.
 - <icode>bar()</icode>: returns the index of the list corresponding to the current bar (with wrapping). This method will return a different value for each bar.
 
 ${makeExample(
-  "This is a test example",
-  `
-mod(1)::sound(['kick', 'hat', 'snare', 'hat'].beat()).out()
+  "A simple drumbeat in no time!",
+  `mod(1)::sound(['kick', 'hat', 'snare', 'hat'].beat()).out()
 mod(1.5)::sound(['jvbass', 'clap'].beat()).out()
 `,
   true
 )}
 
 ${makeExample(
-  "This is another example",
-  `
-mod(2)::snd('snare').out()
+  "Using beat, pulse and bar in the same code",
+  `mod(2)::snd('snare').out()
 mod([1, 0.5].beat()) :: sound(['bass3'].bar())
   .freq(100).n([12, 14].bar())
   .speed([1,2,3].pulse())
@@ -730,104 +738,102 @@ mod([1, 0.5].beat()) :: sound(['bass3'].bar())
 )}
 
 
-- <icode>palindrome()</icode>:
+- <icode>palindrome()</icode>: Concatenates a list with the same list in reverse.
 
-\`\`\`javascript
-// Add example
-\`\`\`
-
-- <icode>random(index: number)</icode>:
-
-\`\`\`javascript
-// Add example
-\`\`\`
-
-- <icode>rand(index: number)</icode>:
-
-\`\`\`javascript
-// Add example
-\`\`\`
-
-- <icode>degrade(amount: number)</icode>:
-
-\`\`\`javascript
-// Add example
-\`\`\`
-
-- <icode>repeatAll(amount: number)</icode>:
-
-\`\`\`javascript
-// Add example
-\`\`\`
+${makeExample(
+  "Palindrome filter sweep",
+  `mod([1,.5,.25].beat()) :: snd('sine')
+  .freq([100,200,300].div(0.25))
+  .fmi([1,2,3].palindrome().div(0.5))
+  .fmh([4, 8].palindrome().beat())
+  .cutoff([500,1000,2000,4000].palindrome().beat())
+  .sustain(0.1)
+  .out()
+`,
+  true
+)}
 
 
-- <icode>repeatPair(amount: number)</icode>:
-
-\`\`\`javascript
-// Add example
-\`\`\`
+- <icode>random(index: number)</icode>: pick a random element in the given list.
+- <icode>rand(index: number)</icode>: shorter alias for the same method.
+- <icode>pick()</icode>: pick a random element in the list.
 
 
-- <icode>repeatOdd(amount: number)</icode>:
+${makeExample(
+  "Sipping some gasoline at the robot bar",
+  `mod(1)::snd('kick').shape(0.5).out()
+mod([.5, 1].random() / 2) :: snd(
+  ['amencutup', 'synth2'].random())
+  .n(irand(4,10))
+  .cutoff(2000)
+  .resonance(10)
+  .end(0.2).out()
+`,
+  true
+)}
 
-\`\`\`javascript
-// Add example
-\`\`\`
+- <icode>degrade(amount: number)</icode>: removes _n_% of the list elements. Lists can be degraded as long as one element remains. The amount of degradation is given as a percentage.
 
-- <icode>beat()</icode>:
+${makeExample(
+  "Amen break suffering from data loss",
+  `// Tweak the value to degrade this amen break even more!
+mod(.25)::snd('amencutup').n([1,2,3,4,5,6,7,8,9].degrade(20).loop($(1))).out()
+`,
+  true
+)}
 
-\`\`\`javascript
-// Add example
-\`\`\`
+- <icode>repeatAll(amount: number)</icode>: repeat every list elements _n_ times.
+- <icode>repeatPair(amount: number)</icode>: repeaet every pair element of the list _n_ times.
+- <icode>repeatOdd(amount: number)</icode>: repeaet every odd element of the list _n_ times.
 
-- <icode>bar()</icode>:
+${makeExample(
+  "Repeating samples a given number of times",
+  `// Please take this repeat number down a bit!
+mod(.25)::sound('amencutup').n([1,2,3,4,5,6,7,8].repeatAll(4).beat()).out()
+`,
+  true
+)}
 
-\`\`\`javascript
-// Add example
-\`\`\`
+- <icode>loop(index: number)</icode>: loop takes one argument, the _index_. It allows you to iterate over a list using an iterator such as a counter. This is super useful to control how you are accessing values in a list without relying on a temporal method such as <icode>.beat()</icode> or </icode>.bar()</icode>.
 
+${makeExample(
+  "Don't you know how to count up to 5?",
+  `mod(1) :: sound('numbers').n([1,2,3,4,5].loop($(3, 10, 2))).out()`,
+  true
+)}
 
-- <icode>pick()</icode>:
+- <icode>shuffle(): this</icode>: shuffles a list! Simple enough!
 
-\`\`\`javascript
-// Add example
-\`\`\`
+${makeExample(
+  "Shuffling a list for extra randomness",
+  `mod(1) :: sound('numbers').n([1,2,3,4,5].shuffle().loop($(1)).out()
+`,
+  true
+)}
 
-- <icode>loop(index: number)</icode>:
+- <icode>rotate(steps: number)</icode>: rotate a list to the right _n_ times. The last value become the first, rinse and repeat.
 
-\`\`\`javascript
-// Add example
-\`\`\`
+${makeExample(
+  "To make things more complex... here you go",
+  `mod(.5) :: snd('sine')
+  .freq([100, 150, 200, 250, ,300, 400]
+        .rotate([1,2,3].bar()) // The list of frequencies is rotating
+        .beat())               // while being indexed over!
+  .sustain(0.1)
+  .out()
+`,
+  true
+)}
 
-- <icode>div(division: number)</icode>:
+- <icode>unique()</icode>: filter a list to remove repeated values.
 
-\`\`\`javascript
-// Add example
-\`\`\`
-
-- <icode>shuffle(): this</icode>:
-
-\`\`\`javascript
-// Add example
-\`\`\`
-
-- <icode>rotate(steps: number)</icode>:
-
-\`\`\`javascript
-// Add example
-\`\`\`
-
-- <icode>unique()</icode>:
-
-\`\`\`javascript
-// Add example
-\`\`\`
-
-- <icode>in(value: T)</icode>:
-
-\`\`\`javascript
-// Add example
-\`\`\`
+${makeExample(
+  "Demonstrative filtering. Final list is [100, 200]",
+  `// Remove unique and 100 will repeat four times!
+mod(1)::snd('sine').sustain(0.1).freq([100,100,100,100,200].unique().beat()).out()
+`,
+  true
+)}
 
 
 ## Simple patterns 
@@ -851,8 +857,7 @@ The <icode>sound</icode> function can take the name of a synthesizer as first ar
 	
 ${makeExample(
   "Simple synthesizer voice with filter",
-  `
-mod(.5) && snd('sawtooth')
+  `mod(.5) && snd('sawtooth')
   .cutoff([2000,500].pick() + usine(.5) * 4000)
   .resonance(0.9).freq([100,150].pick())
   .out()
@@ -870,8 +875,7 @@ The same basic waveforms can take additional methods to switch to a basic two op
 
 ${makeExample(
   "80s nostalgia",
-  `
-mod(.25) && snd('sine')
+  `mod(.25) && snd('sine')
   .fmi([1,2,4,8].pick())
   .fmh([1,2,4,8].div(8))
   .freq([100,150].pick())
