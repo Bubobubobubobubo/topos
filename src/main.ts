@@ -748,6 +748,7 @@ export class Editor {
       button.children[0].classList.remove("text-white");
       button.children[0].classList.add("text-orange-300");
       button.classList.add("text-orange-300");
+      button.classList.add("fill-orange-300");
     };
 
     switch (mode) {
