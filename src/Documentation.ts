@@ -28,7 +28,7 @@ const samples_to_markdown = (application: Editor) => {
 
 		markdownList += `
 <button 
-	class="hover:bg-neutral-500 inline px-4 py-2 bg-neutral-700 text-orange-300 text-2xl"
+	class="hover:bg-neutral-500 inline px-4 py-2 bg-neutral-700 text-orange-300 text-xl"
 	onclick="app.api._playDocExample(app.api.codeExamples['${codeId}'])"
 >
 ${keys[i]}
