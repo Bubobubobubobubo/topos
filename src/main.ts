@@ -60,8 +60,6 @@ const bindings = Object.keys(classMap).map((key) => ({
   replace: (match, p1) => `<${key} class="${classMap[key]}" ${p1}>`,
 }));
 
-// Importing the documentation from separate files in the ./src/documentation/* folder
-
 export class Editor {
   universes: Universes = template_universes;
   selected_universe: string;
@@ -108,6 +106,8 @@ export class Editor {
     document.getElementById("clear-button-1") as HTMLButtonElement,
     //document.getElementById("clear-button-2") as HTMLButtonElement,
   ];
+  load_universe_button: HTMLButtonElement = document.getElementById("load-universe-button") as HTMLButtonElement;
+
   documentation_button: HTMLButtonElement = document.getElementById(
     "doc-button-1"
   ) as HTMLButtonElement;
@@ -241,9 +241,12 @@ export class Editor {
 
     // ================================================================================
     // Building the documentation
-    loadSamples().then(() => {
-      this.docs = documentation_factory(this);
-    });
+    // loadSamples().then(() => {
+    //   this.docs = documentation_factory(this);
+    // });
+		let pre_loading = async () => { await loadSamples(); };
+		pre_loading();
+		this.docs = documentation_factory(this);
     // ================================================================================
 
     // ================================================================================
@@ -308,6 +311,18 @@ export class Editor {
       // This is the modal to switch between universes
       if (event.ctrlKey && event.key === "b") {
         this.hideDocumentation();
+				let existing_universes = document.getElementById("existing-universes");
+				let known_universes = Object.keys(this.universes);
+				let final_html = "<ul class='lg:h-80 lg:w-80 lg:pb-2 lg:pt-2 overflow-y-scroll text-white lg:mb-4 border rounded-lg bg-gray-800'>";
+				known_universes.forEach((name) => {
+					final_html += `
+<li onclick="_loadUniverseFromInterface('${name}')" class="hover:fill-black hover:bg-white py-2 hover:text-black flex justify-between px-4">
+	<p >${name}</p>
+	<button onclick=_deleteUniverseFromInterface('${name}')>🗑</button>
+</li>`;
+				});
+				final_html = final_html + "</ul>";
+				existing_universes!.innerHTML = final_html;
         this.openBuffersModal();
       }
 
@@ -416,6 +431,18 @@ export class Editor {
 
     this.documentation_button.addEventListener("click", () => {
       this.showDocumentation();
+    });
+
+
+    this.load_universe_button.addEventListener("click", () => {
+				let query = this.buffer_search.value;
+        if (query.length > 2 && query.length < 20 && !query.includes(" ")) {
+          this.loadUniverse(query);
+          this.settings.selected_universe = query;
+          this.buffer_search.value = "";
+          this.closeBuffersModal();
+          this.view.focus();
+        }
     });
 
     this.eval_button.addEventListener("click", () => {
@@ -553,9 +580,18 @@ export class Editor {
       "about",
     ].forEach((e) => {
       let name = `docs_` + e;
-      document.getElementById(name)!.addEventListener("click", () => {
-        this.currentDocumentationPane = e;
-        this.updateDocumentationContent();
+      document.getElementById(name)!.addEventListener("click", async () => {
+				if (name !== "docs_samples") {
+					this.currentDocumentationPane = e;
+					this.updateDocumentationContent();
+				} else {
+					console.log('Loading samples!');
+					await loadSamples().then(() => {
+						this.docs = documentation_factory(this)
+						this.currentDocumentationPane = e;
+						this.updateDocumentationContent();
+					});
+				}
       });
     });
 

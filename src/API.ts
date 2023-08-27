@@ -55,6 +55,16 @@ export class UserAPI {
 
   constructor(public app: Editor) {}
 
+	_loadUniverseFromInterface = (universe: string) => {
+		this.app.loadUniverse(universe as string);
+    this.app.openBuffersModal();
+	}
+
+	_deleteUniverseFromInterface = (universe: string) => {
+		delete this.app.universes[universe];
+    this.app.openBuffersModal();
+	}
+
   _playDocExample = (code?: string) => {
     this.play();
     console.log("Executing documentation example: " + this.app.selectedExample);

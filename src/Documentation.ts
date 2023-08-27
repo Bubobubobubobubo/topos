@@ -74,7 +74,7 @@ Welcome to the Topos documentation. These pages are offering you an introduction
 
 ${makeExample(
   "Welcome! Eval to get started",
-  `mod([1/4,1/8,1/16].div(4)):: sound('sine')
+  `mod([1/4,1/8,1/16].div(8)):: sound('sine')
   .freq([100,50].div(16) + 50 * ($(1)%10))
   .gain(0.5).room(0.9).size(0.9)
   .sustain(0.1).out()
@@ -138,6 +138,21 @@ mod(2) && snd('snare').out();
 mod(.5) && snd('hat').out();
 `,
   true
+)}
+
+${makeExample(
+  "Resonant madness",
+  `mod(.5)::snd('synth2')
+  .freq([50,50*1.25,50*1.5,50*1.75].div(8) / 2)
+  .cutoff(usine(.5) * 5000).resonance(15).end(0.8).room(0.9).size(0.9).n(7).out();
+mod(.25)::snd('synth2')
+  .freq([50,50*1.25,50*1.5,50*1.75].div(.5))
+  .cutoff(usine(.5) * 5000).resonance(15)
+  .end(0.2).room(0.9).size(0.9).n(14).out()
+mod(1)::snd('kick').out()
+mod(2)::snd('snare').shape(0.5).out()
+mod(.75)::snd('hat').shape(0.4).out()`,
+  false
 )}
 `;
 
@@ -1137,22 +1152,22 @@ ${makeExample(
 `;
 
   const about: string = `
-	# About Topos
+# About Topos
 	
-	## The Topos Project
+## The Topos Project
 	
-	Topos is an experimental web based algorithmic sequencer programmed by **BuboBubo** ([Raphaël Forment](https://raphaelforment.fr) and **Amiika** ([Miika Alonen](https//github.com/amiika). It is written using [TypeScript](https://google.fr) and [Vite](https://google.fr). Many thanks to Felix Roos for making the [Superdough](https://www.npmjs.com/package/superdough) audio backend available for experimentation. This project is based on the [Monome Teletype](https://monome.org) by [Brian Crabtree](https://nnnnnnnn.co/) and [Kelli Cain](https://kellicain.com/). We hope to follow and honor the same spirit of sharing and experimentation. How much can the Teletype be extended while staying accessible and installation-free?
+Topos is an experimental web based algorithmic sequencer programmed by **BuboBubo** ([Raphaël Forment](https://raphaelforment.fr) and **Amiika** ([Miika Alonen](https//github.com/amiika). It is written using [TypeScript](https://google.fr) and [Vite](https://google.fr). Many thanks to Felix Roos for making the [Superdough](https://www.npmjs.com/package/superdough) audio backend available for experimentation. This project is based on the [Monome Teletype](https://monome.org) by [Brian Crabtree](https://nnnnnnnn.co/) and [Kelli Cain](https://kellicain.com/). We hope to follow and honor the same spirit of sharing and experimentation. How much can the Teletype be extended while staying accessible and installation-free?
 	
-	## About Live Coding
+## About Live Coding
 	
-	**Amiika** and I are both very involved in the [TOPLAP](https://toplap.org) and [Algorave](https://algorave.com) scenes. We previously worked on the [Sardine](https://sardine.raphaelforment.fr) live coding environment for Python. **Amiika** has been working hard on its own algorithmic pattern language called [Ziffers](https://github.com/amiika/ziffers). A version of it is available in Topos! **Raphaël** is doing live coding with other folks from the [Cookie Collective](https://cookie.paris) and from the city of Lyon (France).
+**Amiika** and I are both very involved in the [TOPLAP](https://toplap.org) and [Algorave](https://algorave.com) scenes. We previously worked on the [Sardine](https://sardine.raphaelforment.fr) live coding environment for Python. **Amiika** has been working hard on its own algorithmic pattern language called [Ziffers](https://github.com/amiika/ziffers). A version of it is available in Topos! **Raphaël** is doing live coding with other folks from the [Cookie Collective](https://cookie.paris) and from the city of Lyon (France).
 	
-	## Free and open-source software
-	
-	Topos is a free and open-source software distributed under [GPL-3.0](https://github.com/Bubobubobubobubo/Topos/blob/main/LICENSE) licence. We welcome all contributions and ideas. You can find the source code on [GitHub](https://github.com/Bubobubobubobubo/topos). You can also join us on [Discord](https://discord.gg/8Q2QV6Z6) to discuss about the project and live coding in general.
+## Free and open-source software
+
+Topos is a free and open-source software distributed under [GPL-3.0](https://github.com/Bubobubobubobubo/Topos/blob/main/LICENSE) licence. We welcome all contributions and ideas. You can find the source code on [GitHub](https://github.com/Bubobubobubobubo/topos). You can also join us on [Discord](https://discord.gg/8Q2QV6Z6) to discuss about the project and live coding in general.
 	 
-	**Have fun!**
-	`;
+**Have fun!**
+`;
 
   const code: string = `
 # Code
@@ -1349,38 +1364,40 @@ Chance operators returning a boolean value are also available:
   const shortcuts: string = `
 # Keybindings
 	
-Topos is made to be controlled entirely with a keyboard. It is recommanded to stop using the mouse as much as possible when you are _live coding_. Here is a list of the most important keybindings:
+Topos is made to be controlled entirely with a keyboard. It is recommanded to stop using the mouse as much as possible when you are _live coding_. Some of the keybindings might not work like expected on Windows/Linux. They all work on MacOS. A fix is on the way. Here is a list of the most important keybindings:
 	
 ## Transport
-	
-- **Start** the transport: ${key_shortcut("Ctrl + P")}.
-- **Pause** the transport: ${key_shortcut("Ctrl + S")}.
-- **Rewind** the transport: ${key_shortcut("Ctrl + R")}.
+
+| Shortcut | Key   | Description                                                |
+|----------|-------|------------------------------------------------------------|
+|**Start** transport|${key_shortcut("Ctrl + P")}|Start audio playback|
+|**Pause** the transport |${key_shortcut("Ctrl + S")}|Pause audio playback|
+|**Rewind** the transport|${key_shortcut("Ctrl + R")}|Rewind audio playback|
 	
 ## Moving in the interface
 
-- Switch to a different universe: ${key_shortcut("Ctrl + B")}.
-- Switch to the global script: ${key_shortcut("Ctrl + G")} or ${key_shortcut(
-    "F10"
-  )}.
-- Switch to the local scripts: ${key_shortcut("Ctrl + L")} or ${key_shortcut(
-    "F11"
-  )}.
-- Switch to the init script: ${key_shortcut("Ctrl + L")}.
-- Switch to the note file: ${key_shortcut("Ctrl + N")}.
-- Switch to a local file: ${key_shortcut("F1")} to ${key_shortcut("F9")}.
-- Toggle the documentation: ${key_shortcut("Ctrl + D")}.
+| Shortcut | Key   | Description                                                |
+|----------|-------|------------------------------------------------------------|
+|Universe switch|${key_shortcut("Ctrl + B")}|Switch to a new universe|
+|Global Script|${key_shortcut("Ctrl + G")} or ${key_shortcut("F10")}|Switch to global script |
+|Local scripts|${key_shortcut("Ctrl + L")} or ${key_shortcut("F11")}|Switch to local scripts |
+|Init script|${key_shortcut("Ctrl + L")}|Switch to init script|
+|Note File|${key_shortcut("Ctrl + N")}|Switch to note file|
+|Local Script|${key_shortcut("F1")} to ${key_shortcut("F9")}|Switch to a specific local script|
+|Documentation|${key_shortcut("Ctrl + D")}|Open the documentation|
 	
 ## Evaluating code
-	
-- Evaluate the current script: ${key_shortcut("Ctrl + Enter")}.
-- Evaluate a local script: ${key_shortcut("Ctrl + F1")} to ${key_shortcut(
-    "Ctrl + F9"
-  )}.
+
+| Shortcut | Key   | Description                                                |
+|----------|-------|------------------------------------------------------------|
+|Evaluate|${key_shortcut("Ctrl + Enter")}| Evaluate the current script        |
+|Local Eval|${key_shortcut("Ctrl + F1")} to ${key_shortcut("Ctrl + F9")}|Local File Evaluation|
 	
 ## Special
-	
-- Switch the editor to Vim Mode: ${key_shortcut("Ctrl + V")}.
+
+| Shortcut | Key   | Description                                                |
+|----------|-------|------------------------------------------------------------|
+|Vim Mode|${key_shortcut("Ctrl + V")}| Switch between Vim and Normal Mode|
 `;
 
   return {
