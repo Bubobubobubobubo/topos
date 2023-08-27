@@ -4,7 +4,9 @@ const key_shortcut = (shortcut: string): string => {
   return `<kbd class="lg:px-2 lg:py-1.5 px-1 py-1 lg:text-sm text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg dark:bg-gray-600 dark:text-gray-100 dark:border-gray-500">${shortcut}</kbd>`;
 };
 
-const samples_to_markdown = (samples: object) => {
+const samples_to_markdown = (application: Editor) => {
+	let samples = application.api._all_samples();
+	console.log(samples)
   let markdownList = "";
   let keys = Object.keys(samples);
   let i = -1;
@@ -13,26 +15,33 @@ const samples_to_markdown = (samples: object) => {
     if (!samples[keys[i]].data) continue;
     //@ts-ignore
     if (!samples[keys[i]].data.samples) continue;
-    markdownList += `**${keys[i]}** (_${
-      //@ts-ignore
-      samples[keys[i]].data.samples.length
-    }_) `;
-    // let i2 = -1;
-    // while (i2++ < samples[keys[i]].data.samples.length - 1) {
-    //   console.log(samples[keys[i]].data.samples[i2]);
-    //   markdownList += `\t- <audio controls> <source src="${
-    //     samples[keys[i]].data.samples[i2]
-    //   }" type="audio/wav">\n
-    // 	</audio>
-    // 	`;
-    // }
+    //markdownList += `**${keys[i]}** (_${
+    //  //@ts-ignore
+    //  samples[keys[i]].data.samples.length
+    //}_) `;
+		//
+		
+		// Adding new examples for each sample folder!
+    const codeId = `sampleExample${i}`;
+    application.api.codeExamples[codeId] = `mod(.5) :: sound("${keys[i]}").n(irand(1,100)).end(1).out()`;
+		// @ts-ignore
+		const howMany = samples[keys[i]].data.samples.length;
+
+		markdownList += `
+<button 
+	class="hover:bg-neutral-500 inline px-4 py-2 bg-neutral-700 text-orange-300 text-2xl"
+	onclick="app.api._playDocExample(app.api.codeExamples['${codeId}'])"
+>
+${keys[i]}
+<b class="text-white">(${howMany})</b>
+</button>`;
   }
   return markdownList;
 };
 
 const injectAvailableSamples = (application: Editor): string => {
-  let test = samples_to_markdown(application.api._all_samples());
-  return test;
+	let generatedPage = samples_to_markdown(application);
+  return generatedPage;
 };
 
 export const documentation_factory = (application: Editor) => {
@@ -865,12 +874,13 @@ mod(.5)::snd('pad').crush([16, 8, 4].div(2)).clip(.5).out()
 	
 Audio samples are dynamically loaded from the web. By default, Topos is providing some samples coming from the classic [Dirt-Samples](https://github.com/tidalcycles/Dirt-Samples) but also from the [Topos-Samples](https://github.com/Bubobubobubobubo/Topos-Samples) repository. You can contribute to the latter if you want to share your samples with the community! For each sample folder, we are indicating how many of them are available in parentheses.
 
-- **sample_folder** (_how_many_)
-
 ## Available audio samples
-	
-${injectAvailableSamples(application)}
 
+	
+<b class="flex lg:pl-6 lg:pr-6 text-bold mb-8">Samples can take a few seconds to load. Please wait if you are not hearing anything.</b>
+<div class="lg:pl-6 lg:pr-6 inline-block w-fit flex flex-row flex-wrap gap-x-2 gap-y-2">
+${injectAvailableSamples(application)}
+</div>
 `;
 
   const patterns: string = `
