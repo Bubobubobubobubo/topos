@@ -967,12 +967,8 @@ export class Editor {
   }
 }
 
-// Creating the application
 const app = new Editor();
 
-
-
-// When the user leaves the page, all the universes should be saved in the localStorage
 window.addEventListener("beforeunload", () => {
   // @ts-ignore
   event.preventDefault();
@@ -983,11 +979,3 @@ window.addEventListener("beforeunload", () => {
   app.clock.stop();
   return null;
 });
-
-// function reportMouseCoordinates(event: MouseEvent) {
-//   app._mouseX = event.clientX;
-//   app._mouseY = event.clientY;
-// }
-
-onmousemove = function(e){console.log("mouse location:", e.clientX, e.clientY)}
-
