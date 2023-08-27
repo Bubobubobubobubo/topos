@@ -1,5 +1,6 @@
 export const examples = [
 `
+// Crazy arpeggios - Bubobubobubo
 bpm(110)
 mod(0.125) && sound('sawtooth')
   .note([60, 62, 63, 67, 70].div(.125) + 
@@ -12,6 +13,7 @@ mod(1) && snd('kick').out();
 mod(2) && snd('snare').out();
 mod(.5) && snd('hat').out();
 `, `
+// Obscure Shenanigans - Bubobubobubo
 mod([1/4,1/8,1/16].div(8)):: sound('sine')
 	.freq([100,50].div(16) + 50 * ($(1)%10))
 	.gain(0.5).room(0.9).size(0.9)
@@ -21,6 +23,7 @@ mod(2) :: sound('dr').n(5).out()
 div(3) :: mod([.25,.5].div(.5)) :: sound('dr')
   .n([8,9].pick()).gain([.8,.5,.25,.1,.0].div(.25)).out()
 `, `
+// Resonance bliss - Bubobubobubo
 mod(.25)::snd('arpy')
   .note(30 + [0,3,7,10].beat())
   .cutoff(usine(.5) * 5000).resonance(10).gain(0.3)

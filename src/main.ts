@@ -3,6 +3,7 @@ import {
   colors,
   animals,
 } from "unique-names-generator";
+import { examples } from "./examples/excerpts";
 import { EditorState, Compartment } from "@codemirror/state";
 import { ViewUpdate, lineNumbers, keymap } from "@codemirror/view";
 import { javascript } from "@codemirror/lang-javascript";
@@ -184,9 +185,12 @@ export class Editor {
     // Loading the universe from local storage
     // ================================================================================
 
-    this.selected_universe = this.settings.selected_universe;
-    this.universe_viewer.innerHTML = `Topos: ${this.selected_universe}`;
     this.universes = { ...template_universes, ...this.settings.universes };
+    this.selected_universe = "Welcome";
+    this.universe_viewer.innerHTML = `Topos: ${this.selected_universe}`;
+		let random_example = examples[Math.floor(Math.random() * examples.length)];
+		this.universes[this.selected_universe].global.committed = random_example;
+		this.universes[this.selected_universe].global.candidate = random_example;
 
     // ================================================================================
     // Audio context and clock

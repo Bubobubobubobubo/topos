@@ -443,7 +443,8 @@ mod(.5)::snd(div(2) ? 'kick' : 'hat').out()
 
 ${makeExample(
   "div is great for pretty much everything",
-  `div([1, .5].beat()) :: mod(.25) :: sound('shaker').out();
+  `
+div([1, .5].beat()) :: mod(.25) :: sound('shaker').out();
 div([4, .5].beat()) :: mod(.25) :: sound('shaker').speed(2).out();
 div([1, 2].beat()) :: mod(1.75) :: sound('snare').out();
 div(4) :: mod(.5) :: sound('tom').out()
