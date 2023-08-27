@@ -241,9 +241,6 @@ export class Editor {
 
     // ================================================================================
     // Building the documentation
-    // loadSamples().then(() => {
-    //   this.docs = documentation_factory(this);
-    // });
 		let pre_loading = async () => { await loadSamples(); };
 		pre_loading();
 		this.docs = documentation_factory(this);
@@ -311,18 +308,7 @@ export class Editor {
       // This is the modal to switch between universes
       if (event.ctrlKey && event.key === "b") {
         this.hideDocumentation();
-				let existing_universes = document.getElementById("existing-universes");
-				let known_universes = Object.keys(this.universes);
-				let final_html = "<ul class='lg:h-80 lg:w-80 lg:pb-2 lg:pt-2 overflow-y-scroll text-white lg:mb-4 border rounded-lg bg-gray-800'>";
-				known_universes.forEach((name) => {
-					final_html += `
-<li onclick="_loadUniverseFromInterface('${name}')" class="hover:fill-black hover:bg-white py-2 hover:text-black flex justify-between px-4">
-	<p >${name}</p>
-	<button onclick=_deleteUniverseFromInterface('${name}')>🗑</button>
-</li>`;
-				});
-				final_html = final_html + "</ul>";
-				existing_universes!.innerHTML = final_html;
+				this.updateKnownUniversesView();
         this.openBuffersModal();
       }
 
@@ -667,6 +653,21 @@ export class Editor {
   parseHash = (hash: string) => {
     return JSON.parse(hash);
   };
+
+	updateKnownUniversesView = () => {
+		let existing_universes = document.getElementById("existing-universes");
+		let known_universes = Object.keys(this.universes);
+		let final_html = "<ul class='lg:h-80 lg:w-80 lg:pb-2 lg:pt-2 overflow-y-scroll text-white lg:mb-4 border rounded-lg bg-gray-800'>";
+		known_universes.forEach((name) => {
+			final_html += `
+<li onclick="_loadUniverseFromInterface('${name}')" class="hover:fill-black hover:bg-white py-2 hover:text-black flex justify-between px-4">
+	<p >${name}</p>
+	<button onclick=_deleteUniverseFromInterface('${name}')>🗑</button>
+</li>`;
+		});
+		final_html = final_html + "</ul>";
+		existing_universes!.innerHTML = final_html;
+	}
 
   share() {
     const hashed_table = btoa(

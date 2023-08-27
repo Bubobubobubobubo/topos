@@ -66,7 +66,7 @@ export class UserAPI {
 			this.app.universes,
 			this.app.settings
 		);
-    this.app.openBuffersModal();
+		this.app.updateKnownUniversesView();
 	}
 
   _playDocExample = (code?: string) => {
