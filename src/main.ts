@@ -60,8 +60,6 @@ const bindings = Object.keys(classMap).map((key) => ({
   replace: (match, p1) => `<${key} class="${classMap[key]}" ${p1}>`,
 }));
 
-// Importing the documentation from separate files in the ./src/documentation/* folder
-
 export class Editor {
   universes: Universes = template_universes;
   selected_universe: string;
@@ -241,9 +239,12 @@ export class Editor {
 
     // ================================================================================
     // Building the documentation
-    loadSamples().then(() => {
-      this.docs = documentation_factory(this);
-    });
+    // loadSamples().then(() => {
+    //   this.docs = documentation_factory(this);
+    // });
+		let pre_loading = async () => { await loadSamples(); };
+		pre_loading();
+		this.docs = documentation_factory(this);
     // ================================================================================
 
     // ================================================================================
@@ -553,9 +554,18 @@ export class Editor {
       "about",
     ].forEach((e) => {
       let name = `docs_` + e;
-      document.getElementById(name)!.addEventListener("click", () => {
-        this.currentDocumentationPane = e;
-        this.updateDocumentationContent();
+      document.getElementById(name)!.addEventListener("click", async () => {
+				if (name !== "docs_samples") {
+					this.currentDocumentationPane = e;
+					this.updateDocumentationContent();
+				} else {
+					console.log('Loading samples!');
+					await loadSamples().then(() => {
+						this.docs = documentation_factory(this)
+						this.currentDocumentationPane = e;
+						this.updateDocumentationContent();
+					});
+				}
       });
     });
 

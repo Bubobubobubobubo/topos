@@ -74,7 +74,7 @@ Welcome to the Topos documentation. These pages are offering you an introduction
 
 ${makeExample(
   "Welcome! Eval to get started",
-  `mod([1/4,1/8,1/16].div(4)):: sound('sine')
+  `mod([1/4,1/8,1/16].div(8)):: sound('sine')
   .freq([100,50].div(16) + 50 * ($(1)%10))
   .gain(0.5).room(0.9).size(0.9)
   .sustain(0.1).out()
