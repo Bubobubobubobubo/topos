@@ -412,9 +412,11 @@ export class Editor {
       button.addEventListener("click", () => {
 				if (this.isPlaying) {
       	  this.setButtonHighlighting("pause", true);
+					this.isPlaying = !this.isPlaying;
       	  this.clock.pause();
 				} else {
       	  this.setButtonHighlighting("play", true);
+					this.isPlaying = !this.isPlaying;
       	  this.clock.start();
 				}
 			});
@@ -795,10 +797,26 @@ export class Editor {
     button: "play" | "pause" | "stop" | "clear",
     highlight: boolean
   ) {
+		document.getElementById('play-label')!.textContent = button !== "pause" ? "Pause" : "Play";
+		if (button !== "pause") {
+			document.getElementById('pause-icon')!.classList.remove('hidden');
+			document.getElementById('play-icon')!.classList.add('hidden');
+		} else {
+			document.getElementById('pause-icon')!.classList.add('hidden');
+			document.getElementById('play-icon')!.classList.remove('hidden');
+		}
+
+		if (button === "stop") {
+			this.isPlaying == false;
+			document.getElementById('play-label')!.textContent = "Play";
+			document.getElementById('pause-icon')!.classList.add('hidden');
+			document.getElementById('play-icon')!.classList.remove('hidden');
+		}
+
+
     this.flashBackground("#2d313d", 200);
     const possible_selectors = [
       '[id^="play-button-"]',
-      '[id^="pause-button-"]',
       '[id^="clear-button-"]',
       '[id^="stop-button-"]',
     ];
@@ -820,7 +838,6 @@ export class Editor {
     document
       .querySelectorAll(possible_selectors[selector])
       .forEach((button) => {
-        if (highlight) button.children[0].classList.add("fill-orange-300");
         if (highlight) button.children[0].classList.add("animate-pulse");
       });
     // All other buttons must lose the highlighting
@@ -829,10 +846,8 @@ export class Editor {
         possible_selectors.filter((_, index) => index != selector).join(",")
       )
       .forEach((button) => {
-        button.children[0].classList.remove("fill-orange-300");
-        button.children[0].classList.remove("text-orange-300");
-        button.children[0].classList.remove("bg-orange-300");
         button.children[0].classList.remove("animate-pulse");
+        button.children[1].classList.remove("animate-pulse");
       });
   }
 

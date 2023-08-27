@@ -55,32 +55,34 @@
 
         </a>
         <nav class="py-2 flex flex-wrap items-center text-base absolute right-0">
-         <a title="Play button (Ctrl+P)" id="play-button-1" class="flex flex-row hover:bg-gray-800 px-2 py-2 rounded-lg">
-							<p class="hidden lg:block text-xl pr-2 text-white inline-block">Play</p>
-							<svg class="w-7 h-7" fill="currentColor" viewBox="0 0 14 16">
+         <a title="Play button (Ctrl+P)" id="play-button-1" class="flex flex-row mr-2 hover:bg-gray-800 px-2 py-2 rounded-lg">
+							<svg id="play-icon" class="w-7 h-7" fill="currentColor" viewBox="0 0 14 16">
 								<path d="M0 .984v14.032a1 1 0 0 0 1.506.845l12.006-7.016a.974.974 0 0 0 0-1.69L1.506.139A1 1 0 0 0 0 .984Z"/>
 							</svg>
+							<svg id="pause-icon" class="hidden w-7 h-7 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+    <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9 13a1 1 0 0 1-2 0V7a1 1 0 0 1 2 0v6Zm4 0a1 1 0 0 1-2 0V7a1 1 0 0 1 2 0v6Z"/>
+  </svg>
+							<p id="play-label" class="hidden lg:block text-xl pl-2 text-white inline-block">Play</p>
           </a>
           <a title="Stop button (Ctrl+R)" id="stop-button-1" class="flex flex-row mr-2 hover:text-gray-900 hover:bg-gray-800 px-2 py-2 rounded-lg">
-						<p class="hidden lg:block text-xl pr-2 text-white inline-block">Stop</p>
 						<svg class="w-7 h-7 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
   <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Z"/>
   <rect x="6.5" y="6.5" width="7" height="7" fill="black" rx="1" ry="1"/>
 </svg>
+						<p class="hidden lg:block text-xl pl-2 text-white inline-block">Stop</p>
           </a>
           <a title="Eval button (Ctrl+Enter)" id="eval-button-1" class="flex flex-row mr-2 hover:text-gray-900 hover:bg-gray-800 px-2 py-2 rounded-lg">
-						<p class="hidden lg:block text-xl pr-2 text-white inline-block">Eval</p>
 						<svg class="w-7 h-7 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 20">
     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 1v5h-5M2 19v-5h5m10-4a8 8 0 0 1-14.947 3.97M1 10a8 8 0 0 1 14.947-3.97"/>
   </svg>
+					<p class="hidden lg:block text-xl pl-2 text-white inline-block">Eval</p>
           </a>
 
           <a title="Clear button" id="clear-button-1" class="flex flex-row mr-2 hover:text-gray-900 hover:bg-gray-800 px-2 py-2 rounded-lg">
-						<p class="hidden lg:block text-xl pr-2 text-white inline-block">Clear</p>
 						<svg class="w-7 h-7 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 20">
     <path d="M17 4h-4V2a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v2H1a1 1 0 0 0 0 2h1v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V6h1a1 1 0 1 0 0-2ZM7 2h4v2H7V2Zm1 14a1 1 0 1 1-2 0V8a1 1 0 0 1 2 0v8Zm4 0a1 1 0 0 1-2 0V8a1 1 0 0 1 2 0v8Z"/>
   </svg>
-            </svg>
+						<p class="hidden lg:block text-xl pl-2 text-white inline-block">Clear</p>
           </a>
           <a title="Open Documentation (Ctrl+D)" id="doc-button-1" class="flex flex-row mr-2 hover:text-gray-900 hover:bg-gray-800 px-2 py-2 rounded-lg">
 						<p class="hidden lg:block text-xl pr-2 text-white inline-block">Docs</p>
@@ -218,18 +220,12 @@
             </a>
           
             <a title="Global Script (Ctrl + G)" id="global-button" class="pl-2 p-1.5 text-gray-700 focus:outline-nones transition-colors duration-200 rounded-lg text-white hover:bg-gray-800">
-							<!--
-							<p class="grid font-mono font-semibold text-4xl content-center justify-center">G</p>
-							-->
               <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 18 20">
                 <path d="M17.8 13.75a1 1 0 0 0-.859-.5A7.488 7.488 0 0 1 10.52 2a1 1 0 0 0 0-.969A1.035 1.035 0 0 0 9.687.5h-.113a9.5 9.5 0 1 0 8.222 14.247 1 1 0 0 0 .004-.997Z"/>
               </svg>
             </a>
           
             <a title="Initialisation Script (Ctrl + I)" id="init-button" class="pl-2 p-1.5 text-gray-700 focus:outline-nones transition-colors duration-200 rounded-lg text-white bg-gray-800">
-							<!--
-							<p class="grid font-mono font-semibold text-4xl content-center justify-center">I</p>
-							-->
               <svg class="w-8 h-8 text-white " fill="none" viewBox="0 0 21 20">
                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6.487 1.746c0 4.192 3.592 1.66 4.592 5.754 0 .828 1 1.5 2 1.5s2-.672 2-1.5a1.5 1.5 0 0 1 1.5-1.5h1.5m-16.02.471c4.02 2.248 1.776 4.216 4.878 5.645C10.18 13.61 9 19 9 19m9.366-6h-2.287a3 3 0 0 0-3 3v2m6-8a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
               </svg>
