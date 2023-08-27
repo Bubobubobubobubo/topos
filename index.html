@@ -53,34 +53,40 @@
 
         </a>
         <nav class="py-2 flex flex-wrap items-center text-base absolute right-0">
-         <a title="Play button (Ctrl+P)" id="play-button-1" class="hover:bg-gray-800 px-2 py-2 rounded-lg">
-            <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 14 16">
-              <path d="M0 .984v14.032a1 1 0 0 0 1.506.845l12.006-7.016a.974.974 0 0 0 0-1.69L1.506.139A1 1 0 0 0 0 .984Z"/>
-            </svg>
+         <a title="Play button (Ctrl+P)" id="play-button-1" class="flex flex-row hover:bg-gray-800 px-2 py-2 rounded-lg">
+							<p class="text-xl pr-2 text-white inline-block">Play</p>
+							<svg class="w-7 h-7" fill="currentColor" viewBox="0 0 14 16">
+								<path d="M0 .984v14.032a1 1 0 0 0 1.506.845l12.006-7.016a.974.974 0 0 0 0-1.69L1.506.139A1 1 0 0 0 0 .984Z"/>
+							</svg>
           </a>
-          <a title="Pause button (Ctrl+S)" id="pause-button-1" class="mr-2 hover:text-gray-900 hover:bg-gray-800 px-2 py-2 rounded-lg">
-            <svg class="fill-orange-300 w-8 h-8 text-gray-800 text-white" fill="currentColor" viewBox="0 0 20 20">
-              <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9 13a1 1 0 0 1-2 0V7a1 1 0 0 1 2 0v6Zm4 0a1 1 0 0 1-2 0V7a1 1 0 0 1 2 0v6Z"/>
-            </svg>
+          <a title="Pause button (Ctrl+S)" id="pause-button-1" class="flex flex-row mr-2 hover:text-gray-900 hover:bg-gray-800 px-2 py-2 rounded-lg">
+							<p class="text-xl pr-2 text-white inline-block">Pause</p>
+							<svg class="fill-orange-300 w-7 h-7 text-gray-800 text-white" fill="currentColor" viewBox="0 0 20 20">
+								<path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9 13a1 1 0 0 1-2 0V7a1 1 0 0 1 2 0v6Zm4 0a1 1 0 0 1-2 0V7a1 1 0 0 1 2 0v6Z"/>
+							</svg>
           </a>
-          <a title="Stop button (Ctrl+R)" id="stop-button-1" class="mr-2 hover:text-gray-900 hover:bg-gray-800 px-2 py-2 rounded-lg">
-            <svg class="w-8 h-8 text-gray-800 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 12 16">
+          <a title="Stop button (Ctrl+R)" id="stop-button-1" class="flex flex-row mr-2 hover:text-gray-900 hover:bg-gray-800 px-2 py-2 rounded-lg">
+						<p class="text-xl pr-2 text-white inline-block">Stop</p>
+            <svg class="w-7 h-7 text-gray-800 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 12 16">
               <path d="M10.819.4a1.974 1.974 0 0 0-2.147.33l-6.5 5.773A2.014 2.014 0 0 0 2 6.7V1a1 1 0 0 0-2 0v14a1 1 0 1 0 2 0V9.3c.055.068.114.133.177.194l6.5 5.773a1.982 1.982 0 0 0 2.147.33A1.977 1.977 0 0 0 12 13.773V2.227A1.977 1.977 0 0 0 10.819.4Z"/>
             </svg>
           </a>
-          <a title="Eval button (Ctrl+Enter)" id="eval-button-1" class="mr-2 hover:text-gray-900 hover:bg-gray-800 px-2 py-2 rounded-lg">
-						<svg class="w-8 h-8 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 20">
+          <a title="Eval button (Ctrl+Enter)" id="eval-button-1" class="flex flex-row mr-2 hover:text-gray-900 hover:bg-gray-800 px-2 py-2 rounded-lg">
+						<p class="text-xl pr-2 text-white inline-block">Eval</p>
+						<svg class="w-7 h-7 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 20">
     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 1v5h-5M2 19v-5h5m10-4a8 8 0 0 1-14.947 3.97M1 10a8 8 0 0 1 14.947-3.97"/>
   </svg>
           </a>
 
-          <a title="Clear button" id="clear-button-1" class="mr-2 hover:text-gray-900 hover:bg-gray-800 px-2 py-2 rounded-lg">
-            <svg class="w-8 h-8 text-gray-800 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 17 20">
+          <a title="Clear button" id="clear-button-1" class="flex flex-row mr-2 hover:text-gray-900 hover:bg-gray-800 px-2 py-2 rounded-lg">
+						<p class="text-xl pr-2 text-white inline-block">Clear</p>
+            <svg class="w-7 h-7 text-gray-800 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 17 20">
               <path d="M7.958 19.393a7.7 7.7 0 0 1-6.715-3.439c-2.868-4.832 0-9.376.944-10.654l.091-.122a3.286 3.286 0 0 0 .765-3.288A1 1 0 0 1 4.6.8c.133.1.313.212.525.347A10.451 10.451 0 0 1 10.6 9.3c.5-1.06.772-2.213.8-3.385a1 1 0 0 1 1.592-.758c1.636 1.205 4.638 6.081 2.019 10.441a8.177 8.177 0 0 1-7.053 3.795Z"/>
             </svg>
           </a>
-          <a title="Open Documentation (Ctrl+D)" id="doc-button-1" class="mr-2 hover:text-gray-900 hover:bg-gray-800 px-2 py-2 rounded-lg">
-            <svg class="w-8 h-8 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 18">
+          <a title="Open Documentation (Ctrl+D)" id="doc-button-1" class="flex flex-row mr-2 hover:text-gray-900 hover:bg-gray-800 px-2 py-2 rounded-lg">
+						<p class="text-xl pr-2 text-white inline-block">Docs</p>
+            <svg class="w-7 h-7 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 18">
               <path d="M9 1.334C7.06.594 1.646-.84.293.653a1.158 1.158 0 0 0-.293.77v13.973c0 .193.046.383.134.55.088.167.214.306.366.403a.932.932 0 0 0 .5.147c.176 0 .348-.05.5-.147 1.059-.32 6.265.851 7.5 1.65V1.334ZM19.707.653C18.353-.84 12.94.593 11 1.333V18c1.234-.799 6.436-1.968 7.5-1.65a.931.931 0 0 0 .5.147.931.931 0 0 0 .5-.148c.152-.096.279-.235.366-.403.088-.167.134-.357.134-.55V1.423a1.158 1.158 0 0 0-.293-.77Z"/>
             </svg>
           </a>
