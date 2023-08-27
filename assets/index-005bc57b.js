@@ -794,7 +794,8 @@ mod([1, 0.5].beat()) :: sound(['bass3'].bar())
 
 - <icode>palindrome()</icode>: Concatenates a list with the same list in reverse.
 
-${t("Palindrome filter sweep",`mod([1,.5,.25].beat()) :: snd('sine')
+${t("Palindrome filter sweep",`
+mod([1,.5,.25].beat()) :: snd('sine')
   .freq([100,200,300].div(0.25))
   .fmi([1,2,3].palindrome().div(0.5))
   .fmh([4, 8].palindrome().beat())
@@ -910,7 +911,9 @@ mod(1/8)::sound('sine')
   .velocity(rand(0.0, 1.0))
   .delay(0.75).delayt(.5)
   .sustain(0.4)
+	.cutoff(2000)
   .freq(mouseX())
+	.gain(0.25)
   .out()`,!1)}
 	
 	
@@ -940,8 +943,8 @@ mod(.5) :: sound('sine')
 
 ${t("Some peace and serenity",`
 mod(0.25) :: sound('sine')
-  .note([60, 67, 70, 72, 77].beat())
-  .attack(0.2).release(0.5).gain(0.5)
+  .note([60, 67, 70, 72, 77].beat() - [0,12].bar())
+  .attack(0.2).release(0.5).gain(0.25)
   .room(0.9).size(0.8).sustain(0.5)
   .fmi(Math.floor(usine(.25) * 10))
   .cutoff(1500).delay(0.5).delayt(0.125)
@@ -1069,36 +1072,28 @@ Low Frequency Oscillators (_LFOs_) are an important piece in any digital audio w
 - <icode>sine(freq: number = 1, offset: number= 0): number</icode>: returns a sinusoïdal oscillation between <icode>-1</icode> and <icode>1</icode>.
 - <icode>usine(freq: number = 1, offset: number= 0): number</icode>: returns a sinusoïdal oscillation between <icode>0</icode> and <icode>1</icode>. The <icode>u</icode> stands for _unipolar_.
 	
-\`\`\`javascript
-mod(.25) && snd('cp').speed(1 + usine(0.25) * 2).out()
-\`\`\`
-	
+${t("Modulating the speed of a sample player using a sine LFO","mod(.25) && snd('cp').speed(1 + usine(0.25) * 2).out()",!0)};
+
 - <icode>triangle(freq: number = 1, offset: number= 0): number</icode>: returns a triangle oscillation between <icode>-1</icode> and <icode>1</icode>.
 - <icode>utriangle(freq: number = 1, offset: number= 0): number</icode>: returns a triangle oscillation between <icode>0</icode> and <icode>1</icode>. The <icode>u</icode> stands for _unipolar_.
 	
-\`\`\`javascript
-mod(.25) && snd('cp').speed(1 + utriangle(0.25) * 2).out()
-\`\`\`
+
+${t("Modulating the speed of a sample player using a triangle LFO","mod(.25) && snd('cp').speed(1 + utriangle(0.25) * 2).out()",!0)}
 	
 - <icode>saw(freq: number = 1, offset: number= 0): number</icode>: returns a sawtooth-like oscillation between <icode>-1</icode> and <icode>1</icode>.
 - <icode>usaw(freq: number = 1, offset: number= 0): number</icode>: returns a sawtooth-like oscillation between <icode>0</icode> and <icode>1</icode>. The <icode>u</icode> stands for _unipolar_.
 	
-\`\`\`javascript
-mod(.25) && snd('cp').speed(1 + usaw(0.25) * 2).out()
-\`\`\`
+
+${t("Modulating the speed of a sample player using a saw LFO","mod(.25) && snd('cp').speed(1 + usaw(0.25) * 2).out()",!0)}
 	
 - <icode>square(freq: number = 1, offset: number= 0, duty: number = .5): number</icode>: returns a square wave oscillation between <icode>-1</icode> and <icode>1</icode>. You can also control the duty cycle using the <icode>duty</icode> parameter.
 - <icode>usquare(freq: number = 1, offset: number= 0, duty: number = .5): number</icode>: returns a square wave oscillation between <icode>0</icode> and <icode>1</icode>. The <icode>u</icode> stands for _unipolar_. You can also control the duty cycle using the <icode>duty</icode> parameter.
 	
-\`\`\`javascript
-mod(.25) && snd('cp').speed(1 + usquare(0.25, 0, 0.25) * 2).out()
-\`\`\`
+${t("Modulating the speed of a sample player using a square LFO","mod(.25) && snd('cp').speed(1 + usquare(0.25, 0, 0.25) * 2).out()",!0)};
 	
 - <icode>noise()</icode>: returns a random value between -1 and 1.
 	
-\`\`\`javascript
-mod(.25) && snd('cp').speed(1 + noise() * 2).out()
-\`\`\`
+${t("Modulating the speed of a sample player using noise","mod(.25) && snd('cp').speed(1 + noise() * 2).out()",!0)};
 	
 ## Probabilities
 
