@@ -3,6 +3,10 @@ export {};
 
 declare global {
   interface Array<T> {
+		add(amount: number): number[];
+  	sub(amount: number): number[];
+  	mult(amount: number): number[];
+  	division(amount: number): number[];
     palindrome(): T[];
     random(index: number): T;
     rand(index: number): T;
@@ -20,6 +24,8 @@ declare global {
     rotate(steps: number): this;
     unique(): this;
     in(value: T): boolean;
+	  square(): number[];
+		sqrt(): number[];
   }
 }
 
@@ -27,6 +33,54 @@ export const makeArrayExtensions = (api: UserAPI) => {
   Array.prototype.in = function <T>(this: T[], value: T): boolean {
     return this.includes(value);
   };
+	
+	Array.prototype.square = function (): number[] {
+	  /**
+	   * @returns New array with squared values.
+	   */
+	  return this.map((x: number) => x * x);
+	};
+
+	Array.prototype.sqrt = function (): number[] {
+	  /**
+	   * @returns New array with square roots of values. Throws if any element is negative.
+	   */
+	  if (this.some(x => x < 0)) throw new Error('Cannot take square root of negative number');
+	  return this.map((x: number) => Math.sqrt(x));
+	};
+	
+	Array.prototype.add = function (amount: number): number[] {
+	  /**
+	   * @param amount - The value to add to each element in the array.
+	   * @returns New array with added values.
+	   */
+	  return this.map((x: number) => x + amount);
+	};
+	
+	Array.prototype.sub = function (amount: number): number[] {
+	  /**
+	   * @param amount - The value to subtract from each element in the array.
+	   * @returns New array with subtracted values.
+	   */
+	  return this.map((x: number) => x - amount);
+	};
+	
+	Array.prototype.mult = function (amount: number): number[] {
+	  /**
+	   * @param amount - The value to multiply with each element in the array.
+	   * @returns New array with multiplied values.
+	   */
+	  return this.map((x: number) => x * amount);
+	};
+	
+	Array.prototype.division = function (amount: number): number[] {
+	  /**
+	   * @param amount - The value to divide each element in the array by.
+	   * @returns New array with divided values. Throws if division by zero.
+	   */
+	  if (amount === 0) throw new Error('Division by zero');
+	  return this.map((x: number) => x / amount);
+	};
 
   Array.prototype.pick = function () {
     /**
@@ -37,13 +91,13 @@ export const makeArrayExtensions = (api: UserAPI) => {
     return this[Math.floor(api.randomGen() * this.length)];
   };
 
-  Array.prototype.beat = function () {
+  Array.prototype.beat = function (beat: number = 1) {
     /**
      * Returns the element corresponding to the current beat
      *
      * @returns The element corresponding to the current beat
      */
-    return this[api.ebeat() % this.length];
+    return this[(api.ebeat() / beat) % this.length];
   };
 
   Array.prototype.bar = function () {
@@ -160,7 +214,7 @@ export const makeArrayExtensions = (api: UserAPI) => {
     return this;
   };
 
-  Array.prototype.repeatAll = function <T>(this: T[], amount: number) {
+  Array.prototype.repeatAll = function <T>(this: T[], amount: number = 1) {
     /**
      * Repeats all elements in the array n times.
      *
@@ -181,7 +235,7 @@ export const makeArrayExtensions = (api: UserAPI) => {
     return this;
   };
 
-  Array.prototype.repeatPair = function <T>(this: T[], amount: number) {
+  Array.prototype.repeatPair = function <T>(this: T[], amount: number = 1) {
     /**
      * Repeats all elements in the array n times, except for the
      * elements at odd indexes.
@@ -211,7 +265,7 @@ export const makeArrayExtensions = (api: UserAPI) => {
     return this;
   };
 
-  Array.prototype.repeatOdd = function <T>(this: T[], amount: number) {
+  Array.prototype.repeatOdd = function <T>(this: T[], amount: number = 1) {
     /**
      * Repeats all elements in the array n times, except for the
      * elements at even indexes.

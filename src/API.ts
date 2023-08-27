@@ -958,7 +958,16 @@ export class UserAPI {
      */
     return this._euclidean_cycle(pulses, length, rotate)[iterator % length];
   };
-  ec = this.euclid;
+  ec: Function = this.euclid;
+
+	public rhythm = (
+    div: number,
+    pulses: number,
+    length: number,
+    rotate: number = 0
+  ): boolean => {
+		return this.mod(div) && this._euclidean_cycle(pulses, length, rotate).div(div);
+	}
 
   _euclidean_cycle(
     pulses: number,
