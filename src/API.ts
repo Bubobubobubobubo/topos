@@ -127,6 +127,11 @@ export class UserAPI {
   // Mouse functions
   // =============================================================
 
+	onmousemove = (e: MouseEvent) => {
+		this.app._mouseX = e.clientX;
+		this.app._mouseY = e.clientY;
+	}
+
   public mouseX = (): number => {
     /**
      * @returns The current x position of the mouse

@@ -6,7 +6,6 @@ const key_shortcut = (shortcut: string): string => {
 
 const samples_to_markdown = (application: Editor) => {
 	let samples = application.api._all_samples();
-	console.log(samples)
   let markdownList = "";
   let keys = Object.keys(samples);
   let i = -1;
