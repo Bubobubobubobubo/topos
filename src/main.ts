@@ -316,8 +316,8 @@ export class Editor {
 				let final_html = "<ul class='lg:h-80 lg:w-80 lg:pb-2 lg:pt-2 overflow-y-scroll text-white lg:mb-4 border rounded-lg bg-gray-800'>";
 				known_universes.forEach((name) => {
 					final_html += `
-<li class="hover:fill-black hover:bg-white py-2 hover:text-black flex justify-between px-4">
-	<a onclick="_loadUniverseFromInterface('${name}')">${name}</a>
+<li onclick="_loadUniverseFromInterface('${name}')" class="hover:fill-black hover:bg-white py-2 hover:text-black flex justify-between px-4">
+	<p >${name}</p>
 	<button onclick=_deleteUniverseFromInterface('${name}')>🗑</button>
 </li>`;
 				});
