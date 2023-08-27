@@ -628,7 +628,7 @@ export class Editor {
         if (universeParam !== null) {
           new_universe = JSON.parse(atob(universeParam));
           const randomName: string = uniqueNamesGenerator({
-						  length: 2, separator: '',
+						  length: 2, separator: '_',
 							dictionaries: [colors, animals],
           });
           this.loadUniverse(randomName, new_universe["universe"]);
@@ -970,15 +970,7 @@ export class Editor {
 // Creating the application
 const app = new Editor();
 
-/**
- * @param event The mouse event
- */
-function reportMouseCoordinates(event: MouseEvent) {
-  app._mouseX = event.clientX;
-  app._mouseY = event.clientY;
-}
 
-window.addEventListener("mousemove", reportMouseCoordinates);
 
 // When the user leaves the page, all the universes should be saved in the localStorage
 window.addEventListener("beforeunload", () => {
@@ -991,3 +983,11 @@ window.addEventListener("beforeunload", () => {
   app.clock.stop();
   return null;
 });
+
+// function reportMouseCoordinates(event: MouseEvent) {
+//   app._mouseX = event.clientX;
+//   app._mouseY = event.clientY;
+// }
+
+onmousemove = function(e){console.log("mouse location:", e.clientX, e.clientY)}
+
