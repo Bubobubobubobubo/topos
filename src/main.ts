@@ -171,7 +171,7 @@ export class Editor {
 
   // Share button
   share_button: HTMLElement = document.getElementById(
-    "share_button"
+    "share-button"
   ) as HTMLElement;
 
   // Error line
@@ -513,11 +513,6 @@ export class Editor {
     });
 
     this.share_button.addEventListener("click", () => {
-      this.share_button.classList.add("animate-spin");
-      setInterval(
-        () => this.share_button.classList.remove("animate-spin"),
-        1000
-      );
       // trigger a manual save
       this.currentFile().candidate = app.view.state.doc.toString();
       this.currentFile().committed = app.view.state.doc.toString();
