@@ -84,6 +84,7 @@ export class Editor {
   view: EditorView;
   clock: Clock;
   manualPlay: boolean = false;
+	isPlaying: boolean = false;
 
   // Mouse position
   public _mouseX: number = 0;
@@ -92,11 +93,6 @@ export class Editor {
   // Transport elements
   play_buttons: HTMLButtonElement[] = [
     document.getElementById("play-button-1") as HTMLButtonElement,
-    //document.getElementById("play-button-2") as HTMLButtonElement,
-  ];
-  pause_buttons: HTMLButtonElement[] = [
-    document.getElementById("pause-button-1") as HTMLButtonElement,
-    //document.getElementById("pause-button-2") as HTMLButtonElement,
   ];
   stop_buttons: HTMLButtonElement[] = [
     document.getElementById("stop-button-1") as HTMLButtonElement,
@@ -414,9 +410,14 @@ export class Editor {
 
     this.play_buttons.forEach((button) => {
       button.addEventListener("click", () => {
-        this.setButtonHighlighting("play", true);
-        this.clock.start();
-      });
+				if (this.isPlaying) {
+      	  this.setButtonHighlighting("pause", true);
+      	  this.clock.pause();
+				} else {
+      	  this.setButtonHighlighting("play", true);
+      	  this.clock.start();
+				}
+			});
     });
 
     this.clear_buttons.forEach((button) => {
@@ -450,12 +451,6 @@ export class Editor {
       this.flashBackground("#2d313d", 200);
     });
 
-    this.pause_buttons.forEach((button) => {
-      button.addEventListener("click", () => {
-        this.setButtonHighlighting("pause", true);
-        this.clock.pause();
-      });
-    });
 
     this.stop_buttons.forEach((button) => {
       button.addEventListener("click", () => {
@@ -964,36 +959,6 @@ export class Editor {
 
 // Creating the application
 const app = new Editor();
-
-// Starting the clock after displaying a modal
-function startClock() {
-  document.getElementById("editor")!.classList.remove("invisible");
-  document.getElementById("modal")!.classList.add("hidden");
-  document
-    .getElementById("modal-container")!
-    .classList.remove("motion-safe:animate-pulse");
-  document
-    .getElementById("start-button")!
-    .removeEventListener("click", startClock);
-  document.removeEventListener("click", startClock);
-  document.removeEventListener("keydown", startOnEnter);
-  document.removeEventListener("click", startOnClick);
-  app.clock.start();
-  app.view.focus();
-  app.setButtonHighlighting("play", true);
-}
-
-function startOnEnter(e: KeyboardEvent) {
-  if (e.code === "Enter" || e.code === "Space") startClock();
-}
-
-function startOnClick(e: MouseEvent) {
-  if (e.button === 0) startClock();
-}
-
-document.addEventListener("keydown", startOnEnter);
-document.addEventListener("click", startOnClick);
-// document.getElementById("start-button")!.addEventListener("click", startClock);
 
 /**
  * @param event The mouse event
