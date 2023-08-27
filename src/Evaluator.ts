@@ -18,7 +18,9 @@ const tryCatchWrapper = (
   return new Promise((resolve, _) => {
     try {
       Function(
-        `"use strict";try{${codeReplace(code)}} catch (e) {console.log(e); _reportError(e);};`
+        `"use strict";try{${codeReplace(
+          code
+        )}} catch (e) {console.log(e); _reportError(e);};`
       ).call(application.api);
       resolve(true);
     } catch (error) {
@@ -64,7 +66,7 @@ export const tryEvaluate = async (
         const newFunction = new Function(
           `"use strict";try{${codeReplace(
             wrappedCode
-          )}} catch (e) {console.log(e)};`
+          )}} catch (e) {console.log(e); _reportError(e);};`
         );
         addFunctionToCache(candidateCode, newFunction);
       } else {

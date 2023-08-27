@@ -22,244 +22,6 @@ interface ControlChange {
   value: number;
 }
 
-// ======================================================================
-// Array prototype extensions: easier work with lists
-// ======================================================================
-
-declare global {
-  interface Array<T> {
-    palindrome(): T[];
-    random(index: number): T;
-    rand(index: number): T;
-    degrade(amount: number): T;
-    repeatAll(amount: number): T;
-    repeatPair(amount: number): T;
-    repeatOdd(amount: number): T;
-    loop(index: number): T;
-    div(division: number): T;
-    shuffle(): this;
-    rotate(steps: number): this;
-    unique(): this;
-  }
-}
-
-Array.prototype.shuffle = function () {
-  /**
-   * Shuffles the array in place.
-   * 
-   * @returns The shuffled array
-   */
-  let currentIndex = this.length,
-    randomIndex;
-  while (currentIndex !== 0) {
-    randomIndex = Math.floor(Math.random() * currentIndex);
-    currentIndex--;
-    [this[currentIndex], this[randomIndex]] = [
-      this[randomIndex],
-      this[currentIndex],
-    ];
-  }
-  return this;
-};
-
-Array.prototype.rotate = function (steps: number) {
-  /**
-   * Rotates the array in place.
-   * 
-   * @param steps - The number of steps to rotate the array by
-   * @returns The rotated array
-   */
-  const length = this.length;
-  if (steps < 0) {
-    steps = length + (steps % length);
-  } else if (steps > 0) {
-    steps = steps % length;
-  } else {
-    return this;
-  }
-  const rotated = this.splice(-steps, steps);
-  this.unshift(...rotated);
-  return this;
-};
-
-Array.prototype.unique = function () {
-  /**
-   * Removes duplicate elements from the array in place.
-   * 
-   * @returns The array without duplicates
-   */
-  const seen = new Set();
-  let writeIndex = 0;
-  for (let readIndex = 0; readIndex < this.length; readIndex++) {
-    const value = this[readIndex];
-    if (!seen.has(value)) {
-      seen.add(value);
-      this[writeIndex++] = value;
-    }
-  }
-  this.length = writeIndex;
-  return this;
-};
-
-Array.prototype.degrade = function <T>(this: T[], amount: number) {
-  /**
-   * Removes elements from the array at random. If the array has 
-   * only one element left, it will not be removed.
-   * 
-   * @param amount - The amount of elements to remove
-   * @returns The degraded array
-   */
-  if (amount < 0 || amount > 100) {
-    throw new Error("Amount should be between 0 and 100");
-  }
-  if (this.length <= 1) {
-    return this;
-  }
-  for (let i = 0; i < this.length; ) {
-    const rand = Math.random() * 100;
-    if (rand < amount) {
-      if (this.length > 1) {
-        this.splice(i, 1);
-      } else {
-        return this;
-      }
-    } else {
-      i++;
-    }
-  }
-  return this;
-};
-
-Array.prototype.repeatAll = function <T>(this: T[], amount: number) {
-  /**
-   * Repeats all elements in the array n times.
-   * 
-   * @param amount - The amount of times to repeat the elements
-   * @returns The repeated array
-   */
-  if (amount < 1) {
-    throw new Error("Amount should be at least 1");
-  }
-  let result = [];
-  for (let i = 0; i < this.length; i++) {
-    for (let j = 0; j < amount; j++) {
-      result.push(this[i]);
-    }
-  }
-  this.length = 0;
-  this.push(...result);
-  return this;
-};
-
-Array.prototype.repeatPair = function <T>(this: T[], amount: number) {
-  /**
-   * Repeats all elements in the array n times, except for the
-   * elements at odd indexes.
-   * 
-   * @param amount - The amount of times to repeat the elements
-   * @returns The repeated array
-   */
-  if (amount < 1) {
-    throw new Error("Amount should be at least 1");
-  }
-
-  let result = [];
-
-  for (let i = 0; i < this.length; i++) {
-    // If the index is even, repeat the element
-    if (i % 2 === 0) {
-      for (let j = 0; j < amount; j++) {
-        result.push(this[i]);
-      }
-    } else {
-      result.push(this[i]);
-    }
-  }
-
-  this.length = 0;
-  this.push(...result);
-  return this;
-};
-
-Array.prototype.repeatOdd = function <T>(this: T[], amount: number) {
-  /**
-   * Repeats all elements in the array n times, except for the
-   * elements at even indexes.
-   * 
-   * @param amount - The amount of times to repeat the elements
-   * @returns The repeated array
-   * 
-   * @remarks
-   * This function is the opposite of repeatPair.
-   */
-  if (amount < 1) {
-    throw new Error("Amount should be at least 1");
-  }
-
-  let result = [];
-
-  for (let i = 0; i < this.length; i++) {
-    // If the index is odd, repeat the element
-    if (i % 2 !== 0) {
-      for (let j = 0; j < amount; j++) {
-        result.push(this[i]);
-      }
-    } else {
-      result.push(this[i]);
-    }
-  }
-
-  // Update the original array
-  this.length = 0;
-  this.push(...result);
-  return this;
-};
-
-// @ts-ignore
-Array.prototype.palindrome = function <T>() {
-  /**
-   * Returns a palindrome of the array.
-   * 
-   * @returns The palindrome of the array
-   */
-  let left_to_right = Array.from(this);
-  let right_to_left = Array.from(this.reverse());
-  return left_to_right.concat(right_to_left);
-};
-
-Array.prototype.loop = function <T>(this: T[], index: number): T {
-  /**
-   * Returns an element from the array based on the index.
-   * The index will wrap over the array.
-   * 
-   * @param index - The index of the element to return
-   * @returns The element at the given index
-   */
-  return this[index % this.length];
-};
-
-Array.prototype.random = function () {
-  /**
-   * Returns a random element from the array.
-   * 
-   * @returns A random element from the array
-   */
-  return this[Math.floor(Math.random() * this.length)];
-};
-Array.prototype.rand = Array.prototype.random;
-
-/**
- * This is an override of the basic "includes" method.
- */
-declare global {
-  interface Array<T> {
-    in(value: T): boolean;
-  }
-}
-Array.prototype.in = function <T>(this: T[], value: T): boolean {
-  return this.includes(value);
-};
-
 export async function loadSamples() {
   return Promise.all([
     initAudioOnFirstClick(),
@@ -270,10 +32,6 @@ export async function loadSamples() {
   ]);
 }
 
-export const generateCacheKey = (...args: any[]): string => {
-  return args.map((arg) => JSON.stringify(arg)).join(",");
-};
-
 export class UserAPI {
   /**
    * The UserAPI class is the interface between the user's code and the backend. It provides
@@ -283,6 +41,7 @@ export class UserAPI {
    */
 
   private variables: { [key: string]: any } = {};
+  public codeExamples: { [key: string]: string } = {};
   private counters: { [key: string]: any } = {};
   private _drunk: DrunkWalk = new DrunkWalk(-100, 100, false);
   public randomGen = Math.random;
@@ -294,9 +53,18 @@ export class UserAPI {
   MidiConnection: MidiConnection = new MidiConnection();
   load: samples;
 
-  constructor(public app: Editor) {
-    //this.load = samples("github:tidalcycles/Dirt-Samples/master");
-  }
+  constructor(public app: Editor) {}
+
+  _playDocExample = (code?: string) => {
+    this.play();
+    console.log("Executing documentation example: " + this.app.selectedExample);
+    this.app.universes[this.app.selected_universe as string].global.candidate =
+      code ? code : (this.app.selectedExample as string);
+    tryEvaluate(
+      this.app,
+      this.app.universes[this.app.selected_universe as string].global
+    );
+  };
 
   _all_samples = (): object => {
     return soundMap.get();
@@ -546,6 +314,10 @@ export class UserAPI {
     input: string,
     options: { [key: string]: string | number } = {}
   ) => {
+    const generateCacheKey = (...args: any[]): string => {
+      return args.map((arg) => JSON.stringify(arg)).join(",");
+    };
+
     const key = generateCacheKey(input, options);
     let player;
     if (this.app.api.patternCache.has(key)) {
@@ -554,15 +326,12 @@ export class UserAPI {
       player = new Player(input, options, this.app);
       this.app.api.patternCache.set(key, player);
     }
-    if ((player && player.notStarted()) || player.played) {
-      player.callTime = this.epulse();
-      player.played = false;
-    }
+    if (player) player.updateLastCallTime();
     return player;
   };
 
   // =============================================================
-  // Counter related functions
+  // Counter and iteration
   // =============================================================
 
   public counter = (
@@ -616,6 +385,24 @@ export class UserAPI {
     return this.counters[name].value;
   };
   $ = this.counter;
+
+  // =============================================================
+  // Iterator functions (for loops, with evaluation count, etc...)
+  // =============================================================
+
+  i = (n?: number) => {
+    /**
+     * Returns the current iteration of global file.
+     *
+     * @returns The current iteration of global file
+     */
+    if (n !== undefined) {
+      this.app.universes[this.app.selected_universe].global.evaluations = n;
+      return this.app.universes[this.app.selected_universe];
+    }
+    return this.app.universes[this.app.selected_universe].global
+      .evaluations as number;
+  };
 
   // =============================================================
   // Drunk mechanism
@@ -709,80 +496,6 @@ export class UserAPI {
   cv = this.clear_variables;
 
   // =============================================================
-  // Sequencer related functions
-  // =============================================================
-
-  public div = (chunk: number): boolean => {
-    const time_pos = this.epulse();
-    const current_chunk = Math.floor(
-      time_pos / Math.floor(chunk * this.ppqn())
-    );
-    return current_chunk % 2 === 0;
-  };
-
-  public divbar = (chunk: number): boolean => {
-    const time_pos = this.bar() - 1;
-    const current_chunk = Math.floor(time_pos / chunk);
-    return current_chunk % 2 === 0;
-  };
-
-  public divseq = (...args: any): any => {
-    const chunk_size = args[0]; // Get the first argument (chunk size)
-    const elements = args.slice(1); // Get the rest of the arguments as an array
-    const timepos = this.epulse();
-    const slice_count = Math.floor(
-      timepos / Math.floor(chunk_size * this.ppqn())
-    );
-    return elements[slice_count % elements.length];
-  };
-
-  pick = <T>(...array: T[]): T => {
-    /**
-     * Returns a random element from an array.
-     *
-     * @param array - The array of values to pick from
-     */
-    return array[Math.floor(this.randomGen() * array.length)];
-  };
-
-  seqbeat = <T>(...array: T[]): T => {
-    /**
-     * Returns an element from an array based on the current beat.
-     *
-     * @param array - The array of values to pick from
-     */
-    return array[this.ebeat() % array.length];
-  };
-
-  mel = <T>(iterator: number, array: T[]): T => {
-    /**
-     * Returns an element from an array based on the current value of an iterator.
-     *
-     * @param iterator - The name of the iterator
-     * @param array - The array of values to pick from
-     */
-    return array[iterator % array.length];
-  };
-
-  seqbar = <T>(...array: T[]): T => {
-    /**
-     * Returns an element from an array based on the current bar.
-     *
-     * @param array - The array of values to pick from
-     */
-    return array[(this.app.clock.time_position.bar + 1) % array.length];
-  };
-
-  seqpulse = <T>(...array: T[]): T => {
-    /**
-     * Returns an element from an array based on the current pulse.
-     *
-     * @param array - The array of values to pick from
-     */
-    return array[this.app.clock.time_position.pulse % array.length];
-  };
-
-  // =============================================================
   // Randomness functions
   // =============================================================
 
@@ -807,6 +520,7 @@ export class UserAPI {
      */
     return this.randomGen() * (max - min) + min;
   };
+
   irand = this.randI;
   rI = this.randI;
   r = this.rand;
@@ -1050,24 +764,6 @@ export class UserAPI {
   };
 
   // =============================================================
-  // Iterator functions (for loops, with evaluation count, etc...)
-  // =============================================================
-
-  i = (n?: number) => {
-    /**
-     * Returns the current iteration of global file.
-     *
-     * @returns The current iteration of global file
-     */
-    if (n !== undefined) {
-      this.app.universes[this.app.selected_universe].global.evaluations = n;
-      return this.app.universes[this.app.selected_universe];
-    }
-    return this.app.universes[this.app.selected_universe].global
-      .evaluations as number;
-  };
-
-  // =============================================================
   // Time markers
   // =============================================================
 
@@ -1125,6 +821,41 @@ export class UserAPI {
   // Time Filters
   // =============================================================
 
+  public mod = (...n: number[]): boolean => {
+    const results: boolean[] = n.map(
+      (value) => this.epulse() % Math.floor(value * this.ppqn()) === 0
+    );
+    return results.some((value) => value === true);
+  };
+
+  public modpulse = (...n: number[]): boolean => {
+    const results: boolean[] = n.map((value) => this.epulse() % value === 0);
+    return results.some((value) => value === true);
+  };
+  pmod = this.modpulse;
+
+  public modbar = (...n: number[]): boolean => {
+    const results: boolean[] = n.map(
+      (value) => this.bar() % Math.floor(value * this.ppqn()) === 0
+    );
+    return results.some((value) => value === true);
+  };
+  bmod = this.modbar;
+
+  public div = (chunk: number): boolean => {
+    const time_pos = this.epulse();
+    const current_chunk = Math.floor(
+      time_pos / Math.floor(chunk * this.ppqn())
+    );
+    return current_chunk % 2 === 0;
+  };
+
+  public divbar = (chunk: number): boolean => {
+    const time_pos = this.bar() - 1;
+    const current_chunk = Math.floor(time_pos / chunk);
+    return current_chunk % 2 === 0;
+  };
+
   onbar = (n: number, ...bar: number[]): boolean => {
     // n is acting as a modulo on the bar number
     const bar_list = [...Array(n).keys()].map((i) => i + 1);
@@ -1157,51 +888,9 @@ export class UserAPI {
     return final_pulses.some((p) => p == true);
   };
 
-  public min = (...values: number[]): number => {
-    /**
-     * Returns the minimum value of a list of numbers.
-     *
-     * @param values - The list of numbers
-     * @returns The minimum value of the list of numbers
-     */
-    return Math.min(...values);
-  };
-
-  public max = (...values: number[]): number => {
-    /**
-     * Returns the maximum value of a list of numbers.
-     *
-     * @param values - The list of numbers
-     * @returns The maximum value of the list of numbers
-     */
-    return Math.max(...values);
-  };
-
-  public mean = (...values: number[]): number => {
-    /**
-     * Returns the mean of a list of numbers.
-     *
-     * @param values - The list of numbers
-     * @returns The mean value of the list of numbers
-     */
-    const sum = values.reduce(
-      (accumulator, currentValue) => accumulator + currentValue,
-      0
-    );
-    return sum / values.length;
-  };
-
-  limit = (value: number, min: number, max: number): number => {
-    /**
-     * Limits a value between a minimum and a maximum.
-     *
-     * @param value - The value to limit
-     * @param min - The minimum value
-     * @param max - The maximum value
-     * @returns The limited value
-     */
-    return Math.min(Math.max(value, min), max);
-  };
+  // ======================================================================
+  // Delay related functions
+  // ======================================================================
 
   delay = (ms: number, func: Function): void => {
     /**
@@ -1228,27 +917,6 @@ export class UserAPI {
       setTimeout(func, ms);
     });
   };
-
-  public mod = (...n: number[]): boolean => {
-    const results: boolean[] = n.map(
-      (value) => this.epulse() % Math.floor(value * this.ppqn()) === 0
-    );
-    return results.some((value) => value === true);
-  };
-
-  public modpulse = (...n: number[]): boolean => {
-    const results: boolean[] = n.map((value) => this.epulse() % value === 0);
-    return results.some((value) => value === true);
-  };
-  pmod = this.modpulse;
-
-  public modbar = (...n: number[]): boolean => {
-    const results: boolean[] = n.map(
-      (value) => this.bar() % Math.floor(value * this.ppqn()) === 0
-    );
-    return results.some((value) => value === true);
-  };
-  bmod = this.modbar;
 
   // =============================================================
   // Rythmic generators
@@ -1465,6 +1133,52 @@ export class UserAPI {
   // Math functions
   // =============================================================
 
+  public min = (...values: number[]): number => {
+    /**
+     * Returns the minimum value of a list of numbers.
+     *
+     * @param values - The list of numbers
+     * @returns The minimum value of the list of numbers
+     */
+    return Math.min(...values);
+  };
+
+  public max = (...values: number[]): number => {
+    /**
+     * Returns the maximum value of a list of numbers.
+     *
+     * @param values - The list of numbers
+     * @returns The maximum value of the list of numbers
+     */
+    return Math.max(...values);
+  };
+
+  public mean = (...values: number[]): number => {
+    /**
+     * Returns the mean of a list of numbers.
+     *
+     * @param values - The list of numbers
+     * @returns The mean value of the list of numbers
+     */
+    const sum = values.reduce(
+      (accumulator, currentValue) => accumulator + currentValue,
+      0
+    );
+    return sum / values.length;
+  };
+
+  limit = (value: number, min: number, max: number): number => {
+    /**
+     * Limits a value between a minimum and a maximum.
+     *
+     * @param value - The value to limit
+     * @param min - The minimum value
+     * @param max - The maximum value
+     * @returns The limited value
+     */
+    return Math.min(Math.max(value, min), max);
+  };
+
   abs = Math.abs;
 
   // =============================================================
@@ -1487,5 +1201,37 @@ export class UserAPI {
     // TODO: Implement this. This function should change the rate at which the global script
     // is evaluated. This is useful for slowing down the script, or speeding it up. The default
     // would be 1.0, which is the current rate (very speedy).
+  };
+
+  // =============================================================
+  // Legacy functions
+  // =============================================================
+
+  public divseq = (...args: any): any => {
+    const chunk_size = args[0]; // Get the first argument (chunk size)
+    const elements = args.slice(1); // Get the rest of the arguments as an array
+    const timepos = this.epulse();
+    const slice_count = Math.floor(
+      timepos / Math.floor(chunk_size * this.ppqn())
+    );
+    return elements[slice_count % elements.length];
+  };
+
+  public seqbeat = <T>(...array: T[]): T => {
+    /**
+     * Returns an element from an array based on the current beat.
+     *
+     * @param array - The array of values to pick from
+     */
+    return array[this.ebeat() % array.length];
+  };
+
+  public seqbar = <T>(...array: T[]): T => {
+    /**
+     * Returns an element from an array based on the current bar.
+     *
+     * @param array - The array of values to pick from
+     */
+    return array[(this.app.clock.time_position.bar + 1) % array.length];
   };
 }

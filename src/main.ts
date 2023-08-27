@@ -18,6 +18,7 @@ import { documentation_factory } from "./Documentation";
 import { EditorView } from "codemirror";
 import { Clock } from "./Clock";
 import { loadSamples, UserAPI } from "./API";
+import { makeArrayExtensions } from "./ArrayExtensions";
 import "./style.css";
 import {
   Universes,
@@ -40,8 +41,10 @@ const classMap = {
   a: "lg:text-2xl text-base text-orange-300",
   code: "lg:my-4 sm:my-1 text-base lg:text-xl block whitespace-pre overflow-x-hidden",
   icode:
-    "lg:my-4 my-1 lg:text-xl sm:text-xs text-white font-mono bg-neutral-600",
+    "lg:my-1 my-1 lg:text-xl sm:text-xs text-white font-mono bg-neutral-600",
   blockquote: "text-neutral-200 border-l-4 border-neutral-500 pl-4 my-4 mx-4",
+  details:
+    "lg:mx-12 py-1 px-6 lg:text-2xl text-white rounded-lg bg-neutral-600",
   table:
     "justify-center lg:my-8 my-2 lg:mx-8 mx-2 lg:text-2xl text-base w-full text-left text-white border-collapse",
   thead:
@@ -75,6 +78,7 @@ export class Editor {
   userPlugins: Extension[] = [];
   state: EditorState;
   api: UserAPI;
+  selectedExample: string | null = "";
   docs: { [key: string]: string } = {};
 
   // Audio stuff
@@ -200,6 +204,7 @@ export class Editor {
     // ================================================================================
 
     this.api = new UserAPI(this);
+    makeArrayExtensions(this.api);
 
     // ================================================================================
     // CodeMirror Management
@@ -673,13 +678,8 @@ export class Editor {
     const converted_markdown = converter.makeHtml(
       this.docs[this.currentDocumentationPane]
     );
-    function wrapCodeWithPre(inputString: string): string {
-      let newString = inputString.replace(/<code>/g, "<pre><code>");
-      newString = newString.replace(/<\/code>/g, "</code></pre>");
-      return newString;
-    }
     document.getElementById("documentation-content")!.innerHTML =
-      wrapCodeWithPre(converted_markdown);
+      converted_markdown;
   }
 
   changeToLocalBuffer(i: number) {
