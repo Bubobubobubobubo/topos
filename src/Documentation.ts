@@ -62,10 +62,10 @@ export const documentation_factory = (application: Editor) => {
 
     return `
 <details ${open ? "open" : ""}>
-  <summary>${description}
-    <button class="inline-block pl-2" onclick="app.api._playDocExample(app.api.codeExamples['${codeId}'])">&#9654;</button>
-    <button class="inline-block pl-2" onclick="stop()">&#10074;&#10074;</button>
-    <button class="inline-block pl-2" onclick="navigator.clipboard.writeText(app.api.codeExamples['${codeId}'])">copy</button>
+  <summary >${description}
+    <button class="py-1 align-top text-base rounded-lg pl-2 pr-2 hover:bg-green-700 bg-green-600 inline-block" onclick="app.api._playDocExample(app.api.codeExamples['${codeId}'])">▶️ Play</button>
+    <button class="py-1 text-base rounded-lg pl-2 pr-2 hover:bg-neutral-600 bg-neutral-500 inline-block pl-2" onclick="stop()">&#x23f8;&#xFE0F; Pause</button>
+    <button class="py-1 text-base rounded-lg pl-2 pr-2 hover:bg-neutral-900 bg-neutral-800 inline-block " onclick="navigator.clipboard.writeText(app.api.codeExamples['${codeId}'])">📎 Copy</button>
   </summary>
   \`\`\`javascript
   ${code}
@@ -82,11 +82,11 @@ Welcome to the Topos documentation. These pages are offering you an introduction
   )}.  Press again to make the documentation disappear. All your contributions are welcome!
 
 ${makeExample(
-  "Welcome! Eval to get started",
-  `mod([1/4,1/8,1/16].div(8)):: sound('sine')
-  .freq([100,50].div(16) + 50 * ($(1)%10))
-  .gain(0.5).room(0.9).size(0.9)
-  .sustain(0.1).out()
+  "Welcome! Eval to get started", `
+mod([1/4,1/8,1/16].div(8)):: sound('sine')
+	.freq([100,50].div(16) + 50 * ($(1)%10))
+	.gain(0.5).room(0.9).size(0.9)
+	.sustain(0.1).out()
 mod(1) :: sound('kick').out()`,
   true
 )}

@@ -33,18 +33,19 @@ import showdown from "showdown";
 showdown.setFlavor("github");
 import showdownHighlight from "showdown-highlight";
 const classMap = {
-  h1: "text-white lg:text-4xl text-xl lg:ml-4 lg:mx-4 mx-2 lg:my-4 my-2 lg:mb-8 mb-4 bg-neutral-900 rounded-lg py-2 px-2",
-  h2: "text-white lg:text-3xl text-xl lg:ml-4 lg:mx-4 mx-2 lg:my-4 my-2 lg:mb-8 mb-4 bg-neutral-900 rounded-lg py-2 px-2",
+  h1: "text-white lg:text-4xl text-xl lg:ml-4 lg:mx-4 mx-2 lg:my-4 my-2 lg:mb-4 mb-4 bg-neutral-900 rounded-lg py-2 px-2",
+  h2: "text-white lg:text-3xl text-xl lg:ml-4 lg:mx-4 mx-2 lg:my-4 my-2 lg:mb-4 mb-4 bg-neutral-900 rounded-lg py-2 px-2",
   ul: "text-underline pl-6",
   li: "list-disc lg:text-2xl text-base text-white lg:mx-4 mx-2 my-4 my-2 leading-normal",
-  p: "lg:text-2xl text-base text-white lg:mx-4 mx-2 my-4 leading-normal",
+  p: "lg:text-2xl text-base text-white lg:mx-6 mx-2 my-4 leading-normal",
   a: "lg:text-2xl text-base text-orange-300",
   code: "lg:my-4 sm:my-1 text-base lg:text-xl block whitespace-pre overflow-x-hidden",
   icode:
     "lg:my-1 my-1 lg:text-xl sm:text-xs text-white font-mono bg-neutral-600",
   blockquote: "text-neutral-200 border-l-4 border-neutral-500 pl-4 my-4 mx-4",
   details:
-    "lg:mx-12 py-1 px-6 lg:text-2xl text-white rounded-lg bg-neutral-600",
+    "lg:mx-12 py-2 px-6 lg:text-2xl text-white rounded-lg bg-neutral-600",
+	summary: "font-semibold text-xl",
   table:
     "justify-center lg:my-8 my-2 lg:mx-8 mx-2 lg:text-2xl text-base w-full text-left text-white border-collapse",
   thead:
@@ -84,6 +85,7 @@ export class Editor {
   view: EditorView;
   clock: Clock;
   manualPlay: boolean = false;
+	isPlaying: boolean = false;
 
   // Mouse position
   public _mouseX: number = 0;
@@ -92,11 +94,6 @@ export class Editor {
   // Transport elements
   play_buttons: HTMLButtonElement[] = [
     document.getElementById("play-button-1") as HTMLButtonElement,
-    //document.getElementById("play-button-2") as HTMLButtonElement,
-  ];
-  pause_buttons: HTMLButtonElement[] = [
-    document.getElementById("pause-button-1") as HTMLButtonElement,
-    //document.getElementById("pause-button-2") as HTMLButtonElement,
   ];
   stop_buttons: HTMLButtonElement[] = [
     document.getElementById("stop-button-1") as HTMLButtonElement,
@@ -174,7 +171,7 @@ export class Editor {
 
   // Share button
   share_button: HTMLElement = document.getElementById(
-    "share_button"
+    "share-button"
   ) as HTMLElement;
 
   // Error line
@@ -414,9 +411,16 @@ export class Editor {
 
     this.play_buttons.forEach((button) => {
       button.addEventListener("click", () => {
-        this.setButtonHighlighting("play", true);
-        this.clock.start();
-      });
+				if (this.isPlaying) {
+      	  this.setButtonHighlighting("pause", true);
+					this.isPlaying = !this.isPlaying;
+      	  this.clock.pause();
+				} else {
+      	  this.setButtonHighlighting("play", true);
+					this.isPlaying = !this.isPlaying;
+      	  this.clock.start();
+				}
+			});
     });
 
     this.clear_buttons.forEach((button) => {
@@ -450,12 +454,6 @@ export class Editor {
       this.flashBackground("#2d313d", 200);
     });
 
-    this.pause_buttons.forEach((button) => {
-      button.addEventListener("click", () => {
-        this.setButtonHighlighting("pause", true);
-        this.clock.pause();
-      });
-    });
 
     this.stop_buttons.forEach((button) => {
       button.addEventListener("click", () => {
@@ -515,11 +513,6 @@ export class Editor {
     });
 
     this.share_button.addEventListener("click", () => {
-      this.share_button.classList.add("animate-spin");
-      setInterval(
-        () => this.share_button.classList.remove("animate-spin"),
-        1000
-      );
       // trigger a manual save
       this.currentFile().candidate = app.view.state.doc.toString();
       this.currentFile().committed = app.view.state.doc.toString();
@@ -800,10 +793,26 @@ export class Editor {
     button: "play" | "pause" | "stop" | "clear",
     highlight: boolean
   ) {
+		document.getElementById('play-label')!.textContent = button !== "pause" ? "Pause" : "Play";
+		if (button !== "pause") {
+			document.getElementById('pause-icon')!.classList.remove('hidden');
+			document.getElementById('play-icon')!.classList.add('hidden');
+		} else {
+			document.getElementById('pause-icon')!.classList.add('hidden');
+			document.getElementById('play-icon')!.classList.remove('hidden');
+		}
+
+		if (button === "stop") {
+			this.isPlaying == false;
+			document.getElementById('play-label')!.textContent = "Play";
+			document.getElementById('pause-icon')!.classList.add('hidden');
+			document.getElementById('play-icon')!.classList.remove('hidden');
+		}
+
+
     this.flashBackground("#2d313d", 200);
     const possible_selectors = [
       '[id^="play-button-"]',
-      '[id^="pause-button-"]',
       '[id^="clear-button-"]',
       '[id^="stop-button-"]',
     ];
@@ -825,7 +834,6 @@ export class Editor {
     document
       .querySelectorAll(possible_selectors[selector])
       .forEach((button) => {
-        if (highlight) button.children[0].classList.add("fill-orange-300");
         if (highlight) button.children[0].classList.add("animate-pulse");
       });
     // All other buttons must lose the highlighting
@@ -834,10 +842,8 @@ export class Editor {
         possible_selectors.filter((_, index) => index != selector).join(",")
       )
       .forEach((button) => {
-        button.children[0].classList.remove("fill-orange-300");
-        button.children[0].classList.remove("text-orange-300");
-        button.children[0].classList.remove("bg-orange-300");
         button.children[0].classList.remove("animate-pulse");
+        button.children[1].classList.remove("animate-pulse");
       });
   }
 
@@ -964,36 +970,6 @@ export class Editor {
 
 // Creating the application
 const app = new Editor();
-
-// Starting the clock after displaying a modal
-function startClock() {
-  document.getElementById("editor")!.classList.remove("invisible");
-  document.getElementById("modal")!.classList.add("hidden");
-  document
-    .getElementById("modal-container")!
-    .classList.remove("motion-safe:animate-pulse");
-  document
-    .getElementById("start-button")!
-    .removeEventListener("click", startClock);
-  document.removeEventListener("click", startClock);
-  document.removeEventListener("keydown", startOnEnter);
-  document.removeEventListener("click", startOnClick);
-  app.clock.start();
-  app.view.focus();
-  app.setButtonHighlighting("play", true);
-}
-
-function startOnEnter(e: KeyboardEvent) {
-  if (e.code === "Enter" || e.code === "Space") startClock();
-}
-
-function startOnClick(e: MouseEvent) {
-  if (e.button === 0) startClock();
-}
-
-document.addEventListener("keydown", startOnEnter);
-document.addEventListener("click", startOnClick);
-// document.getElementById("start-button")!.addEventListener("click", startClock);
 
 /**
  * @param event The mouse event
