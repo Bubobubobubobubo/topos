@@ -1,6 +1,5 @@
 import {
   uniqueNamesGenerator,
-  adjectives,
   colors,
   animals,
 } from "unique-names-generator";
@@ -629,7 +628,8 @@ export class Editor {
         if (universeParam !== null) {
           new_universe = JSON.parse(atob(universeParam));
           const randomName: string = uniqueNamesGenerator({
-            dictionaries: [adjectives, colors, animals],
+						  length: 2, separator: '',
+							dictionaries: [colors, animals],
           });
           this.loadUniverse(randomName, new_universe["universe"]);
           this.emptyUrl();
@@ -940,7 +940,6 @@ export class Editor {
     // @ts-ignore
     document.getElementById("buffer-search")!.value = "";
     document.getElementById("editor")!.classList.remove("invisible");
-    document.getElementById("modal")!.classList.add("invisible");
     document.getElementById("modal-buffers")!.classList.add("invisible");
   }
 

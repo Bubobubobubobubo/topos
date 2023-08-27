@@ -62,6 +62,10 @@ export class UserAPI {
 
 	_deleteUniverseFromInterface = (universe: string) => {
 		delete this.app.universes[universe];
+		this.app.settings.saveApplicationToLocalStorage(
+			this.app.universes,
+			this.app.settings
+		);
     this.app.openBuffersModal();
 	}
 
