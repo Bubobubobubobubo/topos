@@ -83,14 +83,20 @@ Welcome to the Topos documentation. These pages are offering you an introduction
 ${makeExample(
   "Welcome! Eval to get started", `
 
-mod([1/4,1/8,1/16].div(8)):: sound('sine')
-	.freq([100,50].div(16) + 50 * ($(1)%10))
-	.gain(0.5).room(0.9).size(0.9)
-	.sustain(0.1).out()
-mod(1) :: sound('kick').out()
-mod(2) :: sound('dr').n(5).out()
-div(3) :: mod([.25,.5].div(.5)) :: sound('dr')
-  .n([8,9].pick()).gain([.8,.5,.25,.1,.0].div(.25)).out()`,
+	
+bpm(110)
+mod(0.125) && sound('sawtooth')
+  .note([60, 62, 63, 67, 70].div(.125) + 
+        [-12,0,12].beat() + [0, 0, 5, 7].bar())
+  .sustain(0.1).fmi(0.25).fmh(2).room(0.9)
+  .gain(0.75).cutoff(500 + usine(8) * [500, 1000, 2000].bar())
+  .delay(0.5).delayt(0.25).delayfb(0.25)
+  .out();
+mod(1) && snd('kick').out();
+mod(2) && snd('snare').out();
+mod(.5) && snd('hat').out();
+
+`,
   true
 )}
 
@@ -101,7 +107,11 @@ Topos is an _algorithmic_ sequencer. Topos uses small algorithms to represent mu
 	
 ${makeExample(
   "Small algorithms for direct musical expression",
-  `mod(1) :: sound(['kick', 'hat', 'snare', 'hat'].div(1)).out()`,
+  `
+mod(1) :: sound(['kick', 'hat', 'snare', 'hat'].div(1)).out()
+mod(.5) :: sound('jvbass').note(35 + [0,12].beat()).out()
+mod([0.5, 0.25, 1, 2].div(1)) :: sound('east')
+  .room(.5).size(0.5).n(irand(1,5)).out()`,
   false
 )}
 
@@ -116,7 +126,11 @@ ${makeExample(
 
 ${makeExample(
   "Making the web less dreadful, one beep at at time",
-  `mod(.5) :: sound(['sid', 'crow', 'zap'].pick()).n($(1) % 10).out()`,
+  `
+mod(.5) :: sound('sid').n($(2)).out()
+mod(.25) :: sound('sid').note(
+  [34, 36, 41].div(.25) + [[0,-24].pick(),12].beat())
+  .room(0.9).size(0.9).n(4).out()`,
   false
 )}
 	
@@ -131,19 +145,17 @@ Press ${key_shortcut(
   )}. You are now making music:
 
 ${makeExample(
-  "Drums and arpeggios",
+  "Obscure shenanigans",
   `
-bpm(110)
-mod(0.125) && sound('sawtooth')
-  .note([60, 62, 63, 67, 70].div(.125) + 
-        [-12,0,12].beat() + [0, 0, 5, 7].bar())
-  .sustain(0.1).fmi(0.25).fmh(2).room(0.9)
-  .gain(0.75).cutoff(500 + usine(8) * [500, 1000, 2000].bar())
-  .delay(0.5).delayt(0.25).delayfb(0.25)
-  .out();
-mod(1) && snd('kick').out();
-mod(2) && snd('snare').out();
-mod(.5) && snd('hat').out();`,
+
+mod([1/4,1/8,1/16].div(8)):: sound('sine')
+	.freq([100,50].div(16) + 50 * ($(1)%10))
+	.gain(0.5).room(0.9).size(0.9)
+	.sustain(0.1).out()
+mod(1) :: sound('kick').out()
+mod(2) :: sound('dr').n(5).out()
+div(3) :: mod([.25,.5].div(.5)) :: sound('dr')
+  .n([8,9].pick()).gain([.8,.5,.25,.1,.0].div(.25)).out()`,
   true
 )}
 
