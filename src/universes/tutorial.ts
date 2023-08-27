@@ -1,22 +1,10 @@
 const global_text =`
-// Global buffer: a central buffer to command them all.
-// ====================================================
-// The global buffer is a special buffer used to control
-// the general behavior of your universe. It is meant to
-// be used as a "control room" for your universe. You can
-// make use of several commands to control the execution
-// flow of all the files:
-// - script(universe/universes: number): run script(s)
 `
 
 const local_buffer =`
-// Local buffer: nine buffers to write your algorithms.
 `
 
 const init_buffer=`
-// Init buffer: a buffer to initialize the universe.
-// This universe is runned once when the universe is
-// loaded!
 `
 
 const note_buffer='// Notes buffer: a buffer to write your notes.'
