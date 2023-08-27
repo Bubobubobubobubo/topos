@@ -22,14 +22,14 @@ const samples_to_markdown = (application: Editor) => {
 		
 		// Adding new examples for each sample folder!
     const codeId = `sampleExample${i}`;
-    application.api.codeExamples[codeId] = `mod(.5) :: sound("${keys[i]}").n(irand(1,100)).end(1).out()`;
+    application.api.codeExamples[codeId] = `sound("${keys[i]}").n(irand(1, 5)).end(1).out()`;
 		// @ts-ignore
 		const howMany = samples[keys[i]].data.samples.length;
 
 		markdownList += `
 <button 
 	class="hover:bg-neutral-500 inline px-4 py-2 bg-neutral-700 text-orange-300 text-xl"
-	onclick="app.api._playDocExample(app.api.codeExamples['${codeId}'])"
+	onclick="app.api._playDocExampleOnce(app.api.codeExamples['${codeId}'])"
 >
 ${keys[i]}
 <b class="text-white">(${howMany})</b>

@@ -1,6 +1,6 @@
 import { seededRandom } from "zifferjs";
 import { MidiConnection } from "./IO/MidiConnection";
-import { tryEvaluate } from "./Evaluator";
+import { tryEvaluate, evaluateOnce } from "./Evaluator";
 import { DrunkWalk } from "./Utils/Drunk";
 import { scale } from "./Scales";
 import { Editor } from "./main";
@@ -78,6 +78,13 @@ export class UserAPI {
       this.app,
       this.app.universes[this.app.selected_universe as string].global
     );
+  };
+
+
+  _playDocExampleOnce = (code?: string) => {
+    this.play();
+    console.log("Executing documentation example: " + this.app.selectedExample);
+    evaluateOnce(this.app, code as string);
   };
 
   _all_samples = (): object => {
