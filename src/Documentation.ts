@@ -24,6 +24,7 @@ const samples_to_markdown = (application: Editor) => {
 		// Adding new examples for each sample folder!
     const codeId = `sampleExample${i}`;
     application.api.codeExamples[codeId] = `mod(.5) :: sound("${keys[i]}").n(irand(1,100)).end(1).out()`;
+		// @ts-ignore
 		const howMany = samples[keys[i]].data.samples.length;
 
 		markdownList += `
