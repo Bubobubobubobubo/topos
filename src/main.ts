@@ -106,6 +106,8 @@ export class Editor {
     document.getElementById("clear-button-1") as HTMLButtonElement,
     //document.getElementById("clear-button-2") as HTMLButtonElement,
   ];
+  load_universe_button: HTMLButtonElement = document.getElementById("load-universe-button") as HTMLButtonElement;
+
   documentation_button: HTMLButtonElement = document.getElementById(
     "doc-button-1"
   ) as HTMLButtonElement;
@@ -417,6 +419,18 @@ export class Editor {
 
     this.documentation_button.addEventListener("click", () => {
       this.showDocumentation();
+    });
+
+
+    this.load_universe_button.addEventListener("click", () => {
+				let query = this.buffer_search.value;
+        if (query.length > 2 && query.length < 20) {
+          this.loadUniverse(query);
+          this.settings.selected_universe = query;
+          this.buffer_search.value = "";
+          this.closeBuffersModal();
+          this.view.focus();
+        }
     });
 
     this.eval_button.addEventListener("click", () => {
