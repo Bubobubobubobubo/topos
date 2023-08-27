@@ -1056,6 +1056,38 @@ ${makeExample(
 	`,
   true
 )}
+
+${makeExample(
+  "Listening to the different waveforms from the sweetest to the harshest",
+  `mod(.5) && snd(['sine', 'triangle', 'sawtooth', 'square'].beat()).freq(100).out()
+	.freq(50)
+  .out()
+	`,
+  false
+)}
+
+
+${makeExample(
+  "Blessed by the square wave",
+  `mod(4) :: [100,101].forEach((freq) => sound('square').freq(freq).sustain(0.1).out())
+mod(.5) :: [100,101].forEach((freq) => sound('square').freq(freq*2).sustain(0.01).out())
+mod([.5, .75, 2].beat()) :: [100,101].forEach((freq) => sound('square')
+  .freq(freq*4 + usquare(2) * 200).sustain(0.125).out())
+mod(.25) :: sound('square').freq(100*[1,2,4,8].beat()).sustain(0.1).out()`,
+  false
+)}
+
+
+${makeExample(
+  "Ghost carillon",
+  `mod(1/8)::sound('sine')
+  .velocity(rand(0.0, 1.0))
+  .delay(0.75).delayt(.5)
+  .sustain(0.4)
+  .freq(mouseX())
+  .out()`,
+  false
+)}
 	
 	
 # Frequency Modulation Synthesis (FM)
@@ -1075,6 +1107,30 @@ ${makeExample(
   .out()
 	`,
   true
+)}
+
+${makeExample(
+  "Giving some love to weird ratios",
+  `mod([.5, .25].bar()) :: sound('sine').fm('2.2183:3.18293').sustain(0.05).out()
+mod([4].bar()) :: sound('sine').fm('5.2183:4.5').sustain(0.05).out()
+mod(.5) :: sound('sine')
+  .fmh([1, 1.75].beat())
+  .fmi($(1) % 30).orbit(2).room(0.5).out()`,
+  false
+)}
+
+
+${makeExample(
+  "Some peace and serenity",
+  `mod(0.25) :: sound('sine')
+  .note([60, 67, 70, 72, 77].beat())
+  .attack(0.2).release(0.5).gain(0.5)
+  .room(0.9).size(0.8).sustain(0.5)
+  .fmi(Math.floor(usine(.25) * 10))
+  .cutoff(1500).delay(0.5).delayt(0.125)
+  .delayfb(0.8).fmh(Math.floor(usine(.5) * 4))
+  .out()`,
+  false
 )}
 
 **Note:** you can also set the _modulation index_ and the _harmonic ratio_ with the <icode>fm</icode> argument. You will have to feed both as a string: <icode>fm('2:4')</icode>. If you only feed one number, only the _modulation index_ will be updated.
