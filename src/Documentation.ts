@@ -139,6 +139,21 @@ mod(.5) && snd('hat').out();
 `,
   true
 )}
+
+${makeExample(
+  "Resonant madness",
+  `mod(.5)::snd('synth2')
+  .freq([50,50*1.25,50*1.5,50*1.75].div(8) / 2)
+  .cutoff(usine(.5) * 5000).resonance(15).end(0.8).room(0.9).size(0.9).n(7).out();
+mod(.25)::snd('synth2')
+  .freq([50,50*1.25,50*1.5,50*1.75].div(.5))
+  .cutoff(usine(.5) * 5000).resonance(15)
+  .end(0.2).room(0.9).size(0.9).n(14).out()
+mod(1)::snd('kick').out()
+mod(2)::snd('snare').shape(0.5).out()
+mod(.75)::snd('hat').shape(0.4).out()`,
+  false
+)}
 `;
 
   const software_interface: string = `

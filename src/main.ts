@@ -311,6 +311,18 @@ export class Editor {
       // This is the modal to switch between universes
       if (event.ctrlKey && event.key === "b") {
         this.hideDocumentation();
+				let existing_universes = document.getElementById("existing-universes");
+				let known_universes = Object.keys(this.universes);
+				let final_html = "<ul class='lg:h-80 lg:w-80 lg:pb-2 lg:pt-2 overflow-y-scroll text-white lg:mb-4 border rounded-lg bg-gray-800'>";
+				known_universes.forEach((name) => {
+					final_html += `
+<li class="hover:fill-black hover:bg-white py-2 hover:text-black flex justify-between px-4">
+	<a onclick="_loadUniverseFromInterface('${name}')">${name}</a>
+	<button onclick=_deleteUniverseFromInterface('${name}')>🗑</button>
+</li>`;
+				});
+				final_html = final_html + "</ul>";
+				existing_universes!.innerHTML = final_html;
         this.openBuffersModal();
       }
 
@@ -424,7 +436,7 @@ export class Editor {
 
     this.load_universe_button.addEventListener("click", () => {
 				let query = this.buffer_search.value;
-        if (query.length > 2 && query.length < 20) {
+        if (query.length > 2 && query.length < 20 && !query.includes(" ")) {
           this.loadUniverse(query);
           this.settings.selected_universe = query;
           this.buffer_search.value = "";
