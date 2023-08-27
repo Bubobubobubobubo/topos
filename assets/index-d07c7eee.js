@@ -506,7 +506,8 @@ The Topos audio engine is based on the [SuperDough](https://www.npmjs.com/packag
 	
 The basic function to play a sound is... <icode>sound(name: string)</icode> (you can also write <icode>snd</icode> to save some precious time). If the given sound or synthesizer exists in the database, it will be automatically queried/started and will start playing. Evaluate the following script in the global window:
 	
-${t("Playing sounds is easy",`mod(1) && sound('bd').out()
+${t("Playing sounds is easy",`
+mod(1) && sound('bd').out()
 mod(0.5) && sound('hh').out()
 `,!0)}
 	
@@ -517,7 +518,8 @@ In plain english, this translates to:
 	
 Let's make it slightly more complex:
 
-${t("Adding some effects",`mod(1) && sound('bd').coarse(0.25).out();
+${t("Adding some effects",`
+mod(1) && sound('bd').coarse(0.25).room(0.5).orbit(2).out();
 mod(0.5) && sound('hh').delay(0.25).delaytime(0.125).out();
 `,!0)}
 	
@@ -532,12 +534,14 @@ Let's pause for a moment to explain what we just wrote. There are many things to
 - Playing a sound always ends up with the <icode>.out()</icode> method that gives the instruction to send a message to the audio engine.
 - Sounds are **composed** by adding qualifiers that will modify the sound or synthesizer being played (_e.g_ <icode>sound('...').blabla(...)..something(...).out()</icode>.
 	
-${t('"Composing" a sound or making a sound chain',`mod(1) :: sound('pad')
+${t('"Composing" a sound or making a sound chain',`
+mod(1) :: sound('pad')
   .begin(rand(0, 0.4))
   .freq([50,52].beat())
   .size(0.9)
   .room(0.9)
-  .pan(sine()).release(2).out()`,!0)}
+  .velocity(0.25)
+  .pan(usine()).release(2).out()`,!0)}
 
 ## Audio Sample Folders / Sample Files
 	
@@ -560,11 +564,14 @@ When you type <icode>kick</icode> in the <icode>sound('kick').out()</icode> expr
 \`\`\`
 	
 The <icode>.n(number)</icode> method can be used to pick a sample from the currently selected sample folder. For instance, the following script will play a random sample from the _kick_ folder:
-${t("Picking a sample","mod(1) && sound('kick').n([1,2,3,4,5,6,7,8].pick()).out()",!0)}
+${t("Picking a sample",`
+mod(1) && sound('kick').n([1,2,3,4,5,6,7,8].pick()).out()
+`,!0)}
 	
 Don't worry about the number. If it gets too big, it will be automatically wrapped to the number of samples in the folder. You can type any number, it will always fall on a sample. Let's use our mouse to select a sample number in a folder:
 	
-${t("Picking a sample... with your mouse!",`// Move your mouse to change the sample being used!
+${t("Picking a sample... with your mouse!",`
+// Move your mouse to change the sample being used!
 mod(.25) && sound('numbers').n(Math.floor(mouseX())).out()`,!0)}
 	
 **Note:** the <icode>sound</icode> function can also be used to play synthesizers (see the **Synthesizers** page). In that case, the <icode>.n(n: number)</icode> becomes totally useless!
@@ -572,11 +579,12 @@ mod(.25) && sound('numbers').n(Math.floor(mouseX())).out()`,!0)}
 ## Learning about sound modifiers
 	
 As we said earlier, the <icode>sound('sample_name')</icode> function can be chained to _specify_ a sound more. For instance, you can add a filter and some effects to your high-hat:
-${t("Learning through repetition",`mod(0.5) && sound('hh')
-	.sometimes(s=>s.speed([1,5,10].pick()))
-	.room(0.5)
-	.cutoff(usine(2) * 5000)
-	.out()`,!0)}
+${t("Learning through repetition",`
+mod(0.5) && sound('hh')
+  .sometimes(s=>s.speed([1,5,10].pick()))
+  .room(0.5)
+  .cutoff(usine(2) * 5000)
+  .out()`,!0)}
 	
 There are many possible arguments that you can add to your sounds. Learning them can take a long time but it will open up a lot of possibilities. Let's try to make it through all of them. They can all be used both with synthesizers and audio samples, which is kind of unconventional with normal / standard electronic music softwares.
 	
@@ -620,11 +628,11 @@ mod(.5)::snd('cp').vel($(1)%10 / 10).out()`,!0)}
 Note that the **sustain** value is not a duration but an amplitude value (how loud). The other values are the time for each stage to take place. Here is a fairly complete example using the <icode>sawtooth</icode> basic waveform.
 	
 ${t("Simple synthesizer",`
-mod(4)::sound('sawtooth').note(50).decay(0.5).sustain(0.5).release(2).out();
-mod(2)::sound('sawtooth').note(50+7).decay(0.5).sustain(0.6).release(2).out();
-mod(1)::sound('sawtooth').note(50+12).decay(0.5).sustain(0.7).release(2).out();
+mod(4)::sound('sawtooth').note(50).decay(0.5).sustain(0.5).release(2).gain(0.25).out();
+mod(2)::sound('sawtooth').note(50+7).decay(0.5).sustain(0.6).release(2).gain(0.25).out();
+mod(1)::sound('sawtooth').note(50+12).decay(0.5).sustain(0.7).release(2).gain(0.25).out();
 mod(.25)::sound('sawtooth').note([50,57,62].pick() + [12, 24, 0].div(2))
-  .cutoff(5000).sustain(0.5).release(0.1).out()
+  .cutoff(5000).sustain(0.5).release(0.1).gain(0.25).out()
 	`,!0)};
 	
 ## Sample Controls
@@ -668,9 +676,9 @@ There are three basic filters: a _lowpass_, _highpass_ and _bandpass_ filters wi
 
 ${t("Filter sweep using a low frequency oscillator",`
 mod(.5) && snd('sawtooth')
-	.cutoff([2000,500].pick() + usine(.5) * 4000)
-	.resonance(0.9).freq([100,150].pick())
-	.out()
+  .cutoff([2000,500].pick() + usine(.5) * 4000)
+  .resonance(0.9).freq([100,150].pick())
+  .out()
 	`,!0)};
 	
 ## Reverb
@@ -739,12 +747,14 @@ JavaScript is using [Arrays](https://developer.mozilla.org/en-US/docs/Web/JavaSc
 
 - <icode>div(division: number)</icode>: this method will return the next value in the list every _n_ pulses. By default, <icode>1</icode> equals to one beat but integer and floating point number values are supported as well. This method is extremely powerful and can be used for many different purposes. Check out the examples.
 
-${t("Light drumming",`// Every bar, use a different rhythm
+${t("Light drumming",`
+// Every bar, use a different rhythm
 mod([1, 0.75].div(4)) :: sound('cp').out()
 mod([0.5, 1].div(4)) :: sound('kick').out()
 mod(2)::snd('snare').shape(.5).out()
 `,!0)}
-${t("Using div to create arpeggios",`// Arpeggio using pulse divisions
+${t("Using div to create arpeggios",`
+// Arpeggio using pulse divisions
 mod([.5, .25].div(2)) :: sound('sine')
   .hcutoff(400)
   .fmi([1,2].div(8))
@@ -756,7 +766,8 @@ mod([.5, .25].div(2)) :: sound('sine')
   .delayfb(0.5)
   .out()
 `,!1)}
-${t("Cool ambiance",`mod(.5) :: snd(['kick', 'hat'].div(4)).out()
+${t("Cool ambiance",`
+mod(.5) :: snd(['kick', 'hat'].div(4)).out()
 mod([2,4].div(2)) :: snd('shaker').delay(.5).delayfb(.75).delayt(0.125).out()
 div(2)::mod(1)::snd('clap').out()
 div(4)::mod(2)::snd('pad').n(2).shape(.5).orbit(2).room(0.9).size(0.9).release(0.5).out()
@@ -768,7 +779,8 @@ div(4)::mod(2)::snd('pad').n(2).shape(.5).orbit(2).room(0.9).size(0.9).release(0
 - <icode>pulse()</icode>: returns the index of the list corresponding to the current pulse (with wrapping). This method will return a different value for each pulse.
 - <icode>bar()</icode>: returns the index of the list corresponding to the current bar (with wrapping). This method will return a different value for each bar.
 
-${t("A simple drumbeat in no time!",`mod(1)::sound(['kick', 'hat', 'snare', 'hat'].beat()).out()
+${t("A simple drumbeat in no time!",`
+mod(1)::sound(['kick', 'hat', 'snare', 'hat'].beat()).out()
 mod(1.5)::sound(['jvbass', 'clap'].beat()).out()
 `,!0)}
 
@@ -797,7 +809,8 @@ ${t("Palindrome filter sweep",`mod([1,.5,.25].beat()) :: snd('sine')
 - <icode>pick()</icode>: pick a random element in the list.
 
 
-${t("Sipping some gasoline at the robot bar",`mod(1)::snd('kick').shape(0.5).out()
+${t("Sipping some gasoline at the robot bar",`
+mod(1)::snd('kick').shape(0.5).out()
 mod([.5, 1].random() / 2) :: snd(
   ['amencutup', 'synth2'].random())
   .n(irand(4,10))
@@ -808,7 +821,8 @@ mod([.5, 1].random() / 2) :: snd(
 
 - <icode>degrade(amount: number)</icode>: removes _n_% of the list elements. Lists can be degraded as long as one element remains. The amount of degradation is given as a percentage.
 
-${t("Amen break suffering from data loss",`// Tweak the value to degrade this amen break even more!
+${t("Amen break suffering from data loss",`
+// Tweak the value to degrade this amen break even more!
 mod(.25)::snd('amencutup').n([1,2,3,4,5,6,7,8,9].degrade(20).loop($(1))).out()
 `,!0)}
 
@@ -816,32 +830,38 @@ mod(.25)::snd('amencutup').n([1,2,3,4,5,6,7,8,9].degrade(20).loop($(1))).out()
 - <icode>repeatPair(amount: number)</icode>: repeaet every pair element of the list _n_ times.
 - <icode>repeatOdd(amount: number)</icode>: repeaet every odd element of the list _n_ times.
 
-${t("Repeating samples a given number of times",`// Please take this repeat number down a bit!
+${t("Repeating samples a given number of times",`
+// Please take this repeat number down a bit!
 mod(.25)::sound('amencutup').n([1,2,3,4,5,6,7,8].repeatAll(4).beat()).out()
 `,!0)}
 
 - <icode>loop(index: number)</icode>: loop takes one argument, the _index_. It allows you to iterate over a list using an iterator such as a counter. This is super useful to control how you are accessing values in a list without relying on a temporal method such as <icode>.beat()</icode> or </icode>.bar()</icode>.
 
-${t("Don't you know how to count up to 5?","mod(1) :: sound('numbers').n([1,2,3,4,5].loop($(3, 10, 2))).out()",!0)}
+${t("Don't you know how to count up to 5?",`
+mod(1) :: sound('numbers').n([1,2,3,4,5].loop($(3, 10, 2))).out()
+`,!0)}
 
 - <icode>shuffle(): this</icode>: shuffles a list! Simple enough!
 
-${t("Shuffling a list for extra randomness",`mod(1) :: sound('numbers').n([1,2,3,4,5].shuffle().loop($(1)).out()
+${t("Shuffling a list for extra randomness",`
+mod(1) :: sound('numbers').n([1,2,3,4,5].shuffle().loop($(1)).out()
 `,!0)}
 
 - <icode>rotate(steps: number)</icode>: rotate a list to the right _n_ times. The last value become the first, rinse and repeat.
 
-${t("To make things more complex... here you go",`mod(.5) :: snd('sine')
+${t("To make things more complex... here you go",`
+mod(.5) :: snd('sine')
   .freq([100, 150, 200, 250, ,300, 400]
-        .rotate([1,2,3].bar()) // The list of frequencies is rotating
-        .beat())               // while being indexed over!
+    .rotate([1,2,3].bar()) // The list of frequencies is rotating
+    .beat())               // while being indexed over!
   .sustain(0.1)
   .out()
 `,!0)}
 
 - <icode>unique()</icode>: filter a list to remove repeated values.
 
-${t("Demonstrative filtering. Final list is [100, 200]",`// Remove unique and 100 will repeat four times!
+${t("Demonstrative filtering. Final list is [100, 200]",`
+// Remove unique and 100 will repeat four times!
 mod(1)::snd('sine').sustain(0.1).freq([100,100,100,100,200].unique().beat()).out()
 `,!0)}
 
@@ -863,26 +883,30 @@ The <icode>sound</icode> function can take the name of a synthesizer as first ar
   - <icode>hcutoff</icode> or <icode>bandf</icode> to switch to a high-pass or bandpass filter.
 	- <icode>hresonance</icode> and <icode>bandq</icode> for the resonance parameter of these filters.
 	
-${t("Simple synthesizer voice with filter",`mod(.5) && snd('sawtooth')
+${t("Simple synthesizer voice with filter",`
+mod(.5) && snd('sawtooth')
   .cutoff([2000,500].pick() + usine(.5) * 4000)
   .resonance(0.9).freq([100,150].pick())
   .out()
 	`,!0)}
 
-${t("Listening to the different waveforms from the sweetest to the harshest",`mod(.5) && snd(['sine', 'triangle', 'sawtooth', 'square'].beat()).freq(100).out()
-	.freq(50)
+${t("Listening to the different waveforms from the sweetest to the harshest",`
+mod(.5) && snd(['sine', 'triangle', 'sawtooth', 'square'].beat()).freq(100).out()
+  .freq(50)
   .out()
 	`,!1)}
 
 
-${t("Blessed by the square wave",`mod(4) :: [100,101].forEach((freq) => sound('square').freq(freq).sustain(0.1).out())
+${t("Blessed by the square wave",`
+mod(4) :: [100,101].forEach((freq) => sound('square').freq(freq).sustain(0.1).out())
 mod(.5) :: [100,101].forEach((freq) => sound('square').freq(freq*2).sustain(0.01).out())
 mod([.5, .75, 2].beat()) :: [100,101].forEach((freq) => sound('square')
   .freq(freq*4 + usquare(2) * 200).sustain(0.125).out())
 mod(.25) :: sound('square').freq(100*[1,2,4,8].beat()).sustain(0.1).out()`,!1)}
 
 
-${t("Ghost carillon",`mod(1/8)::sound('sine')
+${t("Ghost carillon",`
+mod(1/8)::sound('sine')
   .velocity(rand(0.0, 1.0))
   .delay(0.75).delayt(.5)
   .sustain(0.4)
@@ -897,7 +921,8 @@ The same basic waveforms can take additional methods to switch to a basic two op
 - <icode>fmi</icode> (_frequency modulation index_): a floating point value between <icode>1</icode> and <icode>n</icode>.
 - <icode>fmh</icode> (_frequency modulation harmonic ratio_): a floating point value between <icode>1</icode> and <icode>n</icode>.
 
-${t("80s nostalgia",`mod(.25) && snd('sine')
+${t("80s nostalgia",`
+mod(.25) && snd('sine')
   .fmi([1,2,4,8].pick())
   .fmh([1,2,4,8].div(8))
   .freq([100,150].pick())
@@ -905,14 +930,16 @@ ${t("80s nostalgia",`mod(.25) && snd('sine')
   .out()
 	`,!0)}
 
-${t("Giving some love to weird ratios",`mod([.5, .25].bar()) :: sound('sine').fm('2.2183:3.18293').sustain(0.05).out()
+${t("Giving some love to weird ratios",`
+mod([.5, .25].bar()) :: sound('sine').fm('2.2183:3.18293').sustain(0.05).out()
 mod([4].bar()) :: sound('sine').fm('5.2183:4.5').sustain(0.05).out()
 mod(.5) :: sound('sine')
   .fmh([1, 1.75].beat())
   .fmi($(1) % 30).orbit(2).room(0.5).out()`,!1)}
 
 
-${t("Some peace and serenity",`mod(0.25) :: sound('sine')
+${t("Some peace and serenity",`
+mod(0.25) :: sound('sine')
   .note([60, 67, 70, 72, 77].beat())
   .attack(0.2).release(0.5).gain(0.5)
   .room(0.9).size(0.8).sustain(0.5)
