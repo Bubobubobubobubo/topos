@@ -1349,38 +1349,40 @@ Chance operators returning a boolean value are also available:
   const shortcuts: string = `
 # Keybindings
 	
-Topos is made to be controlled entirely with a keyboard. It is recommanded to stop using the mouse as much as possible when you are _live coding_. Here is a list of the most important keybindings:
+Topos is made to be controlled entirely with a keyboard. It is recommanded to stop using the mouse as much as possible when you are _live coding_. Some of the keybindings might not work like expected on Windows/Linux. They all work on MacOS. A fix is on the way. Here is a list of the most important keybindings:
 	
 ## Transport
-	
-- **Start** the transport: ${key_shortcut("Ctrl + P")}.
-- **Pause** the transport: ${key_shortcut("Ctrl + S")}.
-- **Rewind** the transport: ${key_shortcut("Ctrl + R")}.
+
+| Shortcut | Key   | Description                                                |
+|----------|-------|------------------------------------------------------------|
+|**Start** transport|${key_shortcut("Ctrl + P")}|Start audio playback|
+|**Pause** the transport |${key_shortcut("Ctrl + S")}|Pause audio playback|
+|**Rewind** the transport|${key_shortcut("Ctrl + R")}|Rewind audio playback|
 	
 ## Moving in the interface
 
-- Switch to a different universe: ${key_shortcut("Ctrl + B")}.
-- Switch to the global script: ${key_shortcut("Ctrl + G")} or ${key_shortcut(
-    "F10"
-  )}.
-- Switch to the local scripts: ${key_shortcut("Ctrl + L")} or ${key_shortcut(
-    "F11"
-  )}.
-- Switch to the init script: ${key_shortcut("Ctrl + L")}.
-- Switch to the note file: ${key_shortcut("Ctrl + N")}.
-- Switch to a local file: ${key_shortcut("F1")} to ${key_shortcut("F9")}.
-- Toggle the documentation: ${key_shortcut("Ctrl + D")}.
+| Shortcut | Key   | Description                                                |
+|----------|-------|------------------------------------------------------------|
+|Universe switch|${key_shortcut("Ctrl + B")}|Switch to a new universe|
+|Global Script|${key_shortcut("Ctrl + G")} or ${key_shortcut("F10")}|Switch to global script |
+|Local scripts|${key_shortcut("Ctrl + L")} or ${key_shortcut("F11")}|Switch to local scripts |
+|Init script|${key_shortcut("Ctrl + L")}|Switch to init script|
+|Note File|${key_shortcut("Ctrl + N")}|Switch to note file|
+|Local Script|${key_shortcut("F1")} to ${key_shortcut("F9")}|Switch to a specific local script|
+|Documentation|${key_shortcut("Ctrl + D")}|Open the documentation|
 	
 ## Evaluating code
-	
-- Evaluate the current script: ${key_shortcut("Ctrl + Enter")}.
-- Evaluate a local script: ${key_shortcut("Ctrl + F1")} to ${key_shortcut(
-    "Ctrl + F9"
-  )}.
+
+| Shortcut | Key   | Description                                                |
+|----------|-------|------------------------------------------------------------|
+|Evaluate|${key_shortcut("Ctrl + Enter")}| Evaluate the current script        |
+|Local Eval|${key_shortcut("Ctrl + F1")} to ${key_shortcut("Ctrl + F9")}|Local File Evaluation|
 	
 ## Special
-	
-- Switch the editor to Vim Mode: ${key_shortcut("Ctrl + V")}.
+
+| Shortcut | Key   | Description                                                |
+|----------|-------|------------------------------------------------------------|
+|Vim Mode|${key_shortcut("Ctrl + V")}| Switch between Vim and Normal Mode|
 `;
 
   return {
