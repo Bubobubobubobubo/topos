@@ -602,10 +602,34 @@ That's it! You are now ready to play with MIDI.
 
 ## Notes
 
-The most basic MIDI event is the note. MIDI notes traditionally take three parameters: _note_ (from <icode>0</icode> to <icode>127</icode>), _velocity_ (from <icode>0</icode> to <icode>127</icode>) and _channel_ (from <icode>0</icode> to <icode>15</icode>).
+The most basic MIDI event is the note. MIDI notes traditionally take three parameters: _note_ (from <icode>0</icode> to <icode>127</icode>), _velocity_ (from <icode>0</icode> to <icode>127</icode>) and _channel_ (from <icode>0</icode> to <icode>15</icode>). MIDI notes are quite important and can be used for a lot of different things. You can use them to trigger a synthesizer, a drum machine, a robot, or anything really!
 
-- <icode>midi(note: number|object)</icode>: send a MIDI Note. Object can take parameters {note: number, channel: number, port: number|string, velocity: number}.
+- <icode>midi(note: number|object)</icode>: send a MIDI Note. This function is quite bizarre. It can be written and used in many different ways. You can pass form one up to three arguments in different forms.
 	
+${makeExample(
+	"MIDI note using one parameter: note",
+`
+// Configure your MIDI first! 
+// => midi_output("MIDI Bus 1")
+rhythm(.5, 5, 8) :: midi(50).out()
+`, true)}
+
+${makeExample(
+	"MIDI note using three parameters: note, velocity, channel",
+`
+// MIDI Note 50, Velocity 50 + LFO, Channel 0
+rhythm(.5, 5, 8) :: midi(50, 50 + usine(.5) * 20, 0).out()
+`, false)}
+
+${makeExample(
+	"MIDI note by passing an object",
+`
+// MIDI Note 50, Velocity 50 + LFO, Channel 0
+rhythm(.5, 5, 8) :: midi({note: 50, velocity: 50 + usine(.5) * 20, channel: 0}).out()
+`, false)}
+
+We can now have some fun and starting playing a small piano piece:
+
 ${makeExample(
   "Playing some piano",
   `
@@ -617,24 +641,7 @@ sometimes() && mod(.25) && midi(seqbeat(64, 67, 69) + 24).sustain(0.05).out()
 `,
   true
 )}
-	
-## Note chaining
-	
-The <icode>midi(number|object)</icode> function can be chained to _specify_ a midi note more. For instance, you can add a duration, a velocity, a channel, etc... by chaining:
-	
-${makeExample(
-  "MIDI Caterpillar",
-  `
-mod(0.25) && midi(60)
-  .sometimes(n=>n.note(irand(40,60)))
-  .sustain(0.05)
-  .channel(2)
-  .port("bespoke")
-  .out()
-`,
-  true
-)}
-	
+
 ## Control and Program Changes
 	
 - <icode>control_change({control: number, value: number, channel: number})</icode>: send a MIDI Control Change. This function takes a single object argument to specify the control message (_e.g._ <icode>control_change({control: 1, value: 127, channel: 1})</icode>).
@@ -642,8 +649,8 @@ mod(0.25) && midi(60)
 ${makeExample(
   "Imagine that I am tweaking an hardware synthesizer!",
   `
-control_change({control: [24,25].pick(), value: rI(1,120), channel: 1}))})
-control_change({control: [30,35].pick(), value: rI(1,120) / 2, channel: 1}))})
+control_change({control: [24,25].pick(), value: irand(1,120), channel: 1})
+control_change({control: [30,35].pick(), value: irand(1,120) / 2, channel: 1})
 `,
   true
 )}
@@ -663,6 +670,15 @@ program_change([1,2,3,4,5,6,7,8].pick(), 1)
 	
 - <icode>sysex(...number[])</icode>: send a MIDI System Exclusive message. This function takes any number of arguments to specify the message (_e.g._ <icode>sysex(0x90, 0x40, 0x7f)</icode>).
 	
+
+${makeExample(
+  "Nobody can say that we don't support Sysex messages!",
+`
+sysex(0x90, 0x40, 0x7f)
+`,
+  true
+)}
+
 ## Clock
 	
 - <icode>midi_clock()</icode>: send a MIDI Clock message. This function is used to synchronize Topos with other MIDI devices or DAWs.
@@ -674,14 +690,6 @@ mod(.25) && midi_clock() // Sending clock to MIDI device from the global buffer
 `,
   true
 )}
-
-	
-## MIDI Output Selection
-	
-- <icode>midi_outputs()</icode>: Prints a list of available MIDI outputs. You can then use any output name to select the MIDI output you wish to use. **Note:** this function will print to the console. You can open the console by pressing ${key_shortcut(
-    "Ctrl + Shift + I"
-  )} in many web browsers.
-- <icode>midi_output(output_name: string)</icode>: Selects the MIDI output to use. You can use the <icode>midi_outputs()</icode> function to get a list of available MIDI outputs first. If the MIDI output is not available, the function will do nothing and keep on with the currently selected MIDI Port.
 `;
 
   const sound: string = `
@@ -1838,7 +1846,7 @@ All functions from the midi object can be used to modify the event with the prob
   `mod(.5) && midi(60).channel(1)
     .odds(1/4, n => n.channel(2))
     .often(n => n.note+=4)
-    .sometimes(s => s.velocity(irand(50,100))
+    .sometimes(s => s.velocity(irand(50,100)))
     .out()`, true)};
 
 ## Ziffers
