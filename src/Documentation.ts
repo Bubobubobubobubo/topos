@@ -1152,19 +1152,52 @@ true
 const ziffers: string = `
 # Ziffers
 	
-Ziffers is a musical number based notation developed especially for live coding. It is a very powerful and flexibly notation for describing musical patterns in a short string.
-	
+Ziffers is a **musical number based notation** tuned for _live coding_. It is a very powerful and flexible notation for describing musical patterns in very few characters. Number based musical notation has a long history and has been used for centuries as a shorthand technique for music notation. Amiika has written [papers](https://zenodo.org/record/7841945) and other documents describing his system. It is currently implemented for many live coding platforms including [Sardine](https://sardine.raphaelforment.fr) (Raphaël Forment) and [Sonic Pi](https://sonic-pi.net/) (Sam Aaron). Ziffers can be used for:
+
+- composing melodies using using **classical music notation and concepts**.
+- exploring **generative / aleatoric / stochastic** melodies and applying them to sounds and synths.
+- embracing a different mindset and approach to time and **patterning**.
+
+${makeExample(
+	"Super Fancy Ziffers example",
+``, true)}
+
 ## Notation
 
-Basic notation consists of numbers and letters using spaces as separators.
+The basic Ziffer notation is entirely written in JavaScript strings (_e.g_ <icode>"0 1 2"</icode>). It consists mostly of numbers and letters. The whitespace character is used as a separator. Instead of note names, Ziffer is using numbers to represent musical pitch and letters to represent musical durations. Alternatively, _floating point numbers_ can also be used to represent durations.
 
-**Pitches:** Single digits 0-9 or multiple digits escaped {10 11 21}
-**Durations:** a-z or decimals: 0.25 = q (quarter), 0.5 = h (half), 1 = w (whole), etc.
-**Octave:** ^ _ (up and down)
-**Accidentals:** # b
-**Rest:** r
+| Syntax        | Symbol | Description            |
+|------------   |--------|------------------------|
+| **Pitches**   | <icode>0-9</icode> <icode>{10 11 21}</icode> | Numbers or escaped numbers in curly brackets |
+| **Duration** | <icode>a b c</icode> to <icode>z</icode> | Each letter of the alphabet is a rhythm (see table) |
+| **Duration**  | <icode>0.25</icode> = <icode>q</icode>, <icode>0.5</icode> = <icode>h</icode> | Floating point numbers can also be used as durations |
+| **Octave**    | <icode>^ _</icode> | <icode>^</icode> for octave up and <icode>_</icode> for octave down |
+| **Accidentals** | <icode># b</icode> | Sharp and flats, just like with regular music notation :smile: |
+| **Rest**      |  <icode>r</icode> | Rest / silences |
 
-NOTE! Some of the features are still unsupported. For full syntax see article on <a href="https://zenodo.org/record/7841945" target="_blank">Ziffers</a>.
+**Note:** Some features are still unsupported. For full syntax see article about <a href="https://zenodo.org/record/7841945" target="_blank">Ziffers</a>.
+
+
+${makeExample(
+	"Pitches from 0 to 9",
+``, true)}
+
+${makeExample(
+	"Escaped pitches using curly brackets",
+``, false)}
+
+${makeExample(
+	"Durations using letters and floating point numbers",
+``, false)}
+
+${makeExample(
+	"Disco was invented thanks to Ziffers",
+``, false)}
+
+${makeExample(
+	"Accidentals and rests for nice melodies",
+``, false)}
+
 
 ## Algorithmic operations
 
