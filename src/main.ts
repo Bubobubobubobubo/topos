@@ -192,9 +192,11 @@ export class Editor {
     // Loading the universe from local storage
     // ================================================================================
 
-    this.universes = { ...template_universes, ...this.settings.universes };
+    this.universes = { ...this.settings.universes, ...template_universes };
     this.selected_universe = "Welcome";
     this.universe_viewer.innerHTML = `Topos: ${this.selected_universe}`;
+
+		// Picking a random example to populate the landing page
 		let random_example = examples[Math.floor(Math.random() * examples.length)];
 		this.universes[this.selected_universe].global.committed = random_example;
 		this.universes[this.selected_universe].global.candidate = random_example;
@@ -448,6 +450,7 @@ export class Editor {
           this.buffer_search.value = "";
           this.closeBuffersModal();
           this.view.focus();
+					this.emptyUrl();
         }
     });
 
@@ -571,7 +574,9 @@ export class Editor {
       "sound",
       "samples",
       "synths",
+      "chaining",
       "patterns",
+      "ziffers",
       "midi",
       "functions",
       "reference",
@@ -639,7 +644,7 @@ export class Editor {
 							dictionaries: [colors, animals],
           });
           this.loadUniverse(randomName, new_universe["universe"]);
-          this.emptyUrl();
+          this.emptyUrl(); this.emptyUrl();
         }
       }
     }

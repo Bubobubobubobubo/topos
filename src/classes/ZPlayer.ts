@@ -6,10 +6,13 @@ import { SoundEvent } from "./SoundEvent";
 import { NoteEvent } from "./MidiEvent";
 import { RestEvent } from "./RestEvent";
 
+export type InputOptions = { [key: string]: string | number };
+
 export class Player extends Event {
     input: string;
     ziffers: Ziffers;
-    firstCallTime: number = 0;
+    initCallTime: number = 0;
+    startCallTime: number = 0;
     lastCallTime: number = 0;
     waitTime = 0;
     startBeat: number = 0;
@@ -17,10 +20,13 @@ export class Player extends Event {
     current!: Pitch|Chord|ZRest;
     retro: boolean = false;
     index: number = -1;
+    zid: string|undefined = undefined;
+    options: InputOptions = {};
 
-    constructor(input: string, options: object, public app: Editor) {
+    constructor(input: string, options: InputOptions, public app: Editor) {
         super(app);
         this.input = input;
+        this.options = options;
         this.ziffers = new Ziffers(input, options);
     }
 
@@ -30,7 +36,7 @@ export class Player extends Event {
     }
 
     nextEndTime(): number {
-        return this.firstCallTime + this.ticks;
+        return this.startCallTime + this.ticks;
     }
 
     updateLastCallTime(): void {
@@ -54,6 +60,26 @@ export class Player extends Event {
         return this.app.clock.convertPulseToSecond(pulse);
     }
 
+    firstRun = (): boolean => {
+        return this.origin()<=0 && this.notStarted();
+    }
+
+    atTheBeginning = (): boolean => {
+         return this.pulse()===0 && this.ziffers.index===0;
+    }
+
+    origin = (): number => {
+        return this.app.clock.pulses_since_origin+1;
+    }
+
+    pulse = (): number => {
+        return this.app.clock.time_position.pulse;
+    }
+
+    nextBeat = (): number => {
+        return this.app.clock.next_beat_in_ticks;
+    }
+
     // Check if it's time to play the event
     areWeThereYet = (): boolean => {
         // If clock has stopped
@@ -68,14 +94,15 @@ export class Player extends Event {
                 this.notStarted() && 
                 (this.app.clock.time_position.pulse === 1 ||
                 this.app.clock.pulses_since_origin+1 >= this.app.clock.next_beat_in_ticks) &&
-                (this.app.clock.pulses_since_origin+1 >= this.firstCallTime+this.waitTime)
+                (this.app.clock.pulses_since_origin+1 >= this.waitTime)
             )
             ||
             (   // If pattern is already playing
                 this.current &&
-                this.pulseToSecond(this.app.clock.pulses_since_origin+1) >= 
+                (this.pulseToSecond(this.app.clock.pulses_since_origin+1) >= 
                 this.pulseToSecond(this.lastCallTime) +
-                (this.current.duration*4) * this.pulseToSecond(this.app.api.ppqn())
+                (this.current.duration*4) * this.pulseToSecond(this.app.api.ppqn())) &&
+                (this.app.clock.pulses_since_origin+1 >= this.waitTime)
             )
         );
 
@@ -83,7 +110,11 @@ export class Player extends Event {
         this.index = howAboutNow ? this.index+1 : this.index;
 
         if(howAboutNow && this.notStarted()) {
-            this.firstCallTime = this.app.clock.pulses_since_origin+1;
+            this.initCallTime = this.app.clock.pulses_since_origin+1;
+        }
+
+        if(this.atTheBeginning()) {
+            this.startCallTime = this.app.clock.pulses_since_origin;
         }
         
         return howAboutNow;
@@ -93,7 +124,7 @@ export class Player extends Event {
         if(this.areWeThereYet()) {
             const event = this.next() as Pitch|Chord|ZRest;
             if(event instanceof Pitch) {
-                const obj = event.getExisting("freq","pitch","key","scale","octave");
+                const obj = event.getExisting("freq","pitch","key","scale","octave","parsedScale");
                 return new SoundEvent(obj, this.app).sound(name);
             } else if(event instanceof ZRest) {
                 return RestEvent.createRestProxy(event.duration, this.app);
@@ -107,7 +138,7 @@ export class Player extends Event {
          if(this.areWeThereYet()) {
             const event = this.next() as Pitch|Chord|ZRest;
             if(event instanceof Pitch) {
-                const obj = event.getExisting("note","pitch","bend","key","scale","octave");
+                const obj = event.getExisting("note","pitch","bend","key","scale","octave","parsedScale");
                 const note = new NoteEvent(obj, this.app);
                 return value ? note.note(value) : note;
             } else if(event instanceof ZRest) {
@@ -155,7 +186,7 @@ export class Player extends Event {
                 }
             } */
             
-            this.waitTime = Math.ceil(value*4*this.app.clock.ppqn); 
+            this.waitTime = this.origin() + Math.ceil(value*4*this.app.clock.ppqn); 
              
         }
         return this;

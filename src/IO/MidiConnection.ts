@@ -119,14 +119,15 @@ export class MidiConnection{
       }
     }
   
-    public listMidiOutputs(): void {
+    public listMidiOutputs(): string {
       /**
        * Lists all available MIDI outputs to the console.
        */
-      console.log('Available MIDI Outputs:');
+			let final_string = 'Available MIDI Outputs: ';
       this.midiOutputs.forEach((output, index) => {
-        console.log(`${index + 1}. ${output.name}`);
+        final_string += `(${index + 1}) ${output.name} `;
       });
+			return final_string;
     }
 
     public sendMidiNote(noteNumber: number, channel: number, velocity: number, duration: number, port: number|string = this.currentOutputIndex, bend: number|undefined = undefined): void {
