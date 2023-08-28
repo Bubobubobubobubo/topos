@@ -1,4 +1,4 @@
-# Topos: A Web-Based Algorithmic Sequencer for Live Coding
+# Topos: A Web-Based Algorithmic Sequencer
 
 <p align="center"> | 
   <a href="https://discord.gg/aPgV7mSFZh">Discord</a> | 
