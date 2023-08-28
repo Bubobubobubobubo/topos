@@ -572,9 +572,23 @@ if((bar() % 4) > 1) {
 
   const midi: string = `
 # MIDI
-	
+
 You can use Topos to play MIDI thanks to the [WebMIDI API](https://developer.mozilla.org/en-US/docs/Web/API/Web_MIDI_API). You can currently send notes, control change, program change and so on. You can also send a MIDI Clock to your MIDI devices or favorite DAW. Note that Topos is also capable of playing MIDI using **Ziffers** which provides a better syntax for melodic expression.
-	
+
+**Important note:** for the examples on this page to work properly, you will need to configure your web browser to output **MIDI** on the right port. You will also need to make sure to have a synthesizer ready to receive MIDI data (hardware or software). You can use softwares like [VCVRack](https://vcvrack.com/), [Dexed](https://asb2m10.github.io/dexed/), [Surge](https://surge-synthesizer.github.io/) or [SunVox](https://www.warmplace.ru/soft/sunvox/) to get enough instruments for a lifetime.
+
+## MIDI Configuration
+
+Your web browser is capable of sending and receiving MIDI information through the [Web MIDI API](https://developer.mozilla.org/en-US/docs/Web/API/Web_MIDI_API). The support for MIDI on browsers is a bit shaky. Please, take some time to configure and test. To our best knowledge, **Chrome** is currently leading on this feature, followed closely by **Firefox**. The other major web browsers are also starting to support this API. **There are two important functions for configuration:**
+
+- <icode>midi_outputs()</icode>: prints the list of available MIDI devices to the web console. You will have to open the web console using ${key_shortcut("Ctrl+Shift+I")} or sometimes ${key_shortcut("F12")}. You can also open it from the menu of your web browser.
+
+${makeExample(
+	"Listing MIDI outputs",
+`
+log(midi_outputs())
+`, true)}
+
 ## Notes
 - <icode>midi(note: number|object)</icode>: send a MIDI Note. Object can take parameters {note: number, channel: number, port: number|string, velocity: number}.
 	
