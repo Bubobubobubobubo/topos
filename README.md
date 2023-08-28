@@ -1,4 +1,19 @@
-# Topos
+# Topos: A Web-Based Algorithmic Sequencer for Live Coding
+
+<p align="center">
+  <a href="https://discord.gg/aPgV7mSFZh">Discord</a>
+  <a href="https://raphaelforment.fr/">BuboBubo</a> 
+  <a href="about:blank">Amiika</a>
+  <a href="https://toplap.org/">About Live Coding</a>
+  <br><br>
+  <p align='center'>
+    <a href="https://github.com/bubobubobubobubo/Topos/graphs/contributors">
+    <img src="https://contrib.rocks/image?repo=bubobubobubobubo/Topos" />
+    </a>
+  </p>
+</p>
+
+Topos is a web-based application that lives [here](https://topos.raphaelforment.fr). Documentation and description is directly included in the application itself.
 
 ![Screenshot](https://github.com/Bubobubobubobubo/Topos/blob/main/img/screnshot.png)
 
