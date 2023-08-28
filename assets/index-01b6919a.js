@@ -312,7 +312,17 @@ mod(.25) && euclid($(4), 7, 9, 1) && snd('hh').out()
 `,!1)}
 
 
-	
+- <icode>rhythm(divisor: number, pulses: number, length: number, rotate: number): boolean</icode>: generates <icode>true</icode> or <icode>false</icode> values from an euclidian rhythm sequence. This is another version of <icode>euclid</icode> that does not take an iterator.
+${t("rhythm is a beginner friendly rhythmic function!",`
+let speed = [0.5, 0.25].div(8);
+rhythm(speed, 5, 12) :: snd('east').n(2).out()
+rhythm(speed, 2, 12) :: snd('east').out()
+rhythm(speed, 3, 12) :: snd('east').n(4).out()
+rhythm(speed, 7, 12) :: snd('east').n(9).out()
+`,!0)}
+
+
+
 - <icode>bin(iterator: number, n: number): boolean</icode>: a binary rhythm generator. It transforms the given number into its binary representation (_e.g_ <icode>34</icode> becomes <icode>100010</icode>). It then returns a boolean value based on the iterator in order to generate a rhythm.
 	
 ${t("Change the integers for a surprise rhythm!",`
