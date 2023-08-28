@@ -1817,47 +1817,63 @@ Topos is made to be controlled entirely with a keyboard. It is recommanded to st
 	const chaining: string = `
 # Chaining
 
-Method chaining can be used to manipulate object returned by both <icode>sound()</icode> and <icode>midi()</icode> functions. Probability functions are chained to apply different functions randomly. Probability functions are named as global probability functions (see Probabilities), but take a function as an input.
+Method chaining can be used to manipulate objects returned by both <icode>sound()</icode> and <icode>midi()</icode> functions. Think of it as another way to create interesting musical patterns! Method chaining, unlike patterns, is acting on the sound chain level and is not really dependant on time. You can combine chaining and good old patterns if you want!
+
+Probability functions can be chained to apply different modifiers randomly. Probability functions are named as global probability functions (see **Probabilities** in the **Function** page) but take a function as an input.
 
 ## Chaining sound events
 
 All functions from the sound object can be used to modify the event, for example:
-
 ${makeExample(
 	"Modifying sound events with probabilities", 
-`mod(.5) && sound('hh')
+`
+mod(.5) && sound('numbers')
   .odds(1/4, s => s.speed(irand(1,4)))
   .rarely(s => s.crush(3))
-  .out()`, true)};
-
+  .out()
+`, true)}
 ${makeExample(
-    "Modifying sound events with probabilities", 
-  `mod(.5) && sound('tink').note(60)
-    .often(s => s.note(62))
-    .sometimes(s => s.note(64).n(irand(1,4)))
-    .out()`, true)};
+    "Chance to change to a different note", 
+  `
+rhythm(.5, 3, 8) && sound('pluck').note(38).out()
+mod(.5) && sound('pluck').note(60)
+  .often(s => s.note(57))
+  .sometimes(s => s.note(64).n(irand(1,4)))
+  .note(62)
+  .out()`, false)}
 
 ## Chaining midi events
 
-All functions from the midi object can be used to modify the event with the probabilities. Values can also be incremented using += notation.
+All the functions from the MIDI object can be used to modify the event with probabilities. Values can also be incremented using <icode>+=</icode> notation.
 
-  ${makeExample(
-    "Modifying midi events with probabilities", 
-  `mod(.5) && midi(60).channel(1)
-    .odds(1/4, n => n.channel(2))
-    .often(n => n.note+=4)
-    .sometimes(s => s.velocity(irand(50,100)))
-    .out()`, true)};
+${makeExample(
+"Modifying midi events with probabilities", 
+`mod(.5) && midi(60).channel(1)
+  .odds(1/4, n => n.channel(2))
+  .often(n => n.note+=4)
+  .sometimes(s => s.velocity(irand(50,100)))
+  .out()`, true)};
 
 ## Ziffers
 
-Ziffers patterns can be chained to <icode>sound()</icode> and <icode>midi()</icode> to produce different outputs. Chaining is often alternative for passing in options, which can be more efficient. Methods available for chaining are:
-* <icode>key()</icode> - for changing key
-* <icode>scale()</icode> - for chaning scale
-* <icode>octave()</icode> - for changing octave
-* <icode>sound()</icode> - for outputting pattern as sounds (See Sound)
-* <icode>midi()</icode> - for outputting pattern as midi (See Midi)
+Ziffers patterns can be chained to <icode>sound()</icode> and <icode>midi()</icode> as well. Chaining is often used as an alternative to passing values in objects as an option, which can be super cumbersome. The available chaining methods are:
+* <icode>key(key: string)</icode>: for changing key (_e.g._ <icode>"C"</icode> or <icode>"F#"</icode>)
+* <icode>scale(scale: string)</icode>: for changing the current scale (_e.g._ <icode>"rocritonic"</icode> or <icode>"pentatonic"</icode>)
+* <icode>octave(n: number)</icode>: for changing octave (_e.g._ <icode>0</icode> or <icode>2</icode>)
 
+* <icode>sound()</icode>: for outputting pattern as a Sound (See **Sounds**)
+* <icode>midi()</icode> - for outputting pattern as MIDI (See **MIDI**)
+
+${makeExample(
+"Ziffer player using a sound chain and probabilities!", 
+`
+z1('s 0 5 7 0 3 7 0 2 7 0 1 7 0 1 6 5 4 3 2')
+  .octave([0, 1].div(2) - 1)
+  .scale('pentatonic').sound('pluck')
+  .odds(1/4, n => n.delay(0.5).delayt(0.25))
+  .odds(1/2, n => n.speed(0.5))
+  .room(0.5).size(0.5).out()
+`, true)};
 `;
 
   return {
