@@ -41,6 +41,7 @@ export class UserAPI {
    */
 
   private variables: { [key: string]: any } = {};
+  public codeExamples: { [key: string]: string } = {};
   private counters: { [key: string]: any } = {};
   private _drunk: DrunkWalk = new DrunkWalk(-100, 100, false);
   public randomGen = Math.random;
@@ -52,9 +53,32 @@ export class UserAPI {
   MidiConnection: MidiConnection = new MidiConnection();
   load: samples;
 
-  constructor(public app: Editor) {
-    //this.load = samples("github:tidalcycles/Dirt-Samples/master");
-  }
+  constructor(public app: Editor) {}
+
+	_loadUniverseFromInterface = (universe: string) => {
+		this.app.loadUniverse(universe as string);
+    this.app.openBuffersModal();
+	}
+
+	_deleteUniverseFromInterface = (universe: string) => {
+		delete this.app.universes[universe];
+		this.app.settings.saveApplicationToLocalStorage(
+			this.app.universes,
+			this.app.settings
+		);
+    this.app.openBuffersModal();
+	}
+
+  _playDocExample = (code?: string) => {
+    this.play();
+    console.log("Executing documentation example: " + this.app.selectedExample);
+    this.app.universes[this.app.selected_universe as string].global.candidate =
+      code ? code : (this.app.selectedExample as string);
+    tryEvaluate(
+      this.app,
+      this.app.universes[this.app.selected_universe as string].global
+    );
+  };
 
   _all_samples = (): object => {
     return soundMap.get();
@@ -102,6 +126,11 @@ export class UserAPI {
   // =============================================================
   // Mouse functions
   // =============================================================
+
+	onmousemove = (e: MouseEvent) => {
+		this.app._mouseX = e.clientX;
+		this.app._mouseY = e.clientY;
+	}
 
   public mouseX = (): number => {
     /**
@@ -1224,5 +1253,37 @@ export class UserAPI {
     // TODO: Implement this. This function should change the rate at which the global script
     // is evaluated. This is useful for slowing down the script, or speeding it up. The default
     // would be 1.0, which is the current rate (very speedy).
+  };
+
+  // =============================================================
+  // Legacy functions
+  // =============================================================
+
+  public divseq = (...args: any): any => {
+    const chunk_size = args[0]; // Get the first argument (chunk size)
+    const elements = args.slice(1); // Get the rest of the arguments as an array
+    const timepos = this.epulse();
+    const slice_count = Math.floor(
+      timepos / Math.floor(chunk_size * this.ppqn())
+    );
+    return elements[slice_count % elements.length];
+  };
+
+  public seqbeat = <T>(...array: T[]): T => {
+    /**
+     * Returns an element from an array based on the current beat.
+     *
+     * @param array - The array of values to pick from
+     */
+    return array[this.ebeat() % array.length];
+  };
+
+  public seqbar = <T>(...array: T[]): T => {
+    /**
+     * Returns an element from an array based on the current bar.
+     *
+     * @param array - The array of values to pick from
+     */
+    return array[(this.app.clock.time_position.bar + 1) % array.length];
   };
 }

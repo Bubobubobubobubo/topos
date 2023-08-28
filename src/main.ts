@@ -1,6 +1,5 @@
 import {
   uniqueNamesGenerator,
-  adjectives,
   colors,
   animals,
 } from "unique-names-generator";
@@ -33,16 +32,19 @@ import showdown from "showdown";
 showdown.setFlavor("github");
 import showdownHighlight from "showdown-highlight";
 const classMap = {
-  h1: "text-white lg:text-4xl text-xl lg:ml-4 lg:mx-4 mx-2 lg:my-4 my-2 lg:mb-8 mb-4 bg-neutral-900 rounded-lg py-2 px-2",
-  h2: "text-white lg:text-3xl text-xl lg:ml-4 lg:mx-4 mx-2 lg:my-4 my-2 lg:mb-8 mb-4 bg-neutral-900 rounded-lg py-2 px-2",
+  h1: "text-white lg:text-4xl text-xl lg:ml-4 lg:mx-4 mx-2 lg:my-4 my-2 lg:mb-4 mb-4 bg-neutral-900 rounded-lg py-2 px-2",
+  h2: "text-white lg:text-3xl text-xl lg:ml-4 lg:mx-4 mx-2 lg:my-4 my-2 lg:mb-4 mb-4 bg-neutral-900 rounded-lg py-2 px-2",
   ul: "text-underline pl-6",
   li: "list-disc lg:text-2xl text-base text-white lg:mx-4 mx-2 my-4 my-2 leading-normal",
-  p: "lg:text-2xl text-base text-white lg:mx-4 mx-2 my-4 leading-normal",
+  p: "lg:text-2xl text-base text-white lg:mx-6 mx-2 my-4 leading-normal",
   a: "lg:text-2xl text-base text-orange-300",
   code: "lg:my-4 sm:my-1 text-base lg:text-xl block whitespace-pre overflow-x-hidden",
   icode:
-    "lg:my-4 my-1 lg:text-xl sm:text-xs text-white font-mono bg-neutral-600",
+    "lg:my-1 my-1 lg:text-xl sm:text-xs text-white font-mono bg-neutral-600",
   blockquote: "text-neutral-200 border-l-4 border-neutral-500 pl-4 my-4 mx-4",
+  details:
+    "lg:mx-12 py-2 px-6 lg:text-2xl text-white rounded-lg bg-neutral-600",
+	summary: "font-semibold text-xl",
   table:
     "justify-center lg:my-8 my-2 lg:mx-8 mx-2 lg:text-2xl text-base w-full text-left text-white border-collapse",
   thead:
@@ -57,8 +59,6 @@ const bindings = Object.keys(classMap).map((key) => ({
   //@ts-ignore
   replace: (match, p1) => `<${key} class="${classMap[key]}" ${p1}>`,
 }));
-
-// Importing the documentation from separate files in the ./src/documentation/* folder
 
 export class Editor {
   universes: Universes = template_universes;
@@ -76,6 +76,7 @@ export class Editor {
   userPlugins: Extension[] = [];
   state: EditorState;
   api: UserAPI;
+  selectedExample: string | null = "";
   docs: { [key: string]: string } = {};
 
   // Audio stuff
@@ -83,6 +84,7 @@ export class Editor {
   view: EditorView;
   clock: Clock;
   manualPlay: boolean = false;
+	isPlaying: boolean = false;
 
   // Mouse position
   public _mouseX: number = 0;
@@ -91,11 +93,6 @@ export class Editor {
   // Transport elements
   play_buttons: HTMLButtonElement[] = [
     document.getElementById("play-button-1") as HTMLButtonElement,
-    //document.getElementById("play-button-2") as HTMLButtonElement,
-  ];
-  pause_buttons: HTMLButtonElement[] = [
-    document.getElementById("pause-button-1") as HTMLButtonElement,
-    //document.getElementById("pause-button-2") as HTMLButtonElement,
   ];
   stop_buttons: HTMLButtonElement[] = [
     document.getElementById("stop-button-1") as HTMLButtonElement,
@@ -105,6 +102,8 @@ export class Editor {
     document.getElementById("clear-button-1") as HTMLButtonElement,
     //document.getElementById("clear-button-2") as HTMLButtonElement,
   ];
+  load_universe_button: HTMLButtonElement = document.getElementById("load-universe-button") as HTMLButtonElement;
+
   documentation_button: HTMLButtonElement = document.getElementById(
     "doc-button-1"
   ) as HTMLButtonElement;
@@ -171,7 +170,7 @@ export class Editor {
 
   // Share button
   share_button: HTMLElement = document.getElementById(
-    "share_button"
+    "share-button"
   ) as HTMLElement;
 
   // Error line
@@ -238,9 +237,12 @@ export class Editor {
 
     // ================================================================================
     // Building the documentation
-    loadSamples().then(() => {
-      this.docs = documentation_factory(this);
-    });
+    // loadSamples().then(() => {
+    //   this.docs = documentation_factory(this);
+    // });
+		let pre_loading = async () => { await loadSamples(); };
+		pre_loading();
+		this.docs = documentation_factory(this);
     // ================================================================================
 
     // ================================================================================
@@ -305,6 +307,18 @@ export class Editor {
       // This is the modal to switch between universes
       if (event.ctrlKey && event.key === "b") {
         this.hideDocumentation();
+				let existing_universes = document.getElementById("existing-universes");
+				let known_universes = Object.keys(this.universes);
+				let final_html = "<ul class='lg:h-80 lg:w-80 lg:pb-2 lg:pt-2 overflow-y-scroll text-white lg:mb-4 border rounded-lg bg-gray-800'>";
+				known_universes.forEach((name) => {
+					final_html += `
+<li onclick="_loadUniverseFromInterface('${name}')" class="hover:fill-black hover:bg-white py-2 hover:text-black flex justify-between px-4">
+	<p >${name}</p>
+	<button onclick=_deleteUniverseFromInterface('${name}')>🗑</button>
+</li>`;
+				});
+				final_html = final_html + "</ul>";
+				existing_universes!.innerHTML = final_html;
         this.openBuffersModal();
       }
 
@@ -396,9 +410,16 @@ export class Editor {
 
     this.play_buttons.forEach((button) => {
       button.addEventListener("click", () => {
-        this.setButtonHighlighting("play", true);
-        this.clock.start();
-      });
+				if (this.isPlaying) {
+      	  this.setButtonHighlighting("pause", true);
+					this.isPlaying = !this.isPlaying;
+      	  this.clock.pause();
+				} else {
+      	  this.setButtonHighlighting("play", true);
+					this.isPlaying = !this.isPlaying;
+      	  this.clock.start();
+				}
+			});
     });
 
     this.clear_buttons.forEach((button) => {
@@ -415,17 +436,23 @@ export class Editor {
       this.showDocumentation();
     });
 
+
+    this.load_universe_button.addEventListener("click", () => {
+				let query = this.buffer_search.value;
+        if (query.length > 2 && query.length < 20 && !query.includes(" ")) {
+          this.loadUniverse(query);
+          this.settings.selected_universe = query;
+          this.buffer_search.value = "";
+          this.closeBuffersModal();
+          this.view.focus();
+        }
+    });
+
     this.eval_button.addEventListener("click", () => {
       this.currentFile().candidate = this.view.state.doc.toString();
       this.flashBackground("#2d313d", 200);
     });
 
-    this.pause_buttons.forEach((button) => {
-      button.addEventListener("click", () => {
-        this.setButtonHighlighting("pause", true);
-        this.clock.pause();
-      });
-    });
 
     this.stop_buttons.forEach((button) => {
       button.addEventListener("click", () => {
@@ -485,11 +512,6 @@ export class Editor {
     });
 
     this.share_button.addEventListener("click", () => {
-      this.share_button.classList.add("animate-spin");
-      setInterval(
-        () => this.share_button.classList.remove("animate-spin"),
-        1000
-      );
       // trigger a manual save
       this.currentFile().candidate = app.view.state.doc.toString();
       this.currentFile().committed = app.view.state.doc.toString();
@@ -550,9 +572,18 @@ export class Editor {
       "about",
     ].forEach((e) => {
       let name = `docs_` + e;
-      document.getElementById(name)!.addEventListener("click", () => {
-        this.currentDocumentationPane = e;
-        this.updateDocumentationContent();
+      document.getElementById(name)!.addEventListener("click", async () => {
+				if (name !== "docs_samples") {
+					this.currentDocumentationPane = e;
+					this.updateDocumentationContent();
+				} else {
+					console.log('Loading samples!');
+					await loadSamples().then(() => {
+						this.docs = documentation_factory(this)
+						this.currentDocumentationPane = e;
+						this.updateDocumentationContent();
+					});
+				}
       });
     });
 
@@ -597,7 +628,8 @@ export class Editor {
         if (universeParam !== null) {
           new_universe = JSON.parse(atob(universeParam));
           const randomName: string = uniqueNamesGenerator({
-            dictionaries: [adjectives, colors, animals],
+						  length: 2, separator: '_',
+							dictionaries: [colors, animals],
           });
           this.loadUniverse(randomName, new_universe["universe"]);
           this.emptyUrl();
@@ -675,13 +707,8 @@ export class Editor {
     const converted_markdown = converter.makeHtml(
       this.docs[this.currentDocumentationPane]
     );
-    function wrapCodeWithPre(inputString: string): string {
-      let newString = inputString.replace(/<code>/g, "<pre><code>");
-      newString = newString.replace(/<\/code>/g, "</code></pre>");
-      return newString;
-    }
     document.getElementById("documentation-content")!.innerHTML =
-      wrapCodeWithPre(converted_markdown);
+      converted_markdown;
   }
 
   changeToLocalBuffer(i: number) {
@@ -766,10 +793,26 @@ export class Editor {
     button: "play" | "pause" | "stop" | "clear",
     highlight: boolean
   ) {
+		document.getElementById('play-label')!.textContent = button !== "pause" ? "Pause" : "Play";
+		if (button !== "pause") {
+			document.getElementById('pause-icon')!.classList.remove('hidden');
+			document.getElementById('play-icon')!.classList.add('hidden');
+		} else {
+			document.getElementById('pause-icon')!.classList.add('hidden');
+			document.getElementById('play-icon')!.classList.remove('hidden');
+		}
+
+		if (button === "stop") {
+			this.isPlaying == false;
+			document.getElementById('play-label')!.textContent = "Play";
+			document.getElementById('pause-icon')!.classList.add('hidden');
+			document.getElementById('play-icon')!.classList.remove('hidden');
+		}
+
+
     this.flashBackground("#2d313d", 200);
     const possible_selectors = [
       '[id^="play-button-"]',
-      '[id^="pause-button-"]',
       '[id^="clear-button-"]',
       '[id^="stop-button-"]',
     ];
@@ -791,7 +834,6 @@ export class Editor {
     document
       .querySelectorAll(possible_selectors[selector])
       .forEach((button) => {
-        if (highlight) button.children[0].classList.add("fill-orange-300");
         if (highlight) button.children[0].classList.add("animate-pulse");
       });
     // All other buttons must lose the highlighting
@@ -800,10 +842,8 @@ export class Editor {
         possible_selectors.filter((_, index) => index != selector).join(",")
       )
       .forEach((button) => {
-        button.children[0].classList.remove("fill-orange-300");
-        button.children[0].classList.remove("text-orange-300");
-        button.children[0].classList.remove("bg-orange-300");
         button.children[0].classList.remove("animate-pulse");
+        button.children[1].classList.remove("animate-pulse");
       });
   }
 
@@ -900,7 +940,6 @@ export class Editor {
     // @ts-ignore
     document.getElementById("buffer-search")!.value = "";
     document.getElementById("editor")!.classList.remove("invisible");
-    document.getElementById("modal")!.classList.add("invisible");
     document.getElementById("modal-buffers")!.classList.add("invisible");
   }
 
@@ -931,45 +970,7 @@ export class Editor {
 // Creating the application
 const app = new Editor();
 
-// Starting the clock after displaying a modal
-function startClock() {
-  document.getElementById("editor")!.classList.remove("invisible");
-  document.getElementById("modal")!.classList.add("hidden");
-  document
-    .getElementById("modal-container")!
-    .classList.remove("motion-safe:animate-pulse");
-  document
-    .getElementById("start-button")!
-    .removeEventListener("click", startClock);
-  document.removeEventListener("click", startClock);
-  document.removeEventListener("keydown", startOnEnter);
-  document.removeEventListener("click", startOnClick);
-  app.clock.start();
-  app.view.focus();
-  app.setButtonHighlighting("play", true);
-}
 
-function startOnEnter(e: KeyboardEvent) {
-  if (e.code === "Enter" || e.code === "Space") startClock();
-}
-
-function startOnClick(e: MouseEvent) {
-  if (e.button === 0) startClock();
-}
-
-document.addEventListener("keydown", startOnEnter);
-document.addEventListener("click", startOnClick);
-// document.getElementById("start-button")!.addEventListener("click", startClock);
-
-/**
- * @param event The mouse event
- */
-function reportMouseCoordinates(event: MouseEvent) {
-  app._mouseX = event.clientX;
-  app._mouseY = event.clientY;
-}
-
-window.addEventListener("mousemove", reportMouseCoordinates);
 
 // When the user leaves the page, all the universes should be saved in the localStorage
 window.addEventListener("beforeunload", () => {
@@ -982,3 +983,11 @@ window.addEventListener("beforeunload", () => {
   app.clock.stop();
   return null;
 });
+
+// function reportMouseCoordinates(event: MouseEvent) {
+//   app._mouseX = event.clientX;
+//   app._mouseY = event.clientY;
+// }
+
+onmousemove = function(e){console.log("mouse location:", e.clientX, e.clientY)}
+

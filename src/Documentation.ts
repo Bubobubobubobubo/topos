@@ -4,7 +4,8 @@ const key_shortcut = (shortcut: string): string => {
   return `<kbd class="lg:px-2 lg:py-1.5 px-1 py-1 lg:text-sm text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg dark:bg-gray-600 dark:text-gray-100 dark:border-gray-500">${shortcut}</kbd>`;
 };
 
-const samples_to_markdown = (samples: object) => {
+const samples_to_markdown = (application: Editor) => {
+	let samples = application.api._all_samples();
   let markdownList = "";
   let keys = Object.keys(samples);
   let i = -1;
@@ -13,53 +14,123 @@ const samples_to_markdown = (samples: object) => {
     if (!samples[keys[i]].data) continue;
     //@ts-ignore
     if (!samples[keys[i]].data.samples) continue;
-    markdownList += `**${keys[i]}** (_${
-      //@ts-ignore
-      samples[keys[i]].data.samples.length
-    }_) `;
-    // let i2 = -1;
-    // while (i2++ < samples[keys[i]].data.samples.length - 1) {
-    //   console.log(samples[keys[i]].data.samples[i2]);
-    //   markdownList += `\t- <audio controls> <source src="${
-    //     samples[keys[i]].data.samples[i2]
-    //   }" type="audio/wav">\n
-    // 	</audio>
-    // 	`;
-    // }
+    //markdownList += `**${keys[i]}** (_${
+    //  //@ts-ignore
+    //  samples[keys[i]].data.samples.length
+    //}_) `;
+		//
+		
+		// Adding new examples for each sample folder!
+    const codeId = `sampleExample${i}`;
+    application.api.codeExamples[codeId] = `mod(.5) :: sound("${keys[i]}").n(irand(1,100)).end(1).out()`;
+		// @ts-ignore
+		const howMany = samples[keys[i]].data.samples.length;
+
+		markdownList += `
+<button 
+	class="hover:bg-neutral-500 inline px-4 py-2 bg-neutral-700 text-orange-300 text-2xl"
+	onclick="app.api._playDocExample(app.api.codeExamples['${codeId}'])"
+>
+${keys[i]}
+<b class="text-white">(${howMany})</b>
+</button>`;
   }
   return markdownList;
 };
 
 const injectAvailableSamples = (application: Editor): string => {
-  let test = samples_to_markdown(application.api._all_samples());
-  return test;
+	let generatedPage = samples_to_markdown(application);
+  return generatedPage;
 };
 
 export const documentation_factory = (application: Editor) => {
+  let counter = 0; // Counter to generate unique IDs for code snippets
+
+  // Initialize a data structure to store code examples by their unique IDs
+  application.api.codeExamples = {};
+
+  const makeExample = (
+    description: string,
+    code: string,
+    open: boolean = false
+  ): string => {
+    const codeId = `codeExample${counter++}`;
+
+    // Store the code snippet in the data structure
+    application.api.codeExamples[codeId] = code;
+
+    return `
+<details ${open ? "open" : ""}>
+  <summary >${description}
+    <button class="py-1 align-top text-base rounded-lg pl-2 pr-2 hover:bg-green-700 bg-green-600 inline-block" onclick="app.api._playDocExample(app.api.codeExamples['${codeId}'])">▶️ Play</button>
+    <button class="py-1 text-base rounded-lg pl-2 pr-2 hover:bg-neutral-600 bg-neutral-500 inline-block pl-2" onclick="stop()">&#x23f8;&#xFE0F; Pause</button>
+    <button class="py-1 text-base rounded-lg pl-2 pr-2 hover:bg-neutral-900 bg-neutral-800 inline-block " onclick="navigator.clipboard.writeText(app.api.codeExamples['${codeId}'])">📎 Copy</button>
+  </summary>
+  \`\`\`javascript
+  ${code}
+  \`\`\`
+</details>
+`;
+  };
+
   const introduction: string = `
 # Welcome
 	
 Welcome to the Topos documentation. These pages are offering you an introduction to the software and to the ideas behind it. You can jump here anytime by pressing ${key_shortcut(
     "Ctrl + D"
   )}.  Press again to make the documentation disappear. All your contributions are welcome!
+
+${makeExample(
+  "Welcome! Eval to get started", `
+mod([1/4,1/8,1/16].div(8)):: sound('sine')
+	.freq([100,50].div(16) + 50 * ($(1)%10))
+	.gain(0.5).room(0.9).size(0.9)
+	.sustain(0.1).out()
+mod(1) :: sound('kick').out()`,
+  true
+)}
+
 	
 ## What is Topos?
 	
 Topos is an _algorithmic_ sequencer. Topos uses small algorithms to represent musical sequences and processes. These can be written in just a few lines of code. Topos is made to be _live-coded_. The _live coder_ strives for the constant interaction with algorithms and sound during a musical performance. Topos is aiming to be a digital playground for live algorithmic music.
 	
+${makeExample(
+  "Small algorithms for direct musical expression",
+  `mod(1) :: sound(['kick', 'hat', 'snare', 'hat'].div(1)).out()`,
+  false
+)}
+
+${makeExample(
+  "Computer music should be immediate and intuitive",
+  `mod(.5)::snd('sine')
+  .delay(0.5).delayt(0.25).delayfb(0.7)
+  .room(0.8).size(0.8)
+  .freq(mouseX()).out()`,
+  false
+)}
+
+${makeExample(
+  "Making the web less dreadful, one beep at at time",
+  `mod(.5) :: sound(['sid', 'crow', 'zap'].pick()).n($(1) % 10).out()`,
+  false
+)}
 	
 Topos is deeply inspired by the [Monome Teletype](https://monome.org/). The Teletype is/was an open source hardware module for Eurorack synthesizers. While the Teletype was initially born as an hardware module, Topos aims to be a web-browser based software sequencer from the same family! It is a sequencer, a scriptable interface, a companion for algorithmic music-making.  Topos wishes to fullfill the same goal than the Teletype, keeping the same spirit alive on the web. It is free, open-source, and made to be shared and used by everyone.
 	
-## Example
+## Demo Songs
 	
 Press ${key_shortcut(
     "Ctrl + G"
   )} to switch to the global file. This is where everything starts! Evaluate the following script there by pasting and pressing ${key_shortcut(
     "Ctrl + Enter"
   )}. You are now making music:
-<pre><code class="language-javascript">
+
+${makeExample(
+  "Drums and arpeggios",
+  `
 bpm(80)
-mod(0.25) :: sound('sawtooth')
+mod(0.25) && sound('sawtooth')
   .note(seqbar(
     [60, 67, 63].pick() - 12,  [60, 67, 63].pick() - 12, 
     [60, 67, 63].pick() - 12 + 5, [60, 67, 63].pick() - 12 + 5,
@@ -69,12 +140,29 @@ mod(0.25) :: sound('sawtooth')
   .gain(0.75).cutoff(500 + usine(8) * 10000)
   .delay(0.5).delaytime(bpm() / 60 / 4 / 3)
   .delayfeedback(0.25)
-  .out()
-mod(1) && snd('kick').out()
-mod(2) && snd('snare').out()
-mod(.5) && snd('hat').out()
-</code></pre>
-	`;
+  .out();
+mod(1) && snd('kick').out();
+mod(2) && snd('snare').out();
+mod(.5) && snd('hat').out();
+`,
+  true
+)}
+
+${makeExample(
+  "Resonant madness",
+  `mod(.5)::snd('synth2')
+  .freq([50,50*1.25,50*1.5,50*1.75].div(8) / 2)
+  .cutoff(usine(.5) * 5000).resonance(15).end(0.8).room(0.9).size(0.9).n(7).out();
+mod(.25)::snd('synth2')
+  .freq([50,50*1.25,50*1.5,50*1.75].div(.5))
+  .cutoff(usine(.5) * 5000).resonance(15)
+  .end(0.2).room(0.9).size(0.9).n(14).out()
+mod(1)::snd('kick').out()
+mod(2)::snd('snare').shape(0.5).out()
+mod(.75)::snd('hat').shape(0.4).out()`,
+  false
+)}
+`;
 
   const software_interface: string = `
 # Interface
@@ -104,6 +192,26 @@ Every Topos session is composed of several small scripts. A set of scripts is ca
     "Ctrl + N"
   )}): _Not evaluated_. Used to store your thoughts or commentaries about the session you are currently playing. It is nothing more than a scratchpad really!
 	
+
+${makeExample(
+  "To take the most out of Topos...",
+  `// Write your code in multiple scripts. Use all the code buffers!
+mod(1) :: script(1)
+div(4) :: mod(.5) :: script(2)
+`,
+  true
+)}
+
+${makeExample(
+  "Script execution can become musical too!",
+  `// You can play your scripts... algorithmically.
+mod(1) :: script([1,3,5].pick())
+div(4) :: mod([.5, .25].div(16)) :: script([5,6,7,8].loop($(2)))
+`,
+  false
+)}
+
+
 ## Universes
 	
 A set of files is called a _universe_. Topos can store several universes and switch immediately from one to another. You can switch between universes by pressing ${key_shortcut(
@@ -116,10 +224,12 @@ You can clear the current universe by pressing the flame button on the top right
 	
 # Sharing your work
 	
-Click on the Topos logo in the top bar. Your URL will change to something much longer and complex. The same URL will be copied to your clipboard. Send this link to your friends to share the universe you are currently working on with them. 
+**Click on the Topos logo in the top bar**. Your URL will change to something much longer and complex. The same URL will be copied to your clipboard. Send this link to your friends to share the universe you are currently working on with them. 
 	
 - The imported universe will always get a randomly generated name such as: <icode>random_silly_llama</icode>.
 - Topos will automatically fetch and switch to the universe that was sent to you. Your previous universe is still accessible if you switch to it, don't worry!
+
+**Note:** links are currently super long and unsharable! Sorry about that, minifying takes a server and we don't have one yet. We will fix that soon. In the meantime, you can use a service like [tinyurl](https://tinyurl.com/) to shorten your links.
 `;
 
   const time: string = `
@@ -141,23 +251,47 @@ Let's study two very simple rhythmic functions, <icode>mod(n: ...number[])</icod
 	
 - <icode>mod(...n: number[])</icode>: this function will return true every _n_ pulsations. The value <icode>1</icode> will return <icode>true</icode> at the beginning of each beat. Floating point numbers like <icode>0.5</icode> or <icode>0.25</icode> are also accepted. Multiple values can be passed to <icode>mod</icode> to generate more complex rhythms.
 	
-	
-\`\`\`javascript
-mod(1) :: sound('kick').out() // A kickdrum played every beat
-mod(.5) :: sound('kick').out() // A kickdrum played twice per beat
-mod(.25) :: sound('kick').out() // A kickdrum played four times every beat
-mod(1/3) :: sound('kick').out() // A funnier ratio!
-mod(1, 2.5)::sound('hh').out() // A great high-hat pattern
-mod(1,3.25,2.5)::snd('hh').out() // A somewhat weirder pattern
-\`\`\`
+${makeExample(
+  "Using different mod values",
+  `// This code is alternating between different mod values
+mod([1,1/2,1/4,1/8,1/16].div(4)) :: sound('kick').out()
+`,
+  true
+)}
+
+${makeExample(
+  "Some sort of ringtone",
+  `let blip = (freq) => {return sound('sine').sustain(0.1).freq(freq)};
+mod(1) :: blip(200).out();
+mod(1/3) :: blip(400).out();
+div(3) :: mod(1/6) :: blip(800).out();
+mod([1,0.75].div(2)) :: blip([50, 100].div(2)).out();
+`,
+  false
+)}
 	
 - <icode>onbeat(...n: number[])</icode>: By default, the bar is set in <icode>4/4</icode> with four beats per bar. The <icode>onbeat</icode> function allows you to lock on to a specific beat to execute some code. It can accept multiple arguments. It's usage is very straightforward and not hard to understand. You can pass integers or floating point numbers.
-	
-\`\`\`javascript
-onbeat(1,2,3,4)::snd('kick').out() // Bassdrum on each beat
+
+${makeExample(
+  "Some simple yet detailed rhythms",
+  `onbeat(1,2,3,4)::snd('kick').out() // Bassdrum on each beat
 onbeat(2,4)::snd('snare').out() // Snare on acccentuated beats
 onbeat(1.5,2.5,3.5, 3.75)::snd('hat').out() // Cool high-hats
-\`\`\`
+`,
+  true
+)}
+
+${makeExample(
+  "Let's do something more complex",
+  `onbeat(0.5, 1.5, 2, 3, 3.75)::snd('kick').n(2).out()
+onbeat(2, [1.5, 3].pick(), 4)::snd('snare').n(7).out()
+mod([.25, 1/8].div(1.5))::snd('hat').n(2)
+  .gain(rand(0.4, 0.7))
+  .pan(usine()).out()
+`,
+  false
+)}
+
 	
 ## Rhythm generators
 	
@@ -165,25 +299,77 @@ We included a bunch of popular rhythm generators in Topos such as the euclidian 
 	
 - <icode>euclid(iterator: number, pulses: number, length: number, rotate: number): boolean</icode>: generates <icode>true</icode> or <icode>false</icode> values from an euclidian rhythm sequence. This algorithm is very popular in the electronic music making world.
 	
-\`\`\`javascript
+${makeExample(
+  "Classic euclidian club music patterns",
+  `
 mod(.5) && euclid($(1), 5, 8) && snd('kick').out()
 mod(.5) && euclid($(2), 2, 8) && snd('sd').out()
-\`\`\`
+`,
+  true
+)}
+
+${makeExample(
+  "And now for more interesting rhythmic constructions",
+  `
+mod(.5) && euclid($(1), 5, 9) && snd('kick').out()
+mod(.5) && euclid($(2), 2, 3, 1) && snd('pluck').end(0.5).n(5).out()
+`,
+  false
+)}
+
+${makeExample(
+  "Adding more rhythmic density",
+  `
+mod(.5) && euclid($(1), 5, 9) && snd('kick').out()
+mod(.5) && euclid($(2), 2, 3, 1) && snd('pluck').end(0.5).n(5).out()
+mod(.5) && euclid($(3), 6, 9, 1) && snd('pluck').end(0.5).n(5).freq(200).out()
+mod(.25) && euclid($(4), 7, 9, 1) && snd('hh').out()
+`,
+  false
+)}
+
+
 	
 - <icode>bin(iterator: number, n: number): boolean</icode>: a binary rhythm generator. It transforms the given number into its binary representation (_e.g_ <icode>34</icode> becomes <icode>100010</icode>). It then returns a boolean value based on the iterator in order to generate a rhythm.
 	
-\`\`\`javascript
+${makeExample(
+  "Change the integers for a surprise rhythm!",
+  `
 mod(.5) && bin($(1), 34) && snd('kick').out()
 mod(.5) && bin($(2), 48) && snd('sd').out()
-\`\`\`
+`,
+  true
+)}
+
+${makeExample(
+  "Calling 911",
+  `mod(.5) && bin($(1), 911) && snd('pluck').n(4).delay(0.5).delayt(0.25).out()
+mod(1) && sound('kick').shape(0.5).out()
+`,
+  false
+)}
+
+${makeExample(
+  "Playing around with simple numbers",
+  `mod(.5) && bin($(1), [123, 456, 789].div(4)) 
+	&& snd('tabla').n($(2)).delay(0.5).delayt(0.25).out()
+mod(1) && sound('kick').shape(0.5).out()
+`,
+  false
+)}
 	
 If you don't find it spicy enough, you can add some more probabilities to your rhythms by taking advantage of the probability functions. See the functions documentation page to learn more about them. 
 	
-\`\`\`javascript
+${makeExample(
+  "Probablistic drums in one line!",
+  `
 prob(60)::mod(.5) && euclid($(1), 5, 8) && snd('kick').out()
 prob(60)::mod(.5) && euclid($(2), 3, 8) && snd('sd').out()
 prob(80)::mod(.5) && sound('hh').out()
-\`\`\`
+`,
+  true
+)}
+
 	
 ## Larger time divisions
 	
@@ -191,14 +377,21 @@ Now you know how to play some basic rhythmic music but you are a bit stuck in a 
 	
 - <icode>div(n: number)</icode>: the <icode>div</icode> is a temporal switch. If the value <icode>2</icode> is given, the function will return <icode>true</icode> for two beats and <icode>false</icode> for two beats. There are multiple ways to use it effectively. You can pass an integer or a floating point number. Here are some examples.
 	
-\`\`\`javascript
-mod(1)::snd('kick').out(); // Playing on every beat
+${makeExample(
+  "Creating two beats of silence",
+  `
+div(3)::mod([1,.5].beat())::sound('kick').shape(0.3).out(); // Playing every three beats
+mod(1)::snd('snare').out(); // Playing on every beat
 div(2)::mod(.75)::snd('hat').out(); // Playing only every two beats
-\`\`\`
+`,
+  true
+)}
 	
 You can also use it to think about **longer durations** spanning over multiple bars.
 	
-\`\`\`javascript
+${makeExample(
+  "Clunky algorithmic rap music",
+  `
 // Rap God VS Lil Wild -- Adel Faure
 if (div(16)) {
   // Playing this part for two bars
@@ -215,25 +408,51 @@ if (div(16)) {
     .delay(0.5).delaytime(0.5).delayfb(0.25).out()
   mod(.5)::snd('diphone').end(0.5).n([1,2,3,4].pick()).out()
 }
-\`\`\`
+`,
+  true
+)}
 	
 And you can use it for other things inside a method parameter:
 	
-\`\`\`javascript
+${makeExample(
+  "div is great for parameter variation",
+  `
 mod(.5)::snd(div(2) ? 'kick' : 'hat').out()
-\`\`\`
+`,
+  true
+)}
+
+${makeExample(
+  "div is great for pretty much everything",
+  `div([1, .5].beat()) :: mod(.25) :: sound('shaker').out();
+div([4, .5].beat()) :: mod(.25) :: sound('shaker').speed(2).out();
+div([1, 2].beat()) :: mod(1.75) :: sound('snare').out();
+div(4) :: mod(.5) :: sound('tom').out()
+div(.125) :: mod(.5) :: sound('amencutup')
+  .hcutoff(500).pan(sine())
+  .n($(1)).shape(0.5).out()
+`,
+  true
+)}
+
 	
 - <icode>divbar(n: number)</icode>: works just like <icode>div</icode> but at the level of bars instead of beats. It allows you to think about even bigger time cycles. You can also pair it with regular <icode>div</icode> for making complex algorithmic beats.
 	
-\`\`\`javascript
+${makeExample(
+  "Thinking music over bars",
+  `
 divbar(2)::mod(1)::snd('kick').out()
 divbar(3)::mod(.5)::snd('hat').out()
-\`\`\`
+`,
+  true
+)}
 	
 - <icode>onbar(n: number, ...bar: number[])</icode>: The first argument, <icode>n</icode>, is used to divide the time in a period of <icode>n</icode> consecutive bars. The following arguments are bar numbers to play on. For example, <icode>onbar(5, 1, 4)</icode> will return <icode>true</icode> on bar <icode>1</icode> and <icode>4</icode> but return <icode>false</icode> the rest of the time. You can easily divide time that way.
 	
 	
-\`\`\`javascript
+${makeExample(
+  "Using onbar for filler drums",
+  `
 // Only play on the fourth bar of a four bar cycle.
 onbar(4, 4)::mod(.5)::snd('hh').out(); 
 		
@@ -243,7 +462,9 @@ if (onbar(4, 1, 3)) {
 } else {
 	mod(.5)::snd('sd').out();
 }
-\`\`\`
+`,
+  true
+)}
 	
 ## What are pulses?
 	
@@ -271,7 +492,9 @@ Every script can access the current time by using the following functions:
 	
 These values are **extremely useful** to craft more complex syntax or to write musical scores. However, Topos is also offering more high-level sequencing functions to make it easier to play music. You can use the time functions as conditionals. The following example will play a pattern A for 2 bars and a pattern B for 2 bars:
 	
-\`\`\`javascript
+${makeExample(
+  "Manual mode: using time primitives!",
+  `
 if((bar() % 4) > 1) {
   mod(1) && sound('kick').out()
   rarely() && mod(.5) && sound('sd').out()
@@ -281,7 +504,9 @@ if((bar() % 4) > 1) {
   mod(.75) && sound('cp').out()
   mod(.5) && sound('jvbass').freq(250).out()
 }
-\`\`\`
+`,
+  true
+)}
 `;
 
   const midi: string = `
@@ -292,42 +517,57 @@ You can use Topos to play MIDI thanks to the [WebMIDI API](https://developer.moz
 ## Notes
 - <icode>midi(note: number|object)</icode>: send a MIDI Note. Object can take parameters {note: number, channel: number, port: number|string, velocity: number}.
 	
-\`\`\`javascript
+${makeExample(
+  "Playing some piano",
+  `
 bpm(80) // Setting a default BPM
 mod(.5) && midi(36 + seqbeat(0,12)).sustain(0.02).out()
 mod(.25) && midi([64, 76].pick()).sustain(0.05).out()
 mod(.75) && midi(seqbeat(64, 67, 69)).sustain(0.05).out()
 sometimes() && mod(.25) && midi(seqbeat(64, 67, 69) + 24).sustain(0.05).out()
-\`\`\`
+`,
+  true
+)}
 	
 ## Note chaining
 	
 The <icode>midi(number|object)</icode> function can be chained to _specify_ a midi note more. For instance, you can add a duration, a velocity, a channel, etc... by chaining:
 	
-\`\`\`javascript
+${makeExample(
+  "MIDI Caterpillar",
+  `
 mod(0.25) && midi(60)
   .sometimes(n=>n.note(irand(40,60)))
   .sustain(0.05)
   .channel(2)
   .port("bespoke")
   .out()
-\`\`\`
+`,
+  true
+)}
 	
 ## Control and Program Changes
 	
 - <icode>control_change({control: number, value: number, channel: number})</icode>: send a MIDI Control Change. This function takes a single object argument to specify the control message (_e.g._ <icode>control_change({control: 1, value: 127, channel: 1})</icode>).
 	
-\`\`\`javascript
-   control_change({control: [24,25].pick(), value: rI(1,120), channel: 1}))})
-   control_change({control: [30,35].pick(), value: rI(1,120) / 2, channel: 1}))})
-\`\`\`
-	
+${makeExample(
+  "Imagine that I am tweaking an hardware synthesizer!",
+  `
+control_change({control: [24,25].pick(), value: rI(1,120), channel: 1}))})
+control_change({control: [30,35].pick(), value: rI(1,120) / 2, channel: 1}))})
+`,
+  true
+)}
 	
 - <icode>program_change(program: number, channel: number)</icode>: send a MIDI Program Change. This function takes two arguments to specify the program and the channel (_e.g._ <icode>program_change(1, 1)</icode>).
 	
-\`\`\`javascript
+${makeExample(
+  "Crashing old synthesizers: a hobby",
+  `
 program_change([1,2,3,4,5,6,7,8].pick(), 1)
-\`\`\`
+`,
+  true
+)}
 	
 	
 ## System Exclusive Messages
@@ -338,9 +578,14 @@ program_change([1,2,3,4,5,6,7,8].pick(), 1)
 	
 - <icode>midi_clock()</icode>: send a MIDI Clock message. This function is used to synchronize Topos with other MIDI devices or DAWs.
 	
-\`\`\`javascript
+${makeExample(
+  "Tic, tac, tic, tac...",
+  `
 mod(.25) && midi_clock() // Sending clock to MIDI device from the global buffer
-\`\`\`
+`,
+  true
+)}
+
 	
 ## MIDI Output Selection
 	
@@ -359,10 +604,13 @@ The Topos audio engine is based on the [SuperDough](https://www.npmjs.com/packag
 	
 The basic function to play a sound is... <icode>sound(name: string)</icode> (you can also write <icode>snd</icode> to save some precious time). If the given sound or synthesizer exists in the database, it will be automatically queried/started and will start playing. Evaluate the following script in the global window:
 	
-\`\`\`javascript
-mod(1) && sound('bd').out()
+${makeExample(
+  "Playing sounds is easy",
+  `mod(1) && sound('bd').out()
 mod(0.5) && sound('hh').out()
-\`\`\`
+`,
+  true
+)}
 	
 In plain english, this translates to:
 	
@@ -371,10 +619,13 @@ In plain english, this translates to:
 	
 Let's make it slightly more complex:
 
-\`\`\`javascript
-mod(1) && sound('bd').coarse(0.25).out()
-mod(0.5) && sound('hh').delay(0.25).delaytime(0.125).out()
-\`\`\`
+${makeExample(
+  "Adding some effects",
+  `mod(1) && sound('bd').coarse(0.25).out();
+mod(0.5) && sound('hh').delay(0.25).delaytime(0.125).out();
+`,
+  true
+)}
 	
 Now, it reads as follow:
 	
@@ -387,6 +638,17 @@ Let's pause for a moment to explain what we just wrote. There are many things to
 - Playing a sound always ends up with the <icode>.out()</icode> method that gives the instruction to send a message to the audio engine.
 - Sounds are **composed** by adding qualifiers that will modify the sound or synthesizer being played (_e.g_ <icode>sound('...').blabla(...)..something(...).out()</icode>.
 	
+${makeExample(
+  '"Composing" a sound or making a sound chain',
+  `mod(1) :: sound('pad')
+  .begin(rand(0, 0.4))
+  .freq([50,52].beat())
+  .size(0.9)
+  .room(0.9)
+  .pan(sine()).release(2).out()`,
+  true
+)}
+
 ## Audio Sample Folders / Sample Files
 	
 When you type <icode>kick</icode> in the <icode>sound('kick').out()</icode> expression, you are referring to a sample folder containing multiple audio samples. If you look at the sample folder, it would look something like this:
@@ -408,30 +670,35 @@ When you type <icode>kick</icode> in the <icode>sound('kick').out()</icode> expr
 \`\`\`
 	
 The <icode>.n(number)</icode> method can be used to pick a sample from the currently selected sample folder. For instance, the following script will play a random sample from the _kick_ folder:
-	
-\`\`\`javascript
-mod(1) && sound('kick').n([1,2,3,4,5,6,7,8].pick()).out()
-\`\`\`
+${makeExample(
+  "Picking a sample",
+  `mod(1) && sound('kick').n([1,2,3,4,5,6,7,8].pick()).out()`,
+  true
+)}
 	
 Don't worry about the number. If it gets too big, it will be automatically wrapped to the number of samples in the folder. You can type any number, it will always fall on a sample. Let's use our mouse to select a sample number in a folder:
 	
-\`\`\`javascript
-// Move your mouse to change the sample being used!
-mod(.25) && sound('numbers').n(Math.floor(mouseX())).out()
-\`\`\`
+${makeExample(
+  "Picking a sample... with your mouse!",
+  `// Move your mouse to change the sample being used!
+mod(.25) && sound('numbers').n(Math.floor(mouseX())).out()`,
+  true
+)}
 	
 **Note:** the <icode>sound</icode> function can also be used to play synthesizers (see the **Synthesizers** page). In that case, the <icode>.n(n: number)</icode> becomes totally useless!
 	
 ## Learning about sound modifiers
 	
 As we said earlier, the <icode>sound('sample_name')</icode> function can be chained to _specify_ a sound more. For instance, you can add a filter and some effects to your high-hat:
-\`\`\`javascript
-mod(0.5) && sound('hh')
-    .sometimes(s=>s.speed([1,5,10].pick()))
-    .room(0.5)
-    .cutoff(usine(2) * 5000)
-    .out()
-\`\`\`
+${makeExample(
+  "Learning through repetition",
+  `mod(0.5) && sound('hh')
+	.sometimes(s=>s.speed([1,5,10].pick()))
+	.room(0.5)
+	.cutoff(usine(2) * 5000)
+	.out()`,
+  true
+)}
 	
 There are many possible arguments that you can add to your sounds. Learning them can take a long time but it will open up a lot of possibilities. Let's try to make it through all of them. They can all be used both with synthesizers and audio samples, which is kind of unconventional with normal / standard electronic music softwares.
 	
@@ -458,9 +725,12 @@ Simple controls over the amplitude (volume) of a given sound.
 | gain     |       | Volume of the synth/sample (exponential)                   |
 | velocity | vel   | Velocity (amplitude) from 0 to 1. Multipled with gain      |
 	
-\`\`\`javascript
-mod(.5)::snd('cp').vel($(1)%10 / 10).out()
-\`\`\`
+${makeExample(
+  "Velocity manipulated by a counter",
+  `
+mod(.5)::snd('cp').vel($(1)%10 / 10).out()`,
+  true
+)}
 	
 ## Amplitude Enveloppe
 	
@@ -475,13 +745,17 @@ mod(.5)::snd('cp').vel($(1)%10 / 10).out()
 	
 Note that the **sustain** value is not a duration but an amplitude value (how loud). The other values are the time for each stage to take place. Here is a fairly complete example using the <icode>sawtooth</icode> basic waveform.
 	
-\`\`\`javascript
+${makeExample(
+  "Simple synthesizer",
+  `
 mod(4)::sound('sawtooth').note(50).decay(0.5).sustain(0.5).release(2).out();
 mod(2)::sound('sawtooth').note(50+7).decay(0.5).sustain(0.6).release(2).out();
 mod(1)::sound('sawtooth').note(50+12).decay(0.5).sustain(0.7).release(2).out();
 mod(.25)::sound('sawtooth').note([50,57,62].pick() + [12, 24, 0].div(2))
   .cutoff(5000).sustain(0.5).release(0.1).out()
-\`\`\`
+	`,
+  true
+)};
 	
 ## Sample Controls
 
@@ -497,7 +771,9 @@ There are some basic controls over the playback of each sample. This allows you 
 | clip    |       | Multiply the duration of the sample with the given number |
 | pan     |       | Stereo position of the audio playback (<icode>0</icode> = left, <icode>1</icode> = right)|
 	
-\`\`\`javascript
+${makeExample(
+  "Complex sampling duties",
+  `
 // Using some of the modifiers described above :)
 mod(.5)::snd('pad').begin(0.2)
   .speed([1, 0.9, 0.8].div(4))
@@ -505,7 +781,9 @@ mod(.5)::snd('pad').begin(0.2)
   .end(rand(0.3,0.8))
   .room(0.8).size(0.5)
   .clip(1).out()
-\`\`\`
+	`,
+  true
+)};
 	
 	
 ## Filters
@@ -522,12 +800,16 @@ There are three basic filters: a _lowpass_, _highpass_ and _bandpass_ filters wi
 | bandq      | bpq   | Resonance of the bandpass filter        |
 | vowel			 |       | Formant filter with (vocal quality)     |
 
-\`\`\`javascript
+${makeExample(
+  "Filter sweep using a low frequency oscillator",
+  `
 mod(.5) && snd('sawtooth')
 	.cutoff([2000,500].pick() + usine(.5) * 4000)
 	.resonance(0.9).freq([100,150].pick())
 	.out()
-\`\`\`
+	`,
+  true
+)};
 	
 ## Reverb
 	
@@ -538,9 +820,14 @@ A basic reverberator that you can use to give some depth to your sounds. This si
 | room |     | The more, the bigger the reverb (between <icode>0</icode> and <icode>1</icode>.|
 | size |     | Reverberation amount |
 
-\`\`\`javascript
+${makeExample(
+  "Clapping in the cavern",
+  `
 mod(2)::snd('cp').room(1).size(0.9).out()
-\`\`\`
+	`,
+  true
+)};
+
 	
 ## Delay
 	
@@ -552,11 +839,15 @@ A good sounding delay unit that can go into feedback territory. Use it without m
 | delaytime  | delayt    | Delay time (in milliseconds)    |
 | delayfeedback| delayfb | Delay feedback (between <icode>0</icode> and <icode>1</icode>) |
 	
-\`\`\`javascript
+${makeExample(
+  "Who doesn't like delay?",
+  `
 mod(2)::snd('cp').delay(0.5).delaytime(0.75).delayfb(0.8).out()
 mod(4)::snd('snare').out()
 mod(1)::snd('kick').out()
-\`\`\`
+	`,
+  true
+)};
 	
 ## Distorsion, saturation, destruction
 	
@@ -567,10 +858,14 @@ mod(1)::snd('kick').out()
 | shape      |           | Waveshaping distortion (between <icode>0</icode> and <icode>1</icode>)          |
 	
 	
-\`\`\`javascript
+${makeExample(
+  "Crunch... crunch... crunch!",
+  `
 mod(.5)::snd('pad').coarse($(1) % 16).clip(.5).out(); // Comment me
 mod(.5)::snd('pad').crush([16, 8, 4].div(2)).clip(.5).out()
-\`\`\`
+	`,
+  true
+)};
 `;
 
   const samples: string = `
@@ -578,20 +873,182 @@ mod(.5)::snd('pad').crush([16, 8, 4].div(2)).clip(.5).out()
 	
 Audio samples are dynamically loaded from the web. By default, Topos is providing some samples coming from the classic [Dirt-Samples](https://github.com/tidalcycles/Dirt-Samples) but also from the [Topos-Samples](https://github.com/Bubobubobubobubo/Topos-Samples) repository. You can contribute to the latter if you want to share your samples with the community! For each sample folder, we are indicating how many of them are available in parentheses.
 
-- **sample_folder** (_how_many_)
-
 ## Available audio samples
-	
-${injectAvailableSamples(application)}
 
+	
+<b class="flex lg:pl-6 lg:pr-6 text-bold mb-8">Samples can take a few seconds to load. Please wait if you are not hearing anything.</b>
+<div class="lg:pl-6 lg:pr-6 inline-block w-fit flex flex-row flex-wrap gap-x-2 gap-y-2">
+${injectAvailableSamples(application)}
+</div>
 `;
 
   const patterns: string = `
 # Patterns
-	
-## New array methods
 
-- <icode>beat</icode>
+Music really comes to life when you start playing with algorithmic patterns. They can be used to describe a melody, a rhythm, a texture, a set of custom parameters or anything else you can think of. Topos comes with a lot of different abstractions to deal with musical patterns of increasing complexity. Some knowledge of patterns and how to use them will help you to break out of simple loops and repeating structures.
+
+## Working with Arrays
+
+JavaScript is using [Arrays](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array) as a data structure for lists. Topos is extending them with custom methods that allow you to enter softly into a universe of musical patterns. These methods can often be chained to compose a more complex expression: <icode>[1, 2, 3].repeatOdd(5).palindrome().beat()</icode>.
+
+- <icode>div(division: number)</icode>: this method will return the next value in the list every _n_ pulses. By default, <icode>1</icode> equals to one beat but integer and floating point number values are supported as well. This method is extremely powerful and can be used for many different purposes. Check out the examples.
+
+${makeExample(
+  "Light drumming",
+  `// Every bar, use a different rhythm
+mod([1, 0.75].div(4)) :: sound('cp').out()
+mod([0.5, 1].div(4)) :: sound('kick').out()
+mod(2)::snd('snare').shape(.5).out()
+`,
+  true
+)}
+${makeExample(
+  "Using div to create arpeggios",
+  `// Arpeggio using pulse divisions
+mod([.5, .25].div(2)) :: sound('sine')
+  .hcutoff(400)
+  .fmi([1,2].div(8))
+  .fmh([0.5,0.25,1].div(2))
+  .note([50,53,57].div(.25) + [12,24].div(2))
+  .sustain([0.25, 0.5].div(8))
+  .room(0.9).size(0.5)
+  .delay(0.25).delayt([0.5,0.25].div(16))
+  .delayfb(0.5)
+  .out()
+`,
+  false
+)}
+${makeExample(
+  "Cool ambiance",
+  `mod(.5) :: snd(['kick', 'hat'].div(4)).out()
+mod([2,4].div(2)) :: snd('shaker').delay(.5).delayfb(.75).delayt(0.125).out()
+div(2)::mod(1)::snd('clap').out()
+div(4)::mod(2)::snd('pad').n(2).shape(.5).orbit(2).room(0.9).size(0.9).release(0.5).out()
+`,
+  false
+)}
+
+
+
+- <icode>beat()</icode>: returns the index of the list corresponding to current beat (with wrapping). This allows you to return a different value for each beat.
+- <icode>pulse()</icode>: returns the index of the list corresponding to the current pulse (with wrapping). This method will return a different value for each pulse.
+- <icode>bar()</icode>: returns the index of the list corresponding to the current bar (with wrapping). This method will return a different value for each bar.
+
+${makeExample(
+  "A simple drumbeat in no time!",
+  `mod(1)::sound(['kick', 'hat', 'snare', 'hat'].beat()).out()
+mod(1.5)::sound(['jvbass', 'clap'].beat()).out()
+`,
+  true
+)}
+
+${makeExample(
+  "Using beat, pulse and bar in the same code",
+  `mod(2)::snd('snare').out()
+mod([1, 0.5].beat()) :: sound(['bass3'].bar())
+  .freq(100).n([12, 14].bar())
+  .speed([1,2,3].pulse())
+  .out()
+`
+)}
+
+
+- <icode>palindrome()</icode>: Concatenates a list with the same list in reverse.
+
+${makeExample(
+  "Palindrome filter sweep",
+  `mod([1,.5,.25].beat()) :: snd('sine')
+  .freq([100,200,300].div(0.25))
+  .fmi([1,2,3].palindrome().div(0.5))
+  .fmh([4, 8].palindrome().beat())
+  .cutoff([500,1000,2000,4000].palindrome().beat())
+  .sustain(0.1)
+  .out()
+`,
+  true
+)}
+
+
+- <icode>random(index: number)</icode>: pick a random element in the given list.
+- <icode>rand(index: number)</icode>: shorter alias for the same method.
+- <icode>pick()</icode>: pick a random element in the list.
+
+
+${makeExample(
+  "Sipping some gasoline at the robot bar",
+  `mod(1)::snd('kick').shape(0.5).out()
+mod([.5, 1].random() / 2) :: snd(
+  ['amencutup', 'synth2'].random())
+  .n(irand(4,10))
+  .cutoff(2000)
+  .resonance(10)
+  .end(0.2).out()
+`,
+  true
+)}
+
+- <icode>degrade(amount: number)</icode>: removes _n_% of the list elements. Lists can be degraded as long as one element remains. The amount of degradation is given as a percentage.
+
+${makeExample(
+  "Amen break suffering from data loss",
+  `// Tweak the value to degrade this amen break even more!
+mod(.25)::snd('amencutup').n([1,2,3,4,5,6,7,8,9].degrade(20).loop($(1))).out()
+`,
+  true
+)}
+
+- <icode>repeatAll(amount: number)</icode>: repeat every list elements _n_ times.
+- <icode>repeatPair(amount: number)</icode>: repeaet every pair element of the list _n_ times.
+- <icode>repeatOdd(amount: number)</icode>: repeaet every odd element of the list _n_ times.
+
+${makeExample(
+  "Repeating samples a given number of times",
+  `// Please take this repeat number down a bit!
+mod(.25)::sound('amencutup').n([1,2,3,4,5,6,7,8].repeatAll(4).beat()).out()
+`,
+  true
+)}
+
+- <icode>loop(index: number)</icode>: loop takes one argument, the _index_. It allows you to iterate over a list using an iterator such as a counter. This is super useful to control how you are accessing values in a list without relying on a temporal method such as <icode>.beat()</icode> or </icode>.bar()</icode>.
+
+${makeExample(
+  "Don't you know how to count up to 5?",
+  `mod(1) :: sound('numbers').n([1,2,3,4,5].loop($(3, 10, 2))).out()`,
+  true
+)}
+
+- <icode>shuffle(): this</icode>: shuffles a list! Simple enough!
+
+${makeExample(
+  "Shuffling a list for extra randomness",
+  `mod(1) :: sound('numbers').n([1,2,3,4,5].shuffle().loop($(1)).out()
+`,
+  true
+)}
+
+- <icode>rotate(steps: number)</icode>: rotate a list to the right _n_ times. The last value become the first, rinse and repeat.
+
+${makeExample(
+  "To make things more complex... here you go",
+  `mod(.5) :: snd('sine')
+  .freq([100, 150, 200, 250, ,300, 400]
+        .rotate([1,2,3].bar()) // The list of frequencies is rotating
+        .beat())               // while being indexed over!
+  .sustain(0.1)
+  .out()
+`,
+  true
+)}
+
+- <icode>unique()</icode>: filter a list to remove repeated values.
+
+${makeExample(
+  "Demonstrative filtering. Final list is [100, 200]",
+  `// Remove unique and 100 will repeat four times!
+mod(1)::snd('sine').sustain(0.1).freq([100,100,100,100,200].unique().beat()).out()
+`,
+  true
+)}
 
 
 ## Simple patterns 
@@ -613,14 +1070,47 @@ The <icode>sound</icode> function can take the name of a synthesizer as first ar
   - <icode>hcutoff</icode> or <icode>bandf</icode> to switch to a high-pass or bandpass filter.
 	- <icode>hresonance</icode> and <icode>bandq</icode> for the resonance parameter of these filters.
 	
-Here is a simple example of a substractive synth:
-	
-\`\`\`javascript
-mod(.5) && snd('sawtooth')
+${makeExample(
+  "Simple synthesizer voice with filter",
+  `mod(.5) && snd('sawtooth')
   .cutoff([2000,500].pick() + usine(.5) * 4000)
   .resonance(0.9).freq([100,150].pick())
   .out()
-\`\`\`
+	`,
+  true
+)}
+
+${makeExample(
+  "Listening to the different waveforms from the sweetest to the harshest",
+  `mod(.5) && snd(['sine', 'triangle', 'sawtooth', 'square'].beat()).freq(100).out()
+	.freq(50)
+  .out()
+	`,
+  false
+)}
+
+
+${makeExample(
+  "Blessed by the square wave",
+  `mod(4) :: [100,101].forEach((freq) => sound('square').freq(freq).sustain(0.1).out())
+mod(.5) :: [100,101].forEach((freq) => sound('square').freq(freq*2).sustain(0.01).out())
+mod([.5, .75, 2].beat()) :: [100,101].forEach((freq) => sound('square')
+  .freq(freq*4 + usquare(2) * 200).sustain(0.125).out())
+mod(.25) :: sound('square').freq(100*[1,2,4,8].beat()).sustain(0.1).out()`,
+  false
+)}
+
+
+${makeExample(
+  "Ghost carillon",
+  `mod(1/8)::sound('sine')
+  .velocity(rand(0.0, 1.0))
+  .delay(0.75).delayt(.5)
+  .sustain(0.4)
+  .freq(mouseX())
+  .out()`,
+  false
+)}
 	
 	
 # Frequency Modulation Synthesis (FM)
@@ -630,38 +1120,63 @@ The same basic waveforms can take additional methods to switch to a basic two op
 - <icode>fmi</icode> (_frequency modulation index_): a floating point value between <icode>1</icode> and <icode>n</icode>.
 - <icode>fmh</icode> (_frequency modulation harmonic ratio_): a floating point value between <icode>1</icode> and <icode>n</icode>.
 
-And here is a simple example:
-	
-\`\`\`javascript
-mod(.25) && snd('sine')
+${makeExample(
+  "80s nostalgia",
+  `mod(.25) && snd('sine')
   .fmi([1,2,4,8].pick())
   .fmh([1,2,4,8].div(8))
   .freq([100,150].pick())
   .sustain(0.1)
   .out()
-\`\`\`
+	`,
+  true
+)}
 
-**Note::** you can also set the _modulation index_ and the _harmonic ratio_ with the <icode>fm</icode> argument. You will have to feed both as a string: <icode>fm('2:4')</icode>. If you only feed one number, only the _modulation index_ will be updated.
+${makeExample(
+  "Giving some love to weird ratios",
+  `mod([.5, .25].bar()) :: sound('sine').fm('2.2183:3.18293').sustain(0.05).out()
+mod([4].bar()) :: sound('sine').fm('5.2183:4.5').sustain(0.05).out()
+mod(.5) :: sound('sine')
+  .fmh([1, 1.75].beat())
+  .fmi($(1) % 30).orbit(2).room(0.5).out()`,
+  false
+)}
+
+
+${makeExample(
+  "Some peace and serenity",
+  `mod(0.25) :: sound('sine')
+  .note([60, 67, 70, 72, 77].beat())
+  .attack(0.2).release(0.5).gain(0.5)
+  .room(0.9).size(0.8).sustain(0.5)
+  .fmi(Math.floor(usine(.25) * 10))
+  .cutoff(1500).delay(0.5).delayt(0.125)
+  .delayfb(0.8).fmh(Math.floor(usine(.5) * 4))
+  .out()`,
+  false
+)}
+
+**Note:** you can also set the _modulation index_ and the _harmonic ratio_ with the <icode>fm</icode> argument. You will have to feed both as a string: <icode>fm('2:4')</icode>. If you only feed one number, only the _modulation index_ will be updated.
 	
 `;
 
   const about: string = `
-	# About Topos
+# About Topos
 	
-	## The Topos Project
+## The Topos Project
 	
-	Topos is an experimental web based algorithmic sequencer programmed by **BuboBubo** ([Raphaël Forment](https://raphaelforment.fr) and **Amiika** ([Miika Alonen](https//github.com/amiika). It is written using [TypeScript](https://google.fr) and [Vite](https://google.fr). Many thanks to Felix Roos for making the [Superdough](https://www.npmjs.com/package/superdough) audio backend available for experimentation. This project is based on the [Monome Teletype](https://monome.org) by [Brian Crabtree](https://nnnnnnnn.co/) and [Kelli Cain](https://kellicain.com/). We hope to follow and honor the same spirit of sharing and experimentation. How much can the Teletype be extended while staying accessible and installation-free?
+Topos is an experimental web based algorithmic sequencer programmed by **BuboBubo** ([Raphaël Forment](https://raphaelforment.fr) and **Amiika** ([Miika Alonen](https//github.com/amiika). It is written using [TypeScript](https://google.fr) and [Vite](https://google.fr). Many thanks to Felix Roos for making the [Superdough](https://www.npmjs.com/package/superdough) audio backend available for experimentation. This project is based on the [Monome Teletype](https://monome.org) by [Brian Crabtree](https://nnnnnnnn.co/) and [Kelli Cain](https://kellicain.com/). We hope to follow and honor the same spirit of sharing and experimentation. How much can the Teletype be extended while staying accessible and installation-free?
 	
-	## About Live Coding
+## About Live Coding
 	
-	**Amiika** and I are both very involved in the [TOPLAP](https://toplap.org) and [Algorave](https://algorave.com) scenes. We previously worked on the [Sardine](https://sardine.raphaelforment.fr) live coding environment for Python. **Amiika** has been working hard on its own algorithmic pattern language called [Ziffers](https://github.com/amiika/ziffers). A version of it is available in Topos! **Raphaël** is doing live coding with other folks from the [Cookie Collective](https://cookie.paris) and from the city of Lyon (France).
+**Amiika** and I are both very involved in the [TOPLAP](https://toplap.org) and [Algorave](https://algorave.com) scenes. We previously worked on the [Sardine](https://sardine.raphaelforment.fr) live coding environment for Python. **Amiika** has been working hard on its own algorithmic pattern language called [Ziffers](https://github.com/amiika/ziffers). A version of it is available in Topos! **Raphaël** is doing live coding with other folks from the [Cookie Collective](https://cookie.paris) and from the city of Lyon (France).
 	
-	## Free and open-source software
-	
-	Topos is a free and open-source software distributed under [GPL-3.0](https://github.com/Bubobubobubobubo/Topos/blob/main/LICENSE) licence. We welcome all contributions and ideas. You can find the source code on [GitHub](https://github.com/Bubobubobubobubo/topos). You can also join us on [Discord](https://discord.gg/8Q2QV6Z6) to discuss about the project and live coding in general.
+## Free and open-source software
+
+Topos is a free and open-source software distributed under [GPL-3.0](https://github.com/Bubobubobubobubo/Topos/blob/main/LICENSE) licence. We welcome all contributions and ideas. You can find the source code on [GitHub](https://github.com/Bubobubobubobubo/topos). You can also join us on [Discord](https://discord.gg/8Q2QV6Z6) to discuss about the project and live coding in general.
 	 
-	**Have fun!**
-	`;
+**Have fun!**
+`;
 
   const code: string = `
 # Code
@@ -686,9 +1201,52 @@ The code you enter in any of the scripts is evaluated in strict mode. This tells
   )}. You cannot directly use <icode>console.log('hello, world')</icode> in the interface. You will have to open the console as well to see your messages being printed there!
 - **about new syntax:** sometimes, we have taken liberties with the JavaScript syntax in order to make it easier/faster to write on stage. <icode>&&</icode> can also be written <icode>::</icode> or <icode>-></icode> because it is faster to type or better for the eyes!
 	
+## Common idioms
+
+There are some techniques that Topos players are using to keep their JavaScript short and tidy. Don't try to write the shortest possible code but use shortcuts when it makes sense. It's sometimes very comforting to take time to write utilities and scripts that you will often reuse. Take a look at the following examples:
+
+${makeExample(
+  "Shortening your if conditions",
+  `// The && symbol (overriden by :: in Topos) is very often used for conditions!
+mod(.75) :: snd('zap').out()
+//if (true) && log('very true')
+`,
+  true
+)}
+
+${makeExample(
+  "More complex conditions using ?",
+  `// The ? symbol can be used to write a if/true/false condition
+mod(4) ? snd('kick').out() : mod(2)::snd('snare').out()
+// (true) ? log('very true') : log('very false')
+`,
+  false
+)}
+
+
+${makeExample(
+  "Using not and other short symbols",
+  `// The ! symbol can be used to reverse a condition
+mod(4) ? snd('kick').out() : mod(2)::snd('snare').out()
+!mod(2) :: mod(0.5)::snd('clap').out()
+`,
+  false
+)}
+
+
+
 ## About crashes and bugs
 	
 Things will crash, that's also part of the show. You will learn progressively to avoid mistakes and to write safer code. Do not hesitate to kill the page or to stop the transport if you feel overwhelmed by an algorithm blowing up. There are no safeties in place to save you. This is to ensure that you have all the available possible room to write bespoke code and experiment with your ideas through code.
+
+${makeExample(
+  "This example will crash! Who cares?",
+  `// This is crashing. Open your console!
+qjldfqsdklqsjdlkqjsdlqkjdlksjd
+`,
+  false
+)}
+
 `;
 
   const functions: string = `
@@ -815,38 +1373,40 @@ Chance operators returning a boolean value are also available:
   const shortcuts: string = `
 # Keybindings
 	
-Topos is made to be controlled entirely with a keyboard. It is recommanded to stop using the mouse as much as possible when you are _live coding_. Here is a list of the most important keybindings:
+Topos is made to be controlled entirely with a keyboard. It is recommanded to stop using the mouse as much as possible when you are _live coding_. Some of the keybindings might not work like expected on Windows/Linux. They all work on MacOS. A fix is on the way. Here is a list of the most important keybindings:
 	
 ## Transport
-	
-- **Start** the transport: ${key_shortcut("Ctrl + P")}.
-- **Pause** the transport: ${key_shortcut("Ctrl + S")}.
-- **Rewind** the transport: ${key_shortcut("Ctrl + R")}.
+
+| Shortcut | Key   | Description                                                |
+|----------|-------|------------------------------------------------------------|
+|**Start** transport|${key_shortcut("Ctrl + P")}|Start audio playback|
+|**Pause** the transport |${key_shortcut("Ctrl + S")}|Pause audio playback|
+|**Rewind** the transport|${key_shortcut("Ctrl + R")}|Rewind audio playback|
 	
 ## Moving in the interface
 
-- Switch to a different universe: ${key_shortcut("Ctrl + B")}.
-- Switch to the global script: ${key_shortcut("Ctrl + G")} or ${key_shortcut(
-    "F10"
-  )}.
-- Switch to the local scripts: ${key_shortcut("Ctrl + L")} or ${key_shortcut(
-    "F11"
-  )}.
-- Switch to the init script: ${key_shortcut("Ctrl + L")}.
-- Switch to the note file: ${key_shortcut("Ctrl + N")}.
-- Switch to a local file: ${key_shortcut("F1")} to ${key_shortcut("F9")}.
-- Toggle the documentation: ${key_shortcut("Ctrl + D")}.
+| Shortcut | Key   | Description                                                |
+|----------|-------|------------------------------------------------------------|
+|Universe switch|${key_shortcut("Ctrl + B")}|Switch to a new universe|
+|Global Script|${key_shortcut("Ctrl + G")} or ${key_shortcut("F10")}|Switch to global script |
+|Local scripts|${key_shortcut("Ctrl + L")} or ${key_shortcut("F11")}|Switch to local scripts |
+|Init script|${key_shortcut("Ctrl + L")}|Switch to init script|
+|Note File|${key_shortcut("Ctrl + N")}|Switch to note file|
+|Local Script|${key_shortcut("F1")} to ${key_shortcut("F9")}|Switch to a specific local script|
+|Documentation|${key_shortcut("Ctrl + D")}|Open the documentation|
 	
 ## Evaluating code
-	
-- Evaluate the current script: ${key_shortcut("Ctrl + Enter")}.
-- Evaluate a local script: ${key_shortcut("Ctrl + F1")} to ${key_shortcut(
-    "Ctrl + F9"
-  )}.
+
+| Shortcut | Key   | Description                                                |
+|----------|-------|------------------------------------------------------------|
+|Evaluate|${key_shortcut("Ctrl + Enter")}| Evaluate the current script        |
+|Local Eval|${key_shortcut("Ctrl + F1")} to ${key_shortcut("Ctrl + F9")}|Local File Evaluation|
 	
 ## Special
-	
-- Switch the editor to Vim Mode: ${key_shortcut("Ctrl + V")}.
+
+| Shortcut | Key   | Description                                                |
+|----------|-------|------------------------------------------------------------|
+|Vim Mode|${key_shortcut("Ctrl + V")}| Switch between Vim and Normal Mode|
 `;
 
   return {
