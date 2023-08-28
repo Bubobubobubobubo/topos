@@ -601,6 +601,9 @@ midi_output("MIDI Rocket-Trumpet")
 That's it! You are now ready to play with MIDI.
 
 ## Notes
+
+The most basic MIDI event is the note. MIDI notes traditionally take three parameters: _note_ (from <icode>0</icode> to <icode>127</icode>), _velocity_ (from <icode>0</icode> to <icode>127</icode>) and _channel_ (from <icode>0</icode> to <icode>15</icode>).
+
 - <icode>midi(note: number|object)</icode>: send a MIDI Note. Object can take parameters {note: number, channel: number, port: number|string, velocity: number}.
 	
 ${makeExample(
