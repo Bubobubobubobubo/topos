@@ -1057,6 +1057,127 @@ mod(1)::snd('sine').sustain(0.1).freq([100,100,100,100,200].unique().beat()).out
 
 `;
 
+const ziffers: string = `
+# Ziffers
+	
+Ziffers is a musical number based notation developed especially for live coding. It is a very powerful and flexibly notation for describing musical patterns in a short string.
+	
+## Notation
+
+Basic notation consists of numbers and letters using spaces as separators.
+
+**Pitches:** Single digits 0-9 or multiple digits escaped {10 11 21}
+**Durations:** a-z or decimals: 0.25 = q (quarter), 0.5 = h (half), 1 = w (whole), etc.
+**Octave:** ^ _ (up and down)
+**Accidentals:** # b
+**Rest:** r
+
+NOTE! Some of the features are still unsupported. For full syntax see article on <a href="https://zenodo.org/record/7841945" target="_blank">Ziffers</a>.
+
+## Keys and scales
+
+Ziffers supports all the keys and scales. Keys can be defined by using <a href="https://en.wikipedia.org/wiki/Scientific_pitch_notation" target="_blank">scientific pitch notation</a>, for example 'F3'. Western style (1490 scales) can be used with the scale named named after greek modes and extended by William Zeitler (see full <a href="https://ianring.com/musictheory/scales/traditions/zeitler" target="_blank">list</a>):
+
+* Lydian
+* Mixolydian
+* Aeolian
+* Locrian
+* Ionian
+* Dorian
+* Phrygian
+* Soryllic
+* Modimic
+* Ionalian
+* ...
+
+or by most traditional <a href="https://ianring.com/musictheory/scales/traditions/western" target="_blank">western names</a>:
+
+* Major
+* Minor
+* Minor pentatonic
+* Major pentatonic
+* Harmonic minor
+* Harmonic major
+* Melodic minor
+* Melodic major
+* Whole
+* Blues minor
+* Blues major
+* ...
+
+Microtonal scales can be defined using <a href="https://www.huygens-fokker.org/scala/scl_format.html" target="_blank">Scala format</a> or by extended notation defined by Sevish <a href="https://sevish.com/scaleworkshop/" target="_blank">Scale workshop</a>, for example:
+
+**Young:** 106. 198. 306.2 400.1 502. 604. 697.9 806.1 898.1 1004.1 1102. 1200.
+**Wendy carlos:** 17/16 9/8 6/5 5/4 4/3 11/8 3/2 13/8 5/3 7/4 15/8 2/1
+
+## Methods
+
+Ziffers numbered methods **(z0-z16)** can be used to parse and play patterns. Each method is individually cached and can be used to play patterns simultaniously.
+
+## Chaining and options
+
+Ziffers patterns can be chained to <icode>sound()</icode> and <icode>midi()</icode> to produce different outputs. Chaining is often alternative for passing in options, which can be more efficient. Methods available for chaining are:
+* key() - for changing key
+* scale() - for chaning scale
+* octave() - for changing octave
+* sound() - for outputting pattern as sounds (See Sound)
+* midi() - for outputting pattern as midi (See Midi)
+
+## Examples
+	
+- Basic notation
+	
+${makeExample(
+  "Simple method chaining",
+  `
+z1('0 1 2 3').key('G3').scale('minor').sound('sine').out()
+`,
+  true
+)}
+
+${makeExample(
+  "More complex chaining",
+  `
+z1('0 1 2 3 4').key('G3').scale('minor').sound('sine').often(n => n.pitch+=3).rarely(s => s.delay(0.5)).out()
+`,
+  true
+)}
+
+${makeExample(
+  "Simple options",
+  `
+z1('0 3 2 4',{key: 'D3', scale: 'minor pentatonic'}).sound('sine').out()
+`,
+  true
+)}
+
+${makeExample(
+  "Duration chars",
+  `
+z1('s 0 e 1 q 2 h 3 w 4').sound('sine').scale("locrian").out()
+`,
+  true
+)}
+
+${makeExample(
+  "Decimal durations",
+  `
+z1('0.25 5 1 2 6 0.125 3 8 0.5 4 1.0 0').sound('sine').scale("ionian").out()
+`,
+  true
+)}
+
+${makeExample(
+  "Rest and octaves",
+  `
+z1('q 0 ^ e0 r _ 0 _ r 4 ^4 4').sound('sine').scale("ionian").out()
+`,
+  true
+)}
+
+`;
+
+
   const synths: string = `
 # Synthesizers
 	
@@ -1418,6 +1539,7 @@ Topos is made to be controlled entirely with a keyboard. It is recommanded to st
     samples: samples,
     synths: synths,
     patterns: patterns,
+    ziffers: ziffers,
     midi: midi,
     functions: functions,
     reference: reference,

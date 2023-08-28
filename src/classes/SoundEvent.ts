@@ -225,6 +225,7 @@ export class SoundEvent extends AudibleEvent {
     if (funcResult instanceof Object) return funcResult;
     else {
       func(this.values);
+      this.update();
       return this;
     }
   };
@@ -237,20 +238,13 @@ export class SoundEvent extends AudibleEvent {
   sus = this.sustain;
 
   update = (): void => {
-    if (
-      this.values.key &&
-      this.values.pitch &&
-      this.values.parsedScale &&
-      this.values.octave
-    ) {
       const [note, _] = noteFromPc(
-        this.values.key,
-        this.values.pitch,
-        this.values.parsedScale,
-        this.values.octave
+        this.values.key || "C4",
+        this.values.pitch || 0,
+        this.values.parsedScale || "MAJOR",
+        this.values.octave || 0
       );
       this.values.freq = midiToFreq(note);
-    }
   };
 
   out = (): object => {

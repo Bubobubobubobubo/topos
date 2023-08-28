@@ -124,7 +124,7 @@ export class Player extends Event {
         if(this.areWeThereYet()) {
             const event = this.next() as Pitch|Chord|ZRest;
             if(event instanceof Pitch) {
-                const obj = event.getExisting("freq","pitch","key","scale","octave");
+                const obj = event.getExisting("freq","pitch","key","scale","octave","parsedScale");
                 return new SoundEvent(obj, this.app).sound(name);
             } else if(event instanceof ZRest) {
                 return RestEvent.createRestProxy(event.duration, this.app);
@@ -138,7 +138,7 @@ export class Player extends Event {
          if(this.areWeThereYet()) {
             const event = this.next() as Pitch|Chord|ZRest;
             if(event instanceof Pitch) {
-                const obj = event.getExisting("note","pitch","bend","key","scale","octave");
+                const obj = event.getExisting("note","pitch","bend","key","scale","octave","parsedScale");
                 const note = new NoteEvent(obj, this.app);
                 return value ? note.note(value) : note;
             } else if(event instanceof ZRest) {

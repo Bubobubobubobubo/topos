@@ -42,10 +42,10 @@ export class NoteEvent extends AudibleEvent {
         const funcResult = func(this);
         if(funcResult instanceof Object) {
             return funcResult;
-            
         }
         else {
             func(this.values);
+            this.update();
             return this;
         }
     }
@@ -63,12 +63,15 @@ export class NoteEvent extends AudibleEvent {
     }
 
     update = (): void => {
-        if(this.values.key && this.values.pitch && this.values.parsedScale && this.values.octave) {
-            const [note,bend] = noteFromPc(this.values.key, this.values.pitch, this.values.parsedScale, this.values.octave);
-            this.values.note = note;
-            this.values.freq = midiToFreq(note);
-            if(bend) this.values.bend = bend;
-        }
+        const [note, bend] = noteFromPc(
+            this.values.key || "C4",
+            this.values.pitch || 0,
+            this.values.parsedScale || "MAJOR",
+            this.values.octave || 0
+          );
+        this.values.note = note;
+        this.values.freq = midiToFreq(note);
+        if(bend) this.values.bend = bend;
     }
 
     out = (): void => {

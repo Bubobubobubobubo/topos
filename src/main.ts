@@ -565,6 +565,7 @@ export class Editor {
       "samples",
       "synths",
       "patterns",
+      "ziffers",
       "midi",
       "functions",
       "reference",
@@ -989,5 +990,5 @@ window.addEventListener("beforeunload", () => {
 //   app._mouseY = event.clientY;
 // }
 
-onmousemove = function(e){console.log("mouse location:", e.clientX, e.clientY)}
+// onmousemove = function(e){console.log("mouse location:", e.clientX, e.clientY)}
 
