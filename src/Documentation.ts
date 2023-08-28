@@ -485,7 +485,17 @@ if (onbar(4, 1, 3)) {
 `,
   true
 )}
-	
+
+
+- <icode>divbar(bar: number)</icode>: return <icode>true</icode> or <icode>false</icode> alternatively every _n_ bars. 
+${makeExample(
+  "Alternating over four bars",
+`
+divbar(2)
+  ? mod(.5) && snd(['kick', 'hh'].div(1)).out()
+  : mod(.5) && snd(['east', 'snare'].div(1)).out()
+`, true)};
+
 ## What are pulses?
 	
 To make a beat, you need a certain number of time grains or **pulses**. The **pulse** is also known as the [PPQN](https://en.wikipedia.org/wiki/Pulses_per_quarter_note). By default, Topos is using a _pulses per quarter note_ of 48. You can change it by using the <icode>ppqn(number)</icode> function. It means that the lowest possible rhythmic value is 1/48 of a quarter note. That's plenty of time already.

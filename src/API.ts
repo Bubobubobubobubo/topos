@@ -882,12 +882,10 @@ export class UserAPI {
     return current_chunk % 2 === 0;
   };
 
-  onbar = (n: number, ...bar: number[]): boolean => {
-    // n is acting as a modulo on the bar number
-    const bar_list = [...Array(n).keys()].map((i) => i + 1);
-    console.log(bar.some((b) => bar_list.includes(b % n)));
-    return bar.some((b) => bar_list.includes(b % n));
-  };
+ 	public onbar = (n: number, ...bar: number[]): boolean => {
+		return bar.some(b => ((b - 1) % n) < n);
+	};
+
 
   onbeat = (...beat: number[]): boolean => {
     /**
