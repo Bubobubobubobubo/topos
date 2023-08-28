@@ -572,9 +572,23 @@ if((bar() % 4) > 1) {
 
   const midi: string = `
 # MIDI
-	
+
 You can use Topos to play MIDI thanks to the [WebMIDI API](https://developer.mozilla.org/en-US/docs/Web/API/Web_MIDI_API). You can currently send notes, control change, program change and so on. You can also send a MIDI Clock to your MIDI devices or favorite DAW. Note that Topos is also capable of playing MIDI using **Ziffers** which provides a better syntax for melodic expression.
-	
+
+**Important note:** for the examples on this page to work properly, you will need to configure your web browser to output **MIDI** on the right port. You will also need to make sure to have a synthesizer ready to receive MIDI data (hardware or software). You can use softwares like [VCVRack](https://vcvrack.com/), [Dexed](https://asb2m10.github.io/dexed/), [Surge](https://surge-synthesizer.github.io/) or [SunVox](https://www.warmplace.ru/soft/sunvox/) to get enough instruments for a lifetime.
+
+## MIDI Configuration
+
+Your web browser is capable of sending and receiving MIDI information through the [Web MIDI API](https://developer.mozilla.org/en-US/docs/Web/API/Web_MIDI_API). The support for MIDI on browsers is a bit shaky. Please, take some time to configure and test. To our best knowledge, **Chrome** is currently leading on this feature, followed closely by **Firefox**. The other major web browsers are also starting to support this API. **There are two important functions for configuration:**
+
+- <icode>midi_outputs()</icode>: prints the list of available MIDI devices to the web console. You will have to open the web console using ${key_shortcut("Ctrl+Shift+I")} or sometimes ${key_shortcut("F12")}. You can also open it from the menu of your web browser.
+
+${makeExample(
+	"Listing MIDI outputs",
+`
+log(midi_outputs())
+`, true)}
+
 ## Notes
 - <icode>midi(note: number|object)</icode>: send a MIDI Note. Object can take parameters {note: number, channel: number, port: number|string, velocity: number}.
 	
@@ -1215,8 +1229,27 @@ ${makeExample(
 
 Ziffers provides shorthands for **many** numeric and algorithimic operations such as evaluating random numbers and creating sequences using list operations:
 
-* **List operations:** <icode>(3 2 1)+(2 5)</icode> Cartesian operation using + operator (All javascript operators supported).
+* **List operations:** Cartesian operation (_e.g._ <icode>(3 2 1)+(2 5)</icode>) using the <icode>+</icode> operator. All the arithmetic operators are supported.
+
+${makeExample(
+	"Cartesian operation for melodic generation",
+`
+z1("q 0 s (3 2 1)+(2 5) q 0 s (4 5 6)-(2 3)").sound('sine')
+  .scale('minor').fmi(2).fmh(2).room(0.5).size(0.5).sustain(0.1)
+  .delay(0.5).delay(0.125).delayfb(0.25).out();
+`, true)}
+
 * **Random numbers:** <icode>(4,6)</icode> Random number between 4 and 6
+
+${makeExample(
+	"Random numbers, true computer music at last!",
+`
+z1("s (0,8) 0 0 (0,5) 0 0").sound('sine')
+  .scale('minor').fmi(2).fmh(2).room(0.5)
+	.size(0.5).sustain(0.1) .delay(0.5)
+	.delay(0.125).delayfb(0.25).out();
+mod(.5) :: snd(['kick', 'hat'].div(.5)).out()
+`, true)}
 
 ## Keys and scales
 
@@ -1234,6 +1267,19 @@ Ziffers supports all the keys and scales. Keys can be defined by using [scientif
 | Soryllic   | <icode>11122122</icode>|
 | Modimic    | <icode>412122</icode>  |
 | Ionalian   | <icode>1312122</icode> |
+| ... | And it goes on for **1490** scales |
+
+${makeExample(
+	"What the hell is the Modimic scale?",
+`
+z1("s (0,8) 0 0 (0,5) 0 0").sound('sine')
+  .scale('modimic').fmi(2).fmh(2).room(0.5)
+	.size(0.5).sustain(0.1) .delay(0.5)
+	.delay(0.125).delayfb(0.25).out();
+mod(.5) :: snd(['kick', 'hat'].div(.5)).out()
+`, true)}
+
+
 
 <icode></icode>
 
@@ -1253,23 +1299,37 @@ You can also use more traditional <a href="https://ianring.com/musictheory/scale
 | Blues minor        | <icode>321132</icode> |
 | Blues major        | <icode>211323</icode> |
 
+
+${makeExample(
+	"Let's fall back to a classic blues minor scale",
+`
+z1("s (0,8) 0 0 (0,5) 0 0").sound('sine')
+  .scale('blues minor').fmi(2).fmh(2).room(0.5)
+	.size(0.5).sustain(0.25).delay(0.25)
+	.delay(0.25).delayfb(0.5).out();
+mod(1, 1.75) :: snd(['kick', 'hat'].div(1)).out()
+`, true)}
+
 Microtonal scales can be defined using <a href="https://www.huygens-fokker.org/scala/scl_format.html" target="_blank">Scala format</a> or by extended notation defined by Sevish <a href="https://sevish.com/scaleworkshop/" target="_blank">Scale workshop</a>, for example:
 
 - **Young:** 106. 198. 306.2 400.1 502. 604. 697.9 806.1 898.1 1004.1 1102. 1200.
 - **Wendy carlos:** 17/16 9/8 6/5 5/4 4/3 11/8 3/2 13/8 5/3 7/4 15/8 2/1
 
-## Methods
 
-Ziffers numbered methods **(z0-z16)** can be used to parse and play patterns. Each method is individually cached and can be used to play patterns simultaniously.
+${makeExample(
+	"Wendy Carlos, here we go!",
+`
+z1("s ^ (0,8) 0 0 _ (0,5) 0 0").sound('sine')
+  .scale('17/16 9/8 6/5 5/4 4/3 11/8 3/2 13/8 5/3 7/4 15/8 2/1').fmi(2).fmh(2).room(0.5)
+	.size(0.5).sustain(0.15).delay(0.1)
+	.delay(0.25).delayfb(0.5).out();
+mod(1, 1.75) :: snd(['kick', 'hat'].div(1)).out()
+`, true)}
 
-## Chaining and options
+## Synchronization
 
-Ziffers patterns can be chained to <icode>sound()</icode> and <icode>midi()</icode> to produce different outputs. Chaining is often alternative for passing in options, which can be more efficient. Methods available for chaining are:
-* <icode>key()</icode> - for changing key
-* <icode>scale()</icode> - for chaning scale
-* <icode>octave()</icode> - for changing octave
-* <icode>sound()</icode> - for outputting pattern as sounds (See Sound)
-* <icode>midi()</icode> - for outputting pattern as midi (See Midi)
+Ziffers numbered methods **(z0-z16)** can be used to parse and play patterns. Each method is individually cached and can be used to play multiple patterns simultaneously. They can be synchronized together by using a **cue** system. By default, each Ziffers expression will have a different duration. This system is thus necessary to make everything fit together in a loop-based environment like Topos.
+
 
 ## Examples
 	
@@ -1766,6 +1826,15 @@ All functions from the midi object can be used to modify the event with the prob
     .often(n => n.note+=4)
     .sometimes(s => s.velocity(irand(50,100))
     .out()`, true)};
+
+## Ziffers
+
+Ziffers patterns can be chained to <icode>sound()</icode> and <icode>midi()</icode> to produce different outputs. Chaining is often alternative for passing in options, which can be more efficient. Methods available for chaining are:
+* <icode>key()</icode> - for changing key
+* <icode>scale()</icode> - for chaning scale
+* <icode>octave()</icode> - for changing octave
+* <icode>sound()</icode> - for outputting pattern as sounds (See Sound)
+* <icode>midi()</icode> - for outputting pattern as midi (See Midi)
 
 `;
 

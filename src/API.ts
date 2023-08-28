@@ -49,6 +49,8 @@ export class UserAPI {
   public localSeeds = new Map<string, Function>();
   public patternCache = new LRUCache({ max: 1000, ttl: 1000 * 60 * 5 });
   private errorTimeoutID: number = 0;
+  private printTimeoutID: number = 0;
+
 
   MidiConnection: MidiConnection = new MidiConnection();
   load: samples;
@@ -94,11 +96,26 @@ export class UserAPI {
   _reportError = (error: any): void => {
     console.log(error);
     clearTimeout(this.errorTimeoutID);
+    clearTimeout(this.printTimeoutID);
     this.app.error_line.innerHTML = error as string;
+		this.app.error_line.style.color = "color-red-800";
     this.app.error_line.classList.remove("hidden");
     this.errorTimeoutID = setTimeout(
       () => this.app.error_line.classList.add("hidden"),
       2000
+    );
+  };
+
+  _logMessage = (message: any): void => {
+    console.log(message);
+    clearTimeout(this.errorTimeoutID);
+    clearTimeout(this.printTimeoutID);
+    this.app.error_line.innerHTML = message as string;
+		this.app.error_line.style.color = "color-white";
+    this.app.error_line.classList.remove("hidden");
+    this.printTimeoutID = setTimeout(
+      () => this.app.error_line.classList.add("hidden"),
+      4000
     );
   };
 
@@ -223,7 +240,7 @@ export class UserAPI {
      *
      * @returns A list of available MIDI outputs
      */
-    console.log(this.MidiConnection.listMidiOutputs());
+    this._logMessage(this.MidiConnection.listMidiOutputs());
     return this.MidiConnection.midiOutputs;
   };
 
@@ -1260,7 +1277,10 @@ export class UserAPI {
   snd = this.sound;
   samples = samples;
 
-  log = console.log;
+  log = (message: any) => {
+		console.log(message);
+		this._logMessage(message);
+	}
 
   scale = scale;
 
