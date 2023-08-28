@@ -234,14 +234,13 @@ export class UserAPI {
   // MIDI related functions
   // =============================================================
 
-  public midi_outputs = (): Array<MIDIOutput> => {
+  public midi_outputs = (): void => {
     /**
      * Prints a list of available MIDI outputs in the console.
      *
      * @returns A list of available MIDI outputs
      */
     this._logMessage(this.MidiConnection.listMidiOutputs());
-    return this.MidiConnection.midiOutputs;
   };
 
   public midi_output = (outputName: string): void => {

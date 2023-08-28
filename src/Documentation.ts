@@ -581,13 +581,24 @@ You can use Topos to play MIDI thanks to the [WebMIDI API](https://developer.moz
 
 Your web browser is capable of sending and receiving MIDI information through the [Web MIDI API](https://developer.mozilla.org/en-US/docs/Web/API/Web_MIDI_API). The support for MIDI on browsers is a bit shaky. Please, take some time to configure and test. To our best knowledge, **Chrome** is currently leading on this feature, followed closely by **Firefox**. The other major web browsers are also starting to support this API. **There are two important functions for configuration:**
 
-- <icode>midi_outputs()</icode>: prints the list of available MIDI devices to the web console. You will have to open the web console using ${key_shortcut("Ctrl+Shift+I")} or sometimes ${key_shortcut("F12")}. You can also open it from the menu of your web browser.
+- <icode>midi_outputs()</icode>: prints the list of available MIDI devices on the screen. You will have to open the web console using ${key_shortcut("Ctrl+Shift+I")} or sometimes ${key_shortcut("F12")}. You can also open it from the menu of your web browser. **Note:** close the docs to see it printed.
+
 
 ${makeExample(
 	"Listing MIDI outputs",
 `
-log(midi_outputs())
+midi_outputs()
 `, true)}
+
+- <icode>midi_output(output_name: string)</icode>: enter your desired output to connect to it.
+
+${makeExample(
+	"Listing MIDI outputs",
+`
+midi_output("MIDI Rocket-Trumpet")
+`, true)}
+
+That's it! You are now ready to play with MIDI.
 
 ## Notes
 - <icode>midi(note: number|object)</icode>: send a MIDI Note. Object can take parameters {note: number, channel: number, port: number|string, velocity: number}.
