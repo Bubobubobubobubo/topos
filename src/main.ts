@@ -448,6 +448,7 @@ export class Editor {
           this.buffer_search.value = "";
           this.closeBuffersModal();
           this.view.focus();
+					this.emptyUrl();
         }
     });
 
@@ -571,6 +572,7 @@ export class Editor {
       "sound",
       "samples",
       "synths",
+      "chaining",
       "patterns",
       "ziffers",
       "midi",
@@ -640,7 +642,7 @@ export class Editor {
 							dictionaries: [colors, animals],
           });
           this.loadUniverse(randomName, new_universe["universe"]);
-          this.emptyUrl();
+          this.emptyUrl(); this.emptyUrl();
         }
       }
     }

@@ -1278,7 +1278,8 @@ Ziffers patterns can be chained to <icode>sound()</icode> and <icode>midi()</ico
 ${makeExample(
   "Simple method chaining",
   `
-z1('0 1 2 3').key('G3').scale('minor').sound('sine').out()
+z1('0 1 2 3').key('G3')
+  .scale('minor').sound('sine').out()
 `,
   true
 )}
@@ -1731,6 +1732,11 @@ Topos is made to be controlled entirely with a keyboard. It is recommanded to st
 |Vim Mode|${key_shortcut("Ctrl + V")}| Switch between Vim and Normal Mode|
 `;
 
+	const chaining: string = `
+# Chaining
+
+`;
+
   return {
     introduction: introduction,
     interface: software_interface,
@@ -1739,6 +1745,7 @@ Topos is made to be controlled entirely with a keyboard. It is recommanded to st
     sound: sound,
     samples: samples,
     synths: synths,
+		chaining: chaining,
     patterns: patterns,
     ziffers: ziffers,
     midi: midi,
