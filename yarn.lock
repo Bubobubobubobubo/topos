@@ -1446,10 +1446,9 @@ yaml@^2.1.1:
   resolved "https://registry.yarnpkg.com/yaml/-/yaml-2.3.1.tgz#02fe0975d23cd441242aa7204e09fc28ac2ac33b"
   integrity sha512-2eHWfjaoXgTBC2jNM1LRef62VQa0umtvRiDSk6HSzW7RvS5YtkabJrwYLLEKWBc8a5U2PTSCs+dJjUTJdlHsWQ==
 
-zifferjs@^0.0.14:
-  version "0.0.14"
-  resolved "https://registry.yarnpkg.com/zifferjs/-/zifferjs-0.0.14.tgz#7876c799a08e799be7af22b65f4cb6f0b44f79ca"
-  integrity sha512-CpS3zTm8Btm8aTxd7sSUgVCF/S/jJ3hqwgp7uRzbZI8k6yJWhzo/rjMlEZoOmeBhs7Qy4XsVk7pfrLdS8AAIVA==
+"zifferjs@link:../zifferjs":
+  version "0.0.0"
+  uid ""
 
 zzfx@^1.2.0:
   version "1.2.0"

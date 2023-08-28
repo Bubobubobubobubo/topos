@@ -7,7 +7,7 @@ import { Editor } from "./main";
 import { SoundEvent } from "./classes/SoundEvent";
 import { NoteEvent } from "./classes/MidiEvent";
 import { LRUCache } from "lru-cache";
-import { Player } from "./classes/ZPlayer";
+import { InputOptions, Player } from "./classes/ZPlayer";
 import {
   samples,
   initAudioOnFirstClick,
@@ -300,25 +300,58 @@ export class UserAPI {
   // Ziffers related functions
   // =============================================================
 
+  public generateCacheKey = (...args: any[]): string => {
+    return args.map((arg) => JSON.stringify(arg)).join(",");
+  };
+
   public z = (
     input: string,
-    options: { [key: string]: string | number } = {}
+    options: InputOptions = {},
+    id: number|string = ""
   ) => {
-    const generateCacheKey = (...args: any[]): string => {
-      return args.map((arg) => JSON.stringify(arg)).join(",");
-    };
 
-    const key = generateCacheKey(input, options);
+    const zid = "z"+id.toString();
+    const key = id==="" ? this.generateCacheKey(input, options) : zid;
+
     let player;
+    
     if (this.app.api.patternCache.has(key)) {
       player = this.app.api.patternCache.get(key) as Player;
-    } else {
+      if(player.input!==input) {
+        player = undefined;
+      }
+    }
+
+    if (!player) {
       player = new Player(input, options, this.app);
       this.app.api.patternCache.set(key, player);
     }
-    if(player) player.updateLastCallTime();
+
+  
+    if(typeof id === "number") player.zid = zid;
+  
+    player.updateLastCallTime();
+  
     return player;
   };
+
+  public z0 = (input: string, opts: InputOptions = {}) => this.z(input, opts, 0);
+  public z1 = (input: string, opts: InputOptions = {}) => this.z(input, opts, 1);
+  public z2 = (input: string, opts: InputOptions = {}) => this.z(input, opts, 2);
+  public z3 = (input: string, opts: InputOptions = {}) => this.z(input, opts, 3);
+  public z4 = (input: string, opts: InputOptions = {}) => this.z(input, opts, 4);
+  public z5 = (input: string, opts: InputOptions = {}) => this.z(input, opts, 5);
+  public z6 = (input: string, opts: InputOptions = {}) => this.z(input, opts, 6);
+  public z7 = (input: string, opts: InputOptions = {}) => this.z(input, opts, 7);
+  public z8 = (input: string, opts: InputOptions = {}) => this.z(input, opts, 8);
+  public z9 = (input: string, opts: InputOptions = {}) => this.z(input, opts, 9);
+  public z10 = (input: string, opts: InputOptions = {}) => this.z(input, opts, 10);
+  public z11 = (input: string, opts: InputOptions = {}) => this.z(input, opts, 11);
+  public z12 = (input: string, opts: InputOptions = {}) => this.z(input, opts, 12);
+  public z13 = (input: string, opts: InputOptions = {}) => this.z(input, opts, 13);
+  public z14 = (input: string, opts: InputOptions = {}) => this.z(input, opts, 14);
+  public z15 = (input: string, opts: InputOptions = {}) => this.z(input, opts, 15);
+  public z16 = (input: string, opts: InputOptions = {}) => this.z(input, opts, 16);
 
   // =============================================================
   // Counter and iteration
