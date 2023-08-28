@@ -95,3 +95,17 @@ export const evaluate = async (
     console.log(error);
   }
 };
+
+export const evaluateOnce = async (
+  application: Editor,
+  code: string
+): Promise<void> => {
+	/**
+	 * Evaluates the code once without any caching or error-handling mechanisms besides the tryCatchWrapper.
+	 *
+	 * @param application - The application object that contains the Editor API.
+	 * @param code - The code to be evaluated.
+	 * @returns A promise that resolves when the code has been evaluated.
+	 */
+  await tryCatchWrapper(application, code);
+};

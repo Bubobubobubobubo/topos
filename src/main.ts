@@ -3,6 +3,7 @@ import {
   colors,
   animals,
 } from "unique-names-generator";
+import { examples } from "./examples/excerpts";
 import { EditorState, Compartment } from "@codemirror/state";
 import { ViewUpdate, lineNumbers, keymap } from "@codemirror/view";
 import { javascript } from "@codemirror/lang-javascript";
@@ -90,6 +91,9 @@ export class Editor {
   public _mouseX: number = 0;
   public _mouseY: number = 0;
 
+	// Topos Logo
+	topos_logo: HTMLElement = document.getElementById('topos-logo') as HTMLElement;
+
   // Transport elements
   play_buttons: HTMLButtonElement[] = [
     document.getElementById("play-button-1") as HTMLButtonElement,
@@ -130,6 +134,10 @@ export class Editor {
   close_settings_button: HTMLButtonElement = document.getElementById(
     "close-settings-button"
   ) as HTMLButtonElement;
+  close_universes_button: HTMLButtonElement = document.getElementById(
+    "close-universes-button"
+  ) as HTMLButtonElement;
+
   universe_viewer: HTMLDivElement = document.getElementById(
     "universe-viewer"
   ) as HTMLDivElement;
@@ -184,9 +192,12 @@ export class Editor {
     // Loading the universe from local storage
     // ================================================================================
 
-    this.selected_universe = this.settings.selected_universe;
-    this.universe_viewer.innerHTML = `Topos: ${this.selected_universe}`;
     this.universes = { ...template_universes, ...this.settings.universes };
+    this.selected_universe = "Welcome";
+    this.universe_viewer.innerHTML = `Topos: ${this.selected_universe}`;
+		let random_example = examples[Math.floor(Math.random() * examples.length)];
+		this.universes[this.selected_universe].global.committed = random_example;
+		this.universes[this.selected_universe].global.candidate = random_example;
 
     // ================================================================================
     // Audio context and clock
@@ -237,9 +248,6 @@ export class Editor {
 
     // ================================================================================
     // Building the documentation
-    // loadSamples().then(() => {
-    //   this.docs = documentation_factory(this);
-    // });
 		let pre_loading = async () => { await loadSamples(); };
 		pre_loading();
 		this.docs = documentation_factory(this);
@@ -307,18 +315,7 @@ export class Editor {
       // This is the modal to switch between universes
       if (event.ctrlKey && event.key === "b") {
         this.hideDocumentation();
-				let existing_universes = document.getElementById("existing-universes");
-				let known_universes = Object.keys(this.universes);
-				let final_html = "<ul class='lg:h-80 lg:w-80 lg:pb-2 lg:pt-2 overflow-y-scroll text-white lg:mb-4 border rounded-lg bg-gray-800'>";
-				known_universes.forEach((name) => {
-					final_html += `
-<li onclick="_loadUniverseFromInterface('${name}')" class="hover:fill-black hover:bg-white py-2 hover:text-black flex justify-between px-4">
-	<p >${name}</p>
-	<button onclick=_deleteUniverseFromInterface('${name}')>🗑</button>
-</li>`;
-				});
-				final_html = final_html + "</ul>";
-				existing_universes!.innerHTML = final_html;
+				this.updateKnownUniversesView();
         this.openBuffersModal();
       }
 
@@ -408,6 +405,12 @@ export class Editor {
       });
     }
 
+		this.topos_logo.addEventListener("click", () => {
+			this.hideDocumentation();
+			this.updateKnownUniversesView();
+			this.openBuffersModal();
+		})
+
     this.play_buttons.forEach((button) => {
       button.addEventListener("click", () => {
 				if (this.isPlaying) {
@@ -493,6 +496,10 @@ export class Editor {
       let editor = document.getElementById("editor");
       modal_settings?.classList.add("invisible");
       editor?.classList.remove("invisible");
+    });
+
+    this.close_universes_button.addEventListener("click", () => {
+			this.openBuffersModal();
     });
 
     this.font_size_slider.addEventListener("input", () => {
@@ -665,6 +672,21 @@ export class Editor {
     return JSON.parse(hash);
   };
 
+	updateKnownUniversesView = () => {
+		let existing_universes = document.getElementById("existing-universes");
+		let known_universes = Object.keys(this.universes);
+		let final_html = "<ul class='lg:h-80 lg:w-80 lg:pb-2 lg:pt-2 overflow-y-scroll text-white lg:mb-4 border rounded-lg bg-gray-800'>";
+		known_universes.forEach((name) => {
+			final_html += `
+<li onclick="_loadUniverseFromInterface('${name}')" class="hover:fill-black hover:bg-white py-2 hover:text-black flex justify-between px-4">
+	<p >${name}</p>
+	<button onclick=_deleteUniverseFromInterface('${name}')>🗑</button>
+</li>`;
+		});
+		final_html = final_html + "</ul>";
+		existing_universes!.innerHTML = final_html;
+	}
+
   share() {
     const hashed_table = btoa(
       JSON.stringify({
@@ -744,6 +766,7 @@ export class Editor {
       button.children[0].classList.remove("text-white");
       button.children[0].classList.add("text-orange-300");
       button.classList.add("text-orange-300");
+      button.classList.add("fill-orange-300");
     };
 
     switch (mode) {
@@ -968,12 +991,8 @@ export class Editor {
   }
 }
 
-// Creating the application
 const app = new Editor();
 
-
-
-// When the user leaves the page, all the universes should be saved in the localStorage
 window.addEventListener("beforeunload", () => {
   // @ts-ignore
   event.preventDefault();
@@ -984,11 +1003,3 @@ window.addEventListener("beforeunload", () => {
   app.clock.stop();
   return null;
 });
-
-// function reportMouseCoordinates(event: MouseEvent) {
-//   app._mouseX = event.clientX;
-//   app._mouseY = event.clientY;
-// }
-
-// onmousemove = function(e){console.log("mouse location:", e.clientX, e.clientY)}
-

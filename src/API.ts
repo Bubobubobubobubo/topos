@@ -1,6 +1,6 @@
 import { seededRandom } from "zifferjs";
 import { MidiConnection } from "./IO/MidiConnection";
-import { tryEvaluate } from "./Evaluator";
+import { tryEvaluate, evaluateOnce } from "./Evaluator";
 import { DrunkWalk } from "./Utils/Drunk";
 import { scale } from "./Scales";
 import { Editor } from "./main";
@@ -66,7 +66,7 @@ export class UserAPI {
 			this.app.universes,
 			this.app.settings
 		);
-    this.app.openBuffersModal();
+		this.app.updateKnownUniversesView();
 	}
 
   _playDocExample = (code?: string) => {
@@ -78,6 +78,13 @@ export class UserAPI {
       this.app,
       this.app.universes[this.app.selected_universe as string].global
     );
+  };
+
+
+  _playDocExampleOnce = (code?: string) => {
+    this.play();
+    console.log("Executing documentation example: " + this.app.selectedExample);
+    evaluateOnce(this.app, code as string);
   };
 
   _all_samples = (): object => {
@@ -884,7 +891,7 @@ export class UserAPI {
     const results: boolean[] = n.map((value) => this.epulse() % value === 0);
     return results.some((value) => value === true);
   };
-  pmod = this.modpulse;
+  modp = this.modpulse;
 
   public modbar = (...n: number[]): boolean => {
     const results: boolean[] = n.map(
@@ -908,12 +915,12 @@ export class UserAPI {
     return current_chunk % 2 === 0;
   };
 
-  onbar = (n: number, ...bar: number[]): boolean => {
-    // n is acting as a modulo on the bar number
-    const bar_list = [...Array(n).keys()].map((i) => i + 1);
-    console.log(bar.some((b) => bar_list.includes(b % n)));
-    return bar.some((b) => bar_list.includes(b % n));
-  };
+ 	public onbar = (bars: number[] | number, n: number = this.app.clock.time_signature[0]): boolean => {
+		let current_bar = (this.bar() % n) + 1;
+		return (typeof bars === "number") 
+			? bars === current_bar
+			: bars.some((b) => b == current_bar)
+	};
 
   onbeat = (...beat: number[]): boolean => {
     /**
@@ -991,7 +998,16 @@ export class UserAPI {
      */
     return this._euclidean_cycle(pulses, length, rotate)[iterator % length];
   };
-  ec = this.euclid;
+  ec: Function = this.euclid;
+
+	public rhythm = (
+    div: number,
+    pulses: number,
+    length: number,
+    rotate: number = 0
+  ): boolean => {
+		return this.mod(div) && this._euclidean_cycle(pulses, length, rotate).div(div);
+	}
 
   _euclidean_cycle(
     pulses: number,
