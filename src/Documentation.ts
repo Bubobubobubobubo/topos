@@ -1217,14 +1217,14 @@ The basic Ziffer notation is entirely written in JavaScript strings (_e.g_ <icod
 ${makeExample(
 	"Pitches from 0 to 9",
 `
-z1('s 0 1 2 3 4 5 6 7 8 9').sound('sine').release(0.1).sustain(0.25).out()
+z1('s 0 1 2 3 4 5 6 7 8 9').sound('pluck').release(0.1).sustain(0.25).out()
 `, true)}
 
 ${makeExample(
 	"Escaped pitches using curly brackets",
 `
-div(4) ? z1('s 0 {9} 0 {9 11}').sound('sine').release(0.1).sustain(0.25).out()
-     : z1('s 0 {11} 0 {11 13}').sound('sine').release(0.1).sustain(0.25).out()
+let pattern = div(4) ? z1('s _ _ 0 0 {9 11}') : z1('s _ 0 0 {10 12}');
+pattern.sound('pluck').sustain(0.1).room(0.9).out();
 `, false)}
 
 ${makeExample(
@@ -1669,6 +1669,22 @@ By default, each script is independant from each other. Scripts live in their ow
 	- <icode>delete_variable(name: string)</icode>: deletes a global variable from storage.
 	- <icode>clear_variables()</icode>: clear **ALL** variables. **This is a destructive operation**!
 	
+**Note:** since this example is running in the documentation, we cannot take advantage of the multiple scripts paradigm. Try to send a variable from the global file to the local file n°6.
+
+${makeExample(
+	"Setting a global variable",
+`
+v('my_cool_variable', 2)
+`, true)}
+
+${makeExample(
+	"Getting that variable back and printing!",
+`
+// Note that we just use one argument
+log(v('my_cool_variable'))
+`, false)}
+
+
 ## Counter and iterators
 	
 You will often need to use iterators and/or counters to index over data structures (getting a note from a list of notes, etc...). There are functions ready to be used for this. Each script also comes with its own iterator that you can access using the <icode>i</icode> variable. **Note:** the script iteration count is **not** resetted between sessions. It will continue to increase the more you play, even if you just picked up an old project.
@@ -1682,14 +1698,49 @@ You will often need to use iterators and/or counters to index over data structur
 	- <icode>drunk_min(min: number)</icode>: sets the minimum value.
 	- <icode>drunk_wrap(wrap: boolean)</icode>: whether to wrap the drunk walk to 0 once the upper limit is reached or not.
 
+**Note:** Counters also come with a secret syntax. They can be called with the **$** symbol!
+
+${makeExample(
+	"Iterating over a list of samples using a counter",
+`
+rhythm(.25, 6, 8) :: sound('dr').n($(1)).end(.25).out()
+`, true)}
+
+${makeExample(
+	"Using a more complex counter",
+`
+// Limit is 20, step is 5
+rhythm(.25, 6, 8) :: sound('dr').n($(1, 20, 5)).end(.25).out()
+`, false)}
+
+${makeExample(
+	"Calling the drunk mechanism",
+`
+// Limit is 20, step is 5
+rhythm(.25, 6, 8) :: sound('dr').n(drunk()).end(.25).out()
+`, false)}
+
 ## Scripts
 	
 You can control scripts programatically. This is the core concept of Topos after all!
 	
 - <icode>script(...number: number[])</icode>: call one or more scripts (_e.g. <icode>script(1,2,3,4)</icode>). Once called, scripts will be evaluated once. There are nine local scripts by default. You cannot call the global script nor the initialisation script.
-	
 - <icode>clear_script(number)</icode>: deletes the given script.
 - <icode>copy_script(from: number, to: number)</icode>: copies a local script denoted by its number to another local script. **This is a destructive operation!**
+
+${makeExample(
+	"Calling a script! The most important feature!",
+`
+mod(1) :: script(1)
+`, true)}
+
+${makeExample(
+	"Calling mutliple scripts at the same time.",
+`
+mod(1) :: script(1, 3, 5)
+`, false)}
+
+
 	
 ## Mouse
 	
@@ -1698,11 +1749,33 @@ You can get the current position of the mouse on the screen by using the followi
 - <icode>mouseX()</icode>: the horizontal position of the mouse on the screen (as a floating point number).
 - <icode>mouseY()</icode>: the vertical position of the mouse on the screen (as a floating point number).
 	
+${makeExample(
+	"FM Synthesizer controlled using the mouse",
+`
+mod(.25) :: sound('sine')
+  .fmi(mouseX() / 100)
+  .fmh(mouseY() / 100)
+  .vel(0.2)
+  .room(0.9).out()
+`, true)}
+
 Current mouse position can also be used to generate notes:
 	
 - <icode>noteX()</icode>: returns a MIDI note number (0-127) based on the horizontal position of the mouse on the screen.
 - <icode>noteY()</icode>: returns a MIDI note number (0-127) based on the vertical position of the mouse on the screen.
 	
+
+${makeExample(
+	"The same synthesizer, with note control!",
+`
+mod(.25) :: sound('sine')
+  .fmi(mouseX() / 100)
+  .note(noteX())
+  .fmh(mouseY() / 100)
+  .vel(0.2)
+  .room(0.9).out()
+`, true)}
+
 ## Low Frequency Oscillators
 	
 Low Frequency Oscillators (_LFOs_) are an important piece in any digital audio workstation or synthesizer. Topos implements some basic waveforms you can play with to automatically modulate your paremeters. 
@@ -1749,11 +1822,32 @@ There are some simple functions to play with probabilities.
 
 - <icode>rand(min: number, max:number)</icode>: returns a random number between <icode>min</icode> and <icode>max</icode>. Shorthand _r()_.
 - <icode>irand(min: number, max:number)</icode>: returns a random integer between <icode>min</icode> and <icode>max</icode>. Shorthands _ir()_ or _rI()_.
+
+${makeExample(
+	"Bleep bloop, what were you expecting?",
+`
+rhythm(0.125, 10, 16) :: sound('sid').n(4).note(50 + irand(50, 62) % 8).out()
+`, true)}
+
+
 - <icode>prob(p: number)</icode>: return <icode>true</icode> _p_% of time, <icode>false</icode> in other cases.
 - <icode>toss()</icode>: throwing a coin. Head (<icode>true</icode>) or tails (<icode>false</icode>).
+
+
+${makeExample(
+	"The Teletype experience!",
+`
+prob(50) :: script(1);
+prob(60) :: script(2);
+prob(80) :: script(toss() ? script(3) : script(4))
+`, true)}
+
 - <icode>seed(val: number|string)</icode>: sets the seed of the random number generator. You can use a number or a string. The same seed will always return the same sequence of random numbers.
-	
-Chance operators returning a boolean value are also available:
+
+
+## Chance operators
+
+Chance operators returning a boolean value are also available. They are super important because they also exist for another mechanism called **chaining**. Checkout the **Chaining** page to learn how to use them in different contexts!
 	
 - <icode>odds(n: number, sec?: number)</icode>: returns true for every n (odds) (eg. 1/4 = 0.25) in given seconds (sec)
 - <icode>almostNever(sec?: number)</icode>: returns true 0.1% in given seconds (sec)
@@ -1774,7 +1868,23 @@ Chance operators returning a boolean value are also available:
 ## Delay functions
 	
 - <icode>delay(ms: number, func: Function): void</icode>: Delays the execution of a function by a given number of milliseconds.
+
+${makeExample(
+	"Phased woodblocks",
+`
+// Some very low-budget version of phase music
+mod(.5) :: delay(usine(.125) * 80, () => sound('east').out())
+mod(.5) :: delay(50, () => sound('east').out())
+`, true)}
+
 - <icode>delayr(ms: number, nb: number, func: Function): void</icode>: Delays the execution of a function by a given number of milliseconds, repeated a given number of times.
+
+${makeExample(
+	"Another woodblock texture",
+`
+mod(1) :: delayr(50, 4, () => sound('east').speed([0.5,.25].beat()).out())
+div(2) :: mod(2) :: delayr(150, 4, () => sound('east').speed([0.5,.25].beat() * 4).out())
+`, true)};
 `;
 
   const reference: string = `
