@@ -1180,19 +1180,31 @@ The basic Ziffer notation is entirely written in JavaScript strings (_e.g_ <icod
 
 ${makeExample(
 	"Pitches from 0 to 9",
-``, true)}
+`
+z1('s 0 1 2 3 4 5 6 7 8 9').sound('sine').release(0.1).sustain(0.25).out()
+`, true)}
 
 ${makeExample(
 	"Escaped pitches using curly brackets",
-``, false)}
+`
+div(4) ? z1('s 0 {9} 0 {9 11}').sound('sine').release(0.1).sustain(0.25).out()
+     : z1('s 0 {11} 0 {11 13}').sound('sine').release(0.1).sustain(0.25).out()
+`, false)}
 
 ${makeExample(
 	"Durations using letters and floating point numbers",
-``, false)}
+`
+div(8) ? z1('s 0 e 1 q 2 h 3 w 4').sound('sine').scale("locrian").out()
+	   : z1('0.125 0 0.25 2').sound('sine').scale("locrian").out()
+`, false)}
 
 ${makeExample(
 	"Disco was invented thanks to Ziffers",
-``, false)}
+`
+z1('e _ _ 0 ^ 0 _ 0 ^ 0').sound('jvbass').out()
+mod(1)::snd('bd').out(); mod(2)::snd('sd').out()
+mod(3) :: snd('cp').room(0.5).size(0.5).orbit(2).out()
+`, false)}
 
 ${makeExample(
 	"Accidentals and rests for nice melodies",
@@ -1201,48 +1213,50 @@ ${makeExample(
 
 ## Algorithmic operations
 
-Ziffers provides shorthands for many numeric and algorithimic operations such as evaluating random numbers and creating sequences using list operations:
+Ziffers provides shorthands for **many** numeric and algorithimic operations such as evaluating random numbers and creating sequences using list operations:
 
 * **List operations:** <icode>(3 2 1)+(2 5)</icode> Cartesian operation using + operator (All javascript operators supported).
 * **Random numbers:** <icode>(4,6)</icode> Random number between 4 and 6
 
 ## Keys and scales
 
-Ziffers supports all the keys and scales. Keys can be defined by using <a href="https://en.wikipedia.org/wiki/Scientific_pitch_notation" target="_blank">scientific pitch notation</a>, for example 'F3'. Western style (1490 scales) can be with scale names named after greek modes and extended by William Zeitler (see full <a href="https://ianring.com/musictheory/scales/traditions/zeitler" target="_blank">list</a>):
+Ziffers supports all the keys and scales. Keys can be defined by using [scientific pitch notation](https://en.wikipedia.org/wiki/Scientific_pitch_notation), for example <icode>F3</icode>. Western style (1490 scales) can be with scale names named after greek modes and extended by [William Zeitler](https://ianring.com/musictheory/scales/traditions/zeitler). You will never really run out of scales to play with using Ziffers. Here is a short list of some possible scales that you can play with:
 
-* Lydian
-* Mixolydian
-* Aeolian
-* Locrian
-* Ionian
-* Dorian
-* Phrygian
-* Soryllic
-* Modimic
-* Ionalian
-* ...
+| Scale name | Intervals              |
+|------------|------------------------|
+| Lydian     | <icode>2221221</icode> |
+| Mixolydian | <icode>2212212</icode> |
+| Aeolian    | <icode>2122122</icode> |
+| Locrian    | <icode>1221222</icode> |
+| Ionian     | <icode>2212221</icode> |
+| Dorian     | <icode>2122212</icode> |
+| Phrygian   | <icode>1222122</icode> |
+| Soryllic   | <icode>11122122</icode>|
+| Modimic    | <icode>412122</icode>  |
+| Ionalian   | <icode>1312122</icode> |
 
-or by most traditional <a href="https://ianring.com/musictheory/scales/traditions/western" target="_blank">western names</a>:
+<icode></icode>
 
-* Major
-* Minor
-* Minor pentatonic
-* Major pentatonic
-* Harmonic minor
-* Harmonic major
-* Melodic minor
-* Melodic major
-* Whole
-* Blues minor
-* Blues major
-* ...
+You can also use more traditional <a href="https://ianring.com/musictheory/scales/traditions/western" target="_blank">western names</a>:
+
+
+| Scale name | Intervals              |
+|------------|------------------------|
+| Major      | <icode>2212221</icode> |
+| Minor      | <icode>2122122</icode> |
+| Minor pentatonic   | <icode>32232</icode>  |
+| Harmonic minor     | <icode>2122131</icode>|
+| Harmonic major     | <icode>2212131</icode>|
+| Melodic minor      | <icode>2122221</icode>|
+| Melodic major      | <icode>2212122</icode>|
+| Whole              | <icode>222222</icode> |
+| Blues minor        | <icode>321132</icode> |
+| Blues major        | <icode>211323</icode> |
 
 Microtonal scales can be defined using <a href="https://www.huygens-fokker.org/scala/scl_format.html" target="_blank">Scala format</a> or by extended notation defined by Sevish <a href="https://sevish.com/scaleworkshop/" target="_blank">Scale workshop</a>, for example:
 
-**Young:** 106. 198. 306.2 400.1 502. 604. 697.9 806.1 898.1 1004.1 1102. 1200.
-**Wendy carlos:** 17/16 9/8 6/5 5/4 4/3 11/8 3/2 13/8 5/3 7/4 15/8 2/1
-
-See examples for how to use scales.
+- **Young:** 106. 198. 306.2 400.1 502. 604. 697.9 806.1 898.1 1004.1 1102. 1200.
+- **Wendy carlos:** 17/16 9/8 6/5 5/4 4/3 11/8 3/2 13/8 5/3 7/4 15/8 2/1
 
 ## Methods
 
@@ -1288,7 +1302,6 @@ z1('0 3 2 4',{key: 'D3', scale: 'minor pentatonic'}).sound('sine').out()
 ${makeExample(
   "Duration chars",
   `
-z1('s 0 e 1 q 2 h 3 w 4').sound('sine').scale("locrian").out()
 `,
   true
 )}
@@ -1317,17 +1330,6 @@ ${makeExample(
 z1('q 0 3 {10 14} e 8 4 {5 10 12 14 7 0}').sound('sine')
 .fmi([1,2,4,8].pick())
 .scale("17/16 9/8 6/5 5/4 4/3 11/8 3/2 13/8 5/3 7/4 15/8 2/1")
-.out()
-`,
-  true
-)}
-
-${makeExample(
-  "Scale arrays",
-  `
-z1('q 0 6 3 2 e 3 6 q 3 6 s 8 4 2 1').sound('sine')
-.fmi([1,2,4,8].pick())
-.scale([2,1,1,2,2,4,3])
 .out()
 `,
   true
