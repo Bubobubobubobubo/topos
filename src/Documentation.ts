@@ -22,14 +22,14 @@ const samples_to_markdown = (application: Editor) => {
 		
 		// Adding new examples for each sample folder!
     const codeId = `sampleExample${i}`;
-    application.api.codeExamples[codeId] = `mod(.5) :: sound("${keys[i]}").n(irand(1,100)).end(1).out()`;
+    application.api.codeExamples[codeId] = `sound("${keys[i]}").n(irand(1, 5)).end(1).out()`;
 		// @ts-ignore
 		const howMany = samples[keys[i]].data.samples.length;
 
 		markdownList += `
 <button 
-	class="hover:bg-neutral-500 inline px-4 py-2 bg-neutral-700 text-orange-300 text-2xl"
-	onclick="app.api._playDocExample(app.api.codeExamples['${codeId}'])"
+	class="hover:bg-neutral-500 inline px-4 py-2 bg-neutral-700 text-orange-300 text-xl"
+	onclick="app.api._playDocExampleOnce(app.api.codeExamples['${codeId}'])"
 >
 ${keys[i]}
 <b class="text-white">(${howMany})</b>
@@ -82,11 +82,21 @@ Welcome to the Topos documentation. These pages are offering you an introduction
 
 ${makeExample(
   "Welcome! Eval to get started", `
-mod([1/4,1/8,1/16].div(8)):: sound('sine')
-	.freq([100,50].div(16) + 50 * ($(1)%10))
-	.gain(0.5).room(0.9).size(0.9)
-	.sustain(0.1).out()
-mod(1) :: sound('kick').out()`,
+
+	
+bpm(110)
+mod(0.125) && sound('sawtooth')
+  .note([60, 62, 63, 67, 70].div(.125) + 
+        [-12,0,12].beat() + [0, 0, 5, 7].bar())
+  .sustain(0.1).fmi(0.25).fmh(2).room(0.9)
+  .gain(0.75).cutoff(500 + usine(8) * [500, 1000, 2000].bar())
+  .delay(0.5).delayt(0.25).delayfb(0.25)
+  .out();
+mod(1) && snd('kick').out();
+mod(2) && snd('snare').out();
+mod(.5) && snd('hat').out();
+
+`,
   true
 )}
 
@@ -97,7 +107,11 @@ Topos is an _algorithmic_ sequencer. Topos uses small algorithms to represent mu
 	
 ${makeExample(
   "Small algorithms for direct musical expression",
-  `mod(1) :: sound(['kick', 'hat', 'snare', 'hat'].div(1)).out()`,
+  `
+mod(1) :: sound(['kick', 'hat', 'snare', 'hat'].div(1)).out()
+mod(.5) :: sound('jvbass').note(35 + [0,12].beat()).out()
+mod([0.5, 0.25, 1, 2].div(1)) :: sound('east')
+  .room(.5).size(0.5).n(irand(1,5)).out()`,
   false
 )}
 
@@ -112,7 +126,11 @@ ${makeExample(
 
 ${makeExample(
   "Making the web less dreadful, one beep at at time",
-  `mod(.5) :: sound(['sid', 'crow', 'zap'].pick()).n($(1) % 10).out()`,
+  `
+mod(.5) :: sound('sid').n($(2)).out()
+mod(.25) :: sound('sid').note(
+  [34, 36, 41].div(.25) + [[0,-24].pick(),12].beat())
+  .room(0.9).size(0.9).n(4).out()`,
   false
 )}
 	
@@ -127,39 +145,32 @@ Press ${key_shortcut(
   )}. You are now making music:
 
 ${makeExample(
-  "Drums and arpeggios",
+  "Obscure shenanigans",
   `
-bpm(80)
-mod(0.25) && sound('sawtooth')
-  .note(seqbar(
-    [60, 67, 63].pick() - 12,  [60, 67, 63].pick() - 12, 
-    [60, 67, 63].pick() - 12 + 5, [60, 67, 63].pick() - 12 + 5,
-    [60, 67, 63].pick() - 12 + 7, [60, 67, 63].pick() - 12 + 7) + (sometimes() ? 24 : 12)
-  )
-  .sustain(0.1).fmi(8).fmh(4).room(0.9)
-  .gain(0.75).cutoff(500 + usine(8) * 10000)
-  .delay(0.5).delaytime(bpm() / 60 / 4 / 3)
-  .delayfeedback(0.25)
-  .out();
-mod(1) && snd('kick').out();
-mod(2) && snd('snare').out();
-mod(.5) && snd('hat').out();
-`,
+mod([1/4,1/8,1/16].div(8)):: sound('sine')
+	.freq([100,50].div(16) + 50 * ($(1)%10))
+	.gain(0.5).room(0.9).size(0.9)
+	.sustain(0.1).out()
+mod(1) :: sound('kick').out()
+mod(2) :: sound('dr').n(5).out()
+div(3) :: mod([.25,.5].div(.5)) :: sound('dr')
+  .n([8,9].pick()).gain([.8,.5,.25,.1,.0].div(.25)).out()`,
   true
 )}
 
 ${makeExample(
   "Resonant madness",
-  `mod(.5)::snd('synth2')
-  .freq([50,50*1.25,50*1.5,50*1.75].div(8) / 2)
-  .cutoff(usine(.5) * 5000).resonance(15).end(0.8).room(0.9).size(0.9).n(7).out();
-mod(.25)::snd('synth2')
-  .freq([50,50*1.25,50*1.5,50*1.75].div(.5))
-  .cutoff(usine(.5) * 5000).resonance(15)
-  .end(0.2).room(0.9).size(0.9).n(14).out()
-mod(1)::snd('kick').out()
-mod(2)::snd('snare').shape(0.5).out()
-mod(.75)::snd('hat').shape(0.4).out()`,
+  `
+mod(.25)::snd('arpy')
+  .note(30 + [0,3,7,10].beat())
+  .cutoff(usine(.5) * 5000).resonance(10).gain(0.3)
+  .end(0.8).room(0.9).size(0.9).n(0).out();
+mod([.25,.125].div(2))::snd('arpy')
+  .note(30 + [0,3,7,10].beat())
+  .cutoff(usine(.5) * 5000).resonance(20).gain(0.3)
+  .end(0.8).room(0.9).size(0.9).n(3).out();
+mod(.5) :: snd('arpy').note(
+  [30, 33, 35].repeatAll(4).div(1) - [12,0].div(0.5)).out()`,
   false
 )}
 `;
@@ -253,15 +264,17 @@ Let's study two very simple rhythmic functions, <icode>mod(n: ...number[])</icod
 	
 ${makeExample(
   "Using different mod values",
-  `// This code is alternating between different mod values
-mod([1,1/2,1/4,1/8,1/16].div(4)) :: sound('kick').out()
+  `
+// This code is alternating between different mod values
+mod([1,1/2,1/4,1/8].div(2)) :: sound('bd').n(0).out()
 `,
   true
 )}
 
 ${makeExample(
   "Some sort of ringtone",
-  `let blip = (freq) => {return sound('sine').sustain(0.1).freq(freq)};
+  `
+let blip = (freq) => {return sound('sine').sustain(0.1).freq(freq)};
 mod(1) :: blip(200).out();
 mod(1/3) :: blip(400).out();
 div(3) :: mod(1/6) :: blip(800).out();
@@ -269,12 +282,33 @@ mod([1,0.75].div(2)) :: blip([50, 100].div(2)).out();
 `,
   false
 )}
-	
+
+
+- <icode>modp(...n: number[])</icode>: extreme version of the <icode>mod</icode> function. Instead of being normalised, this function is returning a modulo of real pulses! It can be used to break out of ratios and play with real clock pulses for unexpected results.
+
+${makeExample(
+"Intriguing rhythms",
+`
+modp(36) :: snd('east')
+  .n([2,4].div(1)).out()
+modp([12, 36].div(4)) :: snd('east')
+  .n([2,4].add(5).div(1)).out()
+`,
+  true
+)}
+${makeExample(
+"modp is the OG rhythmic function in Topos",
+`
+modp([48, 24, 16].div(4)) :: sound('linnhats').out()
+mod(1)::snd('bd').out()
+`, false)};
+
 - <icode>onbeat(...n: number[])</icode>: By default, the bar is set in <icode>4/4</icode> with four beats per bar. The <icode>onbeat</icode> function allows you to lock on to a specific beat to execute some code. It can accept multiple arguments. It's usage is very straightforward and not hard to understand. You can pass integers or floating point numbers.
 
 ${makeExample(
   "Some simple yet detailed rhythms",
-  `onbeat(1,2,3,4)::snd('kick').out() // Bassdrum on each beat
+  `
+onbeat(1,2,3,4)::snd('kick').out() // Bassdrum on each beat
 onbeat(2,4)::snd('snare').out() // Snare on acccentuated beats
 onbeat(1.5,2.5,3.5, 3.75)::snd('hat').out() // Cool high-hats
 `,
@@ -283,7 +317,8 @@ onbeat(1.5,2.5,3.5, 3.75)::snd('hat').out() // Cool high-hats
 
 ${makeExample(
   "Let's do something more complex",
-  `onbeat(0.5, 1.5, 2, 3, 3.75)::snd('kick').n(2).out()
+  `
+onbeat(0.5, 1.5, 2, 3, 3.75)::snd('kick').n(2).out()
 onbeat(2, [1.5, 3].pick(), 4)::snd('snare').n(7).out()
 mod([.25, 1/8].div(1.5))::snd('hat').n(2)
   .gain(rand(0.4, 0.7))
@@ -311,8 +346,10 @@ mod(.5) && euclid($(2), 2, 8) && snd('sd').out()
 ${makeExample(
   "And now for more interesting rhythmic constructions",
   `
-mod(.5) && euclid($(1), 5, 9) && snd('kick').out()
-mod(.5) && euclid($(2), 2, 3, 1) && snd('pluck').end(0.5).n(5).out()
+bpm(145); // Setting a faster BPM
+mod(.5) && euclid($(1), 5, 8) :: sound('bd').out()
+mod(.5) && euclid($(2), [1,0].div(8), 8) :: sound('sd').out()
+mod(.5) && euclid($(6), [6,7].div(8), 8) :: sound('hh').out()
 `,
   false
 )}
@@ -321,15 +358,29 @@ ${makeExample(
   "Adding more rhythmic density",
   `
 mod(.5) && euclid($(1), 5, 9) && snd('kick').out()
-mod(.5) && euclid($(2), 2, 3, 1) && snd('pluck').end(0.5).n(5).out()
-mod(.5) && euclid($(3), 6, 9, 1) && snd('pluck').end(0.5).n(5).freq(200).out()
+mod(.5) && euclid($(2), 2, 3, 1) && snd('east').end(0.5).n(5).out()
+mod(.5) && euclid($(3), 6, 9, 1) && snd('east').end(0.5).n(5).freq(200).out()
 mod(.25) && euclid($(4), 7, 9, 1) && snd('hh').out()
 `,
   false
 )}
 
 
-	
+- <icode>rhythm(divisor: number, pulses: number, length: number, rotate: number): boolean</icode>: generates <icode>true</icode> or <icode>false</icode> values from an euclidian rhythm sequence. This is another version of <icode>euclid</icode> that does not take an iterator.
+${makeExample(
+"rhythm is a beginner friendly rhythmic function!",
+`
+let speed = [0.5, 0.25].div(8);
+rhythm(speed, 5, 12) :: snd('east').n(2).out()
+rhythm(speed, 2, 12) :: snd('east').out()
+rhythm(speed, 3, 12) :: snd('east').n(4).out()
+rhythm(speed, 7, 12) :: snd('east').n(9).out()
+`,
+  true
+)}
+
+
+
 - <icode>bin(iterator: number, n: number): boolean</icode>: a binary rhythm generator. It transforms the given number into its binary representation (_e.g_ <icode>34</icode> becomes <icode>100010</icode>). It then returns a boolean value based on the iterator in order to generate a rhythm.
 	
 ${makeExample(
@@ -343,15 +394,17 @@ mod(.5) && bin($(2), 48) && snd('sd').out()
 
 ${makeExample(
   "Calling 911",
-  `mod(.5) && bin($(1), 911) && snd('pluck').n(4).delay(0.5).delayt(0.25).out()
-mod(1) && sound('kick').shape(0.5).out()
+  `
+mod(.5) && bin($(1), 911) && snd('subroc3d').n($(2)).delay(0.5).delayt(0.25).end(0.5).out()
+mod(.5) && sound('less').n(irand(1, 10)).out()
 `,
   false
 )}
 
 ${makeExample(
   "Playing around with simple numbers",
-  `mod(.5) && bin($(1), [123, 456, 789].div(4)) 
+  `
+mod(.5) && bin($(1), [123, 456, 789].div(4)) 
 	&& snd('tabla').n($(2)).delay(0.5).delayt(0.25).out()
 mod(1) && sound('kick').shape(0.5).out()
 `,
@@ -424,7 +477,8 @@ mod(.5)::snd(div(2) ? 'kick' : 'hat').out()
 
 ${makeExample(
   "div is great for pretty much everything",
-  `div([1, .5].beat()) :: mod(.25) :: sound('shaker').out();
+  `
+div([1, .5].beat()) :: mod(.25) :: sound('shaker').out();
 div([4, .5].beat()) :: mod(.25) :: sound('shaker').speed(2).out();
 div([1, 2].beat()) :: mod(1.75) :: sound('snare').out();
 div(4) :: mod(.5) :: sound('tom').out()
@@ -446,9 +500,16 @@ divbar(3)::mod(.5)::snd('hat').out()
 `,
   true
 )}
+${makeExample(
+  "Alternating over four bars",
+`
+divbar(2)
+  ? mod(.5) && snd(['kick', 'hh'].div(1)).out()
+  : mod(.5) && snd(['east', 'snare'].div(1)).out()
+`, false)};
+
 	
-- <icode>onbar(n: number, ...bar: number[])</icode>: The first argument, <icode>n</icode>, is used to divide the time in a period of <icode>n</icode> consecutive bars. The following arguments are bar numbers to play on. For example, <icode>onbar(5, 1, 4)</icode> will return <icode>true</icode> on bar <icode>1</icode> and <icode>4</icode> but return <icode>false</icode> the rest of the time. You can easily divide time that way.
-	
+- <icode>onbar(bars: number | number[], n: number)</icode>: The second argument, <icode>n</icode>, is used to divide the time in a period of <icode>n</icode> consecutive bars. The first argument should be a bar number or a list of bar numbers to play on. For example, <icode>onbar([1, 4], 5)</icode> will return <icode>true</icode> on bar <icode>1</icode> and <icode>4</icode> but return <icode>false</icode> the rest of the time. You can easily divide time that way.
 	
 ${makeExample(
   "Using onbar for filler drums",
@@ -457,7 +518,7 @@ ${makeExample(
 onbar(4, 4)::mod(.5)::snd('hh').out(); 
 		
 // Here comes a longer version using JavaScript normal control flow
-if (onbar(4, 1, 3)) { 
+if (onbar([4, 1], 3)) { 
 	mod(1)::snd('kick').out();
 } else {
 	mod(.5)::snd('sd').out();
@@ -465,7 +526,7 @@ if (onbar(4, 1, 3)) {
 `,
   true
 )}
-	
+
 ## What are pulses?
 	
 To make a beat, you need a certain number of time grains or **pulses**. The **pulse** is also known as the [PPQN](https://en.wikipedia.org/wiki/Pulses_per_quarter_note). By default, Topos is using a _pulses per quarter note_ of 48. You can change it by using the <icode>ppqn(number)</icode> function. It means that the lowest possible rhythmic value is 1/48 of a quarter note. That's plenty of time already.
@@ -606,7 +667,8 @@ The basic function to play a sound is... <icode>sound(name: string)</icode> (you
 	
 ${makeExample(
   "Playing sounds is easy",
-  `mod(1) && sound('bd').out()
+  `
+mod(1) && sound('bd').out()
 mod(0.5) && sound('hh').out()
 `,
   true
@@ -621,7 +683,8 @@ Let's make it slightly more complex:
 
 ${makeExample(
   "Adding some effects",
-  `mod(1) && sound('bd').coarse(0.25).out();
+  `
+mod(1) && sound('bd').coarse(0.25).room(0.5).orbit(2).out();
 mod(0.5) && sound('hh').delay(0.25).delaytime(0.125).out();
 `,
   true
@@ -640,12 +703,14 @@ Let's pause for a moment to explain what we just wrote. There are many things to
 	
 ${makeExample(
   '"Composing" a sound or making a sound chain',
-  `mod(1) :: sound('pad')
+  `
+mod(1) :: sound('pad')
   .begin(rand(0, 0.4))
   .freq([50,52].beat())
   .size(0.9)
   .room(0.9)
-  .pan(sine()).release(2).out()`,
+  .velocity(0.25)
+  .pan(usine()).release(2).out()`,
   true
 )}
 
@@ -672,7 +737,9 @@ When you type <icode>kick</icode> in the <icode>sound('kick').out()</icode> expr
 The <icode>.n(number)</icode> method can be used to pick a sample from the currently selected sample folder. For instance, the following script will play a random sample from the _kick_ folder:
 ${makeExample(
   "Picking a sample",
-  `mod(1) && sound('kick').n([1,2,3,4,5,6,7,8].pick()).out()`,
+  `
+mod(1) && sound('kick').n([1,2,3,4,5,6,7,8].pick()).out()
+`,
   true
 )}
 	
@@ -680,7 +747,8 @@ Don't worry about the number. If it gets too big, it will be automatically wrapp
 	
 ${makeExample(
   "Picking a sample... with your mouse!",
-  `// Move your mouse to change the sample being used!
+  `
+// Move your mouse to change the sample being used!
 mod(.25) && sound('numbers').n(Math.floor(mouseX())).out()`,
   true
 )}
@@ -692,11 +760,12 @@ mod(.25) && sound('numbers').n(Math.floor(mouseX())).out()`,
 As we said earlier, the <icode>sound('sample_name')</icode> function can be chained to _specify_ a sound more. For instance, you can add a filter and some effects to your high-hat:
 ${makeExample(
   "Learning through repetition",
-  `mod(0.5) && sound('hh')
-	.sometimes(s=>s.speed([1,5,10].pick()))
-	.room(0.5)
-	.cutoff(usine(2) * 5000)
-	.out()`,
+  `
+mod(0.5) && sound('hh')
+  .sometimes(s=>s.speed([1,5,10].pick()))
+  .room(0.5)
+  .cutoff(usine(2) * 5000)
+  .out()`,
   true
 )}
 	
@@ -748,11 +817,11 @@ Note that the **sustain** value is not a duration but an amplitude value (how lo
 ${makeExample(
   "Simple synthesizer",
   `
-mod(4)::sound('sawtooth').note(50).decay(0.5).sustain(0.5).release(2).out();
-mod(2)::sound('sawtooth').note(50+7).decay(0.5).sustain(0.6).release(2).out();
-mod(1)::sound('sawtooth').note(50+12).decay(0.5).sustain(0.7).release(2).out();
+mod(4)::sound('sawtooth').note(50).decay(0.5).sustain(0.5).release(2).gain(0.25).out();
+mod(2)::sound('sawtooth').note(50+7).decay(0.5).sustain(0.6).release(2).gain(0.25).out();
+mod(1)::sound('sawtooth').note(50+12).decay(0.5).sustain(0.7).release(2).gain(0.25).out();
 mod(.25)::sound('sawtooth').note([50,57,62].pick() + [12, 24, 0].div(2))
-  .cutoff(5000).sustain(0.5).release(0.1).out()
+  .cutoff(5000).sustain(0.5).release(0.1).gain(0.25).out()
 	`,
   true
 )};
@@ -804,9 +873,9 @@ ${makeExample(
   "Filter sweep using a low frequency oscillator",
   `
 mod(.5) && snd('sawtooth')
-	.cutoff([2000,500].pick() + usine(.5) * 4000)
-	.resonance(0.9).freq([100,150].pick())
-	.out()
+  .cutoff([2000,500].pick() + usine(.5) * 4000)
+  .resonance(0.9).freq([100,150].pick())
+  .out()
 	`,
   true
 )};
@@ -895,7 +964,8 @@ JavaScript is using [Arrays](https://developer.mozilla.org/en-US/docs/Web/JavaSc
 
 ${makeExample(
   "Light drumming",
-  `// Every bar, use a different rhythm
+  `
+// Every bar, use a different rhythm
 mod([1, 0.75].div(4)) :: sound('cp').out()
 mod([0.5, 1].div(4)) :: sound('kick').out()
 mod(2)::snd('snare').shape(.5).out()
@@ -904,7 +974,8 @@ mod(2)::snd('snare').shape(.5).out()
 )}
 ${makeExample(
   "Using div to create arpeggios",
-  `// Arpeggio using pulse divisions
+  `
+// Arpeggio using pulse divisions
 mod([.5, .25].div(2)) :: sound('sine')
   .hcutoff(400)
   .fmi([1,2].div(8))
@@ -920,7 +991,8 @@ mod([.5, .25].div(2)) :: sound('sine')
 )}
 ${makeExample(
   "Cool ambiance",
-  `mod(.5) :: snd(['kick', 'hat'].div(4)).out()
+  `
+mod(.5) :: snd(['kick', 'hat'].div(4)).out()
 mod([2,4].div(2)) :: snd('shaker').delay(.5).delayfb(.75).delayt(0.125).out()
 div(2)::mod(1)::snd('clap').out()
 div(4)::mod(2)::snd('pad').n(2).shape(.5).orbit(2).room(0.9).size(0.9).release(0.5).out()
@@ -936,7 +1008,8 @@ div(4)::mod(2)::snd('pad').n(2).shape(.5).orbit(2).room(0.9).size(0.9).release(0
 
 ${makeExample(
   "A simple drumbeat in no time!",
-  `mod(1)::sound(['kick', 'hat', 'snare', 'hat'].beat()).out()
+  `
+mod(1)::sound(['kick', 'hat', 'snare', 'hat'].beat()).out()
 mod(1.5)::sound(['jvbass', 'clap'].beat()).out()
 `,
   true
@@ -957,7 +1030,8 @@ mod([1, 0.5].beat()) :: sound(['bass3'].bar())
 
 ${makeExample(
   "Palindrome filter sweep",
-  `mod([1,.5,.25].beat()) :: snd('sine')
+  `
+mod([1,.5,.25].beat()) :: snd('sine')
   .freq([100,200,300].div(0.25))
   .fmi([1,2,3].palindrome().div(0.5))
   .fmh([4, 8].palindrome().beat())
@@ -976,7 +1050,8 @@ ${makeExample(
 
 ${makeExample(
   "Sipping some gasoline at the robot bar",
-  `mod(1)::snd('kick').shape(0.5).out()
+  `
+mod(1)::snd('kick').shape(0.5).out()
 mod([.5, 1].random() / 2) :: snd(
   ['amencutup', 'synth2'].random())
   .n(irand(4,10))
@@ -991,7 +1066,8 @@ mod([.5, 1].random() / 2) :: snd(
 
 ${makeExample(
   "Amen break suffering from data loss",
-  `// Tweak the value to degrade this amen break even more!
+  `
+// Tweak the value to degrade this amen break even more!
 mod(.25)::snd('amencutup').n([1,2,3,4,5,6,7,8,9].degrade(20).loop($(1))).out()
 `,
   true
@@ -1003,7 +1079,8 @@ mod(.25)::snd('amencutup').n([1,2,3,4,5,6,7,8,9].degrade(20).loop($(1))).out()
 
 ${makeExample(
   "Repeating samples a given number of times",
-  `// Please take this repeat number down a bit!
+  `
+// Please take this repeat number down a bit!
 mod(.25)::sound('amencutup').n([1,2,3,4,5,6,7,8].repeatAll(4).beat()).out()
 `,
   true
@@ -1013,7 +1090,9 @@ mod(.25)::sound('amencutup').n([1,2,3,4,5,6,7,8].repeatAll(4).beat()).out()
 
 ${makeExample(
   "Don't you know how to count up to 5?",
-  `mod(1) :: sound('numbers').n([1,2,3,4,5].loop($(3, 10, 2))).out()`,
+  `
+mod(1) :: sound('numbers').n([1,2,3,4,5].loop($(3, 10, 2))).out()
+`,
   true
 )}
 
@@ -1021,7 +1100,8 @@ ${makeExample(
 
 ${makeExample(
   "Shuffling a list for extra randomness",
-  `mod(1) :: sound('numbers').n([1,2,3,4,5].shuffle().loop($(1)).out()
+  `
+mod(1) :: sound('numbers').n([1,2,3,4,5].shuffle().loop($(1)).out()
 `,
   true
 )}
@@ -1030,10 +1110,11 @@ ${makeExample(
 
 ${makeExample(
   "To make things more complex... here you go",
-  `mod(.5) :: snd('sine')
+  `
+mod(.5) :: snd('sine')
   .freq([100, 150, 200, 250, ,300, 400]
-        .rotate([1,2,3].bar()) // The list of frequencies is rotating
-        .beat())               // while being indexed over!
+    .rotate([1,2,3].bar()) // The list of frequencies is rotating
+    .beat())               // while being indexed over!
   .sustain(0.1)
   .out()
 `,
@@ -1044,12 +1125,23 @@ ${makeExample(
 
 ${makeExample(
   "Demonstrative filtering. Final list is [100, 200]",
-  `// Remove unique and 100 will repeat four times!
+  `
+// Remove unique and 100 will repeat four times!
 mod(1)::snd('sine').sustain(0.1).freq([100,100,100,100,200].unique().beat()).out()
 `,
   true
 )}
 
+- <icode>add()</icode>: add a given amount to every list element.
+- <icode>sub()</icode>: add a given amount to every list element.
+- <icode>mult()</icode>: add a given amount to every list element.
+- <icode>division()</icode>: add a given amount to every list element. The method is named <icode>division</icode> because obviously <icode>div</icode> is already taken.
+
+${makeExample(
+"Simple addition",
+`[1, 2 ,3].add(2).beat()`,
+true
+)}
 
 ## Simple patterns 
 	
@@ -1248,7 +1340,8 @@ The <icode>sound</icode> function can take the name of a synthesizer as first ar
 	
 ${makeExample(
   "Simple synthesizer voice with filter",
-  `mod(.5) && snd('sawtooth')
+  `
+mod(.5) && snd('sawtooth')
   .cutoff([2000,500].pick() + usine(.5) * 4000)
   .resonance(0.9).freq([100,150].pick())
   .out()
@@ -1258,8 +1351,9 @@ ${makeExample(
 
 ${makeExample(
   "Listening to the different waveforms from the sweetest to the harshest",
-  `mod(.5) && snd(['sine', 'triangle', 'sawtooth', 'square'].beat()).freq(100).out()
-	.freq(50)
+  `
+mod(.5) && snd(['sine', 'triangle', 'sawtooth', 'square'].beat()).freq(100).out()
+  .freq(50)
   .out()
 	`,
   false
@@ -1268,7 +1362,8 @@ ${makeExample(
 
 ${makeExample(
   "Blessed by the square wave",
-  `mod(4) :: [100,101].forEach((freq) => sound('square').freq(freq).sustain(0.1).out())
+  `
+mod(4) :: [100,101].forEach((freq) => sound('square').freq(freq).sustain(0.1).out())
 mod(.5) :: [100,101].forEach((freq) => sound('square').freq(freq*2).sustain(0.01).out())
 mod([.5, .75, 2].beat()) :: [100,101].forEach((freq) => sound('square')
   .freq(freq*4 + usquare(2) * 200).sustain(0.125).out())
@@ -1279,11 +1374,14 @@ mod(.25) :: sound('square').freq(100*[1,2,4,8].beat()).sustain(0.1).out()`,
 
 ${makeExample(
   "Ghost carillon",
-  `mod(1/8)::sound('sine')
+  `
+mod(1/8)::sound('sine')
   .velocity(rand(0.0, 1.0))
   .delay(0.75).delayt(.5)
   .sustain(0.4)
+	.cutoff(2000)
   .freq(mouseX())
+	.gain(0.25)
   .out()`,
   false
 )}
@@ -1298,7 +1396,8 @@ The same basic waveforms can take additional methods to switch to a basic two op
 
 ${makeExample(
   "80s nostalgia",
-  `mod(.25) && snd('sine')
+  `
+mod(.25) && snd('sine')
   .fmi([1,2,4,8].pick())
   .fmh([1,2,4,8].div(8))
   .freq([100,150].pick())
@@ -1310,7 +1409,8 @@ ${makeExample(
 
 ${makeExample(
   "Giving some love to weird ratios",
-  `mod([.5, .25].bar()) :: sound('sine').fm('2.2183:3.18293').sustain(0.05).out()
+  `
+mod([.5, .25].bar()) :: sound('sine').fm('2.2183:3.18293').sustain(0.05).out()
 mod([4].bar()) :: sound('sine').fm('5.2183:4.5').sustain(0.05).out()
 mod(.5) :: sound('sine')
   .fmh([1, 1.75].beat())
@@ -1321,9 +1421,10 @@ mod(.5) :: sound('sine')
 
 ${makeExample(
   "Some peace and serenity",
-  `mod(0.25) :: sound('sine')
-  .note([60, 67, 70, 72, 77].beat())
-  .attack(0.2).release(0.5).gain(0.5)
+  `
+mod(0.25) :: sound('sine')
+  .note([60, 67, 70, 72, 77].beat() - [0,12].bar())
+  .attack(0.2).release(0.5).gain(0.25)
   .room(0.9).size(0.8).sustain(0.5)
   .fmi(Math.floor(usine(.25) * 10))
   .cutoff(1500).delay(0.5).delayt(0.125)
@@ -1383,16 +1484,23 @@ There are some techniques that Topos players are using to keep their JavaScript 
 
 ${makeExample(
   "Shortening your if conditions",
-  `// The && symbol (overriden by :: in Topos) is very often used for conditions!
-mod(.75) :: snd('zap').out()
+  `
+// The && symbol (overriden by :: in Topos) is very often used for conditions!
+mod(.75) :: snd('linnhats').n([1,4,5].beat()).out()
+mod(1) :: snd('bd').out()
 //if (true) && log('very true')
+// These two lines are the same:
+// mod(1) && snd('bd').out() 
+//// mod(1) :: snd('bd').out() 
+
 `,
   true
 )}
 
 ${makeExample(
   "More complex conditions using ?",
-  `// The ? symbol can be used to write a if/true/false condition
+  `
+// The ? symbol can be used to write a if/true/false condition
 mod(4) ? snd('kick').out() : mod(2)::snd('snare').out()
 // (true) ? log('very true') : log('very false')
 `,
@@ -1402,7 +1510,8 @@ mod(4) ? snd('kick').out() : mod(2)::snd('snare').out()
 
 ${makeExample(
   "Using not and other short symbols",
-  `// The ! symbol can be used to reverse a condition
+  `
+// The ! symbol can be used to reverse a condition
 mod(4) ? snd('kick').out() : mod(2)::snd('snare').out()
 !mod(2) :: mod(0.5)::snd('clap').out()
 `,
@@ -1477,36 +1586,38 @@ Low Frequency Oscillators (_LFOs_) are an important piece in any digital audio w
 - <icode>sine(freq: number = 1, offset: number= 0): number</icode>: returns a sinusoïdal oscillation between <icode>-1</icode> and <icode>1</icode>.
 - <icode>usine(freq: number = 1, offset: number= 0): number</icode>: returns a sinusoïdal oscillation between <icode>0</icode> and <icode>1</icode>. The <icode>u</icode> stands for _unipolar_.
 	
-\`\`\`javascript
-mod(.25) && snd('cp').speed(1 + usine(0.25) * 2).out()
-\`\`\`
-	
+${makeExample(
+	"Modulating the speed of a sample player using a sine LFO", 
+`mod(.25) && snd('cp').speed(1 + usine(0.25) * 2).out()`, true)};
+
 - <icode>triangle(freq: number = 1, offset: number= 0): number</icode>: returns a triangle oscillation between <icode>-1</icode> and <icode>1</icode>.
 - <icode>utriangle(freq: number = 1, offset: number= 0): number</icode>: returns a triangle oscillation between <icode>0</icode> and <icode>1</icode>. The <icode>u</icode> stands for _unipolar_.
 	
-\`\`\`javascript
-mod(.25) && snd('cp').speed(1 + utriangle(0.25) * 2).out()
-\`\`\`
+
+${makeExample(
+	"Modulating the speed of a sample player using a triangle LFO", 
+`mod(.25) && snd('cp').speed(1 + utriangle(0.25) * 2).out()`, true)}
 	
 - <icode>saw(freq: number = 1, offset: number= 0): number</icode>: returns a sawtooth-like oscillation between <icode>-1</icode> and <icode>1</icode>.
 - <icode>usaw(freq: number = 1, offset: number= 0): number</icode>: returns a sawtooth-like oscillation between <icode>0</icode> and <icode>1</icode>. The <icode>u</icode> stands for _unipolar_.
 	
-\`\`\`javascript
-mod(.25) && snd('cp').speed(1 + usaw(0.25) * 2).out()
-\`\`\`
+
+${makeExample(
+	"Modulating the speed of a sample player using a saw LFO", 
+`mod(.25) && snd('cp').speed(1 + usaw(0.25) * 2).out()`, true)}
 	
 - <icode>square(freq: number = 1, offset: number= 0, duty: number = .5): number</icode>: returns a square wave oscillation between <icode>-1</icode> and <icode>1</icode>. You can also control the duty cycle using the <icode>duty</icode> parameter.
 - <icode>usquare(freq: number = 1, offset: number= 0, duty: number = .5): number</icode>: returns a square wave oscillation between <icode>0</icode> and <icode>1</icode>. The <icode>u</icode> stands for _unipolar_. You can also control the duty cycle using the <icode>duty</icode> parameter.
 	
-\`\`\`javascript
-mod(.25) && snd('cp').speed(1 + usquare(0.25, 0, 0.25) * 2).out()
-\`\`\`
+${makeExample(
+	"Modulating the speed of a sample player using a square LFO", 
+`mod(.25) && snd('cp').speed(1 + usquare(0.25, 0, 0.25) * 2).out()`,true)};
 	
 - <icode>noise()</icode>: returns a random value between -1 and 1.
 	
-\`\`\`javascript
-mod(.25) && snd('cp').speed(1 + noise() * 2).out()
-\`\`\`
+${makeExample(
+	"Modulating the speed of a sample player using noise", 
+`mod(.25) && snd('cp').speed(1 + noise() * 2).out()`, true)};
 	
 ## Probabilities
 

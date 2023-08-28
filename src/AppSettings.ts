@@ -69,7 +69,7 @@ export const template_universe = {
 };
 
 export const template_universes = {
-  Default: {
+  Welcome: {
     global: { candidate: "", committed: "", evaluations: 0 },
     locals: {
       1: { candidate: "", committed: "", evaluations: 0 },
@@ -83,7 +83,7 @@ export const template_universes = {
       9: { candidate: "", committed: "", evaluations: 0 },
     },
     init: { candidate: "", committed: "", evaluations: 0 },
-    notes: { candidate: "// NOTES" },
+    notes: { candidate: "" },
   },
   Help: tutorial_universe,
 };
