@@ -1255,6 +1255,17 @@ Ziffers supports all the keys and scales. Keys can be defined by using [scientif
 | Ionalian   | <icode>1312122</icode> |
 | ... | And it goes on for **1490** scales |
 
+${makeExample(
+	"What the hell is the Modimic scale?",
+`
+z1("s (0,8) 0 0 (0,5) 0 0").sound('sine')
+  .scale('modimic').fmi(2).fmh(2).room(0.5)
+	.size(0.5).sustain(0.1) .delay(0.5)
+	.delay(0.125).delayfb(0.25).out();
+mod(.5) :: snd(['kick', 'hat'].div(.5)).out()
+`, true)}
+
+
 
 <icode></icode>
 
@@ -1274,23 +1285,37 @@ You can also use more traditional <a href="https://ianring.com/musictheory/scale
 | Blues minor        | <icode>321132</icode> |
 | Blues major        | <icode>211323</icode> |
 
+
+${makeExample(
+	"Let's fall back to a classic blues minor scale",
+`
+z1("s (0,8) 0 0 (0,5) 0 0").sound('sine')
+  .scale('blues minor').fmi(2).fmh(2).room(0.5)
+	.size(0.5).sustain(0.25).delay(0.25)
+	.delay(0.25).delayfb(0.5).out();
+mod(1, 1.75) :: snd(['kick', 'hat'].div(1)).out()
+`, true)}
+
 Microtonal scales can be defined using <a href="https://www.huygens-fokker.org/scala/scl_format.html" target="_blank">Scala format</a> or by extended notation defined by Sevish <a href="https://sevish.com/scaleworkshop/" target="_blank">Scale workshop</a>, for example:
 
 - **Young:** 106. 198. 306.2 400.1 502. 604. 697.9 806.1 898.1 1004.1 1102. 1200.
 - **Wendy carlos:** 17/16 9/8 6/5 5/4 4/3 11/8 3/2 13/8 5/3 7/4 15/8 2/1
 
-## Methods
 
-Ziffers numbered methods **(z0-z16)** can be used to parse and play patterns. Each method is individually cached and can be used to play patterns simultaniously.
+${makeExample(
+	"Wendy Carlos, here we go!",
+`
+z1("s ^ (0,8) 0 0 _ (0,5) 0 0").sound('sine')
+  .scale('17/16 9/8 6/5 5/4 4/3 11/8 3/2 13/8 5/3 7/4 15/8 2/1').fmi(2).fmh(2).room(0.5)
+	.size(0.5).sustain(0.15).delay(0.1)
+	.delay(0.25).delayfb(0.5).out();
+mod(1, 1.75) :: snd(['kick', 'hat'].div(1)).out()
+`, true)}
 
-## Chaining and options
+## Synchronization
 
-Ziffers patterns can be chained to <icode>sound()</icode> and <icode>midi()</icode> to produce different outputs. Chaining is often alternative for passing in options, which can be more efficient. Methods available for chaining are:
-* <icode>key()</icode> - for changing key
-* <icode>scale()</icode> - for chaning scale
-* <icode>octave()</icode> - for changing octave
-* <icode>sound()</icode> - for outputting pattern as sounds (See Sound)
-* <icode>midi()</icode> - for outputting pattern as midi (See Midi)
+Ziffers numbered methods **(z0-z16)** can be used to parse and play patterns. Each method is individually cached and can be used to play multiple patterns simultaneously. They can be synchronized together by using a **cue** system. By default, each Ziffers expression will have a different duration. This system is thus necessary to make everything fit together in a loop-based environment like Topos.
+
 
 ## Examples
 	
@@ -1755,6 +1780,16 @@ Topos is made to be controlled entirely with a keyboard. It is recommanded to st
 
 	const chaining: string = `
 # Chaining
+
+
+## Ziffers
+Ziffers patterns can be chained to <icode>sound()</icode> and <icode>midi()</icode> to produce different outputs. Chaining is often alternative for passing in options, which can be more efficient. Methods available for chaining are:
+* <icode>key()</icode> - for changing key
+* <icode>scale()</icode> - for chaning scale
+* <icode>octave()</icode> - for changing octave
+* <icode>sound()</icode> - for outputting pattern as sounds (See Sound)
+* <icode>midi()</icode> - for outputting pattern as midi (See Midi)
+
 
 `;
 
