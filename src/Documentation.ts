@@ -1244,7 +1244,13 @@ mod(3) :: snd('cp').room(0.5).size(0.5).orbit(2).out()
 
 ${makeExample(
 	"Accidentals and rests for nice melodies",
-``, false)}
+`
+z1('e 0 s 1 b2 3 e 0 s 1 b2 4')
+  .scale('major').sound('sine')
+  .fmi(usine(.5)).fmh(2)
+  .delay(0.5).delayt(1.25)
+  .sustain(0.1).out()
+`, false)}
 
 
 ## Algorithmic operations
