@@ -858,7 +858,7 @@ export class UserAPI {
     const results: boolean[] = n.map((value) => this.epulse() % value === 0);
     return results.some((value) => value === true);
   };
-  pmod = this.modpulse;
+  modp = this.modpulse;
 
   public modbar = (...n: number[]): boolean => {
     const results: boolean[] = n.map(

@@ -282,7 +282,27 @@ mod([1,0.75].div(2)) :: blip([50, 100].div(2)).out();
 `,
   false
 )}
-	
+
+
+- <icode>modp(...n: number[])</icode>: extreme version of the <icode>mod</icode> function. Instead of being normalised, this function is returning a modulo of real pulses! It can be used to break out of ratios and play with real clock pulses for unexpected results.
+
+${makeExample(
+"Intriguing rhythms",
+`
+modp(36) :: snd('east')
+  .n([2,4].div(1)).out()
+modp([12, 36].div(4)) :: snd('east')
+  .n([2,4].add(5).div(1)).out()
+`,
+  true
+)}
+${makeExample(
+"modp is the OG rhythmic function in Topos",
+`
+modp([48, 24, 16].div(4)) :: sound('linnhats').out()
+mod(1)::snd('bd').out()
+`, false)};
+
 - <icode>onbeat(...n: number[])</icode>: By default, the bar is set in <icode>4/4</icode> with four beats per bar. The <icode>onbeat</icode> function allows you to lock on to a specific beat to execute some code. It can accept multiple arguments. It's usage is very straightforward and not hard to understand. You can pass integers or floating point numbers.
 
 ${makeExample(
@@ -466,6 +486,14 @@ divbar(3)::mod(.5)::snd('hat').out()
 `,
   true
 )}
+${makeExample(
+  "Alternating over four bars",
+`
+divbar(2)
+  ? mod(.5) && snd(['kick', 'hh'].div(1)).out()
+  : mod(.5) && snd(['east', 'snare'].div(1)).out()
+`, false)};
+
 	
 - <icode>onbar(n: number, ...bar: number[])</icode>: The first argument, <icode>n</icode>, is used to divide the time in a period of <icode>n</icode> consecutive bars. The following arguments are bar numbers to play on. For example, <icode>onbar(5, 1, 4)</icode> will return <icode>true</icode> on bar <icode>1</icode> and <icode>4</icode> but return <icode>false</icode> the rest of the time. You can easily divide time that way.
 	
@@ -485,16 +513,6 @@ if (onbar(4, 1, 3)) {
 `,
   true
 )}
-
-
-- <icode>divbar(bar: number)</icode>: return <icode>true</icode> or <icode>false</icode> alternatively every _n_ bars. 
-${makeExample(
-  "Alternating over four bars",
-`
-divbar(2)
-  ? mod(.5) && snd(['kick', 'hh'].div(1)).out()
-  : mod(.5) && snd(['east', 'snare'].div(1)).out()
-`, true)};
 
 ## What are pulses?
 	
