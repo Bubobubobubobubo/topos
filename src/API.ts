@@ -108,10 +108,10 @@ export class UserAPI {
 
   _logMessage = (message: any): void => {
     console.log(message);
-    clearTimeout(this.errorTimeoutID);
     clearTimeout(this.printTimeoutID);
+    clearTimeout(this.errorTimeoutID);
     this.app.error_line.innerHTML = message as string;
-		this.app.error_line.style.color = "color-white";
+		this.app.error_line.style.color = "white";
     this.app.error_line.classList.remove("hidden");
     this.printTimeoutID = setTimeout(
       () => this.app.error_line.classList.add("hidden"),

@@ -959,7 +959,7 @@ Audio samples are dynamically loaded from the web. By default, Topos is providin
 ## Available audio samples
 
 	
-<b class="flex lg:pl-6 lg:pr-6 text-bold mb-8">Samples can take a few seconds to load. Please wait if you are not hearing anything.</b>
+<b class="flex lg:pl-6 lg:pr-6 text-bold mb-8">Samples can take a few seconds to load. Please wait if you are not hearing anything. Lower your volume, take it slow. Some sounds might be harsh.</b>
 <div class="lg:pl-6 lg:pr-6 inline-block w-fit flex flex-row flex-wrap gap-x-2 gap-y-2">
 ${injectAvailableSamples(application)}
 </div>
