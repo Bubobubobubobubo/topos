@@ -1074,9 +1074,16 @@ Basic notation consists of numbers and letters using spaces as separators.
 
 NOTE! Some of the features are still unsupported. For full syntax see article on <a href="https://zenodo.org/record/7841945" target="_blank">Ziffers</a>.
 
+## Algorithmic operations
+
+Ziffers provides shorthands for many numeric and algorithimic operations such as evaluating random numbers and creating sequences using list operations:
+
+* **List operations:** <icode>(3 2 1)+(2 5)</icode> Cartesian operation using + operator (All javascript operators supported).
+* **Random numbers:** <icode>(4,6)</icode> Random number between 4 and 6
+
 ## Keys and scales
 
-Ziffers supports all the keys and scales. Keys can be defined by using <a href="https://en.wikipedia.org/wiki/Scientific_pitch_notation" target="_blank">scientific pitch notation</a>, for example 'F3'. Western style (1490 scales) can be used with the scale named named after greek modes and extended by William Zeitler (see full <a href="https://ianring.com/musictheory/scales/traditions/zeitler" target="_blank">list</a>):
+Ziffers supports all the keys and scales. Keys can be defined by using <a href="https://en.wikipedia.org/wiki/Scientific_pitch_notation" target="_blank">scientific pitch notation</a>, for example 'F3'. Western style (1490 scales) can be with scale names named after greek modes and extended by William Zeitler (see full <a href="https://ianring.com/musictheory/scales/traditions/zeitler" target="_blank">list</a>):
 
 * Lydian
 * Mixolydian
@@ -1110,6 +1117,8 @@ Microtonal scales can be defined using <a href="https://www.huygens-fokker.org/s
 **Young:** 106. 198. 306.2 400.1 502. 604. 697.9 806.1 898.1 1004.1 1102. 1200.
 **Wendy carlos:** 17/16 9/8 6/5 5/4 4/3 11/8 3/2 13/8 5/3 7/4 15/8 2/1
 
+See examples for how to use scales.
+
 ## Methods
 
 Ziffers numbered methods **(z0-z16)** can be used to parse and play patterns. Each method is individually cached and can be used to play patterns simultaniously.
@@ -1117,11 +1126,11 @@ Ziffers numbered methods **(z0-z16)** can be used to parse and play patterns. Ea
 ## Chaining and options
 
 Ziffers patterns can be chained to <icode>sound()</icode> and <icode>midi()</icode> to produce different outputs. Chaining is often alternative for passing in options, which can be more efficient. Methods available for chaining are:
-* key() - for changing key
-* scale() - for chaning scale
-* octave() - for changing octave
-* sound() - for outputting pattern as sounds (See Sound)
-* midi() - for outputting pattern as midi (See Midi)
+* <icode>key()</icode> - for changing key
+* <icode>scale()</icode> - for chaning scale
+* <icode>octave()</icode> - for changing octave
+* <icode>sound()</icode> - for outputting pattern as sounds (See Sound)
+* <icode>midi()</icode> - for outputting pattern as midi (See Midi)
 
 ## Examples
 	
@@ -1171,6 +1180,52 @@ ${makeExample(
   "Rest and octaves",
   `
 z1('q 0 ^ e0 r _ 0 _ r 4 ^4 4').sound('sine').scale("ionian").out()
+`,
+  true
+)}
+
+- Scales
+
+${makeExample(
+  "Microtonal scales",
+  `
+z1('q 0 3 {10 14} e 8 4 {5 10 12 14 7 0}').sound('sine')
+.fmi([1,2,4,8].pick())
+.scale("17/16 9/8 6/5 5/4 4/3 11/8 3/2 13/8 5/3 7/4 15/8 2/1")
+.out()
+`,
+  true
+)}
+
+${makeExample(
+  "Scale arrays",
+  `
+z1('q 0 6 3 2 e 3 6 q 3 6 s 8 4 2 1').sound('sine')
+.fmi([1,2,4,8].pick())
+.scale([2,1,1,2,2,4,3])
+.out()
+`,
+  true
+)}
+
+- Algorithmic operations
+
+${makeExample(
+  "Random numbers",
+  `
+z1('q 0 (2,4) 4 (5,9)').sound('sine')
+.scale("Bebop minor")
+.out()
+`,
+  true
+)}
+
+${makeExample(
+  "List operations",
+  `
+z1('q (0 3 1 5)+(2 5) e (0 5 2)*(2 3) (0 5 2)>>(2 3) (0 5 2)%(2 3)').sound('sine')
+.scale("Bebop major")
+.out()
 `,
   true
 )}
