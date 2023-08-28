@@ -1735,6 +1735,38 @@ Topos is made to be controlled entirely with a keyboard. It is recommanded to st
 	const chaining: string = `
 # Chaining
 
+Method chaining can be used to manipulate object returned by both <icode>sound()</icode> and <icode>midi()</icode> functions. Probability functions are chained to apply different functions randomly. Probability functions are named as global probability functions (see Probabilities), but take a function as an input.
+
+## Chaining sound events
+
+All functions from the sound object can be used to modify the event, for example:
+
+${makeExample(
+	"Modifying sound events with probabilities", 
+`mod(.5) && sound('hh')
+  .odds(1/4, s => s.speed(irand(1,4)))
+  .rarely(s => s.crush(3))
+  .out()`, true)};
+
+${makeExample(
+    "Modifying sound events with probabilities", 
+  `mod(.5) && sound('tink').note(60)
+    .often(s => s.note(62))
+    .sometimes(s => s.note(64).n(irand(1,4)))
+    .out()`, true)};
+
+## Chaining midi events
+
+All functions from the midi object can be used to modify the event with the probabilities. Values can also be incremented using += notation.
+
+  ${makeExample(
+    "Modifying midi events with probabilities", 
+  `mod(.5) && midi(60).channel(1)
+    .odds(1/4, n => n.channel(2))
+    .often(n => n.note+=4)
+    .sometimes(s => s.velocity(irand(50,100))
+    .out()`, true)};
+
 `;
 
   return {
