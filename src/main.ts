@@ -134,6 +134,10 @@ export class Editor {
   close_settings_button: HTMLButtonElement = document.getElementById(
     "close-settings-button"
   ) as HTMLButtonElement;
+  close_universes_button: HTMLButtonElement = document.getElementById(
+    "close-universes-button"
+  ) as HTMLButtonElement;
+
   universe_viewer: HTMLDivElement = document.getElementById(
     "universe-viewer"
   ) as HTMLDivElement;
@@ -492,6 +496,10 @@ export class Editor {
       let editor = document.getElementById("editor");
       modal_settings?.classList.add("invisible");
       editor?.classList.remove("invisible");
+    });
+
+    this.close_universes_button.addEventListener("click", () => {
+			this.openBuffersModal();
     });
 
     this.font_size_slider.addEventListener("input", () => {
