@@ -1091,6 +1091,16 @@ mod(1)::snd('sine').sustain(0.1).freq([100,100,100,100,200].unique().beat()).out
   true
 )}
 
+- <icode>add()</icode>: add a given amount to every list element.
+- <icode>sub()</icode>: add a given amount to every list element.
+- <icode>mult()</icode>: add a given amount to every list element.
+- <icode>division()</icode>: add a given amount to every list element. The method is named <icode>division</icode> because obviously <icode>div</icode> is already taken.
+
+${makeExample(
+"Simple addition",
+`[1, 2 ,3].add(2).beat()`,
+true
+)}
 
 ## Simple patterns 
 	
@@ -1257,16 +1267,23 @@ There are some techniques that Topos players are using to keep their JavaScript 
 
 ${makeExample(
   "Shortening your if conditions",
-  `// The && symbol (overriden by :: in Topos) is very often used for conditions!
-mod(.75) :: snd('zap').out()
+  `
+// The && symbol (overriden by :: in Topos) is very often used for conditions!
+mod(.75) :: snd('linnhats').n([1,4,5].beat()).out()
+mod(1) :: snd('bd').out()
 //if (true) && log('very true')
+// These two lines are the same:
+// mod(1) && snd('bd').out() 
+//// mod(1) :: snd('bd').out() 
+
 `,
   true
 )}
 
 ${makeExample(
   "More complex conditions using ?",
-  `// The ? symbol can be used to write a if/true/false condition
+  `
+// The ? symbol can be used to write a if/true/false condition
 mod(4) ? snd('kick').out() : mod(2)::snd('snare').out()
 // (true) ? log('very true') : log('very false')
 `,
@@ -1276,7 +1293,8 @@ mod(4) ? snd('kick').out() : mod(2)::snd('snare').out()
 
 ${makeExample(
   "Using not and other short symbols",
-  `// The ! symbol can be used to reverse a condition
+  `
+// The ! symbol can be used to reverse a condition
 mod(4) ? snd('kick').out() : mod(2)::snd('snare').out()
 !mod(2) :: mod(0.5)::snd('clap').out()
 `,
