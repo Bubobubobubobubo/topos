@@ -1215,8 +1215,27 @@ ${makeExample(
 
 Ziffers provides shorthands for **many** numeric and algorithimic operations such as evaluating random numbers and creating sequences using list operations:
 
-* **List operations:** <icode>(3 2 1)+(2 5)</icode> Cartesian operation using + operator (All javascript operators supported).
+* **List operations:** Cartesian operation (_e.g._ <icode>(3 2 1)+(2 5)</icode>) using the <icode>+</icode> operator. All the arithmetic operators are supported.
+
+${makeExample(
+	"Cartesian operation for melodic generation",
+`
+z1("q 0 s (3 2 1)+(2 5) q 0 s (4 5 6)-(2 3)").sound('sine')
+  .scale('minor').fmi(2).fmh(2).room(0.5).size(0.5).sustain(0.1)
+  .delay(0.5).delay(0.125).delayfb(0.25).out();
+`, true)}
+
 * **Random numbers:** <icode>(4,6)</icode> Random number between 4 and 6
+
+${makeExample(
+	"Random numbers, true computer music at last!",
+`
+z1("s (0,8) 0 0 (0,5) 0 0").sound('sine')
+  .scale('minor').fmi(2).fmh(2).room(0.5)
+	.size(0.5).sustain(0.1) .delay(0.5)
+	.delay(0.125).delayfb(0.25).out();
+mod(.5) :: snd(['kick', 'hat'].div(.5)).out()
+`, true)}
 
 ## Keys and scales
 
@@ -1234,6 +1253,8 @@ Ziffers supports all the keys and scales. Keys can be defined by using [scientif
 | Soryllic   | <icode>11122122</icode>|
 | Modimic    | <icode>412122</icode>  |
 | Ionalian   | <icode>1312122</icode> |
+| ... | And it goes on for **1490** scales |
+
 
 <icode></icode>
 
