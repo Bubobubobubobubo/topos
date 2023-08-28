@@ -509,8 +509,7 @@ divbar(2)
 `, false)};
 
 	
-- <icode>onbar(n: number, ...bar: number[])</icode>: The first argument, <icode>n</icode>, is used to divide the time in a period of <icode>n</icode> consecutive bars. The following arguments are bar numbers to play on. For example, <icode>onbar(5, 1, 4)</icode> will return <icode>true</icode> on bar <icode>1</icode> and <icode>4</icode> but return <icode>false</icode> the rest of the time. You can easily divide time that way.
-	
+- <icode>onbar(bars: number | number[], n: number)</icode>: The second argument, <icode>n</icode>, is used to divide the time in a period of <icode>n</icode> consecutive bars. The first argument should be a bar number or a list of bar numbers to play on. For example, <icode>onbar([1, 4], 5)</icode> will return <icode>true</icode> on bar <icode>1</icode> and <icode>4</icode> but return <icode>false</icode> the rest of the time. You can easily divide time that way.
 	
 ${makeExample(
   "Using onbar for filler drums",
@@ -519,7 +518,7 @@ ${makeExample(
 onbar(4, 4)::mod(.5)::snd('hh').out(); 
 		
 // Here comes a longer version using JavaScript normal control flow
-if (onbar(4, 1, 3)) { 
+if (onbar([4, 1], 3)) { 
 	mod(1)::snd('kick').out();
 } else {
 	mod(.5)::snd('sd').out();

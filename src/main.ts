@@ -91,6 +91,9 @@ export class Editor {
   public _mouseX: number = 0;
   public _mouseY: number = 0;
 
+	// Topos Logo
+	topos_logo: HTMLElement = document.getElementById('topos-logo') as HTMLElement;
+
   // Transport elements
   play_buttons: HTMLButtonElement[] = [
     document.getElementById("play-button-1") as HTMLButtonElement,
@@ -397,6 +400,12 @@ export class Editor {
         this.updateEditorView();
       });
     }
+
+		this.topos_logo.addEventListener("click", () => {
+			this.hideDocumentation();
+			this.updateKnownUniversesView();
+			this.openBuffersModal();
+		})
 
     this.play_buttons.forEach((button) => {
       button.addEventListener("click", () => {
