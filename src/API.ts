@@ -108,10 +108,10 @@ export class UserAPI {
 
   _logMessage = (message: any): void => {
     console.log(message);
-    clearTimeout(this.errorTimeoutID);
     clearTimeout(this.printTimeoutID);
+    clearTimeout(this.errorTimeoutID);
     this.app.error_line.innerHTML = message as string;
-		this.app.error_line.style.color = "color-white";
+		this.app.error_line.style.color = "white";
     this.app.error_line.classList.remove("hidden");
     this.printTimeoutID = setTimeout(
       () => this.app.error_line.classList.add("hidden"),
@@ -234,14 +234,13 @@ export class UserAPI {
   // MIDI related functions
   // =============================================================
 
-  public midi_outputs = (): Array<MIDIOutput> => {
+  public midi_outputs = (): void => {
     /**
      * Prints a list of available MIDI outputs in the console.
      *
      * @returns A list of available MIDI outputs
      */
     this._logMessage(this.MidiConnection.listMidiOutputs());
-    return this.MidiConnection.midiOutputs;
   };
 
   public midi_output = (outputName: string): void => {
