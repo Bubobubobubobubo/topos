@@ -882,10 +882,12 @@ export class UserAPI {
     return current_chunk % 2 === 0;
   };
 
- 	public onbar = (n: number, ...bar: number[]): boolean => {
-		return bar.some(b => ((b - 1) % n) < n);
+ 	public onbar = (bars: number[] | number, n: number = this.app.clock.time_signature[0]): boolean => {
+		let current_bar = (this.bar() % n) + 1;
+		return (typeof bars === "number") 
+			? bars === current_bar
+			: bars.some((b) => b == current_bar)
 	};
-
 
   onbeat = (...beat: number[]): boolean => {
     /**
