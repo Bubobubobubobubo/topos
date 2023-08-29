@@ -149,6 +149,9 @@ export class Editor {
   buffer_search: HTMLInputElement = document.getElementById(
     "buffer-search"
   ) as HTMLInputElement;
+  universe_creator: HTMLFormElement = document.getElementById(
+    "universe-creator"
+  ) as HTMLFormElement;
 
   // Local script tabs
   local_script_tabs: HTMLDivElement = document.getElementById(
@@ -554,18 +557,24 @@ export class Editor {
       });
     });
 
-    this.buffer_search.addEventListener("keydown", (event) => {
-      if (event.key === "Enter") {
-        let query = this.buffer_search.value;
-        if (query.length > 2 && query.length < 20) {
-          this.loadUniverse(query);
-          this.settings.selected_universe = query;
+    this.universe_creator.addEventListener("submit", (event) => {
+
+      event.preventDefault();
+
+      let data = new FormData(this.universe_creator);
+      let universeName = data.get("universe") as string|null;
+
+      if(universeName){
+        if (universeName.length > 2 && universeName.length < 20) {
+          this.loadUniverse(universeName);
+          this.settings.selected_universe = universeName;
           this.buffer_search.value = "";
           this.closeBuffersModal();
           this.view.focus();
         }
       }
     });
+
     tryEvaluate(this, this.universes[this.selected_universe.toString()].init);
 
     [
