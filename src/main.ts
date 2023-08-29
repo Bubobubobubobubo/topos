@@ -27,6 +27,7 @@ import {
   template_universes,
 } from "./AppSettings";
 import { tryEvaluate } from "./Evaluator";
+import { gzipSync, decompressSync, strFromU8 } from 'fflate';
 
 // Importing showdown and setting up the markdown converter
 import showdown from "showdown";
@@ -526,13 +527,13 @@ export class Editor {
       this.settings.font_size = parseInt(new_value);
     });
 
-    this.share_button.addEventListener("click", () => {
+    this.share_button.addEventListener("click", async () => {
       // trigger a manual save
       this.currentFile().candidate = app.view.state.doc.toString();
       this.currentFile().committed = app.view.state.doc.toString();
       this.settings.saveApplicationToLocalStorage(app.universes, app.settings);
       // encode as a blob!
-      this.share();
+      await this.share();
     });
 
     this.normal_mode_button.addEventListener("click", () => {
@@ -649,7 +650,8 @@ export class Editor {
       if (url !== null) {
         const universeParam = url.get("universe");
         if (universeParam !== null) {
-          new_universe = JSON.parse(atob(universeParam));
+          let data = Uint8Array.from(atob(universeParam), c => c.charCodeAt(0))
+          new_universe = JSON.parse(strFromU8(decompressSync(data)));
           const randomName: string = uniqueNamesGenerator({
 						  length: 2, separator: '_',
 							dictionaries: [colors, animals],
@@ -702,12 +704,24 @@ export class Editor {
 		existing_universes!.innerHTML = final_html;
 	}
 
-  share() {
-    const hashed_table = btoa(
-      JSON.stringify({
-        universe: this.settings.universes[this.selected_universe],
-      })
-    );
+  async share() {
+
+    async function bufferToBase64(buffer:Uint8Array) {
+      const base64url: string = await new Promise(r => {
+        const reader = new FileReader()
+        reader.onload = () => r(reader.result as string)
+        reader.readAsDataURL(new Blob([buffer]))
+      });
+      return base64url.slice(base64url.indexOf(',') + 1);
+    }
+
+    let data = JSON.stringify({
+      universe: this.settings.universes[this.selected_universe],
+    });
+    let encoded_data = gzipSync(new TextEncoder().encode(data));
+    // TODO make this async
+    // TODO maybe try with compression level 9
+    const hashed_table = await bufferToBase64(encoded_data);
     const url = new URL(window.location.href);
     url.searchParams.set("universe", hashed_table);
     window.history.replaceState({}, "", url.toString());
