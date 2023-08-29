@@ -950,10 +950,12 @@ export class UserAPI {
      */
     let final_pulses: boolean[] = [];
     beat.forEach((b) => {
-      const _mod = b % this.app.clock.time_signature[0];
-      b = _mod === 0 ? b : _mod;
+      b =  b % this.app.clock.time_signature[0] || this.app.clock.time_signature[0];
       let integral_part = Math.floor(b);
-      let decimal_part = b - integral_part;
+      console.log("INTEGRAL: ", integral_part, this.app.clock.time_position.beat)
+      let decimal_part = (b - integral_part)+1;
+      console.log("HUH?", this.app.clock.time_position);
+      console.log("DECIMAL:",decimal_part, this.app.clock.time_position.pulse)
       final_pulses.push(
         integral_part === this.app.clock.time_position.beat &&
           this.app.clock.time_position.pulse ===

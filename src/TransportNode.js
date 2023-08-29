@@ -101,7 +101,7 @@ export class TransportNode extends AudioWorkletNode {
         const beatNumber = Math.floor(ticks / this.app.clock.ppqn);
         const barNumber = Math.floor(beatNumber / beatsPerBar)+1;
         const beatWithinBar = Math.floor(beatNumber % beatsPerBar)+1;
-        return {bar: barNumber, beat: beatWithinBar, ppqn: ppqnPosition};
+        return {bar: barNumber, beat: beatWithinBar, pulse: ppqnPosition};
     }
 
 }
