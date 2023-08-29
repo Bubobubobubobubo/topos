@@ -34,18 +34,18 @@ export class Clock {
 
     ctx: AudioContext
     transportNode: TransportNode | null
-    bpm: number
+    private _bpm: number
     time_signature: number[]
     time_position: TimePosition
-    ppqn: number
+    private _ppqn: number
     tick: number
 
     constructor(public app: Editor, ctx: AudioContext) {
         this.time_position = { bar: 0, beat: 0, pulse: 0 }
         this.time_signature = [4, 4];
-        this.tick = 0;
-        this.bpm = 120;
-        this.ppqn = 48;
+        this.tick = -1;
+        this._bpm = 120;
+        this._ppqn = 48;
         this.transportNode = null;
         this.ctx = ctx;
         ctx.audioWorklet.addModule(TransportProcessor).then((e) => {
@@ -65,8 +65,8 @@ export class Clock {
          * 
          * @returns number of ticks until next bar
          */
-        const currentBeatInTicks = ((this.app.clock.beats_since_origin - 1) * this.ppqn) + this.time_position.pulse + 1
-        const nextBarinTicks =  (this.beats_per_bar * this.ppqn) * this.time_position.bar + 1
+        const currentBeatInTicks = ((this.app.clock.beats_since_origin * this.ppqn) + this.time_position.pulse);
+        const nextBarinTicks =  (this.beats_per_bar * this.ppqn) * this.time_position.bar;
         return nextBarinTicks - currentBeatInTicks;
     }
 
@@ -77,7 +77,7 @@ export class Clock {
          * 
          * @returns number of ticks until next beat
          */
-        const ticksMissingToNextBeat = (this.time_position.pulse + 1) % this.ppqn;
+        const ticksMissingToNextBeat = (this.time_position.pulse) % this.ppqn;
         return this.app.clock.pulses_since_origin + ticksMissingToNextBeat;
     }
 
@@ -94,7 +94,7 @@ export class Clock {
          * 
          * @returns number of beats since origin
          */
-        return (this.time_position.bar - 1) * this.beats_per_bar + this.time_position.beat;
+        return Math.floor(this.tick / this.ppqn);
     }
 
     get pulses_since_origin(): number {
@@ -103,7 +103,7 @@ export class Clock {
          * 
          * @returns number of pulses since origin
          */
-        return (this.beats_since_origin * this.ppqn) + this.time_position.pulse
+        return this.tick;
 
     }
 
@@ -112,6 +112,24 @@ export class Clock {
          * Returns the duration of a pulse in seconds.
          */
         return 60 / this.bpm / this.ppqn;
+    }
+
+    get bpm(): number {
+        return this._bpm;
+    }
+    
+    set bpm(bpm: number) {
+        this._bpm = bpm;
+        this.transportNode?.setBPM(bpm);
+    }
+
+    get ppqn(): number {
+        return this._ppqn;
+    }
+
+    set ppqn(ppqn: number) {
+        this._ppqn = ppqn;
+        this.transportNode?.setPPQN(ppqn);
     }
 
     public convertPulseToSecond(n: number): number {
@@ -126,12 +144,10 @@ export class Clock {
          * Starts the TransportNode (starts the clock).
          */
         // @ts-ignore
-        if (this.transportNode?.state === 'running') {
-            console.log('Already started')
-        } else {
-            this.app.audioContext.resume()
-            this.transportNode?.start();
-        }
+        console.log("STARTING?");
+        this.app.audioContext.resume()
+        this.transportNode?.start();
+        
     }
 
     public pause(): void {

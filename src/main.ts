@@ -463,6 +463,7 @@ export class Editor {
     this.stop_buttons.forEach((button) => {
       button.addEventListener("click", () => {
         this.setButtonHighlighting("stop", true);
+        this.isPlaying = false;
         this.clock.stop();
       });
     });

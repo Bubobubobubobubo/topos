@@ -65,7 +65,7 @@ export class Player extends Event {
     }
 
     atTheBeginning = (): boolean => {
-         return this.pulse()===0 && this.ziffers.index===0;
+         return this.ziffers.index===0;
     }
 
     origin = (): number => {
@@ -74,6 +74,10 @@ export class Player extends Event {
 
     pulse = (): number => {
         return this.app.clock.time_position.pulse;
+    }
+
+    beat = (): number => {
+        return this.app.clock.time_position.beat;
     }
 
     nextBeat = (): number => {
@@ -150,24 +154,25 @@ export class Player extends Event {
     }
 
     scale(name: string) {
-        this.ziffers.scale(name);
+        if(this.atTheBeginning()) this.ziffers.scale(name);
         return this;
     }
 
     key(name: string) {
-        this.ziffers.key(name);
+        if(this.firstRun() || this.atTheBeginning()) {
+            console.log("At", this.app.clock.time_position);
+            this.ziffers.key(name);
+        }
         return this;
     }
 
     octave(value: number) {
-        this.ziffers.octave(value);
+        if(this.atTheBeginning()) this.ziffers.octave(value);
         return this;
     }
 
     retrograde() {
-        if(this.index === -1 && this.ziffers.index === -1) {
-            this.ziffers.retrograde();
-        }
+        if(this.atTheBeginning()) this.ziffers.retrograde();
         return this;
     }
 
