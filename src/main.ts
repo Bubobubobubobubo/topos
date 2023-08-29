@@ -316,6 +316,7 @@ export class Editor {
 
       // This is the modal to switch between universes
       if (event.ctrlKey && event.key === "b") {
+        event.preventDefault();
         this.hideDocumentation();
 				this.updateKnownUniversesView();
         this.openBuffersModal();
