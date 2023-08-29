@@ -43,7 +43,7 @@ export class Clock {
     constructor(public app: Editor, ctx: AudioContext) {
         this.time_position = { bar: 0, beat: 0, pulse: 0 }
         this.time_signature = [4, 4];
-        this.tick = -1;
+        this.tick = 0;
         this._bpm = 120;
         this._ppqn = 48;
         this.transportNode = null;
@@ -65,9 +65,9 @@ export class Clock {
          * 
          * @returns number of ticks until next bar
          */
-        const currentBeatInTicks = ((this.app.clock.beats_since_origin * this.ppqn) + this.time_position.pulse);
-        const nextBarinTicks =  (this.beats_per_bar * this.ppqn) * this.time_position.bar;
-        return nextBarinTicks - currentBeatInTicks;
+        const ticskMissingFromBeat = this.ppqn - this.time_position.pulse;
+        const beatsMissingFromBar = this.beats_per_bar - this.time_position.beat;
+        return (beatsMissingFromBar * this.ppqn) + ticskMissingFromBeat;
     }
 
     get next_beat_in_ticks(): number {
@@ -77,8 +77,7 @@ export class Clock {
          * 
          * @returns number of ticks until next beat
          */
-        const ticksMissingToNextBeat = (this.time_position.pulse) % this.ppqn;
-        return this.app.clock.pulses_since_origin + ticksMissingToNextBeat;
+        return this.app.clock.pulses_since_origin + this.time_position.pulse;
     }
 
     get beats_per_bar(): number {
@@ -143,9 +142,7 @@ export class Clock {
         /**
          * Starts the TransportNode (starts the clock).
          */
-        // @ts-ignore
-        console.log("STARTING?");
-        this.app.audioContext.resume()
+        this.app.audioContext.resume();
         this.transportNode?.start();
         
     }
@@ -161,6 +158,7 @@ export class Clock {
         /**
          * Stops the TransportNode (stops the clock).
          */
+        this.app.clock.tick = 0;
         this.transportNode?.stop();
     }
 }

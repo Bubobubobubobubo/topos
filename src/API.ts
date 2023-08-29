@@ -366,7 +366,7 @@ export class UserAPI {
     const key = id==="" ? this.generateCacheKey(input, options) : zid;
 
     let player;
-    
+
     if (this.app.api.patternCache.has(key)) {
       player = this.app.api.patternCache.get(key) as Player;
       if(player.input!==input) {
@@ -379,7 +379,6 @@ export class UserAPI {
       this.app.api.patternCache.set(key, player);
     }
 
-  
     if(typeof id === "number") player.zid = zid;
   
     player.updateLastCallTime();
@@ -950,16 +949,12 @@ export class UserAPI {
      */
     let final_pulses: boolean[] = [];
     beat.forEach((b) => {
-      b =  b % this.app.clock.time_signature[0] || this.app.clock.time_signature[0];
-      let integral_part = Math.floor(b);
-      console.log("INTEGRAL: ", integral_part, this.app.clock.time_position.beat)
-      let decimal_part = (b - integral_part)+1;
-      console.log("HUH?", this.app.clock.time_position);
-      console.log("DECIMAL:",decimal_part, this.app.clock.time_position.pulse)
+      const beat = b % this.app.clock.time_signature[0] || this.app.clock.time_signature[0];
+      const integral_part = Math.floor(beat);
+      const decimal_part = ((beat - integral_part) * this.app.clock.ppqn) + 1;
       final_pulses.push(
         integral_part === this.app.clock.time_position.beat &&
-          this.app.clock.time_position.pulse ===
-            decimal_part * this.app.clock.ppqn
+        this.app.clock.time_position.pulse === decimal_part
       );
     });
     return final_pulses.some((p) => p == true);

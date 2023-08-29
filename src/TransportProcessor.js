@@ -48,15 +48,13 @@ class TransportProcessor extends AudioWorkletProcessor {
                 this.startedAgainTime = currentTime;
                 this.wasStopped = false;
             }
+
             const logicalTime = currentTime-this.totalPausedTime-this.startedAgainTime;
-            //console.log(currentTime, this.totalPausedTime, this.startedAgainTime);
-            //console.log("Logical/Current:", logicalTime, currentTime);
-            
             const beatNumber = logicalTime / (60 / this.bpm);
-            const nextPulsePosition = Math.ceil(beatNumber * this.ppqn);
-            
-            if(nextPulsePosition > this.currentPulsePosition) {
-                this.currentPulsePosition = nextPulsePosition;
+            const currentPulsePosition = Math.ceil(beatNumber * this.ppqn);
+
+            if(currentPulsePosition > this.currentPulsePosition) {
+                this.currentPulsePosition = currentPulsePosition;
                 this.port.postMessage({ type: "bang", logicalTime });
             }
         }

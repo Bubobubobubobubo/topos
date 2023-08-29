@@ -11,17 +11,19 @@ export type InputOptions = { [key: string]: string | number };
 export class Player extends Event {
     input: string;
     ziffers: Ziffers;
-    initCallTime: number = 0;
-    startCallTime: number = 0;
-    lastCallTime: number = 0;
+    initCallTime: number = 1;
+    startCallTime: number = 1;
+    lastCallTime: number = 1;
     waitTime = 0;
     startBeat: number = 0;
     played: boolean = false;
     current!: Pitch|Chord|ZRest;
     retro: boolean = false;
     index: number = -1;
-    zid: string|undefined = undefined;
+    zid: string = "";
     options: InputOptions = {};
+    skipIndex = 0;
+    endTime = 0;
 
     constructor(input: string, options: InputOptions, public app: Editor) {
         super(app);
@@ -61,15 +63,15 @@ export class Player extends Event {
     }
 
     firstRun = (): boolean => {
-        return this.origin()<=0 && this.notStarted();
+        return this.notStarted();
     }
 
     atTheBeginning = (): boolean => {
-         return this.ziffers.index===0;
+        return this.skipIndex === 0 && this.ziffers.index<=0;
     }
 
     origin = (): number => {
-        return this.app.clock.pulses_since_origin+1;
+        return this.app.clock.pulses_since_origin;
     }
 
     pulse = (): number => {
@@ -86,10 +88,13 @@ export class Player extends Event {
 
     // Check if it's time to play the event
     areWeThereYet = (): boolean => {
+
         // If clock has stopped
         if(this.app.clock.pulses_since_origin<this.lastCallTime) {
-            this.lastCallTime = 0;
+            this.lastCallTime = 1;
+            this.startCallTime = 1;
             this.index = 0;
+            this.waitTime = 0;
         }
 
         // Main logic
@@ -97,24 +102,28 @@ export class Player extends Event {
             (   // If pattern is just starting
                 this.notStarted() && 
                 (this.app.clock.time_position.pulse === 1 ||
-                this.app.clock.pulses_since_origin+1 >= this.app.clock.next_beat_in_ticks) &&
-                (this.app.clock.pulses_since_origin+1 >= this.waitTime)
+                this.app.clock.pulses_since_origin >= this.app.clock.next_beat_in_ticks) &&
+                (this.app.clock.pulses_since_origin >= this.waitTime)
             )
             ||
             (   // If pattern is already playing
                 this.current &&
-                (this.pulseToSecond(this.app.clock.pulses_since_origin+1) >= 
+                (this.pulseToSecond(this.app.clock.pulses_since_origin) >= 
                 this.pulseToSecond(this.lastCallTime) +
                 (this.current.duration*4) * this.pulseToSecond(this.app.api.ppqn())) &&
-                (this.app.clock.pulses_since_origin+1 >= this.waitTime)
+                (this.app.clock.pulses_since_origin >= this.waitTime)
             )
         );
+        
+        // Increment index of how many times call is skipped
+        this.skipIndex = howAboutNow ? 0 : this.skipIndex+1;
 
         // Increment index of how many times sound/midi have been called
         this.index = howAboutNow ? this.index+1 : this.index;
+        
 
         if(howAboutNow && this.notStarted()) {
-            this.initCallTime = this.app.clock.pulses_since_origin+1;
+            this.initCallTime = this.app.clock.pulses_since_origin;
         }
 
         if(this.atTheBeginning()) {
@@ -159,10 +168,7 @@ export class Player extends Event {
     }
 
     key(name: string) {
-        if(this.firstRun() || this.atTheBeginning()) {
-            console.log("At", this.app.clock.time_position);
-            this.ziffers.key(name);
-        }
+        if(this.atTheBeginning()) this.ziffers.key(name);
         return this;
     }
 
@@ -176,23 +182,14 @@ export class Player extends Event {
         return this;
     }
 
-    wait(value: number) {
-        if(this.index === -1 && this.ziffers.index === -1) {
-           
-           // TODO: THIS LATER!
-
-            /* if(typeof value === "string") {
-                const cueKey = this.app.api.patternCues.get(value);
-                if(cueKey) {
-                    const waitedPatter = this.app.api.patternCache.get(cueKey) as Player;
-                    if(waitedPatter) {
-                        this.waitTime = waitedPatter.nextEndTime();
-                    }
-                }
-            } */
-            
+    wait(value: number|Function) {
+        if(this.atTheBeginning()) {    
+            if(typeof value === "function") {
+                const refPat = this.app.api.patternCache.get(value.name) as Player;
+                if(refPat) this.waitTime = refPat.nextEndTime();
+                return this;
+            }
             this.waitTime = this.origin() + Math.ceil(value*4*this.app.clock.ppqn); 
-             
         }
         return this;
     }
