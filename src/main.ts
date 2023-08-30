@@ -27,6 +27,7 @@ import {
   template_universes,
 } from "./AppSettings";
 import { tryEvaluate } from "./Evaluator";
+// @ts-ignore
 import { gzipSync, decompressSync, strFromU8 } from 'fflate';
 
 // Importing showdown and setting up the markdown converter
@@ -263,19 +264,13 @@ export class Editor {
     // Application event listeners
     // ================================================================================
 
-    document.addEventListener("keydown", (event: KeyboardEvent) => {
-      // TAB should do nothing
+    window.addEventListener("keydown", (event: KeyboardEvent) => {
+
       if (event.key === "Tab") {
         event.preventDefault();
       }
 
       if (event.ctrlKey && event.key === "s") {
-        event.preventDefault();
-        this.setButtonHighlighting("pause", true);
-        this.clock.pause();
-      }
-
-      if (event.ctrlKey && event.key === "r") {
         event.preventDefault();
         this.setButtonHighlighting("stop", true);
         this.clock.stop();
@@ -283,8 +278,15 @@ export class Editor {
 
       if (event.ctrlKey && event.key === "p") {
         event.preventDefault();
-        this.setButtonHighlighting("play", true);
-        this.clock.start();
+				if (this.isPlaying) {
+					this.isPlaying = false;
+					this.setButtonHighlighting("pause", true);
+					this.clock.pause();
+				} else {
+					this.isPlaying = true;
+					this.setButtonHighlighting("play", true);
+					this.clock.start();
+				}
       }
 
       // Ctrl + Shift + V: Vim Mode
@@ -370,8 +372,10 @@ export class Editor {
           if (event.keyCode === keycode) {
             event.preventDefault();
             if (event.ctrlKey) {
+							event.preventDefault();
               this.api.script(keycode - 111);
             } else {
+							event.preventDefault();
               this.changeModeFromInterface("local");
               this.changeToLocalBuffer(index);
               this.hideDocumentation();
@@ -381,10 +385,12 @@ export class Editor {
       );
 
       if (event.keyCode == 121) {
+				event.preventDefault();
         this.changeModeFromInterface("global");
         this.hideDocumentation();
       }
       if (event.keyCode == 122) {
+				event.preventDefault();
         this.changeModeFromInterface("init");
         this.hideDocumentation();
       }
@@ -591,7 +597,7 @@ export class Editor {
       "ziffers",
       "midi",
       "functions",
-      "reference",
+      // "reference",
       "shortcuts",
       "about",
     ].forEach((e) => {
