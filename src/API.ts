@@ -51,25 +51,24 @@ export class UserAPI {
   private errorTimeoutID: number = 0;
   private printTimeoutID: number = 0;
 
-
   MidiConnection: MidiConnection = new MidiConnection();
   load: samples;
 
   constructor(public app: Editor) {}
 
-	_loadUniverseFromInterface = (universe: string) => {
-		this.app.loadUniverse(universe as string);
+  _loadUniverseFromInterface = (universe: string) => {
+    this.app.loadUniverse(universe as string);
     this.app.openBuffersModal();
-	}
+  };
 
-	_deleteUniverseFromInterface = (universe: string) => {
-		delete this.app.universes[universe];
-		this.app.settings.saveApplicationToLocalStorage(
-			this.app.universes,
-			this.app.settings
-		);
-		this.app.updateKnownUniversesView();
-	}
+  _deleteUniverseFromInterface = (universe: string) => {
+    delete this.app.universes[universe];
+    this.app.settings.saveApplicationToLocalStorage(
+      this.app.universes,
+      this.app.settings
+    );
+    this.app.updateKnownUniversesView();
+  };
 
   _playDocExample = (code?: string) => {
     this.play();
@@ -81,7 +80,6 @@ export class UserAPI {
       this.app.universes[this.app.selected_universe as string].global
     );
   };
-
 
   _playDocExampleOnce = (code?: string) => {
     this.play();
@@ -98,7 +96,7 @@ export class UserAPI {
     clearTimeout(this.errorTimeoutID);
     clearTimeout(this.printTimeoutID);
     this.app.error_line.innerHTML = error as string;
-		this.app.error_line.style.color = "color-red-800";
+    this.app.error_line.style.color = "color-red-800";
     this.app.error_line.classList.remove("hidden");
     this.errorTimeoutID = setTimeout(
       () => this.app.error_line.classList.add("hidden"),
@@ -111,7 +109,7 @@ export class UserAPI {
     clearTimeout(this.printTimeoutID);
     clearTimeout(this.errorTimeoutID);
     this.app.error_line.innerHTML = message as string;
-		this.app.error_line.style.color = "white";
+    this.app.error_line.style.color = "white";
     this.app.error_line.classList.remove("hidden");
     this.printTimeoutID = setTimeout(
       () => this.app.error_line.classList.add("hidden"),
@@ -151,10 +149,10 @@ export class UserAPI {
   // Mouse functions
   // =============================================================
 
-	onmousemove = (e: MouseEvent) => {
-		this.app._mouseX = e.clientX;
-		this.app._mouseY = e.clientY;
-	}
+  onmousemove = (e: MouseEvent) => {
+    this.app._mouseX = e.clientX;
+    this.app._mouseY = e.clientY;
+  };
 
   public mouseX = (): number => {
     /**
@@ -359,17 +357,16 @@ export class UserAPI {
   public z = (
     input: string,
     options: InputOptions = {},
-    id: number|string = ""
+    id: number | string = ""
   ) => {
-
-    const zid = "z"+id.toString();
-    const key = id==="" ? this.generateCacheKey(input, options) : zid;
+    const zid = "z" + id.toString();
+    const key = id === "" ? this.generateCacheKey(input, options) : zid;
 
     let player;
-    
+
     if (this.app.api.patternCache.has(key)) {
       player = this.app.api.patternCache.get(key) as Player;
-      if(player.input!==input) {
+      if (player.input !== input) {
         player = undefined;
       }
     }
@@ -379,31 +376,47 @@ export class UserAPI {
       this.app.api.patternCache.set(key, player);
     }
 
-  
-    if(typeof id === "number") player.zid = zid;
-  
+    if (typeof id === "number") player.zid = zid;
+
     player.updateLastCallTime();
-  
+
     return player;
   };
 
-  public z0 = (input: string, opts: InputOptions = {}) => this.z(input, opts, 0);
-  public z1 = (input: string, opts: InputOptions = {}) => this.z(input, opts, 1);
-  public z2 = (input: string, opts: InputOptions = {}) => this.z(input, opts, 2);
-  public z3 = (input: string, opts: InputOptions = {}) => this.z(input, opts, 3);
-  public z4 = (input: string, opts: InputOptions = {}) => this.z(input, opts, 4);
-  public z5 = (input: string, opts: InputOptions = {}) => this.z(input, opts, 5);
-  public z6 = (input: string, opts: InputOptions = {}) => this.z(input, opts, 6);
-  public z7 = (input: string, opts: InputOptions = {}) => this.z(input, opts, 7);
-  public z8 = (input: string, opts: InputOptions = {}) => this.z(input, opts, 8);
-  public z9 = (input: string, opts: InputOptions = {}) => this.z(input, opts, 9);
-  public z10 = (input: string, opts: InputOptions = {}) => this.z(input, opts, 10);
-  public z11 = (input: string, opts: InputOptions = {}) => this.z(input, opts, 11);
-  public z12 = (input: string, opts: InputOptions = {}) => this.z(input, opts, 12);
-  public z13 = (input: string, opts: InputOptions = {}) => this.z(input, opts, 13);
-  public z14 = (input: string, opts: InputOptions = {}) => this.z(input, opts, 14);
-  public z15 = (input: string, opts: InputOptions = {}) => this.z(input, opts, 15);
-  public z16 = (input: string, opts: InputOptions = {}) => this.z(input, opts, 16);
+  public z0 = (input: string, opts: InputOptions = {}) =>
+    this.z(input, opts, 0);
+  public z1 = (input: string, opts: InputOptions = {}) =>
+    this.z(input, opts, 1);
+  public z2 = (input: string, opts: InputOptions = {}) =>
+    this.z(input, opts, 2);
+  public z3 = (input: string, opts: InputOptions = {}) =>
+    this.z(input, opts, 3);
+  public z4 = (input: string, opts: InputOptions = {}) =>
+    this.z(input, opts, 4);
+  public z5 = (input: string, opts: InputOptions = {}) =>
+    this.z(input, opts, 5);
+  public z6 = (input: string, opts: InputOptions = {}) =>
+    this.z(input, opts, 6);
+  public z7 = (input: string, opts: InputOptions = {}) =>
+    this.z(input, opts, 7);
+  public z8 = (input: string, opts: InputOptions = {}) =>
+    this.z(input, opts, 8);
+  public z9 = (input: string, opts: InputOptions = {}) =>
+    this.z(input, opts, 9);
+  public z10 = (input: string, opts: InputOptions = {}) =>
+    this.z(input, opts, 10);
+  public z11 = (input: string, opts: InputOptions = {}) =>
+    this.z(input, opts, 11);
+  public z12 = (input: string, opts: InputOptions = {}) =>
+    this.z(input, opts, 12);
+  public z13 = (input: string, opts: InputOptions = {}) =>
+    this.z(input, opts, 13);
+  public z14 = (input: string, opts: InputOptions = {}) =>
+    this.z(input, opts, 14);
+  public z15 = (input: string, opts: InputOptions = {}) =>
+    this.z(input, opts, 15);
+  public z16 = (input: string, opts: InputOptions = {}) =>
+    this.z(input, opts, 16);
 
   // =============================================================
   // Counter and iteration
@@ -931,12 +944,15 @@ export class UserAPI {
     return current_chunk % 2 === 0;
   };
 
- 	public onbar = (bars: number[] | number, n: number = this.app.clock.time_signature[0]): boolean => {
-		let current_bar = (this.bar() % n) + 1;
-		return (typeof bars === "number") 
-			? bars === current_bar
-			: bars.some((b) => b == current_bar)
-	};
+  public onbar = (
+    bars: number[] | number,
+    n: number = this.app.clock.time_signature[0]
+  ): boolean => {
+    let current_bar = (this.bar() % n) + 1;
+    return typeof bars === "number"
+      ? bars === current_bar
+      : bars.some((b) => b == current_bar);
+  };
 
   onbeat = (...beat: number[]): boolean => {
     /**
@@ -950,14 +966,14 @@ export class UserAPI {
      */
     let final_pulses: boolean[] = [];
     beat.forEach((b) => {
-      const _mod = b % this.app.clock.time_signature[0];
-      b = _mod === 0 ? b : _mod;
-      let integral_part = Math.floor(b);
-      let decimal_part = b - integral_part;
+      const beat =
+        b % this.app.clock.time_signature[0] ||
+        this.app.clock.time_signature[0];
+      const integral_part = Math.floor(beat);
+      const decimal_part = (beat - integral_part) * this.app.clock.ppqn + 1;
       final_pulses.push(
         integral_part === this.app.clock.time_position.beat &&
-          this.app.clock.time_position.pulse ===
-            decimal_part * this.app.clock.ppqn
+          this.app.clock.time_position.pulse === decimal_part
       );
     });
     return final_pulses.some((p) => p == true);
@@ -1016,14 +1032,16 @@ export class UserAPI {
   };
   ec: Function = this.euclid;
 
-	public rhythm = (
+  public rhythm = (
     div: number,
     pulses: number,
     length: number,
     rotate: number = 0
   ): boolean => {
-		return this.mod(div) && this._euclidean_cycle(pulses, length, rotate).div(div);
-	}
+    return (
+      this.mod(div) && this._euclidean_cycle(pulses, length, rotate).div(div)
+    );
+  };
 
   _euclidean_cycle(
     pulses: number,
@@ -1277,9 +1295,9 @@ export class UserAPI {
   samples = samples;
 
   log = (message: any) => {
-		console.log(message);
-		this._logMessage(message);
-	}
+    console.log(message);
+    this._logMessage(message);
+  };
 
   scale = scale;
 
