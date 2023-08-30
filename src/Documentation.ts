@@ -1623,7 +1623,7 @@ ${makeExample(
   const object = ["happy","sad","tired"].pick()
   const sentence = subject+" "+verb+" "+" "+object
     
-  mod(6) :: sentence.pitch(0).rate(0).voice([0,2].pick()).say()
+  mod(6) :: sentence.pitch(0).rate(0).voice([0,2].pick()).speak()
   `,
   false
 )}
