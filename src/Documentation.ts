@@ -1581,6 +1581,16 @@ mod(0.25) :: sound('sine')
 
 Topos can also speak using [Web Speec API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Speech_API)!
 
+Speech synthesis can be used in two ways:
+
+- <icode>speak(text: string, voice: number, rate: number, pitch: number)</icode>: speak the given text.
+
+Or by using string and chaining:
+
+- <icode>"Hello".rate(1.5).pitch(0.5).speak()</icode>.
+
+Examples:
+
 ${makeExample(
   "Hello world!",
   `
@@ -1590,12 +1600,35 @@ mod(4) :: speak("Hello world!")
 )}
 
 ${makeExample(
-  "Speak with a different voice",
+  "Different voices",
   `
 mod(2) :: speak("Topos!",irand(0,25))
   `,
   false
 )}
+
+${makeExample(
+  "Chaining string",
+  `
+  onbeat(1,3) :: "Foobaba".voice(irand(0,10)).speak()
+  `,
+  false
+)}
+
+${makeExample(
+  "Building string and chaining",
+  `
+  const subject = ["coder","user","loser"].pick()
+  const verb = ["is", "was", "isnt"].pick()
+  const object = ["happy","sad","tired"].pick()
+  const sentence = subject+" "+verb+" "+" "+object
+    
+  mod(6) :: sentence.pitch(0).rate(0).voice([0,2].pick()).say()
+  `,
+  false
+)}
+
+
 
 
 `;

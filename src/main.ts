@@ -30,6 +30,7 @@ import { gzipSync, decompressSync, strFromU8 } from "fflate";
 import showdown from "showdown";
 showdown.setFlavor("github");
 import showdownHighlight from "showdown-highlight";
+import { makeStringExtensions } from "./StringExtensions";
 const classMap = {
   h1: "text-white lg:text-4xl text-xl lg:ml-4 lg:mx-4 mx-2 lg:my-4 my-2 lg:mb-4 mb-4 bg-neutral-900 rounded-lg py-2 px-2",
   h2: "text-white lg:text-3xl text-xl lg:ml-4 lg:mx-4 mx-2 lg:my-4 my-2 lg:mb-4 mb-4 bg-neutral-900 rounded-lg py-2 px-2",
@@ -219,6 +220,7 @@ export class Editor {
 
     this.api = new UserAPI(this);
     makeArrayExtensions(this.api);
+    makeStringExtensions(this.api);
 
     // ================================================================================
     // CodeMirror Management

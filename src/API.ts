@@ -358,7 +358,7 @@ export class UserAPI {
     input: string,
     options: InputOptions = {},
     id: number | string = ""
-  ) => {
+  ): Player =>  {
     const zid = "z" + id.toString();
     const key = id === "" ? this.generateCacheKey(input, options) : zid;
 
@@ -1292,24 +1292,23 @@ export class UserAPI {
   // Speech synthesis
   // =============================================================
 
-  speak = (text: string, index: number, rate: number = 1, pitch: number = 1): void => {
+  speak = (text: string, voice: number, rate: number = 1, pitch: number = 1): void => {
     /* 
      * Speaks the given text using the browser's speech synthesis API.
      * @param text - The text to speak
-     * @param index - The index of the voice to use
+     * @param voice - The index of the voice to use
+     * @param rate - The rate at which to speak the text
+     * @param pitch - The pitch at which to speak the text
+     * 
      */
     const synth = window.speechSynthesis;
     synth.cancel();
     const utterance = new SpeechSynthesisUtterance(text);
-    utterance.voice = speechSynthesis.getVoices()[index];
+    utterance.voice = speechSynthesis.getVoices()[voice];
     utterance.rate = rate;
     utterance.pitch = pitch;
     synth.speak(utterance);
-  }
-
-  say = this.speak;
-
-
+  };
 
   // =============================================================
   // Trivial functions
