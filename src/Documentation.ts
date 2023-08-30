@@ -1424,6 +1424,24 @@ z1('q 0 3 {10 14} e 8 4 {5 10 12 14 7 0}').sound('sine')
   true
 )}
 
+${makeExample(
+  "Scala scale from variable",
+  `
+  const werckmeister = "107.82 203.91 311.72 401.955 503.91 605.865 701.955 809.775 900. 1007.82 1103.91 1200."
+
+  z0('s (0,3) ^ 0 3 ^ 0 (3,6) 0 _ (3,5) 0 _ 3 ^ 0 (3,5) ^ 0 6 0 _ 3 0')
+    .key('C3')
+    .scale(werckmeister)
+    .sound('sine')
+    .fmi(1 + usine(0.5) * irand(1,10))
+    .cutoff(100 + usine(.5) * 100) 
+    .out()
+  
+  onbeat(1,1.5,3) :: sound('bd').cutoff(100 + usine(.25) * 1000).out()
+`,
+  true
+)}
+
 - Algorithmic operations
 
 ${makeExample(

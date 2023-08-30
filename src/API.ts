@@ -905,6 +905,13 @@ export class UserAPI {
     return this.app.clock.pulses_since_origin;
   };
 
+  signature = (): number[] => {
+    /**
+     * Returns the current time signature
+     */
+    return this.app.clock.time_signature;
+  };
+
   // =============================================================
   // Time Filters
   // =============================================================
@@ -966,14 +973,11 @@ export class UserAPI {
      */
     let final_pulses: boolean[] = [];
     beat.forEach((b) => {
-      const beat =
-        b % this.app.clock.time_signature[0] ||
-        this.app.clock.time_signature[0];
+      const beat = b % this.signature()[0];
       const integral_part = Math.floor(beat);
-      const decimal_part = (beat - integral_part) * this.app.clock.ppqn + 1;
+      const decimal_part = (beat - integral_part) * this.ppqn() + 1;
       final_pulses.push(
-        integral_part === this.app.clock.time_position.beat &&
-          this.app.clock.time_position.pulse === decimal_part
+        integral_part === this.beat() && this.pulse() === decimal_part
       );
     });
     return final_pulses.some((p) => p == true);

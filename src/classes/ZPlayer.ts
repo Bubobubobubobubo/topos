@@ -71,7 +71,7 @@ export class Player extends Event {
   };
 
   origin = (): number => {
-    return this.app.clock.pulses_since_origin;
+    return this.app.clock.pulses_since_origin+1;
   };
 
   pulse = (): number => {
@@ -83,6 +83,10 @@ export class Player extends Event {
   };
 
   nextBeat = (): number => {
+    return this.app.clock.next_beat_in_ticks;
+  };
+
+  nextBeatInTicks = (): number => {
     return this.app.clock.next_beat_in_ticks;
   };
 
@@ -100,17 +104,14 @@ export class Player extends Event {
     const howAboutNow =
       // If pattern is just starting
       (this.notStarted() &&
-        (this.app.clock.time_position.pulse === 1 ||
-          this.app.clock.pulses_since_origin >=
-            this.app.clock.next_beat_in_ticks) &&
-        this.app.clock.pulses_since_origin >= this.waitTime) || // If pattern is already playing
+      (this.pulse() === 1 || this.origin() >= this.nextBeatInTicks()) &&
+       this.origin() >= this.waitTime) || 
+      // If pattern is already playing
       (this.current &&
-        this.pulseToSecond(this.app.clock.pulses_since_origin) >=
-          this.pulseToSecond(this.lastCallTime) +
-            this.current.duration *
-              4 *
-              this.pulseToSecond(this.app.api.ppqn()) &&
-        this.app.clock.pulses_since_origin >= this.waitTime);
+       this.pulseToSecond(this.origin()) >=
+       this.pulseToSecond(this.lastCallTime) +
+       this.current.duration * 4 * this.pulseToSecond(this.app.api.ppqn()) &&
+       this.origin() >= this.waitTime);
 
     // Increment index of how many times call is skipped
     this.skipIndex = howAboutNow ? 0 : this.skipIndex + 1;

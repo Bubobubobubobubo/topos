@@ -16,7 +16,7 @@ export class TransportNode extends AudioWorkletNode {
         if (message.data && message.data.type === "bang") {
             this.logicalTime = message.data.logicalTime;
             
-            let futureTimeStamp = this.convertTicksToTimeposition(this.app.clock.tick);
+            const futureTimeStamp = this.convertTicksToTimeposition(this.app.clock.tick);
            // console.log("BANG", this.logicalTime, futureTimeStamp);
             
             this.app.clock.time_position = futureTimeStamp;
