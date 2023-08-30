@@ -973,7 +973,7 @@ export class UserAPI {
      */
     let final_pulses: boolean[] = [];
     beat.forEach((b) => {
-      const beat = b % this.signature()[0];
+      const beat = b % this.signature()[0] || this.signature()[0];
       const integral_part = Math.floor(beat);
       const decimal_part = (beat - integral_part) * this.ppqn() + 1;
       final_pulses.push(
@@ -1289,10 +1289,10 @@ export class UserAPI {
 
 
   // =============================================================
-  // Speed synthesis
+  // Speech synthesis
   // =============================================================
 
-  speak = (text: string, index: number): void => {
+  speak = (text: string, index: number, rate: number = 1, pitch: number = 1): void => {
     /* 
      * Speaks the given text using the browser's speech synthesis API.
      * @param text - The text to speak
@@ -1302,8 +1302,14 @@ export class UserAPI {
     synth.cancel();
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.voice = speechSynthesis.getVoices()[index];
+    utterance.rate = rate;
+    utterance.pitch = pitch;
     synth.speak(utterance);
   }
+
+  say = this.speak;
+
+
 
   // =============================================================
   // Trivial functions
