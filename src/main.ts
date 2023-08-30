@@ -27,6 +27,8 @@ import {
   template_universes,
 } from "./AppSettings";
 import { tryEvaluate } from "./Evaluator";
+// @ts-ignore
+import { gzipSync, decompressSync, strFromU8 } from 'fflate';
 
 // Importing showdown and setting up the markdown converter
 import showdown from "showdown";
@@ -149,6 +151,9 @@ export class Editor {
   buffer_search: HTMLInputElement = document.getElementById(
     "buffer-search"
   ) as HTMLInputElement;
+  universe_creator: HTMLFormElement = document.getElementById(
+    "universe-creator"
+  ) as HTMLFormElement;
 
   // Local script tabs
   local_script_tabs: HTMLDivElement = document.getElementById(
@@ -259,19 +264,13 @@ export class Editor {
     // Application event listeners
     // ================================================================================
 
-    document.addEventListener("keydown", (event: KeyboardEvent) => {
-      // TAB should do nothing
+    window.addEventListener("keydown", (event: KeyboardEvent) => {
+
       if (event.key === "Tab") {
         event.preventDefault();
       }
 
       if (event.ctrlKey && event.key === "s") {
-        event.preventDefault();
-        this.setButtonHighlighting("pause", true);
-        this.clock.pause();
-      }
-
-      if (event.ctrlKey && event.key === "r") {
         event.preventDefault();
         this.setButtonHighlighting("stop", true);
         this.clock.stop();
@@ -279,8 +278,15 @@ export class Editor {
 
       if (event.ctrlKey && event.key === "p") {
         event.preventDefault();
-        this.setButtonHighlighting("play", true);
-        this.clock.start();
+				if (this.isPlaying) {
+					this.isPlaying = false;
+					this.setButtonHighlighting("pause", true);
+					this.clock.pause();
+				} else {
+					this.isPlaying = true;
+					this.setButtonHighlighting("play", true);
+					this.clock.start();
+				}
       }
 
       // Ctrl + Shift + V: Vim Mode
@@ -316,6 +322,7 @@ export class Editor {
 
       // This is the modal to switch between universes
       if (event.ctrlKey && event.key === "b") {
+        event.preventDefault();
         this.hideDocumentation();
 				this.updateKnownUniversesView();
         this.openBuffersModal();
@@ -365,8 +372,10 @@ export class Editor {
           if (event.keyCode === keycode) {
             event.preventDefault();
             if (event.ctrlKey) {
+							event.preventDefault();
               this.api.script(keycode - 111);
             } else {
+							event.preventDefault();
               this.changeModeFromInterface("local");
               this.changeToLocalBuffer(index);
               this.hideDocumentation();
@@ -376,10 +385,12 @@ export class Editor {
       );
 
       if (event.keyCode == 121) {
+				event.preventDefault();
         this.changeModeFromInterface("global");
         this.hideDocumentation();
       }
       if (event.keyCode == 122) {
+				event.preventDefault();
         this.changeModeFromInterface("init");
         this.hideDocumentation();
       }
@@ -522,13 +533,13 @@ export class Editor {
       this.settings.font_size = parseInt(new_value);
     });
 
-    this.share_button.addEventListener("click", () => {
+    this.share_button.addEventListener("click", async () => {
       // trigger a manual save
       this.currentFile().candidate = app.view.state.doc.toString();
       this.currentFile().committed = app.view.state.doc.toString();
       this.settings.saveApplicationToLocalStorage(app.universes, app.settings);
       // encode as a blob!
-      this.share();
+      await this.share();
     });
 
     this.normal_mode_button.addEventListener("click", () => {
@@ -553,18 +564,24 @@ export class Editor {
       });
     });
 
-    this.buffer_search.addEventListener("keydown", (event) => {
-      if (event.key === "Enter") {
-        let query = this.buffer_search.value;
-        if (query.length > 2 && query.length < 20) {
-          this.loadUniverse(query);
-          this.settings.selected_universe = query;
+    this.universe_creator.addEventListener("submit", (event) => {
+
+      event.preventDefault();
+
+      let data = new FormData(this.universe_creator);
+      let universeName = data.get("universe") as string|null;
+
+      if(universeName){
+        if (universeName.length > 2 && universeName.length < 20) {
+          this.loadUniverse(universeName);
+          this.settings.selected_universe = universeName;
           this.buffer_search.value = "";
           this.closeBuffersModal();
           this.view.focus();
         }
       }
     });
+
     tryEvaluate(this, this.universes[this.selected_universe.toString()].init);
 
     [
@@ -580,7 +597,7 @@ export class Editor {
       "ziffers",
       "midi",
       "functions",
-      "reference",
+      // "reference",
       "shortcuts",
       "about",
     ].forEach((e) => {
@@ -639,7 +656,8 @@ export class Editor {
       if (url !== null) {
         const universeParam = url.get("universe");
         if (universeParam !== null) {
-          new_universe = JSON.parse(atob(universeParam));
+          let data = Uint8Array.from(atob(universeParam), c => c.charCodeAt(0))
+          new_universe = JSON.parse(strFromU8(decompressSync(data)));
           const randomName: string = uniqueNamesGenerator({
 						  length: 2, separator: '_',
 							dictionaries: [colors, animals],
@@ -692,12 +710,24 @@ export class Editor {
 		existing_universes!.innerHTML = final_html;
 	}
 
-  share() {
-    const hashed_table = btoa(
-      JSON.stringify({
-        universe: this.settings.universes[this.selected_universe],
-      })
-    );
+  async share() {
+
+    async function bufferToBase64(buffer:Uint8Array) {
+      const base64url: string = await new Promise(r => {
+        const reader = new FileReader()
+        reader.onload = () => r(reader.result as string)
+        reader.readAsDataURL(new Blob([buffer]))
+      });
+      return base64url.slice(base64url.indexOf(',') + 1);
+    }
+
+    let data = JSON.stringify({
+      universe: this.settings.universes[this.selected_universe],
+    });
+    let encoded_data = gzipSync(new TextEncoder().encode(data));
+    // TODO make this async
+    // TODO maybe try with compression level 9
+    const hashed_table = await bufferToBase64(encoded_data);
     const url = new URL(window.location.href);
     url.searchParams.set("universe", hashed_table);
     window.history.replaceState({}, "", url.toString());

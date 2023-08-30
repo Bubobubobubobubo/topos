@@ -1900,9 +1900,8 @@ Topos is made to be controlled entirely with a keyboard. It is recommanded to st
 
 | Shortcut | Key   | Description                                                |
 |----------|-------|------------------------------------------------------------|
-|**Start** transport|${key_shortcut("Ctrl + P")}|Start audio playback|
-|**Pause** the transport |${key_shortcut("Ctrl + S")}|Pause audio playback|
-|**Rewind** the transport|${key_shortcut("Ctrl + R")}|Rewind audio playback|
+|**Start/Pause** transport|${key_shortcut("Ctrl + P")}|Start or pause audio playback|
+|**Stop** the transport |${key_shortcut("Ctrl + S")}|Stop and rewind audio playback|
 	
 ## Moving in the interface
 
