@@ -238,13 +238,13 @@ export class SoundEvent extends AudibleEvent {
   sus = this.sustain;
 
   update = (): void => {
-      const [note, _] = noteFromPc(
-        this.values.key || "C4",
-        this.values.pitch || 0,
-        this.values.parsedScale || "MAJOR",
-        this.values.octave || 0
-      );
-      this.values.freq = midiToFreq(note);
+    const [note, _] = noteFromPc(
+      this.values.key || "C4",
+      this.values.pitch || 0,
+      this.values.parsedScale || "MAJOR",
+      this.values.octave || 0
+    );
+    this.values.freq = midiToFreq(note);
   };
 
   out = (): object => {

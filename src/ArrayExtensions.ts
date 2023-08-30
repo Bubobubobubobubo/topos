@@ -3,10 +3,10 @@ export {};
 
 declare global {
   interface Array<T> {
-		add(amount: number): number[];
-  	sub(amount: number): number[];
-  	mult(amount: number): number[];
-  	division(amount: number): number[];
+    add(amount: number): number[];
+    sub(amount: number): number[];
+    mult(amount: number): number[];
+    division(amount: number): number[];
     palindrome(): T[];
     random(index: number): T;
     rand(index: number): T;
@@ -24,8 +24,8 @@ declare global {
     rotate(steps: number): this;
     unique(): this;
     in(value: T): boolean;
-	  square(): number[];
-		sqrt(): number[];
+    square(): number[];
+    sqrt(): number[];
   }
 }
 
@@ -33,54 +33,55 @@ export const makeArrayExtensions = (api: UserAPI) => {
   Array.prototype.in = function <T>(this: T[], value: T): boolean {
     return this.includes(value);
   };
-	
-	Array.prototype.square = function (): number[] {
-	  /**
-	   * @returns New array with squared values.
-	   */
-	  return this.map((x: number) => x * x);
-	};
 
-	Array.prototype.sqrt = function (): number[] {
-	  /**
-	   * @returns New array with square roots of values. Throws if any element is negative.
-	   */
-	  if (this.some(x => x < 0)) throw new Error('Cannot take square root of negative number');
-	  return this.map((x: number) => Math.sqrt(x));
-	};
-	
-	Array.prototype.add = function (amount: number): number[] {
-	  /**
-	   * @param amount - The value to add to each element in the array.
-	   * @returns New array with added values.
-	   */
-	  return this.map((x: number) => x + amount);
-	};
-	
-	Array.prototype.sub = function (amount: number): number[] {
-	  /**
-	   * @param amount - The value to subtract from each element in the array.
-	   * @returns New array with subtracted values.
-	   */
-	  return this.map((x: number) => x - amount);
-	};
-	
-	Array.prototype.mult = function (amount: number): number[] {
-	  /**
-	   * @param amount - The value to multiply with each element in the array.
-	   * @returns New array with multiplied values.
-	   */
-	  return this.map((x: number) => x * amount);
-	};
-	
-	Array.prototype.division = function (amount: number): number[] {
-	  /**
-	   * @param amount - The value to divide each element in the array by.
-	   * @returns New array with divided values. Throws if division by zero.
-	   */
-	  if (amount === 0) throw new Error('Division by zero');
-	  return this.map((x: number) => x / amount);
-	};
+  Array.prototype.square = function (): number[] {
+    /**
+     * @returns New array with squared values.
+     */
+    return this.map((x: number) => x * x);
+  };
+
+  Array.prototype.sqrt = function (): number[] {
+    /**
+     * @returns New array with square roots of values. Throws if any element is negative.
+     */
+    if (this.some((x) => x < 0))
+      throw new Error("Cannot take square root of negative number");
+    return this.map((x: number) => Math.sqrt(x));
+  };
+
+  Array.prototype.add = function (amount: number): number[] {
+    /**
+     * @param amount - The value to add to each element in the array.
+     * @returns New array with added values.
+     */
+    return this.map((x: number) => x + amount);
+  };
+
+  Array.prototype.sub = function (amount: number): number[] {
+    /**
+     * @param amount - The value to subtract from each element in the array.
+     * @returns New array with subtracted values.
+     */
+    return this.map((x: number) => x - amount);
+  };
+
+  Array.prototype.mult = function (amount: number): number[] {
+    /**
+     * @param amount - The value to multiply with each element in the array.
+     * @returns New array with multiplied values.
+     */
+    return this.map((x: number) => x * amount);
+  };
+
+  Array.prototype.division = function (amount: number): number[] {
+    /**
+     * @param amount - The value to divide each element in the array by.
+     * @returns New array with divided values. Throws if division by zero.
+     */
+    if (amount === 0) throw new Error("Division by zero");
+    return this.map((x: number) => x / amount);
+  };
 
   Array.prototype.pick = function () {
     /**
