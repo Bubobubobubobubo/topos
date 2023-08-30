@@ -1577,6 +1577,27 @@ mod(0.25) :: sound('sine')
 
 **Note:** you can also set the _modulation index_ and the _harmonic ratio_ with the <icode>fm</icode> argument. You will have to feed both as a string: <icode>fm('2:4')</icode>. If you only feed one number, only the _modulation index_ will be updated.
 	
+# Speech synthesis
+
+Topos can also speak using [Web Speec API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Speech_API)!
+
+${makeExample(
+  "Hello world!",
+  `
+mod(4) :: speak("Hello world!")
+  `,
+  false
+)}
+
+${makeExample(
+  "Speak with a different voice",
+  `
+mod(2) :: speak("Topos!",irand(0,25))
+  `,
+  false
+)}
+
+
 `;
 
   const about: string = `

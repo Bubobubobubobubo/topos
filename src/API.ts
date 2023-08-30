@@ -1287,6 +1287,24 @@ export class UserAPI {
 
   abs = Math.abs;
 
+
+  // =============================================================
+  // Speed synthesis
+  // =============================================================
+
+  speak = (text: string, index: number): void => {
+    /* 
+     * Speaks the given text using the browser's speech synthesis API.
+     * @param text - The text to speak
+     * @param index - The index of the voice to use
+     */
+    const synth = window.speechSynthesis;
+    synth.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.voice = speechSynthesis.getVoices()[index];
+    synth.speak(utterance);
+  }
+
   // =============================================================
   // Trivial functions
   // =============================================================
