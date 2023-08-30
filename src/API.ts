@@ -15,6 +15,7 @@ import {
   soundMap,
   // @ts-ignore
 } from "superdough";
+import { Speaker } from "./StringExtensions";
 
 interface ControlChange {
   channel: number;
@@ -1292,7 +1293,7 @@ export class UserAPI {
   // Speech synthesis
   // =============================================================
 
-  speak = (text: string, voice: number, rate: number = 1, pitch: number = 1): void => {
+  speak = (text: string, lang: string = "en-US", voice: number = 0, rate: number = 1, pitch: number = 1): void => {
     /* 
      * Speaks the given text using the browser's speech synthesis API.
      * @param text - The text to speak
@@ -1301,13 +1302,12 @@ export class UserAPI {
      * @param pitch - The pitch at which to speak the text
      * 
      */
-    const synth = window.speechSynthesis;
-    synth.cancel();
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.voice = speechSynthesis.getVoices()[voice];
-    utterance.rate = rate;
-    utterance.pitch = pitch;
-    synth.speak(utterance);
+    const speaker = new Speaker({text: text, lang: lang, voice: voice, rate: rate, pitch: pitch});
+    speaker.speak().then(() => {
+      // Done speaking
+    }).catch((err) => {
+      console.log(err);
+    });
   };
 
   // =============================================================

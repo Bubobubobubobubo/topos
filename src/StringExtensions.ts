@@ -11,44 +11,53 @@ declare global {
         pitch(pitch: number): string;
         volume(volume: number): string;
         voice(voice: number): string;
+        lang(language: string): string;
         options(): SpeechOptions;
     }
 }
 
-const speechOptionsMap = new Map<string, SpeechOptions>();
+const isJsonString = (str: string):boolean => {
+    return str[0] === '{' && str[str.length - 1] === '}'
+}
+
+const stringObject = (str: string, params: object) => {
+    if(isJsonString(str)) {
+        const obj = JSON.parse(str);
+        return JSON.stringify({...obj, ...params});
+    } else {
+        return JSON.stringify({...params, text: str});
+    }
+}
 
 export const makeStringExtensions = (api: UserAPI) => {
     String.prototype.speak = function () {
-        const options = speechOptionsMap.get(this.valueOf()) || {};
-        new Speech({ ...options, text: this.valueOf() }).say();
+        const options = JSON.parse(this.valueOf());
+        console.log("SPEAKING:", options);
+        new Speaker({ ...options, text: options.text }).speak().then(() => {
+            // Done
+        }).catch((e) => {
+            console.log("Error speaking:", e);
+        });
     };
 
     String.prototype.rate = function (speed: number) {
-        const options = speechOptionsMap.get(this.valueOf()) || {};
-        speechOptionsMap.set(this.valueOf(), { ...options, rate: speed });
-        return this.valueOf();
+        return stringObject(this.valueOf(), {rate: speed});
     };
 
     String.prototype.pitch = function (pitch: number) {
-        const options = speechOptionsMap.get(this.valueOf()) || {};
-        speechOptionsMap.set(this.valueOf(), { ...options, pitch: pitch });
-        return this.valueOf();
+        return stringObject(this.valueOf(), {pitch: pitch});
+    };
+
+    String.prototype.lang = function (language: string) {
+        return stringObject(this.valueOf(),{lang: language});
     };
 
     String.prototype.volume = function (volume: number) {
-        const options = speechOptionsMap.get(this.valueOf()) || {};
-        speechOptionsMap.set(this.valueOf(), { ...options, volume: volume });
-        return this.valueOf();
+        return stringObject(this.valueOf(), {volume: volume});
     };
 
     String.prototype.voice = function (voice: number) {
-        const options = speechOptionsMap.get(this.valueOf()) || {};
-        speechOptionsMap.set(this.valueOf(), { ...options, voice: voice });
-        return this.valueOf();
-    };
-
-    String.prototype.options = function (): SpeechOptions {
-        return speechOptionsMap.get(this.valueOf()) || {};
+        return stringObject(this.valueOf(), {voice: voice});
     };
 
     String.prototype.z = function () {
@@ -62,14 +71,16 @@ type SpeechOptions = {
     pitch?: number;
     volume?: number;
     voice?: number;
+    lang?: string;
 }
 
-class Speech {
+export class Speaker {
     constructor(
         public options: SpeechOptions
     ) {}
     
-    say = () => {
+    speak = () => {
+        return new Promise<void>((resolve, reject) => {
         if (this.options.text) {
             const synth = window.speechSynthesis;
             synth.cancel();
@@ -80,7 +91,32 @@ class Speech {
             if (this.options.voice) {
                 utterance.voice = synth.getVoices()[this.options.voice];
             }
+            if(this.options.lang) {
+                // Check if language has country code
+                if (this.options.lang.length === 2) {
+                    utterance.lang = `${this.options.lang}-${this.options.lang.toUpperCase()}`
+                } else if (this.options.lang.length === 5) {
+                    utterance.lang = this.options.lang;
+                } else {
+                    // Fallback to en us
+                    utterance.lang = 'en-US';
+                }
+            }
+
+            utterance.onend = () => {
+                resolve(); 
+            };
+        
+            utterance.onerror = (error) => {
+                reject(error);
+            };
+
             synth.speak(utterance);
+
+        } else {
+            reject("No text provided");
         }
+
+        });
     }
 }

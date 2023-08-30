@@ -1579,15 +1579,20 @@ mod(0.25) :: sound('sine')
 	
 # Speech synthesis
 
-Topos can also speak using [Web Speec API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Speech_API)!
+Topos can also speak using the Web Speech API. Speech synthesis can be used in two ways:
 
-Speech synthesis can be used in two ways:
-
-- <icode>speak(text: string, voice: number, rate: number, pitch: number)</icode>: speak the given text.
+- <icode>speak(text: string, lang: string, voice: number, rate: number, pitch: number, volume: number)</icode>: speak the given text.
 
 Or by using string and chaining:
 
 - <icode>"Hello".rate(1.5).pitch(0.5).speak()</icode>.
+
+Value ranges for the different parameters are:
+- <icode>lang(string)</icode>: language code, for example <icode>en</icode> for English, <icode>fr</icode> for French or with the country code for example British English <icode>en-GB</icode>. See supported values from the [list](https://cloud.google.com/speech-to-text/docs/speech-to-text-supported-languages).
+- <icode>voice(number)</icode>: voice index, for example <icode>0</icode> for the first voice, <icode>1</icode> for the second voice, etc.
+- <icode>rate(number)</icode>: speaking rate, from <icode>0.0</icode> to <icode>10</icode>.
+- <icode>pitch(number)</icode>: speaking pitch, from <icode>0.0</icode> to <icode>2</icode>.
+- <icode>volume(number)</icode>: speaking volume, from <icode>0.0</icode> to <icode>1.0</icode>.
 
 Examples:
 
@@ -1602,7 +1607,7 @@ mod(4) :: speak("Hello world!")
 ${makeExample(
   "Different voices",
   `
-mod(2) :: speak("Topos!",irand(0,25))
+mod(2) :: speak("Topos!","fr",irand(0,5))
   `,
   false
 )}
@@ -1627,6 +1632,22 @@ ${makeExample(
   `,
   false
 )}
+
+${makeExample(
+  "String chaining with array chaining",
+  `
+  const croissant = ["Croissant!", "Volant", "Arc-en-ciel", "Chocolat", "Dansant", "Nuage", "Tournant", "Galaxie", "Chatoyant", "Flamboyant", "Cosmique"];
+
+  onbeat(1) :: croissant.bar()
+    .lang("fr")
+    .volume(rand(0.2,2.0))
+    .rate(rand(.4,.6))
+    .speak();
+  
+  `,
+  false
+)}
+
 
 
 
