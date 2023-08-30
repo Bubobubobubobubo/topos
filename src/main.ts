@@ -1,8 +1,4 @@
-import {
-  uniqueNamesGenerator,
-  colors,
-  animals,
-} from "unique-names-generator";
+import { uniqueNamesGenerator, colors, animals } from "unique-names-generator";
 import { examples } from "./examples/excerpts";
 import { EditorState, Compartment } from "@codemirror/state";
 import { ViewUpdate, lineNumbers, keymap } from "@codemirror/view";
@@ -28,7 +24,7 @@ import {
 } from "./AppSettings";
 import { tryEvaluate } from "./Evaluator";
 // @ts-ignore
-import { gzipSync, decompressSync, strFromU8 } from 'fflate';
+import { gzipSync, decompressSync, strFromU8 } from "fflate";
 
 // Importing showdown and setting up the markdown converter
 import showdown from "showdown";
@@ -47,7 +43,7 @@ const classMap = {
   blockquote: "text-neutral-200 border-l-4 border-neutral-500 pl-4 my-4 mx-4",
   details:
     "lg:mx-12 py-2 px-6 lg:text-2xl text-white rounded-lg bg-neutral-600",
-	summary: "font-semibold text-xl",
+  summary: "font-semibold text-xl",
   table:
     "justify-center lg:my-8 my-2 lg:mx-8 mx-2 lg:text-2xl text-base w-full text-left text-white border-collapse",
   thead:
@@ -87,14 +83,16 @@ export class Editor {
   view: EditorView;
   clock: Clock;
   manualPlay: boolean = false;
-	isPlaying: boolean = false;
+  isPlaying: boolean = false;
 
   // Mouse position
   public _mouseX: number = 0;
   public _mouseY: number = 0;
 
-	// Topos Logo
-	topos_logo: HTMLElement = document.getElementById('topos-logo') as HTMLElement;
+  // Topos Logo
+  topos_logo: HTMLElement = document.getElementById(
+    "topos-logo"
+  ) as HTMLElement;
 
   // Transport elements
   play_buttons: HTMLButtonElement[] = [
@@ -108,7 +106,9 @@ export class Editor {
     document.getElementById("clear-button-1") as HTMLButtonElement,
     //document.getElementById("clear-button-2") as HTMLButtonElement,
   ];
-  load_universe_button: HTMLButtonElement = document.getElementById("load-universe-button") as HTMLButtonElement;
+  load_universe_button: HTMLButtonElement = document.getElementById(
+    "load-universe-button"
+  ) as HTMLButtonElement;
 
   documentation_button: HTMLButtonElement = document.getElementById(
     "doc-button-1"
@@ -201,10 +201,10 @@ export class Editor {
     this.selected_universe = "Welcome";
     this.universe_viewer.innerHTML = `Topos: ${this.selected_universe}`;
 
-		// Picking a random example to populate the landing page
-		let random_example = examples[Math.floor(Math.random() * examples.length)];
-		this.universes[this.selected_universe].global.committed = random_example;
-		this.universes[this.selected_universe].global.candidate = random_example;
+    // Picking a random example to populate the landing page
+    let random_example = examples[Math.floor(Math.random() * examples.length)];
+    this.universes[this.selected_universe].global.committed = random_example;
+    this.universes[this.selected_universe].global.candidate = random_example;
 
     // ================================================================================
     // Audio context and clock
@@ -255,9 +255,11 @@ export class Editor {
 
     // ================================================================================
     // Building the documentation
-		let pre_loading = async () => { await loadSamples(); };
-		pre_loading();
-		this.docs = documentation_factory(this);
+    let pre_loading = async () => {
+      await loadSamples();
+    };
+    pre_loading();
+    this.docs = documentation_factory(this);
     // ================================================================================
 
     // ================================================================================
@@ -265,7 +267,6 @@ export class Editor {
     // ================================================================================
 
     window.addEventListener("keydown", (event: KeyboardEvent) => {
-
       if (event.key === "Tab") {
         event.preventDefault();
       }
@@ -278,15 +279,15 @@ export class Editor {
 
       if (event.ctrlKey && event.key === "p") {
         event.preventDefault();
-				if (this.isPlaying) {
-					this.isPlaying = false;
-					this.setButtonHighlighting("pause", true);
-					this.clock.pause();
-				} else {
-					this.isPlaying = true;
-					this.setButtonHighlighting("play", true);
-					this.clock.start();
-				}
+        if (this.isPlaying) {
+          this.isPlaying = false;
+          this.setButtonHighlighting("pause", true);
+          this.clock.pause();
+        } else {
+          this.isPlaying = true;
+          this.setButtonHighlighting("play", true);
+          this.clock.start();
+        }
       }
 
       // Ctrl + Shift + V: Vim Mode
@@ -324,7 +325,7 @@ export class Editor {
       if (event.ctrlKey && event.key === "b") {
         event.preventDefault();
         this.hideDocumentation();
-				this.updateKnownUniversesView();
+        this.updateKnownUniversesView();
         this.openBuffersModal();
       }
 
@@ -372,10 +373,10 @@ export class Editor {
           if (event.keyCode === keycode) {
             event.preventDefault();
             if (event.ctrlKey) {
-							event.preventDefault();
+              event.preventDefault();
               this.api.script(keycode - 111);
             } else {
-							event.preventDefault();
+              event.preventDefault();
               this.changeModeFromInterface("local");
               this.changeToLocalBuffer(index);
               this.hideDocumentation();
@@ -385,12 +386,12 @@ export class Editor {
       );
 
       if (event.keyCode == 121) {
-				event.preventDefault();
+        event.preventDefault();
         this.changeModeFromInterface("global");
         this.hideDocumentation();
       }
       if (event.keyCode == 122) {
-				event.preventDefault();
+        event.preventDefault();
         this.changeModeFromInterface("init");
         this.hideDocumentation();
       }
@@ -418,24 +419,24 @@ export class Editor {
       });
     }
 
-		this.topos_logo.addEventListener("click", () => {
-			this.hideDocumentation();
-			this.updateKnownUniversesView();
-			this.openBuffersModal();
-		})
+    this.topos_logo.addEventListener("click", () => {
+      this.hideDocumentation();
+      this.updateKnownUniversesView();
+      this.openBuffersModal();
+    });
 
     this.play_buttons.forEach((button) => {
       button.addEventListener("click", () => {
-				if (this.isPlaying) {
-      	  this.setButtonHighlighting("pause", true);
-					this.isPlaying = !this.isPlaying;
-      	  this.clock.pause();
-				} else {
-      	  this.setButtonHighlighting("play", true);
-					this.isPlaying = !this.isPlaying;
-      	  this.clock.start();
-				}
-			});
+        if (this.isPlaying) {
+          this.setButtonHighlighting("pause", true);
+          this.isPlaying = !this.isPlaying;
+          this.clock.pause();
+        } else {
+          this.setButtonHighlighting("play", true);
+          this.isPlaying = !this.isPlaying;
+          this.clock.start();
+        }
+      });
     });
 
     this.clear_buttons.forEach((button) => {
@@ -452,24 +453,22 @@ export class Editor {
       this.showDocumentation();
     });
 
-
     this.load_universe_button.addEventListener("click", () => {
-				let query = this.buffer_search.value;
-        if (query.length > 2 && query.length < 20 && !query.includes(" ")) {
-          this.loadUniverse(query);
-          this.settings.selected_universe = query;
-          this.buffer_search.value = "";
-          this.closeBuffersModal();
-          this.view.focus();
-					this.emptyUrl();
-        }
+      let query = this.buffer_search.value;
+      if (query.length > 2 && query.length < 20 && !query.includes(" ")) {
+        this.loadUniverse(query);
+        this.settings.selected_universe = query;
+        this.buffer_search.value = "";
+        this.closeBuffersModal();
+        this.view.focus();
+        this.emptyUrl();
+      }
     });
 
     this.eval_button.addEventListener("click", () => {
       this.currentFile().candidate = this.view.state.doc.toString();
       this.flashBackground("#2d313d", 200);
     });
-
 
     this.stop_buttons.forEach((button) => {
       button.addEventListener("click", () => {
@@ -514,7 +513,7 @@ export class Editor {
     });
 
     this.close_universes_button.addEventListener("click", () => {
-			this.openBuffersModal();
+      this.openBuffersModal();
     });
 
     this.font_size_slider.addEventListener("input", () => {
@@ -565,13 +564,12 @@ export class Editor {
     });
 
     this.universe_creator.addEventListener("submit", (event) => {
-
       event.preventDefault();
 
       let data = new FormData(this.universe_creator);
-      let universeName = data.get("universe") as string|null;
+      let universeName = data.get("universe") as string | null;
 
-      if(universeName){
+      if (universeName) {
         if (universeName.length > 2 && universeName.length < 20) {
           this.loadUniverse(universeName);
           this.settings.selected_universe = universeName;
@@ -603,17 +601,17 @@ export class Editor {
     ].forEach((e) => {
       let name = `docs_` + e;
       document.getElementById(name)!.addEventListener("click", async () => {
-				if (name !== "docs_samples") {
-					this.currentDocumentationPane = e;
-					this.updateDocumentationContent();
-				} else {
-					console.log('Loading samples!');
-					await loadSamples().then(() => {
-						this.docs = documentation_factory(this)
-						this.currentDocumentationPane = e;
-						this.updateDocumentationContent();
-					});
-				}
+        if (name !== "docs_samples") {
+          this.currentDocumentationPane = e;
+          this.updateDocumentationContent();
+        } else {
+          console.log("Loading samples!");
+          await loadSamples().then(() => {
+            this.docs = documentation_factory(this);
+            this.currentDocumentationPane = e;
+            this.updateDocumentationContent();
+          });
+        }
       });
     });
 
@@ -656,14 +654,18 @@ export class Editor {
       if (url !== null) {
         const universeParam = url.get("universe");
         if (universeParam !== null) {
-          let data = Uint8Array.from(atob(universeParam), c => c.charCodeAt(0))
+          let data = Uint8Array.from(atob(universeParam), (c) =>
+            c.charCodeAt(0)
+          );
           new_universe = JSON.parse(strFromU8(decompressSync(data)));
           const randomName: string = uniqueNamesGenerator({
-						  length: 2, separator: '_',
-							dictionaries: [colors, animals],
+            length: 2,
+            separator: "_",
+            dictionaries: [colors, animals],
           });
           this.loadUniverse(randomName, new_universe["universe"]);
-          this.emptyUrl(); this.emptyUrl();
+          this.emptyUrl();
+          this.emptyUrl();
         }
       }
     }
@@ -695,30 +697,30 @@ export class Editor {
     return JSON.parse(hash);
   };
 
-	updateKnownUniversesView = () => {
-		let existing_universes = document.getElementById("existing-universes");
-		let known_universes = Object.keys(this.universes);
-		let final_html = "<ul class='lg:h-80 lg:w-80 lg:pb-2 lg:pt-2 overflow-y-scroll text-white lg:mb-4 border rounded-lg bg-gray-800'>";
-		known_universes.forEach((name) => {
-			final_html += `
+  updateKnownUniversesView = () => {
+    let existing_universes = document.getElementById("existing-universes");
+    let known_universes = Object.keys(this.universes);
+    let final_html =
+      "<ul class='lg:h-80 lg:w-80 lg:pb-2 lg:pt-2 overflow-y-scroll text-white lg:mb-4 border rounded-lg bg-gray-800'>";
+    known_universes.forEach((name) => {
+      final_html += `
 <li onclick="_loadUniverseFromInterface('${name}')" class="hover:fill-black hover:bg-white py-2 hover:text-black flex justify-between px-4">
 	<p >${name}</p>
 	<button onclick=_deleteUniverseFromInterface('${name}')>🗑</button>
 </li>`;
-		});
-		final_html = final_html + "</ul>";
-		existing_universes!.innerHTML = final_html;
-	}
+    });
+    final_html = final_html + "</ul>";
+    existing_universes!.innerHTML = final_html;
+  };
 
   async share() {
-
-    async function bufferToBase64(buffer:Uint8Array) {
-      const base64url: string = await new Promise(r => {
-        const reader = new FileReader()
-        reader.onload = () => r(reader.result as string)
-        reader.readAsDataURL(new Blob([buffer]))
+    async function bufferToBase64(buffer: Uint8Array) {
+      const base64url: string = await new Promise((r) => {
+        const reader = new FileReader();
+        reader.onload = () => r(reader.result as string);
+        reader.readAsDataURL(new Blob([buffer]));
       });
-      return base64url.slice(base64url.indexOf(',') + 1);
+      return base64url.slice(base64url.indexOf(",") + 1);
     }
 
     let data = JSON.stringify({
@@ -852,22 +854,22 @@ export class Editor {
     button: "play" | "pause" | "stop" | "clear",
     highlight: boolean
   ) {
-		document.getElementById('play-label')!.textContent = button !== "pause" ? "Pause" : "Play";
-		if (button !== "pause") {
-			document.getElementById('pause-icon')!.classList.remove('hidden');
-			document.getElementById('play-icon')!.classList.add('hidden');
-		} else {
-			document.getElementById('pause-icon')!.classList.add('hidden');
-			document.getElementById('play-icon')!.classList.remove('hidden');
-		}
+    document.getElementById("play-label")!.textContent =
+      button !== "pause" ? "Pause" : "Play";
+    if (button !== "pause") {
+      document.getElementById("pause-icon")!.classList.remove("hidden");
+      document.getElementById("play-icon")!.classList.add("hidden");
+    } else {
+      document.getElementById("pause-icon")!.classList.add("hidden");
+      document.getElementById("play-icon")!.classList.remove("hidden");
+    }
 
-		if (button === "stop") {
-			this.isPlaying == false;
-			document.getElementById('play-label')!.textContent = "Play";
-			document.getElementById('pause-icon')!.classList.add('hidden');
-			document.getElementById('play-icon')!.classList.remove('hidden');
-		}
-
+    if (button === "stop") {
+      this.isPlaying == false;
+      document.getElementById("play-label")!.textContent = "Play";
+      document.getElementById("pause-icon")!.classList.add("hidden");
+      document.getElementById("play-icon")!.classList.remove("hidden");
+    }
 
     this.flashBackground("#2d313d", 200);
     const possible_selectors = [

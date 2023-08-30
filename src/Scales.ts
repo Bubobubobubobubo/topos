@@ -50,25 +50,29 @@ const SCALES: Record<string, number[]> = {
   hindustan: [0, 2, 4, 5, 7, 8, 10],
   persian: [0, 1, 4, 5, 6, 8, 11],
   eastIndianPurvi: [0, 1, 4, 6, 7, 8, 11],
-  orientalA: [0, 1, 4, 5, 6, 9, 10]
+  orientalA: [0, 1, 4, 5, 6, 9, 10],
 };
 
-export function scale(n: number, scaleName: string = 'major', octave: number = 4): number {
-    /**
-     * Returns the MIDI note number for the given scale degree in the given scale.
-     * @param {number} n - The scale degree, where 0 is the tonic.
-     * @param {string} scaleName - The name of the scale.
-     * @param {number} octave - The octave number.
-     * @returns {number} The MIDI note number.
-     */
-    const scale = SCALES[scaleName];
-  
-    if (!scale) {
-      throw new Error(`Unknown scale ${scaleName}`);
-    }
-  
-    let index = n % scale.length;
-    if (index < 0) index += scale.length; // adjust for negative indexes
-    let additionalOctaves = Math.floor(n / scale.length);
-    return 60 + (octave + additionalOctaves) * 12 + scale[index];
+export function scale(
+  n: number,
+  scaleName: string = "major",
+  octave: number = 4
+): number {
+  /**
+   * Returns the MIDI note number for the given scale degree in the given scale.
+   * @param {number} n - The scale degree, where 0 is the tonic.
+   * @param {string} scaleName - The name of the scale.
+   * @param {number} octave - The octave number.
+   * @returns {number} The MIDI note number.
+   */
+  const scale = SCALES[scaleName];
+
+  if (!scale) {
+    throw new Error(`Unknown scale ${scaleName}`);
   }
+
+  let index = n % scale.length;
+  if (index < 0) index += scale.length; // adjust for negative indexes
+  let additionalOctaves = Math.floor(n / scale.length);
+  return 60 + (octave + additionalOctaves) * 12 + scale[index];
+}
