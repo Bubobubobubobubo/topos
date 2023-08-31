@@ -14,35 +14,70 @@ export class SoundEvent extends AudibleEvent {
     else this.values = sound;
   }
 
-  attack = (value: number): this => {
-    this.values["attack"] = value;
+  private updateValue<T>(key: string, value: T): this {
+    this.values[key] = value;
     return this;
-  };
-  atk = this.attack;
+  }
 
-  decay = (value: number): this => {
-    this.values["decay"] = value;
-    return this;
-  };
+  // ================================================================================
+  // ZZFX Sound Parameters
+  // ================================================================================
+
+  volume = (value: number) => this.updateValue("volume", value);
+  vol = this.volume;
+  zrand = (value: number) => this.updateValue("zrand", value);
+  curve = (value: number) => this.updateValue("curve", value);
+  slide = (value: number) => this.updateValue("slide", value);
+  sld = this.slide;
+  deltaSlide = (value: number) => this.updateValue("deltaSlide", value);
+  dslide = this.deltaSlide;
+  pitchJump = (value: number) => this.updateValue("pitchJump", value);
+  pj = this.pitchJump;
+  pitchJumpTime = (value: number) => this.updateValue("pitchJumpTime", value);
+  pjt = this.pitchJumpTime;
+  lfo = (value: number) => this.updateValue("lfo", value);
+  noise = (value: number) => this.updateValue("noise", value);
+  zmod = (value: number) => this.updateValue("zmod", value);
+  zcrush = (value: number) => this.updateValue("zcrush", value);
+  zdelay = (value: number) => this.updateValue("zdelay", value);
+  sustainVolume = (value: number) => this.updateValue("sustainVolume", value);
+  decay = (value: number) => this.updateValue("decay", value);
   dec = this.decay;
+  tremolo = (value: number) => this.updateValue("tremolo", value);
+  duration = (value: number) => this.updateValue("duration", value);
+  zzfx = (value: number[]) => this.updateValue("zzfx", value);
 
-  release = (value: number): this => {
-    this.values["release"] = value;
-    return this;
-  };
+  // ================================================================================
+  // Basic Audio Engine Parameters
+  // ================================================================================
+
+  fmi = (value: number) => this.updateValue("fmi", value);
+  fmh = (value: number) => this.updateValue("fmh", value);
+  fmenv = (value: "lin" | "exp") => this.updateValue("fmenv", value);
+  fmattack = (value: number) => this.updateValue("fmattack", value);
+  fmatk = this.fmattack;
+  fmdecay = (value: number) => this.updateValue("fmdecay", value);
+  fmdec = this.fmdecay;
+  fmsustain = (value: number) => this.updateValue("fmsustain", value);
+  fmsus = this.fmsustain;
+  fmrelease = (value: number) => this.updateValue("fmrelease", value);
+  fmrel = this.fmrelease;
+  fmvelocity = (value: number) => this.updateValue("fmvelocity", value);
+  fmvel = this.fmvelocity;
+  fmwave = (value: "sine" | "triangle" | "sawtooth" | "square") =>
+    this.updateValue("fmwave", value);
+  fmw = this.fmwave;
+  attack = (value: number) => this.updateValue("attack", value);
+  atk = this.attack;
+  release = (value: number) => this.updateValue("release", value);
   rel = this.release;
-
-  unit = (value: number): this => {
-    this.values["unit"] = value;
-    return this;
-  };
-
-  freq = (value: number): this => {
-    this.values["freq"] = value;
-    return this;
-  };
-
-  fm = (value: number | string): this => {
+  sustain = (value: number) => this.updateValue("sustain", value);
+  sus = this.sustain;
+  unit = (value: number) => this.updateValue("unit", value);
+  u = this.unit;
+  freq = (value: number) => this.updateValue("freq", value);
+  f = this.freq;
+  fm = (value: number | string) => {
     if (typeof value === "number") {
       this.values["fmi"] = value;
     } else {
@@ -52,190 +87,51 @@ export class SoundEvent extends AudibleEvent {
     }
     return this;
   };
-
-  sound = (value: string): this => {
-    this.values["s"] = value;
-    return this;
-  };
-
-  fmi = (value: number): this => {
-    this.values["fmi"] = value;
-    return this;
-  };
-
-  fmh = (value: number): this => {
-    this.values["fmh"] = value;
-    return this;
-  };
-
-  nudge = (value: number): this => {
-    this.values["nudge"] = value;
-    return this;
-  };
-
-  cut = (value: number): this => {
-    this.values["cut"] = value;
-    return this;
-  };
-
-  loop = (value: number): this => {
-    this.values["loop"] = value;
-    return this;
-  };
-
-  clip = (value: number): this => {
-    this.values["clip"] = value;
-    return this;
-  };
-
-  n = (value: number): this => {
-    this.values["n"] = value;
-    return this;
-  };
-
-  note = (value: number): this => {
-    this.values["note"] = value;
-    return this;
-  };
-
-  speed = (value: number): this => {
-    this.values["speed"] = value;
-    return this;
-  };
-
-  begin = (value: number): this => {
-    this.values["begin"] = value;
-    return this;
-  };
-
-  end = (value: number): this => {
-    this.values["end"] = value;
-    return this;
-  };
-
-  gain = (value: number): this => {
-    this.values["gain"] = value;
-    return this;
-  };
-
-  cutoff = (value: number): this => {
-    this.values["cutoff"] = value;
-    return this;
-  };
+  sound = (value: string) => this.updateValue("s", value);
+  snd = this.sound;
+  nudge = (value: number) => this.updateValue("nudge", value);
+  cut = (value: number) => this.updateValue("cut", value);
+  loop = (value: number) => this.updateValue("loop", value);
+  clip = (value: number) => this.updateValue("clip", value);
+  n = (value: number) => this.updateValue("n", value);
+  note = (value: number) => this.updateValue("note", value);
+  speed = (value: number) => this.updateValue("speed", value);
+  spd = this.speed;
+  begin = (value: number) => this.updateValue("begin", value);
+  end = (value: number) => this.updateValue("end", value);
+  gain = (value: number) => this.updateValue("gain", value);
+  cutoff = (value: number) => this.updateValue("cutoff", value);
   lpf = this.cutoff;
-
-  resonance = (value: number): this => {
-    this.values["resonance"] = value;
-    return this;
-  };
+  resonance = (value: number) => this.updateValue("resonance", value);
   lpq = this.resonance;
-
-  hcutoff = (value: number): this => {
-    this.values["hcutoff"] = value;
-    return this;
-  };
+  hcutoff = (value: number) => this.updateValue("hcutoff", value);
   hpf = this.hcutoff;
-
-  hresonance = (value: number): this => {
-    this.values["hresonance"] = value;
-    return this;
-  };
+  hresonance = (value: number) => this.updateValue("hresonance", value);
   hpq = this.hresonance;
-
-  bandf = (value: number): this => {
-    this.values["bandf"] = value;
-    return this;
-  };
+  bandf = (value: number) => this.updateValue("bandf", value);
   bpf = this.bandf;
-
-  bandq = (value: number): this => {
-    this.values["bandq"] = value;
-    return this;
-  };
+  bandq = (value: number) => this.updateValue("bandq", value);
   bpq = this.bandq;
-
-  coarse = (value: number): this => {
-    this.values["coarse"] = value;
-    return this;
-  };
-
-  crush = (value: number): this => {
-    this.values["crush"] = value;
-    return this;
-  };
-
-  shape = (value: number): this => {
-    this.values["shape"] = value;
-    return this;
-  };
-
-  pan = (value: number): this => {
-    this.values["pan"] = value;
-    return this;
-  };
-
-  vowel = (value: number): this => {
-    this.values["vowel"] = value;
-    return this;
-  };
-
-  delay = (value: number): this => {
-    this.values["delay"] = value;
-    return this;
-  };
+  coarse = (value: number) => this.updateValue("coarse", value);
+  crush = (value: number) => this.updateValue("crush", value);
+  shape = (value: number) => this.updateValue("shape", value);
+  pan = (value: number) => this.updateValue("pan", value);
+  vowel = (value: number) => this.updateValue("vowel", value);
+  vow = this.vowel;
+  delay = (value: number) => this.updateValue("delay", value);
   del = this.delay;
-
-  delayfeedback = (value: number): this => {
-    this.values["delayfeedback"] = value;
-    return this;
-  };
+  delayfeedback = (value: number) => this.updateValue("delayfeedback", value);
   delayfb = this.delayfeedback;
-
-  delaytime = (value: number): this => {
-    this.values["delaytime"] = value;
-    return this;
-  };
+  delaytime = (value: number) => this.updateValue("delaytime", value);
   delayt = this.delaytime;
-
-  orbit = (value: number): this => {
-    this.values["orbit"] = value;
-    return this;
-  };
+  orbit = (value: number) => this.updateValue("orbit", value);
   o = this.orbit;
-
-  room = (value: number): this => {
-    this.values["room"] = value;
-    return this;
-  };
-
-  size = (value: number): this => {
-    this.values["size"] = value;
-    return this;
-  };
+  room = (value: number) => this.updateValue("room", value);
+  rm = this.room;
+  size = (value: number) => this.updateValue("size", value);
   sz = this.size;
-
-  velocity = (value: number): this => {
-    this.values["velocity"] = value;
-    return this;
-  };
+  velocity = (value: number) => this.updateValue("velocity", value);
   vel = this.velocity;
-
-  modify = (func: Function): this => {
-    const funcResult = func(this);
-    if (funcResult instanceof Object) return funcResult;
-    else {
-      func(this.values);
-      this.update();
-      return this;
-    }
-  };
-
-  // NOTE: Sustain of the sound. duration() from the superclass Event is used to change the note length.
-  sustain = (value: number): this => {
-    this.values["dur"] = value;
-    return this;
-  };
-  sus = this.sustain;
 
   update = (): void => {
     const [note, _] = noteFromPc(

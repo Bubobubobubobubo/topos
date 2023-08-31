@@ -41,6 +41,8 @@ const classMap = {
   code: "lg:my-4 sm:my-1 text-base lg:text-xl block whitespace-pre overflow-x-hidden",
   icode:
     "lg:my-1 my-1 lg:text-xl sm:text-xs text-white font-mono bg-neutral-600",
+  ic: "lg:my-1 my-1 lg:text-xl sm:text-xs text-white font-mono bg-neutral-600",
+
   blockquote: "text-neutral-200 border-l-4 border-neutral-500 pl-4 my-4 mx-4",
   details:
     "lg:mx-12 py-2 px-6 lg:text-2xl text-white rounded-lg bg-neutral-600",
@@ -70,6 +72,7 @@ export class Editor {
   vimModeCompartment: Compartment;
   chosenLanguage: Compartment;
   currentDocumentationPane: string = "introduction";
+  exampleCounter: number = 0;
 
   settings = new AppSettings();
   editorExtensions: Extension[] = [];

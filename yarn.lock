@@ -1272,10 +1272,10 @@ sucrase@^3.32.0:
     pirates "^4.0.1"
     ts-interface-checker "^0.1.9"
 
-superdough@^0.9.5:
-  version "0.9.5"
-  resolved "https://registry.yarnpkg.com/superdough/-/superdough-0.9.5.tgz#316b9fa9699cf1b86285e65c4084c4e2ea4489dd"
-  integrity sha512-PcEzWaD9oQ6apDCLmQq9OtyiAVB+Ell4U3RsYTR48L6jTssZILfYEG8pzHVf06QHeCl0rhl3/QlgO5Vf9HKMkg==
+superdough@^0.9.6:
+  version "0.9.6"
+  resolved "https://registry.yarnpkg.com/superdough/-/superdough-0.9.6.tgz#4955827d01d6fd56a24beca50cd310b690519e14"
+  integrity sha512-f6Aey9+qDJ+NHTuIRO3hXBAhuxg1Z7TeSAdKbG9yrSbfDGcqOWN3Gmfy5ZKe3s34djHWnMotRIHCfzuJcuabuA==
   dependencies:
     nanostores "^0.8.1"
 

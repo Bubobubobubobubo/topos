@@ -1,0 +1,286 @@
+import { type Editor } from "../main";
+import { makeExampleFactory } from "../Documentation";
+
+export const sound = (application: Editor): string => {
+  const makeExample = makeExampleFactory(application);
+  return `
+# Audio engine
+	
+The Topos audio engine is based on the [SuperDough](https://www.npmjs.com/package/superdough) audio backend, leveraging the [Web Audio API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API). The engine is capable of playing multiple samples, synths and effects at once. It is a very powerful and almost limitless tool to create complex sounds and textures. A set of default sounds are already provided but you can also load your own audio samples and synths!
+	
+## Sound basics
+	
+The basic function to play a sound is... <ic>sound(name: string)</ic> (you can also write <ic>snd</ic> to save some precious time). If the given sound or synthesizer exists in the database, it will be automatically queried/started and will start playing. Evaluate the following script in the global window:
+	
+${makeExample(
+  "Playing sounds is easy",
+  `
+mod(1) && sound('bd').out()
+mod(0.5) && sound('hh').out()
+`,
+  true
+)}
+	
+In plain english, this translates to:
+	
+> Every 48 pulses, play a kick drum.
+> Every 24 pulses, play a high-hat.
+	
+Let's make it slightly more complex:
+
+${makeExample(
+  "Adding some effects",
+  `
+mod(1) && sound('bd').coarse(0.25).room(0.5).orbit(2).out();
+mod(0.5) && sound('hh').delay(0.25).delaytime(0.125).out();
+`,
+  true
+)}
+	
+Now, it reads as follow:
+	
+> Every 48 pulses, play a kick drum with some amount of distortion.
+> Every 24 pulses, play a high-hat with 25% of the sound injected in
+> a delay unit, with a delay time of 0.125 seconds.
+	
+Let's pause for a moment to explain what we just wrote. There are many things to be said:
+- If you remove the **mod** instruction, you will end up with a deluge of kick drums and high-hats. The **mod** instruction is used to filter out pulses. It is a very useful instruction to create basic rhythms. Check out the **Time** page if you haven't read it already.
+- Playing a sound always ends up with the <ic>.out()</ic> method that gives the instruction to send a message to the audio engine.
+- Sounds are **composed** by adding qualifiers that will modify the sound or synthesizer being played (_e.g_ <ic>sound('...').blabla(...)..something(...).out()</ic>.
+	
+${makeExample(
+  '"Composing" a sound or making a sound chain',
+  `
+mod(1) :: sound('pad')
+  .begin(rand(0, 0.4))
+  .freq([50,52].beat())
+  .size(0.9)
+  .room(0.9)
+  .velocity(0.25)
+  .pan(usine()).release(2).out()`,
+  true
+)}
+
+## Audio Sample Folders / Sample Files
+	
+When you type <ic>kick</ic> in the <ic>sound('kick').out()</ic> expression, you are referring to a sample folder containing multiple audio samples. If you look at the sample folder, it would look something like this:
+	
+\`\`\`shell
+.
+├── KICK9.wav
+├── kick1.wav
+├── kick10.wav
+├── kick2-1.wav
+├── kick2.wav
+├── kick3-1.wav
+├── kick3.wav
+├── kick4.wav
+├── kick5.wav
+├── kick6.wav
+├── kick7.wav
+└── kick8.wav
+\`\`\`
+	
+The <ic>.n(number)</ic> method can be used to pick a sample from the currently selected sample folder. For instance, the following script will play a random sample from the _kick_ folder:
+${makeExample(
+  "Picking a sample",
+  `
+mod(1) && sound('kick').n([1,2,3,4,5,6,7,8].pick()).out()
+`,
+  true
+)}
+	
+Don't worry about the number. If it gets too big, it will be automatically wrapped to the number of samples in the folder. You can type any number, it will always fall on a sample. Let's use our mouse to select a sample number in a folder:
+	
+${makeExample(
+  "Picking a sample... with your mouse!",
+  `
+// Move your mouse to change the sample being used!
+mod(.25) && sound('numbers').n(Math.floor(mouseX())).out()`,
+  true
+)}
+	
+**Note:** the <ic>sound</ic> function can also be used to play synthesizers (see the **Synthesizers** page). In that case, the <ic>.n(n: number)</ic> becomes totally useless!
+	
+## Learning about sound modifiers
+	
+As we said earlier, the <ic>sound('sample_name')</ic> function can be chained to _specify_ a sound more. For instance, you can add a filter and some effects to your high-hat:
+${makeExample(
+  "Learning through repetition",
+  `
+mod(0.5) && sound('hh')
+  .sometimes(s=>s.speed([1,5,10].pick()))
+  .room(0.5)
+  .cutoff(usine(2) * 5000)
+  .out()`,
+  true
+)}
+	
+There are many possible arguments that you can add to your sounds. Learning them can take a long time but it will open up a lot of possibilities. Let's try to make it through all of them. They can all be used both with synthesizers and audio samples, which is kind of unconventional with normal / standard electronic music softwares.
+	
+## Orbits and audio busses
+	
+Topos is inheriting some audio bus management principles taken from the [SuperDirt](https://github.com/musikinformatik/SuperDirt) and [Superdough](https://www.npmjs.com/package/superdough) engine, a WebAudio based recreation of the same engine. Each sound that you play is associated with an audio bus, called an _orbit_. Some effects are affecting **all sounds currently playing on that bus**. These are called **global effects**, to distinguish from **local effects**:
+	
+- **global effects**: _reverberation_ and _delay_.
+- **local effects**: everything else :smile:
+
+There is a special method to choose the _orbit_ that your sound is going to use:
+	
+| Method   | Alias | Description                                                |
+|----------|-------|------------------------------------------------------------|
+| orbit    |       | Orbit number                                               |
+
+	
+## Amplitude
+	
+Simple controls over the amplitude (volume) of a given sound.
+	
+| Method   | Alias | Description                                                |
+|----------|-------|------------------------------------------------------------|
+| gain     |       | Volume of the synth/sample (exponential)                   |
+| velocity | vel   | Velocity (amplitude) from 0 to 1. Multipled with gain      |
+	
+${makeExample(
+  "Velocity manipulated by a counter",
+  `
+mod(.5)::snd('cp').vel($(1)%10 / 10).out()`,
+  true
+)}
+	
+## Amplitude Enveloppe
+	
+**Superdough** is applying an **ADSR** envelope to every sound being played. This is a very standard and conventional amplitude envelope composed of four stages: _attack_, _decay_, _sustain_ and _release_. You will find the same parameters on most synthesizers.
+	
+| Method  | Alias | Description                                   |
+|---------|-------|-----------------------------------------------|
+| attack  | atk   | Attack value (time to maximum volume)         |
+| decay   | dec   | Decay value (time to decay to sustain level)  |
+| sustain | sus   | Sustain value (gain when sound is held)       |
+| release | rel   | Release value (time for the sound to die off) |
+	
+Note that the **sustain** value is not a duration but an amplitude value (how loud). The other values are the time for each stage to take place. Here is a fairly complete example using the <ic>sawtooth</ic> basic waveform.
+	
+${makeExample(
+  "Simple synthesizer",
+  `
+mod(4)::sound('sawtooth').note(50).decay(0.5).sustain(0.5).release(2).gain(0.25).out();
+mod(2)::sound('sawtooth').note(50+7).decay(0.5).sustain(0.6).release(2).gain(0.25).out();
+mod(1)::sound('sawtooth').note(50+12).decay(0.5).sustain(0.7).release(2).gain(0.25).out();
+mod(.25)::sound('sawtooth').note([50,57,62].pick() + [12, 24, 0].div(2))
+  .cutoff(5000).sustain(0.5).release(0.1).gain(0.25).out()
+	`,
+  true
+)};
+	
+## Sample Controls
+
+There are some basic controls over the playback of each sample. This allows you to get into more serious sampling if you take the time to really work with your audio materials.
+	
+| Method  | Alias | Description                                            |
+|---------|-------|--------------------------------------------------------|
+| n       |       | Select a sample in the current folder (from <ic>0</ic> to infinity)                 |
+| begin   |       | Beginning of the sample playback (between <ic>0</ic> and <ic>1</ic>)     |
+| end     |       | End of the sample (between <ic>0</ic> and <ic>1</ic>)                    |
+| speed   |       | Playback speed (<ic>2</ic> = twice as fast)         |
+| cut     |       | Set with <ic>0</ic> or <ic>1</ic>. Will cut the sample as soon as another sample is played on the same bus |
+| clip    |       | Multiply the duration of the sample with the given number |
+| pan     |       | Stereo position of the audio playback (<ic>0</ic> = left, <ic>1</ic> = right)|
+	
+${makeExample(
+  "Complex sampling duties",
+  `
+// Using some of the modifiers described above :)
+mod(.5)::snd('pad').begin(0.2)
+  .speed([1, 0.9, 0.8].div(4))
+  .n([0, 0, 2, 4].div(4)).pan(usine(.5))
+  .end(rand(0.3,0.8))
+  .room(0.8).size(0.5)
+  .clip(1).out()
+	`,
+  true
+)};
+	
+	
+## Filters
+	
+There are three basic filters: a _lowpass_, _highpass_ and _bandpass_ filters with rather soft slope. Each of them can take up to two arguments. You can also use only the _cutoff_ frequency and the resonance will stay to its default nominal value.
+	
+| Method     | Alias | Description                             |
+|------------|-------|-----------------------------------------|
+| cutoff     | lpf   | Cutoff frequency of the lowpass filter  |
+| resonance  | lpq   | Resonance of the lowpass filter         |
+| hcutoff    | hpf   | Cutoff frequency of the highpass filter |
+| hresonance | hpq   | Resonance of the highpass filter        |
+| bandf      | bpf   | Cutoff frequency of the bandpass filter |
+| bandq      | bpq   | Resonance of the bandpass filter        |
+| vowel			 |       | Formant filter with (vocal quality)     |
+
+${makeExample(
+  "Filter sweep using a low frequency oscillator",
+  `
+mod(.5) && snd('sawtooth')
+  .cutoff([2000,500].pick() + usine(.5) * 4000)
+  .resonance(0.9).freq([100,150].pick())
+  .out()
+	`,
+  true
+)};
+	
+## Reverb
+	
+A basic reverberator that you can use to give some depth to your sounds. This simple reverb design has a _LoFI_ quality that can be quite useful on certain sounds.
+	
+| Method     | Alias | Description                     |
+|------------|-------|---------------------------------|
+| room |     | The more, the bigger the reverb (between <ic>0</ic> and <ic>1</ic>.|
+| size |     | Reverberation amount |
+
+${makeExample(
+  "Clapping in the cavern",
+  `
+mod(2)::snd('cp').room(1).size(0.9).out()
+	`,
+  true
+)};
+
+	
+## Delay
+	
+A good sounding delay unit that can go into feedback territory. Use it without moderation.
+	
+| Method     | Alias     | Description                     |
+|------------|-----------|---------------------------------|
+| delay      |           | Delay _wet/dry_ (between <ic>0</ic> and <ic>1</ic>) |
+| delaytime  | delayt    | Delay time (in milliseconds)    |
+| delayfeedback| delayfb | Delay feedback (between <ic>0</ic> and <ic>1</ic>) |
+	
+${makeExample(
+  "Who doesn't like delay?",
+  `
+mod(2)::snd('cp').delay(0.5).delaytime(0.75).delayfb(0.8).out()
+mod(4)::snd('snare').out()
+mod(1)::snd('kick').out()
+	`,
+  true
+)};
+	
+## Distorsion, saturation, destruction
+	
+| Method     | Alias     | Description                     |
+|------------|-----------|---------------------------------|
+| coarse     |           | Artificial sample-rate lowering |
+| crush      |           | bitcrushing. <ic>1</ic> is extreme, the more you go up, the less it takes effect.  |
+| shape      |           | Waveshaping distortion (between <ic>0</ic> and <ic>1</ic>)          |
+	
+	
+${makeExample(
+  "Crunch... crunch... crunch!",
+  `
+mod(.5)::snd('pad').coarse($(1) % 16).clip(.5).out(); // Comment me
+mod(.5)::snd('pad').crush([16, 8, 4].div(2)).clip(.5).out()
+	`,
+  true
+)};
+`;
+};
