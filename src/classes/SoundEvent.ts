@@ -14,6 +14,47 @@ export class SoundEvent extends AudibleEvent {
     else this.values = sound;
   }
 
+  fmenv = (value: "lin" | "exp"): this => {
+    this.values["fmenv"] = value;
+    return this;
+  };
+
+  fmattack = (value: number): this => {
+    this.values["fmattack"] = value;
+    return this;
+  };
+  fmatk = this.fmattack;
+
+  fmdecay = (value: number): this => {
+    this.values["fmdecay"] = value;
+    return this;
+  };
+  fmdec = this.fmdecay;
+
+  fmsustain = (value: number): this => {
+    this.values["fmsustain"] = value;
+    return this;
+  };
+  fmsus = this.fmsustain;
+
+  fmrelease = (value: number): this => {
+    this.values["fmrelease"] = value;
+    return this;
+  };
+  fmrel = this.fmrelease;
+
+  fmvelocity = (value: number): this => {
+    this.values["fmvelocity"] = value;
+    return this;
+  };
+  fmvel = this.fmvelocity;
+
+  fmwave = (value: "sine" | "triangle" | "sawtooth" | "square"): this => {
+    this.values["fmwave"] = value;
+    return this;
+  };
+  fmw = this.fmwave;
+
   attack = (value: number): this => {
     this.values["attack"] = value;
     return this;
