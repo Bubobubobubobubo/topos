@@ -188,7 +188,16 @@ mod(.25) :: sound('z_tan')
 `,
   true
 )}
-${makeExample("Funny Gameboy Tune", ``, false)}
+${makeExample(
+  "What is happening to me?",
+  `
+mod(1) :: snd('zzfx').zzfx([
+  [4.77,,25,,.15,.2,3,.21,,2.4,,,,,,,.23,.35],
+  [1.12,,97,.11,.16,.01,4,.77,,,30,.17,,,-1.9,,.01,.67,.2]
+  ].beat()).out()
+`,
+  false
+)}
 ${makeExample(
   "Les voitures dans le futur",
   `
@@ -200,6 +209,16 @@ mod(1) :: sound(['z_triangle', 'z_sine'].pick())
   .delayt(0.75).delayfb(0.5).out()
 `,
   false
+)}
+
+Note that you can also design sounds [on this website](https://killedbyapixel.github.io/ZzFX/) and copy the generated code in Topos. To do so, please use the <ic>zzfx</ic> method with the generated array:
+${makeExample(
+  "Designing a sound on the ZzFX website",
+  `
+ 
+mod(2) :: sound('zzfx').zzfx([3.62,,452,.16,.1,.21,,2.5,,,403,.05,.29,,,,.17,.34,.22,.68]).out()
+`,
+  true
 )}
 
 # Speech synthesis
