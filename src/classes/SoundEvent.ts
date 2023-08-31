@@ -43,6 +43,8 @@ export class SoundEvent extends AudibleEvent {
   sustainVolume = (value: number) => this.updateValue("sustainVolume", value);
   decay = (value: number) => this.updateValue("decay", value);
   tremolo = (value: number) => this.updateValue("tremolo", value);
+  duration = (value: number) => this.updateValue("duration", value);
+  zzfx = (value: number[]) => this.updateValue("zzfx", value);
 
   // ================================================================================
   // Basic Audio Engine Parameters

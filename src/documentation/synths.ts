@@ -136,7 +136,20 @@ mod(.5) :: sound(['z_sine', 'z_triangle', 'z_sawtooth', 'z_tan', 'z_noise'].beat
 `,
   true
 )}
-${makeExample("Minimalist chiptune", ``, true)}
+${makeExample(
+  "Minimalist chiptune",
+  `
+mod(.5) :: sound('z_triangle')
+  .note([60, 67, 72, 63, 65, 70].div(.5))
+  .zrand(0).curve([1,2,3,4].div(1))
+  .slide(0.01).tremolo(12)
+  .noise([0,0.5].beat())
+  .decay(0.3).sustain(0)
+  .room(0.5).size(0.9)
+  .pitchJumpTime(0.01).out() 
+`,
+  true
+)}
 
 It comes with a set of parameters that can be used to tweak the sound. Don't underestimate this synth! It is very powerful for generating anything ranging from chaotic noise sources to lush pads:
 
@@ -161,9 +174,33 @@ It comes with a set of parameters that can be used to tweak the sound. Don't und
 |<ic>zmod</ic>|| frequency modulation speed.|
 |<ic>duration</ic>|| Total sound duration (overrides envelope) |
 
-${makeExample("Chaotic Noise source", ``, true)}
+${makeExample(
+  "Chaotic Noise source",
+  `
+mod(.25) :: sound('z_tan')
+  .note(40).noise(rand(0.0, 1.0))
+  .pitchJump(84).pitchJumpTime(rand(0.0, 1.0))
+  .zcrush([0,1,2,3,4].beat())
+  .zmod(rand(0.0, 1.0))
+  .cutoff(irand(2000,5000))
+  .sustain(0).decay([0.2, 0.1].pick())
+  .out() 
+`,
+  true
+)}
 ${makeExample("Funny Gameboy Tune", ``, false)}
-${makeExample("Ambiant noise", ``, false)}
+${makeExample(
+  "Les voitures dans le futur",
+  `
+mod(1) :: sound(['z_triangle', 'z_sine'].pick())
+  .note([60,63,72,75].pick()).tremolo(16)
+  .zmod([0, 1/2, 1/8].division(2).pick())
+  .attack(0.5).release(0.5).sustain(2).delay(0.8)
+  .room(0.9).size(0.9)
+  .delayt(0.75).delayfb(0.5).out()
+`,
+  false
+)}
 
 # Speech synthesis
 
