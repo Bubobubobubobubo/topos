@@ -939,7 +939,7 @@ export class UserAPI {
     const results: boolean[] = n.map((value) => this.app.clock.pulses_since_origin % value === 0);
     return results.some((value) => value === true);
   };
-  pmod = this.modpulse;
+  modp = this.modpulse;
 
   public modbar = (...n: number[]): boolean => {
     const results: boolean[] = n.map(
@@ -947,7 +947,7 @@ export class UserAPI {
     );
     return results.some((value) => value === true);
   };
-  bmod = this.modbar;
+  modb = this.modbar;
 
   public div = (chunk: number): boolean => {
     const time_pos = this.app.clock.pulses_since_origin;
