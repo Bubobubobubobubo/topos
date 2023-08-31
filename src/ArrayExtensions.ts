@@ -98,7 +98,7 @@ export const makeArrayExtensions = (api: UserAPI) => {
      *
      * @returns The element corresponding to the current beat
      */
-    return this[(api.ebeat() / beat) % this.length];
+    return this[(api.app.clock.beats_since_origin  / beat) % this.length];
   };
 
   Array.prototype.bar = function () {

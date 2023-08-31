@@ -862,7 +862,7 @@ export class UserAPI {
      *
      * @returns The current bar number
      */
-    return this.app.clock.time_position.bar;
+    return this.app.clock.time_position.bar + 1;
   };
 
   tick = (): number => {
@@ -871,7 +871,7 @@ export class UserAPI {
      *
      * @returns The current tick number
      */
-    return this.app.clock.tick;
+    return this.app.clock.tick + 1;
   };
 
   pulse = (): number => {
@@ -880,7 +880,7 @@ export class UserAPI {
      *
      * @returns The current pulse number
      */
-    return this.app.clock.time_position.pulse;
+    return this.app.clock.time_position.pulse + 1;
   };
 
   beat = (): number => {
@@ -889,29 +889,38 @@ export class UserAPI {
      *
      * @returns The current beat number
      */
-    return this.app.clock.time_position.beat;
+    return this.app.clock.time_position.beat + 1;
   };
 
   ebeat = (): number => {
     /**
      * Returns the current beat number since the origin of time
      */
-    return this.app.clock.beats_since_origin;
+    return this.app.clock.beats_since_origin + 1;
   };
 
   epulse = (): number => {
     /**
      * Returns the current number of pulses elapsed since origin of time
      */
-    return this.app.clock.pulses_since_origin;
+      return this.app.clock.pulses_since_origin + 1;
   };
 
-  signature = (): number[] => {
+  nominator = (): number => {
     /**
-     * Returns the current time signature
+     * Returns the current nominator of the time signature
      */
-    return this.app.clock.time_signature;
+    return this.app.clock.time_signature[0];
+  }
+
+  meter = (): number => {
+    /**
+     * Returns the current meter (denominator of the time signature)
+     */
+    return this.app.clock.time_signature[1];
   };
+
+  denominator = this.meter;
 
   // =============================================================
   // Time Filters
@@ -919,27 +928,27 @@ export class UserAPI {
 
   public mod = (...n: number[]): boolean => {
     const results: boolean[] = n.map(
-      (value) => this.epulse() % Math.floor(value * this.ppqn()) === 0
+      (value) => this.app.clock.pulses_since_origin % Math.floor(value * this.ppqn()) === 0
     );
     return results.some((value) => value === true);
   };
 
   public modpulse = (...n: number[]): boolean => {
-    const results: boolean[] = n.map((value) => this.epulse() % value === 0);
+    const results: boolean[] = n.map((value) => this.app.clock.pulses_since_origin % value === 0);
     return results.some((value) => value === true);
   };
-  modp = this.modpulse;
+  pmod = this.modpulse;
 
   public modbar = (...n: number[]): boolean => {
     const results: boolean[] = n.map(
-      (value) => this.bar() % Math.floor(value * this.ppqn()) === 0
+      (value) => this.app.clock.time_position.bar % Math.floor(value * this.ppqn()) === 0
     );
     return results.some((value) => value === true);
   };
   bmod = this.modbar;
 
   public div = (chunk: number): boolean => {
-    const time_pos = this.epulse();
+    const time_pos = this.app.clock.pulses_since_origin;
     const current_chunk = Math.floor(
       time_pos / Math.floor(chunk * this.ppqn())
     );
@@ -947,7 +956,7 @@ export class UserAPI {
   };
 
   public divbar = (chunk: number): boolean => {
-    const time_pos = this.bar() - 1;
+    const time_pos = this.app.clock.time_position.bar - 1;
     const current_chunk = Math.floor(time_pos / chunk);
     return current_chunk % 2 === 0;
   };
@@ -956,7 +965,7 @@ export class UserAPI {
     bars: number[] | number,
     n: number = this.app.clock.time_signature[0]
   ): boolean => {
-    let current_bar = (this.bar() % n) + 1;
+    let current_bar = (this.app.clock.time_position.bar % n) + 1;
     return typeof bars === "number"
       ? bars === current_bar
       : bars.some((b) => b == current_bar);
@@ -972,14 +981,33 @@ export class UserAPI {
      * @param beat - The beats to check
      * @returns True if the current beat is in the given list of beats
      */
+    const origin = this.app.clock.pulses_since_origin;
     let final_pulses: boolean[] = [];
     beat.forEach((b) => {
-      const beat = b % this.signature()[0] || this.signature()[0];
-      const integral_part = Math.floor(beat);
-      const decimal_part = (beat - integral_part) * this.ppqn() + 1;
-      final_pulses.push(
-        integral_part === this.beat() && this.pulse() === decimal_part
-      );
+      const pulses = Math.floor(b * this.ppqn());
+      return final_pulses.push(origin % pulses === 0);
+    });
+    return final_pulses.some((p) => p == true);
+  };
+
+  oncount = (beats: number[]|number, count: number): boolean => {
+    /**
+     * Returns true if the current beat is in the given list of beats.
+     *
+     * @remarks
+     * This function can also operate with decimal beats!
+     *
+     * @param beat - The beats to check
+     * @returns True if the current beat is in the given list of beats
+     */
+    if(typeof beats === "number") beats = [beats];
+    const origin = this.app.clock.pulses_since_origin;
+    let final_pulses: boolean[] = [];
+    beats.forEach((b) => {
+      b = b<1 ? 0 : b-1;
+      const beatInTicks = Math.ceil(b * this.ppqn());
+      const meterPosition = origin % (this.ppqn() * count);
+      return final_pulses.push(meterPosition === beatInTicks);
     });
     return final_pulses.some((p) => p == true);
   };
@@ -1342,7 +1370,7 @@ export class UserAPI {
   public divseq = (...args: any): any => {
     const chunk_size = args[0]; // Get the first argument (chunk size)
     const elements = args.slice(1); // Get the rest of the arguments as an array
-    const timepos = this.epulse();
+    const timepos = this.app.clock.pulses_since_origin;
     const slice_count = Math.floor(
       timepos / Math.floor(chunk_size * this.ppqn())
     );
@@ -1355,7 +1383,7 @@ export class UserAPI {
      *
      * @param array - The array of values to pick from
      */
-    return array[this.ebeat() % array.length];
+    return array[this.app.clock.time_position.beat % array.length];
   };
 
   public seqbar = <T>(...array: T[]): T => {

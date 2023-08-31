@@ -15,9 +15,11 @@ export class TransportNode extends AudioWorkletNode {
     handleMessage = (message) => {
         if (message.data && message.data.type === "bang") {
             this.logicalTime = message.data.logicalTime;
+
+            this.app.clock.tick++
             
             const futureTimeStamp = this.convertTicksToTimeposition(this.app.clock.tick);
-           // console.log("BANG", this.logicalTime, futureTimeStamp);
+            //console.log("BANG", this.logicalTime, futureTimeStamp);
             
             this.app.clock.time_position = futureTimeStamp;
             tryEvaluate(this.app, this.app.global_buffer);
@@ -27,11 +29,10 @@ export class TransportNode extends AudioWorkletNode {
 
     convertTicksToTimeposition(ticks) {
         const beatsPerBar = this.app.clock.time_signature[0];
-        const ppqnPosition = (ticks % this.app.clock.ppqn)+1;
+        const ppqnPosition = (ticks % this.app.clock.ppqn);
         const beatNumber = Math.floor(ticks / this.app.clock.ppqn);
-        const barNumber = Math.floor(beatNumber / beatsPerBar)+1;
-        const beatWithinBar = Math.floor(beatNumber % beatsPerBar)+1;
-        this.app.clock.tick++
+        const barNumber = Math.floor(beatNumber / beatsPerBar);
+        const beatWithinBar = Math.floor(beatNumber % beatsPerBar);
         return {bar: barNumber, beat: beatWithinBar, pulse: ppqnPosition};
     }
 

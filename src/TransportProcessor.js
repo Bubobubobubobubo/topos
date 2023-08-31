@@ -30,9 +30,9 @@ class TransportProcessor extends AudioWorkletProcessor {
             this.lastPausedTime = 0;
             this.wasStopped = true;
             this.currentPulsePosition = 0;
-        } else if(message.data === 'bpm') {
+        } else if(message.data.type === 'bpm') {
             this.bpm = message.data.value;
-        } else if(message.data === 'ppqn') {
+        } else if(message.data.type === 'ppqn') {
             this.ppqn = message.data.value;
         }
     };

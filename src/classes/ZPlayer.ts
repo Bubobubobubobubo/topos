@@ -94,8 +94,8 @@ export class Player extends Event {
   areWeThereYet = (): boolean => {
     // If clock has stopped
     if (this.app.clock.pulses_since_origin < this.lastCallTime) {
-      this.lastCallTime = 1;
-      this.startCallTime = 1;
+      this.lastCallTime = 0;
+      this.startCallTime = 0;
       this.index = 0;
       this.waitTime = 0;
     }
@@ -104,7 +104,7 @@ export class Player extends Event {
     const howAboutNow =
       // If pattern is just starting
       (this.notStarted() &&
-      (this.pulse() === 1 || this.origin() >= this.nextBeatInTicks()) &&
+      (this.pulse() === 0 || this.origin() >= this.nextBeatInTicks()) &&
        this.origin() >= this.waitTime) || 
       // If pattern is already playing
       (this.current &&
