@@ -983,11 +983,14 @@ export class UserAPI {
      * @param beat - The beats to check
      * @returns True if the current beat is in the given list of beats
      */
-    const origin = this.app.clock.pulses_since_origin;
     let final_pulses: boolean[] = [];
     beat.forEach((b) => {
-      const pulses = Math.floor(b * this.ppqn());
-      return final_pulses.push(origin % pulses === 0);
+      const beat = b % this.nominator() || this.nominator();
+      const integral_part = Math.floor(beat);
+      const decimal_part = (beat - integral_part) * this.ppqn() + 1;
+      final_pulses.push(
+        integral_part === this.beat() && this.pulse() === decimal_part
+      );
     });
     return final_pulses.some((p) => p == true);
   };

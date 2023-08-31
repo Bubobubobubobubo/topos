@@ -107,7 +107,7 @@ export const makeArrayExtensions = (api: UserAPI) => {
      *
      * @param array - The array of values to pick from
      */
-    return this[(api.app.clock.time_position.bar + 1) % this.length];
+    return this[api.app.clock.time_position.bar % this.length];
   };
 
   Array.prototype.pulse = function () {

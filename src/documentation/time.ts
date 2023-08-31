@@ -89,7 +89,32 @@ mod([.25, 1/8].div(1.5))::snd('hat').n(2)
   false
 )}
 
-	
+- <ic>oncount(beats: number[], meter: number)</ic>: This function is similar to <ic>onbeat</ic> but it allows you to specify a custom meter (time signature denominator) for the beats.
+
+${makeExample(
+  "Using oncount to create more variation in the rhythm",
+  `
+  bpm(120)
+  z1('q (0 4 2 9)+(0 3 1 5)').sound('sine').cutoff(400).delay(0.5).out()
+  onbeat(1,1.5,2,3,4) :: sound('bd').gain(2.0).out()
+  oncount([1,3,5.5,7,7.5,8],8) :: sound('hh').gain(irand(1.0,4.0)).out()
+`,
+  true
+)}
+
+${makeExample(
+  "Using oncount to create rhythms with a custom meter",
+  `
+  bpm(280)
+  oncount([1,5,9,13],16) :: sound('bd').gain(3.0).out()
+  oncount([5,6,13],16) :: sound('cp').gain(1.0).out()
+  oncount([2,3,3.5,6,7,10,15],16) :: sound('hh').n(8).gain(1.0).out()
+  oncount([1,4,5,8,9,10,11,12,13,14,15,16],16) :: 
+  sound('hh').out()
+`,
+  true
+)}
+
 ## Rhythm generators
 	
 We included a bunch of popular rhythm generators in Topos such as the euclidian rhythms algorithms or the one to generate rhythms based on a binary sequence. They all work using _iterators_ that you will gradually learn to use for iterating over lists. Note that they are levaraging <ic>mod(...n:number[])</ic> that you just learned about!

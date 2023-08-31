@@ -32,7 +32,6 @@ const stringObject = (str: string, params: object) => {
 export const makeStringExtensions = (api: UserAPI) => {
     String.prototype.speak = function () {
         const options = JSON.parse(this.valueOf());
-        console.log("SPEAKING:", options);
         new Speaker({ ...options, text: options.text }).speak().then(() => {
             // Done
         }).catch((e) => {
@@ -74,6 +73,8 @@ type SpeechOptions = {
     lang?: string;
 }
 
+let speakerTimeout: number;
+
 export class Speaker {
     constructor(
         public options: SpeechOptions
@@ -83,7 +84,8 @@ export class Speaker {
         return new Promise<void>((resolve, reject) => {
         if (this.options.text) {
             const synth = window.speechSynthesis;
-            synth.cancel();
+            if(synth.speaking) synth.cancel();
+
             const utterance = new SpeechSynthesisUtterance(this.options.text);
             utterance.rate = this.options.rate || 1;
             utterance.pitch = this.options.pitch || 1;
@@ -111,7 +113,17 @@ export class Speaker {
                 reject(error);
             };
 
-            synth.speak(utterance);
+            if(synth.speaking) {
+                // Cancel again?
+                synth.cancel();
+                // Set timeout
+                if(speakerTimeout) clearTimeout(speakerTimeout);
+                speakerTimeout = setTimeout(() => {
+                    synth.speak(utterance);
+                }, 200);
+            } else {
+                synth.speak(utterance);
+            }
 
         } else {
             reject("No text provided");

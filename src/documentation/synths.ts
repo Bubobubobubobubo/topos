@@ -256,7 +256,7 @@ ${makeExample(
   `
 mod(2) :: speak("Topos!","fr",irand(0,5))
   `,
-  false
+  true
 )}
 
 
@@ -265,7 +265,7 @@ You can also use speech by chaining methods to a string:
 ${makeExample(
   "Chaining string",
   `
-  onbeat(1,3) :: "Foobaba".voice(irand(0,10)).speak()
+  onbeat(4) :: "Foobaba".voice(irand(0,10)).speak()
   `,
   true
 )}
@@ -284,18 +284,19 @@ ${makeExample(
 )}
 
 ${makeExample(
-  "String chaining with array chaining",
+  "Live coded poetry with array and string chaining",
   `
-  const croissant = ["Croissant!", "Volant", "Arc-en-ciel", "Chocolat", "Dansant", "Nuage", "Tournant", "Galaxie", "Chatoyant", "Flamboyant", "Cosmique"];
+  bpm(70)
 
-  onbeat(1) :: croissant.bar()
-    .lang("fr")
-    .volume(rand(0.2,2.0))
-    .rate(rand(.4,.6))
-    .speak();
+  const croissant = ["Volant", "Arc-en-ciel", "Chocolat", "Dansant", "Nuage", "Tournant", "Galaxie", "Chatoyant", "Flamboyant", "Cosmique","Croissant!"];
   
+  onbeat(4) :: croissant.bar()
+      .lang("fr")
+      .volume(rand(0.2,2.0))
+      .rate(rand(.4,.6))
+      .speak();
   `,
-  false
+  true
 )}
 `;
 };
