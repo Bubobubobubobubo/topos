@@ -199,8 +199,8 @@ Numbered methods are synced automatically to **z0** method if it exsists. Syncin
 ${makeExample(
   "Automatic sync to z0",
   `
-z0('w 0 8').sound('peri').gain(3.0).out()
-z1('e 0 4 5 9').sound('bell').gain(6.0).out()
+z0('w 0 8').sound('peri').out()
+z1('e 0 4 5 9').sound('bell').out()
 `,  
   true
 )}

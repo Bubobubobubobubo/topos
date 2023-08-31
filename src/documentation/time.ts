@@ -152,6 +152,19 @@ mod(.25) && euclid($(4), 7, 9, 1) && snd('hh').out()
   false
 )}
 
+Alternatively, you can <ic>oneuclid</ic> or <ic>rhythm</ic> without the _iterators_:
+
+- <ic>oneuclid(pulses: number, length: number, rotate: number): boolean</ic>: generates <ic>true</ic> or <ic>false</ic> values from an euclidian rhythm sequence. This is another version of <ic>euclid</ic> that does not take an iterator.
+${makeExample(
+  "Using oneuclid to create a rhythm without iterators",
+  `
+  // Change speed using bpm
+  // bpm(250)
+  oneuclid(5, 9) :: snd('kick').out()
+  oneuclid(7,16) :: snd('east').end(0.5).n(irand(3,5)).out()
+`,
+  false
+)}
 
 - <ic>rhythm(divisor: number, pulses: number, length: number, rotate: number): boolean</ic>: generates <ic>true</ic> or <ic>false</ic> values from an euclidian rhythm sequence. This is another version of <ic>euclid</ic> that does not take an iterator.
 ${makeExample(
