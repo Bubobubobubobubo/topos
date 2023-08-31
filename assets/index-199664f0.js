@@ -397,6 +397,15 @@ mod(.5) && euclid($(3), 6, 9, 1) && snd('east').end(0.5).n(5).freq(200).out()
 mod(.25) && euclid($(4), 7, 9, 1) && snd('hh').out()
 `,!1)}
 
+Alternatively, you can <ic>oneuclid</ic> or <ic>rhythm</ic> without the _iterators_:
+
+- <ic>oneuclid(pulses: number, length: number, rotate: number): boolean</ic>: generates <ic>true</ic> or <ic>false</ic> values from an euclidian rhythm sequence. This is another version of <ic>euclid</ic> that does not take an iterator.
+${e("Using oneuclid to create a rhythm without iterators",`
+  // Change speed using bpm
+  // bpm(250)
+  oneuclid(5, 9) :: snd('kick').out()
+  oneuclid(7,16) :: snd('east').end(0.5).n(irand(3,5)).out()
+`,!1)}
 
 - <ic>rhythm(divisor: number, pulses: number, length: number, rotate: number): boolean</ic>: generates <ic>true</ic> or <ic>false</ic> values from an euclidian rhythm sequence. This is another version of <ic>euclid</ic> that does not take an iterator.
 ${e("rhythm is a beginner friendly rhythmic function!",`
@@ -1470,8 +1479,8 @@ Ziffers numbered methods **(z0-z16)** can be used to parse and play patterns. Ea
 Numbered methods are synced automatically to **z0** method if it exsists. Syncing can also be done manually by using either the <ic>wait</ic> method, which will always wait for the current pattern to finish before starting the next cycle, or the <ic>sync</ic> method will only wait for the synced pattern to finish on the first time.
 
 ${e("Automatic sync to z0",`
-z0('w 0 8').sound('peri').gain(3.0).out()
-z1('e 0 4 5 9').sound('bell').gain(6.0).out()
+z0('w 0 8').sound('peri').out()
+z1('e 0 4 5 9').sound('bell').out()
 `,!0)}
 
 ${e("Sync with wait",`
