@@ -1,4 +1,4 @@
-import { makeExampleFactory, key_shortcut } from "../Documentation";
+import { makeExampleFactory } from "../Documentation";
 import { type Editor } from "../main";
 
 export const time = (application: Editor): string => {

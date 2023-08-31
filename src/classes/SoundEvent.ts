@@ -42,6 +42,7 @@ export class SoundEvent extends AudibleEvent {
   zdelay = (value: number) => this.updateValue("zdelay", value);
   sustainVolume = (value: number) => this.updateValue("sustainVolume", value);
   decay = (value: number) => this.updateValue("decay", value);
+  dec = this.decay;
   tremolo = (value: number) => this.updateValue("tremolo", value);
   duration = (value: number) => this.updateValue("duration", value);
   zzfx = (value: number[]) => this.updateValue("zzfx", value);
@@ -68,8 +69,6 @@ export class SoundEvent extends AudibleEvent {
   fmw = this.fmwave;
   attack = (value: number) => this.updateValue("attack", value);
   atk = this.attack;
-  decay = (value: number) => this.updateValue("decay", value);
-  dec = this.decay;
   release = (value: number) => this.updateValue("release", value);
   rel = this.release;
   sustain = (value: number) => this.updateValue("sustain", value);

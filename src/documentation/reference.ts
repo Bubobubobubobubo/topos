@@ -1,5 +1,3 @@
-import { type Editor } from "../main";
-
-export const reference = (application: Editor): string => {
+export const reference = (): string => {
   return ``;
 };

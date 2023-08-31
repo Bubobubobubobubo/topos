@@ -1,8 +1,6 @@
-import { type Editor } from "../main";
-import { makeExampleFactory, key_shortcut } from "../Documentation";
+import { key_shortcut } from "../Documentation";
 
-export const shortcuts = (application: Editor): string => {
-  const makeExample = makeExampleFactory(application);
+export const shortcuts = (): string => {
   return `
 # Keybindings
 	

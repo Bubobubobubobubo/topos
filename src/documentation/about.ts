@@ -1,6 +1,4 @@
-import { type Editor } from "../main";
-
-export const about = (application: Editor): string => {
+export const about = (): string => {
   return `
 # About Topos
 	

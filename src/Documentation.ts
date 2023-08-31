@@ -46,34 +46,8 @@ export const makeExampleFactory = (application: Editor): Function => {
 };
 
 export const documentation_factory = (application: Editor) => {
-  let counter = 0; // Counter to generate unique IDs for code snippets
-
   // Initialize a data structure to store code examples by their unique IDs
   application.api.codeExamples = {};
-
-  const makeExample = (
-    description: string,
-    code: string,
-    open: boolean = false
-  ): string => {
-    const codeId = `codeExample${counter++}`;
-
-    // Store the code snippet in the data structure
-    application.api.codeExamples[codeId] = code;
-
-    return `
-<details ${open ? "open" : ""}>
-  <summary >${description}
-    <button class="py-1 align-top text-base rounded-lg pl-2 pr-2 hover:bg-green-700 bg-green-600 inline-block" onclick="app.api._playDocExample(app.api.codeExamples['${codeId}'])">▶️ Play</button>
-    <button class="py-1 text-base rounded-lg pl-2 pr-2 hover:bg-neutral-600 bg-neutral-500 inline-block pl-2" onclick="stop()">&#x23f8;&#xFE0F; Pause</button>
-    <button class="py-1 text-base rounded-lg pl-2 pr-2 hover:bg-neutral-900 bg-neutral-800 inline-block " onclick="navigator.clipboard.writeText(app.api.codeExamples['${codeId}'])">📎 Copy</button>
-  </summary>
-  \`\`\`javascript
-  ${code}
-  \`\`\`
-</details>
-`;
-  };
 
   return {
     introduction: introduction(application),
@@ -88,8 +62,8 @@ export const documentation_factory = (application: Editor) => {
     ziffers: ziffers(application),
     midi: midi(application),
     functions: functions(application),
-    reference: reference(application),
-    shortcuts: shortcuts(application),
-    about: about(application),
+    reference: reference(),
+    shortcuts: shortcuts(),
+    about: about(),
   };
 };
