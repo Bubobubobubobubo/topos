@@ -105,10 +105,10 @@ ${makeExample(
 ${makeExample(
   "Using oncount to create rhythms with a custom meter",
   `
-  bpm(280)
-  oncount([1,5,9,13],16) :: sound('bd').gain(3.0).out()
-  oncount([5,6,13],16) :: sound('cp').gain(1.0).out()
-  oncount([2,3,3.5,6,7,10,15],16) :: sound('hh').n(8).gain(1.0).out()
+  bpm(200)
+  oncount([1,5,9,13],16) :: sound('bd').gain(1.0).out()
+  oncount([5,6,13],16) :: sound('cp').gain(0.9).out()
+  oncount([2,3,3.5,6,7,10,15],16) :: sound('hh').n(8).gain(0.8).out()
   oncount([1,4,5,8,9,10,11,12,13,14,15,16],16) :: 
   sound('hh').out()
 `,
