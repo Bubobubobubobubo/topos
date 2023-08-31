@@ -383,6 +383,11 @@ export class UserAPI {
 
     player.updateLastCallTime();
 
+    if(id !== "") {
+      // Sync named patterns to z0 by default
+      player.sync("z0");
+    }
+
     return player;
   };
 

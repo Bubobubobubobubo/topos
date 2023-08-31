@@ -11,9 +11,9 @@ export type InputOptions = { [key: string]: string | number };
 export class Player extends Event {
   input: string;
   ziffers: Ziffers;
-  initCallTime: number = 1;
-  startCallTime: number = 1;
-  lastCallTime: number = 1;
+  initCallTime: number = 0;
+  startCallTime: number = 0;
+  lastCallTime: number = 0;
   waitTime = 0;
   startBeat: number = 0;
   played: boolean = false;
@@ -98,6 +98,7 @@ export class Player extends Event {
       this.startCallTime = 0;
       this.index = 0;
       this.waitTime = 0;
+      this.skipIndex = 0;
     }
 
     // Main logic
@@ -206,6 +207,23 @@ export class Player extends Event {
     }
     return this;
   }
+
+  sync(value: string|Function) {
+     if(this.atTheBeginning() && this.notStarted()) {
+      const origin = this.app.clock.pulses_since_origin;
+         const syncId = typeof value === "function" ? value.name : value;
+         if(origin>0) {
+             const syncPattern = this.app.api.patternCache.get(syncId) as Player;
+             if(syncPattern) {
+                 const syncPatternDuration = syncPattern.ziffers.duration;
+                 const syncPatternStart = syncPattern.startCallTime;
+                 const syncInPulses = syncPatternDuration*4*this.app.clock.ppqn;
+                 this.waitTime = syncPatternStart + syncInPulses;
+             }
+        }
+    }
+    return this;
+ }
 
   out = (): void => {
     // TODO?

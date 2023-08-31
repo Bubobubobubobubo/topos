@@ -86,7 +86,7 @@ Ziffers provides shorthands for **many** numeric and algorithimic operations suc
 * **List operations:** Cartesian operation (_e.g._ <ic>(3 2 1)+(2 5)</ic>) using the <ic>+</ic> operator. All the arithmetic operators are supported.
 
 ${makeExample(
-  "Cartesian operation for melodic generation",
+  "Element-wise operations for melodic generation",
   `
 z1("q 0 s (3 2 1)+(2 5) q 0 s (4 5 6)-(2 3)").sound('sine')
   .scale('minor').fmi(2).fmh(2).room(0.5).size(0.5).sustain(0.1)
@@ -192,7 +192,38 @@ mod(1, 1.75) :: snd(['kick', 'hat'].div(1)).out()
 
 ## Synchronization
 
-Ziffers numbered methods **(z0-z16)** can be used to parse and play patterns. Each method is individually cached and can be used to play multiple patterns simultaneously. They can be synchronized together by using a **cue** system. By default, each Ziffers expression will have a different duration. This system is thus necessary to make everything fit together in a loop-based environment like Topos.
+Ziffers numbered methods **(z0-z16)** can be used to parse and play patterns. Each method is individually cached and can be used to play multiple patterns simultaneously. By default, each Ziffers expression can have a different duration. This system is thus necessary to make everything fit together in a loop-based environment like Topos.
+
+Numbered methods are synced automatically to **z0** method if it exsists. Syncing can also be done manually by using either the <ic>wait</ic> method, which will always wait for the current pattern to finish before starting the next cycle, or the <ic>sync</ic> method will only wait for the synced pattern to finish on the first time.
+
+${makeExample(
+  "Automatic sync to z0",
+  `
+z0('w 0 8').sound('peri').gain(3.0).out()
+z1('e 0 4 5 9').sound('bell').gain(6.0).out()
+`,  
+  true
+)}
+
+${makeExample(
+  "Sync with wait",
+  `
+z1('w 0 5').sound('pluck').release(0.1).sustain(0.25).out()
+z2('q 6 3').wait(z1).sound('sine').release(0.16).sustain(0.55).out()
+`,  
+  true
+)}
+
+${makeExample(
+  "Sync on first run",
+  `
+  z1('w __ 0 5 9 3').sound('bin').out()
+  z2('q __ 4 2 e 6 3 q 6').sync(z1).sound('east').out()
+`,  
+  true
+)}
+
+
 
 
 ## Examples
