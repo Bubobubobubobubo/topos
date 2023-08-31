@@ -12,6 +12,7 @@ import {
   samples,
   initAudioOnFirstClick,
   registerSynthSounds,
+  registerZZFXSounds,
   soundMap,
   // @ts-ignore
 } from "superdough";
@@ -29,6 +30,7 @@ export async function loadSamples() {
     samples("github:tidalcycles/Dirt-Samples/master").then(() =>
       registerSynthSounds()
     ),
+    registerZZFXSounds(),
     samples("github:Bubobubobubobubo/Topos-Samples/main"),
   ]);
 }
@@ -359,7 +361,7 @@ export class UserAPI {
     input: string,
     options: InputOptions = {},
     id: number | string = ""
-  ): Player =>  {
+  ): Player => {
     const zid = "z" + id.toString();
     const key = id === "" ? this.generateCacheKey(input, options) : zid;
 
@@ -1288,26 +1290,40 @@ export class UserAPI {
 
   abs = Math.abs;
 
-
   // =============================================================
   // Speech synthesis
   // =============================================================
 
-  speak = (text: string, lang: string = "en-US", voice: number = 0, rate: number = 1, pitch: number = 1): void => {
-    /* 
+  speak = (
+    text: string,
+    lang: string = "en-US",
+    voice: number = 0,
+    rate: number = 1,
+    pitch: number = 1
+  ): void => {
+    /*
      * Speaks the given text using the browser's speech synthesis API.
      * @param text - The text to speak
      * @param voice - The index of the voice to use
      * @param rate - The rate at which to speak the text
      * @param pitch - The pitch at which to speak the text
-     * 
+     *
      */
-    const speaker = new Speaker({text: text, lang: lang, voice: voice, rate: rate, pitch: pitch});
-    speaker.speak().then(() => {
-      // Done speaking
-    }).catch((err) => {
-      console.log(err);
+    const speaker = new Speaker({
+      text: text,
+      lang: lang,
+      voice: voice,
+      rate: rate,
+      pitch: pitch,
     });
+    speaker
+      .speak()
+      .then(() => {
+        // Done speaking
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   // =============================================================
