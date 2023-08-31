@@ -72,6 +72,7 @@ export class Editor {
   vimModeCompartment: Compartment;
   chosenLanguage: Compartment;
   currentDocumentationPane: string = "introduction";
+  exampleCounter: number = 0;
 
   settings = new AppSettings();
   editorExtensions: Extension[] = [];
