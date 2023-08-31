@@ -121,7 +121,7 @@ export const makeArrayExtensions = (api: UserAPI) => {
 
   Array.prototype.div = function (divisor: number) {
     const chunk_size = divisor; // Get the first argument (chunk size)
-    const timepos = api.epulse();
+    const timepos = api.app.clock.pulses_since_origin;
     const slice_count = Math.floor(
       timepos / Math.floor(chunk_size * api.ppqn())
     );
