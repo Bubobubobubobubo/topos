@@ -26,6 +26,22 @@ export class SoundEvent extends AudibleEvent {
   volume = (value: number) => this.updateValue("volume", value);
   vol = this.volume;
   zrand = (value: number) => this.updateValue("zrand", value);
+  curve = (value: number) => this.updateValue("curve", value);
+  slide = (value: number) => this.updateValue("slide", value);
+  deltaSlide = (value: number) => this.updateValue("deltaSlide", value);
+  dslide = this.deltaSlide;
+  pitchJump = (value: number) => this.updateValue("pitchJump", value);
+  pj = this.pitchJump;
+  pitchJumpTime = (value: number) => this.updateValue("pitchJumpTime", value);
+  pjt = this.pitchJumpTime;
+  lfo = (value: number) => this.updateValue("lfo", value);
+  noise = (value: number) => this.updateValue("noise", value);
+  zmod = (value: number) => this.updateValue("zmod", value);
+  zcrush = (value: number) => this.updateValue("zcrush", value);
+  zdelay = (value: number) => this.updateValue("zdelay", value);
+  sustainVolume = (value: number) => this.updateValue("sustainVolume", value);
+  decay = (value: number) => this.updateValue("decay", value);
+  tremolo = (value: number) => this.updateValue("tremolo", value);
 
   // ================================================================================
   // Basic Audio Engine Parameters
