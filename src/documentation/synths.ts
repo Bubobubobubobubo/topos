@@ -71,6 +71,7 @@ The same basic waveforms can take additional methods to switch to a basic two op
 	
 - <ic>fmi</ic> (_frequency modulation index_): a floating point value between <ic>1</ic> and <ic>n</ic>.
 - <ic>fmh</ic> (_frequency modulation harmonic ratio_): a floating point value between <ic>1</ic> and <ic>n</ic>.
+- <ic>fmwave</ic> (_frequency modulation waveform_): a waveform name (_sine_, _triangle_, _sawtooth_ or _pulse_).
 
 ${makeExample(
   "80s nostalgia",
@@ -119,9 +120,18 @@ There is also a more advanced set of parameters you can use to control the envel
 - <ic>fmsustain</ic> / <ic>fmsus</ic>: sustain time of the modulator envelope.
 - <ic>fmrelease</ic> / <ic>fmrel</ic>: release time of the modulator envelope.
 
-${makeExample("FM Synthesis with envelope control", ``, true)}
-${makeExample("A very long envelope on the modulator", ``, true)}
-${makeExample("A very short envelope on the modulator", ``, true)}
+${makeExample(
+  "FM Synthesis with envelope control",
+  `
+ mod(.5) :: sound('sine')
+  .note([50,53,55,57].div(.5) - 12)
+  .fmi(0.5 + usine(.25) * 1.5)
+  .fmh([2,4].div(.125))
+  .fmwave('triangle')
+  .fmsus(0).fmdec(0.2).out()
+  `,
+  true
+)}
 
 ## ZzFX
 
@@ -223,29 +233,22 @@ mod(2) :: sound('zzfx').zzfx([3.62,,452,.16,.1,.21,,2.5,,,403,.05,.29,,,,.17,.34
 
 # Speech synthesis
 
-Topos can also speak using the [Web Speech API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Speech_API). Speech synthesis can be used in two ways:
+Topos can also speak using the [Web Speech API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Speech_API). There are two ways to use speech synthesis:
 
-- <ic>speak(text: string, lang: string, voice: number, rate: number, pitch: number, volume: number)</ic>: speak the given text.
-
-Or by using string and chaining:
-
-- <ic>"Hello".rate(1.5).pitch(0.5).speak()</ic>.
-
-Value ranges for the different parameters are:
-- <ic>lang(string)</ic>: language code, for example <ic>en</ic> for English, <ic>fr</ic> for French or with the country code for example British English <ic>en-GB</ic>. See supported values from the [list](https://cloud.google.com/speech-to-text/docs/speech-to-text-supported-languages).
-- <ic>voice(number)</ic>: voice index, for example <ic>0</ic> for the first voice, <ic>1</ic> for the second voice, etc.
-- <ic>rate(number)</ic>: speaking rate, from <ic>0.0</ic> to <ic>10</ic>.
-- <ic>pitch(number)</ic>: speaking pitch, from <ic>0.0</ic> to <ic>2</ic>.
-- <ic>volume(number)</ic>: speaking volume, from <ic>0.0</ic> to <ic>1.0</ic>.
-
-Examples:
+- <ic>speak(text: string, lang: string, voice: number, rate: number, pitch: number, volume: number)</ic>
+  - <ic>text</ic>: the text you would like to synthesize (_e.g_ <ic>"Wow, Topos can speak!"</ic>).
+  - <ic>lang</ic>: language code, for example <ic>en</ic> for English, <ic>fr</ic> for French or with the country code for example British English <ic>en-GB</ic>. See supported values from the [list](https://cloud.google.com/speech-to-text/docs/speech-to-text-supported-languages).
+  - <ic>voice</ic>: voice index, for example <ic>0</ic> for the first voice, <ic>1</ic> for the second voice, etc.
+  - <ic>rate(number)</ic>: speaking rate, from <ic>0.0</ic> to <ic>10</ic>.
+  - <ic>pitch(number)</ic>: speaking pitch, from <ic>0.0</ic> to <ic>2</ic>.
+  - <ic>volume(number)</ic>: speaking volume, from <ic>0.0</ic> to <ic>1.0</ic>.
 
 ${makeExample(
   "Hello world!",
   `
 mod(4) :: speak("Hello world!")
   `,
-  false
+  true
 )}
 
 ${makeExample(
@@ -256,12 +259,15 @@ mod(2) :: speak("Topos!","fr",irand(0,5))
   false
 )}
 
+
+You can also use speech by chaining methods to a string:
+
 ${makeExample(
   "Chaining string",
   `
   onbeat(1,3) :: "Foobaba".voice(irand(0,10)).speak()
   `,
-  false
+  true
 )}
 
 ${makeExample(
@@ -274,7 +280,7 @@ ${makeExample(
     
   mod(6) :: sentence.pitch(0).rate(0).voice([0,2].pick()).speak()
   `,
-  false
+  true
 )}
 
 ${makeExample(
