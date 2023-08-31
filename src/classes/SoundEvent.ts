@@ -28,6 +28,7 @@ export class SoundEvent extends AudibleEvent {
   zrand = (value: number) => this.updateValue("zrand", value);
   curve = (value: number) => this.updateValue("curve", value);
   slide = (value: number) => this.updateValue("slide", value);
+  sld = this.slide;
   deltaSlide = (value: number) => this.updateValue("deltaSlide", value);
   dslide = this.deltaSlide;
   pitchJump = (value: number) => this.updateValue("pitchJump", value);

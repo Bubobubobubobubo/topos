@@ -136,16 +136,34 @@ mod(.5) :: sound(['z_sine', 'z_triangle', 'z_sawtooth', 'z_tan', 'z_noise'].beat
 `,
   true
 )}
+${makeExample("Minimalist chiptune", ``, true)}
 
-It comes with a set of parameters that can be used to tweak the sound:
+It comes with a set of parameters that can be used to tweak the sound. Don't underestimate this synth! It is very powerful for generating anything ranging from chaotic noise sources to lush pads:
 
 | Method   | Alias | Description                                                |
 |----------|-------|------------------------------------------------------------|
-|<ic>zrand</ic>| randomisation factor. Seems to concern pitch as well, beware.
-|<ic>volume</ic>| overall volume of the sound. 
-|<ic>frequency</ic>| sound frequency, also controllable using <ic>note</ic>.
-|<ic>attack</ic>, <ic>decay</ic>, <ic>sustain</ic>, <ic>release</ic> | <ic>atk</ic>: envelope parameters.
+|<ic>zrand</ic>| | randomisation factor.|
+|<ic>attack</ic>|<ic>atk</ic>| attack time of the envelope.|
+|<ic>decay</ic>|<ic>dec</ic>| decay time of the envelope.|
+|<ic>sustain</ic>|<ic>sus</ic>| sustain time of the envelope.|
+|<ic>release</ic>|<ic>rel</ic>| release time of the envelope.|
+|<ic>volume</ic>|<ic>vol</ic>| overall volume |
+|<ic>frequency</ic>|freq| sound frequency, also supports <ic>note</ic>.
+|<ic>curve</ic>| | Oscillator waveshaping (0-3) |
+|<ic>slide</ic>|<ic>sld</ic>| Pitch slide |
+|<ic>deltaSlide</ic>|<ic>dslide</ic>| Other pitch slide parameter |
+|<ic>pitchJump</ic>|<ic>pj</ic>| Pitch change after pitchJumpTime |
+|<ic>pitchJumpTime</ic>|<ic>pjt</ic>| Applies pitchJump after _n_ |
+|<ic>noise</ic>| | adds noise|
+|<ic>zcrush</ic>| | Bitcrushing |
+|<ic>zdelay</ic>| | Weird tiny delay |
+|<ic>tremolo</ic>| | Amplitude tremolo (can be loud) |
+|<ic>zmod</ic>|| frequency modulation speed.|
+|<ic>duration</ic>|| Total sound duration (overrides envelope) |
 
+${makeExample("Chaotic Noise source", ``, true)}
+${makeExample("Funny Gameboy Tune", ``, false)}
+${makeExample("Ambiant noise", ``, false)}
 
 # Speech synthesis
 
