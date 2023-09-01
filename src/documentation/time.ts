@@ -223,7 +223,53 @@ prob(80)::mod(.5) && sound('hh').out()
   true
 )}
 
+## Time Warping
+
+Time is cool. But it's even cooler when you can manipulate it to your liking. Think about jumping back or forward in time. Think about looping a specific part of your current pattern or song. This is all possible thanks to two simple functions: <ic>warp(n: number)</ic> and <ic>beat_warp(n: number)</ic>. They are both very easy to use and very powerful. Let's see how they work.
+
+- <ic>warp(n: number)</ic>: this function jumps to the _n_ tick of the clock. <ic>1</ic> is the first pulsation ever, and the number keeps increasing to the infinite.
+
+
+${makeExample(
+  "Jumping back and forth in time",
+  `
+// Obscure Shenanigans - Bubobubobubo
+mod([1/4,1/8,1/16].div(8)):: sound('sine')
+	.freq([100,50].div(16) + 50 * ($(1)%10))
+	.gain(0.5).room(0.9).size(0.9)
+	.sustain(0.1).out()
+mod(1) :: sound('kick').out()
+mod(2) :: sound('dr').n(5).out()
+div(3) :: mod([.25,.5].div(.5)) :: sound('dr')
+  .n([8,9].pick()).gain([.8,.5,.25,.1,.0].div(.25)).out()
+// Time is elastic now!
+mod(.25) :: warp([12, 48, 24, 1, 120, 30].pick())
+`,
+  true
+)}
 	
+- <ic>beat_warp(beat: number)</ic>: this function jumps to the _n_ beat of the clock. The first beat is <ic>1</ic>.
+
+${makeExample(
+  "Jumping back and forth with beats",
+  `
+// Resonance bliss - Bubobubobubo
+mod(.25)::snd('arpy')
+  .note(30 + [0,3,7,10].beat())
+  .cutoff(usine(.5) * 5000).resonance(10).gain(0.3)
+  .end(0.8).room(0.9).size(0.9).n(0).out();
+mod([.25,.125].div(2))::snd('arpy')
+  .note(30 + [0,3,7,10].beat())
+  .cutoff(usine(.5) * 5000).resonance(20).gain(0.3)
+  .end(0.8).room(0.9).size(0.9).n(3).out();
+mod(.5) :: snd('arpy').note(
+  [30, 33, 35].repeatAll(4).div(1) - [12,0].div(0.5)).out()
+// Comment me to stop warping!
+mod(1) :: beat_warp([2,4,5,10,11].pick())
+`,
+  true
+)}
+
 ## Larger time divisions
 	
 Now you know how to play some basic rhythmic music but you are a bit stuck in a one-bar long loop. Let's see how we can think about time flowing on longer periods. The functions you are going to learn now are _very fundamental_ and all the fun comes from mastering them. **Read and experiment a lot with the following examples**.

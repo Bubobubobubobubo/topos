@@ -149,6 +149,28 @@ export class UserAPI {
   hush = this.stop;
 
   // =============================================================
+  // Time warp functions
+  // =============================================================
+
+  public warp = (n: number): void => {
+    /**
+     * Time-warp the clock by using the tick you wish to jump to.
+     */
+    this.app.clock.tick = n;
+    this.app.clock.time_position = this.app.clock.convertTicksToTimeposition(n);
+  };
+
+  public beat_warp = (beat: number): void => {
+    /**
+     * Time-warp the clock by using the tick you wish to jump to.
+     */
+    this.app.clock.tick = beat * this.app.clock.ppqn;
+    this.app.clock.time_position = this.app.clock.convertTicksToTimeposition(
+      beat * this.app.clock.ppqn
+    );
+  };
+
+  // =============================================================
   // Mouse functions
   // =============================================================
 
@@ -910,7 +932,7 @@ export class UserAPI {
     /**
      * Returns the current number of pulses elapsed since origin of time
      */
-      return this.app.clock.pulses_since_origin + 1;
+    return this.app.clock.pulses_since_origin + 1;
   };
 
   nominator = (): number => {
@@ -918,7 +940,7 @@ export class UserAPI {
      * Returns the current nominator of the time signature
      */
     return this.app.clock.time_signature[0];
-  }
+  };
 
   meter = (): number => {
     /**
@@ -935,20 +957,25 @@ export class UserAPI {
 
   public mod = (...n: number[]): boolean => {
     const results: boolean[] = n.map(
-      (value) => this.app.clock.pulses_since_origin % Math.floor(value * this.ppqn()) === 0
+      (value) =>
+        this.app.clock.pulses_since_origin % Math.floor(value * this.ppqn()) ===
+        0
     );
     return results.some((value) => value === true);
   };
 
   public modpulse = (...n: number[]): boolean => {
-    const results: boolean[] = n.map((value) => this.app.clock.pulses_since_origin % value === 0);
+    const results: boolean[] = n.map(
+      (value) => this.app.clock.pulses_since_origin % value === 0
+    );
     return results.some((value) => value === true);
   };
   modp = this.modpulse;
 
   public modbar = (...n: number[]): boolean => {
     const results: boolean[] = n.map(
-      (value) => this.app.clock.time_position.bar % Math.floor(value * this.ppqn()) === 0
+      (value) =>
+        this.app.clock.time_position.bar % Math.floor(value * this.ppqn()) === 0
     );
     return results.some((value) => value === true);
   };
@@ -1000,7 +1027,7 @@ export class UserAPI {
     return final_pulses.some((p) => p == true);
   };
 
-  oncount = (beats: number[]|number, count: number): boolean => {
+  oncount = (beats: number[] | number, count: number): boolean => {
     /**
      * Returns true if the current beat is in the given list of beats.
      *
@@ -1010,11 +1037,11 @@ export class UserAPI {
      * @param beat - The beats to check
      * @returns True if the current beat is in the given list of beats
      */
-    if(typeof beats === "number") beats = [beats];
+    if (typeof beats === "number") beats = [beats];
     const origin = this.app.clock.pulses_since_origin;
     let final_pulses: boolean[] = [];
     beats.forEach((b) => {
-      b = b<1 ? 0 : b-1;
+      b = b < 1 ? 0 : b - 1;
       const beatInTicks = Math.ceil(b * this.ppqn());
       const meterPosition = origin % (this.ppqn() * count);
       return final_pulses.push(meterPosition === beatInTicks);
