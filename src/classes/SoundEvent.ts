@@ -136,6 +136,20 @@ export class SoundEvent extends AudibleEvent {
   public velocity = (value: number) => this.updateValue("velocity", value);
   public vel = this.velocity;
 
+  // ================================================================================
+  // AbstactEvent overrides
+  // ================================================================================
+
+  modify = (func: Function): this => {
+    const funcResult = func(this);
+    if (funcResult instanceof Object) return funcResult;
+    else {
+      func(this.values);
+      this.update();
+      return this;
+    }
+  };
+
   update = (): void => {
     const [note, _] = noteFromPc(
       this.values.key || "C4",

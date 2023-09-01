@@ -2,20 +2,20 @@ import { type Editor } from "../main";
 import { Event } from "./AbstractEvents";
 
 export class RestEvent extends Event {
-  constructor(duration: number, app: Editor) {
+  constructor(length: number, app: Editor) {
     super(app);
-    this.values["duration"] = duration;
+    this.values["length"] = length;
   }
 
   _fallbackMethod = (): Event => {
-    return RestEvent.createRestProxy(this.values["duration"], this.app);
+    return RestEvent.createRestProxy(this.values["length"], this.app);
   };
 
   public static createRestProxy = (
-    duration: number,
+    length: number,
     app: Editor
   ): RestEvent => {
-    const instance = new RestEvent(duration, app);
+    const instance = new RestEvent(length, app);
     return new Proxy(instance, {
       // @ts-ignore
       get(target, propKey, receiver) {

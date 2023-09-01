@@ -74,8 +74,8 @@ export abstract class Event {
     return this.modify(func);
   };
 
-  duration = (value: number): Event => {
-    this.values["duration"] = value;
+  length = (value: number): Event => {
+    this.values["length"] = value;
     return this;
   };
 }

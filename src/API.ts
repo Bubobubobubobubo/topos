@@ -405,6 +405,11 @@ export class UserAPI {
 
     player.updateLastCallTime();
 
+    if(id !== "") {
+      // Sync named patterns to z0 by default
+      player.sync("z0");
+    }
+
     return player;
   };
 
@@ -1042,6 +1047,19 @@ export class UserAPI {
       return final_pulses.push(meterPosition === beatInTicks);
     });
     return final_pulses.some((p) => p == true);
+  };
+
+  oneuclid = (pulses: number, length: number, rotate: number=0): boolean => {
+    /**
+     * Returns true if the current beat is in the given euclid sequence.
+     * @param pulses - The number of pulses in the cycle
+     * @param length - The length of the cycle
+     * @param rotate - Rotation of the euclidian sequence
+     * @returns True if the current beat is in the given euclid sequence
+     */
+    const cycle = this._euclidean_cycle(pulses, length, rotate);
+    const beats = cycle.reduce((acc:number[], x:boolean, i:number) => { if(x) acc.push(i+1); return acc; }, []);
+    return this.oncount(beats, length);
   };
 
   // ======================================================================
