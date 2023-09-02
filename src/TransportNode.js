@@ -8,19 +8,16 @@ export class TransportNode extends AudioWorkletNode {
         this.app = application
         this.port.addEventListener("message", this.handleMessage);
         this.port.start();
-        this.logicalTime = 0;
     }
 
     /** @type {(this: MessagePort, ev: MessageEvent<any>) => any} */
     handleMessage = (message) => {
         if (message.data && message.data.type === "bang") {
-            this.logicalTime = message.data.logicalTime;
 
             this.app.clock.tick++
-            
             const futureTimeStamp = this.app.clock.convertTicksToTimeposition(this.app.clock.tick);
-            
             this.app.clock.time_position = futureTimeStamp;
+            
             if (this.app.exampleIsPlaying) {
                 tryEvaluate(this.app, this.app.example_buffer);
             } else {
