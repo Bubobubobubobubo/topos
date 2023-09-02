@@ -15,6 +15,7 @@ export interface Universe {
   locals: { [key: number]: File };
   init: File;
   notes: File;
+  example?: File;
 }
 
 export interface File {

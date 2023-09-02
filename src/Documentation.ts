@@ -33,7 +33,7 @@ export const makeExampleFactory = (application: Editor): Function => {
 <details ${open ? "open" : ""}>
   <summary >${description}
     <button class="py-1 align-top text-base rounded-lg pl-2 pr-2 hover:bg-green-700 bg-green-600 inline-block" onclick="app.api._playDocExample(app.api.codeExamples['${codeId}'])">▶️ Play</button>
-    <button class="py-1 text-base rounded-lg pl-2 pr-2 hover:bg-neutral-600 bg-neutral-500 inline-block pl-2" onclick="stop()">&#x23f8;&#xFE0F; Pause</button>
+    <button class="py-1 text-base rounded-lg pl-2 pr-2 hover:bg-neutral-600 bg-neutral-500 inline-block pl-2" onclick="app.api._stopDocExample()">&#x23f8;&#xFE0F; Pause</button>
     <button class="py-1 text-base rounded-lg pl-2 pr-2 hover:bg-neutral-900 bg-neutral-800 inline-block " onclick="navigator.clipboard.writeText(app.api.codeExamples['${codeId}'])">📎 Copy</button>
   </summary>
   \`\`\`javascript
