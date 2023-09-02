@@ -75,19 +75,45 @@ export class UserAPI {
   };
 
   _playDocExample = (code?: string) => {
-    this.play();
-    console.log("Executing documentation example: " + this.app.selectedExample);
-    this.app.universes[this.app.selected_universe as string].global.candidate =
-      code ? code : (this.app.selectedExample as string);
-    tryEvaluate(
-      this.app,
-      this.app.universes[this.app.selected_universe as string].global
-    );
+    /**
+     * Play an example from the documentation. The example is going
+     * to be stored in the example buffer belonging to the universe.
+     * This buffer is going to be cleaned everytime the user press
+     * pause or leaves the documentation window.
+     *
+     * @param code - The code example to play (identifier)
+     */
+
+    let current_universe = this.app.universes[this.app.selected_universe];
+    this.app.exampleIsPlaying = true;
+    if (!current_universe.example) {
+      current_universe.example = {
+        candidate: "",
+        committed: "",
+        evaluations: 0,
+      };
+      current_universe.example.candidate! = code
+        ? code
+        : (this.app.selectedExample as string);
+    } else {
+      current_universe.example.candidate! = code
+        ? code
+        : (this.app.selectedExample as string);
+    }
+  };
+
+  _stopDocExample = () => {
+    let current_universe = this.app.universes[this.app.selected_universe];
+    if (current_universe?.example !== undefined) {
+      this.app.exampleIsPlaying = false;
+      current_universe.example.candidate! = "";
+      current_universe.example.committed! = "";
+    }
   };
 
   _playDocExampleOnce = (code?: string) => {
     this.play();
-    console.log("Executing documentation example: " + this.app.selectedExample);
+    this.app.exampleIsPlaying = true;
     evaluateOnce(this.app, code as string);
   };
 
@@ -406,7 +432,7 @@ export class UserAPI {
 
     player.updateLastCallTime();
 
-    if(id !== "") {
+    if (id !== "") {
       // Sync named patterns to z0 by default
       player.sync("z0");
     }
@@ -1050,7 +1076,7 @@ export class UserAPI {
     return final_pulses.some((p) => p == true);
   };
 
-  oneuclid = (pulses: number, length: number, rotate: number=0): boolean => {
+  oneuclid = (pulses: number, length: number, rotate: number = 0): boolean => {
     /**
      * Returns true if the current beat is in the given euclid sequence.
      * @param pulses - The number of pulses in the cycle
@@ -1059,7 +1085,10 @@ export class UserAPI {
      * @returns True if the current beat is in the given euclid sequence
      */
     const cycle = this._euclidean_cycle(pulses, length, rotate);
-    const beats = cycle.reduce((acc:number[], x:boolean, i:number) => { if(x) acc.push(i+1); return acc; }, []);
+    const beats = cycle.reduce((acc: number[], x: boolean, i: number) => {
+      if (x) acc.push(i + 1);
+      return acc;
+    }, []);
     return this.oncount(beats, length);
   };
 

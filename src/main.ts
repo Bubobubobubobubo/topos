@@ -73,6 +73,7 @@ export class Editor {
   chosenLanguage: Compartment;
   currentDocumentationPane: string = "introduction";
   exampleCounter: number = 0;
+  exampleIsPlaying: boolean = false;
 
   settings = new AppSettings();
   editorExtensions: Extension[] = [];
@@ -680,6 +681,10 @@ export class Editor {
     return this.universes[this.selected_universe.toString()].notes;
   }
 
+  get example_buffer() {
+    return this.universes[this.selected_universe.toString()].example;
+  }
+
   get global_buffer() {
     return this.universes[this.selected_universe.toString()].global;
   }
@@ -746,10 +751,10 @@ export class Editor {
     if (document.getElementById("app")?.classList.contains("hidden")) {
       document.getElementById("app")?.classList.remove("hidden");
       document.getElementById("documentation")?.classList.add("hidden");
+      this.exampleIsPlaying = false;
     } else {
       document.getElementById("app")?.classList.add("hidden");
       document.getElementById("documentation")?.classList.remove("hidden");
-
       // Load and convert Markdown content from the documentation file
       this.updateDocumentationContent();
     }
