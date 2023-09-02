@@ -23,13 +23,13 @@ The basic Ziffer notation is entirely written in JavaScript strings (_e.g_ <ic>"
 | **Pitches**   | <ic>0-9</ic> <ic>{10 11 21}</ic> | Numbers or escaped numbers in curly brackets |
 | **Duration** | <ic>a b c</ic> to <ic>z</ic> | Each letter of the alphabet is a rhythm (see table) |
 | **Duration**  | <ic>0.25</ic> = <ic>q</ic>, <ic>0.5</ic> = <ic>h</ic> | Floating point numbers can also be used as durations |
+| **Subdivision** | <ic>[1 [2 3]]</ic> | Durations can be subdivided using square brackets |
 | **Octave**    | <ic>^ _</ic> | <ic>^</ic> for octave up and <ic>_</ic> for octave down |
 | **Accidentals** | <ic># b</ic> | Sharp and flats, just like with regular music notation :smile: |
 | **Rest**      |  <ic>r</ic> | Rest / silences |
 | **Repeat**    | <ic>:1-9</ic> | Repeat the item 1-9 times  |
 
 **Note:** Some features are still unsupported. For full syntax see article about <a href="https://zenodo.org/record/7841945" target="_blank">Ziffers</a>.
-
 
 ${makeExample(
   "Pitches from 0 to 9",
@@ -87,6 +87,16 @@ z1('e 0:4 2:2 4:2 (0 4):2')
   .fmi(usine(.5)).fmh(2)
   .delay(0.5).delayt(1.25)
   .sustain(0.1).out()
+`,
+  false
+)}
+
+${makeExample(
+  "Subdivided durations",
+  `
+z1('w [0 [5 [3 7]]] h [0 4]')
+  .scale('major').sound('sine')
+  .fmi(usine(.5)).fmh(2).out()
 `,
   false
 )}
