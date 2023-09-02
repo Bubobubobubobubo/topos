@@ -1,5 +1,23 @@
 export const examples = [
 `
+// Part-Dieu - Bubobubobubo
+mod(rarely(12) ? .5 : .25) :: sound('ST22')
+  .note([30, 30, 30, 31].repeatAll(8).div(.5))
+  .cut(1).n([19, 21].div(.75))
+  .cutoff(irand(200, 5000))
+  .resonance(rand(0.2,0.8))
+  .room(0.9).size(1).orbit(2)
+  .speed(0.25).vel(0.3).end(0.5)
+  .out()
+mod(.5) :: snd('dr')
+  .n([0, 0, 0, 0, 2, 8].beat())
+  .gain(1).out()
+mod(div(2) ? 1 : 0.75) :: snd('bd').n(2).out()
+mod(4) :: snd('snare').n(5)
+  .delay(0.5).delayt(bpm() / 60 / 8)
+  .delayfb(0.25).out()
+`,
+`
 // Atarism - Bubobubobubo
 bpm(85);
 let modifier = [.5, 1, 2].div(8);
