@@ -59,6 +59,15 @@ export class Clock {
       });
   }
 
+  convertTicksToTimeposition(ticks: number): TimePosition {
+    const beatsPerBar = this.app.clock.time_signature[0];
+    const ppqnPosition = ticks % this.app.clock.ppqn;
+    const beatNumber = Math.floor(ticks / this.app.clock.ppqn);
+    const barNumber = Math.floor(beatNumber / beatsPerBar);
+    const beatWithinBar = Math.floor(beatNumber % beatsPerBar);
+    return { bar: barNumber, beat: beatWithinBar, pulse: ppqnPosition };
+  }
+
   get ticks_before_new_bar(): number {
     /**
      * This function returns the number of ticks separating the current moment
