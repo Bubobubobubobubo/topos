@@ -21,7 +21,11 @@ export class TransportNode extends AudioWorkletNode {
             const futureTimeStamp = this.app.clock.convertTicksToTimeposition(this.app.clock.tick);
             
             this.app.clock.time_position = futureTimeStamp;
-            tryEvaluate(this.app, this.app.global_buffer);
+            if (this.app.exampleIsPlaying) {
+                tryEvaluate(this.app, this.app.example_buffer);
+            } else {
+                tryEvaluate(this.app, this.app.global_buffer);
+            }
               
         }
     };
