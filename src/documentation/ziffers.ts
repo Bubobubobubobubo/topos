@@ -26,6 +26,7 @@ The basic Ziffer notation is entirely written in JavaScript strings (_e.g_ <ic>"
 | **Octave**    | <ic>^ _</ic> | <ic>^</ic> for octave up and <ic>_</ic> for octave down |
 | **Accidentals** | <ic># b</ic> | Sharp and flats, just like with regular music notation :smile: |
 | **Rest**      |  <ic>r</ic> | Rest / silences |
+| **Repeat**    | <ic>:1-9</ic> | Repeat the item 1-9 times  |
 
 **Note:** Some features are still unsupported. For full syntax see article about <a href="https://zenodo.org/record/7841945" target="_blank">Ziffers</a>.
 
@@ -78,6 +79,17 @@ z1('e 0 s 1 b2 3 e 0 s 1 b2 4')
   false
 )}
 
+${makeExample(
+  "Repeat items n-times",
+  `
+z1('e 0:4 2:2 4:2 (0 4):2')
+  .scale('major').sound('sine')
+  .fmi(usine(.5)).fmh(2)
+  .delay(0.5).delayt(1.25)
+  .sustain(0.1).out()
+`,
+  false
+)}
 
 ## Algorithmic operations
 
