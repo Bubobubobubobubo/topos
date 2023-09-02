@@ -18,6 +18,7 @@ rhythm(div(2) ? .5 : .25, div(4) ? 8 : 11, 12) :: sound('hat')
   .orbit(3).room(0.5).size(0.5).n(0).out()
 `,`
 // Part-Dieu - Bubobubobubo
+bpm(90);
 mod(rarely(12) ? .5 : .25) :: sound('ST22')
   .note([30, 30, 30, 31].repeatAll(8).div(.5))
   .cut(1).n([19, 21].div(.75))
