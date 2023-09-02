@@ -83,7 +83,6 @@ export class UserAPI {
      *
      * @param code - The code example to play (identifier)
      */
-
     let current_universe = this.app.universes[this.app.selected_universe];
     this.app.exampleIsPlaying = true;
     if (!current_universe.example) {
@@ -100,6 +99,7 @@ export class UserAPI {
         ? code
         : (this.app.selectedExample as string);
     }
+    this.play();
   };
 
   _stopDocExample = () => {
