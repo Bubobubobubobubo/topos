@@ -1013,12 +1013,29 @@ export class UserAPI {
   };
   modb = this.modbar;
 
-  public div = (chunk: number): boolean => {
+  // Original implementation
+  // public div = (chunk: number): boolean => {
+  //   const time_pos = this.app.clock.pulses_since_origin;
+  //   const current_chunk = Math.floor(
+  //     time_pos / Math.floor(chunk * this.ppqn())
+  //   );
+  //   return current_chunk % 2 === 0;
+  // };
+
+  public div = (chunk: number, ratio: number = 50): boolean => {
+    /**
+     * Determines if the current time position is in the first
+     * or second half of a given time chunk.
+     * @param chunk Time chunk to consider
+     * @param ratio Optional ratio to influence the true/false output (0-100)
+     * @returns Whether the function returns true or false based on ratio and time chunk
+     */
     const time_pos = this.app.clock.pulses_since_origin;
-    const current_chunk = Math.floor(
-      time_pos / Math.floor(chunk * this.ppqn())
-    );
-    return current_chunk % 2 === 0;
+    const full_chunk = Math.floor(chunk * this.ppqn());
+    // const current_chunk = Math.floor(time_pos / full_chunk);
+    const threshold = Math.floor((ratio / 100) * full_chunk);
+    const pos_within_chunk = time_pos % full_chunk;
+    return pos_within_chunk < threshold;
   };
 
   public divbar = (chunk: number): boolean => {

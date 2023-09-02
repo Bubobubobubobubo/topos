@@ -274,19 +274,40 @@ mod(1) :: beat_warp([2,4,5,10,11].pick())
 	
 Now you know how to play some basic rhythmic music but you are a bit stuck in a one-bar long loop. Let's see how we can think about time flowing on longer periods. The functions you are going to learn now are _very fundamental_ and all the fun comes from mastering them. **Read and experiment a lot with the following examples**.
 	
-- <ic>div(n: number)</ic>: the <ic>div</ic> is a temporal switch. If the value <ic>2</ic> is given, the function will return <ic>true</ic> for two beats and <ic>false</ic> for two beats. There are multiple ways to use it effectively. You can pass an integer or a floating point number. Here are some examples.
+- <ic>div(n: number, ratio: number = 50)</ic>: the <ic>div</ic> method is a temporal switch. If the value <ic>2</ic> is given, the function will return <ic>true</ic> for two beats and <ic>false</ic> for two beats. There are multiple ways to use it effectively. You can pass an integer or a floating point number.
+  - <ic>ratio: number = 50</ic>: this argument is ratio expressed in %. It determines how much of the period should be true or false. A ratio of <ic>75</ic> means that 75% of the period will be true. A ratio of <ic>25</ic> means that 25% of the period will be true.  
 	
 ${makeExample(
-  "Creating two beats of silence",
+  "Two beats of silence, two beats of playing",
   `
-div(3)::mod([1,.5].beat())::sound('kick').shape(0.3).out(); // Playing every three beats
-mod(1)::snd('snare').out(); // Playing on every beat
-div(2)::mod(.75)::snd('hat').out(); // Playing only every two beats
+div(4) :: mod(1) :: snd('kick').out()
+`,
+  true
+)}
+
+${makeExample(
+  "Clapping on the edge",
+  `
+div(2.5, 10) :: mod(.25) :: snd('cp').out()
+div(2.5, 75) :: mod(.25) :: snd('click').speed(2).end(0.2).out()
+div(2.5) :: mod(.5) :: snd('bd').out()
+`,
+  false
+)}
+
+${makeExample(
+  "Good old true and false",
+  `
+if (div(4, 75)) {
+  mod(1) :: snd('kick').out()
+} else {
+  mod(.5) :: snd('snare').out()
+}
 `,
   true
 )}
 	
-You can also use it to think about **longer durations** spanning over multiple bars.
+<ic>div</ic> is extremely powerful and is used internally for a lot of other Topos functions. You can also use it to think about **longer durations** spanning over multiple bars.
 	
 ${makeExample(
   "Clunky algorithmic rap music",
@@ -311,30 +332,15 @@ if (div(16)) {
   true
 )}
 	
-And you can use it for other things inside a method parameter:
+You can use it everywhere to spice things up, including as a method parameter picker:
 	
 ${makeExample(
   "div is great for parameter variation",
   `
-mod(.5)::snd(div(2) ? 'kick' : 'hat').out()
+mod(.5)::snd(div(4) ? 'kick' : 'hat').out()
 `,
   true
 )}
-
-${makeExample(
-  "div is great for pretty much everything",
-  `
-div([1, .5].beat()) :: mod(.25) :: sound('shaker').out();
-div([4, .5].beat()) :: mod(.25) :: sound('shaker').speed(2).out();
-div([1, 2].beat()) :: mod(1.75) :: sound('snare').out();
-div(4) :: mod(.5) :: sound('tom').out()
-div(.125) :: mod(.5) :: sound('amencutup')
-  .hcutoff(500).pan(sine())
-  .n($(1)).shape(0.5).out()
-`,
-  true
-)}
-
 	
 - <ic>divbar(n: number)</ic>: works just like <ic>div</ic> but at the level of bars instead of beats. It allows you to think about even bigger time cycles. You can also pair it with regular <ic>div</ic> for making complex algorithmic beats.
 	
