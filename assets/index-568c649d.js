@@ -73,8 +73,7 @@ mod(1/4)::snd(divseq(1, 'sawtooth', 'triangle', 'pulse'))
   .delay(0.5).delaytime(0.25)
   .delayfb(0.6)
   .sustain(0.01 + usine(.25) / 10).out()
-mod(4)::snd('amencutup').n($(19)).cut(1).orbit(2).pan(rand(0.0,1.0)).out()
-log(bar(), beat(), pulse())`,`
+mod(4)::snd('amencutup').n($(19)).cut(1).orbit(2).pan(rand(0.0,1.0)).out()`,`
 // Crazy arpeggios - Bubobubobubo
 bpm(110)
 mod(0.125) && sound('sawtooth')
