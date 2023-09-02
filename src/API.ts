@@ -109,6 +109,7 @@ export class UserAPI {
       current_universe.example.candidate! = "";
       current_universe.example.committed! = "";
     }
+    this.pause();
   };
 
   _playDocExampleOnce = (code?: string) => {
