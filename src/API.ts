@@ -112,6 +112,11 @@ export class UserAPI {
   };
 
   _playDocExampleOnce = (code?: string) => {
+    let current_universe = this.app.universes[this.app.selected_universe];
+    if (current_universe?.example !== undefined) {
+      current_universe.example.candidate! = "";
+      current_universe.example.committed! = "";
+    }
     this.play();
     this.app.exampleIsPlaying = true;
     evaluateOnce(this.app, code as string);
