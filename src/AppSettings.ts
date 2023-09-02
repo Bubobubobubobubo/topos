@@ -66,6 +66,7 @@ export const template_universe = {
     9: { candidate: "", committed: "", evaluations: 0 },
   },
   init: { candidate: "", committed: "", evaluations: 0 },
+  example: { candidate: "", committed: "", evaluations: 0 },
   notes: { candidate: "" },
 };
 
@@ -84,6 +85,7 @@ export const template_universes = {
       9: { candidate: "", committed: "", evaluations: 0 },
     },
     init: { candidate: "", committed: "", evaluations: 0 },
+    example: { candidate: "", committed: "", evaluations: 0 },
     notes: { candidate: "" },
   },
   Help: tutorial_universe,

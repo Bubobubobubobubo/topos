@@ -68,41 +68,9 @@ mod(.25) :: sound('sid').note(
 Topos is deeply inspired by the [Monome Teletype](https://monome.org/). The Teletype is/was an open source hardware module for Eurorack synthesizers. While the Teletype was initially born as an hardware module, Topos aims to be a web-browser based software sequencer from the same family! It is a sequencer, a scriptable interface, a companion for algorithmic music-making.  Topos wishes to fullfill the same goal than the Teletype, keeping the same spirit alive on the web. It is free, open-source, and made to be shared and used by everyone.
 	
 ## Demo Songs
-	
-Press ${key_shortcut(
-    "Ctrl + G"
-  )} to switch to the global file. This is where everything starts! Evaluate the following script there by pasting and pressing ${key_shortcut(
-    "Ctrl + Enter"
-  )}. You are now making music:
 
-${makeExample(
-  "Obscure shenanigans",
-  `
-mod([1/4,1/8,1/16].div(8)):: sound('sine')
-	.freq([100,50].div(16) + 50 * ($(1)%10))
-	.gain(0.5).room(0.9).size(0.9)
-	.sustain(0.1).out()
-mod(1) :: sound('kick').out()
-mod(2) :: sound('dr').n(5).out()
-div(3) :: mod([.25,.5].div(.5)) :: sound('dr')
-  .n([8,9].pick()).gain([.8,.5,.25,.1,.0].div(.25)).out()`,
-  true
-)}
-
-${makeExample(
-  "Resonant madness",
-  `
-mod(.25)::snd('arpy')
-  .note(30 + [0,3,7,10].beat())
-  .cutoff(usine(.5) * 5000).resonance(10).gain(0.3)
-  .end(0.8).room(0.9).size(0.9).n(0).out();
-mod([.25,.125].div(2))::snd('arpy')
-  .note(30 + [0,3,7,10].beat())
-  .cutoff(usine(.5) * 5000).resonance(20).gain(0.3)
-  .end(0.8).room(0.9).size(0.9).n(3).out();
-mod(.5) :: snd('arpy').note(
-  [30, 33, 35].repeatAll(4).div(1) - [12,0].div(0.5)).out()`,
-  false
-)}
+Reloading the application will get you one random song example to study every time. Press ${key_shortcut(
+    "F5"
+  )} and listen to them all!
 `;
 };
