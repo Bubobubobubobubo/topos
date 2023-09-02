@@ -69,7 +69,7 @@ mod(2)::snd('sd').room(0.9).size(0.9).out();
 mod(0.25)::snd('hh').out();
 mod(2)::snd('square')
   .cutoff(500).note(50-12).resonance(20).sustain(0.2).out()
-mod(1/4)::snd(divseq(1, 'sawtooth', 'triangle', 'pulse'))
+mod(1/4)::snd(divseq(1, 'sawtooth', 'triangle', 'square'))
   .note(divseq(4, 50, 53, 55, 50, 50, 52, 58, 50+12, 50+15) + divseq(0.5, 0, 12, 24))
   .cutoff(usine(.5)*10000).resonance(divseq(2, 10,20))
   .fmi($(1) % 10).fmh($(2) % 5)
