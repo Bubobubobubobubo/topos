@@ -32,6 +32,7 @@ export async function loadSamples() {
     ),
     registerZZFXSounds(),
     samples("github:Bubobubobubobubo/Topos-Samples/main"),
+    samples("github:Bubobubobubobubo/Topos-Atari/main"),
   ]);
 }
 
