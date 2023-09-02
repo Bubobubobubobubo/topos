@@ -1,5 +1,20 @@
 export const examples = [
 `
+// Atarism - Bubobubobubo
+bpm(85);
+let modifier = [.5, 1, 2].div(8);
+let othermod = [1, .5, 4].div(4);
+mod(modifier / 2):: sound('STA9').n([0,2].div(.5)).speed(0.5).vel(0.5).out()
+mod(.5)::sound('STA9').n([0, 20].div(.5)).speed([1,1.5].repeatAll(4).beat() / 4)
+  .cutoff(500 + usine(.25) * 3000).vel(0.5).out()
+mod(modifier / 2):: sound('STA9')
+  .n([0,7].div(.5)).speed(div(othermod) ? 2 :4).vel(0.45).out()
+rhythm(.25, 3, 8, 1) :: sound('STA9')
+  .note([30, 33].pick()).n(32).speed(0.5).out()
+rhythm(othermod, 5, 8) :: sound('dr').n([0,1,2].beat()).out()
+mod(1) :: sound('kick').vel(1).out()
+`,
+`
 // Ancient rhythms - Bubobubobubo
 mod(1)::snd('kick').out();
 mod(2)::snd('sd').room(0.9).size(0.9).out();
