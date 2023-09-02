@@ -24,6 +24,7 @@ class TransportProcessor extends AudioWorkletProcessor {
             this.currentPulsePosition = 0;
         } else if(message.data.type === 'ppqn') {
             this.ppqn = message.data.value;
+            this.currentPulsePosition = 0;
         }
     };
 

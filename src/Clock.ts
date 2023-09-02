@@ -127,7 +127,7 @@ export class Clock {
   }
 
   set bpm(bpm: number) {
-    if(this._bpm !== bpm) {
+    if(bpm>0 && this._bpm !== bpm) {
       this._bpm = bpm;
       this.transportNode?.setBPM(bpm);
     }
@@ -138,7 +138,7 @@ export class Clock {
   }
 
   set ppqn(ppqn: number) {
-    if(this._ppqn !== ppqn) {
+    if(ppqn>0 && this._ppqn !== ppqn) {
       this._ppqn = ppqn;
       this.transportNode?.setPPQN(ppqn);
     }
