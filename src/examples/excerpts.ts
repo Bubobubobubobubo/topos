@@ -1,5 +1,16 @@
 export const examples = [
 `
+// Race day - Bubobubobubo
+bpm(125);
+mod(.5) :: sound('STB6')
+  .n(irand(1,10)).speed(0.5).rel(1)
+  .sus(0.1).out()
+rhythm(div(4) ? 1 : .5, 5, 8) :: sound('kick').out()
+rhythm(div(2) ? .5 : .25, 7, 8) :: sound('click')
+  .vel(0.1 + utriangle(.25)).n(irand(1,5)).out()
+rhythm(.5, 2, 8) :: sound('snare').out()
+`,
+`
 // Structure et approximation - Bubobubobubo
 mod(.25) :: sound('zzfx').zzfx(
   // Randomized chaos :)
