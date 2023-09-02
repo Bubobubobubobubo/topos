@@ -1,5 +1,23 @@
 export const examples = [
 `
+// Structure et approximation - Bubobubobubo
+mod(.25) :: sound('zzfx').zzfx(
+  // Randomized chaos :)
+  [
+    rand(1,5),,rand(500,1000),rand(.01, 0.02),,
+    rand(.01, .05),irand(1,12),rand(0,8),,
+    irand(0,200),-411,rand(0, 1),,,irand(-20, 40),,
+    .43,irand(1,20)
+  ]).room(0.4).size(0.15).cutoff(500 + usine() * 8000)
+  .vel(0.1).gain(toss() ? .5 : .125)
+  .delay(toss() ? 0.5 : 0).delayt(0.045).delayfb(0.1).out()
+rhythm(.5, toss() ? 5 : 7, 12) :: sound('kick').n(13).out()
+rhythm(toss() ? .25 : .5, div(2) ? 3 : 5, 12) :: sound(
+  toss() ? 'snare' : 'cp').n(5).out()
+rhythm(div(2) ? .5 : .25, div(4) ? 8 : 11, 12) :: sound('hat')
+  .orbit(3).room(0.5).size(0.5).n(0).out()
+`,
+`
 // Part-Dieu - Bubobubobubo
 mod(rarely(12) ? .5 : .25) :: sound('ST22')
   .note([30, 30, 30, 31].repeatAll(8).div(.5))
