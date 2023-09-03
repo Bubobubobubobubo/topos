@@ -2,7 +2,6 @@ import { EditorView } from "@codemirror/view";
 import { Extension } from "@codemirror/state";
 import { HighlightStyle, syntaxHighlighting } from "@codemirror/language";
 import { tags as t } from "@lezer/highlight";
-import { }
 
 const base00 = "#171717",
   base01 = "#505d64",
