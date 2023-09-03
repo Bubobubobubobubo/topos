@@ -3,25 +3,46 @@ import { Extension } from "@codemirror/state";
 import { HighlightStyle, syntaxHighlighting } from "@codemirror/language";
 import { tags as t } from "@lezer/highlight";
 
-const base00 = "#171717",
-  base01 = "#505d64",
-  base02 = "white",
-  base03 = "#707d8b",
-  base04 = "#a0a4ae",
-  base05 = "#bdbdbd",
-  base06 = "#e0e0e0",
-  base07 = "#fdf6e3",
-  base_red = "#ff5f52",
-  base_deeporange = "#ff6e40",
-  base_pink = "#fa5788",
-  base_yellow = "#facf4e",
-  base_orange = "#ffad42",
-  base_cyan = "#1E6AE1",
-  base_indigo = "#7186f0",
-  base_purple = "#D09EBF",
-  base_green = "#82d47c",
-  base_lightgreen = "#82d47c",
-  base_teal = "#4ebaaa";
+const base00 = "#353535",
+  base01 = "#3D3D3D",
+  base02 = "#FEFEFE",
+  base03 = "#656565",
+  base04 = "#797979",
+  base05 = "#8D8D8D",
+  base06 = "#A1A1A1",
+  base07 = "#B5B5B5",
+  base_red = "#D38185",
+  base_deeporange = "#D8A094",
+  base_pink = "#D0AEB7",
+  base_yellow = "#EEDC93",
+  base_orange = "#D8A094",
+  base_cyan = "#6292B2",
+  base_indigo = "#92C8D8",
+  base_purple = "#CAB0C7",
+  base_green = "#ADC390",
+  base_lightgreen = "#ADC390",
+  base_teal = "#93CFC9";
+
+// Good Nord palette
+// const base00 = "#2E3440",
+//   base01 = "#3B4252",
+//   base02 = "#F0F0F0",
+//   base03 = "#4C566A",
+//   base04 = "#D8DEE9",
+//   base05 = "#E5E9F0",
+//   base06 = "#ECEFF4",
+//   base07 = "#8FBCBB",
+//   base_red = "#BF616A",
+//   base_deeporange = "#D08770",
+//   base_pink = "#B48EAD",
+//   base_yellow = "#EBCB8B",
+//   base_orange = "#D08770",
+//   base_cyan = "#88C0D0",
+//   base_indigo = "#5E81AC",
+//   base_purple = "#B48EAD",
+//   base_green = "#A3BE8C",
+//   base_lightgreen = "#A3BE8C",
+//   base_teal = "#8FBCBB";
 
 const invalid = base_red,
   darkBackground = "#fdf6e3",
@@ -38,7 +59,7 @@ export const materialDarkTheme = EditorView.theme(
       color: base05,
       backgroundColor: background,
       fontSize: "48px",
-      font: "'Victor Mono', monospace",
+      fontFamily: "'Victor Mono', monospace",
     },
     ".cm-content": {
       caretColor: cursor,
@@ -46,8 +67,8 @@ export const materialDarkTheme = EditorView.theme(
     },
     ".cm-cursor, .cm-dropCursor": { borderLeftColor: cursor },
     "&.cm-focused .cm-selectionBackground, .cm-selectionBackground, .cm-content ::selection":
-      { backgroundColor: selection, border: `0.5px solid ${base_teal}` },
-    ".cm-panels": { backgroundColor: darkBackground, color: base03 },
+      { backgroundColor: base_deeporange, border: `0.5px solid ${base_red}` },
+    ".cm-panels": { backgroundColor: darkBackground, color: base05 },
     ".cm-panels.cm-panels-top": { borderBottom: "2px solid black" },
     ".cm-panels.cm-panels-bottom": { borderTop: "2px solid black" },
     ".cm-searchMatch": {
@@ -61,12 +82,12 @@ export const materialDarkTheme = EditorView.theme(
     ".cm-activeLine": { backgroundColor: highlightBackground },
     ".cm-selectionMatch": {
       backgroundColor: darkBackground,
-      outline: `1px solid ${base_teal}`,
+      outline: `1px solid ${base_red}`,
     },
 
     "&.cm-focused .cm-matchingBracket": {
       color: base06,
-      outline: `1px solid ${base_teal}`,
+      outline: `1px solid ${base_red}`,
     },
 
     "&.cm-focused .cm-nonmatchingBracket": {

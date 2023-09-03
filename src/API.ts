@@ -31,8 +31,8 @@ export async function loadSamples() {
       registerSynthSounds()
     ),
     registerZZFXSounds(),
-    samples("github:Bubobubobubobubo/Topos-Samples/main"),
-    samples("github:Bubobubobubobubo/Topos-Atari/main"),
+    samples("github:Bubobubobubobubo/Dough-Samples/main"),
+    samples("github:Bubobubobubobubo/Dough-Amiga/main"),
   ]);
 }
 

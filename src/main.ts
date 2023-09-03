@@ -3,7 +3,7 @@ import { examples } from "./examples/excerpts";
 import { EditorState, Compartment } from "@codemirror/state";
 import { ViewUpdate, lineNumbers, keymap } from "@codemirror/view";
 import { javascript } from "@codemirror/lang-javascript";
-import { oneDark } from "@codemirror/theme-one-dark";
+import { materialDark } from "./themes/materialDark";
 import { markdown } from "@codemirror/lang-markdown";
 import { Extension, Prec } from "@codemirror/state";
 import { indentWithTab } from "@codemirror/commands";
@@ -242,6 +242,7 @@ export class Editor {
       },
       $content: {
         fontFamily: `${this.settings.font}, Menlo, Monaco, Lucida Console, monospace`,
+        fontSize: `${this.settings.font_size}px`,
       },
       ".cm-gutters": {
         fontSize: `${this.settings.font_size}px`,
@@ -253,7 +254,7 @@ export class Editor {
       this.fontSize.of(fontModif),
       this.vimModeCompartment.of(vimPlugin),
       editorSetup,
-      oneDark,
+      materialDark,
       this.chosenLanguage.of(javascript()),
       EditorView.updateListener.of((v: ViewUpdate) => {
         v;
@@ -317,7 +318,7 @@ export class Editor {
       if ((event.key === "Enter" || event.key === "Return") && event.ctrlKey) {
         event.preventDefault();
         this.currentFile().candidate = this.view.state.doc.toString();
-        this.flashBackground("#2d313d", 200);
+        this.flashBackground("#404040", 200);
       }
 
       // Shift + Enter or Ctrl + E: evaluate the line
@@ -327,7 +328,7 @@ export class Editor {
       ) {
         event.preventDefault(); // Prevents the addition of a new line
         this.currentFile().candidate = this.view.state.doc.toString();
-        this.flashBackground("#2d313d", 200);
+        this.flashBackground("#404040", 200);
       }
 
       // This is the modal to switch between universes
@@ -476,7 +477,7 @@ export class Editor {
 
     this.eval_button.addEventListener("click", () => {
       this.currentFile().candidate = this.view.state.doc.toString();
-      this.flashBackground("#2d313d", 200);
+      this.flashBackground("#404040", 200);
     });
 
     this.stop_buttons.forEach((button) => {
@@ -532,7 +533,7 @@ export class Editor {
       this.font_size_witness.innerHTML = `Font Size: ${new_value}px`;
 
       let new_font_size = EditorView.theme({
-        "&": { fontSize: new_value + "px", fontFamily: this.settings.font },
+        "&": { fontSize: new_value + "px" },
         "&content": { fontFamily: this.settings.font },
         ".cm-gutters": { fontSize: new_value + "px" },
       });
@@ -885,7 +886,7 @@ export class Editor {
       document.getElementById("play-icon")!.classList.remove("hidden");
     }
 
-    this.flashBackground("#2d313d", 200);
+    this.flashBackground("#404040", 200);
     const possible_selectors = [
       '[id^="play-button-"]',
       '[id^="clear-button-"]',
