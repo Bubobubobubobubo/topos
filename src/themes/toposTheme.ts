@@ -3,13 +3,12 @@ import { Extension } from "@codemirror/state";
 import { HighlightStyle, syntaxHighlighting } from "@codemirror/language";
 import { tags as t } from "@lezer/highlight";
 
-const base00 = "#353535",
+const base00 = "#262626",
   base01 = "#3B4252",
   base02 = "#FEFEFE",
   base03 = "#4C566A",
   base04 = "#D8DEE9",
   base05 = "#E5E9F0",
-  base06 = "#ECEFF4",
   base07 = "#8FBCBB",
   base_red = "#BF616A",
   base_deeporange = "#D08770",
@@ -22,28 +21,9 @@ const base00 = "#353535",
   base_green = "#A3BE8C",
   base_lightgreen = "#A3BE8C";
 
-// const base00 = "#353535",
-//   base01 = "#3B4252",
-//   base02 = "#F0F0F0",
-//   base03 = "#4C566A",
-//   base04 = "#D8DEE9",
-//   base05 = "#E5E9F0",
-//   base06 = "#ECEFF4",
-//   base07 = "#8FBCBB",
-//   base_red = "#BF616A",
-//   base_deeporange = "#D08770",
-//   base_pink = "#B48EAD",
-//   base_yellow = "#EBCB8B",
-//   base_orange = "#D08770",
-//   base_cyan = "#88C0D0",
-//   base_indigo = "#5E81AC",
-//   base_purple = "#B48EAD",
-//   base_green = "#A3BE8C",
-//   base_lightgreen = "#A3BE8C";
-
 const invalid = base_red,
   darkBackground = "#fdf6e3",
-  highlightBackground = "#545b61",
+  highlightBackground = "#454545",
   background = base00,
   tooltipBackground = base01,
   cursor = base04;
@@ -54,7 +34,7 @@ export const toposDarkTheme = EditorView.theme(
     "&": {
       color: base05,
       backgroundColor: background,
-      fontSize: "48px",
+      fontSize: "24px",
       fontFamily: "'Victor Mono', monospace",
     },
     ".cm-content": {
@@ -63,27 +43,25 @@ export const toposDarkTheme = EditorView.theme(
     },
     ".cm-cursor, .cm-dropCursor": { borderLeftColor: cursor },
     "&.cm-focused .cm-selectionBackground, .cm-selectionBackground, .cm-content ::selection":
-      { backgroundColor: base_deeporange, border: `0.5px solid ${base_red}` },
+      { backgroundColor: base00, border: `0.5px solid ${base00}` },
     ".cm-panels": { backgroundColor: darkBackground, color: base05 },
     ".cm-panels.cm-panels-top": { borderBottom: "2px solid black" },
     ".cm-panels.cm-panels-bottom": { borderTop: "2px solid black" },
     ".cm-searchMatch": {
       outline: `1px solid ${base_yellow}`,
-      backgroundColor: "transparent",
     },
     ".cm-searchMatch.cm-searchMatch-selected": {
       backgroundColor: highlightBackground,
     },
-
     ".cm-activeLine": { backgroundColor: highlightBackground },
     ".cm-selectionMatch": {
-      backgroundColor: darkBackground,
+      backgroundColor: base04,
       outline: `1px solid ${base_red}`,
     },
 
     "&.cm-focused .cm-matchingBracket": {
-      color: base06,
-      outline: `1px solid ${base_red}`,
+      color: base02,
+      outline: `1px solid ${base02}`,
     },
 
     "&.cm-focused .cm-nonmatchingBracket": {
@@ -101,7 +79,6 @@ export const toposDarkTheme = EditorView.theme(
     },
 
     ".cm-foldPlaceholder": {
-      backgroundColor: "transparent",
       border: "none",
       color: `${base07}`,
     },
@@ -110,10 +87,7 @@ export const toposDarkTheme = EditorView.theme(
       border: "none",
       backgroundColor: tooltipBackground,
     },
-    ".cm-tooltip .cm-tooltip-arrow:before": {
-      borderTopColor: "transparent",
-      borderBottomColor: "transparent",
-    },
+    ".cm-tooltip .cm-tooltip-arrow:before": {},
     ".cm-tooltip .cm-tooltip-arrow:after": {
       borderTopColor: tooltipBackground,
       borderBottomColor: tooltipBackground,
