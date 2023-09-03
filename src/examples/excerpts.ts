@@ -1,4 +1,17 @@
 export const examples = [
+  `// Harmonic Leaps and Gaps -- Bubobubobubo
+let oscillation = quant(usine(.25) * 20, [35, 40, 38, 50, 55]);
+let tonal = [0, 5, 0, 0, 7].palindrome().bar() + 40 - 24;
+[tonal, tonal + 7, tonal + [12,3].bar()].forEach((e) => {
+  div(2) :: mod(.5) :: sound('square').fmi(2)
+  .cutoff(500 + usine(1/2)).n(irand(1,10))
+  .note(e + oscillation + [0, 5].div(.5)).out()
+  !div(2) :: mod(.5) :: sound('sawtooth').fmi(2)
+  .cutoff(500 + usine(1/2) * 5000).n(irand(1,10))
+  .note(e + oscillation + [0, 5].div(.5)).out()
+});
+oncount([2, 3.5, [5,0].pick()], 6) :: sound('snare').out()
+  `,
   `// Computer Music Classroom, Monday (8AM) -- Bubobubobubo
 let ur = [0, 12, 7].div(24),
     fundamental = [0, 5, 10, 8, 6].repeatAll(4).bar();
