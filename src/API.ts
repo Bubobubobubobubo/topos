@@ -208,8 +208,8 @@ export class UserAPI {
   // =============================================================
 
   onmousemove = (e: MouseEvent) => {
-    this.app._mouseX = e.clientX;
-    this.app._mouseY = e.clientY;
+    this.app._mouseX = e.pageX;
+    this.app._mouseY = e.pageY;
   };
 
   public mouseX = (): number => {
