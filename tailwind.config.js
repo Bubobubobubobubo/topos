@@ -9,7 +9,12 @@ export default {
   theme: {
     extend: {},
     hljs: {
-      theme: "rainbow",
+      theme: "nord",
+      custom: {
+        general: {
+          comment: "#FEFEFE",
+        },
+      },
     },
   },
   plugins: [require("tailwind-highlightjs")],
