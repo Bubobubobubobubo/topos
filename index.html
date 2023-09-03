@@ -7,7 +7,8 @@
     <title>Topos</title>
     
     
-    <script type="module" crossorigin src="/assets/index-9d53be19.js"></script>
+    <script src="https://unpkg.com/hydra-synth"></script>
+    <script type="module" crossorigin src="/assets/index-cd9e20e7.js"></script>
     <link rel="stylesheet" href="/assets/index-8219df54.css">
   </head>
   <style>
@@ -22,6 +23,19 @@
       margin: 0;
       padding: 0;
     }
+
+    #hydra-bg {
+      position: fixed; /* ignore margins */
+      top: 0px;
+      left: 0px;
+      width: 100%; /* fill screen */
+      height: 100%;
+      background-size: cover;
+      overflow-y: hidden;
+      z-index: -1; /* place behind everything else */
+      display: block;
+    }
+
 
 		details br {
 			display: none;
@@ -308,6 +322,7 @@
          </ul>
          <!-- Here comes the editor itself -->
           <div id="editor" class="relative flex flex-row h-screen overflow-y-hidden">
+            <canvas id="hydra-bg"></canvas>
 					</div>
           <p id="error_line" class="hidden text-red-400 w-screen bg-neutral-900 font-mono absolute bottom-0 pl-2 py-2">Hello kids</p>
         </div>
