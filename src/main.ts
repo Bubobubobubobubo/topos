@@ -197,6 +197,18 @@ export class Editor {
   ) as HTMLElement;
   show_error: boolean = false;
 
+  // Hydra integration
+  hydra_canvas: HTMLCanvasElement = document.getElementById(
+    "hydra-bg"
+  ) as HTMLCanvasElement;
+  //@ts-ignore
+  public hydra_backend = new Hydra({
+    canvas: this.hydra_canvas,
+    detectAudio: false,
+    enableStreamCapture: false,
+  });
+  public hydra: any = this.hydra_backend.synth;
+
   constructor() {
     // ================================================================================
     // Loading the universe from local storage
@@ -680,6 +692,8 @@ export class Editor {
         }
       }
     }
+
+    this.hydra = this.hydra_backend.synth;
   }
 
   get note_buffer() {

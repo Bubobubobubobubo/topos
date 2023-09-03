@@ -24,7 +24,7 @@ const base00 = "#262626",
 const invalid = base_red,
   darkBackground = "#fdf6e3",
   highlightBackground = "#454545",
-  background = base00,
+  // background = base00,
   tooltipBackground = base01,
   cursor = base04;
 
@@ -33,7 +33,8 @@ export const toposDarkTheme = EditorView.theme(
   {
     "&": {
       color: base05,
-      backgroundColor: background,
+      // backgroundColor: background,
+      backgroundColor: "transparent",
       fontSize: "24px",
       fontFamily: "'Victor Mono', monospace",
     },
@@ -53,7 +54,10 @@ export const toposDarkTheme = EditorView.theme(
     ".cm-searchMatch.cm-searchMatch-selected": {
       backgroundColor: highlightBackground,
     },
-    ".cm-activeLine": { backgroundColor: highlightBackground },
+    ".cm-activeLine": {
+      // backgroundColor: highlightBackground
+      backgroundColor: "rgb(76,86,106, 0.4)",
+    },
     ".cm-selectionMatch": {
       backgroundColor: base04,
       outline: `1px solid ${base_red}`,
@@ -69,7 +73,8 @@ export const toposDarkTheme = EditorView.theme(
     },
 
     ".cm-gutters": {
-      backgroundColor: base00,
+      //backgroundColor: base00,
+      backgroundColor: "transparent",
       color: base02,
     },
 
