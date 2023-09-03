@@ -49,11 +49,10 @@ const invalid = base_red,
   highlightBackground = "#545b61",
   background = base00,
   tooltipBackground = base01,
-  selection = base07,
   cursor = base04;
 
 /// The editor theme styles for Material Dark.
-export const materialDarkTheme = EditorView.theme(
+export const toposDarkTheme = EditorView.theme(
   {
     "&": {
       color: base05,
@@ -134,7 +133,7 @@ export const materialDarkTheme = EditorView.theme(
 );
 
 /// The highlighting style for code in the Material Dark theme.
-export const materialDarkHighlightStyle = HighlightStyle.define([
+export const toposDarkHighlightStyle = HighlightStyle.define([
   { tag: t.keyword, color: base_purple },
   {
     tag: [t.name, t.deleted, t.character, t.macroName],
@@ -232,7 +231,7 @@ export const materialDarkHighlightStyle = HighlightStyle.define([
 
 /// Extension to enable the Material Dark theme (both the editor theme and
 /// the highlight style).
-export const materialDark: Extension = [
-  materialDarkTheme,
-  syntaxHighlighting(materialDarkHighlightStyle),
+export const toposTheme: Extension = [
+  toposDarkTheme,
+  syntaxHighlighting(toposDarkHighlightStyle),
 ];

@@ -3,7 +3,7 @@ import { examples } from "./examples/excerpts";
 import { EditorState, Compartment } from "@codemirror/state";
 import { ViewUpdate, lineNumbers, keymap } from "@codemirror/view";
 import { javascript } from "@codemirror/lang-javascript";
-import { materialDark } from "./themes/materialDark";
+import { toposTheme } from "./themes/toposTheme";
 import { markdown } from "@codemirror/lang-markdown";
 import { Extension, Prec } from "@codemirror/state";
 import { indentWithTab } from "@codemirror/commands";
@@ -254,7 +254,7 @@ export class Editor {
       this.fontSize.of(fontModif),
       this.vimModeCompartment.of(vimPlugin),
       editorSetup,
-      materialDark,
+      toposTheme,
       this.chosenLanguage.of(javascript()),
       EditorView.updateListener.of((v: ViewUpdate) => {
         v;
