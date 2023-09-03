@@ -1,5 +1,25 @@
 export const examples = [
   `
+// Super gentle computing - Bubobubobubo
+let melody = [30,30,34,35,37].palindrome()
+  .beat() + [0, -12].repeatAll(2).div(2)
+if (div(8, 75)) {
+  log('first section')
+  rhythm(.5, 4, 8) :: sound('ST12').n([0,1,2].div(0.5)).speed(0.5).out()
+  rhythm(.5, 6, 8) :: sound('ST20').n([0,1,2].div(0.5) + 20)
+    .speed(0.25).end(0.1).orbit(2).room(0.5).size(0.5).out()
+  mod(.5) :: sound('ST01').note(melody)
+    .n($(1)).speed(0.5).room(0.5).size(0.5).out()  
+} else {
+  log('second section')
+  rhythm(.5, 2, 8) :: sound('ST20')
+    .n([0,1,2].div(0.5)).speed(0.5)
+    .end(0.1).out()
+  mod(.5) :: sound('ST01').note(melody).n($(1)).speed(0.5).end(0.1).out()  
+  mod(1) :: sound('ST02').note(melody).n($(1)).speed(0.5).end(0.1).out() 
+}
+  `,
+  `
 // Race day - Bubobubobubo
 bpm(125);
 mod(.5) :: sound('STB6')

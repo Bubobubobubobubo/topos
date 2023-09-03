@@ -236,9 +236,12 @@ export class Editor {
     this.fontSize = new Compartment();
     const vimPlugin = this.settings.vimMode ? vim() : [];
     const lines = this.settings.line_numbers ? lineNumbers() : [];
-    const fontSizeModif = EditorView.theme({
+    const fontModif = EditorView.theme({
       "&": {
         fontSize: `${this.settings.font_size}px`,
+      },
+      $content: {
+        fontFamily: `${this.settings.font}, Menlo, Monaco, Lucida Console, monospace`,
       },
       ".cm-gutters": {
         fontSize: `${this.settings.font_size}px`,
@@ -247,7 +250,7 @@ export class Editor {
 
     this.editorExtensions = [
       this.withLineNumbers.of(lines),
-      this.fontSize.of(fontSizeModif),
+      this.fontSize.of(fontModif),
       this.vimModeCompartment.of(vimPlugin),
       editorSetup,
       oneDark,
@@ -529,7 +532,8 @@ export class Editor {
       this.font_size_witness.innerHTML = `Font Size: ${new_value}px`;
 
       let new_font_size = EditorView.theme({
-        "&": { fontSize: new_value + "px" },
+        "&": { fontSize: new_value + "px", fontFamily: this.settings.font },
+        "&content": { fontFamily: this.settings.font },
         ".cm-gutters": { fontSize: new_value + "px" },
       });
       this.view.dispatch({

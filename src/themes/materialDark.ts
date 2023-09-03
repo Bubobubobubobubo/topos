@@ -2,6 +2,7 @@ import { EditorView } from "@codemirror/view";
 import { Extension } from "@codemirror/state";
 import { HighlightStyle, syntaxHighlighting } from "@codemirror/language";
 import { tags as t } from "@lezer/highlight";
+import { }
 
 const base00 = "#171717",
   base01 = "#505d64",
@@ -37,21 +38,19 @@ export const materialDarkTheme = EditorView.theme(
     "&": {
       color: base05,
       backgroundColor: background,
-      fontSize: "24px",
+      fontSize: "48px",
+      font: "'Victor Mono', monospace",
     },
-
     ".cm-content": {
       caretColor: cursor,
+      fontFamily: "'Victor Mono', monospace",
     },
-
     ".cm-cursor, .cm-dropCursor": { borderLeftColor: cursor },
     "&.cm-focused .cm-selectionBackground, .cm-selectionBackground, .cm-content ::selection":
       { backgroundColor: selection, border: `0.5px solid ${base_teal}` },
-
     ".cm-panels": { backgroundColor: darkBackground, color: base03 },
     ".cm-panels.cm-panels-top": { borderBottom: "2px solid black" },
     ".cm-panels.cm-panels-bottom": { borderTop: "2px solid black" },
-
     ".cm-searchMatch": {
       outline: `1px solid ${base_yellow}`,
       backgroundColor: "transparent",

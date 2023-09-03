@@ -108,8 +108,8 @@ export class AppSettings {
 
   public vimMode: boolean = false;
   public theme: string = "materialDark";
-  public font: string = "SpaceMono";
-  public font_size: number = 22;
+  public font: string = "Victor Mono";
+  public font_size: number = 24;
   public universes: Universes;
   public selected_universe: string = "Default";
   public line_numbers: boolean = true;
