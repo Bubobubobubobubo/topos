@@ -1,4 +1,22 @@
 export const examples = [
+  `// Computer Music Classroom, Monday (8AM) -- Bubobubobubo
+let ur = [0, 12, 7].div(24),
+    fundamental = [0, 5, 10, 8, 6].repeatAll(4).bar();
+mod(.25) :: sound('square')
+  .note(ur + fundamental + 40).n(1 + $(1) % 8)
+  .atk(0.05).sustain(0.1).release(0.1)
+  .room(0.9).size(0.9)
+  .out()
+mod(.25) :: sound('sawtooth')
+  .note(ur + fundamental + 47).n(1 + $(2) % 8)
+  .atk(0.05).sustain(0.1).release(0.1)
+  .room(0.9).size(0.9)
+  .out()
+mod(.25) :: sound(['sawtooth', 'square'].bar())
+  .note(ur + fundamental + 40+[10,12].bar()).n(1 + $(3) % 8)
+  .atk(0.05).sustain(0.1).release(0.1)
+  .room(0.9).size(0.9).out()
+  `,
   `// Lamento for Digital Harpists -- Bubobubobubo
 mod(4) :: sound('triangle')
   .note(60).fmwave('triangle').fmi(3.95)
