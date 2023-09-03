@@ -1,6 +1,41 @@
 export const examples = [
-  `
-// Super gentle computing - Bubobubobubo
+  `// Computer Music Classroom, Monday (8AM) -- Bubobubobubo
+let ur = [0, 12, 7].div(24),
+    fundamental = [0, 5, 10, 8, 6].repeatAll(4).bar();
+mod(.25) :: sound('square')
+  .note(ur + fundamental + 40).n(1 + $(1) % 8)
+  .atk(0.05).sustain(0.1).release(0.1)
+  .room(0.9).size(0.9)
+  .out()
+mod(.25) :: sound('sawtooth')
+  .note(ur + fundamental + 47).n(1 + $(2) % 8)
+  .atk(0.05).sustain(0.1).release(0.1)
+  .room(0.9).size(0.9)
+  .out()
+mod(.25) :: sound(['sawtooth', 'square'].bar())
+  .note(ur + fundamental + 40+[10,12].bar()).n(1 + $(3) % 8)
+  .atk(0.05).sustain(0.1).release(0.1)
+  .room(0.9).size(0.9).out()
+  `,
+  `// Lamento for Digital Harpists -- Bubobubobubo
+mod(4) :: sound('triangle')
+  .note(60).fmwave('triangle').fmi(3.95)
+  .fmh(0.25).release(1.5).sustain(0.5)
+  .decay(1.125).vel(0.35).room(1.5)
+  .size(1.9).out()
+mod([.5,.25].div(1)) :: sound('triangle')
+  .note([67,72,75,77,79].shuffle().div(.25) - [12, 24].pick())
+  .fmwave('triangle').fmi(3.99).fmh([1.001].pick() + usine() / 100)
+  .release(.125).sustain(0.125)
+  .room(1.5).size(1.9).out()
+mod([4, 2, 8].pick() / [2,1].bar()) :: sound('triangle')
+  .note([67,72,75,77,79].shuffle().loop($('lezgo')))
+  .fmwave('triangle').fmi(3.99).fmh([1.001].pick() + usine() / 100)
+  .release(2).sustain(0.125).gain(1.5)
+  .delay(0.5).delaytime(.75).delayfb(0.25)
+  .room(1.5).size(1.9).out()
+  `,
+  `// Super gentle computing - Bubobubobubo
 let melody = [30,30,34,35,37].palindrome()
   .beat() + [0, -12].repeatAll(2).div(2)
 if (div(8, 75)) {
@@ -19,8 +54,7 @@ if (div(8, 75)) {
   mod(1) :: sound('ST02').note(melody).n($(1)).speed(0.5).end(0.1).out() 
 }
   `,
-  `
-// Race day - Bubobubobubo
+  `// Race day - Bubobubobubo
 bpm(125);
 mod(.5) :: sound('STB6')
   .n(irand(1,10)).speed(0.5).rel(1)
@@ -30,8 +64,7 @@ rhythm(div(2) ? .5 : .25, 7, 8) :: sound('click')
   .vel(0.1 + utriangle(.25)).n(irand(1,5)).out()
 rhythm(.5, 2, 8) :: sound('snare').out()
 `,
-  `
-// Structure et approximation - Bubobubobubo
+  `// Structure et approximation - Bubobubobubo
 mod(.25) :: sound('zzfx').zzfx(
   // Randomized chaos :)
   [
@@ -48,8 +81,7 @@ rhythm(toss() ? .25 : .5, div(2) ? 3 : 5, 12) :: sound(
 rhythm(div(2) ? .5 : .25, div(4) ? 8 : 11, 12) :: sound('hat')
   .orbit(3).room(0.5).size(0.5).n(0).out()
 `,
-  `
-// Part-Dieu - Bubobubobubo
+  `// Part-Dieu - Bubobubobubo
 bpm(90);
 mod(rarely(12) ? .5 : .25) :: sound('ST22')
   .note([30, 30, 30, 31].repeatAll(8).div(.5))
@@ -67,8 +99,7 @@ mod(4) :: snd('snare').n(5)
   .delay(0.5).delayt(bpm() / 60 / 8)
   .delayfb(0.25).out()
 `,
-  `
-// Atarism - Bubobubobubo
+  `// Atarism - Bubobubobubo
 bpm(85);
 let modifier = [.5, 1, 2].div(8);
 let othermod = [1, .5, 4].div(4);
@@ -82,8 +113,7 @@ rhythm(.25, 3, 8, 1) :: sound('STA9')
 rhythm(othermod, 5, 8) :: sound('dr').n([0,1,2].beat()).out()
 mod(1) :: sound('kick').vel(1).out()
 `,
-  `
-// Ancient rhythms - Bubobubobubo
+  `// Ancient rhythms - Bubobubobubo
 mod(1)::snd('kick').out();
 mod(2)::snd('sd').room(0.9).size(0.9).out();
 mod(0.25)::snd('hh').out();
@@ -98,8 +128,7 @@ mod(1/4)::snd(divseq(1, 'sawtooth', 'triangle', 'square'))
   .delayfb(0.6)
   .sustain(0.01 + usine(.25) / 10).out()
 mod(4)::snd('amencutup').n($(19)).cut(1).orbit(2).pan(rand(0.0,1.0)).out()`,
-  `
-// Crazy arpeggios - Bubobubobubo
+  `// Crazy arpeggios - Bubobubobubo
 bpm(110)
 mod(0.125) && sound('sawtooth')
   .note([60, 62, 63, 67, 70].div(.125) + 
@@ -112,8 +141,7 @@ mod(1) && snd('kick').out();
 mod(2) && snd('snare').out();
 mod(.5) && snd('hat').out();
 `,
-  `
-// Obscure Shenanigans - Bubobubobubo
+  `// Obscure Shenanigans - Bubobubobubo
 mod([1/4,1/8,1/16].div(8)):: sound('sine')
 	.freq([100,50].div(16) + 50 * ($(1)%10))
 	.gain(0.5).room(0.9).size(0.9)
@@ -123,8 +151,7 @@ mod(2) :: sound('dr').n(5).out()
 div(3) :: mod([.25,.5].div(.5)) :: sound('dr')
   .n([8,9].pick()).gain([.8,.5,.25,.1,.0].div(.25)).out()
 `,
-  `
-// Resonance bliss - Bubobubobubo
+  `// Resonance bliss - Bubobubobubo
 mod(.25)::snd('arpy')
   .note(30 + [0,3,7,10].beat())
   .cutoff(usine(.5) * 5000).resonance(10).gain(0.3)
