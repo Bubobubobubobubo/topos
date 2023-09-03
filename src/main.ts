@@ -711,7 +711,7 @@ export class Editor {
     let existing_universes = document.getElementById("existing-universes");
     let known_universes = Object.keys(this.universes);
     let final_html =
-      "<ul class='lg:h-80 lg:w-80 lg:pb-2 lg:pt-2 overflow-y-scroll text-white lg:mb-4 border rounded-lg bg-gray-800'>";
+      "<ul class='lg:h-80 lg:w-80 lg:pb-2 lg:pt-2 overflow-y-scroll text-white lg:mb-4 border rounded-lg bg-neutral-800'>";
     known_universes.forEach((name) => {
       final_html += `
 <li onclick="_loadUniverseFromInterface('${name}')" class="hover:fill-black hover:bg-white py-2 hover:text-black flex justify-between px-4">
