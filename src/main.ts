@@ -37,6 +37,8 @@ const classMap = {
   ul: "text-underline pl-6",
   li: "list-disc lg:text-2xl text-base text-white lg:mx-4 mx-2 my-4 my-2 leading-normal",
   p: "lg:text-2xl text-base text-white lg:mx-6 mx-2 my-4 leading-normal",
+  warning:
+    "animate-pulse lg:text-2xl font-bold text-rose-600 lg:mx-6 mx-2 my-4 leading-normal",
   a: "lg:text-2xl text-base text-orange-300",
   code: "lg:my-4 sm:my-1 text-base lg:text-xl block whitespace-pre overflow-x-hidden",
   icode:
@@ -621,6 +623,7 @@ export class Editor {
       // "reference",
       "shortcuts",
       "about",
+      "bonus",
     ].forEach((e) => {
       let name = `docs_` + e;
       document.getElementById(name)!.addEventListener("click", async () => {

@@ -14,6 +14,7 @@ import { functions } from "./documentation/functions";
 import { ziffers } from "./documentation/ziffers";
 import { reference } from "./documentation/reference";
 import { synths } from "./documentation/synths";
+import { bonus } from "./documentation/bonus";
 
 export const key_shortcut = (shortcut: string): string => {
   return `<kbd class="lg:px-2 lg:py-1.5 px-1 py-1 lg:text-sm text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg dark:bg-gray-600 dark:text-gray-100 dark:border-gray-500">${shortcut}</kbd>`;
@@ -64,6 +65,7 @@ export const documentation_factory = (application: Editor) => {
     functions: functions(application),
     reference: reference(),
     shortcuts: shortcuts(),
+    bonus: bonus(application),
     about: about(),
   };
 };
