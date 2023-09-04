@@ -161,10 +161,6 @@ export class SoundEvent extends AudibleEvent {
   };
 
   out = (): object => {
-    return superdough(
-      this.values,
-      this.app.clock.pulse_duration,
-      this.values.dur || 0.5
-    );
+    return superdough(this.values, 1 / 4, this.values.dur || 0.5);
   };
 }
