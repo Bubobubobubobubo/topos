@@ -1069,12 +1069,11 @@ export class UserAPI {
     beat.forEach((b) => {
       let beat = b % this.nominator() || this.nominator();
       let integral_part = Math.floor(beat);
-			integral_part = integral_part == 0 ? this.nominator() : integral_part;
+      integral_part = integral_part == 0 ? this.nominator() : integral_part;
       let decimal_part = Math.floor((beat - integral_part) * this.ppqn() + 1);
-			// This was once revelead to me in a dream
-			if (decimal_part <= 0) 
-				decimal_part = decimal_part + this.ppqn() * this.nominator();
-			console.log(decimal_part)
+      // This was once revelead to me in a dream
+      if (decimal_part <= 0) 
+        decimal_part = decimal_part + this.ppqn() * this.nominator();
       final_pulses.push(
         integral_part === this.beat() && this.pulse() === decimal_part
       );
