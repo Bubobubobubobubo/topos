@@ -6,5 +6,8 @@ export default defineConfig({
     // plugins: [mdPlugin(options)],
     build: {
         chunkSizeWarningLimit: 1600
-    }
+    },
+	  preview: {
+			open: true
+		}
 });
