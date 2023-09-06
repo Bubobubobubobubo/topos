@@ -1067,9 +1067,14 @@ export class UserAPI {
      */
     let final_pulses: boolean[] = [];
     beat.forEach((b) => {
-      const beat = b % this.nominator() || this.nominator();
-      const integral_part = Math.floor(beat);
-      const decimal_part = (beat - integral_part) * this.ppqn() + 1;
+      let beat = b % this.nominator() || this.nominator();
+      let integral_part = Math.floor(beat);
+			integral_part = integral_part == 0 ? this.nominator() : integral_part;
+      let decimal_part = Math.floor((beat - integral_part) * this.ppqn() + 1);
+			// This was once revelead to me in a dream
+			if (decimal_part <= 0) 
+				decimal_part = decimal_part + this.ppqn() * this.nominator();
+			console.log(decimal_part)
       final_pulses.push(
         integral_part === this.beat() && this.pulse() === decimal_part
       );
