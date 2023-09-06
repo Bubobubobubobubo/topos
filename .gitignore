@@ -41,3 +41,5 @@ dist/**/*
 yarn.lock
 
 .DS_Store
+
+.vs
