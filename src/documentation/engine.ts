@@ -136,10 +136,11 @@ There is a special method to choose the _orbit_ that your sound is going to use:
 	
 Simple controls over the amplitude (volume) of a given sound.
 	
-| Method   | Alias | Description                                                |
-|----------|-------|------------------------------------------------------------|
-| gain     |       | Volume of the synth/sample (exponential)                   |
-| velocity | vel   | Velocity (amplitude) from 0 to 1. Multipled with gain      |
+| Method   | Alias | Description                                                                       |
+|----------|-------|-----------------------------------------------------------------------------------|
+| gain     |       | Volume of the synth/sample (exponential)                                          |
+| velocity | vel   | Velocity (amplitude) from <ic>0</ic> to <ic>1</ic>. Multipled with gain           |
+| dbgain   | db    | Attenuation in dB from <ic>-inf</ic> to <ic>0</ic> (acts as a sound mixer fader) |
 	
 ${makeExample(
   "Velocity manipulated by a counter",

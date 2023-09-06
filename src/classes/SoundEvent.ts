@@ -102,6 +102,8 @@ export class SoundEvent extends AudibleEvent {
   public begin = (value: number) => this.updateValue("begin", value);
   public end = (value: number) => this.updateValue("end", value);
   public gain = (value: number) => this.updateValue("gain", value);
+  public dbgain = (value: number) => this.updateValue("velocity", Math.pow(10, value / 20));
+  public db = this.dbgain;
   public cutoff = (value: number) => this.updateValue("cutoff", value);
   public lpf = this.cutoff;
   public resonance = (value: number) => this.updateValue("resonance", value);
