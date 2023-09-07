@@ -63,7 +63,7 @@ export const toposDarkTheme = EditorView.theme(
     },
     ".cm-activeLine": {
       // backgroundColor: highlightBackground
-      backgroundColor: "rgb(76,86,106, 0.4)",
+      backgroundColor: "rgb(76,76,106, 0.1)",
     },
     ".cm-selectionMatch": {
       backgroundColor: base04,

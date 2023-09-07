@@ -3,7 +3,7 @@ import { Editor } from "../main";
 import { Event } from "./AbstractEvents";
 import { SkipEvent } from "./SkipEvent";
 import { SoundEvent } from "./SoundEvent";
-import { NoteEvent } from "./MidiEvent";
+import { MidiEvent } from "./MidiEvent";
 import { RestEvent } from "./RestEvent";
 
 export type InputOptions = { [key: string]: string | number };
@@ -144,6 +144,9 @@ export class Player extends Event {
           "parsedScale"
         );
         return new SoundEvent(obj, this.app).sound(name);
+      } else if(event instanceof Chord) {
+        const pitches = event.freqs();
+        return new SoundEvent(event, this.app).chord(pitches).sound(name);
       } else if (event instanceof ZRest) {
         return RestEvent.createRestProxy(event.duration, this.app);
       }
@@ -155,20 +158,23 @@ export class Player extends Event {
   midi(value: number | undefined = undefined) {
     if (this.areWeThereYet()) {
       const event = this.next() as Pitch | Chord | ZRest;
+      const obj = event.getExisting(
+        "note",
+        "pitch",
+        "bend",
+        "key",
+        "scale",
+        "octave",
+        "parsedScale"
+      );
       if (event instanceof Pitch) {
-        const obj = event.getExisting(
-          "note",
-          "pitch",
-          "bend",
-          "key",
-          "scale",
-          "octave",
-          "parsedScale"
-        );
-        const note = new NoteEvent(obj, this.app);
+        const note = new MidiEvent(obj, this.app);
         return value ? note.note(value) : note;
       } else if (event instanceof ZRest) {
         return RestEvent.createRestProxy(event.duration, this.app);
+      } else if (event instanceof Chord) {
+        const pitches = event.notes();
+        return new MidiEvent(obj, this.app).chord(pitches);
       }
     } else {
       return SkipEvent.createSkipProxy();

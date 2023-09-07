@@ -5,7 +5,7 @@ import { DrunkWalk } from "./Utils/Drunk";
 import { scale } from "./Scales";
 import { Editor } from "./main";
 import { SoundEvent } from "./classes/SoundEvent";
-import { NoteEvent } from "./classes/MidiEvent";
+import { MidiEvent } from "./classes/MidiEvent";
 import { LRUCache } from "lru-cache";
 import { InputOptions, Player } from "./classes/ZPlayer";
 import {
@@ -316,7 +316,7 @@ export class UserAPI {
     value: number | object = 60,
     velocity?: number,
     channel?: number
-  ): NoteEvent => {
+  ): MidiEvent => {
     /**
      * Sends a MIDI note to the current MIDI output.
      *
@@ -342,7 +342,7 @@ export class UserAPI {
       value["channel"] = channel;
     }
 
-    return new NoteEvent(value, this.app);
+    return new MidiEvent(value, this.app);
   };
 
   public sysex = (data: Array<number>): void => {

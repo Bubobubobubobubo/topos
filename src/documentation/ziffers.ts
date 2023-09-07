@@ -101,6 +101,41 @@ z1('w [0 [5 [3 7]]] h [0 4]')
   false
 )}
 
+## Chords
+
+Chords can be build by grouping pitches or using roman numeral notation, or by using named chords.
+
+${makeExample(
+  "Chords from pitches",
+  `
+z1('q 024 468').sound('sine').scale("minor").out()
+`
+)}
+
+${makeExample(
+  "Chords from roman numerals",
+  `
+  z1('i i v vii vi iv iv v').sound("pad").out();
+`
+)}
+
+${makeExample(
+  "Named chords with repeats",
+  `
+  z1('e C9:4 Emin:4 F7:4 Emaj:4')
+  .sound("stab").sustain(2.0).out()
+`
+)}
+
+${makeExample(
+  "Transposing chords",
+  `
+  z1('q Fmaj Amin Dmin Cmaj Cdim')
+    .key(["F3","E3","D3","E3"].div(3))
+    .sound('sawtooth').out()
+`
+)}
+
 ## Algorithmic operations
 
 Ziffers provides shorthands for **many** numeric and algorithimic operations such as evaluating random numbers and creating sequences using list operations:

@@ -3,7 +3,7 @@ import { type Editor } from "../main";
 import { MidiConnection } from "../IO/MidiConnection";
 import { midiToFreq, noteFromPc } from "zifferjs";
 
-export class NoteEvent extends AudibleEvent {
+export class MidiEvent extends AudibleEvent {
   midiConnection: MidiConnection;
 
   constructor(input: number | object, public app: Editor) {
@@ -13,6 +13,11 @@ export class NoteEvent extends AudibleEvent {
     this.midiConnection = app.api.MidiConnection;
   }
 
+  chord = (value: number[]): this => {
+    this.values["chord"] = value;
+    return this;
+  };
+  
   note = (value: number): this => {
     this.values["note"] = value;
     return this;
@@ -74,29 +79,40 @@ export class NoteEvent extends AudibleEvent {
   };
 
   out = (): void => {
-    const note = this.values.note ? this.values.note : 60;
-    const channel = this.values.channel ? this.values.channel : 0;
-    const velocity = this.values.velocity ? this.values.velocity : 100;
+    function play(note: number, event: MidiEvent): void {
+      const channel = event.values.channel ? event.values.channel : 0;
+      const velocity = event.values.velocity ? event.values.velocity : 100;
 
-    const sustain = this.values.sustain
-      ? this.values.sustain *
-        this.app.clock.pulse_duration *
-        this.app.api.ppqn()
-      : this.app.clock.pulse_duration * this.app.api.ppqn();
+      const sustain = event.values.sustain
+        ? event.values.sustain *
+          event.app.clock.pulse_duration *
+          event.app.api.ppqn()
+        : event.app.clock.pulse_duration * event.app.api.ppqn();
 
-    const bend = this.values.bend ? this.values.bend : undefined;
+      const bend = event.values.bend ? event.values.bend : undefined;
 
-    const port = this.values.port
-      ? this.midiConnection.getMidiOutputIndex(this.values.port)
-      : this.midiConnection.getCurrentMidiPortIndex();
+      const port = event.values.port
+        ? event.midiConnection.getMidiOutputIndex(event.values.port)
+        : event.midiConnection.getCurrentMidiPortIndex();
 
-    this.midiConnection.sendMidiNote(
-      note,
-      channel,
-      velocity,
-      sustain,
-      port,
-      bend
-    );
+      event.midiConnection.sendMidiNote(
+        note,
+        channel,
+        velocity,
+        sustain,
+        port,
+        bend
+      );
+    }
+
+    if(this.values.chord) {
+      this.values.chord.forEach((note: number) => {
+        play(note, this);
+      });
+    } else {
+      const note = this.values.note ? this.values.note : 60;
+      play(note, this);
+    }
+    
   };
 }

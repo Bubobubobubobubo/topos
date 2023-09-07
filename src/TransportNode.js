@@ -8,7 +8,7 @@ export class TransportNode extends AudioWorkletNode {
         this.app = application
         this.port.addEventListener("message", this.handleMessage);
         this.port.start();
-			  this.timeviewer = document.getElementById("timeviewer");
+		this.timeviewer = document.getElementById("timeviewer");
     }
 
     /** @type {(this: MessagePort, ev: MessageEvent<any>) => any} */
@@ -18,7 +18,7 @@ export class TransportNode extends AudioWorkletNode {
             this.app.clock.tick++
             const futureTimeStamp = this.app.clock.convertTicksToTimeposition(this.app.clock.tick);
             this.app.clock.time_position = futureTimeStamp;
-					  this.timeviewer.innerHTML = `${zeroPad(futureTimeStamp.bar, 2)}:${futureTimeStamp.beat+1}:${zeroPad(futureTimeStamp.pulse, 2)}`;
+			this.timeviewer.innerHTML = `${zeroPad(futureTimeStamp.bar, 2)}:${futureTimeStamp.beat+1}:${zeroPad(futureTimeStamp.pulse, 2)}`;
             
             if (this.app.exampleIsPlaying) {
                 tryEvaluate(this.app, this.app.example_buffer);

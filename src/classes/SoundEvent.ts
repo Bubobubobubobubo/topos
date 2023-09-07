@@ -90,6 +90,7 @@ export class SoundEvent extends AudibleEvent {
     return this;
   };
   public sound = (value: string) => this.updateValue("s", value);
+  public chord = (value: number[]) => this.updateValue("chord", value);
   public snd = this.sound;
   public nudge = (value: number) => this.updateValue("nudge", value);
   public cut = (value: number) => this.updateValue("cut", value);
@@ -162,7 +163,15 @@ export class SoundEvent extends AudibleEvent {
     this.values.freq = midiToFreq(note);
   };
 
-  out = (): object => {
-    return superdough(this.values, 1 / 4, this.values.dur || 0.5);
+  out = (): void => {
+    if(this.values.chord) {
+      this.values.chord.forEach((freq: number) => {
+        const copy = {...this.values};
+        copy.freq = freq;
+        superdough(copy, 1 / 4, this.values.dur || 0.5);
+      });
+    } else {
+      superdough(this.values, 1 / 4, this.values.dur || 0.5);
+    }
   };
 }
