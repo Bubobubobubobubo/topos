@@ -8,8 +8,8 @@
     
     
     <script src="https://unpkg.com/hydra-synth"></script>
-    <script type="module" crossorigin src="/assets/index-82d67677.js"></script>
-    <link rel="stylesheet" href="/assets/index-c0a4a18a.css">
+    <script type="module" crossorigin src="/assets/index-0cfa85e5.js"></script>
+    <link rel="stylesheet" href="/assets/index-df46652b.css">
   </head>
   <style>
 
@@ -49,15 +49,17 @@
       width: 100%;
 			height: 92vh;
       max-height: 100vh;
+			z-index: 0;
     }
 
     .cm-scroller {
       display: block !important;
       width: 100% !important;
+			z-index: 0;
     }
 
   </style>
-  <body class="bg-neutral-800 overflow-y-hidden">
+  <body class="z-0 bg-neutral-800 overflow-y-hidden">
 
 		<!-- The header is hidden on smaller devices -->
     <header class="py-2 block text-white bg-neutral-900">
@@ -221,11 +223,17 @@
                   <label id="vim-mode" for="bordered-radio-2" class="w-full py-4 ml-2 text-sm font-medium text-black">Vim Mode</label>
                 </div>
               </div>
-              <!-- Line Numbers  -->
-              <div class="flex items-center mb-4 ml-8">
-                  <input id="show-line-numbers" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                  <label for="default-checkbox" class="ml-2 text-sm font-medium text-dark">Show Line Numbers</label>
-              </div>
+              <!-- Checkboxes  -->
+							<div class="flex flex-row">
+								<div class="flex items-center mb-4 ml-8">
+              	    <input id="show-line-numbers" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+              	    <label for="default-checkbox" class="ml-2 text-sm font-medium text-dark">Show Line Numbers</label>
+              	</div>
+              	<div class="flex items-center mb-4 ml-8">
+              	    <input id="show-time-position" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+              	    <label for="default-checkbox" class="ml-2 text-sm font-medium text-dark">Show Time Position</label>
+              	</div>
+							</div>
               <!-- Information card -->
               <div class="flex lg:flex-row space-y-2 lg:space-y-0 flex-col w-auto min-w-screen px-4 lg:space-x-8 space-x-0">
                 <a href="https://github.com/Bubobubobubobubo/Topos" class="block max-w-sm p-6 border border-gray-200 rounded-lg shadow bg-gray-800 border-gray-700 hover:bg-gray-700">
@@ -330,4 +338,5 @@
       </div>
       
   </body>
+	<p id="timeviewer" class="rounded-lg px-2 py-2 font-bold bg-white cursor-textpointer-events-none select-none text-black text-sm absolute bottom-2 right-2"></p>
 </html>
