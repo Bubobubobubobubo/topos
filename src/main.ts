@@ -231,6 +231,13 @@ export class Editor {
     this.universes[this.selected_universe].global.committed = random_example;
     this.universes[this.selected_universe].global.candidate = random_example;
 
+		this.line_numbers_checkbox.checked = this.settings.line_numbers;
+		this.time_position_checkbox.checked = this.settings.time_position;
+		if (!this.settings.time_position) {
+			document.getElementById('timeviewer')!.classList.add('hidden');
+		}
+
+
     // ================================================================================
     // Audio context and clock
     // ================================================================================
