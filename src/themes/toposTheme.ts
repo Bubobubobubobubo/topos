@@ -42,10 +42,17 @@ export const toposDarkTheme = EditorView.theme(
       caretColor: cursor,
       fontFamily: "'Victor Mono', monospace",
     },
-    ".cm-cursor, .cm-dropCursor": { borderLeftColor: cursor },
-    "&.cm-focused .cm-selectionBackground, .cm-selectionBackground, .cm-content ::selection":
-      { backgroundColor: base00, border: `0.5px solid ${base00}` },
-    ".cm-panels": { backgroundColor: darkBackground, color: base05 },
+    ".cm-cursor, .cm-dropCursor": { 
+			borderLeftColor: cursor,
+		},
+    "&.cm-focused .cm-selectionBackground, .cm-selectionBackground, .cm-content ::selection": { 
+			backgroundColor: base00,
+			border: `0.5px solid ${base00}`,
+		},
+    ".cm-panels": { 
+			backgroundColor: darkBackground, 
+			color: base05,
+		},
     ".cm-panels.cm-panels-top": { borderBottom: "2px solid black" },
     ".cm-panels.cm-panels-bottom": { borderTop: "2px solid black" },
     ".cm-searchMatch": {

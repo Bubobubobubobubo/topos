@@ -50,6 +50,7 @@ export interface Settings {
   universes: Universes;
   selected_universe: string;
   line_numbers: boolean;
+	time_position: boolean;
 }
 
 export const template_universe = {
@@ -113,6 +114,7 @@ export class AppSettings {
   public universes: Universes;
   public selected_universe: string = "Default";
   public line_numbers: boolean = true;
+	public time_position: boolean = true;
 
   constructor() {
     const settingsFromStorage = JSON.parse(
@@ -128,6 +130,7 @@ export class AppSettings {
       this.universes = settingsFromStorage.universes;
       this.selected_universe = settingsFromStorage.selected_universe;
       this.line_numbers = settingsFromStorage.line_numbers;
+      this.time_position = settingsFromStorage.time_position;
     } else {
       this.universes = template_universes;
     }
@@ -149,6 +152,7 @@ export class AppSettings {
       universes: this.universes,
       selected_universe: this.selected_universe,
       line_numbers: this.line_numbers,
+			time_position: this.time_position
     };
   }
 
@@ -168,6 +172,7 @@ export class AppSettings {
     this.font_size = settings.font_size;
     this.selected_universe = settings.selected_universe;
     this.line_numbers = settings.line_numbers;
+    this.time_position = settings.time_position;
     localStorage.setItem("topos", JSON.stringify(this.data));
   }
 }

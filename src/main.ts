@@ -180,6 +180,12 @@ export class Editor {
     "show-line-numbers"
   ) as HTMLInputElement;
 
+  // Time Position checkbox
+  time_position_checkbox: HTMLInputElement = document.getElementById(
+    "show-time-position"
+  ) as HTMLInputElement;
+
+
   // Editor mode selection
   normal_mode_button: HTMLButtonElement = document.getElementById(
     "normal-mode"
@@ -523,6 +529,7 @@ export class Editor {
         `font-size: ${this.settings.font_size}px;`
       );
       this.line_numbers_checkbox.checked = this.settings.line_numbers;
+      this.time_position_checkbox.checked = this.settings.time_position;
       let modal_settings = document.getElementById("modal-settings");
       let editor = document.getElementById("editor");
       modal_settings?.classList.remove("invisible");
@@ -579,6 +586,14 @@ export class Editor {
           checked ? [lineNumbers()] : []
         ),
       });
+    });
+
+
+    this.time_position_checkbox.addEventListener("change", () => {
+			let timeviewer = document.getElementById("timeviewer") as HTMLElement;
+      let checked = this.time_position_checkbox.checked ? true : false;
+      this.settings.time_position = checked;
+			checked ? timeviewer.classList.remove('hidden') : timeviewer.classList.add('hidden');
     });
 
     this.vim_mode_button.addEventListener("click", () => {
