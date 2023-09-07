@@ -1040,7 +1040,7 @@ export class UserAPI {
   };
 
   public divbar = (chunk: number): boolean => {
-    const time_pos = this.app.clock.time_position.bar - 1;
+    const time_pos = this.app.clock.time_position.bar;
     const current_chunk = Math.floor(time_pos / chunk);
     return current_chunk % 2 === 0;
   };
