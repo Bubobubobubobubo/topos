@@ -98,7 +98,7 @@ mod([1,.5,.25].beat()) :: snd('sine')
 - <ic>random(index: number)</ic>: pick a random element in the given list.
 - <ic>rand(index: number)</ic>: shorter alias for the same method.
 - <ic>pick()</ic>: pick a random element in the list.
-
+- <ic>gen(min,max,length)</ic>: generate a list of random numbers between _min_ and _max_ with a given _length_.
 
 ${makeExample(
   "Sipping some gasoline at the robot bar",
@@ -111,6 +111,14 @@ mod([.5, 1].random() / 2) :: snd(
   .resonance(10)
   .end(0.2).out()
 `,
+  true
+)}
+
+${makeExample(
+  "Generate a list of random numbers",
+  `
+  mod(0.5) && sound('arp').freq([].gen(300,600,10).div(3)).out()
+  `,
   true
 )}
 

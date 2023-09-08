@@ -26,6 +26,7 @@ declare global {
     in(value: T): boolean;
     square(): number[];
     sqrt(): number[];
+    gen(min: number, max: number, times: number): number[];
   }
 }
 
@@ -101,6 +102,20 @@ export const makeArrayExtensions = (api: UserAPI) => {
     return this[(api.app.clock.beats_since_origin  / beat) % this.length];
   };
 
+  Array.prototype.gen = function (min: number, max: number, times: number) {
+    /**
+     * Returns an array of random numbers.
+     * @param min - The minimum value of the random numbers
+     * @param max - The maximum value of the random numbers
+     * @param times - The number of random numbers to generate
+     * @returns An array of random numbers
+     */
+    if(times < 1) {
+      return [];
+    }
+    return Array.from({ length: times }, () => Math.floor(api.randomGen() * (max - min + 1)) + min);
+  };
+
   Array.prototype.bar = function () {
     /**
      * Returns an element from an array based on the current bar.
@@ -137,7 +152,7 @@ export const makeArrayExtensions = (api: UserAPI) => {
     let currentIndex = this.length,
       randomIndex;
     while (currentIndex !== 0) {
-      randomIndex = Math.floor(Math.random() * currentIndex);
+      randomIndex = Math.floor(api.randomGen() * currentIndex);
       currentIndex--;
       [this[currentIndex], this[randomIndex]] = [
         this[randomIndex],
@@ -201,7 +216,7 @@ export const makeArrayExtensions = (api: UserAPI) => {
       return this;
     }
     for (let i = 0; i < this.length; ) {
-      const rand = Math.random() * 100;
+      const rand = api.randomGen() * 100;
       if (rand < amount) {
         if (this.length > 1) {
           this.splice(i, 1);
@@ -329,7 +344,7 @@ export const makeArrayExtensions = (api: UserAPI) => {
      *
      * @returns A random element from the array
      */
-    return this[Math.floor(Math.random() * this.length)];
+    return this[Math.floor(api.randomGen() * this.length)];
   };
   Array.prototype.rand = Array.prototype.random;
 };

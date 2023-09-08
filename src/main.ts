@@ -358,6 +358,16 @@ export class Editor {
         this.flashBackground("#404040", 200);
       }
 
+      // Shift + Ctrl + Enter: Evaluate the currently visible code block
+      if (
+        (event.key === "Enter" && event.shiftKey && event.ctrlKey))
+      {
+        event.preventDefault();
+        this.currentFile().candidate = this.view.state.doc.toString();
+        tryEvaluate(this, this.currentFile());
+        this.flashBackground("#404040", 200);
+      }
+
       // This is the modal to switch between universes
       if (event.ctrlKey && event.key === "b") {
         event.preventDefault();

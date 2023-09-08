@@ -24,7 +24,7 @@ Every Topos session is composed of several small scripts. A set of scripts is ca
   )} to ${key_shortcut("F9")}).
 - **the init script** (${key_shortcut(
     "Ctrl + I"
-  )}): _Evaluated on program load_. Used to set up the software the session to the desired state before playing (_bpm_, etc...). You can also access that script using the ${key_shortcut(
+  )}): _Evaluated on program load_. Used to set up the software the session to the desired state before playing, for example changing bpm or to initialize global variables (See Functions). You can also access that script using the ${key_shortcut(
     "F11"
   )} key.
 - **the note file** (${key_shortcut(

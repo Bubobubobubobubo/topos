@@ -40,9 +40,8 @@ Topos is made to be controlled entirely with a keyboard. It is recommanded to st
 | Shortcut | Key   | Description                                                |
 |----------|-------|------------------------------------------------------------|
 |Evaluate|${key_shortcut("Ctrl + Enter")}| Evaluate the current script        |
-|Local Eval|${key_shortcut("Ctrl + F1")} to ${key_shortcut(
-    "Ctrl + F9"
-  )}|Local File Evaluation|
+|Local Eval|${key_shortcut("Ctrl + F1")} to ${key_shortcut("Ctrl + F9")}|Local File Evaluation|
+|Force Eval|${key_shortcut("Ctrl + Shift + Enter")}|Force evaluation of the current script|
 	
 ## Special
 
