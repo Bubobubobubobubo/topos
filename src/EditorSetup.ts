@@ -1,5 +1,3 @@
-import { inlineHoveringTips } from "./documentation/inlineHelp";
-
 import {
   keymap,
   highlightSpecialChars,
@@ -42,7 +40,6 @@ export const editorSetup: Extension = (() => [
   // crosshairCursor(),
   highlightActiveLine(),
   highlightSelectionMatches(),
-  inlineHoveringTips,
   keymap.of([
     ...closeBracketsKeymap,
     ...defaultKeymap,
