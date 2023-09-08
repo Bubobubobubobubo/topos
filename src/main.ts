@@ -3,6 +3,7 @@ import { examples } from "./examples/excerpts";
 import { EditorState, Compartment } from "@codemirror/state";
 import { ViewUpdate, lineNumbers, keymap } from "@codemirror/view";
 import { javascript } from "@codemirror/lang-javascript";
+import { inlineHoveringTips } from "./documentation/inlineHelp";
 import { toposTheme } from "./themes/toposTheme";
 import { markdown } from "@codemirror/lang-markdown";
 import { Extension, Prec } from "@codemirror/state";
@@ -72,6 +73,7 @@ export class Editor {
   fontSize: Compartment;
   withLineNumbers: Compartment;
   vimModeCompartment: Compartment;
+  hoveringCompartment: Compartment;
   chosenLanguage: Compartment;
   currentDocumentationPane: string = "introduction";
   exampleCounter: number = 0;
@@ -185,6 +187,10 @@ export class Editor {
     "show-time-position"
   ) as HTMLInputElement;
 
+  // Hovering tips checkbox
+  tips_checkbox: HTMLInputElement = document.getElementById(
+    "show-tips"
+  ) as HTMLInputElement;
 
   // Editor mode selection
   normal_mode_button: HTMLButtonElement = document.getElementById(
@@ -231,12 +237,12 @@ export class Editor {
     this.universes[this.selected_universe].global.committed = random_example;
     this.universes[this.selected_universe].global.candidate = random_example;
 
-		this.line_numbers_checkbox.checked = this.settings.line_numbers;
-		this.time_position_checkbox.checked = this.settings.time_position;
-		if (!this.settings.time_position) {
-			document.getElementById('timeviewer')!.classList.add('hidden');
-		}
-
+    this.line_numbers_checkbox.checked = this.settings.line_numbers;
+    this.time_position_checkbox.checked = this.settings.time_position;
+    this.tips_checkbox.checked = this.settings.tips;
+    if (!this.settings.time_position) {
+      document.getElementById("timeviewer")!.classList.add("hidden");
+    }
 
     // ================================================================================
     // Audio context and clock
@@ -258,6 +264,7 @@ export class Editor {
     // ================================================================================
 
     this.vimModeCompartment = new Compartment();
+    this.hoveringCompartment = new Compartment();
     this.withLineNumbers = new Compartment();
     this.chosenLanguage = new Compartment();
     this.fontSize = new Compartment();
@@ -280,6 +287,7 @@ export class Editor {
       this.withLineNumbers.of(lines),
       this.fontSize.of(fontModif),
       this.vimModeCompartment.of(vimPlugin),
+      this.hoveringCompartment.of(this.settings.tips ? inlineHoveringTips : []),
       editorSetup,
       toposTheme,
       this.chosenLanguage.of(javascript()),
@@ -547,6 +555,7 @@ export class Editor {
       );
       this.line_numbers_checkbox.checked = this.settings.line_numbers;
       this.time_position_checkbox.checked = this.settings.time_position;
+      this.tips_checkbox.checked = this.settings.tips;
       let modal_settings = document.getElementById("modal-settings");
       let editor = document.getElementById("editor");
       modal_settings?.classList.remove("invisible");
@@ -605,12 +614,23 @@ export class Editor {
       });
     });
 
-
     this.time_position_checkbox.addEventListener("change", () => {
-			let timeviewer = document.getElementById("timeviewer") as HTMLElement;
+      let timeviewer = document.getElementById("timeviewer") as HTMLElement;
       let checked = this.time_position_checkbox.checked ? true : false;
       this.settings.time_position = checked;
-			checked ? timeviewer.classList.remove('hidden') : timeviewer.classList.add('hidden');
+      checked
+        ? timeviewer.classList.remove("hidden")
+        : timeviewer.classList.add("hidden");
+    });
+
+    this.tips_checkbox.addEventListener("change", () => {
+      let checked = this.tips_checkbox.checked ? true : false;
+      this.settings.tips = checked;
+      this.view.dispatch({
+        effects: this.hoveringCompartment.reconfigure(
+          checked ? inlineHoveringTips : []
+        ),
+      });
     });
 
     this.vim_mode_button.addEventListener("click", () => {

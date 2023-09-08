@@ -42,6 +42,8 @@ export interface Settings {
    * @param universes - The set universes to use (e.g. saved files)
    * @param selected_universe - The name of the selected universe
    * @param line_numbers - Whether or not to show line numbers
+   * @param time_position - Whether or not to show time position
+   * @param tips - Whether or not to show tips
    */
   vimMode: boolean;
   theme: string;
@@ -50,7 +52,8 @@ export interface Settings {
   universes: Universes;
   selected_universe: string;
   line_numbers: boolean;
-	time_position: boolean;
+  time_position: boolean;
+  tips: boolean;
 }
 
 export const template_universe = {
@@ -105,6 +108,9 @@ export class AppSettings {
    * @param universes - The set universes to use (e.g. saved files)
    * @param selected_universe - The name of the selected universe
    * @param line_numbers - Whether or not to show line numbers
+   * @param time_position - Whether or not to show time position
+   * @param tips - Whether or not to show tips
+
    */
 
   public vimMode: boolean = false;
@@ -114,7 +120,8 @@ export class AppSettings {
   public universes: Universes;
   public selected_universe: string = "Default";
   public line_numbers: boolean = true;
-	public time_position: boolean = true;
+  public time_position: boolean = true;
+  public tips: boolean = true;
 
   constructor() {
     const settingsFromStorage = JSON.parse(
@@ -131,6 +138,7 @@ export class AppSettings {
       this.selected_universe = settingsFromStorage.selected_universe;
       this.line_numbers = settingsFromStorage.line_numbers;
       this.time_position = settingsFromStorage.time_position;
+      this.tips = settingsFromStorage.tips;
     } else {
       this.universes = template_universes;
     }
@@ -152,7 +160,8 @@ export class AppSettings {
       universes: this.universes,
       selected_universe: this.selected_universe,
       line_numbers: this.line_numbers,
-			time_position: this.time_position
+      time_position: this.time_position,
+      tips: this.tips,
     };
   }
 
@@ -173,6 +182,7 @@ export class AppSettings {
     this.selected_universe = settings.selected_universe;
     this.line_numbers = settings.line_numbers;
     this.time_position = settings.time_position;
+    this.tips = settings.tips;
     localStorage.setItem("topos", JSON.stringify(this.data));
   }
 }
