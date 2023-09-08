@@ -657,6 +657,7 @@ export const inlineHoveringTips = hoverTooltip(
       pos: start,
       end,
       above: true,
+      // @ts-ignore
       create(view: EditorView) {
         if (
           text.slice(start - from, end - from) in completionDatabase ===
