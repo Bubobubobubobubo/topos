@@ -541,6 +541,108 @@ const completionDatabase: CompletionDatabase = {
     description: "Text to speech synthesizer",
     example: "mod(2) :: speak('Topos!','fr',irand(0,5))",
   },
+  midi_outputs: {
+    name: "midi_outputs",
+    category: "midi",
+    description: "List of available MIDI outputs",
+    example: "midi_outputs()",
+  },
+  midi_output: {
+    name: "midi_output",
+    category: "midi",
+    description: "Set the current MIDI output",
+    example: "midi_output('IAC Driver Bus 1')",
+  },
+  midi: {
+    name: "midi",
+    category: "midi",
+    description: "Send a MIDI message",
+    example: "midi(144, 60, 100)",
+  },
+  control_change: {
+    name: "control_change",
+    category: "midi",
+    description: "Send a MIDI control change message",
+    example: "control_change({control: 1, value: 60, channel: 10})",
+  },
+  program_change: {
+    name: "program_change",
+    category: "midi",
+    description: "Send a MIDI program change message",
+    example: "program_change(1, 10)",
+  },
+  sysex: {
+    name: "sysex",
+    category: "midi",
+    description: "Send a MIDI sysex message",
+    example: "sysex(0xF0, 0x7D, 0x00, 0x06, 0x01, 0xF7)",
+  },
+  midi_clock: {
+    name: "midi_clock",
+    category: "midi",
+    description: "Send a MIDI clock message",
+    example: "midi_clock()",
+  },
+  degrade: {
+    name: "degrade",
+    category: "patterns",
+    description: "Removes <i>n</i>% of the given array randomly",
+    example: "[0,1,2,3].degrade(20)",
+  },
+  loop: {
+    name: "loop",
+    category: "patterns",
+    description: "Loop over the given array using an iterator",
+    example: "[0,1,2,3].loop($(1))",
+  },
+  $: {
+    name: "$",
+    category: "patterns",
+    description: "Iterator",
+    example: "[0,1,2,3].loop($(1))",
+  },
+  shuffle: {
+    name: "shuffle",
+    category: "patterns",
+    description: "Shuffle the given array",
+    example: "[0,1,2,3].shuffle()",
+  },
+  rotate: {
+    name: "rotate",
+    category: "patterns",
+    description: "Rotate the given array to the right for <i>n</i> indexes",
+    example: "[0,1,2,3].rotate(2)",
+  },
+  unique: {
+    name: "unique",
+    category: "patterns",
+    description: "Remove duplicates from the given array",
+    example: "[0,1,2,3,3,3].unique()",
+  },
+  add: {
+    name: "add",
+    category: "patterns",
+    description: "Add a value to each element of the given array",
+    example: "[0,1,2,3].add(1)",
+  },
+  sub: {
+    name: "sub",
+    category: "patterns",
+    description: "Substract a value to each element of the given array",
+    example: "[0,1,2,3].sub(1)",
+  },
+  mul: {
+    name: "mul",
+    category: "patterns",
+    description: "Multiply each element of the given array by a value",
+    example: "[0,1,2,3].mul(2)",
+  },
+  division: {
+    name: "div",
+    category: "patterns",
+    description: "Divide each element of the given array by a value",
+    example: "[0,1,2,3].division(2)",
+  },
 };
 
 export const inlineHoveringTips = hoverTooltip(
