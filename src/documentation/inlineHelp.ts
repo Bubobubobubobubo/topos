@@ -37,6 +37,12 @@ const completionDatabase: CompletionDatabase = {
     description: "ADSR envelope release time (in seconds)",
     example: "sound('sawtooth').release(.5).out()",
   },
+  fmwave: {
+    name: "fmwave",
+    category: "synthesis",
+    description: "FM synth modulator waveform",
+    example: "sound('fm').fmwave('sine').out()",
+  },
   fmi: {
     name: "fmi",
     category: "audio",
@@ -218,11 +224,55 @@ const completionDatabase: CompletionDatabase = {
     description: "Variable assignation",
     example: "let baba = 10",
   },
+  onbeat: {
+    name: "onbeat",
+    category: "rhythm",
+    description: "Return true when targetted beat(s) is/are reached",
+    example: "onbeat([1,2,3]) // true on beats 1, 2 and 3",
+  },
+  oncount: {
+    name: "oncount",
+    category: "rhythm",
+    description:
+      "Return true when targetted beat(s) is/are reached in the given period",
+    example:
+      "oncount([1,2,3], 4) // true on beats 1, 2 and 3 in a 4 beats period",
+  },
   mod: {
     name: "mod",
     category: "rhythm",
     description: "return true every <i>n</i> pulsations.",
     example: "mod(1) :: log(rand(1,5))",
+  },
+  modp: {
+    name: "modp",
+    category: "rhythm",
+    description: "return true every <i>n</i> ticks.",
+    example: "modp(8) :: log(rand(1,5))",
+  },
+  euclid: {
+    name: "euclid",
+    category: "rhythm",
+    description: "Iterator-based euclidian rhythm generator",
+    example: "euclid($(1), 3, 8) // iterator, pulses",
+  },
+  oneuclid: {
+    name: "oneuclid",
+    category: "rhythm",
+    description: "Variant of the euclidian rhythm generator",
+    example: "oneuclid(3, 8) // iterator, pulses",
+  },
+  bin: {
+    name: "bin",
+    category: "rhythm",
+    description: "Convert a decimal number to binary rhythm generator",
+    example: "bin($(1), 9223) // iterator, number to convert",
+  },
+  binrhythm: {
+    name: "binrhythm",
+    category: "rhythm",
+    description: "Binary rhythm generator",
+    example: "binrhythm(9223) :: sound('cp').out()",
   },
   rand: {
     name: "rand",
@@ -266,6 +316,12 @@ const completionDatabase: CompletionDatabase = {
     category: "audio",
     description: "Connect the <code>sound()</code> chain to the output",
     example: "sound('clap').out()",
+  },
+  script: {
+    name: "script",
+    category: "core",
+    description: "Execute one or more local scripts",
+    example: "mod(1) :: script(1)",
   },
 };
 
