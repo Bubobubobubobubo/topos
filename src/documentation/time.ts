@@ -182,12 +182,22 @@ rhythm(speed, 7, 12) :: snd('east').n(9).out()
 
 
 - <ic>bin(iterator: number, n: number): boolean</ic>: a binary rhythm generator. It transforms the given number into its binary representation (_e.g_ <ic>34</ic> becomes <ic>100010</ic>). It then returns a boolean value based on the iterator in order to generate a rhythm.
+- <ic>binrhythm(divisor: number, n: number): boolean: boolean</ic>: iterator-less version of the  binary rhythm generator.
 	
 ${makeExample(
   "Change the integers for a surprise rhythm!",
   `
 mod(.5) && bin($(1), 34) && snd('kick').out()
 mod(.5) && bin($(2), 48) && snd('sd').out()
+`,
+  true
+)}
+
+${makeExample(
+  "binrhythm for fast cool binary rhythms!",
+  `
+binrhythm(.5, 13) && snd('kick').out()
+binrhythm(.5, 18) && snd('sd').out()
 `,
   true
 )}

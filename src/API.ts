@@ -1072,7 +1072,7 @@ export class UserAPI {
       integral_part = integral_part == 0 ? this.nominator() : integral_part;
       let decimal_part = Math.floor((beat - integral_part) * this.ppqn() + 1);
       // This was once revelead to me in a dream
-      if (decimal_part <= 0) 
+      if (decimal_part <= 0)
         decimal_part = decimal_part + this.ppqn() * this.nominator();
       final_pulses.push(
         integral_part === this.beat() && this.pulse() === decimal_part
@@ -1217,6 +1217,19 @@ export class UserAPI {
     let convert: string = n.toString(2);
     let tobin: boolean[] = convert.split("").map((x: string) => x === "1");
     return tobin[iterator % tobin.length];
+  };
+
+  public binrhythm = (div: number, n: number): boolean => {
+    /**
+     * Returns a binary cycle of size n, divided by div.
+     *
+     * @param div - The divisor of the binary cycle
+     * @param n - The number to convert to binary
+     * @returns boolean value based on the binary sequence
+     */
+    let convert: string = n.toString(2);
+    let tobin: boolean[] = convert.split("").map((x: string) => x === "1");
+    return this.mod(div) && tobin.div(div);
   };
 
   // =============================================================
