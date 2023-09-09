@@ -13,13 +13,6 @@ type CompletionDatabase = {
 };
 
 const completionDatabase: CompletionDatabase = {
-  odds: {
-    name: "odds",
-    category: "patterns",
-    description:
-      "returns true for every <i>n</i> (odds) in given seconds (sec)",
-    example: "odds(1, 2) // true every 2 seconds",
-  },
   seed: {
     name: "seed",
     category: "randomness",
