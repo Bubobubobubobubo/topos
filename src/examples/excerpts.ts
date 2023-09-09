@@ -1,4 +1,11 @@
 export const examples = [
+	`// The real internet of things - Bubobubobubo
+mod(.5) :: sound('STA6').cut(1).vel(0.4)
+  .orbit(2).room(0.5).size(0.5).n(irand(1,4))
+  .speed([0.15, 0.30].beat()).out()
+binrhythm(.5, 50) :: sound('shaker').out()
+binrhythm(.5, 52) :: sound('808bd').n(3).out()
+rhythm(.25, 6, 8) :: sound('808sd').out()`,
 	`// Numerology - Bubobubobubo
 let mel = [
   "0.125 _ (0 3 7 0 3 5 0 3 9)+(0 2)", "0.125 (0 7 0 10 0 5)+(0 3)",
