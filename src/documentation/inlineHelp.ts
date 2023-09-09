@@ -13,6 +13,31 @@ type CompletionDatabase = {
 };
 
 const completionDatabase: CompletionDatabase = {
+  odds: {
+    name: "odds",
+    category: "patterns",
+    description:
+      "returns true for every <i>n</i> (odds) in given seconds (sec)",
+    example: "odds(1, 2) // true every 2 seconds",
+  },
+  seed: {
+    name: "seed",
+    category: "randomness",
+    description: "Seed the random generator",
+    example: "seed(1234)",
+  },
+  delayr: {
+    name: "delayr",
+    category: "time",
+    description: "Delay a function <i>n</i> times by <i>t</i> ms",
+    example: "delayr(50, 3, () => mod(1) :: log('delayed'))",
+  },
+  toss: {
+    name: "toss",
+    category: "randomness",
+    description: "Toss a coin, true or false",
+    example: "toss() : log('heads')",
+  },
   attack: {
     name: "attack",
     category: "synthesis",
@@ -351,7 +376,7 @@ const completionDatabase: CompletionDatabase = {
     name: "binrhythm",
     category: "rhythm",
     description: "Binary rhythm generator",
-    example: "binrhythm(9223) :: sound('cp').out()",
+    example: "binrhythm(.5, 9223) :: sound('cp').out()",
   },
   prob: {
     name: "prob",
@@ -467,6 +492,18 @@ const completionDatabase: CompletionDatabase = {
     category: "core",
     description: "Execute one or more local scripts",
     example: "mod(1) :: script(1)",
+  },
+  clear_script: {
+    name: "clear_script",
+    category: "core",
+    description: "Deletes the given script",
+    example: "clear_script(2)",
+  },
+  copy_script: {
+    name: "copy_script",
+    category: "core",
+    description: "Copy the script <i>from</i> to the script <i>to</i>",
+    example: "copy_script(1, 2)",
   },
   warp: {
     name: "warp",
@@ -661,6 +698,54 @@ const completionDatabase: CompletionDatabase = {
     description: "Iterator",
     example: "[0,1,2,3].loop($(1))",
   },
+  counter: {
+    name: "counter",
+    category: "patterns",
+    description: "Counter/iterator",
+    example: "counter('my_counter_, 20, 1)",
+  },
+  drunk: {
+    name: "drunk",
+    category: "patterns",
+    description: "Returns the next value in a drunk walk",
+    example: "drunk()",
+  },
+  drunk_max: {
+    name: "drunk_max",
+    category: "patterns",
+    description: "Sets the maximum value of the drunk walk",
+    example: "drunk_max(10)",
+  },
+  drunk_min: {
+    name: "drunk_min",
+    category: "patterns",
+    description: "Sets the minimum value of the drunk walk",
+    example: "drunk_min(0)",
+  },
+  drunk_wrap: {
+    name: "drunk_wrap",
+    category: "patterns",
+    description: "Wraps (or not) of the drunk walk (boolean)",
+    example: "drunk_wrap(true)",
+  },
+  v: {
+    name: "v",
+    category: "variable",
+    description: "Global Variable setter or getter",
+    example: "v('my_var', 10) // Sets global variable 'my_var' to 10",
+  },
+  delete_variable: {
+    name: "delete_variable",
+    category: "variable",
+    description: "Deletes the given global variable",
+    example: "delete_variable('my_var')",
+  },
+  clear_variables: {
+    name: "clear_variables",
+    category: "variable",
+    description: "Clears all global variables",
+    example: "clear_variables()",
+  },
   shuffle: {
     name: "shuffle",
     category: "patterns",
@@ -702,7 +787,19 @@ const completionDatabase: CompletionDatabase = {
     category: "patterns",
     description: "Divide each element of the given array by a value",
     example: "[0,1,2,3].division(2)",
-  }
+  },
+  scale: {
+    name: "scale",
+    category: "patterns",
+    description: "Scale setter used by Ziffers",
+    example: "z0('0 1 2 3').scale('major').out()",
+  },
+  zzfx: {
+    name: "zzfx",
+    category: "synthesis",
+    description: "ZzFX sound generator",
+    example: "sound('zzfx').zzfx(...).out()",
+  },
 };
 
 export const inlineHoveringTips = hoverTooltip(
