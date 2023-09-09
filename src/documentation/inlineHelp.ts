@@ -368,7 +368,7 @@ const completionDatabase: CompletionDatabase = {
   binrhythm: {
     name: "binrhythm",
     category: "rhythm",
-    description: "Binary rhythm generator",
+    description: "Binary rhythm generator (time, number)",
     example: "binrhythm(.5, 9223) :: sound('cp').out()",
   },
   prob: {

@@ -1,4 +1,11 @@
 export const examples = [
+	`// Entering the secret room - Bubobubobubo
+let frequencies = [200,400,600,800,1000,2000].div(2);
+mod(2) :: sound('sine').freq(frequencies)
+  .delay(0.5).delayt(usine(.5)).delayfb(0.8).size(0.9).room(0.9).out()
+mod(2) :: app.hydra.osc(frequencies/100, 0.25, 0.5)
+  .posterize([32,4,8,16].div(2)).rotate(pulse())
+  .kaleid([1,2,3].beat()).out()`,
 	`// The real internet of things - Bubobubobubo
 mod(.5) :: sound('STA6').cut(1).vel(0.4)
   .orbit(2).room(0.5).size(0.5).n(irand(1,4))
