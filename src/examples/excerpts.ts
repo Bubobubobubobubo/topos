@@ -1,4 +1,19 @@
 export const examples = [
+	`// Numerology - Bubobubobubo
+let mel = [
+  "0.125 _ (0 3 7 0 3 5 0 3 9)+(0 2)", "0.125 (0 7 0 10 0 5)+(0 3)",
+  "0.125 (0 3 7 0 3 5 0 3 9)+(0 2)", "0.125 (0 2 4 5 9 10)+(0 2)",
+].div(4);
+z0(mel)
+  .scale('minor').sound('square').cutoff(800 + usine(.5) * 5000)
+  .fmi([2, 4, 8].div(2)).fmh(div(2) ? 2 : 4)
+  .delay(bpm() / 60 / 9).delayt(0.25).delayfb(0.5)
+  .fmsus(0.3).fmrel(0.3).rel(rand(0.5,0.8))
+  .sus(rand(0.05, 0.1)).out();
+mod(1) :: sound(div(2) ? 'kick' : ['sd', 'cp'].div(3)).out();
+mod([.25, .5].div(4)) :: div(6) && sound('dr')
+  .room(0.85).size(0.85).vel($(1) % 10 / 8)
+  .n([1, 2, 7].pick()).out();`,
   `// Harmonic Leaps and Gaps -- Bubobubobubo
 let oscillation = quant(usine(.25) * 20, [35, 40, 38, 50, 55]);
 let tonal = [0, 5, 0, 0, 7].palindrome().bar() + 40 - 24;
