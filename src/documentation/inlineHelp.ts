@@ -13,6 +13,12 @@ type CompletionDatabase = {
 };
 
 const completionDatabase: CompletionDatabase = {
+	toss: {
+		name: "toss",
+		category: "randomness",
+		description: "Toss a coin, true or false",
+		example: "toss() : log('heads')"
+	},
   attack: {
     name: "attack",
     category: "synthesis",
