@@ -377,6 +377,66 @@ const completionDatabase: CompletionDatabase = {
     description: "Pick a value in the given array",
     example: "[1,4,10].pick()",
   },
+  odds: {
+    name: "odds",
+    category: "randomness",
+    description: "Return true with a probability of <i>n</i> %",
+    example: "odds(1/2) // 50% probability"
+  },
+  never: {
+    name: "never",
+    category: "randomness",
+    description: "Return false",
+    example: "never() // false"
+  },
+  almostNever: {
+    name: "almostNever",
+    category: "randomness",
+    description: "Return true with a probability of 2.5%",
+    example: "almostNever() // 2.5% chance"
+  },
+  rarely: {
+    name: "rarely",
+    category: "randomness",
+    description: "Return true with a probability of 10%",
+    example: "rarely() // 10% chance"
+  },
+  scarcely: {
+    name: "scarcely",
+    category: "randomness",
+    description: "Return true with a probability of 25%",
+    example: "scarcely() // 25% chance"
+  },
+  sometimes: {
+    name: "sometimes",
+    category: "randomness",
+    description: "Return true with a probability of 50%",
+    example: "sometimes() // 50% chance"
+  },
+  often: {
+    name: "often",
+    category: "randomness",
+    description: "Return true with a probability of 75%",
+    example: "often() // 75% chance"
+  },
+  frequently: {
+    name: "frequently",
+    category: "randomness",
+    description: "Return true with a probability of 90%",
+    example: "frequently() // chance"
+  },
+  almostAlways: {
+    name: "almostAlways",
+    category: "randomness",
+    description: "Return true with a probability of 98.5%",
+    example: "almostAlways() // 98.5% chance"
+  },
+  always: {
+    name: "always",
+    category: "randomness",
+    description: "Return true",
+    example: "always() // true"
+  },
   sound: {
     name: "sound",
     category: "audio",
@@ -642,7 +702,7 @@ const completionDatabase: CompletionDatabase = {
     category: "patterns",
     description: "Divide each element of the given array by a value",
     example: "[0,1,2,3].division(2)",
-  },
+  }
 };
 
 export const inlineHoveringTips = hoverTooltip(

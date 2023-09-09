@@ -823,85 +823,105 @@ export class UserAPI {
     return this.randomGen() > 0.5;
   };
 
-  public odds = (n: number, sec: number = 15): boolean => {
+  public odds = (n: number, beats: number = 1): boolean => {
     /**
      * Returns true n% of the time.
      *
      * @param n - The probability of returning true. 1/4 = 25% = 0.25, 80/127 = 62.9% = 0.6299212598425197, etc...
-     * @param sec - The time frame in seconds
+     * @param beats - The time frame in beats
      * @returns True n% of the time
      */
-    return this.randomGen() < (n * this.ppqn()) / (this.ppqn() * sec);
+    return this.randomGen() < (n * this.ppqn()) / (this.ppqn() * beats);
   };
 
-  public almostNever = (sec: number = 15): boolean => {
+  // @ts-ignore
+  public never = (beats: number = 1): boolean => {
+    /**
+     * Returns false
+     * @param beats - Doesn't give a * about beats
+     * @returns False
+     */
+    return false;
+  };
+
+  public almostNever = (beats: number = 1): boolean => {
     /**
      * Returns true 2.5% of the time in given time frame.
      *
-     * @param sec - The time frame in seconds
+     * @param beats - The time frame in beats
      * @returns True 2.5% of the time
      */
-    return this.randomGen() < (0.025 * this.ppqn()) / (this.ppqn() * sec);
+    return this.randomGen() < (0.025 * this.ppqn()) / (this.ppqn() * beats);
   };
 
-  public rarely = (sec: number = 15): boolean => {
+  public rarely = (beats: number = 1): boolean => {
     /**
      * Returns true 10% of the time.
      *
-     * @param sec - The time frame in seconds
+     * @param beats - The time frame in beats
      * @returns True 10% of the time.
      */
-    return this.randomGen() < (0.1 * this.ppqn()) / (this.ppqn() * sec);
+    return this.randomGen() < (0.1 * this.ppqn()) / (this.ppqn() * beats);
   };
 
-  public scarcely = (sec: number = 15): boolean => {
+  public scarcely = (beats: number = 1): boolean => {
     /**
      * Returns true 25% of the time.
      *
-     * @param sec - The time frame in seconds
+     * @param beats - The time frame in beats
      * @returns True 25% of the time
      */
-    return this.randomGen() < (0.25 * this.ppqn()) / (this.ppqn() * sec);
+    return this.randomGen() < (0.25 * this.ppqn()) / (this.ppqn() * beats);
   };
 
-  public sometimes = (sec: number = 15): boolean => {
+  public sometimes = (beats: number = 1): boolean => {
     /**
      * Returns true 50% of the time.
      *
-     * @param sec - The time frame in seconds
+     * @param beats - The time frame in beats
      * @returns True 50% of the time
      */
-    return this.randomGen() < (0.5 * this.ppqn()) / (this.ppqn() * sec);
+    return this.randomGen() < (0.5 * this.ppqn()) / (this.ppqn() * beats);
   };
 
-  public often = (sec: number = 15): boolean => {
+  public often = (beats: number = 1): boolean => {
     /**
      * Returns true 75% of the time.
      *
-     * @param sec - The time frame in seconds
+     * @param beats - The time frame in beats
      * @returns True 75% of the time
      */
-    return this.randomGen() < (0.75 * this.ppqn()) / (this.ppqn() * sec);
+    return this.randomGen() < (0.75 * this.ppqn()) / (this.ppqn() * beats);
   };
 
-  public frequently = (sec: number = 15): boolean => {
+  public frequently = (beats: number = 1): boolean => {
     /**
      * Returns true 90% of the time.
      *
-     * @param sec - The time frame in seconds
+     * @param beats - The time frame in beats
      * @returns True 90% of the time
      */
-    return this.randomGen() < (0.9 * this.ppqn()) / (this.ppqn() * sec);
+    return this.randomGen() < (0.9 * this.ppqn()) / (this.ppqn() * beats);
   };
 
-  public almostAlways = (sec: number = 15): boolean => {
+  public almostAlways = (beats: number = 1): boolean => {
     /**
      * Returns true 98.5% of the time.
      *
-     * @param sec - The time frame in seconds
+     * @param beats - The time frame in beats
      * @returns True 98.5% of the time
      */
-    return this.randomGen() < (0.985 * this.ppqn()) / (this.ppqn() * sec);
+    return this.randomGen() < (0.985 * this.ppqn()) / (this.ppqn() * beats);
+  };
+
+  // @ts-ignore
+  public always = (beats: number = 1): boolean => {
+    /**
+     * Returns true 100% of the time.
+     * @param beats - Doesn't give a * about beats
+     * @returns true
+     */
+    return true;
   };
 
   public dice = (sides: number): number => {

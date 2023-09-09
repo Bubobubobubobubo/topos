@@ -27,6 +27,11 @@ export abstract class Event {
     return this;
   };
 
+  // @ts-ignore
+  never = (func: Function): Event => {
+    return this;
+  };
+
   almostNever = (func: Function): Event => {
     return this.odds(0.025, func);
   };
@@ -53,6 +58,10 @@ export abstract class Event {
 
   almostAlways = (func: Function): Event => {
     return this.odds(0.985, func);
+  };
+
+  always = (func: Function): Event => {
+    return this.modify(func);
   };
 
   modify = (func: Function): Event => {

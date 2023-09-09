@@ -225,16 +225,59 @@ prob(80) :: script(toss() ? script(3) : script(4))
 ## Chance operators
 
 Chance operators returning a boolean value are also available. They are super important because they also exist for another mechanism called **chaining**. Checkout the **Chaining** page to learn how to use them in different contexts!
+
+By default chance operators will be evaluated 48 times within a beat. You can change this value by providing a number of beats as an argument. Default value is 1. Change operators can also be used to randomly apply other operators.
+
+- <ic>odds(n: number, beats?: number)</ic>: returns true for every n (odds) (eg. 1/4 = 0.25) in given number of beats
+- <ic>never(beats?: number)</ic>: returns false. Can be handy when switching between different probabilities
+- <ic>almostNever(beats?: number)</ic>: returns true 0.1% of the time in given number of beats
+- <ic>rarely(beats?: number)</ic>: returns true 1% of the time in given number of beats
+- <ic>scarcely(beats?: number)</ic>: returns true 10% of the time in given number of beats
+- <ic>sometimes(beats?: number)</ic>: returns true 50% of the time in given number of beats
+- <ic>often(beats?: number)</ic>: returns true 75% of the time in given number of beats
+- <ic>frequently(beats?: number)</ic>: returns true 90% of the time in given number of beats
+- <ic>almostAlways(beats?: number)</ic>: returns true 99% of the time in given number of beats
+- <ic>always(beats?: number)</ic>: returns true. Can be handy when switching between different probabilities
 	
-- <ic>odds(n: number, sec?: number)</ic>: returns true for every n (odds) (eg. 1/4 = 0.25) in given seconds (sec)
-- <ic>almostNever(sec?: number)</ic>: returns true 0.1% in given seconds (sec)
-- <ic>rarely(sec?: number)</ic>: returns true 1% in given seconds (sec)
-- <ic>scaresly(sec?: number)</ic>: returns true 10% in given seconds (sec)
-- <ic>sometimes(sec?: number)</ic>: returns true 50% in given seconds (sec)
-- <ic>often(sec?: number)</ic>: returns true 75% in given seconds (sec)
-- <ic>frequently(sec?: number)</ic>: returns true 90% in given seconds (sec)
-- <ic>almostAlways(sec?: number)</ic>: returns true 99% in given seconds (sec)
-	
+Examples:
+
+${makeExample(
+  "Using chance operators",
+  `
+  rarely() :: sound('hh').out(); // Rarely 48 times is still a lot
+  rarely(4) :: sound('bd').out(); // Rarely in 4 beats is bit less
+  rarely(8) :: sound('east').out(); // Rarely in 8 beats is even less
+  `,
+  true
+)}
+
+${makeExample(
+  "Using chance with other operators",
+  `
+  frequently() :: mod(1) :: sound('kick').out();
+  often() :: mod(0.5) :: sound('hh').out();
+  sometimes() :: onbeat(1,3) :: sound('snare').out();
+  `,
+  true
+)}
+
+${makeExample(
+  "Using chance with chaining",
+  `
+  mod(0.5) && sound("bd")
+  .freq(100)
+  .sometimes(s=>s.crush(2.5))
+  .out()
+
+  mod(0.5) && sound('arp').freq(100)
+  .sometimes(n=>n.freq(200).delay(0.5))
+  .rarely(n=>n.freq(300).delay(2.5))
+  .almostNever(n=>n.freq(400))
+  .out()
+  `,
+  true
+)}
+
 ## Math functions
 	
 - <ic>max(...values: number[]): number</ic>: returns the maximum value of a list of numbers.
