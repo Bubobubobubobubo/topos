@@ -8,9 +8,6 @@ export default defineConfig(({ command, mode, ssrBuild }) => {
       server: {
         port: 8000,
         strictPort: true,
-        https: true,
-        open: true,
-        cors: true,
       },
     };
   } else {

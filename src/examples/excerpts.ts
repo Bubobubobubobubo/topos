@@ -162,7 +162,7 @@ beat(0.25) :: snd('hh').out();
 beat(2) :: snd('square')
   .cutoff(500).note(50-12).resonance(20).sustain(0.2).out()
 beat(1/4)::snd(['sawtooth', 'triangle', 'square'].beat(1))
-  .note([50, 53, 55, 50, 50, 52, 58, 50+12, 50+15].beat(4) + [0, 12, 24].beat(0.5)))
+  .note([50, 53, 55, 50, 50, 52, 58, 50+12, 50+15].beat(4) + [0, 12, 24].beat(0.5))
   .cutoff(usine(.5)*10000).resonance([10,20].beat(2))
   .fmi($(1) % 10).fmh($(2) % 5)
   .room(0.8).size(0.9)

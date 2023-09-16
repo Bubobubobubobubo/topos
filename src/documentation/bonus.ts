@@ -19,7 +19,7 @@ Some features are not part of the core of Topos but are still very useful. They 
 
 ${makeExample(
   "Hydra integration",
-  `mod(4) :: app.hydra.osc(3, 0.5, 2).out()`,
+  `beat(4) :: app.hydra.osc(3, 0.5, 2).out()`,
   true
 )}
 

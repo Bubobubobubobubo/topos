@@ -28,7 +28,7 @@ ${makeExample(
   "Using beat to create arpeggios",
   `
 // Arpeggio using pulse divisions
-beat([.5, .25].div(2)) :: sound('sine')
+beat([.5, .25].beat(2)) :: sound('sine')
   .hcutoff(400)
   .fmi([1,2].beat(8))
   .fmh([0.5,0.25,1].beat(2))

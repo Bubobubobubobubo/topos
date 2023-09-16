@@ -60,7 +60,7 @@ ${makeExample(
   "pulse is the OG rhythmic function in Topos",
   `
 pulse([48, 24, 16].beat(4)) :: sound('linnhats').out()
-pulse(1)::snd('bd').out()
+beat(1)::snd('bd').out()
 `,
   false
 )};
@@ -170,7 +170,7 @@ ${makeExample(
 ${makeExample(
   "rhythm is a beginner friendly rhythmic function!",
   `
-let speed = [0.5, 0.25].div(8);
+let speed = [0.5, 0.25].beat(8);
 rhythm(speed, 5, 12) :: snd('east').n(2).out()
 rhythm(speed, 2, 12) :: snd('east').out()
 rhythm(speed, 3, 12) :: snd('east').n(4).out()
@@ -248,7 +248,7 @@ beat([1/4,1/8,1/16].beat(8)):: sound('sine')
 	.sustain(0.1).out()
 beat(1) :: sound('kick').out()
 beat(2) :: sound('dr').n(5).out()
-div(3) :: beat([.25,.5].beat(.5)) :: sound('dr')
+flip(3) :: beat([.25,.5].beat(.5)) :: sound('dr')
   .n([8,9].pick()).gain([.8,.5,.25,.1,.0].beat(.25)).out()
 // Time is elastic now!
 beat(.25) :: warp([12, 48, 24, 1, 120, 30].pick())

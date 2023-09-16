@@ -1200,7 +1200,7 @@ export class UserAPI {
     rotate: number = 0
   ): boolean => {
     return (
-      this.beat(div) && this._euclidean_cycle(pulses, length, rotate).div(div)
+      this.beat(div) && this._euclidean_cycle(pulses, length, rotate).beat(div)
     );
   };
 
@@ -1250,7 +1250,7 @@ export class UserAPI {
      */
     let convert: string = n.toString(2);
     let tobin: boolean[] = convert.split("").map((x: string) => x === "1");
-    return this.beat(div) && tobin.div(div);
+    return this.beat(div) && tobin.beat(div);
   };
 
   // =============================================================
