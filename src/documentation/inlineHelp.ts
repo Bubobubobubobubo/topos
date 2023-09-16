@@ -243,12 +243,6 @@ const completionDatabase: CompletionDatabase = {
     description: "Returns list index for the current bar (with wrapping)",
     example: "[0,1,2,3].bar()",
   },
-  beat: {
-    name: "beat",
-    category: "patterns",
-    description: "Returns list index for the current beat (with wrapping)",
-    example: "[0,1,2,3].beat()",
-  },
   room: {
     name: "room",
     category: "effect",
