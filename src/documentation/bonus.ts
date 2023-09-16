@@ -34,8 +34,8 @@ Stopping **Hydra** is simple:
 ${makeExample(
   "Stopping Hydra",
   `
-mod(4) :: stop_hydra()     // this one
-mod(4) :: app.hydra.hush() // or this one
+beat(4) :: stop_hydra()     // this one
+beat(4) :: app.hydra.hush() // or this one
 `,
   true
 )}

@@ -6,7 +6,7 @@ declare global {
     add(amount: number): number[];
     sub(amount: number): number[];
     mult(amount: number): number[];
-    division(amount: number): number[];
+    div(amount: number): number[];
     palindrome(): T[];
     random(index: number): T;
     rand(index: number): T;
@@ -74,7 +74,7 @@ export const makeArrayExtensions = (api: UserAPI) => {
     return this.map((x: number) => x * amount);
   };
 
-  Array.prototype.division = function (amount: number): number[] {
+  Array.prototype.div = function (amount: number): number[] {
     /**
      * @param amount - The value to divide each element in the array by.
      * @returns New array with divided values. Throws if division by zero.

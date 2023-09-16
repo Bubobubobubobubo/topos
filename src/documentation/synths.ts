@@ -19,7 +19,7 @@ The <ic>sound</ic> function can take the name of a synthesizer as first argument
 ${makeExample(
   "Simple synthesizer voice with filter",
   `
-mod(.5) && snd('sawtooth')
+beat(.5) && snd('sawtooth')
   .cutoff([2000,500].pick() + usine(.5) * 4000)
   .resonance(0.9).freq([100,150].pick())
   .out()
@@ -30,10 +30,9 @@ mod(.5) && snd('sawtooth')
 ${makeExample(
   "Listening to the different waveforms from the sweetest to the harshest",
   `
-mod(.5) && snd(['sine', 'triangle', 'sawtooth', 'square'].beat()).freq(100).out()
+beat(.5) && snd(['sine', 'triangle', 'sawtooth', 'square'].beat()).freq(100).out()
   .freq(50)
-  .out()
-	`,
+  .out()`,
   false
 )}
 
@@ -41,11 +40,11 @@ mod(.5) && snd(['sine', 'triangle', 'sawtooth', 'square'].beat()).freq(100).out(
 ${makeExample(
   "Blessed by the square wave",
   `
-mod(4) :: [100,101].forEach((freq) => sound('square').freq(freq).sustain(0.1).out())
-mod(.5) :: [100,101].forEach((freq) => sound('square').freq(freq*2).sustain(0.01).out())
-mod([.5, .75, 2].beat()) :: [100,101].forEach((freq) => sound('square')
+beat(4) :: [100,101].forEach((freq) => sound('square').freq(freq).sustain(0.1).out())
+beat(.5) :: [100,101].forEach((freq) => sound('square').freq(freq*2).sustain(0.01).out())
+beat([.5, .75, 2].beat()) :: [100,101].forEach((freq) => sound('square')
   .freq(freq*4 + usquare(2) * 200).sustain(0.125).out())
-mod(.25) :: sound('square').freq(100*[1,2,4,8].beat()).sustain(0.1).out()`,
+beat(.25) :: sound('square').freq(100*[1,2,4,8].beat()).sustain(0.1).out()`,
   false
 )}
 
@@ -53,7 +52,7 @@ mod(.25) :: sound('square').freq(100*[1,2,4,8].beat()).sustain(0.1).out()`,
 ${makeExample(
   "Ghost carillon",
   `
-mod(1/8)::sound('sine')
+beat(1/8)::sound('sine')
   .velocity(rand(0.0, 1.0))
   .delay(0.75).delayt(.5)
   .sustain(0.4)
@@ -76,9 +75,9 @@ The same basic waveforms can take additional methods to switch to a basic two op
 ${makeExample(
   "80s nostalgia",
   `
-mod(.25) && snd('sine')
+beat(.25) && snd('sine')
   .fmi([1,2,4,8].pick())
-  .fmh([1,2,4,8].div(8))
+  .fmh([1,2,4,8].beat(8))
   .freq([100,150].pick())
   .sustain(0.1)
   .out()
@@ -89,9 +88,9 @@ mod(.25) && snd('sine')
 ${makeExample(
   "Giving some love to weird ratios",
   `
-mod([.5, .25].bar()) :: sound('sine').fm('2.2183:3.18293').sustain(0.05).out()
-mod([4].bar()) :: sound('sine').fm('5.2183:4.5').sustain(0.05).out()
-mod(.5) :: sound('sine')
+beat([.5, .25].bar()) :: sound('sine').fm('2.2183:3.18293').sustain(0.05).out()
+beat([4].bar()) :: sound('sine').fm('5.2183:4.5').sustain(0.05).out()
+beat(.5) :: sound('sine')
   .fmh([1, 1.75].beat())
   .fmi($(1) % 30).orbit(2).room(0.5).out()`,
   false
@@ -101,7 +100,7 @@ mod(.5) :: sound('sine')
 ${makeExample(
   "Some peace and serenity",
   `
-mod(0.25) :: sound('sine')
+beat(0.25) :: sound('sine')
   .note([60, 67, 70, 72, 77].beat() - [0,12].bar())
   .attack(0.2).release(0.5).gain(0.25)
   .room(0.9).size(0.8).sustain(0.5)
@@ -123,10 +122,10 @@ There is also a more advanced set of parameters you can use to control the envel
 ${makeExample(
   "FM Synthesis with envelope control",
   `
- mod(.5) :: sound('sine')
-  .note([50,53,55,57].div(.5) - 12)
+beat(.5) :: sound('sine')
+  .note([50,53,55,57].beat(.5) - 12)
   .fmi(0.5 + usine(.25) * 1.5)
-  .fmh([2,4].div(.125))
+  .fmh([2,4].beat(.125))
   .fmwave('triangle')
   .fmsus(0).fmdec(0.2).out()
   `,
@@ -142,16 +141,16 @@ ZZfX can be triggered by picking a default ZZfX waveform in the following list: 
 ${makeExample(
   "Picking a waveform",
   `
-mod(.5) :: sound(['z_sine', 'z_triangle', 'z_sawtooth', 'z_tan', 'z_noise'].beat()).out()
+beat(.5) :: sound(['z_sine', 'z_triangle', 'z_sawtooth', 'z_tan', 'z_noise'].beat()).out()
 `,
   true
 )}
 ${makeExample(
   "Minimalist chiptune",
   `
-mod(.5) :: sound('z_triangle')
-  .note([60, 67, 72, 63, 65, 70].div(.5))
-  .zrand(0).curve([1,2,3,4].div(1))
+beat(.5) :: sound('z_triangle')
+  .note([60, 67, 72, 63, 65, 70].beat(.5))
+  .zrand(0).curve([1,2,3,4].beat(1))
   .slide(0.01).tremolo(12)
   .noise([0,0.5].beat())
   .decay(0.3).sustain(0)
@@ -187,7 +186,7 @@ It comes with a set of parameters that can be used to tweak the sound. Don't und
 ${makeExample(
   "Chaotic Noise source",
   `
-mod(.25) :: sound('z_tan')
+beat(.25) :: sound('z_tan')
   .note(40).noise(rand(0.0, 1.0))
   .pitchJump(84).pitchJumpTime(rand(0.0, 1.0))
   .zcrush([0,1,2,3,4].beat())
@@ -201,7 +200,7 @@ mod(.25) :: sound('z_tan')
 ${makeExample(
   "What is happening to me?",
   `
-mod(1) :: snd('zzfx').zzfx([
+beat(1) :: snd('zzfx').zzfx([
   [4.77,,25,,.15,.2,3,.21,,2.4,,,,,,,.23,.35],
   [1.12,,97,.11,.16,.01,4,.77,,,30,.17,,,-1.9,,.01,.67,.2]
   ].beat()).out()
@@ -211,9 +210,9 @@ mod(1) :: snd('zzfx').zzfx([
 ${makeExample(
   "Les voitures dans le futur",
   `
-mod(1) :: sound(['z_triangle', 'z_sine'].pick())
+beat(1) :: sound(['z_triangle', 'z_sine'].pick())
   .note([60,63,72,75].pick()).tremolo(16)
-  .zmod([0, 1/2, 1/8].division(2).pick())
+  .zmod([0, 1/2, 1/8].div(2).pick())
   .attack(0.5).release(0.5).sustain(2).delay(0.8)
   .room(0.9).size(0.9)
   .delayt(0.75).delayfb(0.5).out()
@@ -226,7 +225,7 @@ ${makeExample(
   "Designing a sound on the ZzFX website",
   `
  
-mod(2) :: sound('zzfx').zzfx([3.62,,452,.16,.1,.21,,2.5,,,403,.05,.29,,,,.17,.34,.22,.68]).out()
+beat(2) :: sound('zzfx').zzfx([3.62,,452,.16,.1,.21,,2.5,,,403,.05,.29,,,,.17,.34,.22,.68]).out()
 `,
   true
 )}
@@ -246,7 +245,7 @@ Topos can also speak using the [Web Speech API](https://developer.mozilla.org/en
 ${makeExample(
   "Hello world!",
   `
-mod(4) :: speak("Hello world!")
+beat(4) :: speak("Hello world!")
   `,
   true
 )}
@@ -254,7 +253,7 @@ mod(4) :: speak("Hello world!")
 ${makeExample(
   "Different voices",
   `
-mod(2) :: speak("Topos!","fr",irand(0,5))
+beat(2) :: speak("Topos!","fr",irand(0,5))
   `,
   true
 )}
@@ -278,7 +277,7 @@ ${makeExample(
   const object = ["happy","sad","tired"].pick()
   const sentence = subject+" "+verb+" "+" "+object
     
-  mod(6) :: sentence.pitch(0).rate(0).voice([0,2].pick()).speak()
+  beat(6) :: sentence.pitch(0).rate(0).voice([0,2].pick()).speak()
   `,
   true
 )}
