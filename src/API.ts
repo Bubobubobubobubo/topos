@@ -938,7 +938,7 @@ export class UserAPI {
   // Time markers
   // =============================================================
 
-  bar = (): number => {
+  cbar = (): number => {
     /**
      * Returns the current bar number
      *
@@ -947,7 +947,7 @@ export class UserAPI {
     return this.app.clock.time_position.bar + 1;
   };
 
-  tick = (): number => {
+  ctick = (): number => {
     /**
      * Returns the current tick number
      *
@@ -956,7 +956,7 @@ export class UserAPI {
     return this.app.clock.tick + 1;
   };
 
-  pulse = (): number => {
+  cpulse = (): number => {
     /**
      * Returns the current pulse number
      *
@@ -965,7 +965,7 @@ export class UserAPI {
     return this.app.clock.time_position.pulse + 1;
   };
 
-  beat = (): number => {
+  cbeat = (): number => {
     /**
      * Returns the current beat number
      *
@@ -1008,7 +1008,7 @@ export class UserAPI {
   // Time Filters
   // =============================================================
 
-  public mod = (...n: number[]): boolean => {
+  public beat = (...n: number[]): boolean => {
     const results: boolean[] = n.map(
       (value) =>
         this.app.clock.pulses_since_origin % Math.floor(value * this.ppqn()) ===
@@ -1017,13 +1017,16 @@ export class UserAPI {
     return results.some((value) => value === true);
   };
 
-  public modpulse = (...n: number[]): boolean => {
+  public pulse = (...n: number[]): boolean => {
     const results: boolean[] = n.map(
       (value) => this.app.clock.pulses_since_origin % value === 0
     );
     return results.some((value) => value === true);
   };
-  modp = this.modpulse;
+
+  // =============================================================
+  // Modulo basd time filters
+  // =============================================================
 
   public modbar = (...n: number[]): boolean => {
     const results: boolean[] = n.map(
@@ -1032,18 +1035,12 @@ export class UserAPI {
     );
     return results.some((value) => value === true);
   };
-  modb = this.modbar;
 
-  // Original implementation
-  // public div = (chunk: number): boolean => {
-  //   const time_pos = this.app.clock.pulses_since_origin;
-  //   const current_chunk = Math.floor(
-  //     time_pos / Math.floor(chunk * this.ppqn())
-  //   );
-  //   return current_chunk % 2 === 0;
-  // };
+  // =============================================================
+  // Other core temporal functions
+  // =============================================================
 
-  public div = (chunk: number, ratio: number = 50): boolean => {
+  public flip = (chunk: number, ratio: number = 50): boolean => {
     /**
      * Determines if the current time position is in the first
      * or second half of a given time chunk.
@@ -1064,6 +1061,10 @@ export class UserAPI {
     const current_chunk = Math.floor(time_pos / chunk);
     return current_chunk % 2 === 0;
   };
+
+  // =============================================================
+  // "On" Filters
+  // =============================================================
 
   public onbar = (
     bars: number[] | number,
@@ -1095,7 +1096,7 @@ export class UserAPI {
       if (decimal_part <= 0)
         decimal_part = decimal_part + this.ppqn() * this.nominator();
       final_pulses.push(
-        integral_part === this.beat() && this.pulse() === decimal_part
+        integral_part === this.cbeat() && this.cpulse() === decimal_part
       );
     });
     return final_pulses.some((p) => p == true);
@@ -1199,7 +1200,7 @@ export class UserAPI {
     rotate: number = 0
   ): boolean => {
     return (
-      this.mod(div) && this._euclidean_cycle(pulses, length, rotate).div(div)
+      this.beat(div) && this._euclidean_cycle(pulses, length, rotate).div(div)
     );
   };
 
@@ -1249,7 +1250,7 @@ export class UserAPI {
      */
     let convert: string = n.toString(2);
     let tobin: boolean[] = convert.split("").map((x: string) => x === "1");
-    return this.mod(div) && tobin.div(div);
+    return this.beat(div) && tobin.div(div);
   };
 
   // =============================================================
