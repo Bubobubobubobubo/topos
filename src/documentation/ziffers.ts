@@ -43,7 +43,7 @@ z1('s 0 1 2 3 4 5 6 7 8 9').sound('pluck').release(0.1).sustain(0.25).out()
 ${makeExample(
   "Escaped pitches using curly brackets",
   `
-let pattern = div(4) ? z1('s _ _ 0 0 {9 11}') : z1('s _ 0 0 {10 12}');
+let pattern = flip(4) ? z1('s _ _ 0 0 {9 11}') : z1('s _ 0 0 {10 12}');
 pattern.sound('pluck').sustain(0.1).room(0.9).out();
 `,
   false
@@ -52,7 +52,7 @@ pattern.sound('pluck').sustain(0.1).room(0.9).out();
 ${makeExample(
   "Durations using letters and floating point numbers",
   `
-div(8) ? z1('s 0 e 1 q 2 h 3 w 4').sound('sine').scale("locrian").out()
+flip(8) ? z1('s 0 e 1 q 2 h 3 w 4').sound('sine').scale("locrian").out()
 	   : z1('0.125 0 0.25 2').sound('sine').scale("locrian").out()
 `,
   false
@@ -62,8 +62,8 @@ ${makeExample(
   "Disco was invented thanks to Ziffers",
   `
 z1('e _ _ 0 ^ 0 _ 0 ^ 0').sound('jvbass').out()
-mod(1)::snd('bd').out(); mod(2)::snd('sd').out()
-mod(3) :: snd('cp').room(0.5).size(0.5).orbit(2).out()
+beat(1)::snd('bd').out(); beat(2)::snd('sd').out()
+beat(3) :: snd('cp').room(0.5).size(0.5).orbit(2).out()
 `,
   false
 )}
@@ -132,7 +132,7 @@ ${makeExample(
   "Transposing chords",
   `
   z1('q Fmaj Amin Dmin Cmaj Cdim')
-    .key(["F3","E3","D3","E3"].div(3))
+    .key(["F3","E3","D3","E3"].beat(3))
     .sound('sawtooth').out()
 `
 )}
@@ -177,7 +177,7 @@ z1("s (0,8) 0 0 (0,5) 0 0").sound('sine')
   .scale('minor').fmi(2).fmh(2).room(0.5)
 	.size(0.5).sustain(0.1) .delay(0.5)
 	.delay(0.125).delayfb(0.25).out();
-mod(.5) :: snd(['kick', 'hat'].div(.5)).out()
+beat(.5) :: snd(['kick', 'hat'].beat(.5)).out()
 `,
   true
 )}
@@ -188,17 +188,17 @@ Ziffers supports all the keys and scales. Keys can be defined by using [scientif
 
 | Scale name | Intervals              |
 |------------|------------------------|
-| Lydian     | <ic>2221221</ic> |
-| Mixolydian | <ic>2212212</ic> |
-| Aeolian    | <ic>2122122</ic> |
-| Locrian    | <ic>1221222</ic> |
-| Ionian     | <ic>2212221</ic> |
-| Dorian     | <ic>2122212</ic> |
-| Phrygian   | <ic>1222122</ic> |
-| Soryllic   | <ic>11122122</ic>|
-| Modimic    | <ic>412122</ic>  |
-| Ionalian   | <ic>1312122</ic> |
-| ... | And it goes on for **1490** scales |
+| Lydian     | <ic>2221221</ic> |
+| Mixolydian | <ic>2212212</ic> |
+| Aeolian    | <ic>2122122</ic> |
+| Locrian    | <ic>1221222</ic> |
+| Ionian     | <ic>2212221</ic> |
+| Dorian     | <ic>2122212</ic> |
+| Phrygian   | <ic>1222122</ic> |
+| Soryllic   | <ic>11122122</ic>|
+| Modimic    | <ic>412122</ic>  |
+| Ionalian   | <ic>1312122</ic> |
+| ... | And it goes on for **1490** scales |
 
 ${makeExample(
   "What the hell is the Modimic scale?",
@@ -207,7 +207,7 @@ z1("s (0,8) 0 0 (0,5) 0 0").sound('sine')
   .scale('modimic').fmi(2).fmh(2).room(0.5)
 	.size(0.5).sustain(0.1) .delay(0.5)
 	.delay(0.125).delayfb(0.25).out();
-mod(.5) :: snd(['kick', 'hat'].div(.5)).out()
+beat(.5) :: snd(['kick', 'hat'].beat(.5)).out()
 `,
   true
 )}
@@ -221,16 +221,16 @@ You can also use more traditional <a href="https://ianring.com/musictheory/scale
 
 | Scale name | Intervals              |
 |------------|------------------------|
-| Major      | <ic>2212221</ic> |
-| Minor      | <ic>2122122</ic> |
-| Minor pentatonic   | <ic>32232</ic>  |
-| Harmonic minor     | <ic>2122131</ic>|
-| Harmonic major     | <ic>2212131</ic>|
-| Melodic minor      | <ic>2122221</ic>|
-| Melodic major      | <ic>2212122</ic>|
-| Whole              | <ic>222222</ic> |
-| Blues minor        | <ic>321132</ic> |
-| Blues major        | <ic>211323</ic> |
+| Major      | <ic>2212221</ic> |
+| Minor      | <ic>2122122</ic> |
+| Minor pentatonic   | <ic>32232</ic>  |
+| Harmonic minor     | <ic>2122131</ic>|
+| Harmonic major     | <ic>2212131</ic>|
+| Melodic minor      | <ic>2122221</ic>|
+| Melodic major      | <ic>2212122</ic>|
+| Whole              | <ic>222222</ic> |
+| Blues minor        | <ic>321132</ic> |
+| Blues major        | <ic>211323</ic> |
 
 
 ${makeExample(
@@ -240,7 +240,7 @@ z1("s (0,8) 0 0 (0,5) 0 0").sound('sine')
   .scale('blues minor').fmi(2).fmh(2).room(0.5)
 	.size(0.5).sustain(0.25).delay(0.25)
 	.delay(0.25).delayfb(0.5).out();
-mod(1, 1.75) :: snd(['kick', 'hat'].div(1)).out()
+beat(1, 1.75) :: snd(['kick', 'hat'].beat(1)).out()
 `,
   true
 )}
@@ -258,7 +258,7 @@ z1("s ^ (0,8) 0 0 _ (0,5) 0 0").sound('sine')
   .scale('17/16 9/8 6/5 5/4 4/3 11/8 3/2 13/8 5/3 7/4 15/8 2/1').fmi(2).fmh(2).room(0.5)
 	.size(0.5).sustain(0.15).delay(0.1)
 	.delay(0.25).delayfb(0.5).out();
-mod(1, 1.75) :: snd(['kick', 'hat'].div(1)).out()
+beat(1, 1.75) :: snd(['kick', 'hat'].beat(1)).out()
 `,
   true
 )}
@@ -274,7 +274,7 @@ ${makeExample(
   `
 z0('w 0 8').sound('peri').out()
 z1('e 0 4 5 9').sound('bell').out()
-`,  
+`,
   true
 )}
 
@@ -283,7 +283,7 @@ ${makeExample(
   `
 z1('w 0 5').sound('pluck').release(0.1).sustain(0.25).out()
 z2('q 6 3').wait(z1).sound('sine').release(0.16).sustain(0.55).out()
-`,  
+`,
   true
 )}
 
@@ -292,12 +292,9 @@ ${makeExample(
   `
   z1('w __ 0 5 9 3').sound('bin').out()
   z2('q __ 4 2 e 6 3 q 6').sync(z1).sound('east').out()
-`,  
+`,
   true
 )}
-
-
-
 
 ## Examples
 	

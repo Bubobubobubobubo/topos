@@ -19,7 +19,7 @@ Some features are not part of the core of Topos but are still very useful. They 
 
 ${makeExample(
   "Hydra integration",
-  `mod(4) :: app.hydra.osc(3, 0.5, 2).out()`,
+  `beat(4) :: app.hydra.osc(3, 0.5, 2).out()`,
   true
 )}
 
@@ -34,8 +34,8 @@ Stopping **Hydra** is simple:
 ${makeExample(
   "Stopping Hydra",
   `
-mod(4) :: stop_hydra()     // this one
-mod(4) :: app.hydra.hush() // or this one
+beat(4) :: stop_hydra()     // this one
+beat(4) :: app.hydra.hush() // or this one
 `,
   true
 )}

@@ -23,7 +23,7 @@ const completionDatabase: CompletionDatabase = {
     name: "delayr",
     category: "time",
     description: "Delay a function <i>n</i> times by <i>t</i> ms",
-    example: "delayr(50, 3, () => mod(1) :: log('delayed'))",
+    example: "delayr(50, 3, () => beat(1) :: log('delayed'))",
   },
   toss: {
     name: "toss",
@@ -115,12 +115,12 @@ const completionDatabase: CompletionDatabase = {
     description: "Log a value in the console",
     example: "log('Hello, world')",
   },
-  div: {
-    name: "div",
+  flip: {
+    name: "flip",
     category: "patterns",
     description:
-      "Returns next value every <i>n</i> beats or true and false alternatively",
-    example: "div(4, 50) // 2 beats of true, 2 beats of false, 50/50.",
+      "Returns  true and false alternatively or next value every <i>n</i> beats (arrays)",
+    example: "flip(4, 50) // 2 beats of true, 2 beats of false, 50/50.",
   },
   n: {
     name: "n",
@@ -192,7 +192,7 @@ const completionDatabase: CompletionDatabase = {
     name: "coarse",
     category: "synthesis",
     description: "Artificial sample-rate lowering",
-    example: "mod(.5)::snd('pad').coarse($(1) % 16).clip(.5).out();",
+    example: "beat(.5)::snd('pad').coarse($(1) % 16).clip(.5).out();",
   },
   crush: {
     name: "crush",
@@ -242,12 +242,6 @@ const completionDatabase: CompletionDatabase = {
     category: "patterns",
     description: "Returns list index for the current bar (with wrapping)",
     example: "[0,1,2,3].bar()",
-  },
-  beat: {
-    name: "beat",
-    category: "patterns",
-    description: "Returns list index for the current beat (with wrapping)",
-    example: "[0,1,2,3].beat()",
   },
   room: {
     name: "room",
@@ -335,17 +329,17 @@ const completionDatabase: CompletionDatabase = {
     example:
       "oncount([1,2,3], 4) // true on beats 1, 2 and 3 in a 4 beats period",
   },
-  mod: {
-    name: "mod",
+  beat: {
+    name: "beat",
     category: "rhythm",
-    description: "return true every <i>n</i> pulsations.",
-    example: "mod(1) :: log(rand(1,5))",
+    description: "return true every <i>n</i> beats.",
+    example: "beat(1) :: log(rand(1,5))",
   },
-  modp: {
-    name: "modp",
+  pulse: {
+    name: "pulse",
     category: "rhythm",
-    description: "return true every <i>n</i> ticks.",
-    example: "modp(8) :: log(rand(1,5))",
+    description: "return true every <i>n</i> pulses.",
+    example: "pulse(8) :: log(rand(1,5))",
   },
   euclid: {
     name: "euclid",
@@ -368,7 +362,7 @@ const completionDatabase: CompletionDatabase = {
   binrhythm: {
     name: "binrhythm",
     category: "rhythm",
-    description: "Binary rhythm generator",
+    description: "Binary rhythm generator (time, number)",
     example: "binrhythm(.5, 9223) :: sound('cp').out()",
   },
   prob: {
@@ -399,61 +393,61 @@ const completionDatabase: CompletionDatabase = {
     name: "odds",
     category: "randomness",
     description: "Return true with a probability of <i>n</i> %",
-    example: "odds(1/2) // 50% probability"
+    example: "odds(1/2) // 50% probability",
   },
   never: {
     name: "never",
     category: "randomness",
     description: "Return false",
-    example: "never() // false"
+    example: "never() // false",
   },
   almostNever: {
     name: "almostNever",
     category: "randomness",
     description: "Return true with a probability of 2.5%",
-    example: "almostNever() // 2.5% chance"
+    example: "almostNever() // 2.5% chance",
   },
   rarely: {
     name: "rarely",
     category: "randomness",
     description: "Return true with a probability of 10%",
-    example: "rarely() // 10% chance"
+    example: "rarely() // 10% chance",
   },
   scarcely: {
     name: "scarcely",
     category: "randomness",
     description: "Return true with a probability of 25%",
-    example: "scarcely() // 25% chance"
+    example: "scarcely() // 25% chance",
   },
   sometimes: {
     name: "sometimes",
     category: "randomness",
     description: "Return true with a probability of 50%",
-    example: "sometimes() // 50% chance"
+    example: "sometimes() // 50% chance",
   },
   often: {
     name: "often",
     category: "randomness",
     description: "Return true with a probability of 75%",
-    example: "often() // 75% chance"
+    example: "often() // 75% chance",
   },
   frequently: {
     name: "frequently",
     category: "randomness",
     description: "Return true with a probability of 90%",
-    example: "frequently() // chance"
+    example: "frequently() // chance",
   },
   almostAlways: {
     name: "almostAlways",
     category: "randomness",
     description: "Return true with a probability of 98.5%",
-    example: "almostAlways() // 98.5% chance"
+    example: "almostAlways() // 98.5% chance",
   },
   always: {
     name: "always",
     category: "randomness",
     description: "Return true",
-    example: "always() // true"
+    example: "always() // true",
   },
   sound: {
     name: "sound",
@@ -484,7 +478,7 @@ const completionDatabase: CompletionDatabase = {
     name: "script",
     category: "core",
     description: "Execute one or more local scripts",
-    example: "mod(1) :: script(1)",
+    example: "beat(1) :: script(1)",
   },
   clear_script: {
     name: "clear_script",
@@ -510,18 +504,18 @@ const completionDatabase: CompletionDatabase = {
     description: "jumps to the <i>n</i> beat of the clock.",
     example: "beat_warp(1) :: log('back to the first beat!')",
   },
-  divbar: {
-    name: "divbar",
+  flipbar: {
+    name: "flipbar",
     category: "time",
     description:
-      "works just like <i>div</i> but at the level of bars instead of beats",
-    example: "divbar(2)::mod(1)::snd('kick').out()",
+      "works just like <i>flip</i> at the level of bars instead of beats",
+    example: "flipbar(2)::beat(1)::snd('kick').out()",
   },
   onbar: {
     name: "onbar",
     category: "time",
     description: "return true when targetted bar(s) is/are reached in period",
-    example: "onbar(4, 4)::mod(.5)::snd('hh').out();",
+    example: "onbar(4, 4)::beat(.5)::snd('hh').out();",
   },
   begin: {
     name: "begin",
@@ -629,7 +623,7 @@ const completionDatabase: CompletionDatabase = {
     name: "speak",
     category: "synthesis",
     description: "Text to speech synthesizer",
-    example: "mod(2) :: speak('Topos!','fr',irand(0,5))",
+    example: "beat(2) :: speak('Topos!','fr',irand(0,5))",
   },
   midi_outputs: {
     name: "midi_outputs",
@@ -775,11 +769,11 @@ const completionDatabase: CompletionDatabase = {
     description: "Multiply each element of the given array by a value",
     example: "[0,1,2,3].mul(2)",
   },
-  division: {
+  div: {
     name: "div",
     category: "patterns",
     description: "Divide each element of the given array by a value",
-    example: "[0,1,2,3].division(2)",
+    example: "[0,1,2,3].div(2)",
   },
   scale: {
     name: "scale",

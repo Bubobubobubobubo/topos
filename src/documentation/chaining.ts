@@ -16,7 +16,7 @@ All functions from the sound object can be used to modify the event, for example
 ${makeExample(
   "Modifying sound events with probabilities",
   `
-mod(.5) && sound('numbers')
+beat(.5) && sound('numbers')
   .odds(1/4, s => s.speed(irand(1,4)))
   .rarely(s => s.crush(3))
   .out()
@@ -27,7 +27,7 @@ ${makeExample(
   "Chance to change to a different note",
   `
 rhythm(.5, 3, 8) && sound('pluck').note(38).out()
-mod(.5) && sound('pluck').note(60)
+beat(.5) && sound('pluck').note(60)
   .often(s => s.note(57))
   .sometimes(s => s.note(64).n(irand(1,4)))
   .note(62)
@@ -41,7 +41,7 @@ All the functions from the MIDI object can be used to modify the event with prob
 
 ${makeExample(
   "Modifying midi events with probabilities",
-  `mod(.5) && midi(60).channel(1)
+  `beat(.5) && midi(60).channel(1)
   .odds(1/4, n => n.channel(2))
   .often(n => n.note+=4)
   .sometimes(s => s.velocity(irand(50,100)))
@@ -63,7 +63,7 @@ ${makeExample(
   "Ziffer player using a sound chain and probabilities!",
   `
 z1('s 0 5 7 0 3 7 0 2 7 0 1 7 0 1 6 5 4 3 2')
-  .octave([0, 1].div(2) - 1)
+  .octave([0, 1].beat(2) - 1)
   .scale('pentatonic').sound('pluck')
   .odds(1/4, n => n.delay(0.5).delayt(0.25))
   .odds(1/2, n => n.speed(0.5))

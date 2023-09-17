@@ -1,13 +1,25 @@
-import { defineConfig } from 'vite';
+import { defineConfig } from "vite";
 // import * as mdPlugin from 'vite-plugin-markdown';
 
-export default defineConfig({
-    assetsInclude: ['**/*.md'],
-    // plugins: [mdPlugin(options)],
-    build: {
-        chunkSizeWarningLimit: 1600
-    },
-	  preview: {
-			open: true
-		}
+export default defineConfig(({ command, mode, ssrBuild }) => {
+  if (command === "serve") {
+    return {
+      assetsInclude: ["**/*.md"],
+      server: {
+        port: 8000,
+        strictPort: true,
+      },
+    };
+  } else {
+    return {
+      chunkSizeWarningLimit: 1600 * 2,
+      build: {
+        outDir: "dist",
+        emptyOutDir: true,
+        cssCodeSplit: true,
+        cssMinify: true,
+        minify: true,
+      },
+    };
+  }
 });

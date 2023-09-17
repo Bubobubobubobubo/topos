@@ -16,17 +16,16 @@ ${makeExample(
 
 	
 bpm(110)
-mod(0.125) && sound('sawtooth')
-  .note([60, 62, 63, 67, 70].div(.125) + 
+beat(0.125) && sound('sawtooth')
+  .note([60, 62, 63, 67, 70].beat(.125) + 
         [-12,0,12].beat() + [0, 0, 5, 7].bar())
   .sustain(0.1).fmi(0.25).fmh(2).room(0.9)
   .gain(0.75).cutoff(500 + usine(8) * [500, 1000, 2000].bar())
   .delay(0.5).delayt(0.25).delayfb(0.25)
   .out();
-mod(1) && snd('kick').out();
-mod(2) && snd('snare').out();
-mod(.5) && snd('hat').out();
-
+beat(1) && snd('kick').out();
+beat(2) && snd('snare').out();
+beat(.5) && snd('hat').out();
 `,
   true
 )}
@@ -39,16 +38,16 @@ Topos is an _algorithmic_ sequencer. Topos uses small algorithms to represent mu
 ${makeExample(
   "Small algorithms for direct musical expression",
   `
-mod(1) :: sound(['kick', 'hat', 'snare', 'hat'].div(1)).out()
-mod(.5) :: sound('jvbass').note(35 + [0,12].beat()).out()
-mod([0.5, 0.25, 1, 2].div(1)) :: sound('east')
+beat(1) :: sound(['kick', 'hat', 'snare', 'hat'].beat(1)).out()
+beat(.5) :: sound('jvbass').note(35 + [0,12].beat()).out()
+beat([0.5, 0.25, 1, 2].beat(1)) :: sound('east')
   .room(.5).size(0.5).n(irand(1,5)).out()`,
   false
 )}
 
 ${makeExample(
   "Computer music should be immediate and intuitive",
-  `mod(.5)::snd('sine')
+  `beat(.5)::snd('sine')
   .delay(0.5).delayt(0.25).delayfb(0.7)
   .room(0.8).size(0.8)
   .freq(mouseX()).out()`,
@@ -58,9 +57,9 @@ ${makeExample(
 ${makeExample(
   "Making the web less dreadful, one beep at at time",
   `
-mod(.5) :: sound('sid').n($(2)).out()
-mod(.25) :: sound('sid').note(
-  [34, 36, 41].div(.25) + [[0,-24].pick(),12].beat())
+beat(.5) :: sound('sid').n($(2)).out()
+beat(.25) :: sound('sid').note(
+  [34, 36, 41].beat(.25) + [[0,-24].pick(),12].beat())
   .room(0.9).size(0.9).n(4).out()`,
   false
 )}

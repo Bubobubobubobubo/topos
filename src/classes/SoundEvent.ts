@@ -10,8 +10,19 @@ import {
 export class SoundEvent extends AudibleEvent {
   constructor(sound: string | object, public app: Editor) {
     super(app);
-    if (typeof sound === "string") this.values = { s: sound, dur: 0.5 };
-    else this.values = sound;
+    if (typeof sound === "string") {
+      if (sound.includes(":")) {
+        this.values = {
+          s: sound.split(":")[0],
+          n: sound.split(":")[1],
+          dur: 0.5,
+        };
+      } else {
+        this.values = { s: sound, dur: 0.5 };
+      }
+    } else {
+      this.values = sound;
+    }
   }
 
   private updateValue<T>(key: string, value: T): this {
@@ -103,11 +114,13 @@ export class SoundEvent extends AudibleEvent {
   public begin = (value: number) => this.updateValue("begin", value);
   public end = (value: number) => this.updateValue("end", value);
   public gain = (value: number) => this.updateValue("gain", value);
-  public dbgain = (value: number) => this.updateValue("gain", Math.min(Math.pow(10, value / 20), 10));
+  public dbgain = (value: number) =>
+    this.updateValue("gain", Math.min(Math.pow(10, value / 20), 10));
   public db = this.dbgain;
   public cutoff = (value: number) => this.updateValue("cutoff", value);
   public lpf = this.cutoff;
-  public resonance = (value: number) => this.updateValue("resonance", Math.min(Math.max(value, 0), 50));
+  public resonance = (value: number) =>
+    this.updateValue("resonance", Math.min(Math.max(value, 0), 50));
   public lpq = this.resonance;
   public hcutoff = (value: number) => this.updateValue("hcutoff", value);
   public hpf = this.hcutoff;
@@ -164,9 +177,9 @@ export class SoundEvent extends AudibleEvent {
   };
 
   out = (): void => {
-    if(this.values.chord) {
+    if (this.values.chord) {
       this.values.chord.forEach((freq: number) => {
-        const copy = {...this.values};
+        const copy = { ...this.values };
         copy.freq = freq;
         superdough(copy, 1 / 4, this.values.dur || 0.5);
       });
