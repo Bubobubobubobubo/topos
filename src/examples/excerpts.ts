@@ -1,4 +1,15 @@
 export const examples = [
+  `// Acidity test - BuboBuboBubo
+beat(.25) :: sound('wt_symetric:8')
+  .note([50,55,57,60].beat(.25) - [12,0].pick())
+  .ftype('12db').adsr(0.05/4, 1/16, 0.25/4, 0)
+  .cutoff(1500 + usine(1/8) * 5000)
+  .lpadsr(16, 0.2, 0.2, 0.125/2, 0)
+  .room(0.9).size(0.9).resonance(20)
+  .gain(0.3).out()
+beat(1) :: sound('kick').n(4).out()
+beat(2) :: sound('snare').out()
+beat(.5) :: sound('hh').out()`,
   `// Entering the secret room - Bubobubobubo
 let frequencies = [200,400,600,800,1000,2000].beat(2);
 beat(2) :: sound('sine').freq(frequencies)

@@ -93,16 +93,23 @@ export class SoundEvent extends AudibleEvent {
   public sus = this.sustain;
   public release = (value: number) => this.updateValue("release", value);
   public rel = this.release;
+  public adsr = (a: number, d: number, s: number, r: number) => {
+    this.attack(a);
+    this.decay(d);
+    this.sustain(s);
+    this.release(r);
+    return this;
+  };
 
   // Lowpass filter
   public lpenv = (value: number) => this.updateValue("lpenv", value);
-  public lpe = (value: number) => this.updateValue("lpe", value);
+  public lpe = (value: number) => this.updateValue("lpenv", value);
   public lpattack = (value: number) => this.updateValue("lpattack", value);
   public lpa = this.lpattack;
-  public lbdecay = (value: number) => this.updateValue("lbdecay", value);
-  public lbd = this.lbdecay;
+  public lpdecay = (value: number) => this.updateValue("lbdecay", value);
+  public lpd = this.lpdecay;
   public lpsustain = (value: number) => this.updateValue("lpsustain", value);
-  public lpsus = this.lpsustain;
+  public lps = this.lpsustain;
   public lprelease = (value: number) => this.updateValue("lprelease", value);
   public lpr = this.lprelease;
   public cutoff = (value: number) => this.updateValue("cutoff", value);
@@ -110,6 +117,20 @@ export class SoundEvent extends AudibleEvent {
   public resonance = (value: number) =>
     this.updateValue("resonance", Math.min(Math.max(value, 0), 50));
   public lpq = this.resonance;
+  public lpadsr = (
+    depth: number,
+    a: number,
+    d: number,
+    s: number,
+    r: number
+  ) => {
+    this.lpenv(depth);
+    this.lpattack(a);
+    this.lpdecay(d);
+    this.lpsustain(s);
+    this.lprelease(r);
+    return this;
+  };
 
   // Highpass filter
 
@@ -127,6 +148,20 @@ export class SoundEvent extends AudibleEvent {
   public hpf = this.hcutoff;
   public hresonance = (value: number) => this.updateValue("hresonance", value);
   public hpq = this.hresonance;
+  public hpadsr = (
+    depth: number,
+    a: number,
+    d: number,
+    s: number,
+    r: number
+  ) => {
+    this.hpenv(depth);
+    this.hpattack(a);
+    this.hpdecay(d);
+    this.hpsustain(s);
+    this.hprelease(r);
+    return this;
+  };
 
   // Bandpass filter
 
@@ -144,6 +179,20 @@ export class SoundEvent extends AudibleEvent {
   public bpf = this.bandf;
   public bandq = (value: number) => this.updateValue("bandq", value);
   public bpq = this.bandq;
+  public bpadsr = (
+    depth: number,
+    a: number,
+    d: number,
+    s: number,
+    r: number
+  ) => {
+    this.bpenv(depth);
+    this.bpattack(a);
+    this.bpdecay(d);
+    this.bpsustain(s);
+    this.bprelease(r);
+    return this;
+  };
 
   public freq = (value: number) => this.updateValue("freq", value);
   public f = this.freq;

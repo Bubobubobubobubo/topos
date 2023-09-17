@@ -6,16 +6,145 @@ export const synths = (application: Editor): string => {
   return `
 # Synthesizers
 	
-Topos comes with a small number of basic synthesizers. These synths are based on a basic [WebAudio](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API) design. For heavy synthesis duties, please use MIDI and speak to more complex instruments.
+Topos comes by default with a forever-increasing number of synthesis capabilities. These synths are based on basic [WebAudio](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API) designs. For heavy synthesis duties, I recommend you to user other synthesizers or softwares through MIDI. There is already a lot you can do with the built-in synths though!
 	
-# Substractive Synthesis
+# Timbre, pitch and frequency
 	
-The <ic>sound</ic> function can take the name of a synthesizer as first argument.
-- <ic>sine</ic>, <ic>sawtooth</ic>,<ic>triangle</ic>, <ic>square</ic> for the waveform selection.
-- <ic>cutoff</ic> and <ic>resonance</ic> for adding a low-pass filter with cutoff frequency and filter resonance.
-  - <ic>hcutoff</ic> or <ic>bandf</ic> to switch to a high-pass or bandpass filter.
-	- <ic>hresonance</ic> and <ic>bandq</ic> for the resonance parameter of these filters.
-	
+The <ic>sound</ic> function can take the name of a synthesizer or waveform as first argument. This has for effect to turn the sampler we all know and love into a synthesizer. <ic>sine</ic>, <ic>sawtooth</ic>,<ic>triangle</ic>, <ic>square</ic> are the names used to select classic oscillator waveforms. Note that you can also make use of filters and envelopes to shape the sound to your liking.
+
+${makeExample(
+  "Listening to the different waveforms from the sweetest to the harshest",
+  `
+beat(.5) && snd(['sine', 'triangle', 'sawtooth', 'square'].beat()).freq(100).out()
+`,
+  true
+)}
+
+Two functions are primarily used to control the frequency of the synthesizer:
+- <ic>freq(hz: number)</ic>: sets the frequency of the oscillator.
+- <ic>note(note: number)</ic>: sets the MIDI note of the oscillator (MIDI note converted to hertz).
+
+${makeExample(
+  "Selecting a pitch or note",
+  `
+beat(.5) && snd('triangle').freq([100,200,400].beat(2)).out()
+`,
+  true
+)}
+
+## Vibrato
+
+You can also add some amount of vibrato to the sound using the <ic>vib</ic> and <ic>vibmod</ic> methods. These can turn any oscillator into something more lively and/or into a sound effect when used with a high amount of modulation.
+
+${makeExample(
+  "Different vibrato settings",
+  `beat(1) :: sound('triangle')
+  .freq(400).release(0.2)
+  .vib([1/2, 1, 2, 4].beat())
+  .vibmod([1,2,4,8].beat(2))
+  .out()`,
+  true
+)}
+
+## Controlling the amplitude
+
+Controlling the amplitude and duration of the sound can be done using various techniques. The most important thing to learn is probably how set the amplitude (volume) of your synthesizer:
+- <ic>gain(gain: number)</ic>: sets the gain of the oscillator.
+- <ic>velocity(velocity: number)</ic>: sets the velocity of the oscillator (velocity is a multiple of gain).
+
+${makeExample(
+  "Setting the gain",
+  `beat(0.25) :: sound('sawtooth').gain([0.0, 1/8, 1/4, 1/2, 1].beat(0.5)).out()`,
+  true
+)}
+
+${makeExample(
+  "Setting the velocity",
+  `beat(0.25) :: sound('sawtooth').velocity([0.0, 1/8, 1/4, 1/2, 1].beat(0.5)).out()`,
+  true
+)}
+
+<div class="mt-4 mb-4 lg:grid lg:grid-cols-4 lg:gap-4">
+  <img class="col-span-1 lg:ml-12 bg-gray-100 rounded-lg px-2 py-2", src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/ADSR_Envelope_Graph.svg/1280px-ADSR_Envelope_Graph.svg.png" width="400" />
+  <z class="pl-8 lg:text-2xl text-base text-white lg:mx-6 mx-2 my-4 leading-normal col-span-3 ">Synthesizers typically come with an amplitude envelope that can help you to shape the sound with a slow attack or long release. This is done in Topos using the amplitude envelope, composed of four parameters: <ic>attack</ic>, <ic>decay</ic>, <ic>sustain</ic> and <ic>release</ic>:</z> 
+</div>
+
+- <ic>attack(attack: number)</ic> / <ic>atk(atk: number)</ic>: sets the attack time of the envelope.
+- <ic>decay(decay: number)</ic> / <ic>dec(dec: number)</ic>: sets the decay time of the envelope.
+- <ic>sustain(sustain: number)</ic> / <ic>sus(sus: number)</ic>: sets the sustain time of the envelope.
+- <ic>release(release: number)</ic> / <ic>rel(rel: number)</ic>: sets the release time of the envelope.
+
+${makeExample(
+  "Using decay and sustain to set the ADSR envelope",
+  `
+beat(0.5) :: sound('sawtooth')
+  .cutoff(1000 + usine() * 4000)
+  .freq([50,100,150,300].pick())
+  .decay(.1).sustain([0.25,0.5].pick())
+  .out()`,
+  true
+)}
+
+This ADSR envelope design is important to know because it is used for other aspects of the synthesis engine such as the filters that we are now going to talk about.
+
+## Substractive synthesis using filters
+
+The most basic synthesis technique used since the 1970s is called substractive synthesis. This technique is based on the use of rich sound sources (oscillators) as a base to build rich and moving timbres. Because rich sources contain a lot of different harmonics, you might want to filter some of them to obtain the timbre you are looking for. To do so, Topos comes with a set of basic filters that can be used to shape the sound exactly to your liking. There are three filter types by defaut, with more to be added in the future:
+
+- **lowpass filter**: filters the high frequencies, keeping the low frequencies.
+- **highpass filter**: filtering the low frequencies, keeping the high frequencies.
+- **bandpass filter**: filters the low and high frequencies around a frequency band, keeping what's in the middle.
+
+${makeExample(
+  "Filtering the high frequencies of an oscillator",
+  `beat(.5) :: sound('sawtooth').cutoff(50 + usine(1/8) * 2000).out()`,
+  true
+)}
+
+These filters all come with their own set of parameters. Note that we are describing the parameters of the three different filter types here. Choose the right parameters depending on the filter type you are using:
+
+
+### Lowpass filter
+
+| Method     | Alias     | Description                     |
+|------------|-----------|---------------------------------|
+| cutoff     | lpf       | cutoff frequency of the lowpass filter |
+| resonance  | lpq       | resonance of the lowpass filter |
+
+${makeExample(
+  "Filtering a bass",
+  `beat(.5) :: sound('jvbass').lpf([250,1000,8000].beat()).out()`,
+  true
+)}
+
+### Highpass filter
+
+| Method     | Alias     | Description                     |
+|------------|-----------|---------------------------------|
+| hcutoff     | hpf       | cutoff frequency of the highpass filter |
+| hresonance  | hpq       | resonance of the highpass filter |
+
+${makeExample(
+  "Filtering a noise source",
+  `beat(.5) :: sound('gtr').hpf([250,1000, 2000, 3000, 4000].beat()).end(0.5).out()`,
+  true
+)}
+
+### Bandpass filter
+
+| Method     | Alias     | Description                     |
+|------------|-----------|---------------------------------|
+| bandf      | bpf       | cutoff frequency of the bandpass filter |
+| bandq      | bpq       | resonance of the bandpass filter |
+
+${makeExample(
+  "Sweeping the filter on the same guitar sample",
+  `beat(.5) :: sound('gtr').bandf(100 + usine(1/8) * 4000).end(0.5).out()`,
+  true
+)}
+
+I also encourage you to study these simple examples to get more familiar with the construction of basic substractive synthesizers:
+
 ${makeExample(
   "Simple synthesizer voice with filter",
   `
@@ -28,16 +157,6 @@ beat(.5) && snd('sawtooth')
 )}
 
 ${makeExample(
-  "Listening to the different waveforms from the sweetest to the harshest",
-  `
-beat(.5) && snd(['sine', 'triangle', 'sawtooth', 'square'].beat()).freq(100).out()
-  .freq(50)
-  .out()`,
-  false
-)}
-
-
-${makeExample(
   "Blessed by the square wave",
   `
 beat(4) :: [100,101].forEach((freq) => sound('square').freq(freq).sustain(0.1).out())
@@ -47,7 +166,6 @@ beat([.5, .75, 2].beat()) :: [100,101].forEach((freq) => sound('square')
 beat(.25) :: sound('square').freq(100*[1,2,4,8].beat()).sustain(0.1).out()`,
   false
 )}
-
 
 ${makeExample(
   "Ghost carillon",
@@ -61,6 +179,79 @@ beat(1/8)::sound('sine')
 	.gain(0.25)
   .out()`,
   false
+)}
+
+## Filter envelopes
+
+The examples we have studied so far are static. They filter the sound around a fixed cutoff frequency. To make the sound more interesting, you can use the ADSR filter envelopes to shape the filter cutoff frequency over time. You will always find amplitude and filter envelopes on most commercial synthesizers. This is done using the following methods:
+
+### Lowpass envelope
+
+| Method     | Alias     | Description                     |
+|------------|-----------|---------------------------------|
+| lpenv      | lpe       | lowpass frequency modulation amount (negative or positive) |
+| lpattack   | lpa       | attack of the lowpass filter    |
+| lpdecay    | lpd       | decay of the lowpass filter     |
+| lpsustain  | lps       | sustain of the lowpass filter   |
+| lprelease  | lpr       | release of the lowpass filter   |
+
+${makeExample(
+  "Filtering a sawtooth wave dynamically",
+  `beat(.5) :: sound('sawtooth').note([48,60].beat())
+  .cutoff(5000).lpa([0.05, 0.25, 0.5].beat(2))
+  .lpenv(-8).lpq(10).out()`,
+  true
+)}
+
+### Highpass envelope
+
+| Method     | Alias     | Description                     |
+|------------|-----------|---------------------------------|
+| hpenv      | hpe       | highpass frequency modulation amount (negative or positive) |
+| hpattack   | hpa       | attack of the highpass filter    |
+| hpdecay    | hpd       | decay of the highpass filter     |
+| hpsustain  | hps       | sustain of the highpass filter   |
+| hprelease  | hpr       | release of the highpass filter   |
+
+${makeExample(
+  "Let's use another filter using the same example",
+  `beat(.5) :: sound('sawtooth').note([48,60].beat())
+  .hcutoff(1000).hpa([0.05, 0.25, 0.5].beat(2))
+  .hpenv(8).hpq(10).out()`,
+  true
+)}
+
+### Bandpass envelope
+
+| Method     | Alias     | Description                     |
+|------------|-----------|---------------------------------|
+| bpenv      | bpe       | bandpass frequency modulation amount (negative or positive) |
+| bpattack   | bpa       | attack of the bandpass filter    |
+| bpdecay    | bpd       | decay of the bandpass filter     |
+| bpsustain  | bps       | sustain of the bandpass filter   |
+| bprelease  | bpr       | release of the bandpass filter   |
+
+${makeExample(
+  "And the bandpass filter, just for fun",
+  `beat(.5) :: sound('sawtooth').note([48,60].beat())
+  .bandf([500,1000,2000].beat(2))
+  .bpa([0.25, 0.125, 0.5].beat(2) * 4)
+  .bpenv(-4).release(2).out()
+  `,
+  true
+)}
+
+
+## Wavetable synthesis
+
+${makeExample(
+  "Acidity test",
+  `
+beat(.25) :: sound('wt_symetric:8').note([50,55,57,60].beat(.25) - [12,0].pick()).ftype('12db').adsr(0.05/4, 1/16, 0.25/4, 0)
+  .cutoff(1500 + usine(1/8) * 5000).lpadsr(16, 0.2, 0.2, 0.125/2, 0).room(0.9).size(0.9).resonance(20).gain(0.3).out()
+beat(1) :: sound('kick').n(4).out()
+beat(2) :: sound('snare').out()
+beat(.5) :: sound('hh').out()`
 )}
 	
 	

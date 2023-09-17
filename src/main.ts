@@ -35,6 +35,7 @@ import { makeStringExtensions } from "./StringExtensions";
 const classMap = {
   h1: "text-white lg:text-4xl text-xl lg:ml-4 lg:mx-4 mx-2 lg:my-4 my-2 lg:mb-4 mb-4 bg-neutral-900 rounded-lg py-2 px-2",
   h2: "text-white lg:text-3xl text-xl lg:ml-4 lg:mx-4 mx-2 lg:my-4 my-2 lg:mb-4 mb-4 bg-neutral-900 rounded-lg py-2 px-2",
+  h3: "text-white lg:text-2xl text-xl lg:ml-4 lg:mx-4 mx-2 lg:my-4 my-2 lg:mb-4 mb-4 bg-neutral-700 rounded-lg py-2 px-2 lg:mt-16",
   ul: "text-underline pl-6",
   li: "list-disc lg:text-2xl text-base text-white lg:mx-4 mx-2 my-4 my-2 leading-normal",
   p: "lg:text-2xl text-base text-white lg:mx-6 mx-2 my-4 leading-normal",
@@ -51,7 +52,7 @@ const classMap = {
     "lg:mx-12 py-2 px-6 lg:text-2xl text-white rounded-lg bg-neutral-600",
   summary: "font-semibold text-xl",
   table:
-    "justify-center lg:my-8 my-2 lg:mx-8 mx-2 lg:text-2xl text-base w-full text-left text-white border-collapse",
+    "justify-center lg:my-12 my-2 lg:mx-12 mx-2 lg:text-2xl text-base w-full text-left text-white border-collapse",
   thead:
     "text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400",
   th: "",
@@ -367,9 +368,7 @@ export class Editor {
       }
 
       // Shift + Ctrl + Enter: Evaluate the currently visible code block
-      if (
-        (event.key === "Enter" && event.shiftKey && event.ctrlKey))
-      {
+      if (event.key === "Enter" && event.shiftKey && event.ctrlKey) {
         event.preventDefault();
         this.currentFile().candidate = this.view.state.doc.toString();
         tryEvaluate(this, this.currentFile());

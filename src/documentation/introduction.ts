@@ -1,5 +1,6 @@
 import { makeExampleFactory, key_shortcut } from "../Documentation";
 import { type Editor } from "../main";
+import { examples } from "../examples/excerpts";
 
 export const introduction = (application: Editor): string => {
   const makeExample = makeExampleFactory(application);
@@ -12,24 +13,9 @@ Welcome to the Topos documentation. These pages are offering you an introduction
 
 ${makeExample(
   "Welcome! Eval to get started",
-  `
-
-	
-bpm(110)
-beat(0.125) && sound('sawtooth')
-  .note([60, 62, 63, 67, 70].beat(.125) + 
-        [-12,0,12].beat() + [0, 0, 5, 7].bar())
-  .sustain(0.1).fmi(0.25).fmh(2).room(0.9)
-  .gain(0.75).cutoff(500 + usine(8) * [500, 1000, 2000].bar())
-  .delay(0.5).delayt(0.25).delayfb(0.25)
-  .out();
-beat(1) && snd('kick').out();
-beat(2) && snd('snare').out();
-beat(.5) && snd('hat').out();
-`,
+  examples[Math.floor(Math.random() * examples.length)],
   true
 )}
-
 	
 ## What is Topos?
 	
