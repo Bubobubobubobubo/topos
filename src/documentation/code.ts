@@ -34,12 +34,12 @@ ${makeExample(
   "Shortening your if conditions",
   `
 // The && symbol (overriden by :: in Topos) is very often used for conditions!
-mod(.75) :: snd('linnhats').n([1,4,5].beat()).out()
-mod(1) :: snd('bd').out()
+beat(.75) :: snd('linnhats').n([1,4,5].beat()).out()
+beat(1) :: snd('bd').out()
 //if (true) && log('very true')
 // These two lines are the same:
-// mod(1) && snd('bd').out() 
-//// mod(1) :: snd('bd').out() 
+// beat(1) && snd('bd').out() 
+//// beat(1) :: snd('bd').out() 
 
 `,
   true
@@ -49,7 +49,7 @@ ${makeExample(
   "More complex conditions using ?",
   `
 // The ? symbol can be used to write a if/true/false condition
-mod(4) ? snd('kick').out() : mod(2)::snd('snare').out()
+beat(4) ? snd('kick').out() : beat(2) :: snd('snare').out()
 // (true) ? log('very true') : log('very false')
 `,
   false
@@ -60,13 +60,11 @@ ${makeExample(
   "Using not and other short symbols",
   `
 // The ! symbol can be used to reverse a condition
-mod(4) ? snd('kick').out() : mod(2)::snd('snare').out()
-!mod(2) :: mod(0.5)::snd('clap').out()
+beat(4) ? snd('kick').out() : beat(2) :: snd('snare').out()
+!beat(2) :: beat(0.5) :: snd('clap').out()
 `,
   false
 )}
-
-
 
 ## About crashes and bugs
 	

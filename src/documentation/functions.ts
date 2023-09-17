@@ -86,7 +86,7 @@ You can control scripts programatically. This is the core concept of Topos after
 ${makeExample(
   "Calling a script! The most important feature!",
   `
-mod(1) :: script(1)
+beat(1) :: script(1)
 `,
   true
 )}
@@ -94,7 +94,7 @@ mod(1) :: script(1)
 ${makeExample(
   "Calling mutliple scripts at the same time.",
   `
-mod(1) :: script(1, 3, 5)
+beat(1) :: script(1, 3, 5)
 `,
   false
 )}
@@ -111,7 +111,7 @@ You can get the current position of the mouse on the screen by using the followi
 ${makeExample(
   "FM Synthesizer controlled using the mouse",
   `
-mod(.25) :: sound('sine')
+beat(.25) :: sound('sine')
   .fmi(mouseX() / 100)
   .fmh(mouseY() / 100)
   .vel(0.2)
@@ -129,7 +129,7 @@ Current mouse position can also be used to generate notes:
 ${makeExample(
   "The same synthesizer, with note control!",
   `
-mod(.25) :: sound('sine')
+beat(.25) :: sound('sine')
   .fmi(mouseX() / 100)
   .note(noteX())
   .fmh(mouseY() / 100)
@@ -148,7 +148,7 @@ Low Frequency Oscillators (_LFOs_) are an important piece in any digital audio w
 	
 ${makeExample(
   "Modulating the speed of a sample player using a sine LFO",
-  `mod(.25) && snd('cp').speed(1 + usine(0.25) * 2).out()`,
+  `beat(.25) && snd('cp').speed(1 + usine(0.25) * 2).out()`,
   true
 )};
 
@@ -158,7 +158,7 @@ ${makeExample(
 
 ${makeExample(
   "Modulating the speed of a sample player using a triangle LFO",
-  `mod(.25) && snd('cp').speed(1 + utriangle(0.25) * 2).out()`,
+  `beat(.25) && snd('cp').speed(1 + utriangle(0.25) * 2).out()`,
   true
 )}
 	
@@ -168,7 +168,7 @@ ${makeExample(
 
 ${makeExample(
   "Modulating the speed of a sample player using a saw LFO",
-  `mod(.25) && snd('cp').speed(1 + usaw(0.25) * 2).out()`,
+  `beat(.25) && snd('cp').speed(1 + usaw(0.25) * 2).out()`,
   true
 )}
 	
@@ -177,7 +177,7 @@ ${makeExample(
 	
 ${makeExample(
   "Modulating the speed of a sample player using a square LFO",
-  `mod(.25) && snd('cp').speed(1 + usquare(0.25, 0, 0.25) * 2).out()`,
+  `beat(.25) && snd('cp').speed(1 + usquare(0.25, 0, 0.25) * 2).out()`,
   true
 )};
 	
@@ -185,7 +185,7 @@ ${makeExample(
 	
 ${makeExample(
   "Modulating the speed of a sample player using noise",
-  `mod(.25) && snd('cp').speed(1 + noise() * 2).out()`,
+  `beat(.25) && snd('cp').speed(1 + noise() * 2).out()`,
   true
 )};
 	
@@ -254,8 +254,8 @@ ${makeExample(
 ${makeExample(
   "Using chance with other operators",
   `
-  frequently() :: mod(1) :: sound('kick').out();
-  often() :: mod(0.5) :: sound('hh').out();
+  frequently() :: beat(1) :: sound('kick').out();
+  often() :: beat(0.5) :: sound('hh').out();
   sometimes() :: onbeat(1,3) :: sound('snare').out();
   `,
   true
@@ -264,12 +264,12 @@ ${makeExample(
 ${makeExample(
   "Using chance with chaining",
   `
-  mod(0.5) && sound("bd")
+  beat(0.5) && sound("bd")
   .freq(100)
   .sometimes(s=>s.crush(2.5))
   .out()
 
-  mod(0.5) && sound('arp').freq(100)
+  beat(0.5) && sound('arp').freq(100)
   .sometimes(n=>n.freq(200).delay(0.5))
   .rarely(n=>n.freq(300).delay(2.5))
   .almostNever(n=>n.freq(400))
@@ -293,8 +293,8 @@ ${makeExample(
   "Phased woodblocks",
   `
 // Some very low-budget version of phase music
-mod(.5) :: delay(usine(.125) * 80, () => sound('east').out())
-mod(.5) :: delay(50, () => sound('east').out())
+beat(.5) :: delay(usine(.125) * 80, () => sound('east').out())
+beat(.5) :: delay(50, () => sound('east').out())
 `,
   true
 )}
@@ -304,8 +304,8 @@ mod(.5) :: delay(50, () => sound('east').out())
 ${makeExample(
   "Another woodblock texture",
   `
-mod(1) :: delayr(50, 4, () => sound('east').speed([0.5,.25].beat()).out())
-div(2) :: mod(2) :: delayr(150, 4, () => sound('east').speed([0.5,.25].beat() * 4).out())
+beat(1) :: delayr(50, 4, () => sound('east').speed([0.5,.25].beat()).out())
+flip(2) :: beat(2) :: delayr(150, 4, () => sound('east').speed([0.5,.25].beat() * 4).out())
 `,
   true
 )};

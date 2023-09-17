@@ -35,8 +35,8 @@ Every Topos session is composed of several small scripts. A set of scripts is ca
 ${makeExample(
   "To take the most out of Topos...",
   `// Write your code in multiple scripts. Use all the code buffers!
-mod(1) :: script(1)
-div(4) :: mod(.5) :: script(2)
+beat(1) :: script(1)
+flip(4) :: beat(.5) :: script(2)
 `,
   true
 )}
@@ -44,8 +44,8 @@ div(4) :: mod(.5) :: script(2)
 ${makeExample(
   "Script execution can become musical too!",
   `// You can play your scripts... algorithmically.
-mod(1) :: script([1,3,5].pick())
-div(4) :: mod([.5, .25].div(16)) :: script([5,6,7,8].loop($(2)))
+beat(1) :: script([1,3,5].pick())
+flip(4) :: beat([.5, .25].beat(16)) :: script([5,6,7,8].loop($(2)))
 `,
   false
 )}

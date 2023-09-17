@@ -6,7 +6,7 @@ declare global {
     add(amount: number): number[];
     sub(amount: number): number[];
     mult(amount: number): number[];
-    division(amount: number): number[];
+    div(amount: number): number[];
     palindrome(): T[];
     random(index: number): T;
     rand(index: number): T;
@@ -14,12 +14,11 @@ declare global {
     repeatAll(amount: number): T;
     repeatPair(amount: number): T;
     repeatOdd(amount: number): T;
-    beat(): T;
+    beat(division: number): T;
     bar(): T;
     pulse(): T;
     pick(): T;
     loop(index: number): T;
-    div(division: number): T;
     shuffle(): this;
     rotate(steps: number): this;
     unique(): this;
@@ -75,7 +74,7 @@ export const makeArrayExtensions = (api: UserAPI) => {
     return this.map((x: number) => x * amount);
   };
 
-  Array.prototype.division = function (amount: number): number[] {
+  Array.prototype.div = function (amount: number): number[] {
     /**
      * @param amount - The value to divide each element in the array by.
      * @returns New array with divided values. Throws if division by zero.
@@ -93,15 +92,6 @@ export const makeArrayExtensions = (api: UserAPI) => {
     return this[Math.floor(api.randomGen() * this.length)];
   };
 
-  Array.prototype.beat = function (beat: number = 1) {
-    /**
-     * Returns the element corresponding to the current beat
-     *
-     * @returns The element corresponding to the current beat
-     */
-    return this[(api.app.clock.beats_since_origin  / beat) % this.length];
-  };
-
   Array.prototype.gen = function (min: number, max: number, times: number) {
     /**
      * Returns an array of random numbers.
@@ -110,10 +100,13 @@ export const makeArrayExtensions = (api: UserAPI) => {
      * @param times - The number of random numbers to generate
      * @returns An array of random numbers
      */
-    if(times < 1) {
+    if (times < 1) {
       return [];
     }
-    return Array.from({ length: times }, () => Math.floor(api.randomGen() * (max - min + 1)) + min);
+    return Array.from(
+      { length: times },
+      () => Math.floor(api.randomGen() * (max - min + 1)) + min
+    );
   };
 
   Array.prototype.bar = function () {
@@ -134,7 +127,7 @@ export const makeArrayExtensions = (api: UserAPI) => {
     return this[api.app.clock.time_position.pulse % this.length];
   };
 
-  Array.prototype.div = function (divisor: number) {
+  Array.prototype.beat = function (divisor: number = 1) {
     const chunk_size = divisor; // Get the first argument (chunk size)
     const timepos = api.app.clock.pulses_since_origin;
     const slice_count = Math.floor(

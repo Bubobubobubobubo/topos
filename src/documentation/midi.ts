@@ -81,10 +81,10 @@ ${makeExample(
   "Playing some piano",
   `
 bpm(80) // Setting a default BPM
-mod(.5) && midi(36 + seqbeat(0,12)).sustain(0.02).out()
-mod(.25) && midi([64, 76].pick()).sustain(0.05).out()
-mod(.75) && midi(seqbeat(64, 67, 69)).sustain(0.05).out()
-sometimes() && mod(.25) && midi(seqbeat(64, 67, 69) + 24).sustain(0.05).out()
+beat(.5) && midi(36 + [0,12].beat()).sustain(0.02).out()
+beat(.25) && midi([64, 76].pick()).sustain(0.05).out()
+beat(.75) && midi([64, 67, 69].beat()).sustain(0.05).out()
+beat(.25) && midi([64, 67, 69].beat() + 24).sustain(0.05).out()
 `,
   true
 )}
@@ -133,7 +133,7 @@ sysex(0x90, 0x40, 0x7f)
 ${makeExample(
   "Tic, tac, tic, tac...",
   `
-mod(.25) && midi_clock() // Sending clock to MIDI device from the global buffer
+beat(.25) && midi_clock() // Sending clock to MIDI device from the global buffer
 `,
   true
 )}

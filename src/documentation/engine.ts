@@ -15,8 +15,8 @@ The basic function to play a sound is... <ic>sound(name: string)</ic> (you can a
 ${makeExample(
   "Playing sounds is easy",
   `
-mod(1) && sound('bd').out()
-mod(0.5) && sound('hh').out()
+beat(1) && sound('bd').out()
+beat(0.5) && sound('hh').out()
 `,
   true
 )}
@@ -31,8 +31,8 @@ Let's make it slightly more complex:
 ${makeExample(
   "Adding some effects",
   `
-mod(1) && sound('bd').coarse(0.25).room(0.5).orbit(2).out();
-mod(0.5) && sound('hh').delay(0.25).delaytime(0.125).out();
+beat(1) && sound('bd').coarse(0.25).room(0.5).orbit(2).out();
+beat(0.5) && sound('hh').delay(0.25).delaytime(0.125).out();
 `,
   true
 )}
@@ -51,7 +51,7 @@ Let's pause for a moment to explain what we just wrote. There are many things to
 ${makeExample(
   '"Composing" a sound or making a sound chain',
   `
-mod(1) :: sound('pad')
+beat(1) :: sound('pad')
   .begin(rand(0, 0.4))
   .freq([50,52].beat())
   .size(0.9)
@@ -85,7 +85,7 @@ The <ic>.n(number)</ic> method can be used to pick a sample from the currently s
 ${makeExample(
   "Picking a sample",
   `
-mod(1) && sound('kick').n([1,2,3,4,5,6,7,8].pick()).out()
+beat(1) && sound('kick').n([1,2,3,4,5,6,7,8].pick()).out()
 `,
   true
 )}
@@ -96,7 +96,7 @@ ${makeExample(
   "Picking a sample... with your mouse!",
   `
 // Move your mouse to change the sample being used!
-mod(.25) && sound('numbers').n(Math.floor(mouseX())).out()`,
+beat(.25) && sound('numbers').n(Math.floor(mouseX())).out()`,
   true
 )}
 	
@@ -108,7 +108,7 @@ As we said earlier, the <ic>sound('sample_name')</ic> function can be chained to
 ${makeExample(
   "Learning through repetition",
   `
-mod(0.5) && sound('hh')
+beat(0.5) && sound('hh')
   .sometimes(s=>s.speed([1,5,10].pick()))
   .room(0.5)
   .cutoff(usine(2) * 5000)
@@ -129,7 +129,7 @@ There is a special method to choose the _orbit_ that your sound is going to use:
 	
 | Method   | Alias | Description                                                |
 |----------|-------|------------------------------------------------------------|
-| orbit    |       | Orbit number                                               |
+| orbit    |       | Orbit number                                               |
 
 	
 ## Amplitude
@@ -145,7 +145,7 @@ Simple controls over the amplitude (volume) of a given sound.
 ${makeExample(
   "Velocity manipulated by a counter",
   `
-mod(.5)::snd('cp').vel($(1)%10 / 10).out()`,
+beat(.5)::snd('cp').vel($(1)%10 / 10).out()`,
   true
 )}
 	
@@ -165,10 +165,10 @@ Note that the **sustain** value is not a duration but an amplitude value (how lo
 ${makeExample(
   "Simple synthesizer",
   `
-mod(4)::sound('sawtooth').note(50).decay(0.5).sustain(0.5).release(2).gain(0.25).out();
-mod(2)::sound('sawtooth').note(50+7).decay(0.5).sustain(0.6).release(2).gain(0.25).out();
-mod(1)::sound('sawtooth').note(50+12).decay(0.5).sustain(0.7).release(2).gain(0.25).out();
-mod(.25)::sound('sawtooth').note([50,57,62].pick() + [12, 24, 0].div(2))
+beat(4)::sound('sawtooth').note(50).decay(0.5).sustain(0.5).release(2).gain(0.25).out();
+beat(2)::sound('sawtooth').note(50+7).decay(0.5).sustain(0.6).release(2).gain(0.25).out();
+beat(1)::sound('sawtooth').note(50+12).decay(0.5).sustain(0.7).release(2).gain(0.25).out();
+beat(.25)::sound('sawtooth').note([50,57,62].pick() + [12, 24, 0].beat(2))
   .cutoff(5000).sustain(0.5).release(0.1).gain(0.25).out()
 	`,
   true
@@ -192,9 +192,9 @@ ${makeExample(
   "Complex sampling duties",
   `
 // Using some of the modifiers described above :)
-mod(.5)::snd('pad').begin(0.2)
-  .speed([1, 0.9, 0.8].div(4))
-  .n([0, 0, 2, 4].div(4)).pan(usine(.5))
+beat(.5)::snd('pad').begin(0.2)
+  .speed([1, 0.9, 0.8].beat(4))
+  .n([0, 0, 2, 4].beat(4)).pan(usine(.5))
   .end(rand(0.3,0.8))
   .room(0.8).size(0.5)
   .clip(1).out()
@@ -220,7 +220,7 @@ There are three basic filters: a _lowpass_, _highpass_ and _bandpass_ filters wi
 ${makeExample(
   "Filter sweep using a low frequency oscillator",
   `
-mod(.5) && snd('sawtooth')
+beat(.5) && snd('sawtooth')
   .cutoff([2000,500].pick() + usine(.5) * 4000)
   .resonance(0.9).freq([100,150].pick())
   .out()
@@ -240,7 +240,7 @@ A basic reverberator that you can use to give some depth to your sounds. This si
 ${makeExample(
   "Clapping in the cavern",
   `
-mod(2)::snd('cp').room(1).size(0.9).out()
+beat(2)::snd('cp').room(1).size(0.9).out()
 	`,
   true
 )};
@@ -259,9 +259,9 @@ A good sounding delay unit that can go into feedback territory. Use it without m
 ${makeExample(
   "Who doesn't like delay?",
   `
-mod(2)::snd('cp').delay(0.5).delaytime(0.75).delayfb(0.8).out()
-mod(4)::snd('snare').out()
-mod(1)::snd('kick').out()
+beat(2)::snd('cp').delay(0.5).delaytime(0.75).delayfb(0.8).out()
+beat(4)::snd('snare').out()
+beat(1)::snd('kick').out()
 	`,
   true
 )};
@@ -278,8 +278,8 @@ mod(1)::snd('kick').out()
 ${makeExample(
   "Crunch... crunch... crunch!",
   `
-mod(.5)::snd('pad').coarse($(1) % 16).clip(.5).out(); // Comment me
-mod(.5)::snd('pad').crush([16, 8, 4].div(2)).clip(.5).out()
+beat(.5)::snd('pad').coarse($(1) % 16).clip(.5).out(); // Comment me
+beat(.5)::snd('pad').crush([16, 8, 4].beat(2)).clip(.5).out()
 	`,
   true
 )};
