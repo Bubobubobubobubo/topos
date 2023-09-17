@@ -196,6 +196,20 @@ export class Player extends Event {
     return this;
   }
 
+  voiceleading() {
+    if (this.atTheBeginning()) this.ziffers.lead();
+    return this;
+  }
+
+  lead = () => this.voiceleading();
+
+  invert = (n: number) => {
+    if (this.atTheBeginning()) {
+      this.ziffers.invert(n);
+    }
+    return this;
+  }
+
   retrograde() {
     if (this.atTheBeginning()) this.ziffers.retrograde();
     return this;
