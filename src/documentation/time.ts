@@ -20,7 +20,7 @@ To change the tempo, use the <ic>bpm(number)</ic> function. The transport is con
 	
 Let's study two very simple rhythmic functions, <ic>mod(n: ...number[])</ic> and <ic>onbeat(...n:number[])</ic>. They are both easy to understand and powerful enough to get you to play your first rhythms.
 	
-- <ic>beat(...n: number[])</ic>: this function will return true every _n_ pulsations. The value <ic>1</ic> will return <ic>true</ic> at the beginning of each beat. Floating point numbers like <ic>0.5</ic> or <ic>0.25</ic> are also accepted. Multiple values can be passed to <ic>beat</ic> to generate more complex rhythms.
+- <ic>beat(...n: number[])</ic>: this function will return true every _n_ beats. The value <ic>1</ic> will return <ic>true</ic> at the beginning of each beat. Floating point numbers like <ic>0.5</ic> or <ic>0.25</ic> are also accepted. Multiple values can be passed to <ic>beat</ic> to generate more complex rhythms.
 	
 ${makeExample(
   "Using different mod values",
@@ -44,7 +44,7 @@ beat([1,0.75].beat(2)) :: blip([50, 100].beat(2)).out();
 )}
 
 
-- <ic>pulse(...n: number[])</ic>: extreme version of the <ic>beat</ic> function. Instead of returning true for every beat, this function is returning true every _n_ clock ticks! It can be used to generate very unexpected results or to sequence by using your arithmetic ninja skills.
+- <ic>pulse(...n: number[])</ic>: faster version of the <ic>beat</ic> function. Instead of returning true for every beat, this function is returning true every _n_ clock ticks! It can be used to generate very unexpected results or to sequence by using your arithmetic ninja skills.
 
 ${makeExample(
   "Intriguing rhythms",
@@ -65,7 +65,7 @@ beat(1)::snd('bd').out()
   false
 )};
 
-- <ic>onbeat(...n: number[])</ic>: By default, the bar is set in <ic>4/4</ic> with four beats per bar. The <ic>onbeat</ic> function allows you to lock on to a specific beat to execute some code. It can accept multiple arguments. It's usage is very straightforward and not hard to understand. You can pass integers or floating point numbers.
+- <ic>onbeat(...n: number[])</ic>: The <ic>onbeat</ic> function allows you to lock on to a specific beat from the clock to execute code. It can accept multiple arguments. It's usage is very straightforward and not hard to understand. You can pass either integers or floating point numbers. By default, topos is using a <ic>4/4</ic> bar meaning that you can target any of these beats (or in-between) with this function.
 
 ${makeExample(
   "Some simple yet detailed rhythms",
@@ -89,13 +89,14 @@ beat([.25, 1/8].beat(1.5))::snd('hat').n(2)
   false
 )}
 
-- <ic>oncount(beats: number[], meter: number)</ic>: This function is similar to <ic>onbeat</ic> but it allows you to specify a custom meter (time signature denominator) for the beats.
+- <ic>oncount(beats: number[], meter: number)</ic>: This function is similar to <ic>onbeat</ic> but it allows you to specify a custom number of beats as the last argument.
 
 ${makeExample(
   "Using oncount to create more variation in the rhythm",
   `
   bpm(120)
-  z1('q (0 4 2 9)+(0 3 1 5)').sound('sine').cutoff(400).delay(0.5).out()
+  z1('q (0 4 2 9)+(0 3 1 5)').sound('sawtooth').cutoff([400,500,1000,2000].beat(1))
+    .delay(0.5).delayt(0.25).room(0.9).size(0.9).out()
   onbeat(1,1.5,2,3,4) :: sound('bd').gain(2.0).out()
   oncount([1,3,5.5,7,7.5,8],8) :: sound('hh').gain(irand(1.0,4.0)).out()
 `,
@@ -126,6 +127,7 @@ ${makeExample(
   `
 beat(.5) && euclid($(1), 5, 8) && snd('kick').out()
 beat(.5) && euclid($(2), 2, 8) && snd('sd').out()
+beat(4) :: sound('cp').out()
 `,
   true
 )}
@@ -145,8 +147,8 @@ ${makeExample(
   "Adding more rhythmic density",
   `
 beat(.5) && euclid($(1), 5, 9) && snd('kick').out()
-beat(.5) && euclid($(2), 2, 3, 1) && snd('east').end(0.5).n(5).out()
-beat(.5) && euclid($(3), 6, 9, 1) && snd('east').end(0.5).n(5).freq(200).out()
+beat(.5) && euclid($(2), 2, 3, 1) && snd('east').end(0.5).n(5).speed([1,2].beat(2)).out()
+beat(.5) && euclid($(3), 6, 9, 1) && snd('east').end(0.5).n(5).freq(200).speed([2,1].beat(2)).out()
 beat(.25) && euclid($(4), 7, 9, 1) && snd('hh').out()
 `,
   false
@@ -159,7 +161,7 @@ ${makeExample(
   "Using oneuclid to create a rhythm without iterators",
   `
   // Change speed using bpm
-  // bpm(250)
+  bpm(250)
   oneuclid(5, 9) :: snd('kick').out()
   oneuclid(7,16) :: snd('east').end(0.5).n(irand(3,5)).out()
 `,
@@ -170,7 +172,7 @@ ${makeExample(
 ${makeExample(
   "rhythm is a beginner friendly rhythmic function!",
   `
-let speed = [0.5, 0.25].beat(8);
+let speed = [0.5, 0.25].beat(8); bpm(140);
 rhythm(speed, 5, 12) :: snd('east').n(2).out()
 rhythm(speed, 2, 12) :: snd('east').out()
 rhythm(speed, 3, 12) :: snd('east').n(4).out()
@@ -201,16 +203,17 @@ binrhythm(.5, 18) && snd('sd').out()
 )}
 
 ${makeExample(
-  "Calling 911",
+  "Submarine jungle music",
   `
-beat(.5) && bin($(1), 911) && snd('subroc3d').n($(2)).delay(0.5).delayt(0.25).end(0.5).out()
-beat(.5) && sound('less').n(irand(1, 10)).out()
+beat(.5) && bin($(1), 911) && snd('ST69').n([2,3,4].beat())
+  .delay(0.125).delayt(0.25).end(0.25).speed(1/3).out()
+beat(.5) && sound('amencutup').n(irand(2,7)).shape(0.3).out() 
 `,
   false
 )}
 
 ${makeExample(
-  "Playing around with simple numbers",
+  "Using tabla to play unpredictable rhythms",
   `
 beat(.5) && bin($(1), [123, 456, 789].beat(4)) 
 	&& snd('tabla').n($(2)).delay(0.5).delayt(0.25).out()
@@ -233,13 +236,13 @@ prob(80)::beat(.5) && sound('hh').out()
 
 ## Time Warping
 
-Time is cool. But it's even cooler when you can manipulate it to your liking. Think about jumping back or forward in time. Think about looping a specific part of your current pattern or song. This is all possible thanks to two simple functions: <ic>warp(n: number)</ic> and <ic>beat_warp(n: number)</ic>. They are both very easy to use and very powerful. Let's see how they work.
+Time generally flows from the past to the future. However, it's even cooler when you can manipulate it to your liking by jumping back and forth. Think about looping a specific part of your current pattern or song or jumping all of the sudden in the future. This is entirely possible thanks to two simple functions: <ic>warp(n: number)</ic> and <ic>beat_warp(n: number)</ic>. They are both very easy to use and very powerful. Let's see how they work.
 
-- <ic>warp(n: number)</ic>: this function jumps to the _n_ tick of the clock. <ic>1</ic> is the first pulsation ever, and the number keeps increasing to the infinite.
+- <ic>warp(n: number)</ic>: this function jumps to the _n_ tick of the clock. <ic>1</ic> is the first pulsation ever and the number keeps increasing indefinitely. You are most likely currently listening to tick n°<ic>12838123</ic>.
 
 
 ${makeExample(
-  "Jumping back and forth in time",
+  "Time is now super elastic!",
   `
 // Obscure Shenanigans - Bubobubobubo
 beat([1/4,1/8,1/16].beat(8)):: sound('sine')
@@ -250,7 +253,7 @@ beat(1) :: sound('kick').out()
 beat(2) :: sound('dr').n(5).out()
 flip(3) :: beat([.25,.5].beat(.5)) :: sound('dr')
   .n([8,9].pick()).gain([.8,.5,.25,.1,.0].beat(.25)).out()
-// Time is elastic now!
+// Jumping back and forth in time
 beat(.25) :: warp([12, 48, 24, 1, 120, 30].pick())
 `,
   true
@@ -298,7 +301,8 @@ ${makeExample(
   `
 flip(2.5, 10) :: beat(.25) :: snd('cp').out()
 flip(2.5, 75) :: beat(.25) :: snd('click').speed(2).end(0.2).out()
-flip(2.5) :: mod(.5) :: snd('bd').out()
+flip(2.5) :: beat(.5) :: snd('bd').out()
+beat(.25) :: sound('hh').out()
 `,
   false
 )}
@@ -315,7 +319,7 @@ if (flip(4, 75)) {
   true
 )}
 	
-<ic>flip</ic> is extremely powerful and is used internally for a lot of other Topos functions. You can also use it to think about **longer durations** spanning over multiple bars.
+<ic>flip</ic> is extremely powerful and is used internally for a lot of other Topos functions. You can also use it to think about **longer durations** spanning over multiple bars. Here is a silly composition that is using <ic>flip</ic> to generate a 4 bars long pattern.
 	
 ${makeExample(
   "Clunky algorithmic rap music",
@@ -343,27 +347,27 @@ if (flip(16)) {
 You can use it everywhere to spice things up, including as a method parameter picker:
 	
 ${makeExample(
-  "div is great for parameter variation",
+  "flip is great for parameter variation",
   `
 beat(.5)::snd(flip(4) ? 'kick' : 'hat').out()
 `,
   true
 )}
 	
-- <ic>divbar(n: number)</ic>: works just like <ic>div</ic> but at the level of bars instead of beats. It allows you to think about even bigger time cycles. You can also pair it with regular <ic>div</ic> for making complex algorithmic beats.
+- <ic>flipbar(n: number = 1)</ic>: this method works just like <ic>flip</ic> but counts in bars instead of beats. It allows you to think about even larger time cycles. You can also pair it with regular <ic>flip</ic> for writing complex and long-spanning algorithmic beats.
 	
 ${makeExample(
   "Thinking music over bars",
   `
-divbar(2)::beat(1)::snd('kick').out()
-divbar(3)::beat(.5)::snd('hat').out()
+flipbar(2) :: beat(1):: snd('kick').out()
+flipbar(3) :: beat(.5):: snd('hat').out()
 `,
   true
 )}
 ${makeExample(
   "Alternating over four bars",
   `
-divbar(2)
+flipbar(2)
   ? beat(.5) && snd(['kick', 'hh'].beat(1)).out()
   : beat(.5) && snd(['east', 'snare'].beat(1)).out()
 `,

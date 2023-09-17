@@ -4,7 +4,7 @@ let frequencies = [200,400,600,800,1000,2000].beat(2);
 beat(2) :: sound('sine').freq(frequencies)
   .delay(0.5).delayt(usine(.5)).delayfb(0.8).size(0.9).room(0.9).out()
 beat(2) :: app.hydra.osc(frequencies/100, 0.25, 0.5)
-  .posterize([32,4,8,16].beat(2)).rotate(pulse())
+  .posterize([32,4,8,16].beat(2)).rotate(cpulse())
   .kaleid([1,2,3].beat()).out()`,
   `// The real internet of things - Bubobubobubo
 beat(.5) :: sound('STA6').cut(1).vel(0.4)

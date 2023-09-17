@@ -1025,16 +1025,8 @@ export class UserAPI {
   };
 
   // =============================================================
-  // Modulo basd time filters
+  // Modulo based time filters
   // =============================================================
-
-  public modbar = (...n: number[]): boolean => {
-    const results: boolean[] = n.map(
-      (value) =>
-        this.app.clock.time_position.bar % Math.floor(value * this.ppqn()) === 0
-    );
-    return results.some((value) => value === true);
-  };
 
   // =============================================================
   // Other core temporal functions
@@ -1056,7 +1048,7 @@ export class UserAPI {
     return pos_within_chunk < threshold;
   };
 
-  public divbar = (chunk: number): boolean => {
+  public flipbar = (chunk: number = 1): boolean => {
     const time_pos = this.app.clock.time_position.bar;
     const current_chunk = Math.floor(time_pos / chunk);
     return current_chunk % 2 === 0;

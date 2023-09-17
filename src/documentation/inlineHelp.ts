@@ -504,12 +504,12 @@ const completionDatabase: CompletionDatabase = {
     description: "jumps to the <i>n</i> beat of the clock.",
     example: "beat_warp(1) :: log('back to the first beat!')",
   },
-  divbar: {
-    name: "divbar",
+  flipbar: {
+    name: "flipbar",
     category: "time",
     description:
-      "works just like <i>flip</i> but at the level of bars instead of beats",
-    example: "divbar(2)::beat(1)::snd('kick').out()",
+      "works just like <i>flip</i> at the level of bars instead of beats",
+    example: "flipbar(2)::beat(1)::snd('kick').out()",
   },
   onbar: {
     name: "onbar",
