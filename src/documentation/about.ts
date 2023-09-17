@@ -18,6 +18,7 @@ Topos is a free and open-source software distributed under [GPL-3.0](https://git
 
 - Felix Roos for the [SuperDough](https://www.npmjs.com/package/superdough) audio engine.
 - Frank Force for the [ZzFX](https://github.com/KilledByAPixel/ZzFX) synthesizer.
+- Kristoffer Ekstrand for the [AKWF](https://www.adventurekid.se/akrt/waveforms/adventure-kid-waveforms/) waveforms.
 - All the [Topos](https//github.com/Bubobubobubobubo/Topos) contributors!
 
 **Have fun!**

@@ -168,7 +168,7 @@ beat(.25) :: sound('square').freq(100*[1,2,4,8].beat()).sustain(0.1).out()`,
 )}
 
 ${makeExample(
-  "Ghost carillon",
+  "Ghost carillon (move your mouse!)",
   `
 beat(1/8)::sound('sine')
   .velocity(rand(0.0, 1.0))
@@ -244,16 +244,39 @@ ${makeExample(
 
 ## Wavetable synthesis
 
+Topos can also do wavetable synthesis. Wavetable synthesis allows you to use any sound file as a source to build an oscillator. By default, Topos comes with more than 1000 waveforms thanks to the awesome [AKWF](https://www.adventurekid.se/akrt/waveforms/adventure-kid-waveforms/) pack made by Kristoffer Ekstrand. Any sample name that contains <ic>wt_</ic> as a prefix will be interpreted by the sampler as a wavetable and thus as an oscillator. See for yourself:
+
 ${makeExample(
   "Acidity test",
-  `
-beat(.25) :: sound('wt_symetric:8').note([50,55,57,60].beat(.25) - [12,0].pick()).ftype('12db').adsr(0.05/4, 1/16, 0.25/4, 0)
-  .cutoff(1500 + usine(1/8) * 5000).lpadsr(16, 0.2, 0.2, 0.125/2, 0).room(0.9).size(0.9).resonance(20).gain(0.3).out()
+  `beat(.25) :: sound('wt_symetric:8').note([50,55,57,60].beat(.25) - [12,0]
+  .pick()).ftype('12db').adsr(0.05/4, 1/16, 0.25/4, 0)
+  .cutoff(1500 + usine(1/8) * 5000).lpadsr(16, 0.2, 0.2, 0.125/2, 0)
+  .room(0.9).size(0.9).resonance(20).gain(0.3).out()
 beat(1) :: sound('kick').n(4).out()
 beat(2) :: sound('snare').out()
-beat(.5) :: sound('hh').out()`
+beat(.5) :: sound('hh').out()`,
+  true
 )}
 	
+
+Let's explore the galaxy of possible waveforms. It can be hard to explore them all, there is a **lot** of them:
+
+${makeExample(
+  "Let's explore some wavetables",
+  `
+// Exploring a vast galaxy of waveforms
+let collection = [
+  'wt_sinharm', 'wt_linear', 'wt_bw_sawrounded',
+  'wt_eorgan', 'wt_theremin', 'wt_overtone',
+  'wt_fmsynth', 'wt_bitreduced', 'wt_bw_squrounded'];
+beat(2) :: v('selec', irand(1, 100))
+beat(2) :: v('swave', collection.pick())
+beat(0.5) :: sound(v('swave')).n(v('selec')).out()
+`,
+  true
+)}
+
+You can work with them just like with any other waveform. Having so many of them makes them also very useful for generating sound effects, percussive, sounds, etc...
 	
 # Frequency Modulation Synthesis (FM)
 	
