@@ -15,7 +15,7 @@ export class SoundEvent extends AudibleEvent {
         this.values = {
           s: sound.split(":")[0],
           n: sound.split(":")[1],
-          dur: 0.5,
+          dur: app.clock.convertPulseToSecond(app.clock.ppqn),
         };
       } else {
         this.values = { s: sound, dur: 0.5 };
@@ -55,7 +55,7 @@ export class SoundEvent extends AudibleEvent {
   public sustainVolume = (value: number) =>
     this.updateValue("sustainVolume", value);
   public tremolo = (value: number) => this.updateValue("tremolo", value);
-  public duration = (value: number) => this.updateValue("duration", value);
+  public dur = (value: number) => this.updateValue("dur", value);
   public zzfx = (value: number[]) => this.updateValue("zzfx", value);
 
   // ================================================================================
@@ -106,7 +106,7 @@ export class SoundEvent extends AudibleEvent {
   public lpe = (value: number) => this.updateValue("lpenv", value);
   public lpattack = (value: number) => this.updateValue("lpattack", value);
   public lpa = this.lpattack;
-  public lpdecay = (value: number) => this.updateValue("lbdecay", value);
+  public lpdecay = (value: number) => this.updateValue("lpdecay", value);
   public lpd = this.lpdecay;
   public lpsustain = (value: number) => this.updateValue("lpsustain", value);
   public lps = this.lpsustain;
@@ -295,10 +295,12 @@ export class SoundEvent extends AudibleEvent {
       this.values.chord.forEach((freq: number) => {
         const copy = { ...this.values };
         copy.freq = freq;
-        superdough(copy, 1 / 4, this.values.dur || 0.5);
+        // This is pure non-sense but I need to adapt somehow
+        superdough(copy, this.values.dur * 2, this.values.dur);
       });
     } else {
-      superdough(this.values, 1 / 4, this.values.dur || 0.5);
+      // This is pure non-sense but I need to adapt somehow
+      superdough(this.values, this.values.dur * 2, this.values.dur);
     }
   };
 }

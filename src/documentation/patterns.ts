@@ -111,7 +111,7 @@ beat([.5, 1].random() / 2) :: snd(
 
 ${makeExample(
   "Generate a list of random numbers",
-  `beat(0.5) && sound('arp').freq([].gen(300,600,10).div(3)).out()`,
+  `beat(0.5) && sound('arp').freq([].gen(300,600,10).beat(3)).out()`,
   true
 )}
 
@@ -188,7 +188,7 @@ beat(1)::snd('sine').sustain(0.1).freq([100,100,100,100,200].unique().beat()).ou
 - <ic>add()</ic>: add a given amount to every list element.
 - <ic>sub()</ic>: add a given amount to every list element.
 - <ic>mult()</ic>: add a given amount to every list element.
-- <ic>division()</ic>: add a given amount to every list element. The method is named <ic>division</ic> because obviously <ic>div</ic> is already taken.
+- <ic>div()</ic>: add a given amount to every list element.
 
 ${makeExample("Simple addition", `[1, 2 ,3].add(2).beat()`, true)}
 
