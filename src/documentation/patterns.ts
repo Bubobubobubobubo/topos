@@ -111,7 +111,7 @@ beat([.5, 1].random() / 2) :: snd(
 
 ${makeExample(
   "Generate a list of random numbers",
-  `beat(0.5) && sound('arp').freq([].gen(300,600,10).div(3)).out()`,
+  `beat(0.5) && sound('arp').freq([].gen(300,600,10).beat()).out()`,
   true
 )}
 

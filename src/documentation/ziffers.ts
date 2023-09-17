@@ -152,6 +152,14 @@ ${makeExample(
 `
 )}
 
+${makeExample(
+  "Programmatic inversions",
+  `
+  z1('i v vi iv').invert([1,-1,-2,0].beat(4))
+  .sound("sawtooth").out()
+  `
+)}
+
 ## Algorithmic operations
 
 Ziffers provides shorthands for **many** numeric and algorithimic operations such as evaluating random numbers and creating sequences using list operations:
