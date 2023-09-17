@@ -369,7 +369,7 @@ ${makeExample(
   `
 flipbar(2)
   ? beat(.5) && snd(['kick', 'hh'].beat(1)).out()
-  : beat(.5) && snd(['east', 'snare'].beat(1)).out()
+  : beat(.5) && snd(['east', 'east:2'].beat(1)).out()
 `,
   false
 )};
@@ -380,16 +380,21 @@ flipbar(2)
 ${makeExample(
   "Using onbar for filler drums",
   `
-// Only play on the fourth bar of a four bar cycle.
-onbar(4, 4)::beat(.5)::snd('hh').out(); 
-		
-// Here comes a longer version using JavaScript normal control flow
-if (onbar([4, 1], 3)) { 
-	beat(1)::snd('kick').out();
+bpm(150);
+// Only play on the third and fourth bar of the cycle.
+onbar([3,4], 4)::beat(.25)::snd('hh').out(); 
+// Using JavaScript regular control flow
+if (onbar([1,2], 4)) {
+    beat(.5) :: sometimes() :: sound('east').out()
+	rhythm(.5, 3, 7) :: snd('kick').out();
+    rhythm(.5, 1, 7) :: snd('jvbass').out();
+    rhythm(.5, 2, 7) :: snd('snare').n(5).out();
 } else {
-	beat(.5)::snd('sd').out();
-}
-`,
+    beat(.5) :: rarely() :: sound('east').n($(1)).out()
+    rhythm(.5, 3, 7) :: snd('kick').n(4).out();
+    rhythm(.5, 1, 7) :: snd('jvbass').n(2).out();
+    rhythm(.5, 2, 7) :: snd('snare').n(3).out();
+}`,
   true
 )}
 
@@ -422,15 +427,22 @@ These values are **extremely useful** to craft more complex syntax or to write m
 ${makeExample(
   "Manual mode: using time primitives!",
   `
+// Manual time condition
 if((cbar() % 4) > 1) {
-  beat(1) && sound('kick').out()
+  beat(2) && sound('kick').out()
   rarely() && beat(.5) && sound('sd').out()
-  beat(.5) && sound('jvbass').freq(500).out()
+  beat([.5, .25].beat()) && sound('jvbass')
+    .freq(100  * [2, 1].pick()).dec(2)
+    .room(0.9).size(0.9).orbit(2).out()
 } else {
   beat(.5) && sound('hh').out()
-  beat(.75) && sound('cp').out()
-  beat(.5) && sound('jvbass').freq(250).out()
+  beat(2) && sound('cp').out()
+  beat([.5, .5, .25].beat(.5)) && sound('jvbass')
+    .freq(100 * [3, 1].pick()).dec(2)
+    .room(0.9).size(0.9).orbit(2).out()
 }
+// This is always playing no matter what happens
+beat([.5, .5, 1, .25].beat(0.5)) :: sound('shaker').out() 
 `,
   true
 )}
