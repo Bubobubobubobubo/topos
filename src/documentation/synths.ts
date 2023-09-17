@@ -38,7 +38,9 @@ You can also add some amount of vibrato to the sound using the <ic>vib</ic> and 
 
 ${makeExample(
   "Different vibrato settings",
-  `beat(1) :: sound('triangle')
+  `
+bpm(140);
+beat(1) :: sound('triangle')
   .freq(400).release(0.2)
   .vib([1/2, 1, 2, 4].beat())
   .vibmod([1,2,4,8].beat(2))
@@ -77,15 +79,30 @@ ${makeExample(
 ${makeExample(
   "Using decay and sustain to set the ADSR envelope",
   `
-beat(0.5) :: sound('sawtooth')
+beat(0.5) :: sound('wt_piano')
   .cutoff(1000 + usine() * 4000)
-  .freq([50,100,150,300].pick())
-  .decay(.1).sustain([0.25,0.5].pick())
+  .freq(100).decay(.2)
+  .sustain([0.1,0.5].beat(4))
   .out()`,
   true
 )}
 
-This ADSR envelope design is important to know because it is used for other aspects of the synthesis engine such as the filters that we are now going to talk about.
+This ADSR envelope design is important to know because it is used for other aspects of the synthesis engine such as the filters that we are now going to talk about. But wait, I've kept the best for the end. The <ic>adsr()</ic> combines all the parameters together. It is a shortcut for setting the ADSR envelope:
+
+- <ic>adsr(attack: number, decay: number, sustain: number, release: number)</ic>: sets the ADSR envelope.
+
+${makeExample(
+  "Replacing the previous example with the adsr() method",
+  `
+beat(0.5) :: sound('wt_piano')
+  .cutoff(1000 + usine() * 4000)
+  .freq(100)
+  .adsr(0, .2, [0.1,0.5].beat(4), 0)
+  .out()
+`,
+  true
+)}
+
 
 ## Substractive synthesis using filters
 
@@ -140,6 +157,18 @@ ${makeExample(
 ${makeExample(
   "Sweeping the filter on the same guitar sample",
   `beat(.5) :: sound('gtr').bandf(100 + usine(1/8) * 4000).end(0.5).out()`,
+  true
+)}
+
+## Filter order (type)
+
+You can also use the <ic>ftype</ic> method to change the filter type (order). There are two types by default, <ic>12db</ic> for a gentle slope or <ic>24db</ic> for a really steep filtering slope. The <ic>24db</ic> type is particularly useful for substractive synthesis if you are trying to emulate some of the Moog or Prophet sounds:
+
+- <ic>ftype(type: string)</ic>: sets the filter type (order), either <ic>12db</ic> or <ic>24db</ic>.
+
+${makeExample(
+  "Filtering a bass",
+  `beat(.5) :: sound('jvbass').ftype(['12db', '24db'].beat(4)).lpf([250,1000,8000].beat()).out()`,
   true
 )}
 
@@ -248,7 +277,8 @@ Topos can also do wavetable synthesis. Wavetable synthesis allows you to use any
 
 ${makeExample(
   "Acidity test",
-  `beat(.25) :: sound('wt_symetric:8').note([50,55,57,60].beat(.25) - [12,0]
+  `
+beat(.25) :: sound('wt_symetric:8').note([50,55,57,60].beat(.25) - [12,0]
   .pick()).ftype('12db').adsr(0.05/4, 1/16, 0.25/4, 0)
   .cutoff(1500 + usine(1/8) * 5000).lpadsr(16, 0.2, 0.2, 0.125/2, 0)
   .room(0.9).size(0.9).resonance(20).gain(0.3).out()
@@ -280,39 +310,41 @@ You can work with them just like with any other waveform. Having so many of them
 	
 # Frequency Modulation Synthesis (FM)
 	
-The same basic waveforms can take additional methods to switch to a basic two operators FM synth design (with _carrier_ and _modulator_). FM Synthesis is a complex topic but take this advice: simple ratios will yield stable and harmonic sounds, complex ratios will generate noises, percussions and gritty sounds.
+Another really useful technique to know about is FM synthesis, FM standing for _frequency modulation_. Our basic waveforms can take some additional parameters to be transformed into a two operators FM synthesizer (with _carrier_ and _modulator_). FM Synthesis is a very complex and fascinating topic. There are a lot of things you can design using this technique but keep in mind this advice: **simple ratios will yield stable and harmonic sounds, complex ratios will generate noises, percussions and gritty sounds**.
 	
 - <ic>fmi</ic> (_frequency modulation index_): a floating point value between <ic>1</ic> and <ic>n</ic>.
 - <ic>fmh</ic> (_frequency modulation harmonic ratio_): a floating point value between <ic>1</ic> and <ic>n</ic>.
 - <ic>fmwave</ic> (_frequency modulation waveform_): a waveform name (_sine_, _triangle_, _sawtooth_ or _pulse_).
 
+There is also an additional parameter, <ic>fm</ic> that combines <ic>fmi</ic> and <ic>fmh</ic> using strings: <ic>fm('2:4')</ic>. Think of it as a static shortcut for getting some timbres more quickly.
+
 ${makeExample(
   "80s nostalgia",
   `
-beat(.25) && snd('sine')
-  .fmi([1,2,4,8].pick())
-  .fmh([1,2,4,8].beat(8))
-  .freq([100,150].pick())
-  .sustain(0.1)
-  .out()
+beat([.5, 1].beat(8)) && snd('triangle').adsr(0.02, 0.5, 0.5, 0.25)
+  .fmi(2).fmh(1.5).note([60,55, 60, 63].beat() - 12)
+  .pan(noise()).out()
+beat(.25) && snd('triangle').adsr(0.02, 0.1, 0.1, 0.1)
+  .fmi([2,4].beat(4)).fmh(1.5)
+  .pan(noise()).note([60,55, 60, 63].beat() + [0, 7].pick()).out()
+beat(2) :: sound('cp').room(1).sz(1).out()
 	`,
   true
 )}
 
 ${makeExample(
-  "Giving some love to weird ratios",
+  "Giving some love to ugly inharmonic sounds",
   `
 beat([.5, .25].bar()) :: sound('sine').fm('2.2183:3.18293').sustain(0.05).out()
 beat([4].bar()) :: sound('sine').fm('5.2183:4.5').sustain(0.05).out()
 beat(.5) :: sound('sine')
   .fmh([1, 1.75].beat())
   .fmi($(1) % 30).orbit(2).room(0.5).out()`,
-  false
+  true
 )}
 
-
 ${makeExample(
-  "Some peace and serenity",
+  "Peace and serenity through FM synthesis",
   `
 beat(0.25) :: sound('sine')
   .note([60, 67, 70, 72, 77].beat() - [0,12].bar())
@@ -322,7 +354,7 @@ beat(0.25) :: sound('sine')
   .cutoff(1500).delay(0.5).delayt(0.125)
   .delayfb(0.8).fmh(Math.floor(usine(.5) * 4))
   .out()`,
-  false
+  true
 )}
 
 **Note:** you can also set the _modulation index_ and the _harmonic ratio_ with the <ic>fm</ic> argument. You will have to feed both as a string: <ic>fm('2:4')</ic>. If you only feed one number, only the _modulation index_ will be updated.
@@ -465,7 +497,7 @@ beat(4) :: speak("Hello world!")
 )}
 
 ${makeExample(
-  "Different voices",
+  "Let's hear people talking about Topos",
   `
 beat(2) :: speak("Topos!","fr",irand(0,5))
   `,
@@ -476,7 +508,7 @@ beat(2) :: speak("Topos!","fr",irand(0,5))
 You can also use speech by chaining methods to a string:
 
 ${makeExample(
-  "Chaining string",
+  "Foobaba is the real deal",
   `
   onbeat(4) :: "Foobaba".voice(irand(0,10)).speak()
   `,
@@ -501,7 +533,11 @@ ${makeExample(
   `
   bpm(70)
 
-  const croissant = ["Volant", "Arc-en-ciel", "Chocolat", "Dansant", "Nuage", "Tournant", "Galaxie", "Chatoyant", "Flamboyant", "Cosmique","Croissant!"];
+  const croissant = [
+    "Volant", "Arc-en-ciel", "Chocolat", "Dansant", 
+    "Nuage", "Tournant", "Galaxie", "Chatoyant", 
+    "Flamboyant", "Cosmique", "Croissant!"
+  ];
   
   onbeat(4) :: croissant.bar()
       .lang("fr")
