@@ -6,11 +6,11 @@ export const sound = (application: Editor): string => {
   return `
 # Audio engine
 	
-The Topos audio engine is based on the [SuperDough](https://www.npmjs.com/package/superdough) audio backend, leveraging the [Web Audio API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API). The engine is capable of playing multiple samples, synths and effects at once. It is a very powerful and almost limitless tool to create complex sounds and textures. A set of default sounds are already provided but you can also load your own audio samples and synths!
+The Topos audio engine is based on the [SuperDough](https://www.npmjs.com/package/superdough) audio backend that takes advantage of the [Web Audio API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API). The engine is capable of many things such as playing samples, synths and effects all at once. It is a very powerful and almost limitless tool to create complex sounds and textures. A set of default sounds are already provided but you can also load your own audio samples if you wish!
 	
 ## Sound basics
 	
-The basic function to play a sound is... <ic>sound(name: string)</ic> (you can also write <ic>snd</ic> to save some precious time). If the given sound or synthesizer exists in the database, it will be automatically queried/started and will start playing. Evaluate the following script in the global window:
+The basic function to play a sound is... <ic>sound(name: string)</ic> (you can also write <ic>snd</ic> to save some precious time). If the given sound (or synthesizer) is already declared, it will be automatically queried/started and will start playing. Evaluate the following script in the global window:
 	
 ${makeExample(
   "Playing sounds is easy",
@@ -23,8 +23,8 @@ beat(0.5) && sound('hh').out()
 	
 In plain english, this translates to:
 	
-> Every 48 pulses, play a kick drum.
-> Every 24 pulses, play a high-hat.
+> Every beat, play a kick drum.
+> Every half-beat, play a high-hat.
 	
 Let's make it slightly more complex:
 
@@ -39,14 +39,15 @@ beat(0.5) && sound('hh').delay(0.25).delaytime(0.125).out();
 	
 Now, it reads as follow:
 	
-> Every 48 pulses, play a kick drum with some amount of distortion.
-> Every 24 pulses, play a high-hat with 25% of the sound injected in
+> Every beat, play a kick drum with some amount of distortion.
+> Every half-beat, play a high-hat with 25% of the sound injected in
 > a delay unit, with a delay time of 0.125 seconds.
 	
-Let's pause for a moment to explain what we just wrote. There are many things to be said:
-- If you remove the **mod** instruction, you will end up with a deluge of kick drums and high-hats. The **mod** instruction is used to filter out pulses. It is a very useful instruction to create basic rhythms. Check out the **Time** page if you haven't read it already.
+Let's pause for a moment and explain what is going on:
+
+- If you remove <ic>beat</ic> instruction, you will end up with a deluge of kick drums and high-hats. <ic>beat</ic> in that case, is used to filter time. It is a very useful instruction to create basic rhythms. Check out the **Time** page if you haven't read it already.
 - Playing a sound always ends up with the <ic>.out()</ic> method that gives the instruction to send a message to the audio engine.
-- Sounds are **composed** by adding qualifiers that will modify the sound or synthesizer being played (_e.g_ <ic>sound('...').blabla(...)..something(...).out()</ic>.
+- Sounds are **composed** by adding qualifiers/parameters that will modify the sound or synthesizer being played (_e.g_ <ic>sound('...').blabla(...)..something(...).out()</ic>. Think of it as _audio chains_. 
 	
 ${makeExample(
   '"Composing" a sound or making a sound chain',
@@ -106,11 +107,12 @@ beat(.25) && sound('numbers').n(Math.floor(mouseX())).out()`,
 	
 As we said earlier, the <ic>sound('sample_name')</ic> function can be chained to _specify_ a sound more. For instance, you can add a filter and some effects to your high-hat:
 ${makeExample(
-  "Learning through repetition",
+  "Let's make something more complex",
   `
-beat(0.5) && sound('hh')
+beat(0.25) && sound('jvbass')
   .sometimes(s=>s.speed([1,5,10].pick()))
   .room(0.5)
+  .gain(1)
   .cutoff(usine(2) * 5000)
   .out()`,
   true
@@ -129,7 +131,7 @@ There is a special method to choose the _orbit_ that your sound is going to use:
 	
 | Method   | Alias | Description                                                |
 |----------|-------|------------------------------------------------------------|
-| orbit    |       | Orbit number                                               |
+| orbit    | o      | Orbit number                                               |
 
 	
 ## Amplitude
@@ -183,6 +185,9 @@ There are some basic controls over the playback of each sample. This allows you 
 | n       |       | Select a sample in the current folder (from <ic>0</ic> to infinity)                 |
 | begin   |       | Beginning of the sample playback (between <ic>0</ic> and <ic>1</ic>)     |
 | end     |       | End of the sample (between <ic>0</ic> and <ic>1</ic>)                    |
+| loopBegin |     | Beginning of the loop section (between <ic>0</ic> and <ic>1</ic>)        |
+| loopEnd |     | End of the loop section (between <ic>0</ic> and <ic>1</ic>)        |
+| loop    |       | Whether to loop or not the audio sample          |
 | speed   |       | Playback speed (<ic>2</ic> = twice as fast)         |
 | cut     |       | Set with <ic>0</ic> or <ic>1</ic>. Will cut the sample as soon as another sample is played on the same bus |
 | clip    |       | Multiply the duration of the sample with the given number |

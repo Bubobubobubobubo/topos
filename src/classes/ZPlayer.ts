@@ -71,7 +71,7 @@ export class Player extends Event {
   };
 
   origin = (): number => {
-    return this.app.clock.pulses_since_origin+1;
+    return this.app.clock.pulses_since_origin + 1;
   };
 
   pulse = (): number => {
@@ -105,14 +105,16 @@ export class Player extends Event {
     const howAboutNow =
       // If pattern is just starting
       (this.notStarted() &&
-      (this.pulse() === 0 || this.origin() >= this.nextBeatInTicks()) &&
-       this.origin() >= this.waitTime) || 
+        (this.pulse() === 0 || this.origin() >= this.nextBeatInTicks()) &&
+        this.origin() >= this.waitTime) ||
       // If pattern is already playing
       (this.current &&
-       this.pulseToSecond(this.origin()) >=
-       this.pulseToSecond(this.lastCallTime) +
-       this.current.duration * 4 * this.pulseToSecond(this.app.api.ppqn()) &&
-       this.origin() >= this.waitTime);
+        this.pulseToSecond(this.origin()) >=
+          this.pulseToSecond(this.lastCallTime) +
+            this.current.duration *
+              4 *
+              this.pulseToSecond(this.app.api.ppqn()) &&
+        this.origin() >= this.waitTime);
 
     // Increment index of how many times call is skipped
     this.skipIndex = howAboutNow ? 0 : this.skipIndex + 1;
@@ -143,8 +145,9 @@ export class Player extends Event {
           "octave",
           "parsedScale"
         );
+        obj.dur = event.duration;
         return new SoundEvent(obj, this.app).sound(name);
-      } else if(event instanceof Chord) {
+      } else if (event instanceof Chord) {
         const pitches = event.freqs();
         return new SoundEvent(event, this.app).chord(pitches).sound(name);
       } else if (event instanceof ZRest) {
@@ -228,22 +231,22 @@ export class Player extends Event {
     return this;
   }
 
-  sync(value: string|Function) {
-     if(this.atTheBeginning() && this.notStarted()) {
+  sync(value: string | Function) {
+    if (this.atTheBeginning() && this.notStarted()) {
       const origin = this.app.clock.pulses_since_origin;
-         const syncId = typeof value === "function" ? value.name : value;
-         if(origin>0) {
-             const syncPattern = this.app.api.patternCache.get(syncId) as Player;
-             if(syncPattern) {
-                 const syncPatternDuration = syncPattern.ziffers.duration;
-                 const syncPatternStart = syncPattern.startCallTime;
-                 const syncInPulses = syncPatternDuration*4*this.app.clock.ppqn;
-                 this.waitTime = syncPatternStart + syncInPulses;
-             }
+      const syncId = typeof value === "function" ? value.name : value;
+      if (origin > 0) {
+        const syncPattern = this.app.api.patternCache.get(syncId) as Player;
+        if (syncPattern) {
+          const syncPatternDuration = syncPattern.ziffers.duration;
+          const syncPatternStart = syncPattern.startCallTime;
+          const syncInPulses = syncPatternDuration * 4 * this.app.clock.ppqn;
+          this.waitTime = syncPatternStart + syncInPulses;
         }
+      }
     }
     return this;
- }
+  }
 
   out = (): void => {
     // TODO?
