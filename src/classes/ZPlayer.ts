@@ -137,10 +137,26 @@ export class Player extends Event {
     if (this.areWeThereYet()) {
       const event = this.next() as Pitch | Chord | ZRest;
       if (event instanceof Pitch) {
-        return new SoundEvent({dur: event.duration, freq: event.freq}, this.app).sound(name);
+        const obj = event.getExisting(
+          "freq",
+          "pitch",
+          "key",
+          "scale",
+          "octave",
+          "parsedScale"
+        );
+        obj.dur = event.duration;
+        return new SoundEvent(obj, this.app).sound(name);
       } else if (event instanceof Chord) {
         const pitches = event.pitches.map((p) => {
-          return {freq: p.freq}
+          return p.getExisting(
+            "freq",
+            "pitch",
+            "key",
+            "scale",
+            "octave",
+            "parsedScale"
+          );
         });
         return new SoundEvent({dur: event.duration}, this.app).chord(pitches).sound(name);
       } else if (event instanceof ZRest) {
