@@ -28,6 +28,7 @@ The basic Ziffer notation is entirely written in JavaScript strings (_e.g_ <ic>"
 | **Accidentals** | <ic># b</ic> | Sharp and flats, just like with regular music notation :smile: |
 | **Rest**      |  <ic>r</ic> | Rest / silences |
 | **Repeat**    | <ic>:1-9</ic> | Repeat the item 1-9 times  |
+| **Chords**    | <ic>[1-9]+ / [iv]+ / [AG]+name</ic> | Multiple pitches grouped together, roman numerals or named chords |
 
 **Note:** Some features are still unsupported. For full syntax see article about <a href="https://zenodo.org/record/7841945" target="_blank">Ziffers</a>.
 
@@ -134,6 +135,29 @@ ${makeExample(
     .key(["F3","E3","D3","E3"].beat(3))
     .sound('sawtooth').out()
 `
+)}
+
+${makeExample(
+  "Chord transposition with roman numerals",
+  `
+  z1('i i v%-4 v%-2 vi%-5 vi%-3 iv%-2 iv%-1').sound('sawtooth').out()
+`
+)}
+
+${makeExample(
+  "Chord transposition with named chords",
+  `
+  z1('e C9:4 Emin:4 F7%-1:4 Emaj%-1:4')
+  .sound("stab").out()
+`
+)}
+
+${makeExample(
+  "Programmatic inversions",
+  `
+  z1('i v vi iv').invert([1,-1,-2,0].beat(4))
+  .sound("sawtooth").out()
+  `
 )}
 
 ## Algorithmic operations
