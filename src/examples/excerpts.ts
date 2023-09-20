@@ -25,22 +25,6 @@ beat(.5) :: sound('STA6').cut(1).vel(0.4)
 binrhythm(.5, 50) :: sound('shaker').out()
 binrhythm(.5, 52) :: sound('808bd').n(3).out()
 rhythm(.25, 6, 8) :: sound('808sd').out()`,
-  `// Numerology - Bubobubobubo
-bpm(130);
-let mel = [
-  "0.125 _ (0 3 7 0 3 5 0 3 9)+(0 2)", "0.125 (0 7 0 10 0 5)+(0 3)",
-  "0.125 (0 3 7 0 3 5 0 3 9)+(0 2)", "0.125 (0 2 4 5 9 10)+(0 2)",
-].beat(4);
-z0(mel)
-  .scale('minor').sound('wt_piano').cutoff(800 + usine(.5) * 5000)
-  .fmi([2, 4, 8].beat(2)).fmh(flip(2) ? 2 : 4)
-  .delay(bpm() / 60 / 9).delayt(0.25).delayfb(0.5)
-  .fmsus(0.3).fmrel(0.3).rel(rand(0.5,0.8))
-  .sus(rand(0.05, 0.1)).out();
-beat(1) :: sound(flip(2) ? 'kick' : ['sd', 'cp'].beat(3)).out();
-beat([.25, .5].beat(4)) :: flip(6) && sound('dr')
-  .room(0.85).size(0.85).vel($(1) % 10 / 8)
-  .n([1, 2, 7].pick()).out();`,
   `// Harmonic Leaps and Gaps -- Bubobubobubo
 let oscillation = quant(usine(.25) * 20, [35, 40, 38, 50, 55]);
 let tonal = [0, 5, 0, 0, 7].palindrome().bar() + 40 - 24;
@@ -219,4 +203,22 @@ beat([.25,.125, .5].beat(4))::snd('arpy:4')
   .resonance(5).gain(0.4).end(0.8).room(0.9).size(0.9).n(3).out();
 beat(.5) :: snd('arpy').note([30, 33, 35].repeatAll(4).beat(1) - [24,12].beat(0.5))
   .cutoff(500).lpadsr(8, 0.05, .125, 0, 0).out()`,
+  /*
+  `// Numerology - Bubobubobubo
+bpm(130);
+let mel = [
+  "0.125 _ (0 3 7 0 3 5 0 3 9)+(0 2)", "0.125 (0 7 0 10 0 5)+(0 3)",
+  "0.125 (0 3 7 0 3 5 0 3 9)+(0 2)", "0.125 (0 2 4 5 9 10)+(0 2)",
+].beat(4);
+z0(mel)
+  .scale('minor').sound('wt_piano').cutoff(800 + usine(.5) * 5000)
+  .fmi([2, 4, 8].beat(2)).fmh(flip(2) ? 2 : 4)
+  .delay(bpm() / 60 / 9).delayt(0.25).delayfb(0.5)
+  .fmsus(0.3).fmrel(0.3).rel(rand(0.5,0.8))
+  .sus(rand(0.05, 0.1)).out();
+beat(1) :: sound(flip(2) ? 'kick' : ['sd', 'cp'].beat(3)).out();
+beat([.25, .5].beat(4)) :: flip(6) && sound('dr')
+  .room(0.85).size(0.85).vel($(1) % 10 / 8)
+  .n([1, 2, 7].pick()).out();`,
+  */
 ];
