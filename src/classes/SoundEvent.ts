@@ -230,7 +230,7 @@ export class SoundEvent extends AudibleEvent {
   // Frequency management
 
   public sound = (value: string) => this.updateValue("s", value);
-  public chord = (value: number[]) => this.updateValue("chord", value);
+  public chord = (value: object[]) => this.updateValue("chord", value);
   public snd = this.sound;
   public nudge = (value: number) => this.updateValue("nudge", value);
   public cut = (value: number) => this.updateValue("cut", value);
@@ -292,11 +292,11 @@ export class SoundEvent extends AudibleEvent {
 
   out = (): void => {
     if (this.values.chord) {
-      this.values.chord.forEach((freq: number) => {
-        const copy = { ...this.values };
-        copy.freq = freq;
+      this.values.chord.forEach((obj: {[key: string]: number}) => {
+        const copy = {...this.values};
+        copy.freq = obj.freq
         // This is pure non-sense but I need to adapt somehow
-        superdough(copy, this.values.dur * 2, this.values.dur);
+        superdough(copy, copy.dur*2, copy.dur);
       });
     } else {
       // This is pure non-sense but I need to adapt somehow

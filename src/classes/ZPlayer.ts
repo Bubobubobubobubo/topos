@@ -148,8 +148,17 @@ export class Player extends Event {
         obj.dur = event.duration;
         return new SoundEvent(obj, this.app).sound(name);
       } else if (event instanceof Chord) {
-        const pitches = event.freqs();
-        return new SoundEvent(event, this.app).chord(pitches).sound(name);
+        const pitches = event.pitches.map((p) => {
+          return p.getExisting(
+            "freq",
+            "pitch",
+            "key",
+            "scale",
+            "octave",
+            "parsedScale"
+          );
+        });
+        return new SoundEvent({dur: event.duration}, this.app).chord(pitches).sound(name);
       } else if (event instanceof ZRest) {
         return RestEvent.createRestProxy(event.duration, this.app);
       }
