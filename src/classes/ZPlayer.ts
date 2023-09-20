@@ -101,28 +101,26 @@ export class Player extends Event {
       this.skipIndex = 0;
     }
 
-    // Main logic
-    const howAboutNow =
-      // If pattern is just starting
-      (this.notStarted() &&
-        (this.pulse() === 0 || this.origin() >= this.nextBeatInTicks()) &&
-        this.origin() >= this.waitTime) ||
-      // If pattern is already playing
-      (this.current &&
-        this.pulseToSecond(this.origin()) >=
-          this.pulseToSecond(this.lastCallTime) +
-            this.current.duration *
-              4 *
-              this.pulseToSecond(this.app.api.ppqn()) &&
-        this.origin() >= this.waitTime);
+    const patternIsStarting = (this.notStarted() &&
+    (this.pulse() === 0 || this.origin() >= this.nextBeatInTicks()) &&
+    this.origin() >= this.waitTime);
+    
+    const timeToPlayNext = (this.current &&
+      this.pulseToSecond(this.origin()) >=
+      this.pulseToSecond(this.lastCallTime) +
+      this.pulseToSecond(this.current.duration*4*this.app.clock.ppqn) &&
+      this.origin() >= this.waitTime);
 
+    // If pattern is starting or it's time to play next event
+    const areWeThereYet = patternIsStarting || timeToPlayNext;
+      
     // Increment index of how many times call is skipped
-    this.skipIndex = howAboutNow ? 0 : this.skipIndex + 1;
+    this.skipIndex = areWeThereYet ? 0 : this.skipIndex + 1;
 
     // Increment index of how many times sound/midi have been called
-    this.index = howAboutNow ? this.index + 1 : this.index;
+    this.index = areWeThereYet ? this.index + 1 : this.index;
 
-    if (howAboutNow && this.notStarted()) {
+    if (areWeThereYet && this.notStarted()) {
       this.initCallTime = this.app.clock.pulses_since_origin;
     }
 
@@ -130,7 +128,7 @@ export class Player extends Event {
       this.startCallTime = this.app.clock.pulses_since_origin;
     }
 
-    return howAboutNow;
+    return areWeThereYet;
   };
 
   sound(name: string) {
