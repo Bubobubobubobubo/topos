@@ -134,8 +134,10 @@ export class Player extends Event {
   };
 
   sound(name: string) {
+    
     if (this.areWeThereYet()) {
       const event = this.next() as Pitch | Chord | ZRest;
+      const noteLengthInSeconds = this.app.clock.convertPulseToSecond(event.duration*4*this.app.clock.ppqn);
       if (event instanceof Pitch) {
         const obj = event.getExisting(
           "freq",
@@ -145,7 +147,7 @@ export class Player extends Event {
           "octave",
           "parsedScale"
         );
-        obj.dur = event.duration;
+        obj.dur = noteLengthInSeconds;
         return new SoundEvent(obj, this.app).sound(name);
       } else if (event instanceof Chord) {
         const pitches = event.pitches.map((p) => {
@@ -158,7 +160,7 @@ export class Player extends Event {
             "parsedScale"
           );
         });
-        return new SoundEvent({dur: event.duration}, this.app).chord(pitches).sound(name);
+        return new SoundEvent({dur: noteLengthInSeconds}, this.app).chord(pitches).sound(name);
       } else if (event instanceof ZRest) {
         return RestEvent.createRestProxy(event.duration, this.app);
       }
