@@ -22,7 +22,7 @@ declare global {
     loop(index: number): T;
     shuffle(): this;
     scale(name: string, base_note?: number): this;
-    arp(scaleName: string): this;
+    scaleArp(scaleName: string): this;
     rotate(steps: number): this;
     unique(): this;
     in(value: T): boolean;
@@ -374,47 +374,40 @@ Array.prototype.scale = function (
    * @param scale - the scale name
    * @param base_note - the base note to start at (MIDI note number)
    *
-   * @returns notes from the desired scalek
+   * @returns notes from the desired scale
    */
 
   // This is a helper function to handle up or down octaviation.
   const mod = (n: number, m: number) => ((n % m) + m) % m;
-
-  if (SCALES.hasOwnProperty(scale)) {
-    const selected_scale = SCALES[scale];
-    return this.map((value) => {
-      const octaveShift = Math.floor(value / selected_scale.length) * 12;
-      return (
-        selected_scale[mod(value, selected_scale.length)] +
-        base_note +
-        octaveShift
-      );
-    });
-  } else {
-    return this.map((value) => value + base_note);
-  }
+  const selected_scale = safeScale[scale];
+  return this.map((value) => {
+    const octaveShift = Math.floor(value / selected_scale.length) * 12;
+    return (
+      selected_scale[mod(value, selected_scale.length)] +
+      base_note +
+      octaveShift
+    );
+  });
 };
 
-Array.prototype.arp = function (scaleName: string = "major", mask: number = 0) {
+Array.prototype.scaleArp = function (
+  scaleName: string = "major",
+  boundary: number = 0
+) {
   /*
    * @param scaleName - the scale name
    * @param mask - the length of the mask
    *
+   * @returns arpeggiated notes from the scale
    */
   const scale = safeScale[scaleName];
 
-  //input protect from unknow scale
-
-  if (!scale) {
-    throw new Error(`Unknown scale ${scaleName}`);
-  }
-
   let result = [];
 
-  mask = mask > scale.length ? scale.length : mask;
-  mask = mask == 0 ? scale.length : mask;
+  boundary = boundary > scale.length ? scale.length : boundary;
+  boundary = boundary == 0 ? scale.length : boundary;
 
-  for (let j = 0; j < mask; j++) {
+  for (let j = 0; j < boundary; j++) {
     for (let i = 0; i < this.length; i++) {
       result.push(this[i] + scale[j]);
     }
