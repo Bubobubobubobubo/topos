@@ -2,7 +2,6 @@ import { seededRandom } from "zifferjs";
 import { MidiConnection } from "./IO/MidiConnection";
 import { tryEvaluate, evaluateOnce } from "./Evaluator";
 import { DrunkWalk } from "./Utils/Drunk";
-import { scale } from "./Scales";
 import { Editor } from "./main";
 import { SoundEvent } from "./classes/SoundEvent";
 import { MidiEvent } from "./classes/MidiEvent";
@@ -17,6 +16,7 @@ import {
   // @ts-ignore
 } from "superdough";
 import { Speaker } from "./StringExtensions";
+import { getScaleNotes } from "zifferjs";
 
 interface ControlChange {
   channel: number;
@@ -1513,7 +1513,7 @@ export class UserAPI {
     this._logMessage(message);
   };
 
-  scale = scale;
+  scale = getScaleNotes
 
   rate = (rate: number): void => {
     rate = rate;
