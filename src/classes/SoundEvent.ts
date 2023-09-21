@@ -292,15 +292,13 @@ export class SoundEvent extends AudibleEvent {
 
   out = (): void => {
     if (this.values.chord) {
-      this.values.chord.forEach((obj: {[key: string]: number}) => {
-        const copy = {...this.values};
+      this.values.chord.forEach((obj: { [key: string]: number }) => {
+        const copy = { ...this.values };
         copy.freq = obj.freq
-        // This is pure non-sense but I need to adapt somehow
-        superdough(copy, copy.dur*2, copy.dur);
+        superdough(copy, 0.25, this.values.dur);
       });
     } else {
-      // This is pure non-sense but I need to adapt somehow
-      superdough(this.values, this.values.dur * 2, this.values.dur);
+      superdough(this.values, 0.25, this.values.dur);
     }
   };
 }

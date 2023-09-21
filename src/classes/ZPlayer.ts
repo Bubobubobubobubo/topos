@@ -101,28 +101,26 @@ export class Player extends Event {
       this.skipIndex = 0;
     }
 
-    // Main logic
-    const howAboutNow =
-      // If pattern is just starting
-      (this.notStarted() &&
-        (this.pulse() === 0 || this.origin() >= this.nextBeatInTicks()) &&
-        this.origin() >= this.waitTime) ||
-      // If pattern is already playing
-      (this.current &&
-        this.pulseToSecond(this.origin()) >=
-          this.pulseToSecond(this.lastCallTime) +
-            this.current.duration *
-              4 *
-              this.pulseToSecond(this.app.api.ppqn()) &&
-        this.origin() >= this.waitTime);
+    const patternIsStarting = (this.notStarted() &&
+    (this.pulse() === 0 || this.origin() >= this.nextBeatInTicks()) &&
+    this.origin() >= this.waitTime);
+    
+    const timeToPlayNext = (this.current &&
+      this.pulseToSecond(this.origin()) >=
+      this.pulseToSecond(this.lastCallTime) +
+      this.pulseToSecond(this.current.duration*4*this.app.clock.ppqn) &&
+      this.origin() >= this.waitTime);
 
+    // If pattern is starting or it's time to play next event
+    const areWeThereYet = patternIsStarting || timeToPlayNext;
+      
     // Increment index of how many times call is skipped
-    this.skipIndex = howAboutNow ? 0 : this.skipIndex + 1;
+    this.skipIndex = areWeThereYet ? 0 : this.skipIndex + 1;
 
     // Increment index of how many times sound/midi have been called
-    this.index = howAboutNow ? this.index + 1 : this.index;
+    this.index = areWeThereYet ? this.index + 1 : this.index;
 
-    if (howAboutNow && this.notStarted()) {
+    if (areWeThereYet && this.notStarted()) {
       this.initCallTime = this.app.clock.pulses_since_origin;
     }
 
@@ -130,12 +128,14 @@ export class Player extends Event {
       this.startCallTime = this.app.clock.pulses_since_origin;
     }
 
-    return howAboutNow;
+    return areWeThereYet;
   };
 
   sound(name: string) {
+    
     if (this.areWeThereYet()) {
       const event = this.next() as Pitch | Chord | ZRest;
+      const noteLengthInSeconds = this.app.clock.convertPulseToSecond(event.duration*4*this.app.clock.ppqn);
       if (event instanceof Pitch) {
         const obj = event.getExisting(
           "freq",
@@ -145,7 +145,7 @@ export class Player extends Event {
           "octave",
           "parsedScale"
         );
-        obj.dur = event.duration;
+        obj.dur = noteLengthInSeconds;
         return new SoundEvent(obj, this.app).sound(name);
       } else if (event instanceof Chord) {
         const pitches = event.pitches.map((p) => {
@@ -158,7 +158,7 @@ export class Player extends Event {
             "parsedScale"
           );
         });
-        return new SoundEvent({dur: event.duration}, this.app).chord(pitches).sound(name);
+        return new SoundEvent({dur: noteLengthInSeconds}, this.app).chord(pitches).sound(name);
       } else if (event instanceof ZRest) {
         return RestEvent.createRestProxy(event.duration, this.app);
       }
