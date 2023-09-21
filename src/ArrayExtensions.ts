@@ -353,26 +353,6 @@ Array.prototype.scale = function (
   /**
    * @param scale - the scale name
    * @param base_note - the base note to start at (MIDI note number)
-   */
-  const selected_scale = SCALES[scale];
-  return this.map((value) => {
-    const octaveShift =
-      Math.floor(value / selected_scale.length) * 12 * Math.sign(value);
-    return (
-      selected_scale[Math.abs(value) % selected_scale.length] +
-      base_note +
-      octaveShift
-    );
-  });
-};
-
-Array.prototype.scale = function (
-  scale: string = "major",
-  base_note: number = 0
-) {
-  /**
-   * @param scale - the scale name
-   * @param base_note - the base note to start at (MIDI note number)
    *
    * @returns notes from the desired scale
    */
