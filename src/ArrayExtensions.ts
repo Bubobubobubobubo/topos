@@ -344,18 +344,36 @@ export const makeArrayExtensions = (api: UserAPI) => {
   Array.prototype.rand = Array.prototype.random;
 };
 
-Array.prototype.scale = function <T>(this: T[], scaleName: string = "major") {
+Array.prototype.scale = function <T>(this: T[], scaleName: string = "major", maskLength: number = 0) {
+
+    /**
+      * @param scale - the scale name
+      * @param mask - masking the scale array
+    */
 
     const scale = SCALES[scaleName];
+    let mask = maskLength;
 
     //input protect from unknow scale
     if (!scale) {
         throw new Error(`Unknown scale ${scaleName}`);
     }
 
+    //input protect from to long mask
+    if (mask > scale.length) {
+        mask = scale.length;
+        throw new Error(`Mask exceeds selected scale length`)
+    }
+
+    // default mask = scale length
+    if (mask == 0) {
+        mask = scale.length;
+    }
+    
+
     let result = [];
 
-    for (let j = 0; j < scale.length; j++) {
+    for (let j = 0; j < mask; j++) {
 
         for (let i = 0; i < this.length; i++) {
 
