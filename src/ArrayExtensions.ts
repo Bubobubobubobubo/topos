@@ -355,16 +355,14 @@ Array.prototype.scale = function <T>(this: T[], scaleName: string = "major") {
 
     let result = [];
 
-    for (let i = 0; i < scale.length; i++) {
+    for (let j = 0; j < scale.length; j++) {
 
-        if (!this[i]) {
-            result.push(this[0] + scale[i]);
-        } else {
-            result.push(this[i] + scale[i]);
+        for (let i = 0; i < this.length; i++) {
+
+            result.push(this[i] + scale[j]);
         }
+
     }
 
-    //this.shift()
-    //this = [...result];
     return result;
 };
