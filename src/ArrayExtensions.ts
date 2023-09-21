@@ -1,5 +1,6 @@
 import { type UserAPI } from "./API";
 import { SCALES } from "./Scales";
+import { safeScale } from "zifferjs";
 export { };
 
 declare global {
@@ -22,6 +23,7 @@ declare global {
     loop(index: number): T;
     shuffle(): this;
     scale(name: string, base_note?: number): this;
+    arp(scaleName: string): this;
     rotate(steps: number): this;
     unique(): this;
     in(value: T): boolean;
@@ -366,10 +368,13 @@ Array.prototype.scale = function(scale: string = "major", base_note: number = 0)
   /**
     * @param scale - the scale name
     * @param base_note - the base note to start at (MIDI note number)
+    *
+    * @returns notes from the desired scalek
     */
 
   // This is a helper function to handle up or down octaviation.
   const mod = (n: number, m: number) => ((n % m) + m) % m;
+
   if (SCALES.hasOwnProperty(scale)) {
     const selected_scale = SCALES[scale];
     return this.map((value) => {
@@ -379,4 +384,26 @@ Array.prototype.scale = function(scale: string = "major", base_note: number = 0)
   } else {
     return this.map((value) => value + base_note);
   }
+};
+
+Array.prototype.arp = function(scaleName: string = "major") {
+  /* 
+   * Ajouter documentation
+   *
+   */
+  const scale = SCALES[scaleName];
+
+  //input protect from unknow scale
+
+  if (!scale) {
+    throw new Error(`Unknown scale ${scaleName}`);
+  }
+
+  let result = [];
+  for (let j = 0; j < scale.length; j++) {
+    for (let i = 0; i < this.length; i++) {
+      result.push(this[i] + scale[j]);
+    }
+  }
+  return result;
 };
