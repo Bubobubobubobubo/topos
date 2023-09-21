@@ -7,6 +7,7 @@ import { Editor } from "./main";
 import { SoundEvent } from "./classes/SoundEvent";
 import { MidiEvent } from "./classes/MidiEvent";
 import { LRUCache } from "lru-cache";
+import { SCALES } from "./Scales"
 import { InputOptions, Player } from "./classes/ZPlayer";
 import {
   samples,

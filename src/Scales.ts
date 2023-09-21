@@ -1,4 +1,4 @@
-const SCALES: Record<string, number[]> = {
+export const SCALES: Record<string, number[]> = {
   major: [0, 2, 4, 5, 7, 9, 11],
   naturalMinor: [0, 2, 3, 5, 7, 8, 10],
   harmonicMinor: [0, 2, 3, 5, 7, 8, 11],
@@ -53,18 +53,21 @@ const SCALES: Record<string, number[]> = {
   orientalA: [0, 1, 4, 5, 6, 9, 10],
 };
 
+
+// Legacy function, see Array.prototype.scale @ ArrayExtensions.ts
+/*
 export function scale(
   n: number,
   scaleName: string = "major",
   octave: number = 4
 ): number {
-  /**
+  /*
    * Returns the MIDI note number for the given scale degree in the given scale.
    * @param {number} n - The scale degree, where 0 is the tonic.
    * @param {string} scaleName - The name of the scale.
    * @param {number} octave - The octave number.
    * @returns {number} The MIDI note number.
-   */
+   * /
   const scale = SCALES[scaleName];
 
   if (!scale) {
@@ -76,3 +79,5 @@ export function scale(
   let additionalOctaves = Math.floor(n / scale.length);
   return 60 + (octave + additionalOctaves) * 12 + scale[index];
 }
+
+*/

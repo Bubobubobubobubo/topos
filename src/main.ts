@@ -66,6 +66,8 @@ const bindings = Object.keys(classMap).map((key) => ({
   replace: (match, p1) => `<${key} class="${classMap[key]}" ${p1}>`,
 }));
 
+
+
 export class Editor {
   universes: Universes = template_universes;
   selected_universe: string;

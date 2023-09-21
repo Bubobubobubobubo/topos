@@ -1,4 +1,5 @@
 import { type UserAPI } from "./API";
+import { SCALES } from "./Scales";
 export {};
 
 declare global {
@@ -238,7 +239,8 @@ export const makeArrayExtensions = (api: UserAPI) => {
       for (let j = 0; j < amount; j++) {
         result.push(this[i]);
       }
-    }
+      }
+
     this.length = 0;
     this.push(...result);
     return this;
@@ -340,4 +342,28 @@ export const makeArrayExtensions = (api: UserAPI) => {
     return this[Math.floor(api.randomGen() * this.length)];
   };
   Array.prototype.rand = Array.prototype.random;
+};
+
+Array.prototype.scale = function <T>(this: T[], scaleName: string = "major") {
+
+    const scale = SCALES[scaleName];
+
+    if (!scale) {
+        throw new Error(`Unknown scale ${scaleName}`);
+    }
+
+    let result = [];
+
+    for (let i = 0; i < scale.length; i++) {
+
+        if (!this[i]) {
+            result.push(this[0] + scale[i]);
+        } else {
+            result.push(this[i] + scale[i]);
+        }
+    }
+
+    this.shift()
+    this.push(...result);
+    return this;
 };
