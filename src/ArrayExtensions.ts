@@ -1,6 +1,6 @@
 import { type UserAPI } from "./API";
 import { safeScale } from "zifferjs";
-export { };
+export {};
 
 declare global {
   interface Array<T> {
@@ -37,14 +37,14 @@ export const makeArrayExtensions = (api: UserAPI) => {
     return this.includes(value);
   };
 
-  Array.prototype.square = function(): number[] {
+  Array.prototype.square = function (): number[] {
     /**
      * @returns New array with squared values.
      */
     return this.map((x: number) => x * x);
   };
 
-  Array.prototype.sqrt = function(): number[] {
+  Array.prototype.sqrt = function (): number[] {
     /**
      * @returns New array with square roots of values. Throws if any element is negative.
      */
@@ -53,7 +53,7 @@ export const makeArrayExtensions = (api: UserAPI) => {
     return this.map((x: number) => Math.sqrt(x));
   };
 
-  Array.prototype.add = function(amount: number): number[] {
+  Array.prototype.add = function (amount: number): number[] {
     /**
      * @param amount - The value to add to each element in the array.
      * @returns New array with added values.
@@ -61,7 +61,7 @@ export const makeArrayExtensions = (api: UserAPI) => {
     return this.map((x: number) => x + amount);
   };
 
-  Array.prototype.sub = function(amount: number): number[] {
+  Array.prototype.sub = function (amount: number): number[] {
     /**
      * @param amount - The value to subtract from each element in the array.
      * @returns New array with subtracted values.
@@ -69,7 +69,7 @@ export const makeArrayExtensions = (api: UserAPI) => {
     return this.map((x: number) => x - amount);
   };
 
-  Array.prototype.mult = function(amount: number): number[] {
+  Array.prototype.mult = function (amount: number): number[] {
     /**
      * @param amount - The value to multiply with each element in the array.
      * @returns New array with multiplied values.
@@ -77,7 +77,7 @@ export const makeArrayExtensions = (api: UserAPI) => {
     return this.map((x: number) => x * amount);
   };
 
-  Array.prototype.div = function(amount: number): number[] {
+  Array.prototype.div = function (amount: number): number[] {
     /**
      * @param amount - The value to divide each element in the array by.
      * @returns New array with divided values. Throws if division by zero.
@@ -86,7 +86,7 @@ export const makeArrayExtensions = (api: UserAPI) => {
     return this.map((x: number) => x / amount);
   };
 
-  Array.prototype.pick = function() {
+  Array.prototype.pick = function () {
     /**
      * Returns a random element from an array.
      *
@@ -95,7 +95,7 @@ export const makeArrayExtensions = (api: UserAPI) => {
     return this[Math.floor(api.randomGen() * this.length)];
   };
 
-  Array.prototype.gen = function(min: number, max: number, times: number) {
+  Array.prototype.gen = function (min: number, max: number, times: number) {
     /**
      * Returns an array of random numbers.
      * @param min - The minimum value of the random numbers
@@ -112,7 +112,7 @@ export const makeArrayExtensions = (api: UserAPI) => {
     );
   };
 
-  Array.prototype.bar = function() {
+  Array.prototype.bar = function () {
     /**
      * Returns an element from an array based on the current bar.
      *
@@ -121,7 +121,7 @@ export const makeArrayExtensions = (api: UserAPI) => {
     return this[api.app.clock.time_position.bar % this.length];
   };
 
-  Array.prototype.pulse = function() {
+  Array.prototype.pulse = function () {
     /**
      * Returns an element from an array based on the current pulse.
      *
@@ -130,7 +130,7 @@ export const makeArrayExtensions = (api: UserAPI) => {
     return this[api.app.clock.time_position.pulse % this.length];
   };
 
-  Array.prototype.beat = function(divisor: number = 1) {
+  Array.prototype.beat = function (divisor: number = 1) {
     const chunk_size = divisor; // Get the first argument (chunk size)
     const timepos = api.app.clock.pulses_since_origin;
     const slice_count = Math.floor(
@@ -139,7 +139,7 @@ export const makeArrayExtensions = (api: UserAPI) => {
     return this[slice_count % this.length];
   };
 
-  Array.prototype.shuffle = function() {
+  Array.prototype.shuffle = function () {
     /**
      * Shuffles the array in place.
      *
@@ -158,7 +158,7 @@ export const makeArrayExtensions = (api: UserAPI) => {
     return this;
   };
 
-  Array.prototype.rotate = function(steps: number) {
+  Array.prototype.rotate = function (steps: number) {
     /**
      * Rotates the array in place.
      *
@@ -178,7 +178,7 @@ export const makeArrayExtensions = (api: UserAPI) => {
     return this;
   };
 
-  Array.prototype.unique = function() {
+  Array.prototype.unique = function () {
     /**
      * Removes duplicate elements from the array in place.
      *
@@ -211,7 +211,7 @@ export const makeArrayExtensions = (api: UserAPI) => {
     if (this.length <= 1) {
       return this;
     }
-    for (let i = 0; i < this.length;) {
+    for (let i = 0; i < this.length; ) {
       const rand = api.randomGen() * 100;
       if (rand < amount) {
         if (this.length > 1) {
@@ -324,7 +324,7 @@ export const makeArrayExtensions = (api: UserAPI) => {
     return left_to_right.concat(right_to_left);
   };
 
-  Array.prototype.loop = function(index: number) {
+  Array.prototype.loop = function (index: number) {
     /**
      * Returns an element from the array based on the index.
      * The index will wrap over the array.
@@ -335,7 +335,7 @@ export const makeArrayExtensions = (api: UserAPI) => {
     return this[index % this.length];
   };
 
-  Array.prototype.random = function() {
+  Array.prototype.random = function () {
     /**
      * Returns a random element from the array.
      *
@@ -346,52 +346,79 @@ export const makeArrayExtensions = (api: UserAPI) => {
   Array.prototype.rand = Array.prototype.random;
 };
 
-Array.prototype.scale = function(scale: string = "major", base_note: number = 0) {
+Array.prototype.scale = function (
+  scale: string = "major",
+  base_note: number = 0
+) {
   /**
-    * @param scale - the scale name
-    * @param base_note - the base note to start at (MIDI note number)
-    */
+   * @param scale - the scale name
+   * @param base_note - the base note to start at (MIDI note number)
+   */
+  const selected_scale = SCALES[scale];
+  return this.map((value) => {
+    const octaveShift =
+      Math.floor(value / selected_scale.length) * 12 * Math.sign(value);
+    return (
+      selected_scale[Math.abs(value) % selected_scale.length] +
+      base_note +
+      octaveShift
+    );
+  });
+};
+
+Array.prototype.scale = function (
+  scale: string = "major",
+  base_note: number = 0
+) {
+  /**
+   * @param scale - the scale name
+   * @param base_note - the base note to start at (MIDI note number)
+   *
+   * @returns notes from the desired scalek
+   */
+
+  // This is a helper function to handle up or down octaviation.
+  const mod = (n: number, m: number) => ((n % m) + m) % m;
+
   if (SCALES.hasOwnProperty(scale)) {
     const selected_scale = SCALES[scale];
     return this.map((value) => {
-      const octaveShift = Math.floor(value / selected_scale.length) * 12 * Math.sign(value);
-      return selected_scale[Math.abs(value) % selected_scale.length] + base_note + octaveShift;
+      const octaveShift = Math.floor(value / selected_scale.length) * 12;
+      return (
+        selected_scale[mod(value, selected_scale.length)] +
+        base_note +
+        octaveShift
+      );
     });
   } else {
     return this.map((value) => value + base_note);
   }
 };
 
-
-Array.prototype.scale = function(scale: string = "major", base_note: number = 0) {
-  /**
-    * @param scale - the scale name
-    * @param base_note - the base note to start at (MIDI note number)
-    *
-    * @returns notes from the desired scalek
-    */
-
-  // This is a helper function to handle up or down octaviation.
-  const mod = (n: number, m: number) => ((n % m) + m) % m;
-  let selected_scale = safeScale(scale);
-  return this.map((value) => {
-    const octaveShift = Math.floor(value / selected_scale.length) * 12;
-    return selected_scale[mod(value, selected_scale.length)] + base_note + octaveShift;
-  });
-};
-
-Array.prototype.arp = function(scaleName: string = "major") {
-  /* 
-   * Ajouter documentation
+Array.prototype.arp = function (scaleName: string = "major", mask: number = 0) {
+  /*
+   * @param scaleName - the scale name
+   * @param mask - the length of the mask
    *
    */
   const scale = safeScale[scaleName];
 
+  //input protect from unknow scale
+
+  if (!scale) {
+    throw new Error(`Unknown scale ${scaleName}`);
+  }
+
   let result = [];
-  for (let j = 0; j < scale.length; j++) {
+
+  mask = mask > scale.length ? scale.length : mask;
+  mask = mask == 0 ? scale.length : mask;
+
+  for (let j = 0; j < mask; j++) {
     for (let i = 0; i < this.length; i++) {
       result.push(this[i] + scale[j]);
     }
   }
+
   return result;
 };
