@@ -1,5 +1,4 @@
 import { type UserAPI } from "./API";
-import { SCALES } from "./Scales";
 import { safeScale } from "zifferjs";
 export { };
 
@@ -374,16 +373,11 @@ Array.prototype.scale = function(scale: string = "major", base_note: number = 0)
 
   // This is a helper function to handle up or down octaviation.
   const mod = (n: number, m: number) => ((n % m) + m) % m;
-
-  if (SCALES.hasOwnProperty(scale)) {
-    const selected_scale = SCALES[scale];
-    return this.map((value) => {
-      const octaveShift = Math.floor(value / selected_scale.length) * 12;
-      return selected_scale[mod(value, selected_scale.length)] + base_note + octaveShift;
-    });
-  } else {
-    return this.map((value) => value + base_note);
-  }
+  let selected_scale = safeScale(scale);
+  return this.map((value) => {
+    const octaveShift = Math.floor(value / selected_scale.length) * 12;
+    return selected_scale[mod(value, selected_scale.length)] + base_note + octaveShift;
+  });
 };
 
 Array.prototype.arp = function(scaleName: string = "major") {
@@ -391,13 +385,7 @@ Array.prototype.arp = function(scaleName: string = "major") {
    * Ajouter documentation
    *
    */
-  const scale = SCALES[scaleName];
-
-  //input protect from unknow scale
-
-  if (!scale) {
-    throw new Error(`Unknown scale ${scaleName}`);
-  }
+  const scale = safeScale[scaleName];
 
   let result = [];
   for (let j = 0; j < scale.length; j++) {
