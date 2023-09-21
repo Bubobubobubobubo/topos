@@ -1,5 +1,5 @@
 import { type UserAPI } from "./API";
-import { safeScale } from "zifferjs";
+import { safeScale, stepsToScale } from "zifferjs";
 export {};
 
 declare global {
@@ -379,7 +379,7 @@ Array.prototype.scale = function (
 
   // This is a helper function to handle up or down octaviation.
   const mod = (n: number, m: number) => ((n % m) + m) % m;
-  const selected_scale = safeScale[scale];
+  const selected_scale = stepsToScale(safeScale[scale]);
   return this.map((value) => {
     const octaveShift = Math.floor(value / selected_scale.length) * 12;
     return (
@@ -400,7 +400,7 @@ Array.prototype.scaleArp = function (
    *
    * @returns arpeggiated notes from the scale
    */
-  const scale = safeScale[scaleName];
+  const scale = stepsToScale(safeScale[scaleName]);
 
   let result = [];
 
