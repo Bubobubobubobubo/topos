@@ -1,3 +1,4 @@
+import { noteNameToMidi } from "zifferjs";
 import { type UserAPI } from "./API";
 import { Player } from "./classes/ZPlayer";
 export {};
@@ -30,6 +31,7 @@ declare global {
         z14(): Player;
         z15(): Player;
         z16(): Player;
+        note(): number;
     }
 }
 
@@ -79,7 +81,7 @@ export const makeStringExtensions = (api: UserAPI) => {
     String.prototype.z = function (options: {[key: string]: any} = {}) {
         return api.z(this.valueOf(), options);
     };
-
+ 
     String.prototype.z0 = function (options: {[key: string]: any} = {}) {
         return api.z0(this.valueOf(), options);
     };
@@ -148,6 +150,13 @@ export const makeStringExtensions = (api: UserAPI) => {
         return api.z16(this.valueOf(), options);
     };
 
+    String.prototype.note = function () {
+        try {
+            return parseInt(this.valueOf());
+        } catch (e) {
+            return noteNameToMidi(this.valueOf());
+        }
+    };
 }
 
 type SpeechOptions = {

@@ -22,15 +22,42 @@ beat(.5) && snd(['sine', 'triangle', 'sawtooth', 'square'].beat()).freq(100).out
 
 Two functions are primarily used to control the frequency of the synthesizer:
 - <ic>freq(hz: number)</ic>: sets the frequency of the oscillator.
-- <ic>note(note: number)</ic>: sets the MIDI note of the oscillator (MIDI note converted to hertz).
+- <ic>note(note: number|string)</ic>: sets the MIDI note of the oscillator (MIDI note converted to hertz).
 
 ${makeExample(
-    "Selecting a pitch or note",
+    "Selecting a pitch",
     `
 beat(.5) && snd('triangle').freq([100,200,400].beat(2)).out()
 `,
     true
   )}
+
+  ${makeExample(
+    "Selecting a note",
+    `
+beat(.5) && snd('triangle').note([60,"F4"].pick()).out()
+`,
+    true
+  )}
+
+Chords can also played using different parameters:
+-<ic>chord(string||number[]|...number)</ic>: parses and sets notes for the chord
+
+${makeExample(
+    "Playing a named chord",
+    `
+    beat(1) && snd('triangle').chord(["C","Em7","Fmaj7","Emin"].beat(2)).out()
+`,
+    true
+  )}  
+
+${makeExample(
+    "Playing a chord from a list of notes and doing inversions",
+    `
+    beat(.5) && snd('triangle').chord(60,64,67,72).invert([1,-3,4,-5].pick()).out()
+`,
+    true
+  )}  
 
 ## Vibrato
 

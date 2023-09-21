@@ -1,6 +1,6 @@
 import { type Editor } from "../main";
 import { AudibleEvent } from "./AbstractEvents";
-import { midiToFreq, noteFromPc } from "zifferjs";
+import { chord as parseChord, midiToFreq, noteFromPc, noteNameToMidi } from "zifferjs";
 
 import {
   superdough,
@@ -230,13 +230,42 @@ export class SoundEvent extends AudibleEvent {
   // Frequency management
 
   public sound = (value: string) => this.updateValue("s", value);
-  public chord = (value: object[]) => this.updateValue("chord", value);
+  public chord = (value: string|object[]|number[]|number,...kwargs: number[]) => {
+    if(typeof value === "string") {
+      const chord = parseChord(value);
+      value = chord.map((note: number) => { return {note: note, freq: midiToFreq(note) } });
+    } else if(value instanceof Array && typeof value[0] === "number") {
+      value = (value as number[]).map((note: number) => { return {note: note, freq: midiToFreq(note) } });
+    } else if (typeof value === "number" && kwargs.length > 0) {
+      value = [value, ...kwargs].map((note: number) => { return {note: note, freq: midiToFreq(note) } });
+    }
+    return this.updateValue("chord", value);
+  }
+  public invert = (howMany: number = 0) => {
+    if(this.values.chord) {
+      let notes = this.values.chord.map((obj: { [key: string]: number }) => obj.note);
+      notes = howMany < 0 ? [...notes].reverse() : notes;
+      for (let i = 0; i < Math.abs(howMany); i++) {
+        notes[i % notes.length] += howMany <= 0 ? -12 : 12;
+      }
+      const chord = notes.map((note: number) => { return {note: note, freq: midiToFreq(note) } });
+      return this.updateValue("chord", chord);
+    } else {
+      return this;
+    }
+  }
   public snd = this.sound;
   public nudge = (value: number) => this.updateValue("nudge", value);
   public cut = (value: number) => this.updateValue("cut", value);
   public clip = (value: number) => this.updateValue("clip", value);
   public n = (value: number) => this.updateValue("n", value);
-  public note = (value: number) => this.updateValue("note", value);
+  public note = (value: number|string) => {
+    if(typeof value === "string") {
+      return this.updateValue("note", noteNameToMidi(value));
+    } else {
+      return this.updateValue("note", value);
+    }
+  };
   public speed = (value: number) => this.updateValue("speed", value);
   public spd = this.speed;
 
