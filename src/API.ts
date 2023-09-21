@@ -16,6 +16,7 @@ import {
   // @ts-ignore
 } from "superdough";
 import { Speaker } from "./StringExtensions";
+import { getScaleNotes } from "zifferjs";
 
 interface ControlChange {
   channel: number;
@@ -1512,6 +1513,7 @@ export class UserAPI {
     this._logMessage(message);
   };
 
+  scale = getScaleNotes;
 
   rate = (rate: number): void => {
     rate = rate;
