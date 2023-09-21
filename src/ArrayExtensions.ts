@@ -347,15 +347,35 @@ export const makeArrayExtensions = (api: UserAPI) => {
 
 Array.prototype.scale = function(scale: string = "major", base_note: number = 0) {
   /**
-    * Returns a note from an array containing a specific scale.
-    *
-    * @param scale - the scale name (string)
+    * @param scale - the scale name
     * @param base_note - the base note to start at (MIDI note number)
-    *
     */
   if (SCALES.hasOwnProperty(scale)) {
-    const selected_scale = SCALES[scale]
-    return this.map((value) => selected_scale[value % selected_scale.length] + base_note);
+    const selected_scale = SCALES[scale];
+    return this.map((value) => {
+      const octaveShift = Math.floor(value / selected_scale.length) * 12 * Math.sign(value);
+      return selected_scale[Math.abs(value) % selected_scale.length] + base_note + octaveShift;
+    });
+  } else {
+    return this.map((value) => value + base_note);
+  }
+};
+
+
+Array.prototype.scale = function(scale: string = "major", base_note: number = 0) {
+  /**
+    * @param scale - the scale name
+    * @param base_note - the base note to start at (MIDI note number)
+    */
+
+  // This is a helper function to handle up or down octaviation.
+  const mod = (n: number, m: number) => ((n % m) + m) % m;
+  if (SCALES.hasOwnProperty(scale)) {
+    const selected_scale = SCALES[scale];
+    return this.map((value) => {
+      const octaveShift = Math.floor(value / selected_scale.length) * 12;
+      return selected_scale[mod(value, selected_scale.length)] + base_note + octaveShift;
+    });
   } else {
     return this.map((value) => value + base_note);
   }
