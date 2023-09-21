@@ -1,6 +1,7 @@
 import { type UserAPI } from "./API";
 import { SCALES } from "./Scales";
-export {};
+import { safeScale } from "zifferjs";
+export { };
 
 declare global {
   interface Array<T> {
@@ -21,6 +22,8 @@ declare global {
     pick(): T;
     loop(index: number): T;
     shuffle(): this;
+    scale(name: string, base_note?: number): this;
+    arp(scaleName: string): this;
     rotate(steps: number): this;
     unique(): this;
     in(value: T): boolean;
@@ -35,14 +38,14 @@ export const makeArrayExtensions = (api: UserAPI) => {
     return this.includes(value);
   };
 
-  Array.prototype.square = function (): number[] {
+  Array.prototype.square = function(): number[] {
     /**
      * @returns New array with squared values.
      */
     return this.map((x: number) => x * x);
   };
 
-  Array.prototype.sqrt = function (): number[] {
+  Array.prototype.sqrt = function(): number[] {
     /**
      * @returns New array with square roots of values. Throws if any element is negative.
      */
@@ -51,7 +54,7 @@ export const makeArrayExtensions = (api: UserAPI) => {
     return this.map((x: number) => Math.sqrt(x));
   };
 
-  Array.prototype.add = function (amount: number): number[] {
+  Array.prototype.add = function(amount: number): number[] {
     /**
      * @param amount - The value to add to each element in the array.
      * @returns New array with added values.
@@ -59,7 +62,7 @@ export const makeArrayExtensions = (api: UserAPI) => {
     return this.map((x: number) => x + amount);
   };
 
-  Array.prototype.sub = function (amount: number): number[] {
+  Array.prototype.sub = function(amount: number): number[] {
     /**
      * @param amount - The value to subtract from each element in the array.
      * @returns New array with subtracted values.
@@ -67,7 +70,7 @@ export const makeArrayExtensions = (api: UserAPI) => {
     return this.map((x: number) => x - amount);
   };
 
-  Array.prototype.mult = function (amount: number): number[] {
+  Array.prototype.mult = function(amount: number): number[] {
     /**
      * @param amount - The value to multiply with each element in the array.
      * @returns New array with multiplied values.
@@ -75,7 +78,7 @@ export const makeArrayExtensions = (api: UserAPI) => {
     return this.map((x: number) => x * amount);
   };
 
-  Array.prototype.div = function (amount: number): number[] {
+  Array.prototype.div = function(amount: number): number[] {
     /**
      * @param amount - The value to divide each element in the array by.
      * @returns New array with divided values. Throws if division by zero.
@@ -84,7 +87,7 @@ export const makeArrayExtensions = (api: UserAPI) => {
     return this.map((x: number) => x / amount);
   };
 
-  Array.prototype.pick = function () {
+  Array.prototype.pick = function() {
     /**
      * Returns a random element from an array.
      *
@@ -93,7 +96,7 @@ export const makeArrayExtensions = (api: UserAPI) => {
     return this[Math.floor(api.randomGen() * this.length)];
   };
 
-  Array.prototype.gen = function (min: number, max: number, times: number) {
+  Array.prototype.gen = function(min: number, max: number, times: number) {
     /**
      * Returns an array of random numbers.
      * @param min - The minimum value of the random numbers
@@ -110,7 +113,7 @@ export const makeArrayExtensions = (api: UserAPI) => {
     );
   };
 
-  Array.prototype.bar = function () {
+  Array.prototype.bar = function() {
     /**
      * Returns an element from an array based on the current bar.
      *
@@ -119,7 +122,7 @@ export const makeArrayExtensions = (api: UserAPI) => {
     return this[api.app.clock.time_position.bar % this.length];
   };
 
-  Array.prototype.pulse = function () {
+  Array.prototype.pulse = function() {
     /**
      * Returns an element from an array based on the current pulse.
      *
@@ -128,7 +131,7 @@ export const makeArrayExtensions = (api: UserAPI) => {
     return this[api.app.clock.time_position.pulse % this.length];
   };
 
-  Array.prototype.beat = function (divisor: number = 1) {
+  Array.prototype.beat = function(divisor: number = 1) {
     const chunk_size = divisor; // Get the first argument (chunk size)
     const timepos = api.app.clock.pulses_since_origin;
     const slice_count = Math.floor(
@@ -137,7 +140,7 @@ export const makeArrayExtensions = (api: UserAPI) => {
     return this[slice_count % this.length];
   };
 
-  Array.prototype.shuffle = function () {
+  Array.prototype.shuffle = function() {
     /**
      * Shuffles the array in place.
      *
@@ -156,7 +159,7 @@ export const makeArrayExtensions = (api: UserAPI) => {
     return this;
   };
 
-  Array.prototype.rotate = function (steps: number) {
+  Array.prototype.rotate = function(steps: number) {
     /**
      * Rotates the array in place.
      *
@@ -176,7 +179,7 @@ export const makeArrayExtensions = (api: UserAPI) => {
     return this;
   };
 
-  Array.prototype.unique = function () {
+  Array.prototype.unique = function() {
     /**
      * Removes duplicate elements from the array in place.
      *
@@ -209,7 +212,7 @@ export const makeArrayExtensions = (api: UserAPI) => {
     if (this.length <= 1) {
       return this;
     }
-    for (let i = 0; i < this.length; ) {
+    for (let i = 0; i < this.length;) {
       const rand = api.randomGen() * 100;
       if (rand < amount) {
         if (this.length > 1) {
@@ -239,7 +242,7 @@ export const makeArrayExtensions = (api: UserAPI) => {
       for (let j = 0; j < amount; j++) {
         result.push(this[i]);
       }
-      }
+    }
 
     this.length = 0;
     this.push(...result);
@@ -322,7 +325,7 @@ export const makeArrayExtensions = (api: UserAPI) => {
     return left_to_right.concat(right_to_left);
   };
 
-  Array.prototype.loop = function (index: number) {
+  Array.prototype.loop = function(index: number) {
     /**
      * Returns an element from the array based on the index.
      * The index will wrap over the array.
@@ -333,7 +336,7 @@ export const makeArrayExtensions = (api: UserAPI) => {
     return this[index % this.length];
   };
 
-  Array.prototype.random = function () {
+  Array.prototype.random = function() {
     /**
      * Returns a random element from the array.
      *
@@ -354,10 +357,11 @@ Array.prototype.scale = function <T>(this: T[], scaleName: string = "major", mas
     const scale = SCALES[scaleName];
     let mask = maskLength;
 
-    //input protect from unknow scale
-    if (!scale) {
-        throw new Error(`Unknown scale ${scaleName}`);
-    }
+  //input protect from unknow scale
+
+  if (!scale) {
+    throw new Error(`Unknown scale ${scaleName}`);
+  }
 
     //input protect from to long mask
     if (mask > scale.length) {
