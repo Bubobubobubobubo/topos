@@ -348,6 +348,7 @@ Array.prototype.scale = function <T>(this: T[], scaleName: string = "major") {
 
     const scale = SCALES[scaleName];
 
+    //input protect from unknow scale
     if (!scale) {
         throw new Error(`Unknown scale ${scaleName}`);
     }
@@ -363,7 +364,7 @@ Array.prototype.scale = function <T>(this: T[], scaleName: string = "major") {
         }
     }
 
-    this.shift()
-    this.push(...result);
-    return this;
+    //this.shift()
+    //this = [...result];
+    return result;
 };

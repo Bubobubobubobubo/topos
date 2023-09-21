@@ -2,12 +2,10 @@ import { seededRandom } from "zifferjs";
 import { MidiConnection } from "./IO/MidiConnection";
 import { tryEvaluate, evaluateOnce } from "./Evaluator";
 import { DrunkWalk } from "./Utils/Drunk";
-import { scale } from "./Scales";
 import { Editor } from "./main";
 import { SoundEvent } from "./classes/SoundEvent";
 import { MidiEvent } from "./classes/MidiEvent";
 import { LRUCache } from "lru-cache";
-import { SCALES } from "./Scales"
 import { InputOptions, Player } from "./classes/ZPlayer";
 import {
   samples,
@@ -1514,7 +1512,6 @@ export class UserAPI {
     this._logMessage(message);
   };
 
-  scale = scale;
 
   rate = (rate: number): void => {
     rate = rate;
