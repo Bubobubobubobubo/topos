@@ -409,5 +409,19 @@ z1('q (0 3 1 5)+(2 5) e (0 5 2)*(2 3) (0 5 2)>>(2 3) (0 5 2)%(2 3)').sound('sine
   true
 )}
 
+## String prototypes
+
+You can also use string prototypes as an alternative syntax for creating Ziffers patterns
+
+${makeExample(
+  "String prototypes",
+  `
+  "q 0 e 5 2 6 2 q 3".z0().sound('sine').out()
+  "q 2 7 8 6".z1().octave(-1).sound('sine').out()
+  "q 2 7 8 6".z2({key: "C2", scale: "aeolian"}).sound('sine').scale("minor").out()
+`,
+  true
+)}  
+
 `;
 };
