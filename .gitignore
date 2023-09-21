@@ -43,3 +43,7 @@ yarn.lock
 .DS_Store
 
 .vs
+
+package.json
+
+yarn.lock
