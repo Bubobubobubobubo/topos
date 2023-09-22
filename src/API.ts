@@ -59,7 +59,7 @@ export class UserAPI {
   MidiConnection: MidiConnection = new MidiConnection();
   load: samples;
 
-  constructor(public app: Editor) {}
+  constructor(public app: Editor) { }
 
   _loadUniverseFromInterface = (universe: string) => {
     this.app.loadUniverse(universe as string);
@@ -1017,6 +1017,7 @@ export class UserAPI {
     );
     return results.some((value) => value === true);
   };
+  b = this.beat;
 
   public pulse = (...n: number[]): boolean => {
     const results: boolean[] = n.map(
