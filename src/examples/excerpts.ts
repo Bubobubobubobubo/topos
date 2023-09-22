@@ -75,23 +75,20 @@ beat([4, 2, 8].pick() / [2,1].bar()) :: sound('triangle')
   .delay(0.5).delaytime(.75).delayfb(0.25)
   .room(1.5).size(1.9).out()
   `,
-  `// Super gentle computing - Bubobubobubo
+  `// Super gentle computing aka Super-Zapping - Bubobubobubo
 let melody = [30,30,34,35,37].palindrome()
   .beat() + [0, -12].repeatAll(2).beat(2)
 if (flip(8, 75)) {
-  rhythm(.5, 4, 8) :: sound('ST12').n([0,1,2].beat(0.5)).speed(0.5).gain(0.4).out()
-  rhythm(.5, 6, 8) :: sound('ST20').n([0,1,2].beat(0.5) + 20).gain(0.4)
-    .speed(0.25).end(0.1).orbit(2).room(0.5).size(0.5).out()
-  beat(.5) :: sound('ST01').note(melody).gain(0.4)
-    .n($(1)).speed(0.5).room(0.5).size(0.5).out()  
+  rhythm(.5, 4, 8) :: sound('ST71').n([5,6,8].beat(0.5)).gain(0.4).out()
+  beat(.5) :: sound('ST11').note(melody).gain(0.4)
+    .n($(1)).room(0.5).size(0.5).out()  
 } else {
   rhythm(.5, 2, 8) :: sound('ST20')
-    .n([0,1,2].beat(0.5)).speed(0.5).gain(0.4)
-    .end(0.1).out()
-  beat(.5) :: sound('ST01').note(melody).n($(1)).speed(0.5).gain(0.4).end(0.1).out()  
-  beat(1) :: sound('ST02').note(melody).n($(1)).speed(0.5).gain(0.4).end(0.1).out() 
-}`,
-  `// Race day - Bubobubobubo
+    .n([0,1,2].beat(0.5)).gain(0.4)
+    .end(1).out()
+  beat(.5) :: sound('ST01').note(melody).n($(1)).gain(0.4).end(1).out()  
+  beat(1) :: sound('ST02').note(melody).n($(1)).gain(0.4).end(1).out() 
+}`, `// Race day - Bubobubobubo
 bpm(125);
 beat(.5) :: sound('STB6').n(irand(1,10)).gain(1).out()
 rhythm(flip(4) ? 1 : .5, 5, 8) :: sound('kick').out()

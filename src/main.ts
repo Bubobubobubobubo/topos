@@ -35,7 +35,7 @@ import { makeStringExtensions } from "./StringExtensions";
 const classMap = {
   h1: "text-white lg:text-4xl text-xl lg:ml-4 lg:mx-4 mx-2 lg:my-4 my-2 lg:mb-4 mb-4 bg-neutral-900 rounded-lg py-2 px-2",
   h2: "text-white lg:text-3xl text-xl lg:ml-4 lg:mx-4 mx-2 lg:my-4 my-2 lg:mb-4 mb-4 bg-neutral-900 rounded-lg py-2 px-2",
-  h3: "text-white lg:text-2xl text-xl lg:ml-4 lg:mx-4 mx-2 lg:my-4 my-2 lg:mb-4 mb-4 bg-neutral-700 rounded-lg py-2 px-2 lg:mt-16",
+  h3: "text-white lg:text-2xl text-xl lg:ml-4 lg:mx-4 mx-2 lg:my-4 my-2 lg:mb-4 mb-4 bg-neutoral-700 rounded-lg py-2 px-2 lg:mt-16",
   ul: "text-underline pl-6",
   li: "list-disc lg:text-2xl text-base text-white lg:mx-4 mx-2 my-4 my-2 leading-normal",
   p: "lg:text-2xl text-base text-white lg:mx-6 mx-2 my-4 leading-normal",
@@ -287,9 +287,9 @@ export class Editor {
     });
 
     this.editorExtensions = [
+      this.vimModeCompartment.of(vimPlugin),
       this.withLineNumbers.of(lines),
       this.fontSize.of(fontModif),
-      this.vimModeCompartment.of(vimPlugin),
       this.hoveringCompartment.of(this.settings.tips ? inlineHoveringTips : []),
       editorSetup,
       toposTheme,
@@ -554,12 +554,28 @@ export class Editor {
         "style",
         `font-size: ${this.settings.font_size}px;`
       );
+
+      // Get the right value to update graphical widgets
       this.line_numbers_checkbox.checked = this.settings.line_numbers;
       this.time_position_checkbox.checked = this.settings.time_position;
       this.tips_checkbox.checked = this.settings.tips;
+
+      if (this.settings.vimMode) {
+        let vim = document.getElementById("vim-mode-radio") as HTMLInputElement;
+        let normal = document.getElementById("normal-mode-radio") as HTMLInputElement;
+        vim.checked = true;
+        normal.checked = false;
+      } else {
+        let vim = document.getElementById("vim-mode-radio") as HTMLInputElement;
+        let normal = document.getElementById("normal-mode-radio") as HTMLInputElement;
+        normal.checked = true;
+        vim.checked = false;
+      }
+
       let modal_settings = document.getElementById("modal-settings");
       let editor = document.getElementById("editor");
       modal_settings?.classList.remove("invisible");
+
       editor?.classList.add("invisible");
     });
 
