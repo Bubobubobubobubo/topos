@@ -1,4 +1,5 @@
 import { type UserAPI } from "./API";
+import { safeScale, stepsToScale } from "zifferjs";
 export {};
 
 declare global {
@@ -20,6 +21,8 @@ declare global {
     pick(): T;
     loop(index: number): T;
     shuffle(): this;
+    scale(name: string, base_note?: number): this;
+    scaleArp(scaleName: string): this;
     rotate(steps: number): this;
     unique(): this;
     in(value: T): boolean;
@@ -239,6 +242,7 @@ export const makeArrayExtensions = (api: UserAPI) => {
         result.push(this[i]);
       }
     }
+
     this.length = 0;
     this.push(...result);
     return this;
@@ -340,4 +344,54 @@ export const makeArrayExtensions = (api: UserAPI) => {
     return this[Math.floor(api.randomGen() * this.length)];
   };
   Array.prototype.rand = Array.prototype.random;
+};
+
+Array.prototype.scale = function (
+  scale: string = "major",
+  base_note: number = 0
+) {
+  /**
+   * @param scale - the scale name
+   * @param base_note - the base note to start at (MIDI note number)
+   *
+   * @returns notes from the desired scale
+   */
+
+  // This is a helper function to handle up or down octaviation.
+  const mod = (n: number, m: number) => ((n % m) + m) % m;
+  const selected_scale = stepsToScale(safeScale(scale));
+  return this.map((value) => {
+    const octaveShift = Math.floor(value / selected_scale.length) * 12;
+    return (
+      selected_scale[mod(value, selected_scale.length)] +
+      base_note +
+      octaveShift
+    );
+  });
+};
+
+Array.prototype.scaleArp = function (
+  scaleName: string = "major",
+  boundary: number = 0
+) {
+  /*
+   * @param scaleName - the scale name
+   * @param mask - the length of the mask
+   *
+   * @returns arpeggiated notes from the scale
+   */
+  const scale = stepsToScale(safeScale(scaleName));
+
+  let result = [];
+
+  boundary = boundary > scale.length ? scale.length : boundary;
+  boundary = boundary == 0 ? scale.length : boundary;
+
+  for (let j = 0; j < boundary; j++) {
+    for (let i = 0; i < this.length; i++) {
+      result.push(this[i] + scale[j]);
+    }
+  }
+
+  return result;
 };

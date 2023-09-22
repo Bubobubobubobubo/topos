@@ -1513,7 +1513,7 @@ export class UserAPI {
     this._logMessage(message);
   };
 
-  scale = getScaleNotes
+  scale = getScaleNotes;
 
   rate = (rate: number): void => {
     rate = rate;
