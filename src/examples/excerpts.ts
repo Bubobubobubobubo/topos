@@ -6,7 +6,7 @@ beat(.25) :: sound('wt_symetric:8')
   .cutoff(1500 + usine(1/8) * 5000)
   .lpadsr(16, 0.2, 0.2, 0.125/2, 0)
   .room(0.9).size(0.9).resonance(20)
-  .gain(0.3).out()
+  .gain(0.7).out()
 beat(1) :: sound('kick').n(4).out()
 beat(2) :: sound('snare').out()
 beat(.5) :: sound('hh').out()`,
@@ -18,9 +18,9 @@ beat(2) :: app.hydra.osc(frequencies/100, 0.25, 0.5)
   .posterize([32,4,8,16].beat(2)).rotate(cpulse())
   .kaleid([1,2,3].beat()).out()`,
   `// The real internet of things - Bubobubobubo
-beat(.5) :: sound('STA6').cut(1).vel(0.4)
+beat(.5) :: sound('STA6').cut(1).vel(0.8)
   .orbit(2).room(0.5).size(0.5).n(irand(1,4))
-  .speed([0.15, 0.30].beat() * 1.5).loop([1,0]
+  .speed([0.15, 0.30].beat() * 3).loop([1,0]
   .beat(.125)).loopEnd([1,0.5].beat(2)).out()
 binrhythm(.5, 50) :: sound('shaker').out()
 binrhythm(.5, 52) :: sound('808bd').n(3).out()
@@ -93,14 +93,11 @@ if (flip(8, 75)) {
 }`,
   `// Race day - Bubobubobubo
 bpm(125);
-beat(.5) :: sound('STB6')
-  .n(irand(1,10)).speed(0.5).rel(1)
-  .sus(0.1).out()
+beat(.5) :: sound('STB6').n(irand(1,10)).gain(1).out()
 rhythm(flip(4) ? 1 : .5, 5, 8) :: sound('kick').out()
 rhythm(flip(2) ? .5 : .25, 7, 8) :: sound('click')
   .vel(0.1 + utriangle(.25)).n(irand(1,5)).out()
-rhythm(.5, 2, 8) :: sound('snare').out()
-`,
+rhythm(.5, 2, 8) :: sound('snare').out()`,
   `// Structure et approximation - Bubobubobubo
 beat(.25) :: sound('zzfx').zzfx(
   // Randomized chaos :)
@@ -126,7 +123,7 @@ beat(rarely(12) ? .5 : .25) :: sound('ST22')
   .cutoff(irand(200, 5000))
   .resonance(rand(0.2,0.8))
   .room(0.9).size(1).orbit(2)
-  .speed(0.25).vel(0.3).end(0.5)
+  .speed(0.5).vel(0.6).end(0.5)
   .out()
 beat(.5) :: snd('dr')
   .n([0, 0, 0, 0, 2, 8].beat())
@@ -135,21 +132,19 @@ beat(flip(2) ? 1 : 0.75) :: snd('bd').n(2).out()
 beat(4) :: snd('snare').n(5)
   .delay(0.5).delayt(bpm() / 60 / 8)
   .delayfb(0.25).out()
-`,
-  `// Atarism - Bubobubobubo
+`, `// Atarism - Bubobubobubo
 bpm(85);
 let modifier = [.5, 1, 2].beat(8);
 let othermod = [1, .5, 4].beat(4);
-beat(modifier / 2):: sound('STA9').n([0,2].beat(.5)).speed(0.5).vel(0.5).out()
-beat(.5)::sound('STA9').n([0, 20].beat(.5)).speed([1,1.5].repeatAll(4).beat() / 4)
-  .cutoff(500 + usine(.25) * 3000).vel(0.5).out()
+beat(modifier / 2):: sound('STA9').n([0,2].beat(.5)).vel(0.5).out()
+beat(.5)::sound('STA9').n([0, 20].beat(.5)).speed([1,1.5].repeatAll(4).beat() /2)
+  .cutoff(500 + usine(.25) * 3000).vel(1).room(0.9).out()
 beat(modifier / 2):: sound('STA9')
-  .n([0,7].beat(.5)).speed(flip(othermod) ? 2 :4).vel(0.45).out()
+  .n([0,7].beat(.5)).speed(flip(othermod) ? 2 : 4).vel(1).out()
 rhythm(.25, 3, 8, 1) :: sound('STA9')
-  .note([30, 33].pick()).n(32).speed(0.5).out()
+  .note([30, 33].pick()).n(32).out()
 rhythm(othermod, 5, 8) :: sound('dr').n([0,1,2].beat()).out()
-beat(1) :: sound('kick').vel(1).out()
-`,
+beat(1) :: sound('kick').vel(1).out()`,
   `// Ancient rhythms - Bubobubobubo
 beat(1) :: snd('kick').out();
 beat(2) :: snd('sd').room(0.9).size(0.9).out();
