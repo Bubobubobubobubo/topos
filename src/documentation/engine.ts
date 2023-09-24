@@ -13,13 +13,13 @@ The Topos audio engine is based on the [SuperDough](https://www.npmjs.com/packag
 The basic function to play a sound is... <ic>sound(name: string)</ic> (you can also write <ic>snd</ic> to save some precious time). If the given sound (or synthesizer) is already declared, it will be automatically queried/started and will start playing. Evaluate the following script in the global window:
 	
 ${makeExample(
-  "Playing sounds is easy",
-  `
+    "Playing sounds is easy",
+    `
 beat(1) && sound('bd').out()
 beat(0.5) && sound('hh').out()
 `,
-  true
-)}
+    true
+  )}
 	
 In plain english, this translates to:
 	
@@ -29,13 +29,13 @@ In plain english, this translates to:
 Let's make it slightly more complex:
 
 ${makeExample(
-  "Adding some effects",
-  `
+    "Adding some effects",
+    `
 beat(1) && sound('bd').coarse(0.25).room(0.5).orbit(2).out();
 beat(0.5) && sound('hh').delay(0.25).delaytime(0.125).out();
 `,
-  true
-)}
+    true
+  )}
 	
 Now, it reads as follow:
 	
@@ -50,8 +50,8 @@ Let's pause for a moment and explain what is going on:
 - Sounds are **composed** by adding qualifiers/parameters that will modify the sound or synthesizer being played (_e.g_ <ic>sound('...').blabla(...)..something(...).out()</ic>. Think of it as _audio chains_. 
 	
 ${makeExample(
-  '"Composing" a sound or making a sound chain',
-  `
+    '"Composing" a sound or making a sound chain',
+    `
 beat(1) :: sound('pad')
   .begin(rand(0, 0.4))
   .freq([50,52].beat())
@@ -59,8 +59,8 @@ beat(1) :: sound('pad')
   .room(0.9)
   .velocity(0.25)
   .pan(usine()).release(2).out()`,
-  true
-)}
+    true
+  )}
 
 ## Audio Sample Folders / Sample Files
 	
@@ -84,22 +84,22 @@ When you type <ic>kick</ic> in the <ic>sound('kick').out()</ic> expression, you 
 	
 The <ic>.n(number)</ic> method can be used to pick a sample from the currently selected sample folder. For instance, the following script will play a random sample from the _kick_ folder:
 ${makeExample(
-  "Picking a sample",
-  `
+    "Picking a sample",
+    `
 beat(1) && sound('kick').n([1,2,3,4,5,6,7,8].pick()).out()
 `,
-  true
-)}
+    true
+  )}
 	
 Don't worry about the number. If it gets too big, it will be automatically wrapped to the number of samples in the folder. You can type any number, it will always fall on a sample. Let's use our mouse to select a sample number in a folder:
 	
 ${makeExample(
-  "Picking a sample... with your mouse!",
-  `
+    "Picking a sample... with your mouse!",
+    `
 // Move your mouse to change the sample being used!
 beat(.25) && sound('numbers').n(Math.floor(mouseX())).out()`,
-  true
-)}
+    true
+  )}
 	
 **Note:** the <ic>sound</ic> function can also be used to play synthesizers (see the **Synthesizers** page). In that case, the <ic>.n(n: number)</ic> becomes totally useless!
 	
@@ -107,16 +107,16 @@ beat(.25) && sound('numbers').n(Math.floor(mouseX())).out()`,
 	
 As we said earlier, the <ic>sound('sample_name')</ic> function can be chained to _specify_ a sound more. For instance, you can add a filter and some effects to your high-hat:
 ${makeExample(
-  "Let's make something more complex",
-  `
+    "Let's make something more complex",
+    `
 beat(0.25) && sound('jvbass')
   .sometimes(s=>s.speed([1,5,10].pick()))
   .room(0.5)
   .gain(1)
   .cutoff(usine(2) * 5000)
   .out()`,
-  true
-)}
+    true
+  )}
 	
 There are many possible arguments that you can add to your sounds. Learning them can take a long time but it will open up a lot of possibilities. Let's try to make it through all of them. They can all be used both with synthesizers and audio samples, which is kind of unconventional with normal / standard electronic music softwares.
 	
@@ -145,11 +145,11 @@ Simple controls over the amplitude (volume) of a given sound.
 | dbgain   | db    | Attenuation in dB from <ic>-inf</ic> to <ic>+10</ic> (acts as a sound mixer fader) |
 	
 ${makeExample(
-  "Velocity manipulated by a counter",
-  `
+    "Velocity manipulated by a counter",
+    `
 beat(.5)::snd('cp').vel($(1)%10 / 10).out()`,
-  true
-)}
+    true
+  )}
 	
 ## Amplitude Enveloppe
 	
@@ -165,16 +165,16 @@ beat(.5)::snd('cp').vel($(1)%10 / 10).out()`,
 Note that the **sustain** value is not a duration but an amplitude value (how loud). The other values are the time for each stage to take place. Here is a fairly complete example using the <ic>sawtooth</ic> basic waveform.
 	
 ${makeExample(
-  "Simple synthesizer",
-  `
+    "Simple synthesizer",
+    `
 beat(4)::sound('sawtooth').note(50).decay(0.5).sustain(0.5).release(2).gain(0.25).out();
 beat(2)::sound('sawtooth').note(50+7).decay(0.5).sustain(0.6).release(2).gain(0.25).out();
 beat(1)::sound('sawtooth').note(50+12).decay(0.5).sustain(0.7).release(2).gain(0.25).out();
 beat(.25)::sound('sawtooth').note([50,57,62].pick() + [12, 24, 0].beat(2))
   .cutoff(5000).sustain(0.5).release(0.1).gain(0.25).out()
 	`,
-  true
-)};
+    true
+  )};
 	
 ## Sample Controls
 
@@ -188,14 +188,15 @@ There are some basic controls over the playback of each sample. This allows you 
 | loopBegin |     | Beginning of the loop section (between <ic>0</ic> and <ic>1</ic>)        |
 | loopEnd |     | End of the loop section (between <ic>0</ic> and <ic>1</ic>)        |
 | loop    |       | Whether to loop or not the audio sample          |
+| stretch    |       | Stretches the audio playback rate of a sample over <ic>n</ic> beats          |
 | speed   |       | Playback speed (<ic>2</ic> = twice as fast)         |
 | cut     |       | Set with <ic>0</ic> or <ic>1</ic>. Will cut the sample as soon as another sample is played on the same bus |
 | clip    |       | Multiply the duration of the sample with the given number |
 | pan     |       | Stereo position of the audio playback (<ic>0</ic> = left, <ic>1</ic> = right)|
 	
 ${makeExample(
-  "Complex sampling duties",
-  `
+    "Complex sampling duties",
+    `
 // Using some of the modifiers described above :)
 beat(.5)::snd('pad').begin(0.2)
   .speed([1, 0.9, 0.8].beat(4))
@@ -204,9 +205,18 @@ beat(.5)::snd('pad').begin(0.2)
   .room(0.8).size(0.5)
   .clip(1).out()
 	`,
-  true
-)};
+    true
+  )};
 	
+${makeExample(
+    "Playing an amen break",
+    `
+// Note that stretch has the same value as beat
+beat(4) :: sound('breaks165').stretch(4).out()
+beat(0.25) :: sound('hh').out()
+beat(1, 4, 8) :: sound('bd').out()`,
+    true,
+  )};
 	
 ## Filters
 	
@@ -223,15 +233,15 @@ There are three basic filters: a _lowpass_, _highpass_ and _bandpass_ filters wi
 | vowel			 |       | Formant filter with (vocal quality)     |
 
 ${makeExample(
-  "Filter sweep using a low frequency oscillator",
-  `
+    "Filter sweep using a low frequency oscillator",
+    `
 beat(.5) && snd('sawtooth')
   .cutoff([2000,500].pick() + usine(.5) * 4000)
   .resonance(0.9).freq([100,150].pick())
   .out()
 	`,
-  true
-)};
+    true
+  )};
 	
 ## Reverb
 	
@@ -243,12 +253,12 @@ A basic reverberator that you can use to give some depth to your sounds. This si
 | size |     | Reverberation amount |
 
 ${makeExample(
-  "Clapping in the cavern",
-  `
+    "Clapping in the cavern",
+    `
 beat(2)::snd('cp').room(1).size(0.9).out()
 	`,
-  true
-)};
+    true
+  )};
 
 	
 ## Delay
@@ -262,14 +272,14 @@ A good sounding delay unit that can go into feedback territory. Use it without m
 | delayfeedback| delayfb | Delay feedback (between <ic>0</ic> and <ic>1</ic>) |
 	
 ${makeExample(
-  "Who doesn't like delay?",
-  `
+    "Who doesn't like delay?",
+    `
 beat(2)::snd('cp').delay(0.5).delaytime(0.75).delayfb(0.8).out()
 beat(4)::snd('snare').out()
 beat(1)::snd('kick').out()
 	`,
-  true
-)};
+    true
+  )};
 	
 ## Distorsion, saturation, destruction
 	
@@ -281,12 +291,12 @@ beat(1)::snd('kick').out()
 	
 	
 ${makeExample(
-  "Crunch... crunch... crunch!",
-  `
+    "Crunch... crunch... crunch!",
+    `
 beat(.5)::snd('pad').coarse($(1) % 16).clip(.5).out(); // Comment me
 beat(.5)::snd('pad').crush([16, 8, 4].beat(2)).clip(.5).out()
 	`,
-  true
-)};
+    true
+  )};
 `;
 };
