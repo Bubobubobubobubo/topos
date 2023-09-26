@@ -1620,7 +1620,9 @@ The basic Ziffer notation is entirely written in JavaScript strings (_e.g_ <ic>"
 
 **Note:** Some features are experimental and some are still unsupported. For full / prior syntax see article about <a href="https://zenodo.org/record/7841945" target="_blank">Ziffers</a>.
 
-${e("Pitches from 0 to 9","z1('s 0 1 2 3 4 5 6 7 8 9').sound('wt_stereo').adsr(0, .1, 0, 0).out()",!0)}
+${e("Pitches from 0 to 9",`
+z1('0.25 0 1 2 3 4 5 6 7 8 9').sound('wt_stereo')
+  .adsr(0, .1, 0, 0).out()`,!0)}
 
 ${e("Escaped pitches using curly brackets",`z1('_ _ 0 {9 10 11} 4 {12 13 14}')
   .sound('wt_05').pan(r(0,1))
@@ -1667,26 +1669,37 @@ z1('w [0 [5 [3 7]]] h [0 4]')
 Chords can be build by grouping pitches or using roman numeral notation, or by using named chords.
 
 ${e("Chords from pitches",`
-z1('q 024 468').sound('sine').scale("minor").out()
+z1('1.0 024 045 058 046 014')
+  .sound('sine').adsr(0.5, 1, 0, 0)
+  .room(0.5).size(0.9)
+  .scale("minor").out()
 `)}
 
 ${e("Chords from roman numerals",`
-  z1('i i v vii vi iv iv v').sound("pad").out();
+z1('2/4 i vi ii v')
+  .sound('triangle').adsr(0.2, 0.3, 0, 0)
+  .room(0.5).size(0.9).scale("major").out()
 `)}
 
 ${e("Named chords with repeats",`
-  z1('e C9:4 Emin:4 F7:4 Emaj:4')
-  .sound("stab").sustain(2.0).out()
+z1('0.25 Bmaj7!2 D7!2 _ Gmaj7!2 Bb7!2 ^ Ebmaj7!2')
+  .sound('square').room(0.5).cutoff(500)
+  .lpadsr(4, 0, .4, 0, 0).size(0.9)
+  .scale("major").out()
 `)}
 
 ${e("Transposing chords",`
-  z1('q Fmaj Amin Dmin Cmaj Cdim')
-    .key(["F3","E3","D3","E3"].beat(3))
-    .sound('sawtooth').out()
-`)}
+z1('q Amin!2').key(["A2", "E2"].beat(4))
+  .sound('sawtooth').cutoff(500)
+  .lpadsr(2, 0, .5, 0, 0, 0).out()
+z2('east east east:2 east').sound().out()`)}
 
 ${e("Chord transposition with roman numerals",`
-  z1('i i v%-4 v%-2 vi%-5 vi%-3 iv%-2 iv%-1').sound('sawtooth').out()
+z1('i i v%-4 v%-2 vi%-5 vi%-3 iv%-2 iv%-1')
+  .sound('triangle').adsr(1/16, 1/5, 0.1, 0)
+  .delay(0.5).delayt([1/8, 1/4].beat(4))
+  .delayfb(0.5).out()
+beat(4) :: sound('breaks165').stretch(4).out()
 `)}
 
 ${e("Chord transposition with named chords",`
