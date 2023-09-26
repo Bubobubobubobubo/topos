@@ -32,7 +32,7 @@ midi_outputs()
 - <ic>midi_output(output_name: string)</ic>: enter your desired output to connect to it.
 
 ${makeExample(
-  "Listing MIDI outputs",
+  "Changing MIDI output",
   `
 midi_output("MIDI Rocket-Trumpet")
 `,
@@ -137,5 +137,26 @@ beat(.25) && midi_clock() // Sending clock to MIDI device from the global buffer
 `,
   true
 )}
+
+## Using midi with ziffers
+
+Ziffers offers some shorthands for defining channels within the patterns. See Ziffers for more information.
+
+${makeExample(
+  "Using midi with ziffers",
+  `
+  z1('0 2 e 5 2 q 4 2').midi().port(2).channel(4).out()
+  `,
+  true
+)}
+
+${makeExample(
+  "Setting the channel within the pattern",
+  `
+  z1('(0 2 e 5 2):0 (4 2):1').midi().out()
+  `,
+  true
+)}
+
 `;
 };

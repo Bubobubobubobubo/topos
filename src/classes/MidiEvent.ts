@@ -3,6 +3,14 @@ import { type Editor } from "../main";
 import { MidiConnection } from "../IO/MidiConnection";
 import { midiToFreq, noteFromPc } from "zifferjs";
 
+export type MidiParams = {
+  note: number;
+  bend?: number;
+  channel?: number;
+  port?: number;
+  sustain?: number;
+}
+
 export class MidiEvent extends AudibleEvent {
   midiConnection: MidiConnection;
 
@@ -13,7 +21,7 @@ export class MidiEvent extends AudibleEvent {
     this.midiConnection = app.api.MidiConnection;
   }
 
-  chord = (value: number[]): this => {
+  chord = (value: MidiParams[]): this => {
     this.values["chord"] = value;
     return this;
   };
@@ -79,9 +87,12 @@ export class MidiEvent extends AudibleEvent {
   };
 
   out = (): void => {
-    function play(note: number, event: MidiEvent): void {
-      const channel = event.values.channel ? event.values.channel : 0;
+    function play(event: MidiEvent, params?: MidiParams): void {
+      const paramChannel = params && params.channel ? params.channel : 0;
+      const channel = event.values.channel ? event.values.channel : paramChannel;
       const velocity = event.values.velocity ? event.values.velocity : 100;
+      const paramNote = params && params.note ? params.note : 60;
+      const note = event.values.note ? event.values.note : paramNote;
 
       const sustain = event.values.sustain
         ? event.values.sustain *
@@ -106,12 +117,11 @@ export class MidiEvent extends AudibleEvent {
     }
 
     if(this.values.chord) {
-      this.values.chord.forEach((note: number) => {
-        play(note, this);
+      this.values.chord.forEach((p: MidiParams) => {
+        play(this, p);
       });
     } else {
-      const note = this.values.note ? this.values.note : 60;
-      play(note, this);
+      play(this);
     }
     
   };

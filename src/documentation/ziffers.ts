@@ -29,8 +29,10 @@ The basic Ziffer notation is entirely written in JavaScript strings (_e.g_ <ic>"
 | **Rest**      |  <ic>r</ic> | Rest / silences |
 | **Repeat**    | <ic>:1-9</ic> | Repeat the item 1-9 times  |
 | **Chords**    | <ic>[1-9]+ / [iv]+ / [AG]+name</ic> | Multiple pitches grouped together, roman numerals or named chords |
+| **Samples**   | <ic>[a-z0-9_]+</ic> | Samples can be used pitched or unpitched | 
+| **Index/Channel** | <ic>[a-z0-9]+:[0-9]*</ic> | Samples or midi channel can be changed using a colon |
 
-**Note:** Some features are still unsupported. For full syntax see article about <a href="https://zenodo.org/record/7841945" target="_blank">Ziffers</a>.
+**Note:** Some features are experimental and some are still unsupported. For full / prior syntax see article about <a href="https://zenodo.org/record/7841945" target="_blank">Ziffers</a>.
 
 ${makeExample(
   "Pitches from 0 to 9",
@@ -408,6 +410,76 @@ z1('q (0 3 1 5)+(2 5) e (0 5 2)*(2 3) (0 5 2)>>(2 3) (0 5 2)%(2 3)').sound('sine
 `,
   true
 )}
+
+## Samples
+
+Samples can be patterned using the sample names or using <c>@</c>-operator for assigning sample to a pitch. Sample index can be changed using the <c>:</c> operator.
+
+${makeExample(
+  "Sampled drums",
+  `
+  z1('bd [hh hh]').octave(-2).sound('sine').out()
+  `,
+  true
+)}
+
+${makeExample(
+  "More complex pattern",
+  `
+  z1('bd [hh <hh <cp cp:2>>]').octave(-2).sound('sine').out()
+  `,
+  true
+)}
+
+${makeExample(
+  "Pitched samples",
+  `
+  z1('0@sax 3@sax 2@sax 6@sax')
+    .octave(-1).sound()
+    .adsr(0.25,0.125,0.125,0.25).out()
+  `,
+  true
+)}
+
+${makeExample(
+  "Pitched samples from list operation",
+  `
+  z1('e (0 3 -1 4)+(-1 0 2 1)@sine')
+  .key('G4')
+  .scale('110 220 320 450')
+  .sound().out()
+  `,
+  true
+)}
+
+${makeExample(
+  "Pitched samples with list notation",
+  `
+  z1('e (0 2 6 3 5 -2)@sax (0 2 6 3 5 -2)@arp')
+    .octave(-1).sound()
+    .adsr(0.25,0.125,0.125,0.25).out()
+  `,
+  true
+)}
+
+${makeExample(
+  "Sample indices",
+  `
+  z1('e 1:2 4:3 6:2')
+  .octave(-1).sound("east").out()
+  `,
+  true
+)}
+
+${makeExample(
+  "Pitched samples with sample indices",
+  `
+z1('_e 1@east:2 4@bd:3 6@arp:2 9@baa').sound().out()
+`,
+  true
+)}
+
+
 
 ## String prototypes
 
