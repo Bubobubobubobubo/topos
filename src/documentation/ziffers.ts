@@ -338,6 +338,15 @@ z1('0 3 2 4',{key: 'D3', scale: 'minor pentatonic'}).sound('sine').out()
 ${makeExample(
   "Duration chars",
   `
+  z1('q 0 0 4 4 5 5 h4 q 3 3 2 2 1 1 h0').sound('sine').out()
+`,
+  true
+)}
+
+${makeExample(
+  "Fraction durations",
+  `
+  z1('1/4 0 0 4 4 5 5 2/4 4 1/4 3 3 2 2 1 1 2/4 0').sound('sine').out()
 `,
   true
 )}
