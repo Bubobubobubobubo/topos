@@ -2,8 +2,8 @@ import { Chord, Pitch, Rest as ZRest, Ziffers } from "zifferjs";
 import { Editor } from "../main";
 import { Event } from "./AbstractEvents";
 import { SkipEvent } from "./SkipEvent";
-import { SoundEvent } from "./SoundEvent";
-import { MidiEvent } from "./MidiEvent";
+import { SoundEvent, SoundParams } from "./SoundEvent";
+import { MidiEvent, MidiParams } from "./MidiEvent";
 import { RestEvent } from "./RestEvent";
 
 export type InputOptions = { [key: string]: string | number };
@@ -131,7 +131,7 @@ export class Player extends Event {
     return areWeThereYet;
   };
 
-  sound(name: string) {
+  sound(name?: string) {
     
     if (this.areWeThereYet()) {
       const event = this.next() as Pitch | Chord | ZRest;
@@ -145,8 +145,10 @@ export class Player extends Event {
           "octave",
           "parsedScale"
         );
+        if(event.sound) name = event.sound as string;
+        if(event.soundIndex) obj.n = event.soundIndex;
         obj.dur = noteLengthInSeconds;
-        return new SoundEvent(obj, this.app).sound(name);
+        return new SoundEvent(obj, this.app).sound(name || "sine");
       } else if (event instanceof Chord) {
         const pitches = event.pitches.map((p) => {
           return p.getExisting(
@@ -158,7 +160,9 @@ export class Player extends Event {
             "parsedScale"
           );
         });
-        return new SoundEvent({dur: noteLengthInSeconds}, this.app).chord(pitches).sound(name);
+        const sound: SoundParams = {dur: noteLengthInSeconds};
+        if(name) sound.s = name;
+        return new SoundEvent(sound, this.app).chord(pitches);
       } else if (event instanceof ZRest) {
         return RestEvent.createRestProxy(event.duration, this.app);
       }
@@ -177,15 +181,16 @@ export class Player extends Event {
         "key",
         "scale",
         "octave",
-        "parsedScale"
+        "parsedScale",
       );
       if (event instanceof Pitch) {
+        if(event.soundIndex) obj.channel = event.soundIndex;
         const note = new MidiEvent(obj, this.app);
         return value ? note.note(value) : note;
       } else if (event instanceof ZRest) {
         return RestEvent.createRestProxy(event.duration, this.app);
       } else if (event instanceof Chord) {
-        const pitches = event.notes();
+        const pitches = event.midiChord() as MidiParams[];
         return new MidiEvent(obj, this.app).chord(pitches);
       }
     } else {

@@ -7,6 +7,11 @@ import {
   // @ts-ignore
 } from "superdough";
 
+export type SoundParams = {
+  dur: number;
+  s?: string;
+}
+
 export class SoundEvent extends AudibleEvent {
   constructor(sound: string | object, public app: Editor) {
     super(app);

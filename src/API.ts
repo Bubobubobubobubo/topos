@@ -33,6 +33,7 @@ export async function loadSamples() {
     registerZZFXSounds(),
     samples("github:Bubobubobubobubo/Dough-Samples/main"),
     samples("github:Bubobubobubobubo/Dough-Amiga/main"),
+    samples("github:Bubobubobubobubo/Dough-Amen/main"),
     samples("github:Bubobubobubobubo/Dough-Waveforms/main"),
   ]);
 }
