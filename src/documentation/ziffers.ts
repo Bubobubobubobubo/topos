@@ -176,16 +176,18 @@ beat(4) :: sound('breaks165').stretch(4).out()
 ${makeExample(
     "Chord transposition with named chords",
     `
-  z1('e C9:4 Emin:4 F7%-1:4 Emaj%-1:4')
-  .sound("stab").out()
+z1('1/4 Cmin!3 Fmin!3 Fmin%-1 Fmin%-2 Fmin%-1')
+  .sound("sine").bpf(500 + usine(1/4) * 2000)
+  .out()
 `
   )}
 
 ${makeExample(
     "Programmatic inversions",
     `
-  z1('i v vi iv').invert([1,-1,-2,0].beat(4))
-  .sound("sawtooth").out()
+z1('1/6 i v 1/3 vi iv').invert([1,-1,-2,0].beat(4))
+  .sound("sawtooth").cutoff(1000)
+  .lpadsr(2, 0, .2, 0, 0).out()
   `
   )}
 
