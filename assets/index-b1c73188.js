@@ -1316,11 +1316,19 @@ ${e("Demonstrative filtering. Final list is [100, 200]",`
 beat(1)::snd('sine').sustain(0.1).freq([100,100,100,100,200].unique().beat()).out()
 `,!0)}
 
-- <ic>scale(scale: string, mask: number)</ic>: extrapolate a custom-masked scale from each list elements. [0].scale("major", 3) returns [0,2,4]. You can use western scale names like (Major, Minor, Minor pentatonic ...) or [zeitler](https://ianring.com/musictheory/scales/traditions/zeitler) scale names. Alternatively you can also use the integers as used by Ian Ring in his [study of scales](https://ianring.com/musictheory/scales/).
+  - <ic>scale(scale: string, base note: number)</ic>: Map each element of the list to the closest note of the slected scale. [0, 2, 3, 5 ].scale("major", 50) returns [50, 52, <ic>54</ic>, 55]. You can use western scale names like (Major, Minor, Minor pentatonic ...) or [zeitler](https://ianring.com/musictheory/scales/traditions/zeitler) scale names. Alternatively you can also use the integers as used by Ian Ring in his [study of scales](https://ianring.com/musictheory/scales/).
+
+${e("Mapping the note array to the E3 major scale",`
+beat(1) :: snd('gtr')
+    .note([0, 5, 2, 1, 7].scale("Major", 52).beat())
+    .out()
+`,!0)}
+
+- <ic>scaleArp(scale: string, mask: number)</ic>: extrapolate a custom-masked scale from each list elements. [0].scale("major", 3) returns [0,2,4]. <ic>scaleArp</ic> supports the same scales as <ic>scale</ic>.
 
 ${e("Extrapolate a 3-elements Mixolydian scale from 2 notes",`
 beat(1) :: snd('gtr')
-    .note([0,5].scale("mixolydian", 3).beat() + 50)
+    .note([0, 5].scaleArp("mixolydian", 3).beat() + 50)
     .out()
 `,!0)}
 
