@@ -12,7 +12,21 @@ Ziffers is a **musical number based notation** tuned for _live coding_. It is a 
 - exploring **generative / aleatoric / stochastic** melodies and applying them to sounds and synths.
 - embracing a different mindset and approach to time and **patterning**.
 
-${makeExample("Super Fancy Ziffers example", ``, true)}
+${makeExample("Super Fancy Ziffers example", `
+z1('1/8 024!3 035 024 0124').sound('wt_stereo')
+  .adsr(0, .4, 0.5, .4).gain(0.1)
+  .lpadsr(4, 0, .2, 0, 0)
+  .cutoff(5000 + usine(1/2) * 2000)
+  .n([1,2,4].beat(4)).out()
+z2('<1/8 1/16> __ 0 <(^) (^ ^)> (0,8)').sound('wt_stereo')
+  .adsr(0, .5, 0.5, .4).gain(0.2)
+  .lpadsr(4, 0, .2, 0, 0).n(14)
+  .cutoff(200 + usine(1/2) * 4000)
+  .n([1,2,4].beat(4)).o(2).room(0.9).out()
+let osci = 1500 + usine(1/2) * 2000;
+z3('can can:2').sound().gain(1).cutoff(osci).out()
+z4('1/4 kick kick snare kick').sound().gain(1).cutoff(osci).out()
+`, true)}
 
 ## Notation
 
@@ -35,132 +49,132 @@ The basic Ziffer notation is entirely written in JavaScript strings (_e.g_ <ic>"
 **Note:** Some features are experimental and some are still unsupported. For full / prior syntax see article about <a href="https://zenodo.org/record/7841945" target="_blank">Ziffers</a>.
 
 ${makeExample(
-  "Pitches from 0 to 9",
-  `
+    "Pitches from 0 to 9",
+    `
 z1('s 0 1 2 3 4 5 6 7 8 9').sound('pluck').release(0.1).sustain(0.25).out()
 `,
-  true
-)}
+    true
+  )}
 
 ${makeExample(
-  "Escaped pitches using curly brackets",
-  `
+    "Escaped pitches using curly brackets",
+    `
 let pattern = flip(4) ? z1('s _ _ 0 0 {9 11}') : z1('s _ 0 0 {10 12}');
 pattern.sound('pluck').sustain(0.1).room(0.9).out();
 `,
-  false
-)}
+    false
+  )}
 
 ${makeExample(
-  "Durations using letters and floating point numbers",
-  `
+    "Durations using letters and floating point numbers",
+    `
 flip(8) ? z1('s 0 e 1 q 2 h 3 w 4').sound('sine').scale("locrian").out()
 	   : z1('0.125 0 0.25 2').sound('sine').scale("locrian").out()
 `,
-  false
-)}
+    false
+  )}
 
 ${makeExample(
-  "Disco was invented thanks to Ziffers",
-  `
+    "Disco was invented thanks to Ziffers",
+    `
 z1('e _ _ 0 ^ 0 _ 0 ^ 0').sound('jvbass').out()
 beat(1)::snd('bd').out(); beat(2)::snd('sd').out()
 beat(3) :: snd('cp').room(0.5).size(0.5).orbit(2).out()
 `,
-  false
-)}
+    false
+  )}
 
 ${makeExample(
-  "Accidentals and rests for nice melodies",
-  `
+    "Accidentals and rests for nice melodies",
+    `
 z1('e 0 s 1 b2 3 e 0 s 1 b2 4')
   .scale('major').sound('sine')
   .fmi(usine(.5)).fmh(2)
   .delay(0.5).delayt(1.25)
   .sustain(0.1).out()
 `,
-  false
-)}
+    false
+  )}
 
 ${makeExample(
-  "Repeat items n-times",
-  `
+    "Repeat items n-times",
+    `
 z1('e 0:4 2:2 4:2 (0 4):2')
   .scale('major').sound('sine')
   .fmi(usine(.5)).fmh(2)
   .delay(0.5).delayt(1.25)
   .sustain(0.1).out()
 `,
-  false
-)}
+    false
+  )}
 
 ${makeExample(
-  "Subdivided durations",
-  `
+    "Subdivided durations",
+    `
 z1('w [0 [5 [3 7]]] h [0 4]')
   .scale('major').sound('sine')
   .fmi(usine(.5)).fmh(2).out()
 `,
-  false
-)}
+    false
+  )}
 
 ## Chords
 
 Chords can be build by grouping pitches or using roman numeral notation, or by using named chords.
 
 ${makeExample(
-  "Chords from pitches",
-  `
+    "Chords from pitches",
+    `
 z1('q 024 468').sound('sine').scale("minor").out()
 `
-)}
+  )}
 
 ${makeExample(
-  "Chords from roman numerals",
-  `
+    "Chords from roman numerals",
+    `
   z1('i i v vii vi iv iv v').sound("pad").out();
 `
-)}
+  )}
 
 ${makeExample(
-  "Named chords with repeats",
-  `
+    "Named chords with repeats",
+    `
   z1('e C9:4 Emin:4 F7:4 Emaj:4')
   .sound("stab").sustain(2.0).out()
 `
-)}
+  )}
 
 ${makeExample(
-  "Transposing chords",
-  `
+    "Transposing chords",
+    `
   z1('q Fmaj Amin Dmin Cmaj Cdim')
     .key(["F3","E3","D3","E3"].beat(3))
     .sound('sawtooth').out()
 `
-)}
+  )}
 
 ${makeExample(
-  "Chord transposition with roman numerals",
-  `
+    "Chord transposition with roman numerals",
+    `
   z1('i i v%-4 v%-2 vi%-5 vi%-3 iv%-2 iv%-1').sound('sawtooth').out()
 `
-)}
+  )}
 
 ${makeExample(
-  "Chord transposition with named chords",
-  `
+    "Chord transposition with named chords",
+    `
   z1('e C9:4 Emin:4 F7%-1:4 Emaj%-1:4')
   .sound("stab").out()
 `
-)}
+  )}
 
 ${makeExample(
-  "Programmatic inversions",
-  `
+    "Programmatic inversions",
+    `
   z1('i v vi iv').invert([1,-1,-2,0].beat(4))
   .sound("sawtooth").out()
   `
-)}
+  )}
 
 ## Algorithmic operations
 
@@ -169,28 +183,28 @@ Ziffers provides shorthands for **many** numeric and algorithimic operations suc
 * **List operations:** Cartesian operation (_e.g._ <ic>(3 2 1)+(2 5)</ic>) using the <ic>+</ic> operator. All the arithmetic operators are supported.
 
 ${makeExample(
-  "Element-wise operations for melodic generation",
-  `
+    "Element-wise operations for melodic generation",
+    `
 z1("q 0 s (3 2 1)+(2 5) q 0 s (4 5 6)-(2 3)").sound('sine')
   .scale('minor').fmi(2).fmh(2).room(0.5).size(0.5).sustain(0.1)
   .delay(0.5).delay(0.125).delayfb(0.25).out();
 `,
-  true
-)}
+    true
+  )}
 
 * **Random numbers:** <ic>(4,6)</ic> Random number between 4 and 6
 
 ${makeExample(
-  "Random numbers, true computer music at last!",
-  `
+    "Random numbers, true computer music at last!",
+    `
 z1("s (0,8) 0 0 (0,5) 0 0").sound('sine')
   .scale('minor').fmi(2).fmh(2).room(0.5)
 	.size(0.5).sustain(0.1) .delay(0.5)
 	.delay(0.125).delayfb(0.25).out();
 beat(.5) :: snd(['kick', 'hat'].beat(.5)).out()
 `,
-  true
-)}
+    true
+  )}
 
 ## Keys and scales
 
@@ -211,16 +225,16 @@ Ziffers supports all the keys and scales. Keys can be defined by using [scientif
 | ... | And it goes on for **1490** scales |
 
 ${makeExample(
-  "What the hell is the Modimic scale?",
-  `
+    "What the hell is the Modimic scale?",
+    `
 z1("s (0,8) 0 0 (0,5) 0 0").sound('sine')
   .scale('modimic').fmi(2).fmh(2).room(0.5)
 	.size(0.5).sustain(0.1) .delay(0.5)
 	.delay(0.125).delayfb(0.25).out();
 beat(.5) :: snd(['kick', 'hat'].beat(.5)).out()
 `,
-  true
-)}
+    true
+  )}
 
 
 
@@ -244,16 +258,16 @@ You can also use more traditional <a href="https://ianring.com/musictheory/scale
 
 
 ${makeExample(
-  "Let's fall back to a classic blues minor scale",
-  `
+    "Let's fall back to a classic blues minor scale",
+    `
 z1("s (0,8) 0 0 (0,5) 0 0").sound('sine')
   .scale('blues minor').fmi(2).fmh(2).room(0.5)
 	.size(0.5).sustain(0.25).delay(0.25)
 	.delay(0.25).delayfb(0.5).out();
 beat(1, 1.75) :: snd(['kick', 'hat'].beat(1)).out()
 `,
-  true
-)}
+    true
+  )}
 
 Microtonal scales can be defined using <a href="https://www.huygens-fokker.org/scala/scl_format.html" target="_blank">Scala format</a> or by extended notation defined by Sevish <a href="https://sevish.com/scaleworkshop/" target="_blank">Scale workshop</a>, for example:
 
@@ -262,16 +276,16 @@ Microtonal scales can be defined using <a href="https://www.huygens-fokker.org/s
 
 
 ${makeExample(
-  "Wendy Carlos, here we go!",
-  `
+    "Wendy Carlos, here we go!",
+    `
 z1("s ^ (0,8) 0 0 _ (0,5) 0 0").sound('sine')
   .scale('17/16 9/8 6/5 5/4 4/3 11/8 3/2 13/8 5/3 7/4 15/8 2/1').fmi(2).fmh(2).room(0.5)
 	.size(0.5).sustain(0.15).delay(0.1)
 	.delay(0.25).delayfb(0.5).out();
 beat(1, 1.75) :: snd(['kick', 'hat'].beat(1)).out()
 `,
-  true
-)}
+    true
+  )}
 
 ## Synchronization
 
@@ -280,109 +294,109 @@ Ziffers numbered methods **(z0-z16)** can be used to parse and play patterns. Ea
 Numbered methods are synced automatically to **z0** method if it exsists. Syncing can also be done manually by using either the <ic>wait</ic> method, which will always wait for the current pattern to finish before starting the next cycle, or the <ic>sync</ic> method will only wait for the synced pattern to finish on the first time.
 
 ${makeExample(
-  "Automatic sync to z0",
-  `
+    "Automatic sync to z0",
+    `
 z0('w 0 8').sound('peri').out()
 z1('e 0 4 5 9').sound('bell').out()
 `,
-  true
-)}
+    true
+  )}
 
 ${makeExample(
-  "Sync with wait",
-  `
+    "Sync with wait",
+    `
 z1('w 0 5').sound('pluck').release(0.1).sustain(0.25).out()
 z2('q 6 3').wait(z1).sound('sine').release(0.16).sustain(0.55).out()
 `,
-  true
-)}
+    true
+  )}
 
 ${makeExample(
-  "Sync on first run",
-  `
+    "Sync on first run",
+    `
   z1('w __ 0 5 9 3').sound('bin').out()
   z2('q __ 4 2 e 6 3 q 6').sync(z1).sound('east').out()
 `,
-  true
-)}
+    true
+  )}
 
 ## Examples
 	
 - Basic notation
 	
 ${makeExample(
-  "Simple method chaining",
-  `
+    "Simple method chaining",
+    `
 z1('0 1 2 3').key('G3')
   .scale('minor').sound('sine').out()
 `,
-  true
-)}
+    true
+  )}
 
 ${makeExample(
-  "More complex chaining",
-  `
+    "More complex chaining",
+    `
 z1('0 1 2 3 4').key('G3').scale('minor').sound('sine').often(n => n.pitch+=3).rarely(s => s.delay(0.5)).out()
 `,
-  true
-)}
+    true
+  )}
 
 ${makeExample(
-  "Simple options",
-  `
+    "Simple options",
+    `
 z1('0 3 2 4',{key: 'D3', scale: 'minor pentatonic'}).sound('sine').out()
 `,
-  true
-)}
+    true
+  )}
 
 ${makeExample(
-  "Duration chars",
-  `
+    "Duration chars",
+    `
   z1('q 0 0 4 4 5 5 h4 q 3 3 2 2 1 1 h0').sound('sine').out()
 `,
-  true
-)}
+    true
+  )}
 
 ${makeExample(
-  "Fraction durations",
-  `
+    "Fraction durations",
+    `
   z1('1/4 0 0 4 4 5 5 2/4 4 1/4 3 3 2 2 1 1 2/4 0').sound('sine').out()
 `,
-  true
-)}
+    true
+  )}
 
 ${makeExample(
-  "Decimal durations",
-  `
+    "Decimal durations",
+    `
 z1('0.25 5 1 2 6 0.125 3 8 0.5 4 1.0 0').sound('sine').scale("ionian").out()
 `,
-  true
-)}
+    true
+  )}
 
 ${makeExample(
-  "Rest and octaves",
-  `
+    "Rest and octaves",
+    `
 z1('q 0 ^ e0 r _ 0 _ r 4 ^4 4').sound('sine').scale("ionian").out()
 `,
-  true
-)}
+    true
+  )}
 
 - Scales
 
 ${makeExample(
-  "Microtonal scales",
-  `
+    "Microtonal scales",
+    `
 z1('q 0 3 {10 14} e 8 4 {5 10 12 14 7 0}').sound('sine')
 .fmi([1,2,4,8].pick())
 .scale("17/16 9/8 6/5 5/4 4/3 11/8 3/2 13/8 5/3 7/4 15/8 2/1")
 .out()
 `,
-  true
-)}
+    true
+  )}
 
 ${makeExample(
-  "Scala scale from variable",
-  `
+    "Scala scale from variable",
+    `
   const werckmeister = "107.82 203.91 311.72 401.955 503.91 605.865 701.955 809.775 900. 1007.82 1103.91 1200."
 
   z0('s (0,3) ^ 0 3 ^ 0 (3,6) 0 _ (3,5) 0 _ 3 ^ 0 (3,5) ^ 0 6 0 _ 3 0')
@@ -395,98 +409,98 @@ ${makeExample(
   
   onbeat(1,1.5,3) :: sound('bd').cutoff(100 + usine(.25) * 1000).out()
 `,
-  true
-)}
+    true
+  )}
 
 - Algorithmic operations
 
 ${makeExample(
-  "Random numbers",
-  `
+    "Random numbers",
+    `
 z1('q 0 (2,4) 4 (5,9)').sound('sine')
 .scale("Bebop minor")
 .out()
 `,
-  true
-)}
+    true
+  )}
 
 ${makeExample(
-  "List operations",
-  `
+    "List operations",
+    `
 z1('q (0 3 1 5)+(2 5) e (0 5 2)*(2 3) (0 5 2)>>(2 3) (0 5 2)%(2 3)').sound('sine')
 .scale("Bebop major")
 .out()
 `,
-  true
-)}
+    true
+  )}
 
 ## Samples
 
 Samples can be patterned using the sample names or using <c>@</c>-operator for assigning sample to a pitch. Sample index can be changed using the <c>:</c> operator.
 
 ${makeExample(
-  "Sampled drums",
-  `
+    "Sampled drums",
+    `
   z1('bd [hh hh]').octave(-2).sound('sine').out()
   `,
-  true
-)}
+    true
+  )}
 
 ${makeExample(
-  "More complex pattern",
-  `
+    "More complex pattern",
+    `
   z1('bd [hh <hh <cp cp:2>>]').octave(-2).sound('sine').out()
   `,
-  true
-)}
+    true
+  )}
 
 ${makeExample(
-  "Pitched samples",
-  `
+    "Pitched samples",
+    `
   z1('0@sax 3@sax 2@sax 6@sax')
     .octave(-1).sound()
     .adsr(0.25,0.125,0.125,0.25).out()
   `,
-  true
-)}
+    true
+  )}
 
 ${makeExample(
-  "Pitched samples from list operation",
-  `
+    "Pitched samples from list operation",
+    `
   z1('e (0 3 -1 4)+(-1 0 2 1)@sine')
   .key('G4')
   .scale('110 220 320 450')
   .sound().out()
   `,
-  true
-)}
+    true
+  )}
 
 ${makeExample(
-  "Pitched samples with list notation",
-  `
+    "Pitched samples with list notation",
+    `
   z1('e (0 2 6 3 5 -2)@sax (0 2 6 3 5 -2)@arp')
     .octave(-1).sound()
     .adsr(0.25,0.125,0.125,0.25).out()
   `,
-  true
-)}
+    true
+  )}
 
 ${makeExample(
-  "Sample indices",
-  `
+    "Sample indices",
+    `
   z1('e 1:2 4:3 6:2')
   .octave(-1).sound("east").out()
   `,
-  true
-)}
+    true
+  )}
 
 ${makeExample(
-  "Pitched samples with sample indices",
-  `
+    "Pitched samples with sample indices",
+    `
 z1('_e 1@east:2 4@bd:3 6@arp:2 9@baa').sound().out()
 `,
-  true
-)}
+    true
+  )}
 
 
 
@@ -495,14 +509,14 @@ z1('_e 1@east:2 4@bd:3 6@arp:2 9@baa').sound().out()
 You can also use string prototypes as an alternative syntax for creating Ziffers patterns
 
 ${makeExample(
-  "String prototypes",
-  `
+    "String prototypes",
+    `
   "q 0 e 5 2 6 2 q 3".z0().sound('sine').out()
   "q 2 7 8 6".z1().octave(-1).sound('sine').out()
   "q 2 7 8 6".z2({key: "C2", scale: "aeolian"}).sound('sine').scale("minor").out()
 `,
-  true
-)}  
+    true
+  )}  
 
 `;
 };

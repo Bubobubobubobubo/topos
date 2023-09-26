@@ -194,7 +194,22 @@ beat([.25,.125, .5].beat(4))::snd('arpy:4')
   .cutoff(100 + usine(1/8) * 800).lpadsr(5, 0, [1/8, 1.16].beat(), 0, 0)
   .resonance(5).gain(0.4).end(0.8).room(0.9).size(0.9).n(3).out();
 beat(.5) :: snd('arpy').note([30, 33, 35].repeatAll(4).beat(1) - [24,12].beat(0.5))
-  .cutoff(500).lpadsr(8, 0.05, .125, 0, 0).out()`,
+  .cutoff(500).lpadsr(8, 0.05, .125, 0, 0).out()`, `
+// Naïf et agréable -- Bubobubobubo
+z1('1/8 024!3 035 024 0124').sound('wt_stereo')
+  .adsr(0, .4, 0.5, .4).gain(0.1)
+  .lpadsr(4, 0, .2, 0, 0)
+  .cutoff(5000 + usine(1/2) * 2000)
+  .n([1,2,4].beat(4)).out()
+z2('<1/8 1/16> __ 0 <(^) (^ ^)> (0,8)').sound('wt_stereo')
+  .adsr(0, .5, 0.5, .4).gain(0.2)
+  .lpadsr(4, 0, .2, 0, 0).n(14)
+  .cutoff(200 + usine(1/2) * 4000)
+  .n([1,2,4].beat(4)).o(2).room(0.9).out()
+let osci = 2000 + usine(1/2) * 2000;
+z3('can can:2').sound().gain(1).cutoff(osci).out()
+z4('1/4 kick kick snare kick').sound().gain(1).cutoff(osci).out()`,
+
   /*
   `// Numerology - Bubobubobubo
 bpm(130);
