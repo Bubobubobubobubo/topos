@@ -35,13 +35,13 @@ The basic Ziffer notation is entirely written in JavaScript strings (_e.g_ <ic>"
 | Syntax        | Symbol | Description            |
 |------------   |--------|------------------------|
 | **Pitches**   | <ic>0-9</ic> <ic>{10 11 21}</ic> | Numbers or escaped numbers in curly brackets |
-| **Duration** | <ic>a b c</ic> to <ic>z</ic> | Each letter of the alphabet is a rhythm (see table) |
-| **Duration**  | <ic>0.25</ic> = <ic>q</ic>, <ic>0.5</ic> = <ic>h</ic> | Floating point numbers can also be used as durations |
+| **Duration**  | <ic>0.25</ic>, <ic>0.5</ic> | Floating point numbers can also be used as durations |
+| **Duration**  | <ic>1/4</ic>, <ic>1/16</ic> | Fractions can be used as durations |
 | **Subdivision** | <ic>[1 [2 3]]</ic> | Durations can be subdivided using square brackets |
 | **Octave**    | <ic>^ _</ic> | <ic>^</ic> for octave up and <ic>_</ic> for octave down |
 | **Accidentals** | <ic># b</ic> | Sharp and flats, just like with regular music notation :smile: |
 | **Rest**      |  <ic>r</ic> | Rest / silences |
-| **Repeat**    | <ic>:1-9</ic> | Repeat the item 1-9 times  |
+| **Repeat**    | <ic>!1-9</ic> | Repeat the item 1 to 9 times  |
 | **Chords**    | <ic>[1-9]+ / [iv]+ / [AG]+name</ic> | Multiple pitches grouped together, roman numerals or named chords |
 | **Samples**   | <ic>[a-z0-9_]+</ic> | Samples can be used pitched or unpitched | 
 | **Index/Channel** | <ic>[a-z0-9]+:[0-9]*</ic> | Samples or midi channel can be changed using a colon |
@@ -50,26 +50,25 @@ The basic Ziffer notation is entirely written in JavaScript strings (_e.g_ <ic>"
 
 ${makeExample(
     "Pitches from 0 to 9",
-    `
-z1('s 0 1 2 3 4 5 6 7 8 9').sound('pluck').release(0.1).sustain(0.25).out()
-`,
+    `z1('s 0 1 2 3 4 5 6 7 8 9').sound('wt_stereo').adsr(0, .1, 0, 0).out()`,
     true
   )}
 
 ${makeExample(
     "Escaped pitches using curly brackets",
-    `
-let pattern = flip(4) ? z1('s _ _ 0 0 {9 11}') : z1('s _ 0 0 {10 12}');
-pattern.sound('pluck').sustain(0.1).room(0.9).out();
-`,
+    `z1('_ _ 0 {9 10 11} 4 {12 13 14}')
+  .sound('wt_05').pan(r(0,1))
+  .cutoff(usaw(1/2) * 4000)
+  .room(0.9).size(0.9).out()`,
     false
   )}
 
 ${makeExample(
-    "Durations using letters and floating point numbers",
+    "Durations using fractions and floating point numbers",
     `
-flip(8) ? z1('s 0 e 1 q 2 h 3 w 4').sound('sine').scale("locrian").out()
-	   : z1('0.125 0 0.25 2').sound('sine').scale("locrian").out()
+z1('1/8 0 2 4 0 2 4 1/4 0 3 5 0.25 _ 0 7 0 7')
+  .sound('square').delay(0.5).delayt(1/8)
+  .adsr(0, .1, 0, 0).delayfb(0.45).out()
 `,
     false
   )}
@@ -87,11 +86,11 @@ beat(3) :: snd('cp').room(0.5).size(0.5).orbit(2).out()
 ${makeExample(
     "Accidentals and rests for nice melodies",
     `
-z1('e 0 s 1 b2 3 e 0 s 1 b2 4')
-  .scale('major').sound('sine')
-  .fmi(usine(.5)).fmh(2)
-  .delay(0.5).delayt(1.25)
-  .sustain(0.1).out()
+z1('^ 1/8 0 1 b2 3 4 _ 4 b5 4 3 b2 1 0')
+  .scale('major').sound('triangle')
+  .cutoff(500).lpadsr(5, 0, 1/12, 0, 0)
+  .fmi(0.5).fmh(2).delay(0.5).delayt(1/3)
+  .adsr(0, .1, 0, 0).out()
 `,
     false
   )}
@@ -99,11 +98,12 @@ z1('e 0 s 1 b2 3 e 0 s 1 b2 4')
 ${makeExample(
     "Repeat items n-times",
     `
-z1('e 0:4 2:2 4:2 (0 4):2')
-  .scale('major').sound('sine')
-  .fmi(usine(.5)).fmh(2)
-  .delay(0.5).delayt(1.25)
-  .sustain(0.1).out()
+z1('1/8 _ _ 0!4 3!4 4!4 3!4')
+  .scale('major').sound('wt_oboe')
+  .shape(0.2).sustain(0.1).out()
+z2('1/8 _ 0!4 5!4 4!2 7!2')
+  .scale('major').sound('wt_oboe')
+  .shape(0.2).sustain(0.1).out()
 `,
     false
   )}
