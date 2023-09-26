@@ -1691,8 +1691,7 @@ z1('0.25 Bmaj7!2 D7!2 _ Gmaj7!2 Bb7!2 ^ Ebmaj7!2')
 ${e("Transposing chords",`
 z1('q Amin!2').key(["A2", "E2"].beat(4))
   .sound('sawtooth').cutoff(500)
-  .lpadsr(2, 0, .5, 0, 0, 0).out()
-z2('east east east:2 east').sound().out()`)}
+  .lpadsr(2, 0, .5, 0, 0, 0).out()`)}
 
 ${e("Chord transposition with roman numerals",`
 z1('i i v%-4 v%-2 vi%-5 vi%-3 iv%-2 iv%-1')
@@ -1721,18 +1720,20 @@ Ziffers provides shorthands for **many** numeric and algorithimic operations suc
 * **List operations:** Cartesian operation (_e.g._ <ic>(3 2 1)+(2 5)</ic>) using the <ic>+</ic> operator. All the arithmetic operators are supported.
 
 ${e("Element-wise operations for melodic generation",`
-z1("q 0 s (3 2 1)+(2 5) q 0 s (4 5 6)-(2 3)").sound('sine')
-  .scale('minor').fmi(2).fmh(2).room(0.5).size(0.5).sustain(0.1)
-  .delay(0.5).delay(0.125).delayfb(0.25).out();
+z1("1/8 _ 0 (0 1 3)+(1 2) 0 (2 3 5)-(1 2)").sound('sine')
+  .scale('pentatonic').fmi([0.25,0.5].beat(2)).fmh([2,4].beat(2))
+  .room(0.9).size(0.9).sustain(0.1).delay(0.5).delay(0.125)
+  .delayfb(0.25).out();
 `,!0)}
 
 * **Random numbers:** <ic>(4,6)</ic> Random number between 4 and 6
 
 ${e("Random numbers, true computer music at last!",`
-z1("s (0,8) 0 0 (0,5) 0 0").sound('sine')
-  .scale('minor').fmi(2).fmh(2).room(0.5)
-	.size(0.5).sustain(0.1) .delay(0.5)
-	.delay(0.125).delayfb(0.25).out();
+z1("s _ (0,8) 0 0 (0,5) 0 0").sound('sine')
+  .adsr(0, .1, 0, 0).scale('minor')
+  .fmdec(0.25).fmi(2).fmh([0.5, 0.25].beat(2))
+  .room(0.9).size(0.5).sustain(0.1) .delay(0.5)
+  .delay(0.125).delayfb(0.25).out();
 beat(.5) :: snd(['kick', 'hat'].beat(.5)).out()
 `,!0)}
 
