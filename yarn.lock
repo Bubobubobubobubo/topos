@@ -1451,10 +1451,10 @@ yaml@^2.1.1:
   resolved "https://registry.yarnpkg.com/yaml/-/yaml-2.3.1.tgz#02fe0975d23cd441242aa7204e09fc28ac2ac33b"
   integrity sha512-2eHWfjaoXgTBC2jNM1LRef62VQa0umtvRiDSk6HSzW7RvS5YtkabJrwYLLEKWBc8a5U2PTSCs+dJjUTJdlHsWQ==
 
-zifferjs@^0.0.31:
-  version "0.0.31"
-  resolved "https://registry.yarnpkg.com/zifferjs/-/zifferjs-0.0.31.tgz#723d780eb4992f5eb59fd5a43b9a38e7b1e0ed2a"
-  integrity sha512-PJV+tEzM9iYeFK3ta7LGSu0j2iodnNIROdzdguVG/YwDz0LLr3vVh8s8XXR3N6CV+/HKbS890han5wdd9kb9Jw==
+zifferjs@^0.0.32:
+  version "0.0.32"
+  resolved "https://registry.yarnpkg.com/zifferjs/-/zifferjs-0.0.32.tgz#825ab27f890f6fc9315e350e9d6b7ea40bcdaa3e"
+  integrity sha512-jY7Jx1lFIa7+I606G0+SSYID5hUe8nYlzebtlLKmbuE1Fb1utReb6064auLcpUcRz+zoSBm2GDr6/JlZ4HpKJg==
 
 zzfx@^1.2.0:
   version "1.2.0"

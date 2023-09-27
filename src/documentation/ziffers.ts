@@ -376,7 +376,8 @@ ${makeExample(
 ${makeExample(
     "Fraction durations",
     `
-  z1('1/4 0 0 4 4 5 5 2/4 4 1/4 3 3 2 2 1 1 2/4 0').sound('sine').out()
+  z1('1/4 0 0 4 4 5 5 2/4 4 1/4 3 3 2 2 1 1 2/4 0')
+  .sound('sine').out()
 `,
     true
   )}
@@ -384,7 +385,8 @@ ${makeExample(
 ${makeExample(
     "Decimal durations",
     `
-z1('0.25 5 1 2 6 0.125 3 8 0.5 4 1.0 0').sound('sine').scale("ionian").out()
+z1('0.25 5 1 2 6 0.125 3 8 0.5 4 1.0 0')
+.sound('sine').scale("galian").out()
 `,
     true
   )}
@@ -392,10 +394,20 @@ z1('0.25 5 1 2 6 0.125 3 8 0.5 4 1.0 0').sound('sine').scale("ionian").out()
 ${makeExample(
     "Rest and octaves",
     `
-z1('q 0 ^ e0 r _ 0 _ r 4 ^4 4').sound('sine').scale("ionian").out()
+z1('q 0 ^ e0 r _ 0 _ r 4 ^4 4')
+.sound('sine').scale("godian").out()
 `,
     true
   )}
+
+${makeExample(
+ "Rests with durations",
+ `
+ z1('q 0 4 e^r 3 e3 0.5^r h4 1/4^r e 5 r 0.125^r 0')
+ .sound('sine').scale("aeryptian").out()
+ `,
+ true
+)}
 
 - Scales
 

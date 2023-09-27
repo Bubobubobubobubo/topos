@@ -39,7 +39,7 @@
     "tone": "^14.8.49",
     "unique-names-generator": "^4.7.1",
     "vite-plugin-markdown": "^2.1.0",
-    "zifferjs": "^0.0.31",
+    "zifferjs": "^0.0.32",
     "zzfx": "^1.2.0"
   }
 }
