@@ -60,7 +60,7 @@ export class UserAPI {
   MidiConnection: MidiConnection = new MidiConnection();
   load: samples;
 
-  constructor(public app: Editor) { }
+  constructor(public app: Editor) {}
 
   _loadUniverseFromInterface = (universe: string) => {
     this.app.loadUniverse(universe as string);
@@ -168,16 +168,19 @@ export class UserAPI {
 
   public play = (): void => {
     this.app.setButtonHighlighting("play", true);
+    this.MidiConnection.sendStartMessage();
     this.app.clock.start();
   };
 
   public pause = (): void => {
     this.app.setButtonHighlighting("pause", true);
+    this.MidiConnection.sendStopMessage();
     this.app.clock.pause();
   };
 
   public stop = (): void => {
     this.app.setButtonHighlighting("stop", true);
+    this.MidiConnection.sendStopMessage();
     this.app.clock.stop();
   };
   silence = this.stop;
