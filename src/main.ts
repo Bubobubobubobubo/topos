@@ -66,8 +66,6 @@ const bindings = Object.keys(classMap).map((key) => ({
   replace: (match, p1) => `<${key} class="${classMap[key]}" ${p1}>`,
 }));
 
-
-
 export class Editor {
   universes: Universes = template_universes;
   selected_universe: string;
@@ -487,10 +485,12 @@ export class Editor {
           this.setButtonHighlighting("pause", true);
           this.isPlaying = !this.isPlaying;
           this.clock.pause();
+          this.api.MidiConnection.sendStopMessage();
         } else {
           this.setButtonHighlighting("play", true);
           this.isPlaying = !this.isPlaying;
           this.clock.start();
+          this.api.MidiConnection.sendStartMessage();
         }
       });
     });
@@ -562,12 +562,16 @@ export class Editor {
 
       if (this.settings.vimMode) {
         let vim = document.getElementById("vim-mode-radio") as HTMLInputElement;
-        let normal = document.getElementById("normal-mode-radio") as HTMLInputElement;
+        let normal = document.getElementById(
+          "normal-mode-radio"
+        ) as HTMLInputElement;
         vim.checked = true;
         normal.checked = false;
       } else {
         let vim = document.getElementById("vim-mode-radio") as HTMLInputElement;
-        let normal = document.getElementById("normal-mode-radio") as HTMLInputElement;
+        let normal = document.getElementById(
+          "normal-mode-radio"
+        ) as HTMLInputElement;
         normal.checked = true;
         vim.checked = false;
       }

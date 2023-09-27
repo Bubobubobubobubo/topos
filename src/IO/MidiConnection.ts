@@ -54,6 +54,26 @@ export class MidiConnection {
     }
   }
 
+  public sendStartMessage(): void {
+    /**
+     * Sends a MIDI Start message to the currently selected MIDI output.
+     */
+    const output = this.midiOutputs[this.currentOutputIndex];
+    if (output) {
+      output.send([0xfa]); // Send MIDI Start message
+    }
+  }
+
+  public sendStopMessage(): void {
+    /**
+     * Sends a MIDI Stop message to the currently selected MIDI output.
+     */
+    const output = this.midiOutputs[this.currentOutputIndex];
+    if (output) {
+      output.send([0xfc]); // Send MIDI Stop message
+    }
+  }
+
   public getCurrentMidiPortIndex(): number {
     /**
      * Returns the index of the currently selected MIDI output.
@@ -79,8 +99,6 @@ export class MidiConnection {
     const output = this.midiOutputs[this.currentOutputIndex];
     if (output) {
       output.send([0xf8]); // Send a single MIDI clock message
-    } else {
-      console.error("MIDI output not available.");
     }
   }
 

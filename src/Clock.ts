@@ -127,7 +127,7 @@ export class Clock {
   }
 
   set bpm(bpm: number) {
-    if(bpm>0 && this._bpm !== bpm) {
+    if (bpm > 0 && this._bpm !== bpm) {
       this._bpm = bpm;
       this.transportNode?.setBPM(bpm);
     }
@@ -138,7 +138,7 @@ export class Clock {
   }
 
   set ppqn(ppqn: number) {
-    if(ppqn>0 && this._ppqn !== ppqn) {
+    if (ppqn > 0 && this._ppqn !== ppqn) {
       this._ppqn = ppqn;
       this.transportNode?.setPPQN(ppqn);
     }
@@ -154,23 +154,32 @@ export class Clock {
   public start(): void {
     /**
      * Starts the TransportNode (starts the clock).
+     *
+     * @remark also sends a MIDI message if a port is declared
      */
     this.app.audioContext.resume();
+    this.app.api.MidiConnection.sendStartMessage();
     this.transportNode?.start();
   }
 
   public pause(): void {
     /**
      * Pauses the TransportNode (pauses the clock).
+     *
+     * @remark also sends a MIDI message if a port is declared
      */
     this.transportNode?.pause();
+    this.app.api.MidiConnection.sendStopMessage();
   }
 
   public stop(): void {
     /**
      * Stops the TransportNode (stops the clock).
+     *
+     * @remark also sends a MIDI message if a port is declared
      */
     this.app.clock.tick = -1;
+    this.app.api.MidiConnection.sendStopMessage();
     this.transportNode?.stop();
   }
 }
