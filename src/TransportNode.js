@@ -13,6 +13,7 @@ export class TransportNode extends AudioWorkletNode {
   /** @type {(this: MessagePort, ev: MessageEvent<any>) => any} */
   handleMessage = (message) => {
     if (message.data && message.data.type === "bang") {
+      this.app.api.MidiConnection.sendMidiClock();
       this.app.clock.tick++;
       const futureTimeStamp = this.app.clock.convertTicksToTimeposition(
         this.app.clock.tick
@@ -21,7 +22,6 @@ export class TransportNode extends AudioWorkletNode {
       this.timeviewer.innerHTML = `${zeroPad(futureTimeStamp.bar, 2)}:${
         futureTimeStamp.beat + 1
       }:${zeroPad(futureTimeStamp.pulse, 2)}`;
-      this.app.api.MidiConnection.sendMidiClock();
       if (this.app.exampleIsPlaying) {
         tryEvaluate(this.app, this.app.example_buffer);
       } else {
