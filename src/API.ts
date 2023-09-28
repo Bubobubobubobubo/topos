@@ -286,8 +286,9 @@ export class UserAPI {
      * @param from - The script to copy from
      * @param to - The script to copy to
      */
-    this.app.universes[this.app.selected_universe].locals[to] =
-      this.app.universes[this.app.selected_universe].locals[from];
+    this.app.universes[this.app.selected_universe].locals[to] = {
+      ...this.app.universes[this.app.selected_universe].locals[from],
+    };
   };
   cps = this.copy_script;
 
