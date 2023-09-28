@@ -5,7 +5,7 @@ import { tags as t } from "@lezer/highlight";
 
 const base00 = "#262626",
   base01 = "#3B4252",
-  base02 = "#FEFEFE",
+  base02 = "#BBBBBB",
   base03 = "#4C566A",
   base04 = "#D8DEE9",
   base05 = "#E5E9F0",
@@ -13,9 +13,9 @@ const base00 = "#262626",
   base_red = "#BF616A",
   base_deeporange = "#D08770",
   base_pink = "#B48EAD",
-  base_yellow = "#EBCB8B",
+  base_cyan = "#FBCF8B",
+  base_yellow = "#88C0D0",
   base_orange = "#D08770",
-  base_cyan = "#88C0D0",
   base_indigo = "#5E81AC",
   base_purple = "#B48EAD",
   base_green = "#A3BE8C",
@@ -23,7 +23,7 @@ const base00 = "#262626",
 
 const invalid = base_red,
   darkBackground = "#fdf6e3",
-  highlightBackground = "#454545",
+  highlightBackground = "#252525",
   // background = base00,
   tooltipBackground = base01,
   cursor = base04;
@@ -36,23 +36,24 @@ export const toposDarkTheme = EditorView.theme(
       // backgroundColor: background,
       backgroundColor: "transparent",
       fontSize: "24px",
-      fontFamily: "'Victor Mono', monospace",
+      fontFamily: "IBM Plex Mono",
     },
     ".cm-content": {
       caretColor: cursor,
-      fontFamily: "'Victor Mono', monospace",
+      fontFamily: "IBM Plex Mono",
     },
-    ".cm-cursor, .cm-dropCursor": { 
-			borderLeftColor: cursor,
-		},
-    "&.cm-focused .cm-selectionBackground, .cm-selectionBackground, .cm-content ::selection": { 
-			backgroundColor: base00,
-			border: `0.5px solid ${base00}`,
-		},
-    ".cm-panels": { 
-			backgroundColor: darkBackground, 
-			color: base05,
-		},
+    ".cm-cursor, .cm-dropCursor": {
+      borderLeftColor: cursor,
+    },
+    "&.cm-focused .cm-selectionBackground, .cm-selectionBackground, .cm-content ::selection":
+      {
+        backgroundColor: base00,
+        border: `0.5px solid ${base00}`,
+      },
+    ".cm-panels": {
+      backgroundColor: darkBackground,
+      color: base05,
+    },
     ".cm-panels.cm-panels-top": { borderBottom: "2px solid black" },
     ".cm-panels.cm-panels-bottom": { borderTop: "2px solid black" },
     ".cm-searchMatch": {
@@ -72,7 +73,7 @@ export const toposDarkTheme = EditorView.theme(
 
     "&.cm-focused .cm-matchingBracket": {
       color: base02,
-      outline: `1px solid ${base02}`,
+      // outline: `1px solid ${base02}`,
     },
 
     "&.cm-focused .cm-nonmatchingBracket": {

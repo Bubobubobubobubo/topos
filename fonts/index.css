@@ -1,34 +1,34 @@
 @font-face {
-  font-family: "Victor Mono";
-  src: url("woff2/VictorMono-Regular.woff2") format("woff2"),
-       url("woff/VictorMono-Regular.woff") format("woff");
+  font-family: "IBM Plex Mono";
+  src: url("woff2/IBMPlexMono-Regular.woff2") format("woff2"),
+       url("woff/IBMPlexMono-Regular.woff") format("woff");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: "Victor Mono";
-  src: url("woff2/VictorMono-Italic.woff2") format("woff2"),
-       url("woff/VictorMono-Italic.woff") format("woff");
+  font-family: "IBM PLex Mono";
+  src: url("woff2/IBMPlexMono-Italic.woff2") format("woff2"),
+       url("woff/IBMPlexMono-Italic.woff") format("woff");
   font-weight: 400;
   font-style: italic;
   font-display: swap;
 }
 
 @font-face {
-  font-family: "Victor Mono";
-  src: url("woff2/VictorMono-Bold.woff2") format("woff2"),
-       url("woff/VictorMono-Bold.woff") format("woff");
+  font-family: "IBM PLex Mono";
+  src: url("woff2/IBMPlexMono-Bold.woff2") format("woff2"),
+       url("woff/IBMPlexMono-Bold.woff") format("woff");
   font-weight: 700;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: "Victor Mono";
-  src: url("woff2/VictorMono-BoldItalic.woff2") format("woff2"),
-       url("woff/VictorMono-BoldItalic.woff") format("woff");
+  font-family: "IBM Plex Mono";
+  src: url("woff2/IBMPlexMono-BoldItalic.woff2") format("woff2"),
+       url("woff/IBMPlexMono-BoldItalic.woff") format("woff");
   font-weight: 700;
   font-style: italic;
   font-display: swap;
