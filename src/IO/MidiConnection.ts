@@ -1,3 +1,5 @@
+import { UserAPI } from "../API";
+
 export class MidiConnection {
   /**
    * Wrapper class for Web MIDI API. Provides methods for sending MIDI messages.
@@ -11,10 +13,20 @@ export class MidiConnection {
 
   private midiAccess: MIDIAccess | null = null;
   public midiOutputs: MIDIOutput[] = [];
+  public midiInputs: MIDIInput[] = [];
   private currentOutputIndex: number = 0;
+  private currentInputIndex: number|undefined = undefined;
+  private midiClockInput?: MIDIInput|undefined = undefined;
+  private lastClockTime: number = 0;
+  private lastBPM: number;
+  private clockBuffer: number[] = [];
+  private clockBufferLength = 100;
   private scheduledNotes: { [noteNumber: number]: number } = {}; // { noteNumber: timeoutId }
+  private api: UserAPI;
 
-  constructor() {
+  constructor(api: UserAPI) {
+    this.api = api;
+    this.lastBPM = api.bpm();
     this.initializeMidiAccess();
   }
 
@@ -30,6 +42,12 @@ export class MidiConnection {
       if (this.midiOutputs.length === 0) {
         console.warn("No MIDI outputs available.");
         this.currentOutputIndex = -1;
+      }
+      this.midiInputs = Array.from(this.midiAccess.inputs.values());
+      if (this.midiInputs.length === 0) {
+        console.warn("No MIDI inputs available.");
+      } else {
+        this.updateMidiClockSelect();
       }
     } catch (error) {
       console.error("Failed to initialize MIDI:", error);
@@ -92,6 +110,105 @@ export class MidiConnection {
     }
   }
 
+  public setMidiClock(inputName: string|number): void {
+    /**
+     * Sets the MIDI input to use for MIDI clock messages.
+     *
+     * @param inputName Name of the MIDI input to use for MIDI clock messages
+     */
+    const inputIndex = this.getMidiInputIndex(inputName);
+    if (inputIndex !== -1) {
+      this.midiClockInput = this.midiInputs[inputIndex];
+      this.registerMidiClockListener();
+    } else {
+      this.midiClockInput = undefined;
+    }
+  }
+
+  public updateMidiClockSelect() {
+    /**
+     * Updates the MIDI clock input select element with the available MIDI inputs.
+     */
+    if(this.midiInputs.length > 0) {
+      const select = document.getElementById("midi-clock-input") as HTMLSelectElement;
+      select.innerHTML = "";
+      // Defaults to internal clock
+      const defaultOption = document.createElement("option");
+      defaultOption.value = "-1";
+      defaultOption.text = "Internal";
+      select.appendChild(defaultOption);
+      // Add MIDI inputs to clock select input
+      this.midiInputs.forEach((input, index) => {
+        const option = document.createElement("option");
+        option.value = index.toString();
+        option.text = input.name || "No name input";
+        select.appendChild(option);
+      });
+      select.value = this.currentInputIndex ? this.currentInputIndex.toString() : "-1";
+      // Add listener
+      select.addEventListener("change", (event) => {
+        const value = (event.target as HTMLSelectElement).value;
+        if(value === "-1") {
+          if(this.midiClockInput) this.midiClockInput.onmidimessage = null;
+          this.midiClockInput = undefined;
+        } else {
+          this.currentInputIndex = parseInt(value);
+          if(this.midiClockInput) this.midiClockInput.onmidimessage = null;
+          this.midiClockInput = this.midiInputs[this.currentInputIndex];
+          this.registerMidiClockListener();
+        }
+      });
+    }
+  }
+
+  public registerMidiClockListener(): void {
+    /**
+     * Registers a listener for MIDI clock messages on the currently selected MIDI input.
+     */
+    if (this.midiClockInput) {
+      this.midiClockInput.onmidimessage = (event: Event) => {
+        const message = event as MIDIMessageEvent;
+        if (message.data[0] === 0xf8) {
+          const timestamp = performance.now();
+          const delta = timestamp - this.lastClockTime;
+          const bpm = 60 * (1000 / delta / 24);
+          this.lastClockTime = timestamp;
+          this.clockBuffer.push(bpm);
+          if(this.clockBuffer.length>this.clockBufferLength) this.clockBuffer.shift();
+          const estimatedBPM = this.estimatedBPM();
+          if(estimatedBPM !== this.lastBPM) {
+            this.api.bpm(this.estimatedBPM());
+            this.lastBPM = estimatedBPM;
+          }
+        } else if(message.data[0] === 0xfa) {
+          console.log("MIDI start received");
+        } else if(message.data[0] === 0xfc) {
+          console.log("MIDI stop received");
+        } else if(message.data[0] === 0xfb) {
+          console.log("MIDI continue received");
+        } else if(message.data[0] === 0xfe) {
+          console.log("MIDI active sensing received");
+        } else {
+          // Ignore other MIDI messages
+          console.log("Ignored MIDI message: ", message.data);
+        }
+      }
+    }
+  }
+
+  public estimatedBPM(): number {
+    /**
+     * Returns the estimated BPM based on the last 24 MIDI clock messages.
+     *
+     * @returns Estimated BPM
+     */
+    const sum = this.clockBuffer.reduce((a, b) => a + b);
+    return Math.round(sum / this.clockBuffer.length);
+  }
+
+
+
+
   public sendMidiClock(): void {
     /**
      * Sends a single MIDI clock message to the currently selected MIDI output.
@@ -144,6 +261,36 @@ export class MidiConnection {
       } else {
         console.error(`MIDI output "${output}" not found.`);
         return this.currentOutputIndex;
+      }
+    }
+  }
+
+  public getMidiInputIndex(input: string | number): number {
+    /**
+     * Returns the index of the MIDI input with the specified name.
+     *
+     * @param input Name or index of the MIDI input
+     * @returns Index of the new MIDI input or -1 if not valid
+     *
+     */
+    if (typeof input === "number") {
+      if (input < 0 || input >= this.midiInputs.length) {
+        console.error(
+          `Invalid MIDI input index. Index must be in the range 0-${
+            this.midiInputs.length - 1
+          }.`
+        );
+        return -1;
+      } else {
+        return input;
+      }
+    } else {
+      const index = this.midiInputs.findIndex((o) => o.name === input);
+      if (index !== -1) {
+        return index;
+      } else {
+        console.error(`MIDI input "${input}" not found.`);
+        return -1;
       }
     }
   }

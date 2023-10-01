@@ -56,11 +56,12 @@ export class UserAPI {
   public patternCache = new LRUCache({ max: 1000, ttl: 1000 * 60 * 5 });
   private errorTimeoutID: number = 0;
   private printTimeoutID: number = 0;
-
-  MidiConnection: MidiConnection = new MidiConnection();
+  public MidiConnection: MidiConnection;
   load: samples;
 
-  constructor(public app: Editor) {}
+  constructor(public app: Editor) {
+    this.MidiConnection = new MidiConnection(this);
+  }
 
   _loadUniverseFromInterface = (universe: string) => {
     this.app.loadUniverse(universe as string);
