@@ -239,9 +239,16 @@
               <!-- Midi settings -->
               <div class="flex flex-row">
                 <div class="flex items-center mb-4 ml-8">
-                  Midi clock:&nbsp;
+                  <label for="default-checkbox" class="ml-2 text-sm font-medium text-dark">Midi clock:&nbsp;</label>
                   <select id="midi-clock-input" class="w-32 h-8 text-sm font-medium text-black bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                     <option value="-1">Internal</option>
+                  </select>
+                </div>
+                <div class="flex items-center mb-4 ml-8">
+                  <label for="default-checkbox" class="ml-2 text-sm font-medium text-dark">Clock ppqn:&nbsp;</label>
+                  <select id="midi-clock-ppqn-input" class="w-32 h-8 text-sm font-medium text-black bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                    <option value="24">24</option>
+                    <option value="48">48</option>
                   </select>
                 </div>
               </div>

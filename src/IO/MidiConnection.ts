@@ -11,22 +11,32 @@ export class MidiConnection {
    * @param scheduledNotes - Object containing scheduled notes. Keys are note numbers and values are timeout IDs.
    */
 
+  private api: UserAPI;
   private midiAccess: MIDIAccess | null = null;
   public midiOutputs: MIDIOutput[] = [];
   public midiInputs: MIDIInput[] = [];
   private currentOutputIndex: number = 0;
   private currentInputIndex: number|undefined = undefined;
-  private midiClockInput?: MIDIInput|undefined = undefined;
-  private lastClockTime: number = 0;
-  private lastBPM: number;
-  private clockBuffer: number[] = [];
-  private clockBufferLength = 100;
   private scheduledNotes: { [noteNumber: number]: number } = {}; // { noteNumber: timeoutId }
-  private api: UserAPI;
+ 
+  /* MIDI clock stuff */
+  private midiClockInput?: MIDIInput|undefined = undefined;
+  private lastTimestamp: number = 0;
+  private midiClockDelta: number = 0;
+  private lastBPM: number;
+  private roundedBPM: number = 0;
+  private clockBuffer: number[] = [];
+  private deltaBuffer: number[] = [];
+  private clockBufferLength = 24;
+  private clockPPQN = 24;
+  private clockTicks = 0;
+  private clockErrorCount = 0;
+  private skipOnError = 0;
 
   constructor(api: UserAPI) {
     this.api = api;
     this.lastBPM = api.bpm();
+    this.roundedBPM = this.lastBPM;
     this.initializeMidiAccess();
   }
 
@@ -48,6 +58,7 @@ export class MidiConnection {
         console.warn("No MIDI inputs available.");
       } else {
         this.updateMidiClockSelect();
+        this.clockPPQNSelect();
       }
     } catch (error) {
       console.error("Failed to initialize MIDI:", error);
@@ -161,6 +172,14 @@ export class MidiConnection {
     }
   }
 
+  clockPPQNSelect(): void {
+    const select = document.getElementById("midi-clock-ppqn-input") as HTMLSelectElement;
+    select.addEventListener("change", (event) => {
+      const value = (event.target as HTMLSelectElement).value;
+      this.clockPPQN = parseInt(value);
+    });
+  }
+
   public registerMidiClockListener(): void {
     /**
      * Registers a listener for MIDI clock messages on the currently selected MIDI input.
@@ -169,16 +188,10 @@ export class MidiConnection {
       this.midiClockInput.onmidimessage = (event: Event) => {
         const message = event as MIDIMessageEvent;
         if (message.data[0] === 0xf8) {
-          const timestamp = performance.now();
-          const delta = timestamp - this.lastClockTime;
-          const bpm = 60 * (1000 / delta / 24);
-          this.lastClockTime = timestamp;
-          this.clockBuffer.push(bpm);
-          if(this.clockBuffer.length>this.clockBufferLength) this.clockBuffer.shift();
-          const estimatedBPM = this.estimatedBPM();
-          if(estimatedBPM !== this.lastBPM) {
-            this.api.bpm(this.estimatedBPM());
-            this.lastBPM = estimatedBPM;
+          if(this.skipOnError>0) {
+            this.skipOnError -= 1;
+          } else {
+            this.onMidiClock(event.timeStamp);
           }
         } else if(message.data[0] === 0xfa) {
           console.log("MIDI start received");
@@ -196,6 +209,63 @@ export class MidiConnection {
     }
   }
 
+  public onMidiClock(timestamp: number): void {
+    /**
+     * Called when a MIDI clock message is received.
+     */
+    
+    const SMOOTH = 0.1;
+    this.clockTicks += 1;
+
+    if(this.lastTimestamp > 0) {
+
+      if(this.lastTimestamp===timestamp) {
+         // This is error handling for odd MIDI clock messages with the same timestamp
+        this.clockErrorCount+=1;
+      } else {
+        if(this.clockErrorCount>0) {
+          console.log("Timestamp error count: ", this.clockErrorCount);
+          console.log("Current timestamp: ", timestamp);
+          console.log("Last timestamp: ", this.lastTimestamp);
+          console.log("Last delta: ", this.midiClockDelta);
+          console.log("Current delta: ", timestamp - this.lastTimestamp);
+          console.log("BPMs", this.clockBuffer);
+          console.log("Deltas", this.deltaBuffer);
+          this.clockErrorCount = 0;
+          this.skipOnError = this.clockPPQN/4; // Skip quarter of the pulses
+          timestamp = 0; // timestamp 0 == lastTimestamp 0
+        } else {
+
+          if(this.midiClockDelta === 0) {
+            this.midiClockDelta = timestamp - this.lastTimestamp;
+            this.lastBPM = 60 * (1000 / this.midiClockDelta / 24);
+          } else {
+            const lastDelta = this.midiClockDelta * (1.0 - SMOOTH);
+            this.midiClockDelta = timestamp - this.lastTimestamp;
+            this.lastBPM = (60 * (1000 / (this.midiClockDelta*SMOOTH+lastDelta) / 24) * SMOOTH) + (this.lastBPM * (1.0 - SMOOTH));        
+          }
+
+          this.deltaBuffer.push(this.midiClockDelta);
+          if(this.deltaBuffer.length>this.clockBufferLength) this.deltaBuffer.shift();
+        
+          this.clockBuffer.push(this.lastBPM);
+          if(this.clockBuffer.length>this.clockBufferLength) this.clockBuffer.shift();
+          
+          const estimatedBPM = this.estimatedBPM();
+          if(estimatedBPM !== this.roundedBPM) {
+            this.api.bpm(estimatedBPM);
+            this.roundedBPM = estimatedBPM;
+            console.log(this.roundedBPM);
+          }
+          
+        }
+      }
+    }
+
+    this.lastTimestamp = timestamp;
+  
+  }
+
   public estimatedBPM(): number {
     /**
      * Returns the estimated BPM based on the last 24 MIDI clock messages.
@@ -205,9 +275,6 @@ export class MidiConnection {
     const sum = this.clockBuffer.reduce((a, b) => a + b);
     return Math.round(sum / this.clockBuffer.length);
   }
-
-
-
 
   public sendMidiClock(): void {
     /**
