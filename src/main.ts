@@ -193,6 +193,11 @@ export class Editor {
     "show-tips"
   ) as HTMLInputElement;
 
+  // Loading demo songs when starting
+  load_demo_songs: HTMLInputElement = document.getElementById(
+    "load-demo-songs"
+  ) as HTMLInputElement;
+
   // Editor mode selection
   normal_mode_button: HTMLButtonElement = document.getElementById(
     "normal-mode"
@@ -225,18 +230,10 @@ export class Editor {
   public hydra: any = this.hydra_backend.synth;
 
   constructor() {
-    // ================================================================================
-    // Loading the universe from local storage
-    // ================================================================================
 
-    this.universes = { ...this.settings.universes, ...template_universes };
-    this.selected_universe = "Welcome";
-    this.universe_viewer.innerHTML = `Topos: ${this.selected_universe}`;
-
-    // Picking a random example to populate the landing page
-    let random_example = examples[Math.floor(Math.random() * examples.length)];
-    this.universes[this.selected_universe].global.committed = random_example;
-    this.universes[this.selected_universe].global.candidate = random_example;
+    // ================================================================================
+    // Loading the settings
+    // ================================================================================
 
     this.line_numbers_checkbox.checked = this.settings.line_numbers;
     this.time_position_checkbox.checked = this.settings.time_position;
@@ -244,6 +241,29 @@ export class Editor {
     if (!this.settings.time_position) {
       document.getElementById("timeviewer")!.classList.add("hidden");
     }
+    this.load_demo_songs.checked = this.settings.load_demo_songs;
+
+    // ================================================================================
+    // Loading the universe from local storage
+    // ================================================================================
+
+    this.universes = {
+      ...this.settings.universes,
+      ...template_universes
+    };
+
+    if (this.settings.load_demo_songs) {
+      let random_example = examples[Math.floor(Math.random() * examples.length)];
+      this.selected_universe = "Welcome"
+      this.universes[this.selected_universe].global.committed = random_example;
+      this.universes[this.selected_universe].global.candidate = random_example;
+    } else {
+      this.selected_universe = this.settings.selected_universe;
+      if (this.universes[this.selected_universe] === undefined)
+        this.universes[this.selected_universe] = structuredClone(template_universe)
+    }
+    this.universe_viewer.innerHTML = `Topos: ${this.selected_universe}`;
+
 
     // ================================================================================
     // Audio context and clock
@@ -499,7 +519,7 @@ export class Editor {
       button.addEventListener("click", () => {
         this.setButtonHighlighting("clear", true);
         if (confirm("Do you want to reset the current universe?")) {
-          this.universes[this.selected_universe] = template_universe;
+          this.universes[this.selected_universe] = structuredClone(template_universe);
           this.updateEditorView();
         }
       });
@@ -559,6 +579,7 @@ export class Editor {
       this.line_numbers_checkbox.checked = this.settings.line_numbers;
       this.time_position_checkbox.checked = this.settings.time_position;
       this.tips_checkbox.checked = this.settings.tips;
+      this.load_demo_songs.checked = this.settings.load_demo_songs;
 
       if (this.settings.vimMode) {
         let vim = document.getElementById("vim-mode-radio") as HTMLInputElement;
@@ -653,6 +674,12 @@ export class Editor {
         ),
       });
     });
+
+    this.load_demo_songs.addEventListener("change", () => {
+      let checked = this.load_demo_songs.checked ? true : false;
+      this.settings.load_demo_songs = checked;
+    });
+
 
     this.vim_mode_button.addEventListener("click", () => {
       this.settings.vimMode = true;

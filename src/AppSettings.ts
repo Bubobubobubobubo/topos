@@ -53,6 +53,7 @@ export interface Settings {
   selected_universe: string;
   line_numbers: boolean;
   time_position: boolean;
+  load_demo_songs: boolean;
   tips: boolean;
 }
 
@@ -122,6 +123,7 @@ export class AppSettings {
   public line_numbers: boolean = true;
   public time_position: boolean = true;
   public tips: boolean = true;
+  public load_demo_songs: boolean = true;
 
   constructor() {
     const settingsFromStorage = JSON.parse(
@@ -139,6 +141,7 @@ export class AppSettings {
       this.line_numbers = settingsFromStorage.line_numbers;
       this.time_position = settingsFromStorage.time_position;
       this.tips = settingsFromStorage.tips;
+      this.load_demo_songs = settingsFromStorage.load_demo_songs;
     } else {
       this.universes = template_universes;
     }
@@ -162,6 +165,7 @@ export class AppSettings {
       line_numbers: this.line_numbers,
       time_position: this.time_position,
       tips: this.tips,
+      load_demo_songs: this.load_demo_songs,
     };
   }
 
@@ -183,6 +187,7 @@ export class AppSettings {
     this.line_numbers = settings.line_numbers;
     this.time_position = settings.time_position;
     this.tips = settings.tips;
+    this.load_demo_songs = settings.load_demo_songs;
     localStorage.setItem("topos", JSON.stringify(this.data));
   }
 }
