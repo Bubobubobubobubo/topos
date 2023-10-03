@@ -197,6 +197,10 @@ export class Editor {
     "send-midi-clock"
   ) as HTMLInputElement;
 
+  midi_clock_ppqn: HTMLSelectElement  = document.getElementById(
+    "midi-clock-ppqn-input"
+  ) as HTMLSelectElement;
+
   // Editor mode selection
   normal_mode_button: HTMLButtonElement = document.getElementById(
     "normal-mode"
@@ -246,6 +250,7 @@ export class Editor {
     this.time_position_checkbox.checked = this.settings.time_position;
     this.tips_checkbox.checked = this.settings.tips;
     this.midi_clock_checkbox.checked = this.settings.send_clock;
+    this.midi_clock_ppqn.value = this.settings.midi_clock_ppqn.toString();
     if (!this.settings.time_position) {
       document.getElementById("timeviewer")!.classList.add("hidden");
     }
@@ -565,6 +570,7 @@ export class Editor {
       this.time_position_checkbox.checked = this.settings.time_position;
       this.tips_checkbox.checked = this.settings.tips;
       this.midi_clock_checkbox.checked = this.settings.send_clock;
+      this.midi_clock_ppqn.value = this.settings.midi_clock_ppqn.toString();
 
       if (this.settings.vimMode) {
         let vim = document.getElementById("vim-mode-radio") as HTMLInputElement;
@@ -663,6 +669,11 @@ export class Editor {
     this.midi_clock_checkbox.addEventListener("change", () => {
       let checked = this.midi_clock_checkbox.checked ? true : false;
       this.settings.send_clock = checked;
+    });
+
+    this.midi_clock_ppqn.addEventListener("change", () => {
+      let value = parseInt(this.midi_clock_ppqn.value);
+      this.settings.midi_clock_ppqn = value;
     });
 
     this.vim_mode_button.addEventListener("click", () => {

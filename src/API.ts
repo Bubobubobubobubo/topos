@@ -60,7 +60,7 @@ export class UserAPI {
   load: samples;
 
   constructor(public app: Editor) {
-    this.MidiConnection = new MidiConnection(this);
+    this.MidiConnection = new MidiConnection(this, app.settings);
   }
 
   _loadUniverseFromInterface = (universe: string) => {

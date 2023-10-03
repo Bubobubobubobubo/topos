@@ -1,4 +1,5 @@
 import { UserAPI } from "../API";
+import { AppSettings } from "../AppSettings";
 
 export class MidiConnection {
   /**
@@ -12,6 +13,7 @@ export class MidiConnection {
    */
 
   private api: UserAPI;
+  private settings: AppSettings;
   private midiAccess: MIDIAccess | null = null;
   public midiOutputs: MIDIOutput[] = [];
   public midiInputs: MIDIInput[] = [];
@@ -28,13 +30,13 @@ export class MidiConnection {
   private clockBuffer: number[] = [];
   private deltaBuffer: number[] = [];
   private clockBufferLength = 24;
-  private clockPPQN = 24;
   private clockTicks = 0;
   private clockErrorCount = 0;
   private skipOnError = 0;
 
-  constructor(api: UserAPI) {
+  constructor(api: UserAPI, settings: AppSettings) {
     this.api = api;
+    this.settings = settings;
     this.lastBPM = api.bpm();
     this.roundedBPM = this.lastBPM;
     this.initializeMidiAccess();
@@ -58,7 +60,6 @@ export class MidiConnection {
         console.warn("No MIDI inputs available.");
       } else {
         this.updateMidiClockSelect();
-        this.clockPPQNSelect();
       }
     } catch (error) {
       console.error("Failed to initialize MIDI:", error);
@@ -156,32 +157,35 @@ export class MidiConnection {
       this.midiInputs.forEach((input, index) => {
         const option = document.createElement("option");
         option.value = index.toString();
-        option.text = input.name || "No name input";
+        option.text = input.name || index.toString();
         select.appendChild(option);
       });
-      select.value = this.currentInputIndex ? this.currentInputIndex.toString() : "-1";
+      if(this.settings.midi_clock_input) {
+        const clockMidiInputIndex = this.getMidiInputIndex(this.settings.midi_clock_input);
+        select.value = clockMidiInputIndex.toString();
+        if(clockMidiInputIndex > 0) {
+          this.midiClockInput = this.midiInputs[clockMidiInputIndex];
+          this.registerMidiClockListener();
+        } 
+      } else {
+        select.value = "-1";
+      }
       // Add listener
       select.addEventListener("change", (event) => {
         const value = (event.target as HTMLSelectElement).value;
         if(value === "-1") {
           if(this.midiClockInput) this.midiClockInput.onmidimessage = null;
           this.midiClockInput = undefined;
+          this.settings.midi_clock_input = undefined;
         } else {
           this.currentInputIndex = parseInt(value);
           if(this.midiClockInput) this.midiClockInput.onmidimessage = null;
           this.midiClockInput = this.midiInputs[this.currentInputIndex];
           this.registerMidiClockListener();
+          this.settings.midi_clock_input = this.midiClockInput.name || undefined;
         }
       });
     }
-  }
-
-  clockPPQNSelect(): void {
-    const select = document.getElementById("midi-clock-ppqn-input") as HTMLSelectElement;
-    select.addEventListener("change", (event) => {
-      const value = (event.target as HTMLSelectElement).value;
-      this.clockPPQN = parseInt(value);
-    });
   }
 
   public registerMidiClockListener(): void {
@@ -241,12 +245,12 @@ export class MidiConnection {
           this.clockErrorCount = 0;
           /* I dont know why this happens. But when it does, deltas for the following messages are off.
              So skipping ~ quarted of clock resolution usually helps */
-          this.skipOnError = this.clockPPQN/4; 
+          this.skipOnError = this.settings.midi_clock_ppqn/4; 
           timestamp = 0; // timestamp 0 == lastTimestamp 0
         } else {
 
           this.midiClockDelta = timestamp - this.lastTimestamp;
-          this.lastBPM = 60 * (1000 / this.midiClockDelta / 24);
+          this.lastBPM = 60 * (1000 / this.midiClockDelta / this.settings.midi_clock_ppqn);
 
           this.clockBuffer.push(this.lastBPM);
           if(this.clockBuffer.length>this.clockBufferLength) this.clockBuffer.shift();

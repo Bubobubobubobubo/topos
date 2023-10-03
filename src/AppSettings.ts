@@ -45,6 +45,8 @@ export interface Settings {
    * @param time_position - Whether or not to show time position
    * @param tips - Whether or not to show tips
    * @param send_clock - Whether or not to send midi clock
+   * @param midi_clock_input - The name of the midi clock input
+   * @param midi_clock_ppqn - The pulses per quarter note for midi clock
    */
   vimMode: boolean;
   theme: string;
@@ -56,6 +58,8 @@ export interface Settings {
   time_position: boolean;
   tips: boolean;
   send_clock: boolean;
+  midi_clock_input: string|undefined;
+  midi_clock_ppqn: number;
 }
 
 export const template_universe = {
@@ -113,6 +117,8 @@ export class AppSettings {
    * @param time_position - Whether or not to show time position
    * @param tips - Whether or not to show tips
    * @param send_clock - Whether or not to send midi clock
+   * @param midi_clock_input - The name of the midi clock input
+   * @param midi_clock_ppqn - The pulses per quarter note for midi clock
 
    */
 
@@ -126,6 +132,8 @@ export class AppSettings {
   public time_position: boolean = true;
   public tips: boolean = true;
   public send_clock: boolean = false;
+  public midi_clock_input: string|undefined = undefined;
+  public midi_clock_ppqn: number = 24;
 
   constructor() {
     const settingsFromStorage = JSON.parse(
@@ -144,6 +152,8 @@ export class AppSettings {
       this.time_position = settingsFromStorage.time_position;
       this.tips = settingsFromStorage.tips;
       this.send_clock = settingsFromStorage.send_clock;
+      this.midi_clock_input = settingsFromStorage.midi_clock_input;
+      this.midi_clock_ppqn = settingsFromStorage.midi_clock_ppqn || 24;
     } else {
       this.universes = template_universes;
     }
@@ -168,6 +178,8 @@ export class AppSettings {
       time_position: this.time_position,
       tips: this.tips,
       send_clock: this.send_clock,
+      midi_clock_input: this.midi_clock_input,
+      midi_clock_ppqn: this.midi_clock_ppqn,
     };
   }
 
@@ -190,6 +202,8 @@ export class AppSettings {
     this.time_position = settings.time_position;
     this.tips = settings.tips;
     this.send_clock = settings.send_clock;
+    this.midi_clock_input = settings.midi_clock_input;
+    this.midi_clock_ppqn = settings.midi_clock_ppqn;
     localStorage.setItem("topos", JSON.stringify(this.data));
   }
 }
