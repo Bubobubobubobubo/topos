@@ -1,4 +1,5 @@
 import { UserAPI } from "../API";
+import { Clock } from "../Clock";
 
 export class MidiConnection {
   /**
@@ -85,21 +86,25 @@ export class MidiConnection {
 
   public sendStartMessage(): void {
     /**
-     * Sends a MIDI Start message to the currently selected MIDI output.
+     * Sends a MIDI Start message to the currently selected MIDI output and MIDI clock is not used
      */
-    const output = this.midiOutputs[this.currentOutputIndex];
-    if (output) {
-      output.send([0xfa]); // Send MIDI Start message
+    if(!this.midiClockInput) {
+      const output = this.midiOutputs[this.currentOutputIndex];
+      if (output) {
+        output.send([0xfa]); // Send MIDI Start message
+      }
     }
   }
 
   public sendStopMessage(): void {
     /**
-     * Sends a MIDI Stop message to the currently selected MIDI output.
+     * Sends a MIDI Stop message to the currently selected MIDI output and MIDI clock is not used
      */
-    const output = this.midiOutputs[this.currentOutputIndex];
-    if (output) {
-      output.send([0xfc]); // Send MIDI Stop message
+    if(!this.midiClockInput) {
+      const output = this.midiOutputs[this.currentOutputIndex];
+      if (output) {
+        output.send([0xfc]); // Send MIDI Stop message
+      }
     }
   }
 
@@ -195,15 +200,19 @@ export class MidiConnection {
           }
         } else if(message.data[0] === 0xfa) {
           console.log("MIDI start received");
+          this.api.stop();
+          this.api.play();
         } else if(message.data[0] === 0xfc) {
           console.log("MIDI stop received");
+          this.api.pause();
         } else if(message.data[0] === 0xfb) {
           console.log("MIDI continue received");
+          this.api.play();
         } else if(message.data[0] === 0xfe) {
           console.log("MIDI active sensing received");
         } else {
           // Ignore other MIDI messages
-          console.log("Ignored MIDI message: ", message.data);
+          // console.log("Ignored MIDI message: ", message.data[0], message.data[1]);
         }
       }
     }
@@ -232,32 +241,25 @@ export class MidiConnection {
           console.log("BPMs", this.clockBuffer);
           console.log("Deltas", this.deltaBuffer);
           this.clockErrorCount = 0;
-          this.skipOnError = this.clockPPQN/4; // Skip quarter of the pulses
+          /* I dont know why this happens. But when it does, deltas for the following messages are off.
+             So skipping ~ quarted of clock resolution usually helps */
+          this.skipOnError = this.clockPPQN/4; 
           timestamp = 0; // timestamp 0 == lastTimestamp 0
         } else {
 
-          if(this.midiClockDelta === 0) {
-            this.midiClockDelta = timestamp - this.lastTimestamp;
-            this.lastBPM = 60 * (1000 / this.midiClockDelta / 24);
-          } else {
-            const lastDelta = this.midiClockDelta * (1.0 - SMOOTH);
-            this.midiClockDelta = timestamp - this.lastTimestamp;
-            this.lastBPM = (60 * (1000 / (this.midiClockDelta*SMOOTH+lastDelta) / 24) * SMOOTH) + (this.lastBPM * (1.0 - SMOOTH));        
-          }
+          this.midiClockDelta = timestamp - this.lastTimestamp;
+          this.lastBPM = 60 * (1000 / this.midiClockDelta / 24);
 
-          this.deltaBuffer.push(this.midiClockDelta);
-          if(this.deltaBuffer.length>this.clockBufferLength) this.deltaBuffer.shift();
-        
           this.clockBuffer.push(this.lastBPM);
           if(this.clockBuffer.length>this.clockBufferLength) this.clockBuffer.shift();
           
           const estimatedBPM = this.estimatedBPM();
           if(estimatedBPM !== this.roundedBPM) {
+            console.log("Esimated BPM: ", estimatedBPM);
             this.api.bpm(estimatedBPM);
             this.roundedBPM = estimatedBPM;
-            console.log(this.roundedBPM);
           }
-          
+
         }
       }
     }
@@ -280,9 +282,11 @@ export class MidiConnection {
     /**
      * Sends a single MIDI clock message to the currently selected MIDI output.
      */
-    const output = this.midiOutputs[this.currentOutputIndex];
-    if (output) {
-      output.send([0xf8]); // Send a single MIDI clock message
+    if(!this.midiClockInput) {
+      const output = this.midiOutputs[this.currentOutputIndex];
+      if (output) {
+        output.send([0xf8]); // Send a single MIDI clock message
+      }
     }
   }
 
