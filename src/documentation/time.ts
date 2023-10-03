@@ -26,7 +26,7 @@ ${makeExample(
     "Using different mod values",
     `
 // This code is alternating between different mod values
-beat([1,1/2,1/4,1/8].beat(2)) :: sound('bd').n(0).out()
+beat([1,1/2,1/4,1/8].beat(2)) :: sound('hat').n(0).out()
 `,
     true
   )}
@@ -34,24 +34,33 @@ beat([1,1/2,1/4,1/8].beat(2)) :: sound('bd').n(0).out()
 ${makeExample(
     "Some sort of ringtone",
     `
-let blip = (freq) => {return sound('sine').sustain(0.1).freq(freq)};
-beat(1) :: blip(200).out();
-beat(1/3) :: blip(400).out();
-flip(3) :: beat(1/6) :: blip(800).out();
-beat([1,0.75].beat(2)) :: blip([50, 100].beat(2)).out();
+// Blip generator :)
+let blip = (freq) => {
+  return sound('wt_piano')
+          .gain(1)
+          .sustain(0.1)
+          .freq(freq)
+          .cutoff(1500)
+          .lpadsr(4, 0, .25, 0, 0)
+};
+beat(1) :: blip(200).pan(r(0,1)).vib(0.5).vibmod(2).out();
+beat(1/3) :: blip(400).pan(r(0,1)).out();
+flip(3) :: beat(1/6) :: blip(800).pan(r(0,1)).out();
+beat([1,0.75].beat(2)) :: blip([50, 100].beat(2)).pan(r(0,1)).out();
 `,
     false
   )}
 
 
-- <ic>pulse(...n: number[])</ic>: faster version of the <ic>beat</ic> function. Instead of returning true for every beat, this function is returning true every _n_ clock ticks! It can be used to generate very unexpected results or to sequence by using your arithmetic ninja skills.
+- <ic>pulse(...n: number[])</ic>: faster version of the <ic>beat</ic> function. Instead of returning true for every beat, this function is returning true every _n_ clock ticks! It can be used to generate very unexpected rhythms.
 
 ${makeExample(
     "Intriguing rhythms",
     `
-pulse(36) :: snd('east')
-  .n([2,4].beat(1)).out()
-pulse([12, 36].beat(4)) :: snd('east')
+pulse([24,48].beat(2)) :: snd('hand')
+  .cut(1).room(0.9).size(0.9)
+  .n([2,4].beat(2)).out()
+pulse([48/2, 48/3].beat(4)) :: snd('hand')
   .n([2,4].add(5).beat(1)).out()
 `,
     true
@@ -71,8 +80,8 @@ ${makeExample(
     "Some simple yet detailed rhythms",
     `
 onbeat(1,2,3,4)::snd('kick').out() // Bassdrum on each beat
-onbeat(2,4)::snd('snare').out() // Snare on acccentuated beats
-onbeat(1.5,2.5,3.5, 3.75)::snd('hat').out() // Cool high-hats
+onbeat(2,4)::snd('snare').n([0,2].beat(2.5)).out() // Snare on acccentuated beats
+onbeat(1.5,2.5,3.5, 3.75)::snd('hat').gain(r(0.9,1.1)).out() // Cool high-hats
 `,
     true
   )}
@@ -80,10 +89,10 @@ onbeat(1.5,2.5,3.5, 3.75)::snd('hat').out() // Cool high-hats
 ${makeExample(
     "Let's do something more complex",
     `
-onbeat(0.5, 1.5, 2, 3, 3.75)::snd('kick').n(2).out()
-onbeat(2, [1.5, 3].pick(), 4)::snd('snare').n(7).out()
+onbeat(0.5, 2, 3, 3.75)::snd('kick').n(2).out()
+onbeat(2, [1.5, 3, 4].pick(), 4)::snd('snare').n(8).out()
 beat([.25, 1/8].beat(1.5))::snd('hat').n(2)
-  .gain(rand(0.4, 0.7))
+  .gain(rand(0.4, 0.7)).end(0.05)
   .pan(usine()).out()
 `,
     false
@@ -95,7 +104,9 @@ ${makeExample(
     "Using oncount to create more variation in the rhythm",
     `
   bpm(120)
-  z1('q (0 4 2 9)+(0 3 1 5)').sound('sawtooth').cutoff([400,500,1000,2000].beat(1))
+  z1('0.125 (0 2 3 4)+(0 2 4 6)').sound('sawtooth')
+    .cutoff([400,500,1000,2000].beat(1))
+    .lpadsr(2, 0, .2, 0, 0)
     .delay(0.5).delayt(0.25).room(0.9).size(0.9).out()
   onbeat(1,1.5,2,3,4) :: sound('bd').gain(2.0).out()
   oncount([1,3,5.5,7,7.5,8],8) :: sound('hh').gain(irand(1.0,4.0)).out()
@@ -133,11 +144,12 @@ beat(4) :: sound('cp').out()
   )}
 
 ${makeExample(
-    "And now for more interesting rhythmic constructions",
+    "And now something a bit more complex",
     `
 bpm(145); // Setting a faster BPM
 beat(.5) && euclid($(1), 5, 8) :: sound('bd').out()
-beat(.5) && euclid($(2), [1,0].beat(8), 8) :: sound('sd').out()
+beat(.5) && euclid($(2), [1,0].beat(8), 8) 
+  :: sound('ST03').n(3).room(1).size(1).o(1).out()
 beat(.5) && euclid($(6), [6,7].beat(8), 8) :: sound('hh').out()
 `,
     false
@@ -172,10 +184,10 @@ ${makeExample(
 ${makeExample(
     "rhythm is a beginner friendly rhythmic function!",
     `
-let speed = [0.5, 0.25].beat(8); bpm(140);
-rhythm(speed, 5, 12) :: snd('east').n(2).out()
+let speed = [1, 0.5].beat(8); bpm(140);
+rhythm(speed, 5, 12) :: snd('linnhats').n(2).pan(noise()).out()
 rhythm(speed, 2, 12) :: snd('east').out()
-rhythm(speed, 3, 12) :: snd('east').n(4).out()
+rhythm(speed, 3, 12) :: snd('linnhats').n(4).pan(noise()).out()
 rhythm(speed, 7, 12) :: snd('east').n(9).out()
 `,
     true
@@ -187,8 +199,9 @@ rhythm(speed, 7, 12) :: snd('east').n(9).out()
 ${makeExample(
     "Change the integers for a surprise rhythm!",
     `
-beat(.5) && bin($(1), 34) && snd('kick').out()
-beat(.5) && bin($(2), 48) && snd('sd').out()
+bpm(135);
+beat(.5) && bin($(1), 34) && snd('kick').n([1,3].beat(1)).out()
+beat(.5) && bin($(2), 48) && snd('snare').n([1,4].beat(1)).out()
 `,
     true
   )}
@@ -196,8 +209,13 @@ beat(.5) && bin($(2), 48) && snd('sd').out()
 ${makeExample(
     "binrhythm for fast cool binary rhythms!",
     `
-binrhythm(.5, 13) && snd('kick').out()
-binrhythm(.5, 18) && snd('sd').out()
+let a = 0;
+a = beat(4) ? irand(1,20) : a;
+binrhythm(.5, 6) && snd(['kick', 'snare'].beat(0.5)).n(11).out()
+binrhythm([.5, .25].beat(1), 30) && snd('wt_granular').n(a)
+  .cutoff(800).lpadsr(4, 0, 0.125, 0.5, 0.25)
+  .adsr(0, r(.1, .4), 0, 0).freq([50, 60, 72].beat(4))
+  .room(1).size(1).out()
 `,
     true
   )}
@@ -205,19 +223,11 @@ binrhythm(.5, 18) && snd('sd').out()
 ${makeExample(
     "Submarine jungle music",
     `
+bpm(145);
 beat(.5) && bin($(1), 911) && snd('ST69').n([2,3,4].beat())
-  .delay(0.125).delayt(0.25).end(0.25).speed(1/3).out()
+  .delay(0.125).delayt(0.25).end(0.25).speed(1/3)
+  .room(1).size(1).out()
 beat(.5) && sound('amencutup').n(irand(2,7)).shape(0.3).out() 
-`,
-    false
-  )}
-
-${makeExample(
-    "Using tabla to play unpredictable rhythms",
-    `
-beat(.5) && bin($(1), [123, 456, 789].beat(4)) 
-	&& snd('tabla').n($(2)).delay(0.5).delayt(0.25).out()
-beat(1) && sound('kick').shape(0.5).out()
 `,
     false
   )}
@@ -228,8 +238,10 @@ ${makeExample(
     "Probablistic drums in one line!",
     `
 prob(60)::beat(.5) && euclid($(1), 5, 8) && snd('kick').out()
-prob(60)::beat(.5) && euclid($(2), 3, 8) && snd('sd').out()
-prob(80)::beat(.5) && sound('hh').out()
+prob(60)::beat(.5) && euclid($(2), 3, 8) && snd('mash')
+  .n([1,2,3].beat(1))
+  .pan(usine(1/4)).out()
+prob(80)::beat(.5) && sound(['hh', 'hat'].pick()).out()
 `,
     true
   )}
@@ -300,9 +312,10 @@ ${makeExample(
     "Clapping on the edge",
     `
 flip(2.5, 10) :: beat(.25) :: snd('cp').out()
-flip(2.5, 75) :: beat(.25) :: snd('click').speed(2).end(0.2).out()
+flip(2.5, 75) :: beat(.25) :: snd('click')
+  .speed(2).end(0.2).out()
 flip(2.5) :: beat(.5) :: snd('bd').out()
-beat(.25) :: sound('hh').out()
+beat(.25) :: sound('hat').end(0.1).cutoff(1200).pan(usine(1/4)).out()
 `,
     false
   )}
