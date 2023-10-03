@@ -56,6 +56,7 @@ export interface Settings {
   selected_universe: string;
   line_numbers: boolean;
   time_position: boolean;
+  load_demo_songs: boolean;
   tips: boolean;
   send_clock: boolean;
   midi_clock_input: string|undefined;
@@ -134,6 +135,7 @@ export class AppSettings {
   public send_clock: boolean = false;
   public midi_clock_input: string|undefined = undefined;
   public midi_clock_ppqn: number = 24;
+  public load_demo_songs: boolean = true;
 
   constructor() {
     const settingsFromStorage = JSON.parse(
@@ -154,6 +156,7 @@ export class AppSettings {
       this.send_clock = settingsFromStorage.send_clock;
       this.midi_clock_input = settingsFromStorage.midi_clock_input;
       this.midi_clock_ppqn = settingsFromStorage.midi_clock_ppqn || 24;
+      this.load_demo_songs = settingsFromStorage.load_demo_songs;
     } else {
       this.universes = template_universes;
     }
@@ -180,6 +183,7 @@ export class AppSettings {
       send_clock: this.send_clock,
       midi_clock_input: this.midi_clock_input,
       midi_clock_ppqn: this.midi_clock_ppqn,
+      load_demo_songs: this.load_demo_songs,
     };
   }
 
@@ -204,6 +208,7 @@ export class AppSettings {
     this.send_clock = settings.send_clock;
     this.midi_clock_input = settings.midi_clock_input;
     this.midi_clock_ppqn = settings.midi_clock_ppqn;
+    this.load_demo_songs = settings.load_demo_songs;
     localStorage.setItem("topos", JSON.stringify(this.data));
   }
 }

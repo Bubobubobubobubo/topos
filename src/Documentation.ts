@@ -28,7 +28,7 @@ export const makeExampleFactory = (application: Editor): Function => {
   ) => {
     const codeId = `codeExample${application.exampleCounter++}`;
     // Store the code snippet in the data structure
-    application.api.codeExamples[codeId] = code;
+    application.api.codeExamples[codeId] = "bpm(120);\n" + code;
 
     return `
 <details ${open ? "open" : ""}>
