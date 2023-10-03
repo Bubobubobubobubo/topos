@@ -23,89 +23,89 @@ Let's study two very simple rhythmic functions, <ic>mod(n: ...number[])</ic> and
 - <ic>beat(...n: number[])</ic>: this function will return true every _n_ beats. The value <ic>1</ic> will return <ic>true</ic> at the beginning of each beat. Floating point numbers like <ic>0.5</ic> or <ic>0.25</ic> are also accepted. Multiple values can be passed to <ic>beat</ic> to generate more complex rhythms.
 	
 ${makeExample(
-  "Using different mod values",
-  `
+    "Using different mod values",
+    `
 // This code is alternating between different mod values
 beat([1,1/2,1/4,1/8].beat(2)) :: sound('bd').n(0).out()
 `,
-  true
-)}
+    true
+  )}
 
 ${makeExample(
-  "Some sort of ringtone",
-  `
+    "Some sort of ringtone",
+    `
 let blip = (freq) => {return sound('sine').sustain(0.1).freq(freq)};
 beat(1) :: blip(200).out();
 beat(1/3) :: blip(400).out();
 flip(3) :: beat(1/6) :: blip(800).out();
 beat([1,0.75].beat(2)) :: blip([50, 100].beat(2)).out();
 `,
-  false
-)}
+    false
+  )}
 
 
 - <ic>pulse(...n: number[])</ic>: faster version of the <ic>beat</ic> function. Instead of returning true for every beat, this function is returning true every _n_ clock ticks! It can be used to generate very unexpected results or to sequence by using your arithmetic ninja skills.
 
 ${makeExample(
-  "Intriguing rhythms",
-  `
+    "Intriguing rhythms",
+    `
 pulse(36) :: snd('east')
   .n([2,4].beat(1)).out()
 pulse([12, 36].beat(4)) :: snd('east')
   .n([2,4].add(5).beat(1)).out()
 `,
-  true
-)}
+    true
+  )}
 ${makeExample(
-  "pulse is the OG rhythmic function in Topos",
-  `
+    "pulse is the OG rhythmic function in Topos",
+    `
 pulse([48, 24, 16].beat(4)) :: sound('linnhats').out()
 beat(1)::snd('bd').out()
 `,
-  false
-)};
+    false
+  )};
 
 - <ic>onbeat(...n: number[])</ic>: The <ic>onbeat</ic> function allows you to lock on to a specific beat from the clock to execute code. It can accept multiple arguments. It's usage is very straightforward and not hard to understand. You can pass either integers or floating point numbers. By default, topos is using a <ic>4/4</ic> bar meaning that you can target any of these beats (or in-between) with this function.
 
 ${makeExample(
-  "Some simple yet detailed rhythms",
-  `
+    "Some simple yet detailed rhythms",
+    `
 onbeat(1,2,3,4)::snd('kick').out() // Bassdrum on each beat
 onbeat(2,4)::snd('snare').out() // Snare on acccentuated beats
 onbeat(1.5,2.5,3.5, 3.75)::snd('hat').out() // Cool high-hats
 `,
-  true
-)}
+    true
+  )}
 
 ${makeExample(
-  "Let's do something more complex",
-  `
+    "Let's do something more complex",
+    `
 onbeat(0.5, 1.5, 2, 3, 3.75)::snd('kick').n(2).out()
 onbeat(2, [1.5, 3].pick(), 4)::snd('snare').n(7).out()
 beat([.25, 1/8].beat(1.5))::snd('hat').n(2)
   .gain(rand(0.4, 0.7))
   .pan(usine()).out()
 `,
-  false
-)}
+    false
+  )}
 
 - <ic>oncount(beats: number[], meter: number)</ic>: This function is similar to <ic>onbeat</ic> but it allows you to specify a custom number of beats as the last argument.
 
 ${makeExample(
-  "Using oncount to create more variation in the rhythm",
-  `
+    "Using oncount to create more variation in the rhythm",
+    `
   bpm(120)
   z1('q (0 4 2 9)+(0 3 1 5)').sound('sawtooth').cutoff([400,500,1000,2000].beat(1))
     .delay(0.5).delayt(0.25).room(0.9).size(0.9).out()
   onbeat(1,1.5,2,3,4) :: sound('bd').gain(2.0).out()
   oncount([1,3,5.5,7,7.5,8],8) :: sound('hh').gain(irand(1.0,4.0)).out()
 `,
-  true
-)}
+    true
+  )}
 
 ${makeExample(
-  "Using oncount to create rhythms with a custom meter",
-  `
+    "Using oncount to create rhythms with a custom meter",
+    `
   bpm(200)
   oncount([1, 5, 9, 13],16) :: sound('bd').gain(1.0).out()
   oncount([5, 6, 13],16) :: sound('cp').gain(0.9).out()
@@ -113,8 +113,8 @@ ${makeExample(
   oncount([1, 4, 5, 8, 9, 10, 11, 12, 13, 14, 15, 16],16) :: 
   sound('hh').out()
 `,
-  true
-)}
+    true
+  )}
 
 ## Rhythm generators
 	
@@ -123,116 +123,116 @@ We included a bunch of popular rhythm generators in Topos such as the euclidian 
 - <ic>euclid(iterator: number, pulses: number, length: number, rotate: number): boolean</ic>: generates <ic>true</ic> or <ic>false</ic> values from an euclidian rhythm sequence. This algorithm is very popular in the electronic music making world.
 	
 ${makeExample(
-  "Classic euclidian club music patterns",
-  `
+    "Classic euclidian club music patterns",
+    `
 beat(.5) && euclid($(1), 5, 8) && snd('kick').out()
 beat(.5) && euclid($(2), 2, 8) && snd('sd').out()
 beat(4) :: sound('cp').out()
 `,
-  true
-)}
+    true
+  )}
 
 ${makeExample(
-  "And now for more interesting rhythmic constructions",
-  `
+    "And now for more interesting rhythmic constructions",
+    `
 bpm(145); // Setting a faster BPM
 beat(.5) && euclid($(1), 5, 8) :: sound('bd').out()
 beat(.5) && euclid($(2), [1,0].beat(8), 8) :: sound('sd').out()
 beat(.5) && euclid($(6), [6,7].beat(8), 8) :: sound('hh').out()
 `,
-  false
-)}
+    false
+  )}
 
 ${makeExample(
-  "Adding more rhythmic density",
-  `
+    "Adding more rhythmic density",
+    `
 beat(.5) && euclid($(1), 5, 9) && snd('kick').out()
 beat(.5) && euclid($(2), 2, 3, 1) && snd('east').end(0.5).n(5).speed([1,2].beat(2)).out()
 beat(.5) && euclid($(3), 6, 9, 1) && snd('east').end(0.5).n(5).freq(200).speed([2,1].beat(2)).out()
 beat(.25) && euclid($(4), 7, 9, 1) && snd('hh').out()
 `,
-  false
-)}
+    false
+  )}
 
 Alternatively, you can <ic>oneuclid</ic> or <ic>rhythm</ic> without the _iterators_:
 
 - <ic>oneuclid(pulses: number, length: number, rotate: number): boolean</ic>: generates <ic>true</ic> or <ic>false</ic> values from an euclidian rhythm sequence. This is another version of <ic>euclid</ic> that does not take an iterator.
 ${makeExample(
-  "Using oneuclid to create a rhythm without iterators",
-  `
+    "Using oneuclid to create a rhythm without iterators",
+    `
   // Change speed using bpm
   bpm(250)
   oneuclid(5, 9) :: snd('kick').out()
   oneuclid(7,16) :: snd('east').end(0.5).n(irand(3,5)).out()
 `,
-  false
-)}
+    false
+  )}
 
 - <ic>rhythm(divisor: number, pulses: number, length: number, rotate: number): boolean</ic>: generates <ic>true</ic> or <ic>false</ic> values from an euclidian rhythm sequence. This is another version of <ic>euclid</ic> that does not take an iterator.
 ${makeExample(
-  "rhythm is a beginner friendly rhythmic function!",
-  `
+    "rhythm is a beginner friendly rhythmic function!",
+    `
 let speed = [0.5, 0.25].beat(8); bpm(140);
 rhythm(speed, 5, 12) :: snd('east').n(2).out()
 rhythm(speed, 2, 12) :: snd('east').out()
 rhythm(speed, 3, 12) :: snd('east').n(4).out()
 rhythm(speed, 7, 12) :: snd('east').n(9).out()
 `,
-  true
-)}
+    true
+  )}
 
 - <ic>bin(iterator: number, n: number): boolean</ic>: a binary rhythm generator. It transforms the given number into its binary representation (_e.g_ <ic>34</ic> becomes <ic>100010</ic>). It then returns a boolean value based on the iterator in order to generate a rhythm.
 - <ic>binrhythm(divisor: number, n: number): boolean: boolean</ic>: iterator-less version of the  binary rhythm generator.
 	
 ${makeExample(
-  "Change the integers for a surprise rhythm!",
-  `
+    "Change the integers for a surprise rhythm!",
+    `
 beat(.5) && bin($(1), 34) && snd('kick').out()
 beat(.5) && bin($(2), 48) && snd('sd').out()
 `,
-  true
-)}
+    true
+  )}
 
 ${makeExample(
-  "binrhythm for fast cool binary rhythms!",
-  `
+    "binrhythm for fast cool binary rhythms!",
+    `
 binrhythm(.5, 13) && snd('kick').out()
 binrhythm(.5, 18) && snd('sd').out()
 `,
-  true
-)}
+    true
+  )}
 
 ${makeExample(
-  "Submarine jungle music",
-  `
+    "Submarine jungle music",
+    `
 beat(.5) && bin($(1), 911) && snd('ST69').n([2,3,4].beat())
   .delay(0.125).delayt(0.25).end(0.25).speed(1/3).out()
 beat(.5) && sound('amencutup').n(irand(2,7)).shape(0.3).out() 
 `,
-  false
-)}
+    false
+  )}
 
 ${makeExample(
-  "Using tabla to play unpredictable rhythms",
-  `
+    "Using tabla to play unpredictable rhythms",
+    `
 beat(.5) && bin($(1), [123, 456, 789].beat(4)) 
 	&& snd('tabla').n($(2)).delay(0.5).delayt(0.25).out()
 beat(1) && sound('kick').shape(0.5).out()
 `,
-  false
-)}
+    false
+  )}
 	
 If you don't find it spicy enough, you can add some more probabilities to your rhythms by taking advantage of the probability functions. See the functions documentation page to learn more about them. 
 	
 ${makeExample(
-  "Probablistic drums in one line!",
-  `
+    "Probablistic drums in one line!",
+    `
 prob(60)::beat(.5) && euclid($(1), 5, 8) && snd('kick').out()
 prob(60)::beat(.5) && euclid($(2), 3, 8) && snd('sd').out()
 prob(80)::beat(.5) && sound('hh').out()
 `,
-  true
-)}
+    true
+  )}
 
 ## Time Warping
 
@@ -242,8 +242,8 @@ Time generally flows from the past to the future. However, it's even cooler when
 
 
 ${makeExample(
-  "Time is now super elastic!",
-  `
+    "Time is now super elastic!",
+    `
 // Obscure Shenanigans - Bubobubobubo
 beat([1/4,1/8,1/16].beat(8)):: sound('sine')
 	.freq([100,50].beat(16) + 50 * ($(1)%10))
@@ -256,14 +256,14 @@ flip(3) :: beat([.25,.5].beat(.5)) :: sound('dr')
 // Jumping back and forth in time
 beat(.25) :: warp([12, 48, 24, 1, 120, 30].pick())
 `,
-  true
-)}
+    true
+  )}
 	
 - <ic>beat_warp(beat: number)</ic>: this function jumps to the _n_ beat of the clock. The first beat is <ic>1</ic>.
 
 ${makeExample(
-  "Jumping back and forth with beats",
-  `
+    "Jumping back and forth with beats",
+    `
 // Resonance bliss - Bubobubobubo
 beat(.25)::snd('arpy')
   .note(30 + [0,3,7,10].beat())
@@ -278,8 +278,8 @@ beat(.5) :: snd('arpy').note(
 // Comment me to stop warping!
 beat(1) :: beat_warp([2,4,5,10,11].pick())
 `,
-  true
-)}
+    true
+  )}
 
 ## Larger time divisions
 	
@@ -289,41 +289,41 @@ Now you know how to play some basic rhythmic music but you are a bit stuck in a 
   - <ic>ratio: number = 50</ic>: this argument is ratio expressed in %. It determines how much of the period should be true or false. A ratio of <ic>75</ic> means that 75% of the period will be true. A ratio of <ic>25</ic> means that 25% of the period will be true.  
 	
 ${makeExample(
-  "Two beats of silence, two beats of playing",
-  `
+    "Two beats of silence, two beats of playing",
+    `
 flip(4) :: beat(1) :: snd('kick').out()
 `,
-  true
-)}
+    true
+  )}
 
 ${makeExample(
-  "Clapping on the edge",
-  `
+    "Clapping on the edge",
+    `
 flip(2.5, 10) :: beat(.25) :: snd('cp').out()
 flip(2.5, 75) :: beat(.25) :: snd('click').speed(2).end(0.2).out()
 flip(2.5) :: beat(.5) :: snd('bd').out()
 beat(.25) :: sound('hh').out()
 `,
-  false
-)}
+    false
+  )}
 
 ${makeExample(
-  "Good old true and false",
-  `
+    "Good old true and false",
+    `
 if (flip(4, 75)) {
   beat(1) :: snd('kick').out()
 } else {
   beat(.5) :: snd('snare').out()
 }
 `,
-  true
-)}
+    true
+  )}
 	
 <ic>flip</ic> is extremely powerful and is used internally for a lot of other Topos functions. You can also use it to think about **longer durations** spanning over multiple bars. Here is a silly composition that is using <ic>flip</ic> to generate a 4 bars long pattern.
 	
 ${makeExample(
-  "Clunky algorithmic rap music",
-  `
+    "Clunky algorithmic rap music",
+    `
 // Rap God VS Lil Wild -- Adel Faure
 if (flip(16)) {
   // Playing this part for two bars
@@ -341,45 +341,45 @@ if (flip(16)) {
   beat(.5)::snd('diphone').end(0.5).n([1,2,3,4].pick()).out()
 }
 `,
-  true
-)}
+    true
+  )}
 	
 You can use it everywhere to spice things up, including as a method parameter picker:
 	
 ${makeExample(
-  "flip is great for parameter variation",
-  `
+    "flip is great for parameter variation",
+    `
 beat(.5)::snd(flip(4) ? 'kick' : 'hat').out()
 `,
-  true
-)}
+    true
+  )}
 	
 - <ic>flipbar(n: number = 1)</ic>: this method works just like <ic>flip</ic> but counts in bars instead of beats. It allows you to think about even larger time cycles. You can also pair it with regular <ic>flip</ic> for writing complex and long-spanning algorithmic beats.
 	
 ${makeExample(
-  "Thinking music over bars",
-  `
+    "Thinking music over bars",
+    `
 flipbar(2) :: beat(1):: snd('kick').out()
 flipbar(3) :: beat(.5):: snd('hat').out()
 `,
-  true
-)}
+    true
+  )}
 ${makeExample(
-  "Alternating over four bars",
-  `
+    "Alternating over four bars",
+    `
 flipbar(2)
   ? beat(.5) && snd(['kick', 'hh'].beat(1)).out()
   : beat(.5) && snd(['east', 'east:2'].beat(1)).out()
 `,
-  false
-)};
+    false
+  )};
 
 	
 - <ic>onbar(bars: number | number[], n: number)</ic>: The second argument, <ic>n</ic>, is used to divide the time in a period of <ic>n</ic> consecutive bars. The first argument should be a bar number or a list of bar numbers to play on. For example, <ic>onbar([1, 4], 5)</ic> will return <ic>true</ic> on bar <ic>1</ic> and <ic>4</ic> but return <ic>false</ic> the rest of the time. You can easily divide time that way.
 	
 ${makeExample(
-  "Using onbar for filler drums",
-  `
+    "Using onbar for filler drums",
+    `
 bpm(150);
 // Only play on the third and fourth bar of the cycle.
 onbar([3,4], 4)::beat(.25)::snd('hh').out(); 
@@ -395,8 +395,8 @@ if (onbar([1,2], 4)) {
     rhythm(.5, 1, 7) :: snd('jvbass').n(2).out();
     rhythm(.5, 2, 7) :: snd('snare').n(3).out();
 }`,
-  true
-)}
+    true
+  )}
 
 ## What are pulses?
 	
@@ -425,8 +425,8 @@ Every script can access the current time by using the following functions:
 These values are **extremely useful** to craft more complex syntax or to write musical scores. However, Topos is also offering more high-level sequencing functions to make it easier to play music. You can use the time functions as conditionals. The following example will play a pattern A for 2 bars and a pattern B for 2 bars:
 	
 ${makeExample(
-  "Manual mode: using time primitives!",
-  `
+    "Manual mode: using time primitives!",
+    `
 // Manual time condition
 if((cbar() % 4) > 1) {
   beat(2) && sound('kick').out()
@@ -444,7 +444,7 @@ if((cbar() % 4) > 1) {
 // This is always playing no matter what happens
 beat([.5, .5, 1, .25].beat(0.5)) :: sound('shaker').out() 
 `,
-  true
-)}
+    true
+  )}
 `;
 };

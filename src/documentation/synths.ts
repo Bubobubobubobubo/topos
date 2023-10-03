@@ -41,12 +41,13 @@ beat(.5) && snd('triangle').note([60,"F4"].pick()).out()
   )}
 
 Chords can also played using different parameters:
--<ic>chord(string||number[]|...number)</ic>: parses and sets notes for the chord
+
+- <ic>chord(string||number[]|...number)</ic>: parses and sets notes for the chord
 
 ${makeExample(
     "Playing a named chord",
     `
-    beat(1) && snd('triangle').chord(["C","Em7","Fmaj7","Emin"].beat(2)).out()
+    beat(1) && snd('triangle').chord(["C","Em7","Fmaj7","Emin"].beat(2)).adsr(0,.2).out()
 `,
     true
   )}  
@@ -54,7 +55,7 @@ ${makeExample(
 ${makeExample(
     "Playing a chord from a list of notes and doing inversions",
     `
-    beat(.5) && snd('triangle').chord(60,64,67,72).invert([1,-3,4,-5].pick()).out()
+    beat(.5) && snd('triangle').chord(60,64,67,72).invert([1,-3,4,-5].pick()).adsr(0,.2).out()
 `,
     true
   )}  
@@ -152,8 +153,8 @@ These filters all come with their own set of parameters. Note that we are descri
 
 | Method     | Alias     | Description                     |
 |------------|-----------|---------------------------------|
-| cutoff     | lpf       | cutoff frequency of the lowpass filter |
-| resonance  | lpq       | resonance of the lowpass filter |
+| <ic>cutoff</ic>     | <ic>lpf</ic>       | cutoff frequency of the lowpass filter |
+| <ic>resonance</ic>  | <ic>lpq</ic>       | resonance of the lowpass filter |
 
 ${makeExample(
     "Filtering a bass",
@@ -165,8 +166,8 @@ ${makeExample(
 
 | Method     | Alias     | Description                     |
 |------------|-----------|---------------------------------|
-| hcutoff     | hpf       | cutoff frequency of the highpass filter |
-| hresonance  | hpq       | resonance of the highpass filter |
+| <ic>hcutoff</ic>     | <ic>hpf</ic>       | cutoff frequency of the highpass filter |
+| <ic>hresonance</ic>  | <ic>hpq</ic>       | resonance of the highpass filter |
 
 ${makeExample(
     "Filtering a noise source",
@@ -178,8 +179,8 @@ ${makeExample(
 
 | Method     | Alias     | Description                     |
 |------------|-----------|---------------------------------|
-| bandf      | bpf       | cutoff frequency of the bandpass filter |
-| bandq      | bpq       | resonance of the bandpass filter |
+| <ic>bandf</ic>      | <ic>bpf</ic>       | cutoff frequency of the bandpass filter |
+| <ic>bandq</ic>      | <ic>bpq</ic>       | resonance of the bandpass filter |
 
 ${makeExample(
     "Sweeping the filter on the same guitar sample",
@@ -245,12 +246,12 @@ The examples we have studied so far are static. They filter the sound around a f
 
 | Method     | Alias     | Description                     |
 |------------|-----------|---------------------------------|
-| lpenv      | lpe       | lowpass frequency modulation amount (negative or positive) |
-| lpattack   | lpa       | attack of the lowpass filter    |
-| lpdecay    | lpd       | decay of the lowpass filter     |
-| lpsustain  | lps       | sustain of the lowpass filter   |
-| lprelease  | lpr       | release of the lowpass filter   |
-| lpadsr     |           | (**takes five arguments**) set all the parameters  |
+| <ic>lpenv</ic>      | <ic>lpe</ic>       | lowpass frequency modulation amount (negative or positive) |
+| <ic>lpattack</ic>   | <ic>lpa</ic>       | attack of the lowpass filter    |
+| <ic>lpdecay</ic>    | <ic>lpd</ic>       | decay of the lowpass filter     |
+| <ic>lpsustain</ic>  | <ic>lps</ic>       | sustain of the lowpass filter   |
+| <ic>lprelease</ic>  | <ic>lpr</ic>       | release of the lowpass filter   |
+| <ic>lpadsr</ic>     |                    | (**takes five arguments**) set all the parameters  |
 
 
 ${makeExample(
@@ -265,12 +266,12 @@ ${makeExample(
 
 | Method     | Alias     | Description                     |
 |------------|-----------|---------------------------------|
-| hpenv      | hpe       | highpass frequency modulation amount (negative or positive) |
-| hpattack   | hpa       | attack of the highpass filter    |
-| hpdecay    | hpd       | decay of the highpass filter     |
-| hpsustain  | hps       | sustain of the highpass filter   |
-| hprelease  | hpr       | release of the highpass filter   |
-| hpadsr     |           | (**takes five arguments**) set all the parameters  |
+| <ic>hpenv</ic>      | <ic>hpe</ic>       | highpass frequency modulation amount (negative or positive) |
+| <ic>hpattack</ic>   | <ic>hpa</ic>       | attack of the highpass filter    |
+| <ic>hpdecay</ic>    | <ic>hpd</ic>       | decay of the highpass filter     |
+| <ic>hpsustain</ic>  | <ic>hps</ic>       | sustain of the highpass filter   |
+| <ic>hprelease</ic>  | <ic>hpr</ic>       | release of the highpass filter   |
+| <ic>hpadsr</ic>     |           | (**takes five arguments**) set all the parameters  |
 
 
 ${makeExample(
@@ -285,12 +286,12 @@ ${makeExample(
 
 | Method     | Alias     | Description                     |
 |------------|-----------|---------------------------------|
-| bpenv      | bpe       | bandpass frequency modulation amount (negative or positive) |
-| bpattack   | bpa       | attack of the bandpass filter    |
-| bpdecay    | bpd       | decay of the bandpass filter     |
-| bpsustain  | bps       | sustain of the bandpass filter   |
-| bprelease  | bpr       | release of the bandpass filter   |
-| bpadsr     |           | (**takes five arguments**) set all the parameters  |
+| <ic>bpenv</ic>      | <ic>bpe</ic>       | bandpass frequency modulation amount (negative or positive) |
+| <ic>bpattack</ic>   | <ic>bpa</ic>       | attack of the bandpass filter    |
+| <ic>bpdecay</ic>    | <ic>bpd</ic>       | decay of the bandpass filter     |
+| <ic>bpsustain</ic>  | <ic>bps</ic>       | sustain of the bandpass filter   |
+| <ic>bprelease</ic>  | <ic>bpr</ic>       | release of the bandpass filter   |
+| <ic>bpadsr</ic>     |           | (**takes five arguments**) set all the parameters  |
 
 
 ${makeExample(
