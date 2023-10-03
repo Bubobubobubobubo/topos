@@ -44,6 +44,7 @@ export interface Settings {
    * @param line_numbers - Whether or not to show line numbers
    * @param time_position - Whether or not to show time position
    * @param tips - Whether or not to show tips
+   * @param send_clock - Whether or not to send midi clock
    */
   vimMode: boolean;
   theme: string;
@@ -54,6 +55,7 @@ export interface Settings {
   line_numbers: boolean;
   time_position: boolean;
   tips: boolean;
+  send_clock: boolean;
 }
 
 export const template_universe = {
@@ -110,6 +112,7 @@ export class AppSettings {
    * @param line_numbers - Whether or not to show line numbers
    * @param time_position - Whether or not to show time position
    * @param tips - Whether or not to show tips
+   * @param send_clock - Whether or not to send midi clock
 
    */
 
@@ -122,6 +125,7 @@ export class AppSettings {
   public line_numbers: boolean = true;
   public time_position: boolean = true;
   public tips: boolean = true;
+  public send_clock: boolean = false;
 
   constructor() {
     const settingsFromStorage = JSON.parse(
@@ -139,6 +143,7 @@ export class AppSettings {
       this.line_numbers = settingsFromStorage.line_numbers;
       this.time_position = settingsFromStorage.time_position;
       this.tips = settingsFromStorage.tips;
+      this.send_clock = settingsFromStorage.send_clock;
     } else {
       this.universes = template_universes;
     }
@@ -162,6 +167,7 @@ export class AppSettings {
       line_numbers: this.line_numbers,
       time_position: this.time_position,
       tips: this.tips,
+      send_clock: this.send_clock,
     };
   }
 
@@ -183,6 +189,7 @@ export class AppSettings {
     this.line_numbers = settings.line_numbers;
     this.time_position = settings.time_position;
     this.tips = settings.tips;
+    this.send_clock = settings.send_clock;
     localStorage.setItem("topos", JSON.stringify(this.data));
   }
 }

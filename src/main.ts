@@ -80,7 +80,7 @@ export class Editor {
   exampleCounter: number = 0;
   exampleIsPlaying: boolean = false;
 
-  settings = new AppSettings();
+  settings: AppSettings = new AppSettings();
   editorExtensions: Extension[] = [];
   userPlugins: Extension[] = [];
   state: EditorState;
@@ -193,6 +193,10 @@ export class Editor {
     "show-tips"
   ) as HTMLInputElement;
 
+  midi_clock_checkbox: HTMLInputElement = document.getElementById(
+    "send-midi-clock"
+  ) as HTMLInputElement;
+
   // Editor mode selection
   normal_mode_button: HTMLButtonElement = document.getElementById(
     "normal-mode"
@@ -241,6 +245,7 @@ export class Editor {
     this.line_numbers_checkbox.checked = this.settings.line_numbers;
     this.time_position_checkbox.checked = this.settings.time_position;
     this.tips_checkbox.checked = this.settings.tips;
+    this.midi_clock_checkbox.checked = this.settings.send_clock;
     if (!this.settings.time_position) {
       document.getElementById("timeviewer")!.classList.add("hidden");
     }
@@ -559,6 +564,7 @@ export class Editor {
       this.line_numbers_checkbox.checked = this.settings.line_numbers;
       this.time_position_checkbox.checked = this.settings.time_position;
       this.tips_checkbox.checked = this.settings.tips;
+      this.midi_clock_checkbox.checked = this.settings.send_clock;
 
       if (this.settings.vimMode) {
         let vim = document.getElementById("vim-mode-radio") as HTMLInputElement;
@@ -652,6 +658,11 @@ export class Editor {
           checked ? inlineHoveringTips : []
         ),
       });
+    });
+
+    this.midi_clock_checkbox.addEventListener("change", () => {
+      let checked = this.midi_clock_checkbox.checked ? true : false;
+      this.settings.send_clock = checked;
     });
 
     this.vim_mode_button.addEventListener("click", () => {

@@ -1,5 +1,4 @@
 import { UserAPI } from "../API";
-import { Clock } from "../Clock";
 
 export class MidiConnection {
   /**
@@ -223,7 +222,6 @@ export class MidiConnection {
      * Called when a MIDI clock message is received.
      */
     
-    const SMOOTH = 0.1;
     this.clockTicks += 1;
 
     if(this.lastTimestamp > 0) {
