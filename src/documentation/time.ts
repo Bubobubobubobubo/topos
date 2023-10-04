@@ -69,7 +69,7 @@ ${makeExample(
     "pulse is the OG rhythmic function in Topos",
     `
 pulse([48, 24, 16].beat(4)) :: sound('linnhats').out()
-beat(1)::snd('bd').out()
+beat(1)::snd(['bd', '808oh'].beat(1)).out()
 `,
     false
   )};
@@ -80,7 +80,7 @@ ${makeExample(
     "Some simple yet detailed rhythms",
     `
 onbeat(1,2,3,4)::snd('kick').out() // Bassdrum on each beat
-onbeat(2,4)::snd('snare').n([0,2].beat(2.5)).out() // Snare on acccentuated beats
+onbeat(2,4)::snd('snare').n([8,4].beat(4)).out() // Snare on acccentuated beats
 onbeat(1.5,2.5,3.5, 3.75)::snd('hat').gain(r(0.9,1.1)).out() // Cool high-hats
 `,
     true
@@ -103,13 +103,12 @@ beat([.25, 1/8].beat(1.5))::snd('hat').n(2)
 ${makeExample(
     "Using oncount to create more variation in the rhythm",
     `
-  bpm(120)
-  z1('0.125 (0 2 3 4)+(0 2 4 6)').sound('sawtooth')
-    .cutoff([400,500,1000,2000].beat(1))
-    .lpadsr(2, 0, .2, 0, 0)
-    .delay(0.5).delayt(0.25).room(0.9).size(0.9).out()
-  onbeat(1,1.5,2,3,4) :: sound('bd').gain(2.0).out()
-  oncount([1,3,5.5,7,7.5,8],8) :: sound('hh').gain(irand(1.0,4.0)).out()
+z1('1/16 (0 2 3 4)+(0 2 4 6)').scale('pentatonic').sound('sawtooth')
+  .cutoff([400,500,1000,2000].beat(1))
+  .lpadsr(2, 0, .2, 0, 0)
+  .delay(0.5).delayt(0.25).room(0.9).size(0.9).out()
+onbeat(1,1.5,2,3,4) :: sound('bd').gain(2.0).out()
+oncount([1,3,5.5,7,7.5,8],8) :: sound('hh').gain(irand(1.0,4.0)).out()
 `,
     true
   )}
@@ -117,12 +116,11 @@ ${makeExample(
 ${makeExample(
     "Using oncount to create rhythms with a custom meter",
     `
-  bpm(200)
-  oncount([1, 5, 9, 13],16) :: sound('bd').gain(1.0).out()
-  oncount([5, 6, 13],16) :: sound('cp').gain(0.9).out()
-  oncount([2, 3, 3.5, 6, 7, 10, 15],16) :: sound('hh').n(8).gain(0.8).out()
-  oncount([1, 4, 5, 8, 9, 10, 11, 12, 13, 14, 15, 16],16) :: 
-  sound('hh').out()
+bpm(200)
+oncount([1, 5, 9, 13],16) :: sound('808bd').n(4).shape(0.5).gain(1.0).out()
+oncount([5, 6, 13],16) :: sound('shaker').room(0.25).gain(0.9).out()
+oncount([2, 3, 3.5, 6, 7, 10, 15],16) :: sound('hh').n(8).gain(0.8).out()
+oncount([1, 4, 5, 8, 9, 10, 11, 12, 13, 14, 15, 16],16) :: sound('hh').out()
 `,
     true
   )}
@@ -136,9 +134,14 @@ We included a bunch of popular rhythm generators in Topos such as the euclidian 
 ${makeExample(
     "Classic euclidian club music patterns",
     `
-beat(.5) && euclid($(1), 5, 8) && snd('kick').out()
-beat(.5) && euclid($(2), 2, 8) && snd('sd').out()
-beat(4) :: sound('cp').out()
+beat(.5) && euclid($(1), 4, 8) && snd('kick').n(4).out()
+beat(.25) && euclid($(2), 5, 8) && snd('dr').n(21).out()
+beat(.25) && euclid($(3), 3, 8) && snd('shaker')
+  .gain(r(0.7, 1)).cutoff(1000 + usine(1/8) * 3000)
+  .n(11).out()
+beat(.25) && euclid($(3), 6, 8) && snd('shaker')
+  .gain(r(0.7, 1)).cutoff(1000 + usine(1/4) * 4000)
+  .speed(2).n(11).out()
 `,
     true
   )}
@@ -149,7 +152,7 @@ ${makeExample(
 bpm(145); // Setting a faster BPM
 beat(.5) && euclid($(1), 5, 8) :: sound('bd').out()
 beat(.5) && euclid($(2), [1,0].beat(8), 8) 
-  :: sound('ST03').n(3).room(1).size(1).o(1).out()
+  :: sound('ST03').n(5).room(1).size(1).o(1).out()
 beat(.5) && euclid($(6), [6,7].beat(8), 8) :: sound('hh').out()
 `,
     false
@@ -158,9 +161,11 @@ beat(.5) && euclid($(6), [6,7].beat(8), 8) :: sound('hh').out()
 ${makeExample(
     "Adding more rhythmic density",
     `
-beat(.5) && euclid($(1), 5, 9) && snd('kick').out()
-beat(.5) && euclid($(2), 2, 3, 1) && snd('east').end(0.5).n(5).speed([1,2].beat(2)).out()
-beat(.5) && euclid($(3), 6, 9, 1) && snd('east').end(0.5).n(5).freq(200).speed([2,1].beat(2)).out()
+beat(.5) && euclid($(1), 5, 9) && snd('kick').shape(r(0.2,0.5)).out()
+beat(.5) && euclid($(2), 2, 3, 1) && snd('dr').end(0.5).n([8,9,13].beat(0.25))
+  .gain(r(0.5,1)).speed(1).out()
+beat(.5) && euclid($(3), 6, 9, 1) && snd('dr').end(0.5).n(2).freq(200).speed(1)
+  .gain(r(0.5,1)).out()
 beat(.25) && euclid($(4), 7, 9, 1) && snd('hh').out()
 `,
     false
@@ -200,8 +205,8 @@ ${makeExample(
     "Change the integers for a surprise rhythm!",
     `
 bpm(135);
-beat(.5) && bin($(1), 34) && snd('kick').n([1,3].beat(1)).out()
-beat(.5) && bin($(2), 48) && snd('snare').n([1,4].beat(1)).out()
+beat(.5) && bin($(1), 12) && snd('kick').n([4,9].beat(1.5)).out()
+beat(.5) && bin($(2), 34) && snd('snare').n([3,5].beat(1)).out()
 `,
     true
   )}
@@ -372,8 +377,16 @@ beat(.5)::snd(flip(4) ? 'kick' : 'hat').out()
 ${makeExample(
     "Thinking music over bars",
     `
-flipbar(2) :: beat(1):: snd('kick').out()
-flipbar(3) :: beat(.5):: snd('hat').out()
+let roomy = (n) => n.room(1).size(1).cutoff(500 + usaw(1/8) * 5000);
+function a() {
+  beat(1) && roomy(sound('kick')).out()
+  beat(.5) && roomy(sound('hat')).out()
+}
+function b() {
+  beat(1/4) && roomy(sound('shaker')).out()
+}
+flipbar(2) && a()
+flipbar(3) && b()
 `,
     true
   )}
