@@ -12,43 +12,44 @@ Welcome to the Topos documentation. These pages are offering you an introduction
   )}.  Press again to make the documentation disappear. All your contributions are welcome!
 
 ${makeExample(
-  "Welcome! Eval to get started",
-  examples[Math.floor(Math.random() * examples.length)],
-  true
-)}
+    "Welcome! Eval to get started",
+    examples[Math.floor(Math.random() * examples.length)],
+    true
+  )}
 	
 ## What is Topos?
 	
 Topos is an _algorithmic_ sequencer. Topos uses small algorithms to represent musical sequences and processes. These can be written in just a few lines of code. Topos is made to be _live-coded_. The _live coder_ strives for the constant interaction with algorithms and sound during a musical performance. Topos is aiming to be a digital playground for live algorithmic music.
 	
 ${makeExample(
-  "Small algorithms for direct musical expression",
-  `
+    "Small algorithms for direct musical expression",
+    `
 beat(1) :: sound(['kick', 'hat', 'snare', 'hat'].beat(1)).out()
 beat(.5) :: sound('jvbass').note(35 + [0,12].beat()).out()
-beat([0.5, 0.25, 1, 2].beat(1)) :: sound('east')
-  .room(.5).size(0.5).n(irand(1,5)).out()`,
-  false
-)}
+beat([0.5, 0.25].beat(1)) :: sound('east')
+  .room(.9).speed(flip(4) ? 1 : 0.95).size(0.9).o(2).n($(1)).out()`,
+    false
+  )}
 
 ${makeExample(
-  "Computer music should be immediate and intuitive",
-  `beat(.5)::snd('sine')
+    "Computer music should be immediate and intuitive",
+    `beat(.5)::snd('sine')
   .delay(0.5).delayt(0.25).delayfb(0.7)
   .room(0.8).size(0.8)
   .freq(mouseX()).out()`,
-  false
-)}
+    false
+  )}
 
 ${makeExample(
-  "Making the web less dreadful, one beep at at time",
-  `
-beat(.5) :: sound('sid').n($(2)).out()
+    "Making the web less dreadful, one beep at at time",
+    `
+beat(.5) :: sound('sid').n($(2))
+  .room(1).speed([1,2].pick()).out()
 beat(.25) :: sound('sid').note(
   [34, 36, 41].beat(.25) + [[0,-24].pick(),12].beat())
   .room(0.9).size(0.9).n(4).out()`,
-  false
-)}
+    false
+  )}
 	
 Topos is deeply inspired by the [Monome Teletype](https://monome.org/). The Teletype is/was an open source hardware module for Eurorack synthesizers. While the Teletype was initially born as an hardware module, Topos aims to be a web-browser based software sequencer from the same family! It is a sequencer, a scriptable interface, a companion for algorithmic music-making.  Topos wishes to fullfill the same goal than the Teletype, keeping the same spirit alive on the web. It is free, open-source, and made to be shared and used by everyone.
 	
