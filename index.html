@@ -195,68 +195,81 @@
       </div>
 
       <!-- This modal is used for settings -->
-        <div id="modal-settings" class="invisible bg-neutral-900 bg-opacity-50 flex justify-center items-center absolute top-0 right-0 bottom-0 left-0">
-          <div class="flex flex flex-col w-full">
-            <div class="bg-white rounded-lg mx-48 my-48 space-y-8 px-8">
-            <h1 class="mt-12 font-semibold rounded bg-gray-800 justify-center text-center text-white mx-4 text-xl border-b border-gray-300 py-4">Topos Application Settings</h1>
-              <!-- Font Size Selection -->
-              <div class="space-y-6 w-auto min-w-screen px-4">
-                <div id="font-size-selector" class="flex flex-row space-x-4 rounded-lg">
-                  <label id="font-size-witness" for="default-range" class="text-xs lg:text-sm font-medium text-black w-2/5 lg:w-1/5">Font Size: 22px</label>
-                  <input id="font-size-slider" type="range" step=1 value="22" class="align-middle w-3/5 lg:w-4/5 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer bg-gray-700">
+      <div id="modal-settings" class="invisible bg-neutral-900 bg-opacity-50 flex justify-center items-center absolute top-0 right-0 bottom-0 left-0">
+        <div class="grid grid-col-3 w-full">
+          <div class="bg-white rounded-lg mx-48 my-48 space-y-8 px-8">
+          <h1 class="mt-12 font-semibold rounded bg-gray-800 justify-center text-center text-white mx-4 text-xl border-b border-gray-300 py-4">Topos Application Settings</h1>
+
+            <div class="flex flex-row mr-4 ml-4">
+            <!-- Font Size Selection -->
+              <div class="bg-gray-200 rounded-lg w-full pt-2">
+                <p class="font-bold text-xl ml-4 pb-4 underline underline-offset-4">Font Settings</p>
+                <div class="mb-6 mx-4 font-semibold">
+                  <label for="default-input" class="block mb-2 ml-1 font-normal">Size:</label>
+                  <input type="text" id="font-size-input" type="number" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                 </div>
-              </div>
-              <!-- Font Family Selection -->
-              <div class="space-y-6 w-auto min-w-screen px-4">
+                <label for="font" class="block ml-5 mb-2 font-medium">Font (<b>TODO</b>):</label>
+                  <select id="font-family" class="bg-gray-50 w-48 ml-4 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                    <option selected>Choose a font</option>
+                    <option value="US">IBM Plex Mono</option>
+                    <option value="CA">Victor Mono</option>
+                    <option value="FR">Courier</option>
+                  </select>
               </div>
               <!-- Editor mode selection -->
-              <div class="flex flex-row space-x-4 justify-center px-2 mx-2">
-                <div class="flex items-center pl-4 border border-gray-200 rounded border-gray-700 w-full">
-                  <input id="normal-mode-radio" type="radio" value="" name="bordered-radio" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 focus:ring-blue-600 ring-offset-gray-800 focus:ring-2 bg-gray-700 border-gray-600">
-                  <label id="normal-mode" for="bordered-radio-1" class="w-full py-4 ml-2 text-sm font-medium text-black">Normal Mode</label>
-                </div>
-                <div class="flex items-center pl-4 border rounded border-gray-700 w-full">
-                  <input checked id="vim-mode-radio" type="radio" value="" name="bordered-radio" class="w-4 h-4 text-blue-600 bg-gray-100 focus:ring-blue-600 ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                  <label id="vim-mode" for="bordered-radio-2" class="w-full py-4 ml-2 text-sm font-medium text-black">Vim Mode</label>
-                </div>
-              </div>
+            <div class="bg-gray-200 rounded-lg ml-4 w-full pt-2">
+              <p class="font-bold text-xl ml-4 pb-4 underline underline-offset-4">Editor options</p>
               <!-- Checkboxes  -->
-							<div class="flex flex-row">
-								<div class="flex items-center mb-4 ml-8">
-              	    <input id="show-line-numbers" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-              	    <label for="default-checkbox" class="ml-2 text-sm font-medium text-dark">Show Line Numbers</label>
-              	</div>
-              	<div class="flex items-center mb-4 ml-8">
-              	    <input id="show-time-position" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-              	    <label for="default-checkbox" class="ml-2 text-sm font-medium text-dark">Show Time Position</label>
-              	</div>
-              	<div class="flex items-center mb-4 ml-8">
-              	    <input id="show-tips" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-              	    <label for="default-checkbox" class="ml-2 text-sm font-medium text-dark">Show Hovering Tips</label>
-              	</div>
-              	<div class="flex items-center mb-4 ml-8">
-              	    <input id="load-demo-songs" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-              	    <label for="default-checkbox" class="ml-2 text-sm font-medium text-dark">Load Demo Song</label>
-              	</div>
+  					  <div class="pr-4">
+							  <div  class="flex items-center mb-4 ml-5">
+            	    <input id="vim-mode" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+             	    <label for="default-checkbox" class="ml-2 text-sm font-medium text-dark">Vim Mode</label>
+             	  </div>
+							  <div class="flex items-center mb-4 ml-5">
+             	    <input id="show-line-numbers" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+             	    <label for="default-checkbox" class="ml-2 text-sm font-medium text-dark">Show Line Numbers</label>
+             	  </div>
+             	  <div class="flex items-center mb-4 ml-5">
+             	    <input id="show-time-position" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+             	    <label for="default-checkbox" class="ml-2 text-sm font-medium text-dark">Show Time Position</label>
+             	  </div>
+             	  <div class="flex items-center mb-4 ml-5">
+             	    <input id="show-tips" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+             	    <label for="default-checkbox" class="ml-2 text-sm font-medium text-dark">Show Hovering Tips</label>
+             	  </div>
+             	  <div class="flex items-center mb-4 ml-5">
+             	    <input id="load-demo-songs" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+             	    <label for="default-checkbox" class="ml-2 text-sm font-medium text-dark">Load Demo Song</label>
+             	  </div>
+						  </div>
+            </div>
 
-							</div>
-              <!-- Information card -->
-              <div class="flex lg:flex-row space-y-2 lg:space-y-0 flex-col w-auto min-w-screen px-4 lg:space-x-8 space-x-0">
-                <a href="https://github.com/Bubobubobubobubo/Topos" class="block max-w-sm p-6 border border-gray-200 rounded-lg shadow bg-gray-800 border-gray-700 hover:bg-gray-700">
-                  <h5 class="mb-2 lg:text-2xl text-xl font-bold tracking-tight text-white">GitHub</h5>
-                  <p class="font-normal text-white">Get involved in the dev process and or file an issue for a broken feature</p>
-                </a>
-                <a href="https://discord.gg/aPgV7mSFZh" class="block max-w-sm p-6  border border-gray-200 rounded-lg shadow bg-gray-800 border-gray-700 hover:bg-gray-700">
-                  <h5 class="mb-2 lg:text-2xl text-xl font-bold tracking-tight text-white">Discord</h5>
-                  <p class="font-normal text-white">Join the community on the official Topos/Sardine Discord Server.</p>
-                </a>
-             </div>
-              <div class="flex space-x-6 border-t border-gray-200 rounded-b dark:border-gray-600 mx-4 border-spacing-y-4">
-                <button id="close-settings-button" data-modal-hide="defaultModal" type="button" class="hover:bg-gray-700 bg-gray-800 mt-4 mb-4 text-white focus:ring-4  font-medium rounded-lg text-sm px-5 py-2.5 text-center">OK</button>
+            <div class="bg-gray-200 rounded-lg ml-4 w-full pt-2">
+              <p class="font-bold text-xl ml-4 pb-4 underline underline-offset-4">File Management</p>
+              <div class="flex flex-col space-y-2">
+                <button id="download-universes" class="bg-gray-800 hover:bg-gray-900 text-white font-bold py-4 px-2 rounded-lg inline-flex items-center mx-4">
+                  <svg class="fill-current w-4 h-6 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M13 8V2H7v6H2l8 8 8-8h-5zM0 18h20v2H0v-2z"/></svg>
+                  <span>Download universes</span>
+                </button>
+                <button id="upload-universes" class="bg-gray-800 hover:bg-gray-900 text-white font-bold py-4 px-2 rounded-lg inline-flex items-center mx-4">
+                  <svg class="rotate-180 fill-current w-4 h-6 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M13 8V2H7v6H2l8 8 8-8h-5zM0 18h20v2H0v-2z"/></svg>
+                  <span>Upload universes</span>
+                </button>
+                <button id="upload-universes" class="bg-red-800 hover:bg-red-900 text-white font-bold py-2 px-2 rounded-lg inline-flex items-center mx-4">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-6 mr-2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+                  </svg>
+                  <span>Destroy universes</span>
+                </button>
               </div>
             </div>
           </div>
+          <div class="flex space-x-6 border-t border-gray-200 rounded-b dark:border-gray-600 mx-4 border-spacing-y-4">
+            <button id="close-settings-button" data-modal-hide="defaultModal" type="button" class="hover:bg-gray-700 bg-gray-800 mt-4 mb-4 text-white focus:ring-4  font-medium rounded-lg text-sm px-5 py-2.5 text-center">OK</button>
+          </div>
         </div>
+      </div>
+    </div>
 
       <div class="flex flex-row max-h-fit">
 
@@ -295,12 +308,17 @@
   </svg>
 			      </a>
 
-            <a title="Open settings" id="settings-button" class="lg:block sm:hidden p-2 text-gray-200 ml-1 absolute bottom-2 focus:outline-nones transition-colors duration-200 rounded-lg text-gray-200 bg-gray-800">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M10.343 3.94c.09-.542.56-.94 1.11-.94h1.093c.55 0 1.02.398 1.11.94l.149.894c.07.424.384.764.78.93.398.164.855.142 1.205-.108l.737-.527a1.125 1.125 0 011.45.12l.773.774c.39.389.44 1.002.12 1.45l-.527.737c-.25.35-.272.806-.107 1.204.165.397.505.71.93.78l.893.15c.543.09.94.56.94 1.109v1.094c0 .55-.397 1.02-.94 1.11l-.893.149c-.425.07-.765.383-.93.78-.165.398-.143.854.107 1.204l.527.738c.32.447.269 1.06-.12 1.45l-.774.773a1.125 1.125 0 01-1.449.12l-.738-.527c-.35-.25-.806-.272-1.203-.107-.397.165-.71.505-.781.929l-.149.894c-.09.542-.56.94-1.11.94h-1.094c-.55 0-1.019-.398-1.11-.94l-.148-.894c-.071-.424-.384-.764-.781-.93-.398-.164-.854-.142-1.204.108l-.738.527c-.447.32-1.06.269-1.45-.12l-.773-.774a1.125 1.125 0 01-.12-1.45l.527-.737c.25-.35.273-.806.108-1.204-.165-.397-.505-.71-.93-.78l-.894-.15c-.542-.09-.94-.56-.94-1.109v-1.094c0-.55.398-1.02.94-1.11l.894-.149c.424-.07.765-.383.93-.78.165-.398.143-.854-.107-1.204l-.527-.738a1.125 1.125 0 01.12-1.45l.773-.773a1.125 1.125 0 011.45-.12l.737.527c.35.25.807.272 1.204.107.397-.165.71-.505.78-.929l.15-.894z" />
-              <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-              </svg>
-            </a>
+            <a title="Application Settings" id="settings-button" class="pl-2 p-1.5 text-white focus:outline-nones transition-colors duration-200 rounded-lg text-white hover:bg-gray-800">
+							<svg class="w-8 h-8 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M10.343 3.94c.09-.542.56-.94 1.11-.94h1.093c.55 0 1.02.398 1.11.94l.149.894c.07.424.384.764.78.93.398.164.855.142 1.205-.108l.737-.527a1.125 1.125 0 011.45.12l.773.774c.39.389.44 1.002.12 1.45l-.527.737c-.25.35-.272.806-.107 1.204.165.397.505.71.93.78l.893.15c.543.09.94.56.94 1.109v1.094c0 .55-.397 1.02-.94 1.11l-.893.149c-.425.07-.765.383-.93.78-.165.398-.143.854.107 1.204l.527.738c.32.447.269 1.06-.12 1.45l-.774.773a1.125 1.125 0 01-1.449.12l-.738-.527c-.35-.25-.806-.272-1.203-.107-.397.165-.71.505-.781.929l-.149.894c-.09.542-.56.94-1.11.94h-1.094c-.55 0-1.019-.398-1.11-.94l-.148-.894c-.071-.424-.384-.764-.781-.93-.398-.164-.854-.142-1.204.108l-.738.527c-.447.32-1.06.269-1.45-.12l-.773-.774a1.125 1.125 0 01-.12-1.45l.527-.737c.25-.35.273-.806.108-1.204-.165-.397-.505-.71-.93-.78l-.894-.15c-.542-.09-.94-.56-.94-1.109v-1.094c0-.55.398-1.02.94-1.11l.894-.149c.424-.07.765-.383.93-.78.165-.398.143-.854-.107-1.204l-.527-.738a1.125 1.125 0 01.12-1.45l.773-.773a1.125 1.125 0 011.45-.12l.737.527c.35.25.807.272 1.204.107.397-.165.71-.505.78-.929l.15-.894z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+
+  </svg>
+			      </a>
+
+
         </aside>
 
         <!-- Tabs for local files -->

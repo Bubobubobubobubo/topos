@@ -33,19 +33,24 @@ showdown.setFlavor("github");
 import showdownHighlight from "showdown-highlight";
 import { makeStringExtensions } from "./StringExtensions";
 
-
 // Broadcast that you're opening a page.
 localStorage.openpages = Date.now();
-window.addEventListener('storage', function(e) {
-  if (e.key == "openpages") {
-    // Listen if anybody else is opening the same page!
-    localStorage.page_available = Date.now();
-  }
-  if (e.key == "page_available") {
-    document.getElementById("all")!.classList.add("invisible")
-    alert("Topos is already opened in another tab. Close this tab now to prevent data loss.");
-  }
-}, false);
+window.addEventListener(
+  "storage",
+  function (e) {
+    if (e.key == "openpages") {
+      // Listen if anybody else is opening the same page!
+      localStorage.page_available = Date.now();
+    }
+    if (e.key == "page_available") {
+      document.getElementById("all")!.classList.add("invisible");
+      alert(
+        "Topos is already opened in another tab. Close this tab now to prevent data loss."
+      );
+    }
+  },
+  false
+);
 
 const classMap = {
   h1: "text-white lg:text-4xl text-xl lg:ml-4 lg:mx-4 mx-2 lg:my-4 my-2 lg:mb-4 mb-4 bg-neutral-900 rounded-lg py-2 px-2",
@@ -135,6 +140,14 @@ export class Editor {
     "load-universe-button"
   ) as HTMLButtonElement;
 
+  download_universe_button: HTMLButtonElement = document.getElementById(
+    "download-universes"
+  ) as HTMLButtonElement;
+
+  upload_universe_button: HTMLButtonElement = document.getElementById(
+    "upload-universes"
+  ) as HTMLButtonElement;
+
   documentation_button: HTMLButtonElement = document.getElementById(
     "doc-button-1"
   ) as HTMLButtonElement;
@@ -186,12 +199,19 @@ export class Editor {
   ) as HTMLDivElement;
 
   // Font Size Slider
-  font_size_slider: HTMLInputElement = document.getElementById(
-    "font-size-slider"
+  font_size_input: HTMLInputElement = document.getElementById(
+    "font-size-input"
   ) as HTMLInputElement;
-  font_size_witness: HTMLSpanElement = document.getElementById(
-    "font-size-witness"
-  ) as HTMLSpanElement;
+
+  // Font Family Selector
+  font_family_selector: HTMLSelectElement = document.getElementById(
+    "font-family"
+  ) as HTMLSelectElement;
+
+  // Vim mode checkbox
+  vim_mode_checkbox: HTMLInputElement = document.getElementById(
+    "vim-mode"
+  ) as HTMLInputElement;
 
   // Line Numbers checkbox
   line_numbers_checkbox: HTMLInputElement = document.getElementById(
@@ -245,7 +265,6 @@ export class Editor {
   public hydra: any = this.hydra_backend.synth;
 
   constructor() {
-
     // ================================================================================
     // Loading the settings
     // ================================================================================
@@ -264,21 +283,22 @@ export class Editor {
 
     this.universes = {
       ...this.settings.universes,
-      ...template_universes
+      ...template_universes,
     };
 
     if (this.settings.load_demo_songs) {
-      let random_example = examples[Math.floor(Math.random() * examples.length)];
-      this.selected_universe = "Welcome"
+      let random_example =
+        examples[Math.floor(Math.random() * examples.length)];
+      this.selected_universe = "Welcome";
       this.universes[this.selected_universe].global.committed = random_example;
       this.universes[this.selected_universe].global.candidate = random_example;
     } else {
       this.selected_universe = this.settings.selected_universe;
       if (this.universes[this.selected_universe] === undefined)
-        this.universes[this.selected_universe] = structuredClone(template_universe)
+        this.universes[this.selected_universe] =
+          structuredClone(template_universe);
     }
     this.universe_viewer.innerHTML = `Topos: ${this.selected_universe}`;
-
 
     // ================================================================================
     // Audio context and clock
@@ -534,7 +554,8 @@ export class Editor {
       button.addEventListener("click", () => {
         this.setButtonHighlighting("clear", true);
         if (confirm("Do you want to reset the current universe?")) {
-          this.universes[this.selected_universe] = structuredClone(template_universe);
+          this.universes[this.selected_universe] =
+            structuredClone(template_universe);
           this.updateEditorView();
         }
       });
@@ -542,6 +563,63 @@ export class Editor {
 
     this.documentation_button.addEventListener("click", () => {
       this.showDocumentation();
+    });
+
+    this.upload_universe_button.addEventListener("click", () => {
+      const fileInput = document.createElement("input");
+      fileInput.type = "file";
+      fileInput.accept = ".json";
+
+      fileInput.addEventListener("change", (event) => {
+        const input = event.target as HTMLInputElement;
+        const file = input.files?.[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.readAsText(file, "UTF-8");
+
+          reader.onload = (evt) => {
+            const data = JSON.parse(evt.target!.result as string);
+            for (const [key, value] of Object.entries(data)) {
+              this.universes[key] = value as Universe;
+            }
+          };
+          reader.onerror = (evt) => {
+            console.error("An error occurred reading the file:", evt);
+          };
+        }
+      });
+
+      document.body.appendChild(fileInput);
+      fileInput.click();
+      document.body.removeChild(fileInput);
+    });
+
+    this.download_universe_button.addEventListener("click", () => {
+      // Trigger save of the universe before downloading
+      this.settings.saveApplicationToLocalStorage(
+        this.universes,
+        this.settings
+      );
+
+      // Generate a file name based on timestamp
+      let fileName = `topos-universes-${Date.now()}.json`;
+
+      // Create Blob and Object URL
+      const blob = new Blob([JSON.stringify(this.settings.universes)], {
+        type: "application/json",
+      });
+      const url = URL.createObjectURL(blob);
+
+      // Create a temporary anchor and trigger download
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = fileName;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+
+      // Revoke the Object URL to free resources
+      URL.revokeObjectURL(url);
     });
 
     this.load_universe_button.addEventListener("click", () => {
@@ -582,35 +660,55 @@ export class Editor {
       this.changeModeFromInterface("notes")
     );
 
+    this.font_family_selector.addEventListener("change", () => {
+      let new_font = this.font_family_selector.value;
+      this.settings.font = new_font;
+      let new_font_size = EditorView.theme({
+        "&": { fontSize: this.settings.font_size + "px" },
+        "&content": {
+          fontFamily: new_font,
+          fontSize: this.settings.font_size + "px",
+        },
+        ".cm-gutters": { fontSize: this.settings.font_size + "px" },
+      });
+      this.view.dispatch({
+        effects: this.fontSize.reconfigure(new_font_size),
+      });
+    });
+
+    this.font_size_input.addEventListener("input", () => {
+      let new_value: string | number = this.font_size_input.value;
+      this.settings.font_size = Math.max(8, Math.min(48, parseInt(new_value)));
+
+      let new_font_size = EditorView.theme({
+        "&": { fontSize: new_value + "px" },
+        "&content": {
+          fontFamily: this.settings.font,
+          fontSize: new_value + "px",
+        },
+        ".cm-gutters": { fontSize: new_value + "px" },
+      });
+      this.view.dispatch({
+        effects: this.fontSize.reconfigure(new_font_size),
+      });
+      this.settings.font_size = parseInt(new_value);
+    });
+
     this.settings_button.addEventListener("click", () => {
-      this.font_size_slider.value = this.settings.font_size.toString();
-      this.font_size_witness.innerHTML = `Font Size: ${this.settings.font_size}px`;
-      this.font_size_witness?.setAttribute(
-        "style",
-        `font-size: ${this.settings.font_size}px;`
-      );
+      // Populate the font family selector
+      this.font_family_selector.value = this.settings.font;
+
+      if (this.settings.font_size === null) {
+        this.settings.font_size = 12;
+      }
+      this.font_size_input.value = this.settings.font_size.toString();
 
       // Get the right value to update graphical widgets
       this.line_numbers_checkbox.checked = this.settings.line_numbers;
       this.time_position_checkbox.checked = this.settings.time_position;
       this.tips_checkbox.checked = this.settings.tips;
       this.load_demo_songs.checked = this.settings.load_demo_songs;
-
-      if (this.settings.vimMode) {
-        let vim = document.getElementById("vim-mode-radio") as HTMLInputElement;
-        let normal = document.getElementById(
-          "normal-mode-radio"
-        ) as HTMLInputElement;
-        vim.checked = true;
-        normal.checked = false;
-      } else {
-        let vim = document.getElementById("vim-mode-radio") as HTMLInputElement;
-        let normal = document.getElementById(
-          "normal-mode-radio"
-        ) as HTMLInputElement;
-        normal.checked = true;
-        vim.checked = false;
-      }
+      this.vim_mode_checkbox.checked = this.settings.vimMode;
 
       let modal_settings = document.getElementById("modal-settings");
       let editor = document.getElementById("editor");
@@ -624,27 +722,23 @@ export class Editor {
       let editor = document.getElementById("editor");
       modal_settings?.classList.add("invisible");
       editor?.classList.remove("invisible");
+      // Update the font size once again
+      this.view.dispatch({
+        effects: this.fontSize.reconfigure(
+          EditorView.theme({
+            "&": { fontSize: this.settings.font_size + "px" },
+            "&content": {
+              fontFamily: this.settings.font,
+              fontSize: this.settings.font_size + "px",
+            },
+            ".cm-gutters": { fontSize: this.settings.font_size + "px" },
+          })
+        ),
+      });
     });
 
     this.close_universes_button.addEventListener("click", () => {
       this.openBuffersModal();
-    });
-
-    this.font_size_slider.addEventListener("input", () => {
-      const new_value = this.font_size_slider.value;
-      this.settings.font_size = parseInt(new_value);
-      this.font_size_witness.style.fontSize = `${new_value}px`;
-      this.font_size_witness.innerHTML = `Font Size: ${new_value}px`;
-
-      let new_font_size = EditorView.theme({
-        "&": { fontSize: new_value + "px" },
-        "&content": { fontFamily: this.settings.font },
-        ".cm-gutters": { fontSize: new_value + "px" },
-      });
-      this.view.dispatch({
-        effects: this.fontSize.reconfigure(new_font_size),
-      });
-      this.settings.font_size = parseInt(new_value);
     });
 
     this.share_button.addEventListener("click", async () => {
@@ -656,9 +750,12 @@ export class Editor {
       await this.share();
     });
 
-    this.normal_mode_button.addEventListener("click", () => {
-      this.settings.vimMode = false;
-      this.view.dispatch({ effects: this.vimModeCompartment.reconfigure([]) });
+    this.vim_mode_checkbox.addEventListener("change", () => {
+      let checked = this.vim_mode_checkbox.checked ? true : false;
+      this.settings.vimMode = checked;
+      this.view.dispatch({
+        effects: this.vimModeCompartment.reconfigure(checked ? vim() : []),
+      });
     });
 
     this.line_numbers_checkbox.addEventListener("change", () => {
@@ -693,14 +790,6 @@ export class Editor {
     this.load_demo_songs.addEventListener("change", () => {
       let checked = this.load_demo_songs.checked ? true : false;
       this.settings.load_demo_songs = checked;
-    });
-
-
-    this.vim_mode_button.addEventListener("click", () => {
-      this.settings.vimMode = true;
-      this.view.dispatch({
-        effects: this.vimModeCompartment.reconfigure(vim()),
-      });
     });
 
     this.universe_creator.addEventListener("submit", (event) => {
@@ -1187,4 +1276,3 @@ window.addEventListener("beforeunload", () => {
   app.clock.stop();
   return null;
 });
-

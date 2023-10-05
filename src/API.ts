@@ -7,6 +7,7 @@ import { SoundEvent } from "./classes/SoundEvent";
 import { MidiEvent } from "./classes/MidiEvent";
 import { LRUCache } from "lru-cache";
 import { InputOptions, Player } from "./classes/ZPlayer";
+import { template_universes } from "./AppSettings";
 import {
   samples,
   initAudioOnFirstClick,
@@ -277,7 +278,7 @@ export class UserAPI {
       evaluations: 0,
     };
   };
-  cs = this.clear_script;
+  cs = this.delete_script;
 
   copy_script = (from: number, to: number): void => {
     /**
@@ -307,6 +308,24 @@ export class UserAPI {
       this.app.universes,
       this.app.settings
     );
+    this.app.updateKnownUniversesView();
+  };
+
+  big_bang = (): void => {
+    /**
+     * Clears all universes
+     * TODO: add documentation. This doesn't work super well.
+     */
+    if (confirm("Are you sure you want to delete all universes?")) {
+      this.app.universes = {
+        ...template_universes,
+      };
+      this.app.settings.saveApplicationToLocalStorage(
+        this.app.universes,
+        this.app.settings
+      );
+    }
+    this.app.selected_universe = "Default";
     this.app.updateKnownUniversesView();
   };
 
