@@ -303,7 +303,8 @@ export class SoundEvent extends AudibleEvent {
   // Unit
   public stretch = (beat: number) => {
     this.updateValue("unit", "c");
-    this.updateValue("speed", 2 / beat)
+    this.updateValue("speed", 1 / beat)
+    this.updateValue("cut", beat)
     return this;
   }
 

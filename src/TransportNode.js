@@ -19,9 +19,8 @@ export class TransportNode extends AudioWorkletNode {
         this.app.clock.tick
       );
       this.app.clock.time_position = futureTimeStamp;
-      this.timeviewer.innerHTML = `${zeroPad(futureTimeStamp.bar, 2)}:${
-        futureTimeStamp.beat + 1
-      }:${zeroPad(futureTimeStamp.pulse, 2)}`;
+      this.timeviewer.innerHTML = `${zeroPad(futureTimeStamp.bar, 2)}:${futureTimeStamp.beat + 1
+        }:${zeroPad(futureTimeStamp.pulse, 2)} / ${this.app.clock.bpm}`;
       if (this.app.exampleIsPlaying) {
         tryEvaluate(this.app, this.app.example_buffer);
       } else {

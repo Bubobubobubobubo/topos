@@ -32,6 +32,21 @@ import showdown from "showdown";
 showdown.setFlavor("github");
 import showdownHighlight from "showdown-highlight";
 import { makeStringExtensions } from "./StringExtensions";
+
+
+// Broadcast that you're opening a page.
+localStorage.openpages = Date.now();
+window.addEventListener('storage', function(e) {
+  if (e.key == "openpages") {
+    // Listen if anybody else is opening the same page!
+    localStorage.page_available = Date.now();
+  }
+  if (e.key == "page_available") {
+    document.getElementById("all")!.classList.add("invisible")
+    alert("Topos is already opened in another tab. Close this tab now to prevent data loss.");
+  }
+}, false);
+
 const classMap = {
   h1: "text-white lg:text-4xl text-xl lg:ml-4 lg:mx-4 mx-2 lg:my-4 my-2 lg:mb-4 mb-4 bg-neutral-900 rounded-lg py-2 px-2",
   h2: "text-white lg:text-3xl text-xl lg:ml-4 lg:mx-4 mx-2 lg:my-4 my-2 lg:mb-4 mb-4 bg-neutral-900 rounded-lg py-2 px-2",
@@ -1182,7 +1197,7 @@ export class Editor {
   }
 }
 
-const app = new Editor();
+let app = new Editor();
 
 window.addEventListener("beforeunload", () => {
   // @ts-ignore
@@ -1194,3 +1209,4 @@ window.addEventListener("beforeunload", () => {
   app.clock.stop();
   return null;
 });
+

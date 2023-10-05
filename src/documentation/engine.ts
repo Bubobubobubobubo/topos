@@ -50,13 +50,12 @@ Let's pause for a moment and explain what is going on:
 - Sounds are **composed** by adding qualifiers/parameters that will modify the sound or synthesizer being played (_e.g_ <ic>sound('...').blabla(...)..something(...).out()</ic>. Think of it as _audio chains_. 
 	
 ${makeExample(
-    '"Composing" a sound or making a sound chain',
+    '"Composing" a complex sonic object by making a sound chain',
     `
-beat(1) :: sound('pad')
+beat(1) :: sound('pad').n(1)
   .begin(rand(0, 0.4))
   .freq([50,52].beat())
-  .size(0.9)
-  .room(0.9)
+  .size(0.9).room(0.9)
   .velocity(0.25)
   .pan(usine()).release(2).out()`,
     true
@@ -110,10 +109,9 @@ ${makeExample(
     "Let's make something more complex",
     `
 beat(0.25) && sound('jvbass')
-  .sometimes(s=>s.speed([1,5,10].pick()))
-  .room(0.5)
-  .gain(1)
-  .cutoff(usine(2) * 5000)
+  .sometimes(s=>s.speed([2, 0.5].pick()))
+  .room(0.9).size(0.9).gain(1)
+  .cutoff(usine(1/2) * 5000)
   .out()`,
     true
   )}
@@ -131,7 +129,7 @@ There is a special method to choose the _orbit_ that your sound is going to use:
 	
 | Method   | Alias | Description                                                |
 |----------|-------|------------------------------------------------------------|
-| orbit    | o      | Orbit number                                               |
+| <ic>orbit</ic>    | o      | Orbit number                                               |
 
 	
 ## Amplitude
@@ -140,9 +138,9 @@ Simple controls over the amplitude (volume) of a given sound.
 	
 | Method   | Alias | Description                                                                        |
 |----------|-------|------------------------------------------------------------------------------------|
-| gain     |       | Volume of the synth/sample (exponential)                                           |
-| velocity | vel   | Velocity (amplitude) from <ic>0</ic> to <ic>1</ic>. Multipled with gain            |
-| dbgain   | db    | Attenuation in dB from <ic>-inf</ic> to <ic>+10</ic> (acts as a sound mixer fader) |
+| <ic>gain</ic>     |       | Volume of the synth/sample (exponential)                                           |
+| <ic>velocity</ic> | vel   | Velocity (amplitude) from <ic>0</ic> to <ic>1</ic>. Multipled with gain            |
+| <ic>dbgain</ic>   | db    | Attenuation in dB from <ic>-inf</ic> to <ic>+10</ic> (acts as a sound mixer fader) |
 	
 ${makeExample(
     "Velocity manipulated by a counter",
@@ -157,21 +155,24 @@ beat(.5)::snd('cp').vel($(1)%10 / 10).out()`,
 	
 | Method  | Alias | Description                                   |
 |---------|-------|-----------------------------------------------|
-| attack  | atk   | Attack value (time to maximum volume)         |
-| decay   | dec   | Decay value (time to decay to sustain level)  |
-| sustain | sus   | Sustain value (gain when sound is held)       |
-| release | rel   | Release value (time for the sound to die off) |
+| <ic>attack</ic>  | atk   | Attack value (time to maximum volume)         |
+| <ic>decay</ic>   | dec   | Decay value (time to decay to sustain level)  |
+| <ic>sustain</ic> | sus   | Sustain value (gain when sound is held)       |
+| <ic>release</ic> | rel   | Release value (time for the sound to die off) |
 	
 Note that the **sustain** value is not a duration but an amplitude value (how loud). The other values are the time for each stage to take place. Here is a fairly complete example using the <ic>sawtooth</ic> basic waveform.
 	
 ${makeExample(
     "Simple synthesizer",
     `
-beat(4)::sound('sawtooth').note(50).decay(0.5).sustain(0.5).release(2).gain(0.25).out();
-beat(2)::sound('sawtooth').note(50+7).decay(0.5).sustain(0.6).release(2).gain(0.25).out();
-beat(1)::sound('sawtooth').note(50+12).decay(0.5).sustain(0.7).release(2).gain(0.25).out();
-beat(.25)::sound('sawtooth').note([50,57,62].pick() + [12, 24, 0].beat(2))
-  .cutoff(5000).sustain(0.5).release(0.1).gain(0.25).out()
+let smooth = (sound) => {
+  return sound.cutoff(r(100,500))
+       .lpadsr(usaw(1/8) * 8, 0.05, .125, 0, 0)
+       .gain(r(0.25, 0.4)).adsr(0, r(.2,.4), r(0,0.5), 0)
+       .room(0.9).size(2).o(2).vib(r(2,8)).vibmod(0.125)
+}
+beat(.25)::smooth(sound('sawtooth').note([50,57,55,60].beat(1))).out();
+beat(.25)::smooth(sound('sawtooth').note([50,57,55,60].add(12).beat(1.5))).out();
 	`,
     true
   )};
@@ -182,17 +183,17 @@ There are some basic controls over the playback of each sample. This allows you 
 	
 | Method  | Alias | Description                                            |
 |---------|-------|--------------------------------------------------------|
-| n       |       | Select a sample in the current folder (from <ic>0</ic> to infinity)                 |
-| begin   |       | Beginning of the sample playback (between <ic>0</ic> and <ic>1</ic>)     |
-| end     |       | End of the sample (between <ic>0</ic> and <ic>1</ic>)                    |
-| loopBegin |     | Beginning of the loop section (between <ic>0</ic> and <ic>1</ic>)        |
-| loopEnd |     | End of the loop section (between <ic>0</ic> and <ic>1</ic>)        |
-| loop    |       | Whether to loop or not the audio sample          |
-| stretch    |       | Stretches the audio playback rate of a sample over <ic>n</ic> beats          |
-| speed   |       | Playback speed (<ic>2</ic> = twice as fast)         |
-| cut     |       | Set with <ic>0</ic> or <ic>1</ic>. Will cut the sample as soon as another sample is played on the same bus |
-| clip    |       | Multiply the duration of the sample with the given number |
-| pan     |       | Stereo position of the audio playback (<ic>0</ic> = left, <ic>1</ic> = right)|
+| <ic>n</ic>       |       | Select a sample in the current folder (from <ic>0</ic> to infinity)                 |
+| <ic>begin</ic>   |       | Beginning of the sample playback (between <ic>0</ic> and <ic>1</ic>)     |
+| <ic>end</ic>     |       | End of the sample (between <ic>0</ic> and <ic>1</ic>)                    |
+| <ic>loopBegin</ic> |     | Beginning of the loop section (between <ic>0</ic> and <ic>1</ic>)        |
+| <ic>loopEnd</ic> |     | End of the loop section (between <ic>0</ic> and <ic>1</ic>)        |
+| <ic>loop</ic>    |       | Whether to loop or not the audio sample          |
+| <ic>stretch</ic>    |       | Stretches the audio playback rate of a sample over <ic>n</ic> beats          |
+| <ic>speed</ic>   |       | Playback speed (<ic>2</ic> = twice as fast)         |
+| <ic>cut</ic>     |       | Set with <ic>0</ic> or <ic>1</ic>. Will cut the sample as soon as another sample is played on the same bus |
+| <ic>clip</ic>    |       | Multiply the duration of the sample with the given number |
+| <ic>pan</ic>     |       | Stereo position of the audio playback (<ic>0</ic> = left, <ic>1</ic> = right)|
 	
 ${makeExample(
     "Complex sampling duties",
@@ -200,7 +201,7 @@ ${makeExample(
 // Using some of the modifiers described above :)
 beat(.5)::snd('pad').begin(0.2)
   .speed([1, 0.9, 0.8].beat(4))
-  .n([0, 0, 2, 4].beat(4)).pan(usine(.5))
+  .n(2).pan(usine(.5))
   .end(rand(0.3,0.8))
   .room(0.8).size(0.5)
   .clip(1).out()
@@ -212,11 +213,11 @@ ${makeExample(
     "Playing an amen break",
     `
 // Note that stretch has the same value as beat
-beat(4) :: sound('breaks165').stretch(4).out()
-beat(0.25) :: sound('hh').out()
-beat(1, 4, 8) :: sound('bd').out()`,
+beat(4) :: sound('amen1').n(11).stretch(4).out()
+beat(1) :: sound('kick').shape(0.35).out()`,
     true,
   )};
+
 	
 ## Filters
 	
@@ -224,13 +225,13 @@ There are three basic filters: a _lowpass_, _highpass_ and _bandpass_ filters wi
 	
 | Method     | Alias | Description                             |
 |------------|-------|-----------------------------------------|
-| cutoff     | lpf   | Cutoff frequency of the lowpass filter  |
-| resonance  | lpq   | Resonance of the lowpass filter         |
-| hcutoff    | hpf   | Cutoff frequency of the highpass filter |
-| hresonance | hpq   | Resonance of the highpass filter        |
-| bandf      | bpf   | Cutoff frequency of the bandpass filter |
-| bandq      | bpq   | Resonance of the bandpass filter        |
-| vowel			 |       | Formant filter with (vocal quality)     |
+| <ic>cutoff</ic>     | lpf   | Cutoff frequency of the lowpass filter  |
+| <ic>resonance</ic>  | lpq   | Resonance of the lowpass filter         |
+| <ic>hcutoff</ic>    | hpf   | Cutoff frequency of the highpass filter |
+| <ic>hresonance</ic> | hpq   | Resonance of the highpass filter        |
+| <ic>bandf</ic>      | bpf   | Cutoff frequency of the bandpass filter |
+| <ic>bandq</ic>      | bpq   | Resonance of the bandpass filter        |
+| <ic>vowel</ic> |       | Formant filter with (vocal quality)     |
 
 ${makeExample(
     "Filter sweep using a low frequency oscillator",
@@ -249,8 +250,8 @@ A basic reverberator that you can use to give some depth to your sounds. This si
 	
 | Method     | Alias | Description                     |
 |------------|-------|---------------------------------|
-| room |     | The more, the bigger the reverb (between <ic>0</ic> and <ic>1</ic>.|
-| size |     | Reverberation amount |
+| <ic>room</ic> |     | The more, the bigger the reverb (between <ic>0</ic> and <ic>1</ic>.|
+| <ic>size</ic> |     | Reverberation amount |
 
 ${makeExample(
     "Clapping in the cavern",
@@ -267,9 +268,9 @@ A good sounding delay unit that can go into feedback territory. Use it without m
 	
 | Method     | Alias     | Description                     |
 |------------|-----------|---------------------------------|
-| delay      |           | Delay _wet/dry_ (between <ic>0</ic> and <ic>1</ic>) |
-| delaytime  | delayt    | Delay time (in milliseconds)    |
-| delayfeedback| delayfb | Delay feedback (between <ic>0</ic> and <ic>1</ic>) |
+| <ic>delay</ic>      |           | Delay _wet/dry_ (between <ic>0</ic> and <ic>1</ic>) |
+| <ic>delaytime</ic>  | delayt    | Delay time (in milliseconds)    |
+| <ic>delayfeedback</ic> | delayfb | Delay feedback (between <ic>0</ic> and <ic>1</ic>) |
 	
 ${makeExample(
     "Who doesn't like delay?",
@@ -285,9 +286,9 @@ beat(1)::snd('kick').out()
 	
 | Method     | Alias     | Description                     |
 |------------|-----------|---------------------------------|
-| coarse     |           | Artificial sample-rate lowering |
-| crush      |           | bitcrushing. <ic>1</ic> is extreme, the more you go up, the less it takes effect.  |
-| shape      |           | Waveshaping distortion (between <ic>0</ic> and <ic>1</ic>)          |
+| <ic>coarse</ic>     |           | Artificial sample-rate lowering |
+| <ic>crush</ic>      |           | bitcrushing. <ic>1</ic> is extreme, the more you go up, the less it takes effect.  |
+| <ic>shape</ic>      |           | Waveshaping distortion (between <ic>0</ic> and <ic>1</ic>)          |
 	
 	
 ${makeExample(
