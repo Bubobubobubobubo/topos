@@ -146,45 +146,76 @@ export class MidiConnection {
      * Updates the MIDI clock input select element with the available MIDI inputs.
      */
     if(this.midiInputs.length > 0) {
-      const select = document.getElementById("midi-clock-input") as HTMLSelectElement;
-      select.innerHTML = "";
+      const midiClockSelect = document.getElementById("midi-clock-input") as HTMLSelectElement;
+      const midiInputSelect = document.getElementById("default-midi-input") as HTMLSelectElement;
+      
+      midiClockSelect.innerHTML = "";
+      midiInputSelect.innerHTML = "";
+
       // Defaults to internal clock
       const defaultOption = document.createElement("option");
       defaultOption.value = "-1";
       defaultOption.text = "Internal";
-      select.appendChild(defaultOption);
-      // Add MIDI inputs to clock select input
+      midiClockSelect.appendChild(defaultOption);
+
+      // Add MIDI inputs to clock select input and default midi input
       this.midiInputs.forEach((input, index) => {
         const option = document.createElement("option");
         option.value = index.toString();
         option.text = input.name || index.toString();
-        select.appendChild(option);
+        midiClockSelect.appendChild(option);
+        midiInputSelect.appendChild(option.cloneNode(true));
       });
+
       if(this.settings.midi_clock_input) {
         const clockMidiInputIndex = this.getMidiInputIndex(this.settings.midi_clock_input);
-        select.value = clockMidiInputIndex.toString();
+        midiClockSelect.value = clockMidiInputIndex.toString();
         if(clockMidiInputIndex > 0) {
           this.midiClockInput = this.midiInputs[clockMidiInputIndex];
           this.registerMidiClockListener();
         } 
       } else {
-        select.value = "-1";
+        midiClockSelect.value = "-1";
       }
-      // Add listener
-      select.addEventListener("change", (event) => {
+
+      if(this.settings.default_midi_input) {
+        const defaultMidiInputIndex = this.getMidiInputIndex(this.settings.default_midi_input);
+        midiInputSelect.value = defaultMidiInputIndex.toString();
+        if(defaultMidiInputIndex > 0) {
+          this.currentInputIndex = defaultMidiInputIndex;
+          this.registerMidiInputListener();
+        } 
+      } else {
+        midiInputSelect.value = "";
+      }
+
+      // Add midi clock listener
+      midiClockSelect.addEventListener("change", (event) => {
         const value = (event.target as HTMLSelectElement).value;
         if(value === "-1") {
           if(this.midiClockInput) this.midiClockInput.onmidimessage = null;
           this.midiClockInput = undefined;
           this.settings.midi_clock_input = undefined;
         } else {
-          this.currentInputIndex = parseInt(value);
+          const clockInputIndex = parseInt(value);
           if(this.midiClockInput) this.midiClockInput.onmidimessage = null;
-          this.midiClockInput = this.midiInputs[this.currentInputIndex];
+          this.midiClockInput = this.midiInputs[clockInputIndex];
           this.registerMidiClockListener();
           this.settings.midi_clock_input = this.midiClockInput.name || undefined;
         }
       });
+
+      // Add mini input listener
+      midiInputSelect.addEventListener("change", (event) => {
+        const value = (event.target as HTMLSelectElement).value;
+        if(value) {
+          this.unregisterMidiInputListener();
+          this.currentInputIndex = parseInt(value);
+          this.registerMidiInputListener();
+          this.settings.default_midi_input = this.midiInputs[this.currentInputIndex].name || undefined;
+        }
+      });
+
     }
   }
 
@@ -220,6 +251,45 @@ export class MidiConnection {
       }
     }
   }
+
+  public registerMidiInputListener(): void {
+    /**
+     * Register midi input listener and store last value as global parameter named channel_{number}
+     */
+    if(this.currentInputIndex !== undefined) {
+      const input = this.midiInputs[this.currentInputIndex];
+      if(input) {
+        input.onmidimessage = (event: Event) => {
+          const message = event as MIDIMessageEvent;
+          
+          // List of all note_on messages from channels 1-16
+          const all_note_ons = [0x90, 0x91, 0x92, 0x93, 0x94, 0x95, 0x96, 0x97, 0x98, 0x99, 0x9A, 0x9B, 0x9C, 0x9D,0x9E, 0x9F]; 
+          // If message is one of note ons
+          if(all_note_ons.indexOf(message.data[0]) !== -1) {
+            const channel = all_note_ons.indexOf(message.data[0])+1;
+            const note = message.data[1];
+            const velocity = message.data[2];
+            this.api.variable(`channel_${channel}_note`, note);
+            this.api.variable(`channel_${channel}_velocity`, velocity);
+            if(this.settings.midi_channels_scripts) this.api.script(channel);
+          }
+        }
+      }
+    }
+  }
+
+  public unregisterMidiInputListener(): void {
+    /**
+     * Unregister midi input listener
+     */
+    if(this.currentInputIndex !== undefined) {
+      const input = this.midiInputs[this.currentInputIndex];
+      if(input) {
+        input.onmidimessage = null;
+      }
+    }
+  }
+  
 
   public onMidiClock(timestamp: number): void {
     /**

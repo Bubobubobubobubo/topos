@@ -212,6 +212,10 @@ export class Editor {
     "send-midi-clock"
   ) as HTMLInputElement;
 
+  midi_channels_scripts: HTMLInputElement = document.getElementById(
+    "midi-channels-scripts"
+  ) as HTMLInputElement;
+
   midi_clock_ppqn: HTMLSelectElement  = document.getElementById(
     "midi-clock-ppqn-input"
   ) as HTMLSelectElement;
@@ -262,6 +266,7 @@ export class Editor {
     this.time_position_checkbox.checked = this.settings.time_position;
     this.tips_checkbox.checked = this.settings.tips;
     this.midi_clock_checkbox.checked = this.settings.send_clock;
+    this.midi_channels_scripts.checked = this.settings.midi_channels_scripts;
     this.midi_clock_ppqn.value = this.settings.midi_clock_ppqn.toString();
     if (!this.settings.time_position) {
       document.getElementById("timeviewer")!.classList.add("hidden");
@@ -605,6 +610,7 @@ export class Editor {
       this.time_position_checkbox.checked = this.settings.time_position;
       this.tips_checkbox.checked = this.settings.tips;
       this.midi_clock_checkbox.checked = this.settings.send_clock;
+      this.midi_channels_scripts.checked = this.settings.midi_channels_scripts;
       this.midi_clock_ppqn.value = this.settings.midi_clock_ppqn.toString();
       this.load_demo_songs.checked = this.settings.load_demo_songs;
 
@@ -705,6 +711,11 @@ export class Editor {
     this.midi_clock_checkbox.addEventListener("change", () => {
       let checked = this.midi_clock_checkbox.checked ? true : false;
       this.settings.send_clock = checked;
+    });
+
+    this.midi_channels_scripts.addEventListener("change", () => {
+      let checked = this.midi_channels_scripts.checked ? true : false;
+      this.settings.midi_channels_scripts = checked;
     });
 
     this.midi_clock_ppqn.addEventListener("change", () => {
