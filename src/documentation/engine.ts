@@ -201,7 +201,7 @@ ${makeExample(
 // Using some of the modifiers described above :)
 beat(.5)::snd('pad').begin(0.2)
   .speed([1, 0.9, 0.8].beat(4))
-  .n([0, 0, 2, 4].beat(4)).pan(usine(.5))
+  .n(2).pan(usine(.5))
   .end(rand(0.3,0.8))
   .room(0.8).size(0.5)
   .clip(1).out()
@@ -213,11 +213,11 @@ ${makeExample(
     "Playing an amen break",
     `
 // Note that stretch has the same value as beat
-beat(4) :: sound('breaks165').stretch(4).out()
-beat(0.25) :: sound('hh').out()
-beat(1, 4, 8) :: sound('bd').out()`,
+beat(4) :: sound('amen1').n(11).stretch(4).out()
+beat(1) :: sound('kick').shape(0.35).out()`,
     true,
   )};
+
 	
 ## Filters
 	
