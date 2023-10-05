@@ -22,13 +22,13 @@ export class MidiConnection {
   private scheduledNotes: { [noteNumber: number]: number } = {}; // { noteNumber: timeoutId }
  
   /* MIDI clock stuff */
+  private midiClockInputIndex: number|undefined = undefined;
   private midiClockInput?: MIDIInput|undefined = undefined;
   private lastTimestamp: number = 0;
   private midiClockDelta: number = 0;
   private lastBPM: number;
   private roundedBPM: number = 0;
   private clockBuffer: number[] = [];
-  private deltaBuffer: number[] = [];
   private clockBufferLength = 24;
   private clockTicks = 0;
   private clockErrorCount = 0;
@@ -59,7 +59,7 @@ export class MidiConnection {
       if (this.midiInputs.length === 0) {
         console.warn("No MIDI inputs available.");
       } else {
-        this.updateMidiClockSelect();
+        this.updateInputSelects();
       }
     } catch (error) {
       console.error("Failed to initialize MIDI:", error);
@@ -134,14 +134,15 @@ export class MidiConnection {
      */
     const inputIndex = this.getMidiInputIndex(inputName);
     if (inputIndex !== -1) {
+      this.midiClockInputIndex = inputIndex;
       this.midiClockInput = this.midiInputs[inputIndex];
-      this.registerMidiClockListener();
+      this.registerMidiInputListener(inputIndex);
     } else {
       this.midiClockInput = undefined;
     }
   }
 
-  public updateMidiClockSelect() {
+  public updateInputSelects() {
     /**
      * Updates the MIDI clock input select element with the available MIDI inputs.
      */
@@ -152,11 +153,17 @@ export class MidiConnection {
       midiClockSelect.innerHTML = "";
       midiInputSelect.innerHTML = "";
 
-      // Defaults to internal clock
+      // Set Midi clock as Internal by default
       const defaultOption = document.createElement("option");
       defaultOption.value = "-1";
       defaultOption.text = "Internal";
       midiClockSelect.appendChild(defaultOption);
+
+      // Set default input as None by default
+      const defaultInputOption = document.createElement("option");
+      defaultInputOption.value = "-1";
+      defaultInputOption.text = "None";
+      midiInputSelect.appendChild(defaultInputOption);
 
       // Add MIDI inputs to clock select input and default midi input
       this.midiInputs.forEach((input, index) => {
@@ -172,7 +179,7 @@ export class MidiConnection {
         midiClockSelect.value = clockMidiInputIndex.toString();
         if(clockMidiInputIndex > 0) {
           this.midiClockInput = this.midiInputs[clockMidiInputIndex];
-          this.registerMidiClockListener();
+          this.registerMidiInputListener(clockMidiInputIndex);
         } 
       } else {
         midiClockSelect.value = "-1";
@@ -183,24 +190,25 @@ export class MidiConnection {
         midiInputSelect.value = defaultMidiInputIndex.toString();
         if(defaultMidiInputIndex > 0) {
           this.currentInputIndex = defaultMidiInputIndex;
-          this.registerMidiInputListener();
+          this.registerMidiInputListener(defaultMidiInputIndex);
         } 
       } else {
-        midiInputSelect.value = "";
+        midiInputSelect.value = "-1";
       }
 
       // Add midi clock listener
       midiClockSelect.addEventListener("change", (event) => {
         const value = (event.target as HTMLSelectElement).value;
         if(value === "-1") {
-          if(this.midiClockInput) this.midiClockInput.onmidimessage = null;
+          if(this.midiClockInput && this.midiClockInputIndex!=this.currentInputIndex) this.midiClockInput.onmidimessage = null;
           this.midiClockInput = undefined;
           this.settings.midi_clock_input = undefined;
         } else {
           const clockInputIndex = parseInt(value);
-          if(this.midiClockInput) this.midiClockInput.onmidimessage = null;
+          this.midiClockInputIndex = clockInputIndex;
+          if(this.midiClockInput && this.midiClockInputIndex!=this.currentInputIndex) this.midiClockInput.onmidimessage = null;
           this.midiClockInput = this.midiInputs[clockInputIndex];
-          this.registerMidiClockListener();
+          this.registerMidiInputListener(clockInputIndex);
           this.settings.midi_clock_input = this.midiClockInput.name || undefined;
         }
       });
@@ -208,10 +216,14 @@ export class MidiConnection {
       // Add mini input listener
       midiInputSelect.addEventListener("change", (event) => {
         const value = (event.target as HTMLSelectElement).value;
-        if(value) {
-          this.unregisterMidiInputListener();
+        if(value === "-1") {
+          if(this.currentInputIndex && this.currentInputIndex!=this.midiClockInputIndex) this.unregisterMidiInputListener(this.currentInputIndex);
+          this.currentInputIndex = undefined;
+          this.settings.default_midi_input = undefined;
+        } else {
+          if(this.currentInputIndex && this.currentInputIndex!=this.midiClockInputIndex) this.unregisterMidiInputListener(this.currentInputIndex);
           this.currentInputIndex = parseInt(value);
-          this.registerMidiInputListener();
+          this.registerMidiInputListener(this.currentInputIndex);
           this.settings.default_midi_input = this.midiInputs[this.currentInputIndex].name || undefined;
         }
       });
@@ -219,71 +231,62 @@ export class MidiConnection {
     }
   }
 
-  public registerMidiClockListener(): void {
-    /**
-     * Registers a listener for MIDI clock messages on the currently selected MIDI input.
-     */
-    if (this.midiClockInput) {
-      this.midiClockInput.onmidimessage = (event: Event) => {
-        const message = event as MIDIMessageEvent;
-        if (message.data[0] === 0xf8) {
-          if(this.skipOnError>0) {
-            this.skipOnError -= 1;
-          } else {
-            this.onMidiClock(event.timeStamp);
-          }
-        } else if(message.data[0] === 0xfa) {
-          console.log("MIDI start received");
-          this.api.stop();
-          this.api.play();
-        } else if(message.data[0] === 0xfc) {
-          console.log("MIDI stop received");
-          this.api.pause();
-        } else if(message.data[0] === 0xfb) {
-          console.log("MIDI continue received");
-          this.api.play();
-        } else if(message.data[0] === 0xfe) {
-          console.log("MIDI active sensing received");
-        } else {
-          // Ignore other MIDI messages
-          // console.log("Ignored MIDI message: ", message.data[0], message.data[1]);
-        }
-      }
-    }
-  }
-
-  public registerMidiInputListener(): void {
+  public registerMidiInputListener(inputIndex: number): void {
     /**
      * Register midi input listener and store last value as global parameter named channel_{number}
      */
-    if(this.currentInputIndex !== undefined) {
-      const input = this.midiInputs[this.currentInputIndex];
-      if(input) {
+    if(inputIndex !== undefined) {
+      const input = this.midiInputs[inputIndex];
+      if(input && !input.onmidimessage) {
         input.onmidimessage = (event: Event) => {
           const message = event as MIDIMessageEvent;
-          
-          // List of all note_on messages from channels 1-16
-          const all_note_ons = [0x90, 0x91, 0x92, 0x93, 0x94, 0x95, 0x96, 0x97, 0x98, 0x99, 0x9A, 0x9B, 0x9C, 0x9D,0x9E, 0x9F]; 
-          // If message is one of note ons
-          if(all_note_ons.indexOf(message.data[0]) !== -1) {
-            const channel = all_note_ons.indexOf(message.data[0])+1;
-            const note = message.data[1];
-            const velocity = message.data[2];
-            this.api.variable(`channel_${channel}_note`, note);
-            this.api.variable(`channel_${channel}_velocity`, velocity);
-            if(this.settings.midi_channels_scripts) this.api.script(channel);
+         /* MIDI CLOCK */
+          if(input.name === this.settings.midi_clock_input) {
+            if (message.data[0] === 0xf8) {
+              if(this.skipOnError>0) {
+                this.skipOnError -= 1;
+              } else {
+                this.onMidiClock(event.timeStamp);
+              }
+            } else if(message.data[0] === 0xfa) {
+              console.log("MIDI start received");
+              this.api.stop();
+              this.api.play();
+            } else if(message.data[0] === 0xfc) {
+              console.log("MIDI stop received");
+              this.api.pause();
+            } else if(message.data[0] === 0xfb) {
+              console.log("MIDI continue received");
+              this.api.play();
+            } else if(message.data[0] === 0xfe) {
+              console.log("MIDI active sensing received");
+            }
+          }
+          /* DEFAULT MIDI INPUT */
+          if(input.name === this.settings.default_midi_input) {
+            // List of all note_on messages from channels 1-16
+            const all_note_ons = [0x90, 0x91, 0x92, 0x93, 0x94, 0x95, 0x96, 0x97, 0x98, 0x99, 0x9A, 0x9B, 0x9C, 0x9D,0x9E, 0x9F]; 
+            // If message is one of note ons
+            if(all_note_ons.indexOf(message.data[0]) !== -1) {
+              const channel = all_note_ons.indexOf(message.data[0])+1;
+              const note = message.data[1];
+              const velocity = message.data[2];
+              this.api.variable(`channel_${channel}_note`, note);
+              this.api.variable(`channel_${channel}_velocity`, velocity);
+              if(this.settings.midi_channels_scripts) this.api.script(channel);
+            }
           }
         }
       }
     }
   }
 
-  public unregisterMidiInputListener(): void {
+  public unregisterMidiInputListener(inputIndex: number): void {
     /**
      * Unregister midi input listener
      */
-    if(this.currentInputIndex !== undefined) {
-      const input = this.midiInputs[this.currentInputIndex];
+    if(inputIndex !== undefined) {
+      const input = this.midiInputs[inputIndex];
       if(input) {
         input.onmidimessage = null;
       }
@@ -311,7 +314,6 @@ export class MidiConnection {
           console.log("Last delta: ", this.midiClockDelta);
           console.log("Current delta: ", timestamp - this.lastTimestamp);
           console.log("BPMs", this.clockBuffer);
-          console.log("Deltas", this.deltaBuffer);
           this.clockErrorCount = 0;
           /* I dont know why this happens. But when it does, deltas for the following messages are off.
              So skipping ~ quarted of clock resolution usually helps */
