@@ -265,7 +265,7 @@ export class UserAPI {
   };
   s = this.script;
 
-  clear_script = (script: number): void => {
+  delete_script = (script: number): void => {
     /**
      * Clears a local script
      *
@@ -291,6 +291,24 @@ export class UserAPI {
     };
   };
   cps = this.copy_script;
+
+  copy_universe = (from: string, to: string): void => {
+    this.app.universes[to] = {
+      ...this.app.universes[from],
+    };
+  };
+
+  delete_universe = (universe: string): void => {
+    if (this.app.selected_universe === universe) {
+      this.app.selected_universe = "Default";
+    }
+    delete this.app.universes[universe];
+    this.app.settings.saveApplicationToLocalStorage(
+      this.app.universes,
+      this.app.settings
+    );
+    this.app.updateKnownUniversesView();
+  };
 
   // =============================================================
   // MIDI related functions
