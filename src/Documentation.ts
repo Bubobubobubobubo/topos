@@ -12,6 +12,9 @@ import { sound } from "./documentation/engine";
 import { shortcuts } from "./documentation/keyboard";
 import { patterns } from "./documentation/patterns";
 import { functions } from "./documentation/functions";
+import { variables } from "./documentation/variables";
+import { probabilities } from "./documentation/probabilities";
+import { lfos } from "./documentation/lfos";
 import { ziffers } from "./documentation/ziffers";
 import { reference } from "./documentation/reference";
 import { synths } from "./documentation/synths";
@@ -64,6 +67,9 @@ export const documentation_factory = (application: Editor) => {
     patterns: patterns(application),
     ziffers: ziffers(application),
     midi: midi(application),
+    lfos: lfos(application),
+    variables: variables(application),
+    probabilities: probabilities(application),
     functions: functions(application),
     reference: reference(),
     shortcuts: shortcuts(),
