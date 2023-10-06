@@ -1,5 +1,5 @@
 import { seededRandom } from "zifferjs";
-import { MidiConnection } from "./IO/MidiConnection";
+import { MidiCCEvent, MidiConnection, MidiNoteEvent } from "./IO/MidiConnection";
 import { tryEvaluate, evaluateOnce } from "./Evaluator";
 import { DrunkWalk } from "./Utils/Drunk";
 import { Editor } from "./main";
@@ -57,11 +57,12 @@ export class UserAPI {
   public patternCache = new LRUCache({ max: 1000, ttl: 1000 * 60 * 5 });
   private errorTimeoutID: number = 0;
   private printTimeoutID: number = 0;
-
-  MidiConnection: MidiConnection = new MidiConnection();
+  public MidiConnection: MidiConnection;
   load: samples;
 
-  constructor(public app: Editor) {}
+  constructor(public app: Editor) {
+    this.MidiConnection = new MidiConnection(this, app.settings);
+  }
 
   _loadUniverseFromInterface = (universe: string) => {
     this.app.loadUniverse(universe as string);
@@ -446,6 +447,127 @@ export class UserAPI {
      */
     this.MidiConnection.panic();
   };
+
+  public active_note_events = (channel?: number): MidiNoteEvent[]|undefined => {
+    /**
+     * @returns A list of currently active MIDI notes
+     */
+    let events;
+    if(channel) {
+      events = this.MidiConnection.activeNotesFromChannel(channel);
+    } else {
+      events = this.MidiConnection.activeNotes;
+    }
+    if(events.length>0) return events
+    else return undefined;
+  }
+
+  public transmission(): boolean {
+    /**
+     * Returns true if there are active notes
+     */
+    return this.MidiConnection.activeNotes.length > 0;
+  }
+
+  public active_notes = (channel?: number): number[]|undefined => {
+    /**
+     * @returns A list of currently active MIDI notes
+     */
+    const notes = this.active_note_events(channel);
+    if(notes && notes.length > 0) return notes.map((e) => e.note);
+    else return undefined;
+  }
+
+  public kill_active_notes = (): void => {
+    /**
+     * Clears all active notes
+     */
+    this.MidiConnection.activeNotes = [];
+  }
+
+  public sticky_notes = (channel?: number): number[]|undefined => {
+    /**
+     * 
+     * @param channel 
+     * @returns 
+     */
+    let notes;
+    if(channel) notes = this.MidiConnection.stickyNotesFromChannel(channel);
+    else notes = this.MidiConnection.stickyNotes;
+    if(notes.length > 0) return notes.map((e) => e.note);
+    else return undefined;
+  }
+
+  public kill_sticky_notes = (): void => {
+    /**
+     * Clears all sticky notes
+     */
+    this.MidiConnection.stickyNotes = [];
+  }
+
+  public buffer = (channel?: number): boolean => {
+    /**
+     * Return true if there is last note event
+     */
+    if(channel) return this.MidiConnection.findNoteFromBufferInChannel(channel) !== undefined;
+    else return this.MidiConnection.noteInputBuffer.length > 0;
+  }
+
+  public buffer_event = (channel?: number): MidiNoteEvent|undefined => {
+    /**
+     * @returns Returns latest unlistened note event
+     */
+    if(channel) return this.MidiConnection.findNoteFromBufferInChannel(channel);
+    else return this.MidiConnection.noteInputBuffer.shift();
+  }
+
+  public buffer_note = (channel?: number): number|undefined => {
+    /**
+     * @returns Returns latest received note
+     */
+    const note = this.buffer_event(channel);
+    return note ? note.note : undefined;
+  }
+
+  public last_note_event = (channel?: number): MidiNoteEvent|undefined => {
+    /**
+     * @returns Returns last received note
+     */
+    if(channel) return this.MidiConnection.lastNoteInChannel[channel];
+    else return this.MidiConnection.lastNote;
+  }
+
+  public last_note = (channel?: number): number|undefined => {
+    /**
+     * @returns Returns last received note
+     */
+    const note = this.last_note_event(channel);
+    return note ? note.note : undefined;
+  }
+
+  public last_cc = (control: number, channel?: number): number|undefined => {
+    /**
+     * @returns Returns last received cc
+     */
+    if(channel) return this.MidiConnection.lastCCInChannel[channel][control];
+    else return this.MidiConnection.lastCC[control];
+  }
+
+  public has_cc = (channel?: number): boolean => {
+    /**
+     * Return true if there is last cc event
+     */
+    if(channel) return this.MidiConnection.findCCFromBufferInChannel(channel) !== undefined;
+    else return this.MidiConnection.ccInputBuffer.length > 0;
+  }
+
+  public buffer_cc = (channel?: number): MidiCCEvent|undefined => {
+    /**
+     * @returns Returns latest unlistened cc event
+     */
+    if(channel) return this.MidiConnection.findCCFromBufferInChannel(channel);
+    else return this.MidiConnection.ccInputBuffer.shift();
+  }
 
   // =============================================================
   // Ziffers related functions

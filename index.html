@@ -268,6 +268,42 @@
               </div>
             </div>
           </div>
+
+            <!-- Midi settings -->
+            <div id="midi-settings-container" class="bg-gray-200 rounded-lg flex flex-row mr-4 ml-4">
+            <div class="flex flex-row">
+              <div class="flex items-center mb-4 ml-6">
+                <label for="default-checkbox" class="ml-2 text-sm font-medium text-dark">MIDI Clock:&nbsp;</label>
+                <select id="midi-clock-input" class="w-32 h-8 text-sm font-medium text-black bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2">
+                  <option value="-1">Internal</option>
+                </select>
+              </div>
+              <div class="flex items-center mb-4 ml-6">
+                <label for="default-checkbox" class="ml-2 text-sm font-medium text-dark">Clock PPQN:&nbsp;</label>
+                <select id="midi-clock-ppqn-input" class="w-32 h-8 text-sm font-medium text-black bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2">
+                  <option value="24">24</option>
+                  <option value="48">48</option>
+                </select>
+              </div>
+              <div class="flex items-center mb-4 ml-20">
+                  <input id="send-midi-clock" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                  <label for="default-checkbox" class="ml-2 text-sm font-medium text-dark">Send MIDI Clock</label>
+              </div>
+            </div>
+            <div class="flex flex-row">
+              <div class="flex items-center mb-4 ml-6">
+                <label for="default-checkbox" class="ml-2 text-sm font-medium text-dark">MIDI input:&nbsp;</label>
+                <select id="default-midi-input" class="w-32 h-8 text-sm font-medium text-black bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2">
+                  <option value="-1">None</option>
+                </select>
+              </div>
+              <div class="flex items-center mb-4 ml-20">
+                <input id="midi-channels-scripts" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                <label for="default-checkbox" class="ml-2 text-sm font-medium text-dark">Route channels to scripts</label>
+              </div>
+            </div>
+          </div>
+          
           <div class="flex space-x-6 border-t border-gray-200 rounded-b dark:border-gray-600 mx-4 border-spacing-y-4">
             <button id="close-settings-button" data-modal-hide="defaultModal" type="button" class="hover:bg-gray-700 bg-gray-800 mt-4 mb-4 text-white focus:ring-4  font-medium rounded-lg text-sm px-5 py-2.5 text-center">OK</button>
           </div>
