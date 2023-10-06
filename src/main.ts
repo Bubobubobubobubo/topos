@@ -37,7 +37,7 @@ import { makeStringExtensions } from "./StringExtensions";
 localStorage.openpages = Date.now();
 window.addEventListener(
   "storage",
-  function (e) {
+  function(e) {
     if (e.key == "openpages") {
       // Listen if anybody else is opening the same page!
       localStorage.page_available = Date.now();
@@ -827,6 +827,7 @@ export class Editor {
     [
       "introduction",
       "interface",
+      "interaction",
       "code",
       "time",
       "sound",

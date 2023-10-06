@@ -3,6 +3,7 @@ import { introduction } from "./documentation/introduction";
 import { samples } from "./documentation/samples";
 import { chaining } from "./documentation/chaining";
 import { software_interface } from "./documentation/interface";
+import { interaction } from "./documentation/interaction";
 import { time } from "./documentation/time";
 import { midi } from "./documentation/midi";
 import { code } from "./documentation/code";
@@ -53,6 +54,7 @@ export const documentation_factory = (application: Editor) => {
   return {
     introduction: introduction(application),
     interface: software_interface(application),
+    interaction: interaction(application),
     code: code(application),
     time: time(application),
     sound: sound(application),

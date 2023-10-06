@@ -17,21 +17,21 @@ By default, each script is independant from each other. Scripts live in their ow
 **Note:** since this example is running in the documentation, we cannot take advantage of the multiple scripts paradigm. Try to send a variable from the global file to the local file n°6.
 
 ${makeExample(
-  "Setting a global variable",
-  `
+    "Setting a global variable",
+    `
 v('my_cool_variable', 2)
 `,
-  true
-)}
+    true
+  )}
 
 ${makeExample(
-  "Getting that variable back and printing!",
-  `
+    "Getting that variable back and printing!",
+    `
 // Note that we just use one argument
 log(v('my_cool_variable'))
 `,
-  false
-)}
+    false
+  )}
 
 
 ## Counter and iterators
@@ -50,30 +50,30 @@ You will often need to use iterators and/or counters to index over data structur
 **Note:** Counters also come with a secret syntax. They can be called with the **$** symbol!
 
 ${makeExample(
-  "Iterating over a list of samples using a counter",
-  `
+    "Iterating over a list of samples using a counter",
+    `
 rhythm(.25, 6, 8) :: sound('dr').n($(1)).end(.25).out()
 `,
-  true
-)}
+    true
+  )}
 
 ${makeExample(
-  "Using a more complex counter",
-  `
+    "Using a more complex counter",
+    `
 // Limit is 20, step is 5
 rhythm(.25, 6, 8) :: sound('dr').n($(1, 20, 5)).end(.25).out()
 `,
-  false
-)}
+    false
+  )}
 
 ${makeExample(
-  "Calling the drunk mechanism",
-  `
+    "Calling the drunk mechanism",
+    `
 // Limit is 20, step is 5
 rhythm(.25, 6, 8) :: sound('dr').n(drunk()).end(.25).out()
 `,
-  false
-)}
+    false
+  )}
 
 ## Scripts
 	
@@ -84,61 +84,23 @@ You can control scripts programatically. This is the core concept of Topos after
 - <ic>copy_script(from: number, to: number)</ic>: copies a local script denoted by its number to another local script. **This is a destructive operation!**
 
 ${makeExample(
-  "Calling a script! The most important feature!",
-  `
+    "Calling a script! The most important feature!",
+    `
 beat(1) :: script(1)
 `,
-  true
-)}
+    true
+  )}
 
 ${makeExample(
-  "Calling mutliple scripts at the same time.",
-  `
+    "Calling mutliple scripts at the same time.",
+    `
 beat(1) :: script(1, 3, 5)
 `,
-  false
-)}
+    false
+  )}
 
 
 	
-## Mouse
-	
-You can get the current position of the mouse on the screen by using the following functions:
-	
-- <ic>mouseX()</ic>: the horizontal position of the mouse on the screen (as a floating point number).
-- <ic>mouseY()</ic>: the vertical position of the mouse on the screen (as a floating point number).
-	
-${makeExample(
-  "FM Synthesizer controlled using the mouse",
-  `
-beat(.25) :: sound('sine')
-  .fmi(mouseX() / 100)
-  .fmh(mouseY() / 100)
-  .vel(0.2)
-  .room(0.9).out()
-`,
-  true
-)}
-
-Current mouse position can also be used to generate notes:
-	
-- <ic>noteX()</ic>: returns a MIDI note number (0-127) based on the horizontal position of the mouse on the screen.
-- <ic>noteY()</ic>: returns a MIDI note number (0-127) based on the vertical position of the mouse on the screen.
-	
-
-${makeExample(
-  "The same synthesizer, with note control!",
-  `
-beat(.25) :: sound('sine')
-  .fmi(mouseX() / 100)
-  .note(noteX())
-  .fmh(mouseY() / 100)
-  .vel(0.2)
-  .room(0.9).out()
-`,
-  true
-)}
-
 ## Low Frequency Oscillators
 	
 Low Frequency Oscillators (_LFOs_) are an important piece in any digital audio workstation or synthesizer. Topos implements some basic waveforms you can play with to automatically modulate your paremeters. 
@@ -147,47 +109,47 @@ Low Frequency Oscillators (_LFOs_) are an important piece in any digital audio w
 - <ic>usine(freq: number = 1, offset: number= 0): number</ic>: returns a sinusoïdal oscillation between <ic>0</ic> and <ic>1</ic>. The <ic>u</ic> stands for _unipolar_.
 	
 ${makeExample(
-  "Modulating the speed of a sample player using a sine LFO",
-  `beat(.25) && snd('cp').speed(1 + usine(0.25) * 2).out()`,
-  true
-)};
+    "Modulating the speed of a sample player using a sine LFO",
+    `beat(.25) && snd('cp').speed(1 + usine(0.25) * 2).out()`,
+    true
+  )};
 
 - <ic>triangle(freq: number = 1, offset: number= 0): number</ic>: returns a triangle oscillation between <ic>-1</ic> and <ic>1</ic>.
 - <ic>utriangle(freq: number = 1, offset: number= 0): number</ic>: returns a triangle oscillation between <ic>0</ic> and <ic>1</ic>. The <ic>u</ic> stands for _unipolar_.
 	
 
 ${makeExample(
-  "Modulating the speed of a sample player using a triangle LFO",
-  `beat(.25) && snd('cp').speed(1 + utriangle(0.25) * 2).out()`,
-  true
-)}
+    "Modulating the speed of a sample player using a triangle LFO",
+    `beat(.25) && snd('cp').speed(1 + utriangle(0.25) * 2).out()`,
+    true
+  )}
 	
 - <ic>saw(freq: number = 1, offset: number= 0): number</ic>: returns a sawtooth-like oscillation between <ic>-1</ic> and <ic>1</ic>.
 - <ic>usaw(freq: number = 1, offset: number= 0): number</ic>: returns a sawtooth-like oscillation between <ic>0</ic> and <ic>1</ic>. The <ic>u</ic> stands for _unipolar_.
 	
 
 ${makeExample(
-  "Modulating the speed of a sample player using a saw LFO",
-  `beat(.25) && snd('cp').speed(1 + usaw(0.25) * 2).out()`,
-  true
-)}
+    "Modulating the speed of a sample player using a saw LFO",
+    `beat(.25) && snd('cp').speed(1 + usaw(0.25) * 2).out()`,
+    true
+  )}
 	
 - <ic>square(freq: number = 1, offset: number= 0, duty: number = .5): number</ic>: returns a square wave oscillation between <ic>-1</ic> and <ic>1</ic>. You can also control the duty cycle using the <ic>duty</ic> parameter.
 - <ic>usquare(freq: number = 1, offset: number= 0, duty: number = .5): number</ic>: returns a square wave oscillation between <ic>0</ic> and <ic>1</ic>. The <ic>u</ic> stands for _unipolar_. You can also control the duty cycle using the <ic>duty</ic> parameter.
 	
 ${makeExample(
-  "Modulating the speed of a sample player using a square LFO",
-  `beat(.25) && snd('cp').speed(1 + usquare(0.25, 0, 0.25) * 2).out()`,
-  true
-)};
+    "Modulating the speed of a sample player using a square LFO",
+    `beat(.25) && snd('cp').speed(1 + usquare(0.25, 0, 0.25) * 2).out()`,
+    true
+  )};
 	
 - <ic>noise()</ic>: returns a random value between -1 and 1.
 	
 ${makeExample(
-  "Modulating the speed of a sample player using noise",
-  `beat(.25) && snd('cp').speed(1 + noise() * 2).out()`,
-  true
-)};
+    "Modulating the speed of a sample player using noise",
+    `beat(.25) && snd('cp').speed(1 + noise() * 2).out()`,
+    true
+  )};
 	
 ## Probabilities
 
@@ -197,12 +159,12 @@ There are some simple functions to play with probabilities.
 - <ic>irand(min: number, max:number)</ic>: returns a random integer between <ic>min</ic> and <ic>max</ic>. Shorthands _ir()_ or _rI()_.
 
 ${makeExample(
-  "Bleep bloop, what were you expecting?",
-  `
+    "Bleep bloop, what were you expecting?",
+    `
 rhythm(0.125, 10, 16) :: sound('sid').n(4).note(50 + irand(50, 62) % 8).out()
 `,
-  true
-)}
+    true
+  )}
 
 
 - <ic>prob(p: number)</ic>: return <ic>true</ic> _p_% of time, <ic>false</ic> in other cases.
@@ -210,14 +172,14 @@ rhythm(0.125, 10, 16) :: sound('sid').n(4).note(50 + irand(50, 62) % 8).out()
 
 
 ${makeExample(
-  "The Teletype experience!",
-  `
+    "The Teletype experience!",
+    `
 prob(50) :: script(1);
 prob(60) :: script(2);
 prob(80) :: script(toss() ? script(3) : script(4))
 `,
-  true
-)}
+    true
+  )}
 
 - <ic>seed(val: number|string)</ic>: sets the seed of the random number generator. You can use a number or a string. The same seed will always return the same sequence of random numbers.
 
@@ -242,28 +204,28 @@ By default chance operators will be evaluated 48 times within a beat. You can ch
 Examples:
 
 ${makeExample(
-  "Using chance operators",
-  `
+    "Using chance operators",
+    `
   rarely() :: sound('hh').out(); // Rarely 48 times is still a lot
   rarely(4) :: sound('bd').out(); // Rarely in 4 beats is bit less
   rarely(8) :: sound('east').out(); // Rarely in 8 beats is even less
   `,
-  true
-)}
+    true
+  )}
 
 ${makeExample(
-  "Using chance with other operators",
-  `
+    "Using chance with other operators",
+    `
   frequently() :: beat(1) :: sound('kick').out();
   often() :: beat(0.5) :: sound('hh').out();
   sometimes() :: onbeat(1,3) :: sound('snare').out();
   `,
-  true
-)}
+    true
+  )}
 
 ${makeExample(
-  "Using chance with chaining",
-  `
+    "Using chance with chaining",
+    `
   beat(0.5) && sound("bd")
   .freq(100)
   .sometimes(s=>s.crush(2.5))
@@ -275,8 +237,8 @@ ${makeExample(
   .almostNever(n=>n.freq(400))
   .out()
   `,
-  true
-)}
+    true
+  )}
 
 ## Math functions
 	
@@ -290,24 +252,24 @@ ${makeExample(
 - <ic>delay(ms: number, func: Function): void</ic>: Delays the execution of a function by a given number of milliseconds.
 
 ${makeExample(
-  "Phased woodblocks",
-  `
+    "Phased woodblocks",
+    `
 // Some very low-budget version of phase music
 beat(.5) :: delay(usine(.125) * 80, () => sound('east').out())
 beat(.5) :: delay(50, () => sound('east').out())
 `,
-  true
-)}
+    true
+  )}
 
 - <ic>delayr(ms: number, nb: number, func: Function): void</ic>: Delays the execution of a function by a given number of milliseconds, repeated a given number of times.
 
 ${makeExample(
-  "Another woodblock texture",
-  `
+    "Another woodblock texture",
+    `
 beat(1) :: delayr(50, 4, () => sound('east').speed([0.5,.25].beat()).out())
 flip(2) :: beat(2) :: delayr(150, 4, () => sound('east').speed([0.5,.25].beat() * 4).out())
 `,
-  true
-)};
+    true
+  )};
 `;
 };
