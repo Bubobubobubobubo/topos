@@ -99,6 +99,7 @@ export class Player extends Event {
       this.index = 0;
       this.waitTime = 0;
       this.skipIndex = 0;
+      this.ziffers.index = 0;
     }
 
     const patternIsStarting = (this.notStarted() &&

@@ -100,7 +100,7 @@ export class Editor {
   exampleCounter: number = 0;
   exampleIsPlaying: boolean = false;
 
-  settings = new AppSettings();
+  settings: AppSettings = new AppSettings();
   editorExtensions: Extension[] = [];
   userPlugins: Extension[] = [];
   state: EditorState;
@@ -232,6 +232,18 @@ export class Editor {
     "show-tips"
   ) as HTMLInputElement;
 
+  midi_clock_checkbox: HTMLInputElement = document.getElementById(
+    "send-midi-clock"
+  ) as HTMLInputElement;
+
+  midi_channels_scripts: HTMLInputElement = document.getElementById(
+    "midi-channels-scripts"
+  ) as HTMLInputElement;
+
+  midi_clock_ppqn: HTMLSelectElement  = document.getElementById(
+    "midi-clock-ppqn-input"
+  ) as HTMLSelectElement;
+
   // Loading demo songs when starting
   load_demo_songs: HTMLInputElement = document.getElementById(
     "load-demo-songs"
@@ -276,6 +288,9 @@ export class Editor {
     this.line_numbers_checkbox.checked = this.settings.line_numbers;
     this.time_position_checkbox.checked = this.settings.time_position;
     this.tips_checkbox.checked = this.settings.tips;
+    this.midi_clock_checkbox.checked = this.settings.send_clock;
+    this.midi_channels_scripts.checked = this.settings.midi_channels_scripts;
+    this.midi_clock_ppqn.value = this.settings.midi_clock_ppqn.toString();
     if (!this.settings.time_position) {
       document.getElementById("timeviewer")!.classList.add("hidden");
     }
@@ -720,6 +735,9 @@ export class Editor {
       this.line_numbers_checkbox.checked = this.settings.line_numbers;
       this.time_position_checkbox.checked = this.settings.time_position;
       this.tips_checkbox.checked = this.settings.tips;
+      this.midi_clock_checkbox.checked = this.settings.send_clock;
+      this.midi_channels_scripts.checked = this.settings.midi_channels_scripts;
+      this.midi_clock_ppqn.value = this.settings.midi_clock_ppqn.toString();
       this.load_demo_songs.checked = this.settings.load_demo_songs;
       this.vim_mode_checkbox.checked = this.settings.vimMode;
 
@@ -798,6 +816,21 @@ export class Editor {
           checked ? inlineHoveringTips : []
         ),
       });
+    });
+
+    this.midi_clock_checkbox.addEventListener("change", () => {
+      let checked = this.midi_clock_checkbox.checked ? true : false;
+      this.settings.send_clock = checked;
+    });
+
+    this.midi_channels_scripts.addEventListener("change", () => {
+      let checked = this.midi_channels_scripts.checked ? true : false;
+      this.settings.midi_channels_scripts = checked;
+    });
+
+    this.midi_clock_ppqn.addEventListener("change", () => {
+      let value = parseInt(this.midi_clock_ppqn.value);
+      this.settings.midi_clock_ppqn = value;
     });
 
     this.load_demo_songs.addEventListener("change", () => {

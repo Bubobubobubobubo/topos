@@ -44,6 +44,11 @@ export interface Settings {
    * @param line_numbers - Whether or not to show line numbers
    * @param time_position - Whether or not to show time position
    * @param tips - Whether or not to show tips
+   * @param send_clock - Whether or not to send midi clock
+   * @param midi_channels_scripts - Whether midi input channels fires scripts
+   * @param midi_clock_input - The name of the midi clock input
+   * @param midi_clock_ppqn - The pulses per quarter note for midi clock
+   * @param default_midi_input - The default midi input for incoming messages
    */
   vimMode: boolean;
   theme: string;
@@ -55,6 +60,11 @@ export interface Settings {
   time_position: boolean;
   load_demo_songs: boolean;
   tips: boolean;
+  send_clock: boolean;
+  midi_channels_scripts: boolean;
+  midi_clock_input: string|undefined;
+  midi_clock_ppqn: number;
+  default_midi_input: string|undefined;
 }
 
 export const template_universe = {
@@ -111,7 +121,11 @@ export class AppSettings {
    * @param line_numbers - Whether or not to show line numbers
    * @param time_position - Whether or not to show time position
    * @param tips - Whether or not to show tips
-
+   * @param send_clock - Whether or not to send midi clock
+   * @param midi_channels_scripts - Whether midi input channels fires scripts
+   * @param midi_clock_input - The name of the midi clock input
+   * @param midi_clock_ppqn - The pulses per quarter note for midi clock
+   * @param default_midi_input - The default midi input for incoming messages
    */
 
   public vimMode: boolean = false;
@@ -123,6 +137,11 @@ export class AppSettings {
   public line_numbers: boolean = true;
   public time_position: boolean = true;
   public tips: boolean = true;
+  public send_clock: boolean = false;
+  public midi_channels_scripts: boolean = true;
+  public midi_clock_input: string|undefined = undefined;
+  public default_midi_input: string|undefined = undefined;
+  public midi_clock_ppqn: number = 24;
   public load_demo_songs: boolean = true;
 
   constructor() {
@@ -141,6 +160,11 @@ export class AppSettings {
       this.line_numbers = settingsFromStorage.line_numbers;
       this.time_position = settingsFromStorage.time_position;
       this.tips = settingsFromStorage.tips;
+      this.send_clock = settingsFromStorage.send_clock;
+      this.midi_channels_scripts = settingsFromStorage.midi_channels_scripts;
+      this.midi_clock_input = settingsFromStorage.midi_clock_input;
+      this.midi_clock_ppqn = settingsFromStorage.midi_clock_ppqn || 24;
+      this.default_midi_input = settingsFromStorage.default_midi_input;
       this.load_demo_songs = settingsFromStorage.load_demo_songs;
     } else {
       this.universes = template_universes;
@@ -165,6 +189,11 @@ export class AppSettings {
       line_numbers: this.line_numbers,
       time_position: this.time_position,
       tips: this.tips,
+      send_clock: this.send_clock,
+      midi_channels_scripts: this.midi_channels_scripts,
+      midi_clock_input: this.midi_clock_input,
+      midi_clock_ppqn: this.midi_clock_ppqn,
+      default_midi_input: this.default_midi_input,
       load_demo_songs: this.load_demo_songs,
     };
   }
@@ -187,6 +216,11 @@ export class AppSettings {
     this.line_numbers = settings.line_numbers;
     this.time_position = settings.time_position;
     this.tips = settings.tips;
+    this.send_clock = settings.send_clock;
+    this.midi_channels_scripts = settings.midi_channels_scripts;
+    this.midi_clock_input = settings.midi_clock_input;
+    this.midi_clock_ppqn = settings.midi_clock_ppqn;
+    this.default_midi_input = settings.default_midi_input;
     this.load_demo_songs = settings.load_demo_songs;
     localStorage.setItem("topos", JSON.stringify(this.data));
   }
