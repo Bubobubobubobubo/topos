@@ -1,5 +1,5 @@
 import { seededRandom } from "zifferjs";
-import { MidiConnection } from "./IO/MidiConnection";
+import { MidiCCEvent, MidiConnection, MidiNoteEvent } from "./IO/MidiConnection";
 import { tryEvaluate, evaluateOnce } from "./Evaluator";
 import { DrunkWalk } from "./Utils/Drunk";
 import { Editor } from "./main";
@@ -410,6 +410,133 @@ export class UserAPI {
      */
     this.MidiConnection.panic();
   };
+
+  public active_note_events = (channel?: number): MidiNoteEvent[]|undefined => {
+    /**
+     * @returns A list of currently active MIDI notes
+     */
+    let events;
+    if(channel) {
+      events = this.MidiConnection.activeNotesFromChannel(channel);
+    } else {
+      events = this.MidiConnection.activeNotes;
+    }
+    if(events.length>0) return events
+    else return undefined;
+  }
+
+  public transmission(): boolean {
+    /**
+     * Returns true if there are active notes
+     */
+    return this.MidiConnection.activeNotes.length > 0;
+  }
+
+  public active_notes = (channel?: number): number[]|undefined => {
+    /**
+     * @returns A list of currently active MIDI notes
+     */
+    let notes;
+    if(channel) {
+      notes = this.MidiConnection.activeNotesFromChannel(channel).map((note) => note.note);
+    } else {
+      notes = this.MidiConnection.activeNotes.map((note) => note.note);
+    }
+    if(notes.length > 0) return notes;
+    else return undefined;
+  }
+
+  public kill_active_notes = (): void => {
+    /**
+     * Clears all active notes
+     */
+    this.MidiConnection.activeNotes = [];
+  }
+
+  public sticky_notes = (channel?: number): number[]|undefined => {
+    /**
+     * 
+     * @param channel 
+     * @returns 
+     */
+    let notes;
+    if(channel) notes = this.MidiConnection.stickyNotesFromChannel(channel);
+    else notes = this.MidiConnection.stickyNotes;
+    if(notes.length > 0) return notes.map((e) => e.note);
+    else return undefined;
+  }
+
+  public kill_sticky_notes = (): void => {
+    /**
+     * Clears all sticky notes
+     */
+    this.MidiConnection.stickyNotes = [];
+  }
+
+  public last_event = (): MidiNoteEvent|undefined => {
+    /**
+     * @returns Returns latest unlistened note event
+     */
+    return this.MidiConnection.popNoteFromBuffer();
+  }
+
+  public last_note = (): number|undefined => {
+    /**
+     * @returns Returns latest received note
+     */
+    const note = this.MidiConnection.popNoteFromBuffer();
+    return note ? note.note : undefined;
+  }
+
+  public first_event = (): MidiNoteEvent|undefined => {
+    /**
+     * @returns Returns first unlistened note event
+     */
+    return this.MidiConnection.shiftNoteFromBuffer();
+  }
+
+  public first_note = (): number|undefined => {
+    /**
+     * @returns Returns first received note
+     */
+    const note = this.MidiConnection.shiftNoteFromBuffer();
+    return note ? note.note : undefined;
+  }
+
+  public last_channel_note = (channel: number): MidiNoteEvent|undefined => {
+    /**
+     * @returns Returns first unlistened note event on a specific channel
+     */
+    return this.MidiConnection.findNoteFromBufferInChannel(channel);
+  }
+
+  public find_channel_note = (channel: number): MidiNoteEvent|undefined => {
+    /**
+     * @returns Returns first unlistened note event on a specific channel
+     */
+    return this.MidiConnection.findNoteFromBufferInChannel(channel);
+  }
+
+  public first_cc = (): MidiCCEvent|undefined => {
+    /**
+     * @returns Returns first unlistened cc event
+     */
+    return this.MidiConnection.popCCFromBuffer();
+  }
+
+  public last_cc = (): MidiCCEvent|undefined => {
+    /**
+     * @returns Returns latest unlistened cc event
+     */
+    return this.MidiConnection.shiftCCFromBuffer();
+  }
+
+  public find_channel_cc = (channel: number): MidiCCEvent|undefined => {
+    /**
+     * @returns Returns first unlistened cc event on a specific channel
+     */
+    return this.MidiConnection.findCCFromBufferInChannel(channel);
+  }
 
   // =============================================================
   // Ziffers related functions

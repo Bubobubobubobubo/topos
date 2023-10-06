@@ -1,6 +1,20 @@
 import { UserAPI } from "../API";
 import { AppSettings } from "../AppSettings";
 
+export type MidiNoteEvent = {
+  note: number;
+  velocity: number;
+  channel: number;
+  timestamp: number;
+}
+
+export type MidiCCEvent = {
+  control: number;
+  value: number;
+  channel: number;
+  timestamp: number;
+}
+
 export class MidiConnection {
   /**
    * Wrapper class for Web MIDI API. Provides methods for sending MIDI messages.
@@ -12,15 +26,23 @@ export class MidiConnection {
    * @param scheduledNotes - Object containing scheduled notes. Keys are note numbers and values are timeout IDs.
    */
 
+  /* Midi output */
   private api: UserAPI;
   private settings: AppSettings;
   private midiAccess: MIDIAccess | null = null;
-  public midiOutputs: MIDIOutput[] = [];
-  public midiInputs: MIDIInput[] = [];
+  public midiOutputs: MIDIOutput[] = [];  
   private currentOutputIndex: number = 0;
-  private currentInputIndex: number|undefined = undefined;
   private scheduledNotes: { [noteNumber: number]: number } = {}; // { noteNumber: timeoutId }
  
+  /* Midi input */
+  public midiInputs: MIDIInput[] = [];
+  private currentInputIndex: number|undefined = undefined;
+  public bufferLength: number = 512; // 32*16
+  public noteInputBuffer: MidiNoteEvent[] = [];
+  public ccInputBuffer: MidiCCEvent[] = [];
+  public activeNotes: MidiNoteEvent[] = [];
+  public stickyNotes: MidiNoteEvent[] = [];
+
   /* MIDI clock stuff */
   private midiClockInputIndex: number|undefined = undefined;
   private midiClockInput?: MIDIInput|undefined = undefined;
@@ -264,20 +286,144 @@ export class MidiConnection {
           }
           /* DEFAULT MIDI INPUT */
           if(input.name === this.settings.default_midi_input) {
-            // List of all note_on messages from channels 1-16
-            const all_note_ons = [0x90, 0x91, 0x92, 0x93, 0x94, 0x95, 0x96, 0x97, 0x98, 0x99, 0x9A, 0x9B, 0x9C, 0x9D,0x9E, 0x9F]; 
+
             // If message is one of note ons
-            if(all_note_ons.indexOf(message.data[0]) !== -1) {
-              const channel = all_note_ons.indexOf(message.data[0])+1;
+            if(message.data[0] >= 0x90 && message.data[0] <= 0x9F) {
+              const channel = message.data[0] - 0x90 + 1;
               const note = message.data[1];
               const velocity = message.data[2];
               this.api.variable(`channel_${channel}_note`, note);
               this.api.variable(`channel_${channel}_velocity`, velocity);
+
               if(this.settings.midi_channels_scripts) this.api.script(channel);
+
+              //console.log(`NOTE: ${note} VELOCITY: ${velocity} CHANNEL: ${channel}`);
+            
+              this.pushToMidiInputBuffer({note, velocity, channel, timestamp: event.timeStamp});
+              this.activeNotes.push({note, velocity, channel, timestamp: event.timeStamp});
+
+              const sticky = this.removeFromStickyNotes(note, channel);
+              if(!sticky) this.stickyNotes.push({note, velocity, channel, timestamp: event.timeStamp});
             }
+
+            // If note off
+            if(message.data[0] >= 0x80 && message.data[0] <= 0x8F) {
+              const channel = message.data[0] - 0x80 + 1;
+              const note = message.data[1];
+              this.removeFromActiveNotes(note, channel);
+            }
+
+            // If message is one of CCs
+            if(message.data[0]>=0xB0 && message.data[0]<=0xBF) {
+              const channel = message.data[0] - 0xB0 + 1;
+              const control = message.data[1];
+              const value = message.data[2];
+              this.api.variable(`channel_${channel}_control`, control);
+              this.api.variable(`channel_${channel}_value`, value);
+
+              //console.log(`CC: ${control} VALUE: ${value} CHANNEL: ${channel}`);
+
+              this.pushToMidiCCBuffer({control, value, channel, timestamp: event.timeStamp});
+
+            }
+
+
           }
         }
       }
+    }
+  }
+
+  /* Methods for handling active midi notes */
+
+  public removeFromActiveNotes(note: number, channel: number): void {
+    const index = this.activeNotes.findIndex((e) => e.note===note && e.channel===channel);
+    if(index>=0) this.activeNotes.splice(index, 1);
+  }
+
+  public removeFromStickyNotes(note: number, channel: number): boolean {
+    const index = this.stickyNotes.findIndex((e) => e.note===note && e.channel===channel);
+    if(index>=0) {
+      this.stickyNotes.splice(index, 1);
+      return true;
+    } else { return false; }
+  }
+
+  public stickyNotesFromChannel(channel: number): MidiNoteEvent[] {
+    return this.stickyNotes.filter((e) => e.channel===channel);
+  }
+
+  public activeNotesFromChannel(channel: number): MidiNoteEvent[] {
+    return this.activeNotes.filter((e) => e.channel===channel);
+  }
+
+  public killActiveNotes(): void {
+    this.activeNotes = [];
+  }
+
+  public killActiveNotesFromChannel(channel: number): void {
+    this.activeNotes = this.activeNotes.filter((e) => e.channel!==channel);
+  }
+
+  /* Methods for handling midi input buffers */
+
+  private pushToMidiInputBuffer(event: MidiNoteEvent): void {
+    this.noteInputBuffer.push(event);
+    if(this.noteInputBuffer.length>this.bufferLength) {
+      this.noteInputBuffer.shift();
+    }
+  }
+
+  private pushToMidiCCBuffer(event: MidiCCEvent): void {
+    this.ccInputBuffer.push(event);
+    if(this.ccInputBuffer.length>this.bufferLength) {
+      this.ccInputBuffer.shift();
+    }
+  }
+
+  public shiftNoteFromBuffer(): MidiNoteEvent|undefined {
+    const event = this.noteInputBuffer.shift();
+    if(event) return event;
+    else return undefined;
+  }
+
+  public popNoteFromBuffer(): MidiNoteEvent|undefined {
+    const event = this.noteInputBuffer.pop();
+    if(event) return event;
+    else return undefined;
+  }
+
+  public popCCFromBuffer(): MidiCCEvent|undefined {
+    const event = this.ccInputBuffer.pop();
+    if(event) return event;
+    else return undefined;
+  }
+
+  public shiftCCFromBuffer(): MidiCCEvent|undefined {
+    const event = this.ccInputBuffer.shift();
+    if(event) return event;
+    else return undefined;
+  }
+
+  public findNoteFromBufferInChannel(channel: number|undefined) {
+    const index = this.noteInputBuffer.findIndex((e) => e.channel===channel);
+    if(index>=0) {
+      const event = this.noteInputBuffer[index];
+      this.noteInputBuffer.splice(index, 1);
+      return event;
+    } else {
+      return undefined;
+    }
+  }
+
+  public findCCFromBufferInChannel(channel: number|undefined) {
+    const index = this.ccInputBuffer.findIndex((e) => e.channel===channel);
+    if(index>=0) {
+      const event = this.ccInputBuffer[index];
+      this.ccInputBuffer.splice(index, 1);
+      return event;
+    } else {
+      return undefined;
     }
   }
 
