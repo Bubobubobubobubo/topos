@@ -3,6 +3,7 @@ import { introduction } from "./documentation/introduction";
 import { samples } from "./documentation/samples";
 import { chaining } from "./documentation/chaining";
 import { software_interface } from "./documentation/interface";
+import { interaction } from "./documentation/interaction";
 import { time } from "./documentation/time";
 import { midi } from "./documentation/midi";
 import { code } from "./documentation/code";
@@ -11,6 +12,9 @@ import { sound } from "./documentation/engine";
 import { shortcuts } from "./documentation/keyboard";
 import { patterns } from "./documentation/patterns";
 import { functions } from "./documentation/functions";
+import { variables } from "./documentation/variables";
+import { probabilities } from "./documentation/probabilities";
+import { lfos } from "./documentation/lfos";
 import { ziffers } from "./documentation/ziffers";
 import { reference } from "./documentation/reference";
 import { synths } from "./documentation/synths";
@@ -53,6 +57,7 @@ export const documentation_factory = (application: Editor) => {
   return {
     introduction: introduction(application),
     interface: software_interface(application),
+    interaction: interaction(application),
     code: code(application),
     time: time(application),
     sound: sound(application),
@@ -62,6 +67,9 @@ export const documentation_factory = (application: Editor) => {
     patterns: patterns(application),
     ziffers: ziffers(application),
     midi: midi(application),
+    lfos: lfos(application),
+    variables: variables(application),
+    probabilities: probabilities(application),
     functions: functions(application),
     reference: reference(),
     shortcuts: shortcuts(),

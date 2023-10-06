@@ -51,6 +51,11 @@ flip(4) :: beat([.5, .25].beat(16)) :: script([5,6,7,8].loop($(2)))
 )}
 
 
+There are some useful functions to help you manage your scripts:
+
+- <ic>copy_script(from: number, to: number)</ic>: copy the content of a script to another.
+- <ic>delete_script(index: number)</ic>: clear the content of a script. Warning: this is irreversible! 
+
 ## Universes
 	
 A set of files is called a _universe_. Topos can store several universes and switch immediately from one to another. You can switch between universes by pressing ${key_shortcut(
@@ -60,6 +65,11 @@ A set of files is called a _universe_. Topos can store several universes and swi
 Switching between universes will not stop the transport nor reset the clock. You are switching the context but time keeps flowing. This can be useful to prepare immediate transitions between songs and parts. Think of universes as an algorithmic set of music. All scripts in a given universe are aware about how many times they have been runned already. You can reset that value programatically.
 	
 You can clear the current universe by pressing the flame button on the top right corner of the interface. This will clear all the scripts and the note file. **Note:** there is no shortcut for clearing a universe. We do not want to loose your work by mistake!
+
+There are some useful functions to help you manage your universes:
+
+- <ic>copy_universe(from: string, to: string)</ic>: copy the content of a universe to another. This is useful to create a backup of your work.
+- <ic>delete_universe(name: string)</ic>: delete a universe. Warning: this is irreversible!
 	
 # Sharing your work
 	

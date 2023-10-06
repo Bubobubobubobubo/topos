@@ -7,6 +7,7 @@ import { SoundEvent } from "./classes/SoundEvent";
 import { MidiEvent } from "./classes/MidiEvent";
 import { LRUCache } from "lru-cache";
 import { InputOptions, Player } from "./classes/ZPlayer";
+import { template_universes } from "./AppSettings";
 import {
   samples,
   initAudioOnFirstClick,
@@ -266,7 +267,7 @@ export class UserAPI {
   };
   s = this.script;
 
-  clear_script = (script: number): void => {
+  delete_script = (script: number): void => {
     /**
      * Clears a local script
      *
@@ -278,7 +279,7 @@ export class UserAPI {
       evaluations: 0,
     };
   };
-  cs = this.clear_script;
+  cs = this.delete_script;
 
   copy_script = (from: number, to: number): void => {
     /**
@@ -292,6 +293,42 @@ export class UserAPI {
     };
   };
   cps = this.copy_script;
+
+  copy_universe = (from: string, to: string): void => {
+    this.app.universes[to] = {
+      ...this.app.universes[from],
+    };
+  };
+
+  delete_universe = (universe: string): void => {
+    if (this.app.selected_universe === universe) {
+      this.app.selected_universe = "Default";
+    }
+    delete this.app.universes[universe];
+    this.app.settings.saveApplicationToLocalStorage(
+      this.app.universes,
+      this.app.settings
+    );
+    this.app.updateKnownUniversesView();
+  };
+
+  big_bang = (): void => {
+    /**
+     * Clears all universes
+     * TODO: add documentation. This doesn't work super well.
+     */
+    if (confirm("Are you sure you want to delete all universes?")) {
+      this.app.universes = {
+        ...template_universes,
+      };
+      this.app.settings.saveApplicationToLocalStorage(
+        this.app.universes,
+        this.app.settings
+      );
+    }
+    this.app.selected_universe = "Default";
+    this.app.updateKnownUniversesView();
+  };
 
   // =============================================================
   // MIDI related functions
@@ -436,13 +473,8 @@ export class UserAPI {
     /**
      * @returns A list of currently active MIDI notes
      */
-    let notes;
-    if(channel) {
-      notes = this.MidiConnection.activeNotesFromChannel(channel).map((note) => note.note);
-    } else {
-      notes = this.MidiConnection.activeNotes.map((note) => note.note);
-    }
-    if(notes.length > 0) return notes;
+    const notes = this.active_note_events(channel);
+    if(notes && notes.length > 0) return notes.map((e) => e.note);
     else return undefined;
   }
 
@@ -473,69 +505,68 @@ export class UserAPI {
     this.MidiConnection.stickyNotes = [];
   }
 
-  public last_event = (): MidiNoteEvent|undefined => {
+  public buffer = (channel?: number): boolean => {
+    /**
+     * Return true if there is last note event
+     */
+    if(channel) return this.MidiConnection.findNoteFromBufferInChannel(channel) !== undefined;
+    else return this.MidiConnection.noteInputBuffer.length > 0;
+  }
+
+  public buffer_event = (channel?: number): MidiNoteEvent|undefined => {
     /**
      * @returns Returns latest unlistened note event
      */
-    return this.MidiConnection.popNoteFromBuffer();
+    if(channel) return this.MidiConnection.findNoteFromBufferInChannel(channel);
+    else return this.MidiConnection.noteInputBuffer.shift();
   }
 
-  public last_note = (): number|undefined => {
+  public buffer_note = (channel?: number): number|undefined => {
     /**
      * @returns Returns latest received note
      */
-    const note = this.MidiConnection.popNoteFromBuffer();
+    const note = this.buffer_event(channel);
     return note ? note.note : undefined;
   }
 
-  public first_event = (): MidiNoteEvent|undefined => {
+  public last_note_event = (channel?: number): MidiNoteEvent|undefined => {
     /**
-     * @returns Returns first unlistened note event
+     * @returns Returns last received note
      */
-    return this.MidiConnection.shiftNoteFromBuffer();
+    if(channel) return this.MidiConnection.lastNoteInChannel[channel];
+    else return this.MidiConnection.lastNote;
   }
 
-  public first_note = (): number|undefined => {
+  public last_note = (channel?: number): number|undefined => {
     /**
-     * @returns Returns first received note
+     * @returns Returns last received note
      */
-    const note = this.MidiConnection.shiftNoteFromBuffer();
+    const note = this.last_note_event(channel);
     return note ? note.note : undefined;
   }
 
-  public last_channel_note = (channel: number): MidiNoteEvent|undefined => {
+  public last_cc = (control: number, channel?: number): number|undefined => {
     /**
-     * @returns Returns first unlistened note event on a specific channel
+     * @returns Returns last received cc
      */
-    return this.MidiConnection.findNoteFromBufferInChannel(channel);
+    if(channel) return this.MidiConnection.lastCCInChannel[channel][control];
+    else return this.MidiConnection.lastCC[control];
   }
 
-  public find_channel_note = (channel: number): MidiNoteEvent|undefined => {
+  public has_cc = (channel?: number): boolean => {
     /**
-     * @returns Returns first unlistened note event on a specific channel
+     * Return true if there is last cc event
      */
-    return this.MidiConnection.findNoteFromBufferInChannel(channel);
+    if(channel) return this.MidiConnection.findCCFromBufferInChannel(channel) !== undefined;
+    else return this.MidiConnection.ccInputBuffer.length > 0;
   }
 
-  public first_cc = (): MidiCCEvent|undefined => {
-    /**
-     * @returns Returns first unlistened cc event
-     */
-    return this.MidiConnection.popCCFromBuffer();
-  }
-
-  public last_cc = (): MidiCCEvent|undefined => {
+  public buffer_cc = (channel?: number): MidiCCEvent|undefined => {
     /**
      * @returns Returns latest unlistened cc event
      */
-    return this.MidiConnection.shiftCCFromBuffer();
-  }
-
-  public find_channel_cc = (channel: number): MidiCCEvent|undefined => {
-    /**
-     * @returns Returns first unlistened cc event on a specific channel
-     */
-    return this.MidiConnection.findCCFromBufferInChannel(channel);
+    if(channel) return this.MidiConnection.findCCFromBufferInChannel(channel);
+    else return this.MidiConnection.ccInputBuffer.shift();
   }
 
   // =============================================================
@@ -1175,8 +1206,9 @@ export class UserAPI {
      * @param ratio Optional ratio to influence the true/false output (0-100)
      * @returns Whether the function returns true or false based on ratio and time chunk
      */
+    let realChunk = chunk * 2;
     const time_pos = this.app.clock.pulses_since_origin;
-    const full_chunk = Math.floor(chunk * this.ppqn());
+    const full_chunk = Math.floor(realChunk * this.ppqn());
     // const current_chunk = Math.floor(time_pos / full_chunk);
     const threshold = Math.floor((ratio / 100) * full_chunk);
     const pos_within_chunk = time_pos % full_chunk;
@@ -1184,8 +1216,9 @@ export class UserAPI {
   };
 
   public flipbar = (chunk: number = 1): boolean => {
+    let realFlip = chunk * 2;
     const time_pos = this.app.clock.time_position.bar;
-    const current_chunk = Math.floor(time_pos / chunk);
+    const current_chunk = Math.floor(time_pos / realFlip);
     return current_chunk % 2 === 0;
   };
 
