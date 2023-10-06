@@ -148,6 +148,10 @@ export class Editor {
     "upload-universes"
   ) as HTMLButtonElement;
 
+  destroy_universes_button: HTMLButtonElement = document.getElementById(
+    "destroy-universes"
+  ) as HTMLButtonElement;
+
   documentation_button: HTMLButtonElement = document.getElementById(
     "doc-button-1"
   ) as HTMLButtonElement;
@@ -563,6 +567,15 @@ export class Editor {
 
     this.documentation_button.addEventListener("click", () => {
       this.showDocumentation();
+    });
+
+    this.destroy_universes_button.addEventListener("click", () => {
+      if (confirm("Do you want to destroy all universes?")) {
+        this.universes = {
+          ...template_universes,
+        };
+        this.updateKnownUniversesView();
+      }
     });
 
     this.upload_universe_button.addEventListener("click", () => {
