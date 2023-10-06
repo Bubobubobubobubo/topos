@@ -1084,8 +1084,9 @@ export class UserAPI {
      * @param ratio Optional ratio to influence the true/false output (0-100)
      * @returns Whether the function returns true or false based on ratio and time chunk
      */
+    let realChunk = chunk * 2;
     const time_pos = this.app.clock.pulses_since_origin;
-    const full_chunk = Math.floor(chunk * this.ppqn());
+    const full_chunk = Math.floor(realChunk * this.ppqn());
     // const current_chunk = Math.floor(time_pos / full_chunk);
     const threshold = Math.floor((ratio / 100) * full_chunk);
     const pos_within_chunk = time_pos % full_chunk;
@@ -1093,8 +1094,9 @@ export class UserAPI {
   };
 
   public flipbar = (chunk: number = 1): boolean => {
+    let realFlip = chunk * 2;
     const time_pos = this.app.clock.time_position.bar;
-    const current_chunk = Math.floor(time_pos / chunk);
+    const current_chunk = Math.floor(time_pos / realFlip);
     return current_chunk % 2 === 0;
   };
 
