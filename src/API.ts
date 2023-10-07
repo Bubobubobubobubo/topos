@@ -448,17 +448,17 @@ export class UserAPI {
     this.MidiConnection.panic();
   };
 
-  public active_note_events = (channel?: number): MidiNoteEvent[]|undefined => {
+  public active_note_events = (channel?: number): MidiNoteEvent[] | undefined => {
     /**
      * @returns A list of currently active MIDI notes
      */
     let events;
-    if(channel) {
+    if (channel) {
       events = this.MidiConnection.activeNotesFromChannel(channel);
     } else {
       events = this.MidiConnection.activeNotes;
     }
-    if(events.length>0) return events
+    if (events.length > 0) return events
     else return undefined;
   }
 
@@ -469,12 +469,12 @@ export class UserAPI {
     return this.MidiConnection.activeNotes.length > 0;
   }
 
-  public active_notes = (channel?: number): number[]|undefined => {
+  public active_notes = (channel?: number): number[] | undefined => {
     /**
      * @returns A list of currently active MIDI notes
      */
     const notes = this.active_note_events(channel);
-    if(notes && notes.length > 0) return notes.map((e) => e.note);
+    if (notes && notes.length > 0) return notes.map((e) => e.note);
     else return undefined;
   }
 
@@ -485,16 +485,16 @@ export class UserAPI {
     this.MidiConnection.activeNotes = [];
   }
 
-  public sticky_notes = (channel?: number): number[]|undefined => {
+  public sticky_notes = (channel?: number): number[] | undefined => {
     /**
      * 
      * @param channel 
      * @returns 
      */
     let notes;
-    if(channel) notes = this.MidiConnection.stickyNotesFromChannel(channel);
+    if (channel) notes = this.MidiConnection.stickyNotesFromChannel(channel);
     else notes = this.MidiConnection.stickyNotes;
-    if(notes.length > 0) return notes.map((e) => e.note);
+    if (notes.length > 0) return notes.map((e) => e.note);
     else return undefined;
   }
 
@@ -509,19 +509,19 @@ export class UserAPI {
     /**
      * Return true if there is last note event
      */
-    if(channel) return this.MidiConnection.findNoteFromBufferInChannel(channel) !== undefined;
+    if (channel) return this.MidiConnection.findNoteFromBufferInChannel(channel) !== undefined;
     else return this.MidiConnection.noteInputBuffer.length > 0;
   }
 
-  public buffer_event = (channel?: number): MidiNoteEvent|undefined => {
+  public buffer_event = (channel?: number): MidiNoteEvent | undefined => {
     /**
      * @returns Returns latest unlistened note event
      */
-    if(channel) return this.MidiConnection.findNoteFromBufferInChannel(channel);
+    if (channel) return this.MidiConnection.findNoteFromBufferInChannel(channel);
     else return this.MidiConnection.noteInputBuffer.shift();
   }
 
-  public buffer_note = (channel?: number): number|undefined => {
+  public buffer_note = (channel?: number): number | undefined => {
     /**
      * @returns Returns latest received note
      */
@@ -529,11 +529,11 @@ export class UserAPI {
     return note ? note.note : undefined;
   }
 
-  public last_note_event = (channel?: number): MidiNoteEvent|undefined => {
+  public last_note_event = (channel?: number): MidiNoteEvent | undefined => {
     /**
      * @returns Returns last received note
      */
-    if(channel) return this.MidiConnection.lastNoteInChannel[channel];
+    if (channel) return this.MidiConnection.lastNoteInChannel[channel];
     else return this.MidiConnection.lastNote;
   }
 
@@ -549,8 +549,8 @@ export class UserAPI {
     /**
      * @returns Returns last received cc
      */
-    if(channel) {
-      if(this.MidiConnection.lastCCInChannel[channel]) {
+    if (channel) {
+      if (this.MidiConnection.lastCCInChannel[channel]) {
         return this.MidiConnection.lastCCInChannel[channel][control];
       } else return 64;
     }
@@ -561,15 +561,15 @@ export class UserAPI {
     /**
      * Return true if there is last cc event
      */
-    if(channel) return this.MidiConnection.findCCFromBufferInChannel(channel) !== undefined;
+    if (channel) return this.MidiConnection.findCCFromBufferInChannel(channel) !== undefined;
     else return this.MidiConnection.ccInputBuffer.length > 0;
   }
 
-  public buffer_cc = (channel?: number): MidiCCEvent|undefined => {
+  public buffer_cc = (channel?: number): MidiCCEvent | undefined => {
     /**
      * @returns Returns latest unlistened cc event
      */
-    if(channel) return this.MidiConnection.findCCFromBufferInChannel(channel);
+    if (channel) return this.MidiConnection.findCCFromBufferInChannel(channel);
     else return this.MidiConnection.ccInputBuffer.shift();
   }
 
@@ -912,6 +912,19 @@ export class UserAPI {
   // =============================================================
   // Transport functions
   // =============================================================
+
+  public nudge = (nudge?: number): number => {
+    /**
+     * Sets or returns the current clock nudge.
+     *
+     * @param nudge - [optional] the nudge to set
+     * @returns The current nudge
+     */
+    if (nudge) {
+      this.app.clock.nudge = nudge;
+    }
+    return this.app.clock.nudge;
+  }
 
   public bpm = (n?: number): number => {
     /**

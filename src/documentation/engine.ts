@@ -221,7 +221,7 @@ beat(1) :: sound('kick').shape(0.35).out()`,
 	
 ## Filters
 	
-There are three basic filters: a _lowpass_, _highpass_ and _bandpass_ filters with rather soft slope. Each of them can take up to two arguments. You can also use only the _cutoff_ frequency and the resonance will stay to its default nominal value.
+There are three basic filters: a _lowpass_, _highpass_ and _bandpass_ filters with rather soft slope. Each of them can take up to two arguments. You can also use only the _cutoff_ frequency and the resonance will stay to its default nominal value. You will learn more about the usage of filters in the synths page!
 	
 | Method     | Alias | Description                             |
 |------------|-------|-----------------------------------------|

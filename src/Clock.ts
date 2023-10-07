@@ -126,6 +126,10 @@ export class Clock {
     return this._bpm;
   }
 
+  set nudge(nudge: number) {
+    this.transportNode?.setNudge(nudge);
+  }
+
   set bpm(bpm: number) {
     if (bpm > 0 && this._bpm !== bpm) {
       this._bpm = bpm;

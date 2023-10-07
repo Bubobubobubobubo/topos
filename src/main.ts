@@ -240,7 +240,7 @@ export class Editor {
     "midi-channels-scripts"
   ) as HTMLInputElement;
 
-  midi_clock_ppqn: HTMLSelectElement  = document.getElementById(
+  midi_clock_ppqn: HTMLSelectElement = document.getElementById(
     "midi-clock-ppqn-input"
   ) as HTMLSelectElement;
 
@@ -261,6 +261,11 @@ export class Editor {
   share_button: HTMLElement = document.getElementById(
     "share-button"
   ) as HTMLElement;
+
+  // Audio nudge range
+  audio_nudge_range: HTMLInputElement = document.getElementById(
+    "audio_nudge"
+  ) as HTMLInputElement;
 
   // Error line
   error_line: HTMLElement = document.getElementById(
@@ -592,6 +597,10 @@ export class Editor {
         this.updateKnownUniversesView();
       }
     });
+
+    this.audio_nudge_range.addEventListener("input", () => {
+      this.clock.nudge = parseInt(this.audio_nudge_range.value);
+    })
 
     this.upload_universe_button.addEventListener("click", () => {
       const fileInput = document.createElement("input");

@@ -13,7 +13,7 @@ export class TransportNode extends AudioWorkletNode {
   /** @type {(this: MessagePort, ev: MessageEvent<any>) => any} */
   handleMessage = (message) => {
     if (message.data && message.data.type === "bang") {
-      if(this.app.settings.send_clock) this.app.api.MidiConnection.sendMidiClock();
+      if (this.app.settings.send_clock) this.app.api.MidiConnection.sendMidiClock();
       this.app.clock.tick++;
       const futureTimeStamp = this.app.clock.convertTicksToTimeposition(
         this.app.clock.tick
@@ -43,6 +43,10 @@ export class TransportNode extends AudioWorkletNode {
 
   setPPQN(ppqn) {
     this.port.postMessage({ type: "ppqn", value: ppqn });
+  }
+
+  setNudge(nudge) {
+    this.port.postMessage({ type: "nudge", value: nudge });
   }
 
   stop() {

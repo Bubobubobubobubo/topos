@@ -4,7 +4,7 @@ export const shortcuts = (): string => {
   return `
 # Keybindings
 	
-Topos is made to be controlled entirely with a keyboard. It is recommanded to stop using the mouse as much as possible when you are _live coding_. Some of the keybindings might not work like expected on Windows/Linux. They all work on MacOS. A fix is on the way. Here is a list of the most important keybindings:
+Topos is made to be controlled entirely with a keyboard. It is recommanded to stop using the mouse as much as possible when you are _live coding_. Here is a list of the most important keybindings:
 	
 ## Transport
 
