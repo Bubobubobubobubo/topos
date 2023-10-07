@@ -301,8 +301,6 @@ export class MidiConnection {
               this.lastNoteInChannel[channel] = {note, velocity, channel, timestamp: event.timeStamp};
 
               if(this.settings.midi_channels_scripts) this.api.script(channel);
-
-              //console.log(`NOTE: ${note} VELOCITY: ${velocity} CHANNEL: ${channel}`);
             
               this.pushToMidiInputBuffer({note, velocity, channel, timestamp: event.timeStamp});
               this.activeNotes.push({note, velocity, channel, timestamp: event.timeStamp});
@@ -320,13 +318,18 @@ export class MidiConnection {
 
             // If message is one of CCs
             if(message.data[0]>=0xB0 && message.data[0]<=0xBF) {
+             
               const channel = message.data[0] - 0xB0 + 1;
               const control = message.data[1];
               const value = message.data[2];
               
               this.lastCC[control] = value;
-              this.lastCCInChannel[channel][control] = value;
-
+              if(this.lastCCInChannel[channel]) {
+                this.lastCCInChannel[channel][control] = value;
+              } else {
+                this.lastCCInChannel[channel] = {};
+                this.lastCCInChannel[channel][control] = value;
+              }
 
               //console.log(`CC: ${control} VALUE: ${value} CHANNEL: ${channel}`);
 

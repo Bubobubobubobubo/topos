@@ -537,20 +537,24 @@ export class UserAPI {
     else return this.MidiConnection.lastNote;
   }
 
-  public last_note = (channel?: number): number|undefined => {
+  public last_note = (channel?: number): number => {
     /**
      * @returns Returns last received note
      */
     const note = this.last_note_event(channel);
-    return note ? note.note : undefined;
+    return note ? note.note : 60;
   }
 
-  public last_cc = (control: number, channel?: number): number|undefined => {
+  public last_cc = (control: number, channel?: number): number => {
     /**
      * @returns Returns last received cc
      */
-    if(channel) return this.MidiConnection.lastCCInChannel[channel][control];
-    else return this.MidiConnection.lastCC[control];
+    if(channel) {
+      if(this.MidiConnection.lastCCInChannel[channel]) {
+        return this.MidiConnection.lastCCInChannel[channel][control];
+      } else return 64;
+    }
+    else return this.MidiConnection.lastCC[control] || 64;
   }
 
   public has_cc = (channel?: number): boolean => {
