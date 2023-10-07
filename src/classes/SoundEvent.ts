@@ -13,8 +13,13 @@ export type SoundParams = {
 }
 
 export class SoundEvent extends AudibleEvent {
+
+  nudge: number;
+
   constructor(sound: string | object, public app: Editor) {
     super(app);
+    this.nudge = app.dough_nudge / 100;
+    console.log(this.nudge)
     if (typeof sound === "string") {
       if (sound.includes(":")) {
         this.values = {
@@ -260,7 +265,6 @@ export class SoundEvent extends AudibleEvent {
     }
   }
   public snd = this.sound;
-  public nudge = (value: number) => this.updateValue("nudge", value);
   public cut = (value: number) => this.updateValue("cut", value);
   public clip = (value: number) => this.updateValue("clip", value);
   public n = (value: number) => this.updateValue("n", value);
@@ -337,10 +341,10 @@ export class SoundEvent extends AudibleEvent {
       this.values.chord.forEach((obj: { [key: string]: number }) => {
         const copy = { ...this.values };
         copy.freq = obj.freq
-        superdough(copy, 0.25, this.values.dur);
+        superdough(copy, this.nudge, this.values.dur);
       });
     } else {
-      superdough(this.values, 0.25, this.values.dur);
+      superdough(this.values, this.nudge, this.values.dur);
     }
   };
 }

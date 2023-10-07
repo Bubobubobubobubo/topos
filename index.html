@@ -307,18 +307,31 @@
 
           <!-- Audio nudge slider -->
           <div id="midi-settings-container" class="bg-gray-200 rounded-lg flex flex-col mx-4 my-4 pt-4 pb-2">
-            <p class="font-bold text-xl ml-4 pb-4 underline underline-offset-4">Audio Output nudge</p>
-            <div class="flex flex-colunm">
+            <p class="font-bold text-xl ml-4 pb-4 underline underline-offset-4">Audio/Event Nudging</p>
+            <div class="flex flex-column pb-2">
               <input
                 type="range" id="audio_nudge"
-                name="rangeInput"
-                min="-1000" max="1000"
+                name="audiorangeInput"
+                min="-200" max="200"
                 value="0"
                 class="w-full ml-4"
-                oninput="amount.value=audio_nudge.value"
+                oninput="nudgenumber.value=audio_nudge.value"
               >
-              <output name="amount" id="amount" for="rangeInput" class="bg-gray-500 rounded-lg ml-2 mr-4 px-4 py-1 text-white">0</output>
+              <output name="nudgenumber" id="nudgenumber" for="audiorangeInput" class="bg-gray-500 rounded-lg ml-2 mr-4 px-4 py-1 text-white">0</output>
             </div>
+
+            <div class="flex flex-column">
+              <input
+                type="range" id="dough_nudge"
+                name="doughrangeInput"
+                min="0" max="100"
+                value="0"
+                class="w-full ml-4"
+                oninput="doughnumber.value=dough_nudge.value"
+              >
+            <output name="doughnumber" id="doughnumber" for="doughrangeInput" class="bg-gray-500 rounded-lg ml-2 mr-4 px-4 py-1 text-white">0</output>
+            </div>
+
           </div>
 
           <div class="flex space-x-6 border-t border-gray-200 rounded-b dark:border-gray-600 mx-4 border-spacing-y-4">

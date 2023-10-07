@@ -110,6 +110,7 @@ export class Editor {
 
   // Audio stuff
   audioContext: AudioContext;
+  dough_nudge: number = 0.25;
   view: EditorView;
   clock: Clock;
   manualPlay: boolean = false;
@@ -265,6 +266,12 @@ export class Editor {
   // Audio nudge range
   audio_nudge_range: HTMLInputElement = document.getElementById(
     "audio_nudge"
+  ) as HTMLInputElement;
+
+
+  // Dough nudge range
+  dough_nudge_range: HTMLInputElement = document.getElementById(
+    "dough_nudge"
   ) as HTMLInputElement;
 
   // Error line
@@ -600,6 +607,11 @@ export class Editor {
 
     this.audio_nudge_range.addEventListener("input", () => {
       this.clock.nudge = parseInt(this.audio_nudge_range.value);
+    })
+
+
+    this.dough_nudge_range.addEventListener("input", () => {
+      this.dough_nudge = parseInt(this.dough_nudge_range.value);
     })
 
     this.upload_universe_button.addEventListener("click", () => {
