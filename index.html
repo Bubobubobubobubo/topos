@@ -212,8 +212,8 @@
                   <label for="default-input" class="block mb-2 ml-1 font-normal">Size:</label>
                   <input type="text" id="font-size-input" type="number" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                 </div>
-                <label for="font" class="block ml-5 mb-2 font-medium">Font (<b>TODO</b>):</label>
-                  <select id="font-family" class="bg-gray-50 w-11/12 ml-4 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                <label for="font" class="block ml-5 mb-2 font-medium">Font:</label>
+                  <select id="font-family" class="bg-gray-50 w-5/6 ml-4 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
                     <option selected>Choose a font</option>
                     <option value="US">IBM Plex Mono</option>
                     <option value="CA">Victor Mono</option>
@@ -309,6 +309,7 @@
           <div id="midi-settings-container" class="bg-gray-200 rounded-lg flex flex-col mx-4 my-4 pt-4 pb-2">
             <p class="font-bold text-xl ml-4 pb-4 underline underline-offset-4">Audio/Event Nudging</p>
             <div class="flex flex-column pb-2">
+              <p class="pt-0.5 ml-4">Clock:</p>
               <input
                 type="range" id="audio_nudge"
                 name="audiorangeInput"
@@ -317,10 +318,17 @@
                 class="w-full ml-4"
                 oninput="nudgenumber.value=audio_nudge.value"
               >
-              <output name="nudgenumber" id="nudgenumber" for="audiorangeInput" class="bg-gray-500 rounded-lg ml-2 mr-4 px-4 py-1 text-white">0</output>
+              <output 
+                name="nudgenumber" 
+                id="nudgenumber" 
+                for="audiorangeInput" 
+                class="bg-gray-500 rounded-lg ml-2 mr-4 px-4 py-1 text-white"
+              >0</output>
             </div>
 
             <div class="flex flex-column">
+
+              <p class="pt-0.5 ml-4">Audio:</p>
               <input
                 type="range" id="dough_nudge"
                 name="doughrangeInput"
@@ -329,7 +337,12 @@
                 class="w-full ml-4"
                 oninput="doughnumber.value=dough_nudge.value"
               >
-            <output name="doughnumber" id="doughnumber" for="doughrangeInput" class="bg-gray-500 rounded-lg ml-2 mr-4 px-4 py-1 text-white">0</output>
+              <output 
+                name="doughnumber" 
+                id="doughnumber" 
+                for="doughrangeInput" 
+                class="bg-gray-500 rounded-lg ml-2 mr-4 px-4 py-1 text-white"
+              >0</output>
             </div>
 
           </div>

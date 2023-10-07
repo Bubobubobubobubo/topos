@@ -19,7 +19,6 @@ export class SoundEvent extends AudibleEvent {
   constructor(sound: string | object, public app: Editor) {
     super(app);
     this.nudge = app.dough_nudge / 100;
-    console.log(this.nudge)
     if (typeof sound === "string") {
       if (sound.includes(":")) {
         this.values = {
