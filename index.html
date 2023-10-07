@@ -8,8 +8,8 @@
     
     
     <script src="https://unpkg.com/hydra-synth"></script>
-    <script type="module" crossorigin src="/assets/index-60c09532.js"></script>
-    <link rel="stylesheet" href="/assets/index-92dcd2a0.css">
+    <script type="module" crossorigin src="/assets/index-e5b85c04.js"></script>
+    <link rel="stylesheet" href="/assets/index-3ab5b43f.css">
   </head>
   <style>
 
@@ -215,7 +215,7 @@
                   <input type="text" id="font-size-input" type="number" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                 </div>
                 <label for="font" class="block ml-5 mb-2 font-medium">Font (<b>TODO</b>):</label>
-                  <select id="font-family" class="bg-gray-50 w-48 ml-4 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                  <select id="font-family" class="bg-gray-50 w-11/12 ml-4 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
                     <option selected>Choose a font</option>
                     <option value="US">IBM Plex Mono</option>
                     <option value="CA">Victor Mono</option>
@@ -272,8 +272,9 @@
           </div>
 
             <!-- Midi settings -->
-            <div id="midi-settings-container" class="bg-gray-200 rounded-lg flex flex-row mr-4 ml-4">
+            <div id="midi-settings-container" class="bg-gray-200 rounded-lg flex flex-row mx-4 my-4 pt-4">
             <div class="flex flex-row">
+            <p class="font-bold text-xl ml-4 pb-4 underline underline-offset-4">MIDI I/O Settings</p>
               <div class="flex items-center mb-4 ml-6">
                 <label for="default-checkbox" class="ml-2 text-sm font-medium text-dark">MIDI Clock:&nbsp;</label>
                 <select id="midi-clock-input" class="w-32 h-8 text-sm font-medium text-black bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2">
@@ -287,7 +288,7 @@
                   <option value="48">48</option>
                 </select>
               </div>
-              <div class="flex items-center mb-4 ml-20">
+              <div class="flex items-center mb-4 ml-6">
                   <input id="send-midi-clock" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                   <label for="default-checkbox" class="ml-2 text-sm font-medium text-dark">Send MIDI Clock</label>
               </div>
@@ -299,7 +300,7 @@
                   <option value="-1">None</option>
                 </select>
               </div>
-              <div class="flex items-center mb-4 ml-20">
+              <div class="flex items-center mb-4 ml-6">
                 <input id="midi-channels-scripts" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                 <label for="default-checkbox" class="ml-2 text-sm font-medium text-dark">Route channels to scripts</label>
               </div>
