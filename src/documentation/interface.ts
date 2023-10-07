@@ -1,6 +1,7 @@
 import { key_shortcut, makeExampleFactory } from "../Documentation";
 import { type Editor } from "../main";
 import topos_arch from './topos_arch.svg';
+import many_universes from './many_universes.svg';
 
 export const software_interface = (application: Editor): string => {
   const makeExample = makeExampleFactory(application);
@@ -62,6 +63,9 @@ There are some useful functions to help you manage your scripts:
 
 ## Universes
 	
+<object type="image/svg+xml" data=${many_universes} style="width: 100%; height: auto; background-color: transparent"></object>
+
+
 A set of files is called a _universe_. Topos can store several universes and switch immediately from one to another. You can switch between universes by pressing ${key_shortcut(
     "Ctrl + B"
   )}. You can also create a new universe by entering a name that has never been used before. _Universes_ are only referenced by their names. Once a universe is loaded, it is not possible to call any data/code from any other universe.
