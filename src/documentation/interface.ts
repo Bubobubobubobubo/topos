@@ -1,5 +1,6 @@
 import { key_shortcut, makeExampleFactory } from "../Documentation";
 import { type Editor } from "../main";
+import topos_arch from './topos_arch.svg';
 
 export const software_interface = (application: Editor): string => {
   const makeExample = makeExampleFactory(application);
@@ -8,6 +9,9 @@ export const software_interface = (application: Editor): string => {
 	
 The Topos interface is entirely dedicated to highlight the core concepts at play: _scripts_ and _universes_. By understanding the interface, you will already understand quite a lot about Topos and how to play music with it. Make sure to learn the dedicated keybindings as well and you will fly!
 	
+<object type="image/svg+xml" data=${topos_arch} style="width: 100%; height: auto; background-color: transparent"></object>
+
+
 ## Scripts
 
 Every Topos session is composed of several small scripts. A set of scripts is called a _universe_. Every script is written using the JavaScript programming language and describes a musical or algorithmic process that takes place over time.
@@ -33,22 +37,22 @@ Every Topos session is composed of several small scripts. A set of scripts is ca
 	
 
 ${makeExample(
-  "To take the most out of Topos...",
-  `// Write your code in multiple scripts. Use all the code buffers!
+    "To take the most out of Topos...",
+    `// Write your code in multiple scripts. Use all the code buffers!
 beat(1) :: script(1)
 flip(4) :: beat(.5) :: script(2)
 `,
-  true
-)}
+    true
+  )}
 
 ${makeExample(
-  "Script execution can become musical too!",
-  `// You can play your scripts... algorithmically.
+    "Script execution can become musical too!",
+    `// You can play your scripts... algorithmically.
 beat(1) :: script([1,3,5].pick())
 flip(4) :: beat([.5, .25].beat(16)) :: script([5,6,7,8].loop($(2)))
 `,
-  false
-)}
+    false
+  )}
 
 
 There are some useful functions to help you manage your scripts:
