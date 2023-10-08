@@ -164,7 +164,7 @@ export abstract class Event {
     return this.modify(func);
   };
 
-  private modify = (func: Function): Event => {
+  modify = (func: Function): Event => {
     /**
      * Returns a transformed Event. This function is used internally by the
      * other functions of this class. It is just a wrapper for the function
