@@ -1,3 +1,5 @@
+import teletype_performance from "./teletype_performance.png";
+
 export const about = (): string => {
   return `
 # About Topos

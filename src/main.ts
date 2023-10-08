@@ -37,7 +37,7 @@ import { makeStringExtensions } from "./StringExtensions";
 localStorage.openpages = Date.now();
 window.addEventListener(
   "storage",
-  function(e) {
+  function (e) {
     if (e.key == "openpages") {
       // Listen if anybody else is opening the same page!
       localStorage.page_available = Date.now();
@@ -110,7 +110,7 @@ export class Editor {
 
   // Audio stuff
   audioContext: AudioContext;
-  dough_nudge: number = 0.25;
+  dough_nudge: number = 20;
   view: EditorView;
   clock: Clock;
   manualPlay: boolean = false;
@@ -267,7 +267,6 @@ export class Editor {
   audio_nudge_range: HTMLInputElement = document.getElementById(
     "audio_nudge"
   ) as HTMLInputElement;
-
 
   // Dough nudge range
   dough_nudge_range: HTMLInputElement = document.getElementById(
@@ -607,12 +606,11 @@ export class Editor {
 
     this.audio_nudge_range.addEventListener("input", () => {
       this.clock.nudge = parseInt(this.audio_nudge_range.value);
-    })
-
+    });
 
     this.dough_nudge_range.addEventListener("input", () => {
       this.dough_nudge = parseInt(this.dough_nudge_range.value);
-    })
+    });
 
     this.upload_universe_button.addEventListener("click", () => {
       const fileInput = document.createElement("input");
@@ -745,6 +743,10 @@ export class Editor {
 
     this.settings_button.addEventListener("click", () => {
       // Populate the font family selector
+      this.dough_nudge_range.value = this.dough_nudge.toString();
+      // @ts-ignore
+      document.getElementById("doughnumber")!.value =
+        this.dough_nudge.toString();
       this.font_family_selector.value = this.settings.font;
 
       if (this.settings.font_size === null) {

@@ -1,5 +1,9 @@
 import { seededRandom } from "zifferjs";
-import { MidiCCEvent, MidiConnection, MidiNoteEvent } from "./IO/MidiConnection";
+import {
+  MidiCCEvent,
+  MidiConnection,
+  MidiNoteEvent,
+} from "./IO/MidiConnection";
 import { tryEvaluate, evaluateOnce } from "./Evaluator";
 import { DrunkWalk } from "./Utils/Drunk";
 import { Editor } from "./main";
@@ -32,6 +36,7 @@ export async function loadSamples() {
       registerSynthSounds()
     ),
     registerZZFXSounds(),
+    samples("github:Bubobubobubobubo/Dough-Fox/main"),
     samples("github:Bubobubobubobubo/Dough-Samples/main"),
     samples("github:Bubobubobubobubo/Dough-Amiga/main"),
     samples("github:Bubobubobubobubo/Dough-Amen/main"),
@@ -448,7 +453,9 @@ export class UserAPI {
     this.MidiConnection.panic();
   };
 
-  public active_note_events = (channel?: number): MidiNoteEvent[] | undefined => {
+  public active_note_events = (
+    channel?: number
+  ): MidiNoteEvent[] | undefined => {
     /**
      * @returns A list of currently active MIDI notes
      */
@@ -458,9 +465,9 @@ export class UserAPI {
     } else {
       events = this.MidiConnection.activeNotes;
     }
-    if (events.length > 0) return events
+    if (events.length > 0) return events;
     else return undefined;
-  }
+  };
 
   public transmission(): boolean {
     /**
@@ -476,50 +483,54 @@ export class UserAPI {
     const notes = this.active_note_events(channel);
     if (notes && notes.length > 0) return notes.map((e) => e.note);
     else return undefined;
-  }
+  };
 
   public kill_active_notes = (): void => {
     /**
      * Clears all active notes
      */
     this.MidiConnection.activeNotes = [];
-  }
+  };
 
   public sticky_notes = (channel?: number): number[] | undefined => {
     /**
-     * 
-     * @param channel 
-     * @returns 
+     *
+     * @param channel
+     * @returns
      */
     let notes;
     if (channel) notes = this.MidiConnection.stickyNotesFromChannel(channel);
     else notes = this.MidiConnection.stickyNotes;
     if (notes.length > 0) return notes.map((e) => e.note);
     else return undefined;
-  }
+  };
 
   public kill_sticky_notes = (): void => {
     /**
      * Clears all sticky notes
      */
     this.MidiConnection.stickyNotes = [];
-  }
+  };
 
   public buffer = (channel?: number): boolean => {
     /**
      * Return true if there is last note event
      */
-    if (channel) return this.MidiConnection.findNoteFromBufferInChannel(channel) !== undefined;
+    if (channel)
+      return (
+        this.MidiConnection.findNoteFromBufferInChannel(channel) !== undefined
+      );
     else return this.MidiConnection.noteInputBuffer.length > 0;
-  }
+  };
 
   public buffer_event = (channel?: number): MidiNoteEvent | undefined => {
     /**
      * @returns Returns latest unlistened note event
      */
-    if (channel) return this.MidiConnection.findNoteFromBufferInChannel(channel);
+    if (channel)
+      return this.MidiConnection.findNoteFromBufferInChannel(channel);
     else return this.MidiConnection.noteInputBuffer.shift();
-  }
+  };
 
   public buffer_note = (channel?: number): number | undefined => {
     /**
@@ -527,7 +538,7 @@ export class UserAPI {
      */
     const note = this.buffer_event(channel);
     return note ? note.note : undefined;
-  }
+  };
 
   public last_note_event = (channel?: number): MidiNoteEvent | undefined => {
     /**
@@ -535,7 +546,7 @@ export class UserAPI {
      */
     if (channel) return this.MidiConnection.lastNoteInChannel[channel];
     else return this.MidiConnection.lastNote;
-  }
+  };
 
   public last_note = (channel?: number): number => {
     /**
@@ -543,7 +554,7 @@ export class UserAPI {
      */
     const note = this.last_note_event(channel);
     return note ? note.note : 60;
-  }
+  };
 
   public last_cc = (control: number, channel?: number): number => {
     /**
@@ -553,17 +564,19 @@ export class UserAPI {
       if (this.MidiConnection.lastCCInChannel[channel]) {
         return this.MidiConnection.lastCCInChannel[channel][control];
       } else return 64;
-    }
-    else return this.MidiConnection.lastCC[control] || 64;
-  }
+    } else return this.MidiConnection.lastCC[control] || 64;
+  };
 
   public has_cc = (channel?: number): boolean => {
     /**
      * Return true if there is last cc event
      */
-    if (channel) return this.MidiConnection.findCCFromBufferInChannel(channel) !== undefined;
+    if (channel)
+      return (
+        this.MidiConnection.findCCFromBufferInChannel(channel) !== undefined
+      );
     else return this.MidiConnection.ccInputBuffer.length > 0;
-  }
+  };
 
   public buffer_cc = (channel?: number): MidiCCEvent | undefined => {
     /**
@@ -571,7 +584,7 @@ export class UserAPI {
      */
     if (channel) return this.MidiConnection.findCCFromBufferInChannel(channel);
     else return this.MidiConnection.ccInputBuffer.shift();
-  }
+  };
 
   // =============================================================
   // Ziffers related functions
@@ -924,7 +937,7 @@ export class UserAPI {
       this.app.clock.nudge = nudge;
     }
     return this.app.clock.nudge;
-  }
+  };
 
   public bpm = (n?: number): number => {
     /**
