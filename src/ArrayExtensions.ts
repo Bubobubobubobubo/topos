@@ -28,6 +28,8 @@ declare global {
     square(): number[];
     sqrt(): number[];
     gen(min: number, max: number, times: number): number[];
+    sometimes(func: Function): number[];
+    apply(func: Function): number[];
   }
 }
 
@@ -37,6 +39,18 @@ export const makeArrayExtensions = (api: UserAPI) => {
      * @returns New array with squared values.
      */
     return this.map((x: number) => x * x);
+  };
+
+  Array.prototype.sometimes = function (func: Function): number[] {
+    if (api.randomGen() < 0.5) {
+      return func(this);
+    } else {
+      return this;
+    }
+  };
+
+  Array.prototype.apply = function (func: Function): number[] {
+    return func(this);
   };
 
   Array.prototype.sqrt = function (): number[] {

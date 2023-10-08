@@ -1750,4 +1750,76 @@ export class UserAPI {
      */
     return array[(this.app.clock.time_position.bar + 1) % array.length];
   };
+
+  // =============================================================
+  // High Order Functions
+  // =============================================================
+
+  public shuffle = <T>(array: T[]): T[] => {
+    /**
+     * Returns a shuffled version of an array.
+     * @param array - The array to shuffle
+     * @returns A shuffled version of the array
+     */
+    return array.sort(() => this.randomGen() - 0.5);
+  };
+
+  public reverse = <T>(array: T[]): T[] => {
+    /**
+     * Returns a reversed version of an array.
+     * @param array - The array to reverse
+     * @returns A reversed version of the array
+     */
+    return array.reverse();
+  };
+
+  public rotate = <T>(n: number): Function => {
+    /**
+     * Returns a partially applied function that rotates an array by n.
+     *
+     */
+
+    return (array: T[]): T[] => {
+      return array.slice(n, array.length).concat(array.slice(0, n));
+    };
+  };
+
+  public repeat = <T>(n: number): Function => {
+    /**
+     * Returns a partially applied function that repeats each element of an array n times.
+     *
+     */
+    return (array: T[]): T[] => {
+      return array.flatMap((x) => Array(n).fill(x));
+    };
+  };
+
+  public repeatOdd = <T>(n: number): Function => {
+    /**
+     * Returns a partially applied function that repeats  each even element of an array n times.
+     *
+     */
+    return (array: T[]): T[] => {
+      return array.flatMap((x, i) => (i % 2 === 0 ? Array(n).fill(x) : x));
+    };
+  };
+
+  public repeatEven = <T>(n: number): Function => {
+    /**
+     * Returns a partially applied function that repeats  each even element of an array n times.
+     *
+     */
+    return (array: T[]): T[] => {
+      return array.flatMap((x, i) => (i % 2 !== 0 ? Array(n).fill(x) : x));
+    };
+  };
+
+  public palindrome = <T>(array: T[]): T[] => {
+    /**
+     * Returns a palindrome of an array.
+     * @param array - The array to palindrome
+     * @returns A palindrome of the array
+     */
+    return array.concat(array.slice(0, array.length - 1).reverse());
+  };
 }
