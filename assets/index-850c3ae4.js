@@ -37,7 +37,7 @@ oncount([2, 4, 4.5], 6) :: sound('snare').n(4).out()
 rhythm(.25, 6, 8) :: sound('shaker').end(0.25).out()
 rhythm(.5,4,8) :: sound('bd').out()`,`// Computer Music Classroom, Monday (8AM) -- Bubobubobubo
 let ur = [0, 5, 12, 7, 5].beat(24),
-    fundamental = [0, 5, 10, 8, 6].repeatAll(4).bar();
+    fundamental = [0, 5, 10, 8, 6].repeat(4).bar();
 beat(.25) :: sound('triangle')
   .note(ur + fundamental + 40).n(1 + $(1) % 16)
   .atk(0.05).sustain(0.1).release(0.1)
@@ -71,7 +71,7 @@ beat([4, 2, 8].pick() / [2,1].bar()) :: sound('triangle')
   .room(1.5).size(1.9).out()
   `,`// Super gentle computing aka Super-Zapping - Bubobubobubo
 let melody = [30,30,34,35,37].palindrome()
-  .beat() + [0, -12].repeatAll(2).beat(2)
+  .beat() + [0, -12].repeat(2).beat(2)
 if (flip(8, 75)) {
   rhythm(.5, 4, 8) :: sound('ST71').n([5,6,8].beat(0.5)).gain(0.4).out()
   beat(.5) :: sound('ST11').note(melody).gain(0.4)
@@ -107,7 +107,7 @@ rhythm(flip(2) ? .5 : .25, flip(4) ? 8 : 11, 12) :: sound('hat')
 `,`// Part-Dieu - Bubobubobubo
 bpm(90);
 beat(rarely(12) ? .5 : .25) :: sound('ST22')
-  .note([30, 30, 30, 31].repeatAll(8).beat(.5))
+  .note([30, 30, 30, 31].repeat(8).beat(.5))
   .cut(1).n([19, 21].beat(.75))
   .cutoff(irand(200, 5000))
   .resonance(rand(0.2,0.8))
@@ -126,7 +126,7 @@ bpm(85);
 let modifier = [.5, 1, 2].beat(8);
 let othermod = [1, .5, 4].beat(4);
 beat(modifier / 2):: sound('STA9').n([0,2].beat(.5)).vel(0.5).out()
-beat(.5)::sound('STA9').n([0, 20].beat(.5)).speed([1,1.5].repeatAll(4).beat() /2)
+beat(.5)::sound('STA9').n([0, 20].beat(.5)).speed([1,1.5].repeat(4).beat() /2)
   .cutoff(500 + usine(.25) * 3000).vel(1).room(0.9).out()
 beat(modifier / 2):: sound('STA9')
   .n([0,7].beat(.5)).speed(flip(othermod) ? 2 : 4).vel(1).out()
@@ -181,7 +181,7 @@ beat([.25,.125, .5].beat(4))::snd('arpy:4')
   .note(30 + [0,3,7,10, 12, 5, 7].beat()).speed(1.001).pan(1)
   .cutoff(100 + usine(1/8) * 800).lpadsr(5, 0, [1/8, 1.16].beat(), 0, 0)
   .resonance(5).gain(0.4).end(0.8).room(0.9).size(0.9).n(3).out();
-beat(.5) :: snd('arpy').note([30, 33, 35].repeatAll(4).beat(1) - [24,12].beat(0.5))
+beat(.5) :: snd('arpy').note([30, 33, 35].repeat(4).beat(1) - [24,12].beat(0.5))
   .cutoff(500).lpadsr(8, 0.05, .125, 0, 0).out()`,`// Naïf et agréable -- Bubobubobubo
 z1('1/8 024!3 035 024 0124').sound('wt_stereo')
   .adsr(0, .4, 0.5, .4).gain(0.1)
