@@ -246,17 +246,21 @@ beat(.5) && snd('sawtooth')
 	
 ## Reverb
 	
-A basic reverberator that you can use to give some depth to your sounds. This simple reverb design has a _LoFI_ quality that can be quite useful on certain sounds.
+A good sounding reverb. This reverb unit is using a convolution that gets updated everytime you change a parameter.
+For that reason, it is often a good idea to set fixed reverb values per orbit. Do not try to pattern the reverb too much. 
 	
 | Method     | Alias | Description                     |
 |------------|-------|---------------------------------|
-| <ic>room</ic> |     | The more, the bigger the reverb (between <ic>0</ic> and <ic>1</ic>.|
-| <ic>size</ic> |     | Reverberation amount |
+| <ic>room</ic> | rm | Reverb level (between <ic>0</ic> and <ic>1</ic> |
+| <ic>size</ic> | sz  | Reverb room size of the reverb, between <ic>0</ic> and <ic>n</ic> |
+| <ic>roomfade</ic> |     | Reverb fade time, in seconds |
+| <ic>roomlp</ic> |     | Reverb lowpass starting frequency (in hertz) |
+| <ic>roomdim</ic> |     | Reverb lowpass frequency at -60db (in hertz) |
 
 ${makeExample(
     "Clapping in the cavern",
     `
-beat(2)::snd('cp').room(1).size(0.9).out()
+beat(2)::snd('cp').room(0.5).size(4).out()
 	`,
     true
   )};
@@ -282,7 +286,22 @@ beat(1)::snd('kick').out()
     true
   )};
 	
+## Compression
+
+This effect is leveraging the basic WebAudio compressor. More information can be found about it on the [DynamicsCompressorNode](https://developer.mozilla.org/en-US/docs/Web/API/DynamicsCompressorNode?retiredLocale=de#instance_properties) page. This can be come quite complex :)
+
+| Method     | Alias     | Description                     |
+|------------|-----------|---------------------------------|
+| <ic>comp</ic>     | cmp | Compressor threshold value (dB) over which compressor operates |
+| <ic>ratio</ic>     | rt | Compressor ratio: input amount in dB needed for 1dB change in the output   |
+| <ic>knee</ic>     | kn | dB value defining the range over which the signal transitions to compressed section |
+| <ic>compAttack</ic>     | cmpa | In seconds, time to decrease the gain by 10db |
+| <ic>compRelease</ic>     | cmpr | In seconds, time to increase the gain by 10db |
+
+
 ## Distorsion, saturation, destruction
+
+Three additional effects that are easy enough to understand. These effects are deteriorating the signal, making it easy to get digital or gritty audio sample playback or synthesizers destroyed beyond recognition. Be careful with your signal level!
 	
 | Method     | Alias     | Description                     |
 |------------|-----------|---------------------------------|

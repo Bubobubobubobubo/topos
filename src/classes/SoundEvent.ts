@@ -301,9 +301,28 @@ export class SoundEvent extends AudibleEvent {
 
   // Reverb management
   public room = (value: number) => this.updateValue("room", value);
-  public rm = this.room;
-  public size = (value: number) => this.updateValue("size", value);
+  public rm = this.room
+  public roomfade = (value: number) => this.updateValue("roomfade", value);
+  public rfade = this.roomfade;
+  public roomlp = (value: number) => this.updateValue("roomlp", value);
+  public rlp = this.roomlp;
+  public roomdim = (value: number) => this.updateValue("roomdim", value);
+  public rdim = this.roomdim;
+  public size = (value: number) => this.updateValue("roomsize", value);
   public sz = this.size;
+
+  // Compressor
+  public comp = (value: number) => this.updateValue('compressor', value);
+  public cmp = this.comp;
+  public ratio = (value: number) => this.updateValue('compressorRatio', value);
+  public rt = this.ratio;
+  public knee = (value: number) => this.updateValue('compressorKnee', value);
+  public kn = this.knee;
+  public compAttack = (value: number) => this.updateValue('compressorAttack', value);
+  public cmpa = this.compAttack;
+  public compRelease = (value: number) => this.updateValue('compressorRelease', value);
+  public cmpr = this.compRelease;
+
 
   // Unit
   public stretch = (beat: number) => {
