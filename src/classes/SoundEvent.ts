@@ -267,9 +267,11 @@ export class SoundEvent extends AudibleEvent {
   public cut = (value: number) => this.updateValue("cut", value);
   public clip = (value: number) => this.updateValue("clip", value);
   public n = (value: number) => this.updateValue("n", value);
-  public note = (value: number | string) => {
+  public note = (value: number | string | null) => {
     if (typeof value === "string") {
       return this.updateValue("note", noteNameToMidi(value));
+    } else if (typeof value == null || value == undefined) {
+      return this.updateValue("note", 0).updateValue("gain", 0);
     } else {
       return this.updateValue("note", value);
     }
