@@ -20,7 +20,7 @@ Topos is a web-based application that lives [here](https://topos.raphaelforment.
 
 ## Disclaimer
 
-**Topos** is a very young project. It is not ready for end users, do not expect stable features and/or user support. Contributors and curious people are welcome! The software is not stabilized at all for the moment but it is already possible to have fun playing with it.
+**Topos** is a fairly young project developed by two part time hobbyists :) Do not expect stable features and/or user support in the initial development stage. Contributors and curious people are welcome! The software is working quite well and we are continuously striving to improve it.
 
 ## Installation (for devs and contributors)
 
