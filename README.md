@@ -52,4 +52,17 @@ The `tauri` version is only here to quickstart future developments but nothing 
 `docker compose --profile prod up`
 
 ### Build and run the dev image
-`docker compose --profile dev up`
+
+**First installation**
+First you need to map node_modules to your local machine for your ide intellisense to work properly
+```bash
+docker compose --profile dev up -d
+docker cp topos-dev:/app/node_modules .
+docker compose --profile dev down
+```
+
+**Then**
+```bash
+docker compose --profile dev up
+```
+
