@@ -149,5 +149,26 @@ beat(.25) :: sound('sine')
 `,
     true
   )}
+
+## Scale output for lighted keys
+
+Topos can output scales to external keyboards lighted keys using the following functions:
+
+- <ic>show_scale(key: string, scale: string|int, channel?: number, port?: string|number, soundOff?: boolean): void</ic>: sends the scale as midi on messages to specified port and channel to light the keys of external keyboard. If soundOff is true, all sound off message will be sent after every note on message. This can be useful with some keyboards not supporting external channel for lightning or routing for the midi in to suppress the sound from incoming note on messages.
+
+${makeExample(
+  "Show scale on external keyboard",
+  `show_scale("F","aeolian",0,4)`,
+  true
+  )}
+
+${makeExample(
+  "Hide scale",
+  `hide_scale("F","aeolian",0,4)`,
+  true
+  )}
+
+
 `
 }
+

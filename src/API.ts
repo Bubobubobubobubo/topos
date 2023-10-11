@@ -1,4 +1,4 @@
-import { seededRandom } from "zifferjs";
+import { getAllScaleNotes, seededRandom } from "zifferjs";
 import {
   MidiCCEvent,
   MidiConnection,
@@ -63,6 +63,7 @@ export class UserAPI {
   private errorTimeoutID: number = 0;
   private printTimeoutID: number = 0;
   public MidiConnection: MidiConnection;
+  public scale_aid: string|number|undefined = undefined;
   load: samples;
 
   constructor(public app: Editor) {
@@ -585,6 +586,61 @@ export class UserAPI {
     if (channel) return this.MidiConnection.findCCFromBufferInChannel(channel);
     else return this.MidiConnection.ccInputBuffer.shift();
   };
+
+  public show_scale = (
+    root: number|string, 
+    scale: number|string, 
+    channel: number = 0, 
+    port: number|string = (this.MidiConnection.currentOutputIndex || 0),
+    soundOff: boolean = false): void => {
+    /**
+     * Sends given scale to midi output for visual aid
+     */
+    if (!this.scale_aid || scale !== this.scale_aid) {
+      this.hide_scale(root,scale,channel,port);
+      const scaleNotes = getAllScaleNotes(scale, root);
+      // Send each scale note to current midi out
+      scaleNotes.forEach(note => {
+          this.MidiConnection.sendMidiOn(note, channel, 1, port);
+          if(soundOff) this.MidiConnection.sendAllSoundOff(channel, port);
+      }); 
+      
+      this.scale_aid = scale;
+    }
+  }
+
+  public hide_scale = (
+    // @ts-ignore
+    root: number|string=0,
+    // @ts-ignore 
+    scale: number|string=0, 
+    channel: number = 0, 
+    port: number|string = (this.MidiConnection.currentOutputIndex || 0)): void => {
+    /**
+     * Hides all notes by sending all notes off to midi output
+     */
+      const allNotes = Array.from(Array(128).keys());
+      // Send each scale note to current midi out
+      allNotes.forEach(note => {
+          this.MidiConnection.sendMidiOff(note, channel, port);
+      });
+      this.scale_aid = undefined;
+    
+  }
+
+  midi_notes_off = (channel: number = 0, port: number|string = (this.MidiConnection.currentOutputIndex || 0)): void => {
+    /**
+     * Sends all notes off to midi output
+     */
+    this.MidiConnection.sendAllNotesOff(channel, port);
+  }
+
+  midi_sound_off = (channel: number = 0, port: number|string = (this.MidiConnection.currentOutputIndex || 0)): void => {
+    /**
+     * Sends all sound off to midi output
+     */
+    this.MidiConnection.sendAllSoundOff(channel, port);
+  }
 
   // =============================================================
   // Ziffers related functions
