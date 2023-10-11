@@ -1,0 +1,18 @@
+version: '3.7'
+services:
+  topos-dev:
+    container_name: topos-dev
+    profiles: ["dev"]
+    build: 
+      context: .
+      target: "dev"
+    ports:
+      - "8000:8000"
+  topos-prod:
+    container_name: topos-prod
+    profiles: ["prod"]
+    build: 
+      context: .
+      target: "prod"
+    ports:
+      - "8001:80"
