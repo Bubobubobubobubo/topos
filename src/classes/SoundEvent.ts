@@ -267,9 +267,11 @@ export class SoundEvent extends AudibleEvent {
   public cut = (value: number) => this.updateValue("cut", value);
   public clip = (value: number) => this.updateValue("clip", value);
   public n = (value: number) => this.updateValue("n", value);
-  public note = (value: number | string) => {
+  public note = (value: number | string | null) => {
     if (typeof value === "string") {
       return this.updateValue("note", noteNameToMidi(value));
+    } else if (typeof value == null || value == undefined) {
+      return this.updateValue("note", 0).updateValue("gain", 0);
     } else {
       return this.updateValue("note", value);
     }
@@ -299,9 +301,28 @@ export class SoundEvent extends AudibleEvent {
 
   // Reverb management
   public room = (value: number) => this.updateValue("room", value);
-  public rm = this.room;
-  public size = (value: number) => this.updateValue("size", value);
+  public rm = this.room
+  public roomfade = (value: number) => this.updateValue("roomfade", value);
+  public rfade = this.roomfade;
+  public roomlp = (value: number) => this.updateValue("roomlp", value);
+  public rlp = this.roomlp;
+  public roomdim = (value: number) => this.updateValue("roomdim", value);
+  public rdim = this.roomdim;
+  public size = (value: number) => this.updateValue("roomsize", value);
   public sz = this.size;
+
+  // Compressor
+  public comp = (value: number) => this.updateValue('compressor', value);
+  public cmp = this.comp;
+  public ratio = (value: number) => this.updateValue('compressorRatio', value);
+  public rt = this.ratio;
+  public knee = (value: number) => this.updateValue('compressorKnee', value);
+  public kn = this.knee;
+  public compAttack = (value: number) => this.updateValue('compressorAttack', value);
+  public cmpa = this.compAttack;
+  public compRelease = (value: number) => this.updateValue('compressorRelease', value);
+  public cmpr = this.compRelease;
+
 
   // Unit
   public stretch = (beat: number) => {

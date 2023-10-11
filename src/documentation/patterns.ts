@@ -6,11 +6,11 @@ export const patterns = (application: Editor): string => {
   return `
 # Patterns
 
-Music really comes to life when you start playing with algorithmic patterns. They can be used to describe a melody, a rhythm, a texture, a set of custom parameters or anything else you can think of. Topos comes with a lot of different abstractions to deal with musical patterns of increasing complexity. Some knowledge of patterns and how to use them will help you to break out of simple loops and repeating structures.
+Playing with fixed values is fine but what if you could give more life to your parameters? Having parameters that can vary over time is important to describe melodies, rhythms, complex textures, etc. Topos comes with a lot of different abstractions to deal with musical patterns of increasing complexity. Some knowledge of patterns and how to use them will help you to break out of simple loops and repeating structures.
 
-## Working with Arrays
+## Arrays
 
-JavaScript is using [Arrays](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array) as a data structure for lists. Topos is extending them with custom methods that allow you to enter softly into a universe of musical patterns. These methods can often be chained to compose a more complex expression: <ic>[1, 2, 3].repeatOdd(5).palindrome().beat()</ic>.
+One of the most basic JavaScript data structures is [Arrays](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array). Topos is extending this data structure with custom methods that makes it usable for describing patterns that evolve over time. These methods can often be chained to compose more complex expressions: <ic>[1, 2, 3].repeatOdd(5).palindrome().beat()</ic>.
 
 - <ic>beat(division: number)</ic>: this method will return the next value in the list every _n_ pulses. By default, <ic>1</ic> equals to one beat but integer and floating point number values are supported as well. This method is extremely powerful and can be used for many different purposes. Check out the examples.
 
@@ -52,8 +52,7 @@ flip(4)::beat(2)::snd('pad').n(2).shape(.5).orbit(2).room(0.9).size(0.9).release
   false
 )}
 
-- <ic>pulse()</ic>: returns the index of the list corresponding to the current pulse (with wrapping). This method will return a different value for each pulse.
-- <ic>bar()</ic>: returns the index of the list corresponding to the current bar (with wrapping). This method will return a different value for each bar.
+- <ic>bar(value: number = 1)</ic>: returns the next value every bar (if <ic>value = 1</ic>). Using a larger value will return the next value every <ic>n</ic> bars.
 
 ${makeExample(
   "A simple drumbeat in no time!",
@@ -126,8 +125,8 @@ beat(.25)::snd('amencutup').n([1,2,3,4,5,6,7,8,9].degrade(20).loop($(1))).out()
   true
 )}
 
-- <ic>repeatAll(amount: number)</ic>: repeat every list elements _n_ times.
-- <ic>repeatPair(amount: number)</ic>: repeaet every pair element of the list _n_ times.
+- <ic>repeat(amount: number)</ic>: repeat every list elements _n_ times.
+- <ic>repeatEven(amount: number)</ic>: repeaet every pair element of the list _n_ times.
 - <ic>repeatOdd(amount: number)</ic>: repeaet every odd element of the list _n_ times.
 
 ${makeExample(
@@ -183,31 +182,31 @@ ${makeExample(
 beat(1)::snd('sine').sustain(0.1).freq([100,100,100,100,200].unique().beat()).out()
 `,
   true
-  )}
+)}
 
   - <ic>scale(scale: string, base note: number)</ic>: Map each element of the list to the closest note of the slected scale. [0, 2, 3, 5 ].scale("major", 50) returns [50, 52, <ic>54</ic>, 55]. You can use western scale names like (Major, Minor, Minor pentatonic ...) or [zeitler](https://ianring.com/musictheory/scales/traditions/zeitler) scale names. Alternatively you can also use the integers as used by Ian Ring in his [study of scales](https://ianring.com/musictheory/scales/).
 
 ${makeExample(
-    "Mapping the note array to the E3 major scale",
-    `
+  "Mapping the note array to the E3 major scale",
+  `
 beat(1) :: snd('gtr')
     .note([0, 5, 2, 1, 7].scale("Major", 52).beat())
     .out()
 `,
-    true
+  true
 )}
 
 - <ic>scaleArp(scale: string, mask: number)</ic>: extrapolate a custom-masked scale from each list elements. [0].scale("major", 3) returns [0,2,4]. <ic>scaleArp</ic> supports the same scales as <ic>scale</ic>.
 
 ${makeExample(
-    "Extrapolate a 3-elements Mixolydian scale from 2 notes",
-    `
+  "Extrapolate a 3-elements Mixolydian scale from 2 notes",
+  `
 beat(1) :: snd('gtr')
     .note([0, 5].scaleArp("mixolydian", 3).beat() + 50)
     .out()
 `,
-    true
-  )}
+  true
+)}
 
 
 - <ic>add()</ic>: add a given amount to every list element.
