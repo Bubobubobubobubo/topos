@@ -1007,19 +1007,33 @@ export class Editor {
   };
 
   updateKnownUniversesView = () => {
-    let existing_universes = document.getElementById("existing-universes");
-    let known_universes = Object.keys(this.universes);
-    let final_html =
-      "<ul class='lg:h-80 lg:w-80 lg:pb-2 lg:pt-2 overflow-y-scroll text-white lg:mb-4 border rounded-lg bg-neutral-800'>";
-    known_universes.forEach((name) => {
-      final_html += `
-<li onclick="_loadUniverseFromInterface('${name}')" class="hover:fill-black hover:bg-white py-2 hover:text-black flex justify-between px-4">
-	<p >${name}</p>
-	<button onclick=_deleteUniverseFromInterface('${name}')>🗑</button>
-</li>`;
-    });
-    final_html = final_html + "</ul>";
-    existing_universes!.innerHTML = final_html;
+    let itemTemplate = document.getElementById("ui-known-universe-item-template") as HTMLTemplateElement;
+    if(!itemTemplate){
+      console.warn("Missing template #ui-known-universe-item-template")
+      return
+    }
+
+    let existing_universes = document.getElementById("existing-universes")
+    if(!existing_universes){
+      console.warn("Missing element #existing-universes")
+      return
+    }
+
+    let list = document.createElement("ul")
+    list.className = "lg:h-80 lg:w-80 lg:pb-2 lg:pt-2 overflow-y-scroll text-white lg:mb-4 border rounded-lg bg-neutral-800"
+
+    list.append(...Object.keys(this.universes)
+      .map(it => {
+        let item = itemTemplate.content.cloneNode(true) as DocumentFragment
+        let api = (window as unknown as UserAPI) // It's dirty but okey
+        item.querySelector(".universe-name")!.textContent = it
+        item.querySelector(".load-universe")?.addEventListener("click", () => api._loadUniverseFromInterface(it))
+        item.querySelector(".delete-universe")?.addEventListener("click", () => api._deleteUniverseFromInterface(it))
+        return item
+      }))
+
+    existing_universes.innerHTML = ""
+    existing_universes.append(list)
   };
 
   async share() {
