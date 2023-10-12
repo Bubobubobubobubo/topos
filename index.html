@@ -444,6 +444,14 @@
         </div>
       </div>
       <script type="module" src="/src/main.ts"></script>
+
+      <template id="ui-known-universe-item-template">
+        <!-- A known universe button in "opening" interface -->
+        <li class="hover:fill-black hover:bg-white py-2 hover:text-black flex justify-between px-4">
+          <button class="universe-name load-universe" title="Load this universe">Universe Name</button>
+          <button class="delete-universe" title="Delete this universe">🗑</button>
+        </li>
+      </template>
   </body>
 	<p id="timeviewer" class="rounded-lg px-2 py-2 font-bold bg-white cursor-textpointer-events-none select-none text-black text-sm absolute bottom-2 right-2"></p>
 </html>
