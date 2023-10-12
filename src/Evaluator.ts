@@ -18,9 +18,9 @@ const tryCatchWrapper = (
   return new Promise((resolve, _) => {
     try {
       Function(
-        `"use strict";try{${codeReplace(
-          code
-        )}} catch (e) {console.log(e); _reportError(e);};`
+        `"use strict";try{
+          ${codeReplace(code)}; /* break block comments */;
+      } catch (e) {console.log(e); _reportError(e);};`
       ).call(application.api);
       resolve(true);
     } catch (error) {
