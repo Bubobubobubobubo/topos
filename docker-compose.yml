@@ -1,0 +1,28 @@
+version: '3.7'
+services:
+  topos-dev:
+    container_name: topos-dev
+    profiles: ["dev"]
+    build: 
+      context: .
+      target: "dev"
+    volumes:
+      - ./src:/app/src
+      - ./fonts:/app/fonts
+      - ./img:/app/img
+      - ./package.json:/app/package.json
+      - ./postcss.config.js:/app/postcss.config.js
+      - ./tailwind.config.js:/app/tailwind.config.js
+      - ./tsconfig.json:/app/tsconfig.json
+      - ./vite.config.js:/app/vite.config.js
+      - ./yarn.lock:/app/yarn.lock
+    ports:
+      - "8000:8000"
+  topos-prod:
+    container_name: topos-prod
+    profiles: ["prod"]
+    build: 
+      context: .
+      target: "prod"
+    ports:
+      - "8001:80"

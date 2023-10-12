@@ -42,3 +42,27 @@ To build a standalone browser application using [Tauri](https://tauri.app/), you
 - `yarn tauri dev`
 
 The `tauri` version is only here to quickstart future developments but nothing has been done yet.
+
+## Docker
+
+### Run the application
+`docker run -p 8001:80 yassinsiouda/topos:latest`
+
+### Build and run the prod image
+`docker compose --profile prod up`
+
+### Build and run the dev image
+
+**First installation**
+First you need to map node_modules to your local machine for your ide intellisense to work properly
+```bash
+docker compose --profile dev up -d
+docker cp topos-dev:/app/node_modules .
+docker compose --profile dev down
+```
+
+**Then**
+```bash
+docker compose --profile dev up
+```
+
