@@ -30,4 +30,4 @@ jobs:
           push: true
           context: .
           # based on branch push tag latest for main with commit sha
-          tags: BuboBuboBubo/topos:latest, BuboBuboBubo/topos:main-${{ github.sha }}
+          tags: bubobubobubo/topos:latest, bubobubobubo/topos:main-${{ github.sha }}
