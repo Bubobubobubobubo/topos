@@ -39,6 +39,9 @@
     "tone": "^14.8.49",
     "unique-names-generator": "^4.7.1",
     "vite-plugin-markdown": "^2.1.0",
+    "y-codemirror.next": "^0.3.2",
+    "y-webrtc": "^10.2.5",
+    "yjs": "^13.6.8",
     "zifferjs": "^0.0.32",
     "zzfx": "^1.2.0"
   }

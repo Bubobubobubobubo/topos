@@ -18,11 +18,15 @@ services:
       - ./yarn.lock:/app/yarn.lock
     ports:
       - "8000:8000"
+    env_file:
+      - .env
   topos-prod:
     container_name: topos-prod
     profiles: ["prod"]
     build: 
       context: .
       target: "prod"
+    env_file:
+      - .env
     ports:
       - "8001:80"

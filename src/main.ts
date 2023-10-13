@@ -1,5 +1,9 @@
 import { uniqueNamesGenerator, colors, animals } from "unique-names-generator";
 import { examples } from "./examples/excerpts";
+import * as Y from 'yjs'
+import { yCollab } from 'y-codemirror.next'
+import { WebrtcProvider } from 'y-webrtc'
+import * as random from 'lib0/random'
 import { EditorState, Compartment } from "@codemirror/state";
 import { ViewUpdate, lineNumbers, keymap } from "@codemirror/view";
 import { javascript } from "@codemirror/lang-javascript";
@@ -51,6 +55,34 @@ window.addEventListener(
   },
   false
 );
+
+// #################### COLLAB ################
+
+export const usercolors = [
+  { color: '#30bced', light: '#30bced33' },
+  { color: '#6eeb83', light: '#6eeb8333' },
+  { color: '#ffbc42', light: '#ffbc4233' },
+  { color: '#ecd444', light: '#ecd44433' },
+  { color: '#ee6352', light: '#ee635233' },
+  { color: '#9ac2c9', light: '#9ac2c933' },
+  { color: '#8acb88', light: '#8acb8833' },
+  { color: '#1be7ff', light: '#1be7ff33' }
+]
+
+// select a random color for this user
+export const userColor = usercolors[random.uint32() % usercolors.length]
+
+const ydoc = new Y.Doc()
+const provider = new WebrtcProvider('codemirror6-demo-room',  ydoc, { signaling: [import.meta.env.VITE_DEFAULT_WEBRTC_SERVER] })
+const ytext = ydoc.getText('codemirror')
+
+const undoManager = new Y.UndoManager(ytext)
+
+provider.awareness.setLocalStateField('user', {
+  name: 'Anonymous ' + Math.floor(Math.random() * 100),
+  color: userColor.color,
+  colorLight: userColor.light
+})
 
 const classMap = {
   h1: "text-white lg:text-4xl text-xl lg:ml-4 lg:mx-4 mx-2 lg:my-4 my-2 lg:mb-4 mb-4 bg-neutral-900 rounded-lg py-2 px-2",
@@ -155,6 +187,10 @@ export class Editor {
 
   documentation_button: HTMLButtonElement = document.getElementById(
     "doc-button-1"
+  ) as HTMLButtonElement;
+
+  collaborate_button: HTMLButtonElement = document.getElementById(
+    "collaborate-button"
   ) as HTMLButtonElement;
   eval_button: HTMLButtonElement = document.getElementById(
     "eval-button-1"
@@ -595,6 +631,10 @@ export class Editor {
       this.showDocumentation();
     });
 
+    this.collaborate_button.addEventListener("click", () => {
+      this.showCollaboration();
+    });
+
     this.destroy_universes_button.addEventListener("click", () => {
       if (confirm("Do you want to destroy all universes?")) {
         this.universes = {
@@ -924,10 +964,12 @@ export class Editor {
     });
 
     this.state = EditorState.create({
+      doc: ytext.toString(),
       extensions: [
         ...this.editorExtensions,
         EditorView.lineWrapping,
         dynamicPlugins.of(this.userPlugins),
+        yCollab(ytext, provider.awareness, { undoManager }),
         Prec.highest(
           keymap.of([
             {
@@ -940,7 +982,8 @@ export class Editor {
         ),
         keymap.of([indentWithTab]),
       ],
-      doc: this.universes[this.selected_universe].global.candidate,
+      //doc: this.universes[this.selected_universe].global.candidate,
+      
     });
 
     this.view = new EditorView({
