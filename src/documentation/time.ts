@@ -18,9 +18,9 @@ To change the tempo, use the <ic>bpm(number)</ic> function. The transport is con
 	
 ## Simple rhythms
 	
-Let's study two very simple rhythmic functions, <ic>mod(n: ...number[])</ic> and <ic>onbeat(...n:number[])</ic>. They are both easy to understand and powerful enough to get you to play your first rhythms.
-	
-- <ic>beat(...n: number[])</ic>: return true every _n_ beats. The value <ic>1</ic> will return <ic>true</ic> at the beginning of each beat. Floating point numbers like <ic>0.5</ic> or <ic>0.25</ic> are also accepted. Multiple values can be passed to <ic>beat</ic> to generate more complex rhythms.
+- <ic>beat(n: number | number[] = 1, offset: number = 1)</ic>: return true every _n_ beats.
+  - <ic>number</ic>: if <ic>number = 1</ic>, the function will return <ic>true</ic> every beat. Lists can be used too.
+  - <ic>offset</ic>: offset (in beats) to apply. An offset of <ic>0.5</ic> will return true against the beat.
 	
 ${makeExample(
     "Using different mod values",
@@ -51,7 +51,19 @@ beat([1,0.75].beat(2)) :: blip([50, 100].beat(2)).pan(r(0,1)).out();
     false
   )}
 
-- <ic>pulse(...n: number[])</ic>: faster version of the <ic>beat</ic> function. Instead of returning true for every beat, this function is returning true every _n_ clock ticks! It can be used to generate very unexpected rhythms.
+${makeExample(
+    "Multiple values for creating rhythms", `
+beat([1,2.5,3.25], 0)::sound('hat').out()
+beat([1,2.25,4])::sound('kick').speed(
+  [1.25,1].beat(0.5)).out()
+onbeat(3, 3.25, 3.125)::sound('shaker').out()
+`, false,
+  )}
+
+- <ic>pulse(n: number | number[] = 1, offset: number = 1)</ic>: return true every _n_ pulses. A pulse is the tiniest possible rhythmic value.
+  - <ic>number</ic>: if <ic>number = 1</ic>, the function will return <ic>true</ic> every pulse. Lists can be used too.
+  - <ic>offset</ic>: offset (in pulses) to apply.
+
 
 ${makeExample(
     "Intriguing rhythms",
@@ -73,7 +85,10 @@ beat(1)::snd(['bd', '808oh'].beat(1)).out()
     false
   )};
 
-- <ic>bar(...n: number[])</ic>: return true every _n_ bars.
+
+- <ic>bar(n: number | number[] = 1, offset: number = 1)</ic>: return true every _n_ bars.
+  - <ic>number</ic>: if <ic>number = 1</ic>, the function will return <ic>true</ic> every bar. Lists can be used too.
+  - <ic>offset</ic>: offset (in bars) to apply.
 
 ${makeExample(
     "Four beats per bar: proof",
@@ -83,6 +98,16 @@ beat(1)::sound('hat').speed(2).out()
 `, true
   )}
 
+
+${makeExample(
+    "Offsettings trigger signal",
+    `
+bar(1)::sound('kick').out()
+beat(1)::sound('hat').speed(2).out()
+beat(1,0.5)::sound('hat').speed(4).out()
+bar(1,0.5)::sound('sn').out()
+`, false
+  )}
 
 - <ic>onbeat(...n: number[])</ic>: The <ic>onbeat</ic> function allows you to lock on to a specific beat from the clock to execute code. It can accept multiple arguments. It's usage is very straightforward and not hard to understand. You can pass either integers or floating point numbers. By default, topos is using a <ic>4/4</ic> bar meaning that you can target any of these beats (or in-between) with this function.
 
@@ -388,7 +413,7 @@ ${makeExample(
     "Thinking music over bars",
     `
 let roomy = (n) => n.room(1).size(1).cutoff(500 + usaw(1/8) * 5000);
-function a() {
+function a() {
   beat(1) && roomy(sound('kick')).out()
   beat(.5) && roomy(sound('hat')).out()
 }

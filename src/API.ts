@@ -1259,33 +1259,55 @@ export class UserAPI {
   // Time Filters
   // =============================================================
 
-  public beat = (...n: number[]): boolean => {
-    const results: boolean[] = n.map(
+  public beat = (n: number | number[] = 1, nudge: number = 0): boolean => {
+    /**
+     * Determine if the current pulse is on a specified beat, with optional nudge.
+     * @param n Single beat multiplier or array of beat multipliers
+     * @param nudge Offset in pulses to nudge the beat forward or backward
+     * @returns True if the current pulse is on one of the specified beats (considering nudge), false otherwise
+     */
+    const nArray = Array.isArray(n) ? n : [n];
+    const results: boolean[] = nArray.map(
       (value) =>
-        this.app.clock.pulses_since_origin % Math.floor(value * this.ppqn()) ===
-        0
+        (this.app.clock.pulses_since_origin - Math.floor(nudge * this.ppqn())) % Math.floor(value * this.ppqn()) === 0
     );
     return results.some((value) => value === true);
   };
   b = this.beat;
 
-
-  public bar = (...n: number[]): boolean => {
-    const results: boolean[] = n.map(
+  public bar = (n: number | number[] = 1, nudge: number = 0): boolean => {
+    /**
+    * Determine if the current pulse is on a specified bar, with optional nudge.
+    * @param n Single bar multiplier or array of bar multipliers
+    * @param nudge Offset in bars to nudge the bar forward or backward
+    * @returns True if the current pulse is on one of the specified bars (considering nudge), false otherwise
+    */
+    const nArray = Array.isArray(n) ? n : [n];
+    const barLength = this.app.clock.time_signature[1] * this.ppqn();
+    const nudgeInPulses = Math.floor(nudge * barLength);
+    const results: boolean[] = nArray.map(
       (value) =>
-        this.app.clock.pulses_since_origin % Math.floor((value * this.ppqn()) * this.app.clock.time_signature[1]) ===
-        0
+        (this.app.clock.pulses_since_origin - nudgeInPulses) % Math.floor(value * barLength) === 0
     );
     return results.some((value) => value === true);
   };
   B = this.bar;
 
-  public pulse = (...n: number[]): boolean => {
-    const results: boolean[] = n.map(
-      (value) => this.app.clock.pulses_since_origin % value === 0
+  public pulse = (n: number | number[] = 1, nudge: number = 0): boolean => {
+    /**
+    * Determine if the current pulse is on a specified pulse count, with optional nudge.
+    * @param n Single pulse count or array of pulse counts
+    * @param nudge Offset in pulses to nudge the pulse forward or backward
+    * @returns True if the current pulse is on one of the specified pulse counts (considering nudge), false otherwise
+    */
+    const nArray = Array.isArray(n) ? n : [n];
+    const results: boolean[] = nArray.map(
+      (value) => (this.app.clock.pulses_since_origin - nudge) % value === 0
     );
     return results.some((value) => value === true);
   };
+  p = this.pulse;
+
 
   // =============================================================
   // Modulo based time filters
