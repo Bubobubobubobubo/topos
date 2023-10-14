@@ -405,7 +405,6 @@ export class Editor {
     //
     document.addEventListener('keydown', (event) => {
       if (event.altKey) {
-        event.preventDefault();
         this.fill = true;
         this.fill_viewer.classList.remove("invisible");
       }
