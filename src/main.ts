@@ -34,23 +34,23 @@ import showdownHighlight from "showdown-highlight";
 import { makeStringExtensions } from "./StringExtensions";
 
 // Broadcast that you're opening a page.
-localStorage.openpages = Date.now();
-window.addEventListener(
-  "storage",
-  function (e) {
-    if (e.key == "openpages") {
-      // Listen if anybody else is opening the same page!
-      localStorage.page_available = Date.now();
-    }
-    if (e.key == "page_available") {
-      document.getElementById("all")!.classList.add("invisible");
-      alert(
-        "Topos is already opened in another tab. Close this tab now to prevent data loss."
-      );
-    }
-  },
-  false
-);
+// localStorage.openpages = Date.now();
+// window.addEventListener(
+//   "storage",
+//   function (e) {
+//     if (e.key == "openpages") {
+//       // Listen if anybody else is opening the same page!
+//       localStorage.page_available = Date.now();
+//     }
+//     if (e.key == "page_available") {
+//       document.getElementById("all")!.classList.add("invisible");
+//       alert(
+//         "Topos is already opened in another tab. Close this tab now to prevent data loss."
+//       );
+//     }
+//   },
+//   false
+// );
 
 const classMap = {
   h1: "text-white lg:text-4xl text-xl lg:ml-4 lg:mx-4 mx-2 lg:my-4 my-2 lg:mb-4 mb-4 bg-neutral-900 rounded-lg py-2 px-2",
@@ -88,6 +88,7 @@ const bindings = Object.keys(classMap).map((key) => ({
 
 export class Editor {
   universes: Universes = template_universes;
+  fill: boolean = false;
   selected_universe: string;
   local_index: number = 1;
   editor_mode: "global" | "local" | "init" | "notes" = "global";
@@ -123,6 +124,11 @@ export class Editor {
   // Topos Logo
   topos_logo: HTMLElement = document.getElementById(
     "topos-logo"
+  ) as HTMLElement;
+
+  // Fillviewer
+  fill_viewer: HTMLElement = document.getElementById(
+    "fillviewer"
   ) as HTMLElement;
 
   // Transport elements
@@ -396,6 +402,21 @@ export class Editor {
     // ================================================================================
     // Application event listeners
     // ================================================================================
+    //
+    document.addEventListener('keydown', (event) => {
+      if (event.altKey) {
+        event.preventDefault();
+        this.fill = true;
+        this.fill_viewer.classList.remove("invisible");
+      }
+    });
+
+    document.addEventListener('keyup', (event) => {
+      if (event.key === 'Alt') {
+        this.fill = false;
+        this.fill_viewer.classList.add("invisible");
+      }
+    });
 
     window.addEventListener("keydown", (event: KeyboardEvent) => {
       if (event.key === "Tab") {
@@ -1008,13 +1029,13 @@ export class Editor {
 
   updateKnownUniversesView = () => {
     let itemTemplate = document.getElementById("ui-known-universe-item-template") as HTMLTemplateElement;
-    if(!itemTemplate){
+    if (!itemTemplate) {
       console.warn("Missing template #ui-known-universe-item-template")
       return
     }
 
     let existing_universes = document.getElementById("existing-universes")
-    if(!existing_universes){
+    if (!existing_universes) {
       console.warn("Missing element #existing-universes")
       return
     }

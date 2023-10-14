@@ -57,6 +57,7 @@ export class SoundEvent extends AudibleEvent {
     this.updateValue("pitchJumpTime", value);
   public pjt = this.pitchJumpTime;
   public lfo = (value: number) => this.updateValue("lfo", value);
+  public znoise = (value: number) => this.updateValue("znoise", value);
   public noise = (value: number) => this.updateValue("noise", value);
   public zmod = (value: number) => this.updateValue("zmod", value);
   public zcrush = (value: number) => this.updateValue("zcrush", value);
@@ -109,6 +110,13 @@ export class SoundEvent extends AudibleEvent {
     this.release(r);
     return this;
   };
+  public ad = (a: number, d: number) => {
+    this.attack(a);
+    this.decay(d);
+    this.sustain(0.0);
+    this.release(0.0);
+    return this;
+  }
 
   // Lowpass filter
   public lpenv = (value: number) => this.updateValue("lpenv", value);

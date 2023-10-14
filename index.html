@@ -199,21 +199,24 @@
       </div>
 
       <!-- This modal is used for settings -->
-      <div id="modal-settings" class="invisible bg-neutral-900 bg-opacity-50 flex justify-center items-center absolute top-0 right-0 bottom-0 left-0">
-        <div class="grid grid-col-3 w-full">
-          <div class="bg-white rounded-lg mx-48 my-48 space-y-8 px-8">
+      <div id="modal-settings" class="invisible 
+      bg-neutral-900 bg-opacity-50 flex
+      absolute justify-center items-center 
+      top-0 bottom-0 overflow-y-auto 
+      overflow-x-auto w-screen">
+        <div class="grid lg:grid-col-3 grid-col-1">
+          <div class="bg-white rounded-lg lg:mx-48 mx-0 lg:my-48 my-0 lg:space-y-8 space-y-2 lg:px-8 px-2 mt-24">
           <h1 class="mt-12 font-semibold rounded bg-gray-800 justify-center text-center text-white mx-4 text-xl border-b border-gray-300 py-4">Topos Application Settings</h1>
-
-            <div class="flex flex-row mr-4 ml-4">
+            <div class="lg:flex lg:flex-row mr-4 ml-4">
             <!-- Font Size Selection -->
-              <div class="bg-gray-200 rounded-lg w-full pt-2">
+              <div class="bg-gray-200 rounded-lg lg:w-full w-auto pt-2 pb-1 mb-2">
                 <p class="font-bold text-xl ml-4 pb-4 underline underline-offset-4">Font Settings</p>
                 <div class="mb-6 mx-4 font-semibold">
                   <label for="default-input" class="block mb-2 ml-1 font-normal">Size:</label>
                   <input type="text" id="font-size-input" type="number" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                 </div>
                 <label for="font" class="block ml-5 mb-2 font-medium">Font:</label>
-                  <select id="font-family" class="bg-gray-50 w-5/6 ml-4 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                  <select id="font-family" class="bg-gray-50 w-2/3 ml-4 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
                     <option selected>Choose a font</option>
                     <option value="US">IBM Plex Mono</option>
                     <option value="CA">Victor Mono</option>
@@ -221,7 +224,7 @@
                   </select>
               </div>
               <!-- Editor mode selection -->
-            <div class="bg-gray-200 rounded-lg ml-4 w-full pt-2">
+            <div class="bg-gray-200 rounded-lg lg:ml-4 lg:w-full w-auto pt-2 pb-1 mb-2">
               <p class="font-bold text-xl ml-4 pb-4 underline underline-offset-4">Editor options</p>
               <!-- Checkboxes  -->
   					  <div class="pr-4">
@@ -248,7 +251,7 @@
 						  </div>
             </div>
 
-            <div class="bg-gray-200 rounded-lg ml-4 w-full pt-2">
+            <div class="bg-gray-200 rounded-lg lg:ml-4 lg:w-full w-auto pt-2 pb-1 mb-2">
               <p class="font-bold text-xl ml-4 pb-4 underline underline-offset-4">File Management</p>
               <div class="flex flex-col space-y-2">
                 <button id="download-universes" class="bg-gray-800 hover:bg-gray-900 text-white font-bold py-4 px-2 rounded-lg inline-flex items-center mx-4">
@@ -347,7 +350,7 @@
 
           </div>
 
-          <div class="flex space-x-6 border-t border-gray-200 rounded-b dark:border-gray-600 mx-4 border-spacing-y-4">
+          <div class="flex space-x-6 border-t border-gray-200 rounded-b dark:border-gray-600 mx-4 border-spacing-y-4 pb-2">
             <button id="close-settings-button" data-modal-hide="defaultModal" type="button" class="hover:bg-gray-700 bg-gray-800 mt-4 mb-4 text-white focus:ring-4  font-medium rounded-lg text-sm px-5 py-2.5 text-center">OK</button>
           </div>
         </div>
@@ -454,4 +457,5 @@
       </template>
   </body>
 	<p id="timeviewer" class="rounded-lg px-2 py-2 font-bold bg-white cursor-textpointer-events-none select-none text-black text-sm absolute bottom-2 right-2"></p>
+	<p id="fillviewer" class="invisible rounded-lg px-2 py-2 font-bold bg-white cursor-textpointer-events-none select-none text-black text-sm absolute right-2 bottom-12">/////// Fill ///////</p>
 </html>

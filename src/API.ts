@@ -1255,6 +1255,13 @@ export class UserAPI {
 
   denominator = this.meter;
 
+
+  // =============================================================
+  // Fill
+  // =============================================================
+
+  public fill = (): boolean => this.app.fill;
+
   // =============================================================
   // Time Filters
   // =============================================================
@@ -1307,6 +1314,14 @@ export class UserAPI {
     return results.some((value) => value === true);
   };
   p = this.pulse;
+
+  public tick = (tick: number | number[], offset: number = 0): boolean => {
+    const nArray = Array.isArray(tick) ? tick : [tick];
+    const results: boolean[] = nArray.map(
+      (value) => (this.app.clock.time_position.pulse === value + offset)
+    );
+    return results.some((value) => value === true)
+  }
 
 
   // =============================================================
