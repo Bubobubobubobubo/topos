@@ -1558,7 +1558,7 @@ export class UserAPI {
     return result;
   };
 
-  sine = (freq: number = 1, offset: number = 0): number => {
+  sine = (freq: number = 1, times: number = 1, offset: number = 0): number => {
     /**
      * Returns a sine wave between -1 and 1.
      *
@@ -1567,11 +1567,11 @@ export class UserAPI {
      * @returns A sine wave between -1 and 1
      */
     return (
-      Math.sin(this.app.clock.ctx.currentTime * Math.PI * 2 * freq) + offset
+      (Math.sin(this.app.clock.ctx.currentTime * Math.PI * 2 * freq) + offset) * times
     );
   };
 
-  usine = (freq: number = 1, offset: number = 0): number => {
+  usine = (freq: number = 1, times: number = 1, offset: number = 0): number => {
     /**
      * Returns a sine wave between 0 and 1.
      *
@@ -1580,10 +1580,10 @@ export class UserAPI {
      * @returns A sine wave between 0 and 1
      * @see sine
      */
-    return (this.sine(freq, offset) + 1) / 2;
+    return ((this.sine(freq, offset) + 1) / 2) * times
   };
 
-  saw = (freq: number = 1, offset: number = 0): number => {
+  saw = (freq: number = 1, times: number = 1, offset: number = 0): number => {
     /**
      * Returns a saw wave between -1 and 1.
      *
@@ -1595,10 +1595,10 @@ export class UserAPI {
      * @see sine
      * @see noise
      */
-    return ((this.app.clock.ctx.currentTime * freq) % 1) * 2 - 1 + offset;
+    return (((this.app.clock.ctx.currentTime * freq) % 1) * 2 - 1 + offset) * times;
   };
 
-  usaw = (freq: number = 1, offset: number = 0): number => {
+  usaw = (freq: number = 1, times: number = 1, offset: number = 0): number => {
     /**
      * Returns a saw wave between 0 and 1.
      *
@@ -1607,10 +1607,10 @@ export class UserAPI {
      * @returns A saw wave between 0 and 1
      * @see saw
      */
-    return (this.saw(freq, offset) + 1) / 2;
+    return ((this.saw(freq, offset) + 1) / 2) * times;
   };
 
-  triangle = (freq: number = 1, offset: number = 0): number => {
+  triangle = (freq: number = 1, times: number = 1, offset: number = 0): number => {
     /**
      * Returns a triangle wave between -1 and 1.
      *
@@ -1620,10 +1620,10 @@ export class UserAPI {
      * @see sine
      * @see noise
      */
-    return Math.abs(this.saw(freq, offset)) * 2 - 1;
+    return (Math.abs(this.saw(freq, offset)) * 2 - 1) * times;
   };
 
-  utriangle = (freq: number = 1, offset: number = 0): number => {
+  utriangle = (freq: number = 1, times: number = 1, offset: number = 0): number => {
     /**
      * Returns a triangle wave between 0 and 1.
      *
@@ -1632,11 +1632,12 @@ export class UserAPI {
      * @returns A triangle wave between 0 and 1
      * @see triangle
      */
-    return (this.triangle(freq, offset) + 1) / 2;
+    return ((this.triangle(freq, offset) + 1) / 2) * times;
   };
 
   square = (
     freq: number = 1,
+    times: number = 1,
     offset: number = 0,
     duty: number = 0.5
   ): number => {
@@ -1651,11 +1652,12 @@ export class UserAPI {
      */
     const period = 1 / freq;
     const t = (Date.now() / 1000 + offset) % period;
-    return t / period < duty ? 1 : -1;
+    return (t / period < duty ? 1 : -1) * times;
   };
 
   usquare = (
     freq: number = 1,
+    times: number = 1,
     offset: number = 0,
     duty: number = 0.5
   ): number => {
@@ -1667,10 +1669,10 @@ export class UserAPI {
      * @returns A square wave between 0 and 1
      * @see square
      */
-    return (this.square(freq, offset, duty) + 1) / 2;
+    return ((this.square(freq, offset, duty) + 1) / 2) * times;
   };
 
-  noise = (): number => {
+  noise = (times: number = 1): number => {
     /**
      * Returns a random value between -1 and 1.
      *
@@ -1681,7 +1683,7 @@ export class UserAPI {
      * @see sine
      * @see noise
      */
-    return this.randomGen() * 2 - 1;
+    return (this.randomGen() * 2 - 1) * times;
   };
 
   // =============================================================
