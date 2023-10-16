@@ -8,8 +8,8 @@
     
     
     <script src="https://unpkg.com/hydra-synth"></script>
-    <script type="module" crossorigin src="/assets/index-4c117ff4.js"></script>
-    <link rel="stylesheet" href="/assets/index-92f73574.css">
+    <script type="module" crossorigin src="/assets/index-020449ff.js"></script>
+    <link rel="stylesheet" href="/assets/index-4adf04a1.css">
   </head>
   <style>
 
@@ -201,24 +201,28 @@
       </div>
 
       <!-- This modal is used for settings -->
-      <div id="modal-settings" class="invisible 
-      bg-neutral-900 bg-opacity-50 flex
-      absolute justify-center items-center 
-      top-0 bottom-0 overflow-y-auto 
-      overflow-x-auto w-screen">
-        <div class="grid lg:grid-col-3 grid-col-1">
-          <div class="bg-white rounded-lg lg:mx-48 mx-0 lg:my-48 my-0 lg:space-y-8 space-y-2 lg:px-8 px-2 mt-24">
-          <h1 class="mt-12 font-semibold rounded bg-gray-800 justify-center text-center text-white mx-4 text-xl border-b border-gray-300 py-4">Topos Application Settings</h1>
-            <div class="lg:flex lg:flex-row mr-4 ml-4">
+      <div id="modal-settings" class="invisible bg-neutral-900 bg-opacity-50 flex
+              absolute lg:justify-center lg:items-center overflow-y-scroll owerflow-x-scroll
+              md:top-0 md:bottom-0 md:w-auto md:h-auto h-screen w-screen"
+      >
+        <div class="grid grid-col-3">
+          <div class="bg-white rounded-lg lg:mx-48 mx-0 lg:space-y-8 space-y-4 lg:px-8">
+          <h1 class="lg:mt-12 mt-0 font-semibold rounded-lg
+                     bg-gray-800 justify-center lg:text-center lg:pl-0 pl-8 text-white mx-4
+                     text-sm lg:text-xl border-b border-gray-300 py-4">Topos Application Settings</h1>
+            <div class="flex lg:flex-row flex-col mr-4 ml-4">
             <!-- Font Size Selection -->
-              <div class="bg-gray-200 rounded-lg lg:w-full w-auto pt-2 pb-1 mb-2">
-                <p class="font-bold text-xl ml-4 pb-4 underline underline-offset-4">Font Settings</p>
+              <div class="bg-gray-200 rounded-lg ml-0 lg:w-1/3 w-3/4 pt-2 pb-1 mb-2">
+                <p class="font-bold lg:text-xl text-sm ml-4 pb-4 underline underline-offset-4">Font Settings</p>
                 <div class="mb-6 mx-4 font-semibold">
-                  <label for="default-input" class="block mb-2 ml-1 font-normal">Size:</label>
-                  <input type="text" id="font-size-input" type="number" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                  <label for="default-input" class="block mb-2 ml-1 font-normal sd:text-sm">Size:</label>
+                  <input type="text" id="font-size-input" type="number" class="bg-gray-50 border border-gray-300 text-gray-900 
+                  text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 
+                  dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                 </div>
-                <label for="font" class="block ml-5 mb-2 font-medium">Font:</label>
-                  <select id="font-family" class="bg-gray-50 w-2/3 ml-4 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                <label for="font" class="block ml-5 mb-2 font-medium sd:text-sm">Font:</label>
+                  <select id="font-family" class="bg-gray-50 w-2/3 ml-4 border border-gray-300 w-full
+                  text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block  p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
                     <option selected>Choose a font</option>
                     <option value="US">IBM Plex Mono</option>
                     <option value="CA">Victor Mono</option>
@@ -226,8 +230,8 @@
                   </select>
               </div>
               <!-- Editor mode selection -->
-            <div class="bg-gray-200 rounded-lg lg:ml-4 lg:w-full w-auto pt-2 pb-1 mb-2">
-              <p class="font-bold text-xl ml-4 pb-4 underline underline-offset-4">Editor options</p>
+            <div class="bg-gray-200 rounded-lg lg:ml-4 lg:w-1/3 w-3/4 pt-2 pb-1 mb-2">
+              <p class="font-bold lg:text-xl text-sm ml-4 pb-4 underline underline-offset-4">Editor options</p>
               <!-- Checkboxes  -->
   					  <div class="pr-4">
 							  <div  class="flex items-center mb-4 ml-5">
@@ -253,7 +257,7 @@
 						  </div>
             </div>
 
-            <div class="bg-gray-200 rounded-lg lg:ml-4 lg:w-full w-auto pt-2 pb-1 mb-2">
+            <div class="bg-gray-200 rounded-lg lg:ml-4 lg:w-1/3 w-3/4 pt-2 pb-1 mb-2">
               <p class="font-bold text-xl ml-4 pb-4 underline underline-offset-4">File Management</p>
               <div class="flex flex-col space-y-2">
                 <button id="download-universes" class="bg-gray-800 hover:bg-gray-900 text-white font-bold py-4 px-2 rounded-lg inline-flex items-center mx-4">
@@ -276,7 +280,7 @@
 
             <!-- Midi settings -->
             <div id="midi-settings-container" class="bg-gray-200 rounded-lg flex flex-row mx-4 my-4 pt-4">
-            <div class="flex flex-row">
+            <div class="lg:flex lg:flex-row w-fit">
             <p class="font-bold text-xl ml-4 pb-4 underline underline-offset-4">MIDI I/O Settings</p>
               <div class="flex items-center mb-4 ml-6">
                 <label for="default-checkbox" class="ml-2 text-sm font-medium text-dark">MIDI Clock:&nbsp;</label>
@@ -284,26 +288,26 @@
                   <option value="-1">Internal</option>
                 </select>
               </div>
-              <div class="flex items-center mb-4 ml-6">
+              <div class="lg:flex block items-center mb-4 ml-6">
                 <label for="default-checkbox" class="ml-2 text-sm font-medium text-dark">Clock PPQN:&nbsp;</label>
                 <select id="midi-clock-ppqn-input" class="w-32 h-8 text-sm font-medium text-black bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2">
                   <option value="24">24</option>
                   <option value="48">48</option>
                 </select>
               </div>
-              <div class="flex items-center mb-4 ml-6">
+              <div class="lg:flex block items-center mb-4 ml-6">
                   <input id="send-midi-clock" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                   <label for="default-checkbox" class="ml-2 text-sm font-medium text-dark">Send MIDI Clock</label>
               </div>
             </div>
-            <div class="flex flex-row">
+            <div class="lg:flex block flex-row">
               <div class="flex items-center mb-4 ml-6">
                 <label for="default-checkbox" class="ml-2 text-sm font-medium text-dark">MIDI input:&nbsp;</label>
                 <select id="default-midi-input" class="w-32 h-8 text-sm font-medium text-black bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2">
                   <option value="-1">None</option>
                 </select>
               </div>
-              <div class="flex items-center mb-4 ml-6">
+              <div class="lg:flex block items-center mb-4 ml-6">
                 <input id="midi-channels-scripts" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                 <label for="default-checkbox" class="ml-2 text-sm font-medium text-dark">Route channels to scripts</label>
               </div>
@@ -352,8 +356,10 @@
 
           </div>
 
-          <div class="flex space-x-6 border-t border-gray-200 rounded-b dark:border-gray-600 mx-4 border-spacing-y-4 pb-2">
-            <button id="close-settings-button" data-modal-hide="defaultModal" type="button" class="hover:bg-gray-700 bg-gray-800 mt-4 mb-4 text-white focus:ring-4  font-medium rounded-lg text-sm px-5 py-2.5 text-center">OK</button>
+          <div class="flex space-x-6 border-t border-gray-200 rounded-b dark:border-gray-600 mx-4 border-spacing-y-4 pb-14 lg:pb-0">
+            <button id="close-settings-button" data-modal-hide="defaultModal" type="button" class="
+            hover:bg-gray-700 bg-gray-800 mt-4 mb-4 text-white focus:ring-4
+            font-medium rounded-lg text-sm px-5 py-2.5 text-center">OK</button>
           </div>
         </div>
       </div>
