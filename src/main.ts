@@ -1156,6 +1156,7 @@ export class Editor {
         }
         this.editor_mode = "local";
         this.local_index = 0;
+        document.getElementById('editor')!.style.height = 'calc(100% - 100px)';
         this.changeToLocalBuffer(this.local_index);
         changeColor(this.local_button);
         break;
@@ -1164,6 +1165,7 @@ export class Editor {
           this.local_script_tabs.classList.add("hidden");
         }
         this.editor_mode = "global";
+        document.getElementById('editor')!.style.height = '100%';
         changeColor(this.global_button);
         break;
       case "init":
