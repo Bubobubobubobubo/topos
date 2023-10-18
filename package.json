@@ -42,7 +42,7 @@
     "y-codemirror.next": "^0.3.2",
     "y-webrtc": "^10.2.5",
     "yjs": "^13.6.8",
-    "zifferjs": "^0.0.32",
+    "zifferjs": "^0.0.33",
     "zzfx": "^1.2.0"
   }
 }

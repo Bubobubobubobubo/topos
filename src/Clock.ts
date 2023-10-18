@@ -148,6 +148,24 @@ export class Clock {
     }
   }
 
+  public nextTickFrom(time: number, nudge: number): number {
+    /**
+     * Compute the time remaining before the next clock tick.
+     * @param time - audio context currentTime
+     * @param nudge - nudge in the future (in seconds)
+     * @returns remainingTime
+     */
+    const pulseDuration = this.pulse_duration;
+    const nudgedTime = time + nudge;
+    const nextTickTime = Math.ceil(nudgedTime /
+      pulseDuration) * pulseDuration;
+    const remainingTime = nextTickTime - nudgedTime;
+
+    return remainingTime;
+  }
+
+
+
   public convertPulseToSecond(n: number): number {
     /**
      * Converts a pulse to a second.

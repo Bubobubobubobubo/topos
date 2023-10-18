@@ -20,6 +20,17 @@ beat(.5) && snd(['sine', 'triangle', 'sawtooth', 'square'].beat()).freq(100).out
     true
   )}
 
+Note that you can also use noise if you do not want to use a periodic oscillator:
+
+
+${makeExample(
+    "Listening to the different types of noise",
+    `
+beat(.5) && snd(['brown', 'pink', 'white'].beat()).adsr(0,.1,0,0).out()
+`,
+    true
+  )}
+
 Two functions are primarily used to control the frequency of the synthesizer:
 - <ic>freq(hz: number)</ic>: sets the frequency of the oscillator.
 - <ic>note(note: number|string)</ic>: sets the MIDI note of the oscillator (MIDI note converted to hertz).
@@ -76,6 +87,24 @@ beat(1) :: sound('triangle')
     true
   )}
 
+## Noise
+
+A certain amount of brown noise can be added by using the <ic>.noise</ic> key:
+
+${makeExample(
+    "Different vibrato settings",
+    `
+bpm(140);
+beat(1) :: sound('triangle')
+  .freq(400).release(0.2)
+  .noise([0.2,0.4,0.5].bar())
+  .vib([1/2, 1, 2, 4].beat())
+  .vibmod([1,2,4,8].beat(2))
+  .out()`,
+    true
+  )}
+
+
 ## Controlling the amplitude
 
 Controlling the amplitude and duration of the sound can be done using various techniques. The most important thing to learn is probably how set the amplitude (volume) of your synthesizer:
@@ -131,6 +160,19 @@ beat(0.5) :: sound('wt_piano')
     true
   )}
 
+- <ic>ad(attack: number, decay: number)</ic>: sets the attack and decay phases, setting sustain and release to <ic>0</ic>.
+
+${makeExample(
+    "Two segment envelope",
+    `
+beat(0.5) :: sound('wt_piano')
+  .cutoff(1000 + usine() * 4000)
+  .freq(100)
+  .ad(0, .2)
+  .out()
+`,
+    true
+  )}
 
 ## Substractive synthesis using filters
 

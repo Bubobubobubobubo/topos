@@ -1,5 +1,5 @@
 import { type Editor } from "../main";
-import { makeExampleFactory } from "../Documentation";
+import { key_shortcut, makeExampleFactory } from "../Documentation";
 
 // @ts-ignore
 export const interaction = (application: Editor): string => {
@@ -8,6 +8,17 @@ export const interaction = (application: Editor): string => {
 # Interaction
 
 Topos can interact with the physical world or react to events coming from outside the system (_MIDI_, physical control, etc).
+
+## Fill
+
+By pressing the ${key_shortcut('Alt')} key, you can trigger the <ic>Fill</ic> mode which can either be <ic>true</ic> or <ic>false</ic>. The fill will be set to <ic>true</ic> as long as the key is held. Try pressing ${key_shortcut('Alt')} when playing this example:
+
+${makeExample(
+    "Claping twice as fast with fill",
+    `
+beat(fill() ? 1/4 : 1/2)::sound('cp').out()
+`, true)
+    }
 
 ## MIDI input
 
@@ -23,49 +34,49 @@ MIDI input can be enabled in the settings panel. Once you have done that, you ca
 * <ic>buffer_note(channel?: number)</ic>: returns last unread note that has been received. Note is fetched and removed from start of the buffer once this is called. Returns undefined if no notes have been received.
 
 ${makeExample(
-    "Play active notes as chords",
-    `
+      "Play active notes as chords",
+      `
   beat(1) && active_notes() && sound('sine').chord(active_notes()).out()
   `,
-    true
-  )}
+      true
+    )}
 
 ${makeExample(
-    "Play active notes as arpeggios",
-    `
+      "Play active notes as arpeggios",
+      `
   beat(0.25) && active_notes() && sound('juno').note(
     active_notes().beat(0.5)+[12,24].beat(0.25)
   ).cutoff(300 + usine(1/4) * 2000).out()
   `,
-    false
-  )}
+      false
+    )}
 
 ${makeExample(
-    "Play continous arpeggio with sticky notes",
-    `
+      "Play continous arpeggio with sticky notes",
+      `
   beat(0.25) && sticky_notes() && sound('arp')
   .note(sticky_notes().palindrome().beat(0.25)).out()
   `,
-    false
-  )}
+      false
+    )}
 
 ${makeExample(
-    "Play last note",
-    `
+      "Play last note",
+      `
   beat(0.5) && sound('sawtooth').note(last_note())
   .vib([1, 3, 5].beat(1))
   .vibmod([1,3,2,4].beat(2)).out()
   `,
-    false
-  )}
+      false
+    )}
 
 ${makeExample(
-    "Play buffered note",
-    `
+      "Play buffered note",
+      `
   beat(1) && buffer() && sound('sine').note(buffer_note()).out()
   `,
-    false
-  )}
+      false
+    )}
 
 ### MIDI CC Input
 
@@ -75,16 +86,16 @@ Currently supported methods for CC input are:
 * <ic>last_cc(control: number, channel?: number): Returns last received CC value for given control number (and optional channel). By default last CC value is last value from ANY channel or 64 if no CC messages have been received.
 
 ${makeExample(
-    "Play notes with cc",
-    `
+      "Play notes with cc",
+      `
   beat(0.5) && sound('arp').note(last_cc(74)).out()
   `,
-    true
-  )}
+      true
+    )}
 
 ${makeExample(
-    "Control everything with CCs",
-    `
+      "Control everything with CCs",
+      `
   beat(0.5) :: sound('sine')
   .freq(last_cc(75)*3)
   .cutoff(last_cc(76)*2*usine())
@@ -97,8 +108,8 @@ beat(last_cc(74)/127*.5) :: sound('sine')
   .sustain(last_cc(74)/127*.25)
   .out()
   `,
-    false
-  )}
+      false
+    )}
 
 
 ### Run scripts with MIDI
@@ -120,16 +131,16 @@ You can get the current position of the mouse on the screen by using the followi
 - <ic>mouseY()</ic>: the vertical position of the mouse on the screen (as a floating point number).
 	
 ${makeExample(
-    "FM Synthesizer controlled using the mouse",
-    `
+      "FM Synthesizer controlled using the mouse",
+      `
 beat(.25) :: sound('sine')
   .fmi(mouseX() / 100)
   .fmh(mouseY() / 100)
   .vel(0.2)
   .room(0.9).out()
 `,
-    true
-  )}
+      true
+    )}
 
 Current mouse position can also be used to generate notes:
 	
@@ -138,8 +149,8 @@ Current mouse position can also be used to generate notes:
 	
 
 ${makeExample(
-    "The same synthesizer, with note control!",
-    `
+      "The same synthesizer, with note control!",
+      `
 beat(.25) :: sound('sine')
   .fmi(mouseX() / 100)
   .note(noteX())
@@ -147,7 +158,28 @@ beat(.25) :: sound('sine')
   .vel(0.2)
   .room(0.9).out()
 `,
-    true
-  )}
+      true
+    )}
+
+## Scale output for lighted keys
+
+Topos can output scales to external keyboards lighted keys using the following functions:
+
+- <ic>show_scale(key: string, scale: string|int, channel?: number, port?: string|number, soundOff?: boolean): void</ic>: sends the scale as midi on messages to specified port and channel to light the keys of external keyboard. If soundOff is true, all sound off message will be sent after every note on message. This can be useful with some keyboards not supporting external channel for lightning or routing for the midi in to suppress the sound from incoming note on messages.
+
+${makeExample(
+      "Show scale on external keyboard",
+      `show_scale("F","aeolian",0,4)`,
+      true
+    )}
+
+${makeExample(
+      "Hide scale",
+      `hide_scale("F","aeolian",0,4)`,
+      true
+    )}
+
+
 `
 }
+

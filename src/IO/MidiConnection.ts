@@ -31,7 +31,7 @@ export class MidiConnection {
   private settings: AppSettings;
   private midiAccess: MIDIAccess | null = null;
   public midiOutputs: MIDIOutput[] = [];
-  private currentOutputIndex: number = 0;
+  public currentOutputIndex: number = 0;
   private scheduledNotes: { [noteNumber: number]: number } = {}; // { noteNumber: timeoutId }
 
   /* Midi input */
@@ -620,6 +620,64 @@ export class MidiConnection {
       }, (duration - 0.02) * 1000);
 
       this.scheduledNotes[noteNumber] = timeoutId;
+    } else {
+      console.error("MIDI output not available.");
+    }
+  }
+
+  public sendMidiOn(note: number, channel: number, velocity: number, port: number | string = this.currentOutputIndex) {
+    /** 
+     * Sending Midi Note on message
+     */
+    if(typeof port === "string") port = this.getMidiOutputIndex(port);
+    const output = this.midiOutputs[port];
+    note = Math.min(Math.max(note, 0), 127);
+    if (output) {
+      const noteOnMessage = [0x90 + channel, note, velocity];
+      output.send(noteOnMessage);
+     } else {
+      console.error("MIDI output not available.");
+    }
+  }
+
+  sendMidiOff(note: number, channel: number, port: number | string = this.currentOutputIndex) {
+    /**
+    * Sending Midi Note off message
+     */
+    if(typeof port === "string") port = this.getMidiOutputIndex(port);
+    const output = this.midiOutputs[port];
+    note = Math.min(Math.max(note, 0), 127);
+    if (output) {
+      const noteOffMessage = [0x80 + channel, note, 0];
+      output.send(noteOffMessage);
+    } else {
+      console.error("MIDI output not available.");
+    }
+  }
+
+  sendAllNotesOff(channel: number, port: number | string = this.currentOutputIndex) {
+    /**
+    * Sending Midi Note off message
+     */
+    if(typeof port === "string") port = this.getMidiOutputIndex(port);
+    const output = this.midiOutputs[port];
+    if (output) {
+      const noteOffMessage = [0xb0 + channel, 123, 0];
+      output.send(noteOffMessage);
+    } else {
+      console.error("MIDI output not available.");
+    }
+  }
+
+  sendAllSoundOff(channel: number, port: number | string = this.currentOutputIndex) {
+    /**
+    * Sending all sound off
+     */
+    if(typeof port === "string") port = this.getMidiOutputIndex(port);
+    const output = this.midiOutputs[port];
+    if (output) {
+      const noteOffMessage = [0xb0 + channel, 120, 0];
+      output.send(noteOffMessage);
     } else {
       console.error("MIDI output not available.");
     }
