@@ -1739,6 +1739,16 @@ export class UserAPI {
     return sum / values.length;
   };
 
+  public range = (
+    inputY: number, yMin: number,
+    yMax: number, xMin: number,
+    xMax: number): number => {
+    const percent = (inputY - yMin) / (yMax - yMin);
+    const outputX = percent * (xMax - xMin) + xMin;
+    return outputX;
+  };
+
+
   limit = (value: number, min: number, max: number): number => {
     /**
      * Limits a value between a minimum and a maximum.
