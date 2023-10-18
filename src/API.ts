@@ -564,8 +564,8 @@ export class UserAPI {
     if (channel) {
       if (this.MidiConnection.lastCCInChannel[channel]) {
         return this.MidiConnection.lastCCInChannel[channel][control];
-      } else return 64;
-    } else return this.MidiConnection.lastCC[control] || 64;
+      } else return 0;
+    } else return this.MidiConnection.lastCC[control] || 0;
   };
 
   public has_cc = (channel?: number): boolean => {
