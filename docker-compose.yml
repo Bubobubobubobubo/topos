@@ -16,11 +16,13 @@ services:
       - ./tsconfig.json:/app/tsconfig.json
       - ./vite.config.js:/app/vite.config.js
       - ./yarn.lock:/app/yarn.lock
+      - ./index.html:/app/index.html
     ports:
       - "8000:8000"
     env_file:
       - .env
   topos-prod:
+    image: yassinsiouda/topos:collaborate
     container_name: topos-prod
     profiles: ["prod"]
     build: 

@@ -1,274 +1,380 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Topos</title>
-    <link rel="stylesheet" href="/src/output.css" />
-    <link rel="stylesheet" href='/fonts/index.css' >
-    <script src="https://unpkg.com/hydra-synth"></script>
-  </head>
-  <style>
 
-    body {
-      font-family: "Arial";
-      background-color: #111827;
-			overflow: hidden;
-			position: fixed;
-			width: 100vw;
-			height: 100vh;
-      margin: 0;
-      padding: 0;
-    }
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Topos</title>
+  <link rel="stylesheet" href="/src/output.css" />
+  <link rel="stylesheet" href='/fonts/index.css'>
+  <script src="https://unpkg.com/hydra-synth"></script>
+</head>
+<style>
+  body {
+    font-family: "Arial";
+    background-color: #111827;
+    overflow: hidden;
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+  }
 
-    #hydra-bg {
-      position: fixed; /* ignore margins */
-      top: 0px;
-      left: 0px;
-      width: 100%; /* fill screen */
-      height: 100%;
-      background-size: cover;
-      overflow-y: hidden;
-      z-index: -1; /* place behind everything else */
-      display: block;
-    }
+  #hydra-bg {
+    position: fixed;
+    /* ignore margins */
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    /* fill screen */
+    height: 100%;
+    background-size: cover;
+    overflow-y: hidden;
+    z-index: -1;
+    /* place behind everything else */
+    display: block;
+  }
 
 
-		details br {
-			display: none;
-		}
+  details br {
+    display: none;
+  }
 
-    .app {
-      max-height: 100vh;
-    }
- 
-    .cm-editor {
-      width: 100%;
-			height: 92vh;
-      max-height: 100vh;
-			z-index: 0;
-    }
+  .app {
+    max-height: 100vh;
+  }
 
-    .cm-scroller {
-      display: block !important;
-      width: 100% !important;
-			z-index: 0;
-    }
+  .cm-editor {
+    width: 100%;
+    height: 92vh;
+    max-height: 100vh;
+    z-index: 0;
+  }
 
-  </style>
-  <body id="all" class="z-0 bg-neutral-800 overflow-y-hidden">
+  .cm-scroller {
+    display: block !important;
+    width: 100% !important;
+    z-index: 0;
+  }
+</style>
 
-		<!-- The header is hidden on smaller devices -->
-    <header class="py-2 block text-white bg-neutral-900">
-      <div class="mx-auto flex flex-wrap pl-2 py-1 flex-row items-center">
-        <a class="flex title-font font-medium items-center text-black mb-0">
-          <svg id="topos-logo" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-10 h-10 text-black p-2 bg-white rounded-full" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
+<body id="all" class="z-0 bg-neutral-800 overflow-y-hidden">
+
+  <!-- The header is hidden on smaller devices -->
+  <header class="py-2 block text-white bg-neutral-900">
+    <div class="mx-auto flex flex-wrap pl-2 py-1 flex-row items-center">
+      <a class="flex title-font font-medium items-center text-black mb-0">
+        <svg id="topos-logo" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round"
+          stroke-linejoin="round" stroke-width="2" class="w-10 h-10 text-black p-2 bg-white rounded-full"
+          viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round"
+            d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
+        </svg>
+        <span id="universe-viewer" class="hidden xl:block ml-4 text-2xl text-white">Topos</span>
+      </a>
+      <nav class="py-2 flex flex-wrap items-center text-base absolute right-0">
+        <a title="Play button (Ctrl+P)" id="play-button-1"
+          class="flex flex-row mr-2 hover:bg-gray-800 px-2 py-2 rounded-lg">
+          <svg id="play-icon" class="w-7 h-7" fill="currentColor" viewBox="0 0 14 16">
+            <path
+              d="M0 .984v14.032a1 1 0 0 0 1.506.845l12.006-7.016a.974.974 0 0 0 0-1.69L1.506.139A1 1 0 0 0 0 .984Z" />
           </svg>
-          <span id="universe-viewer" class="hidden xl:block ml-4 text-2xl text-white">Topos</span>
+          <svg id="pause-icon" class="hidden w-7 h-7 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+            fill="currentColor" viewBox="0 0 20 20">
+            <path
+              d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9 13a1 1 0 0 1-2 0V7a1 1 0 0 1 2 0v6Zm4 0a1 1 0 0 1-2 0V7a1 1 0 0 1 2 0v6Z" />
+          </svg>
+          <p id="play-label" class="hidden lg:block text-xl pl-2 text-white inline-block">Play</p>
         </a>
-        <nav class="py-2 flex flex-wrap items-center text-base absolute right-0">
-         <a title="Play button (Ctrl+P)" id="play-button-1" class="flex flex-row mr-2 hover:bg-gray-800 px-2 py-2 rounded-lg">
-							<svg id="play-icon" class="w-7 h-7" fill="currentColor" viewBox="0 0 14 16">
-								<path d="M0 .984v14.032a1 1 0 0 0 1.506.845l12.006-7.016a.974.974 0 0 0 0-1.69L1.506.139A1 1 0 0 0 0 .984Z"/>
-							</svg>
-							<svg id="pause-icon" class="hidden w-7 h-7 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-    <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9 13a1 1 0 0 1-2 0V7a1 1 0 0 1 2 0v6Zm4 0a1 1 0 0 1-2 0V7a1 1 0 0 1 2 0v6Z"/>
-  </svg>
-							<p id="play-label" class="hidden lg:block text-xl pl-2 text-white inline-block">Play</p>
-          </a>
-          <a title="Stop button (Ctrl+R)" id="stop-button-1" class="flex flex-row mr-2 hover:bg-gray-800 px-2 py-2 rounded-lg">
-						<svg class="w-7 h-7 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-  <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Z"/>
-  <rect x="6.5" y="6.5" width="7" height="7" fill="black" rx="1" ry="1"/>
-</svg>
-						<p class="hidden lg:block text-xl pl-2 text-white inline-block">Stop</p>
-          </a>
-          <a title="Eval button (Ctrl+Enter)" id="eval-button-1" class="flex flex-row mr-2 hover:text-gray-900 hover:bg-gray-800 px-2 py-2 rounded-lg">
-						<svg class="w-7 h-7 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 20">
-    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 1v5h-5M2 19v-5h5m10-4a8 8 0 0 1-14.947 3.97M1 10a8 8 0 0 1 14.947-3.97"/>
-  </svg>
-					<p class="hidden lg:block text-xl pl-2 text-white inline-block">Eval</p>
-          </a>
+        <a title="Stop button (Ctrl+R)" id="stop-button-1"
+          class="flex flex-row mr-2 hover:bg-gray-800 px-2 py-2 rounded-lg">
+          <svg class="w-7 h-7 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+            viewBox="0 0 20 20">
+            <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Z" />
+            <rect x="6.5" y="6.5" width="7" height="7" fill="black" rx="1" ry="1" />
+          </svg>
+          <p class="hidden lg:block text-xl pl-2 text-white inline-block">Stop</p>
+        </a>
+        <a title="Eval button (Ctrl+Enter)" id="eval-button-1"
+          class="flex flex-row mr-2 hover:text-gray-900 hover:bg-gray-800 px-2 py-2 rounded-lg">
+          <svg class="w-7 h-7 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+            viewBox="0 0 18 20">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M16 1v5h-5M2 19v-5h5m10-4a8 8 0 0 1-14.947 3.97M1 10a8 8 0 0 1 14.947-3.97" />
+          </svg>
+          <p class="hidden lg:block text-xl pl-2 text-white inline-block">Eval</p>
+        </a>
 
-          <a title="Clear button" id="clear-button-1" class="flex flex-row mr-2 hover:text-gray-900 hover:bg-gray-800 px-2 py-2 rounded-lg">
-						<svg class="w-7 h-7 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 20">
-    <path d="M17 4h-4V2a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v2H1a1 1 0 0 0 0 2h1v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V6h1a1 1 0 1 0 0-2ZM7 2h4v2H7V2Zm1 14a1 1 0 1 1-2 0V8a1 1 0 0 1 2 0v8Zm4 0a1 1 0 0 1-2 0V8a1 1 0 0 1 2 0v8Z"/>
-  </svg>
-						<p class="hidden lg:block text-xl pl-2 text-white inline-block">Clear</p>
-          </a>
+        <a title="Clear button" id="clear-button-1"
+          class="flex flex-row mr-2 hover:text-gray-900 hover:bg-gray-800 px-2 py-2 rounded-lg">
+          <svg class="w-7 h-7 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+            viewBox="0 0 18 20">
+            <path
+              d="M17 4h-4V2a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v2H1a1 1 0 0 0 0 2h1v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V6h1a1 1 0 1 0 0-2ZM7 2h4v2H7V2Zm1 14a1 1 0 1 1-2 0V8a1 1 0 0 1 2 0v8Zm4 0a1 1 0 0 1-2 0V8a1 1 0 0 1 2 0v8Z" />
+          </svg>
+          <p class="hidden lg:block text-xl pl-2 text-white inline-block">Clear</p>
+        </a>
 
-          <a title="Share button" id="share-button" class="flex flex-row mr-2 hover:text-gray-900 hover:bg-gray-800 px-2 py-2 rounded-lg">
-						<svg class="w-7 h-7 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 19 19">
-    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.013 7.962a3.519 3.519 0 0 0-4.975 0l-3.554 3.554a3.518 3.518 0 0 0 4.975 4.975l.461-.46m-.461-4.515a3.518 3.518 0 0 0 4.975 0l3.553-3.554a3.518 3.518 0 0 0-4.974-4.975L10.3 3.7"/>
-  </svg>
-						<p class="hidden lg:block text-xl pl-2 text-white inline-block">Share</p>
-          </a>
+        <a title="Share button" id="share-button"
+          class="flex flex-row mr-2 hover:text-gray-900 hover:bg-gray-800 px-2 py-2 rounded-lg">
+          <svg class="w-7 h-7 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+            viewBox="0 0 19 19">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M11.013 7.962a3.519 3.519 0 0 0-4.975 0l-3.554 3.554a3.518 3.518 0 0 0 4.975 4.975l.461-.46m-.461-4.515a3.518 3.518 0 0 0 4.975 0l3.553-3.554a3.518 3.518 0 0 0-4.974-4.975L10.3 3.7" />
+          </svg>
+          <p class="hidden lg:block text-xl pl-2 text-white inline-block">Share</p>
+        </a>
 
-          <a title="Open Documentation (Ctrl+D)" id="doc-button-1" class="flex flex-row hover:text-gray-900 hover:bg-gray-800 px-2 py-2 rounded-lg">
-						<svg class="w-7 h-7 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-    <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
-  </svg>
-						<p class="hidden lg:block text-xl pl-2 text-white inline-block">Docs</p>
-          </a>
- 
-        </nav>
-        </nav>
-      </div>
-    </header>
+        <a title="Open Documentation (Ctrl+D)" id="doc-button-1"
+          class="flex flex-row hover:text-gray-900 hover:bg-gray-800 px-2 py-2 rounded-lg">
+          <svg class="w-7 h-7 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+            viewBox="0 0 20 20">
+            <path
+              d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+          </svg>
+          <p class="hidden lg:block text-xl pl-2 text-white inline-block">Docs</p>
+        </a>
 
-    <div id="documentation" class="hidden">
-      <div id="documentation-page" class="flex flex-row">
-        <aside class="w-1/8 flex-shrink-0 h-screen overflow-y-auto p-1 lg:p-6 bg-neutral-900 text-white">
-          <nav class="text-xl sm:text-sm overflow-y-scroll mb-24">
-            <div class="">
-              <h2 class="font-semibold lg:text-xl text-gray-400">Basics</h2>
-              <div class="flex flex-col">
-                <p rel="noopener noreferrer" id="docs_introduction" class="pl-2 pr-2 lg:text-xl text-sm hover:bg-neutral-800 py-1 my-1 rounded-lg">Introduction </p>
-                <p rel="noopener noreferrer" id="docs_interface" class="pl-2 pr-2 lg:text-xl text-sm hover:bg-neutral-800 py-1 my-1 rounded-lg">Interface</p>
-                <p rel="noopener noreferrer" id="docs_interaction" class="pl-2 pr-2 lg:text-xl text-sm hover:bg-neutral-800 py-1 my-1 rounded-lg">Interaction</p>
-                <p rel="noopener noreferrer" id="docs_shortcuts" class="pl-2 pr-2 lg:text-xl text-sm hover:bg-neutral-800 py-1 my-1 rounded-lg">Keyboard</p>
-                <p rel="noopener noreferrer" id="docs_code" class="pl-2 pr-2 lg:text-xl text-sm hover:bg-neutral-800 py-1 my-1 rounded-lg">Coding</p>
-							</div>
-						</div>
-            <div class="space-y-2">
-              <h2 class="font-semibold lg:text-xl pb-1 pt-1 text-gray-400">Learning</h2>
-              <div class="flex flex-col">
-                <p rel="noopener noreferrer" id="docs_time" class="pl-2 pr-2 lg:text-xl text-sm hover:bg-neutral-800 py-1 my-1 rounded-lg">Time/Rhythm</p>
-                <p rel="noopener noreferrer" id="docs_sound" class="pl-2 pr-2 lg:text-xl text-sm hover:bg-neutral-800 py-1 my-1 rounded-lg">Audio Engine</p>
-                <p rel="noopener noreferrer" id="docs_samples" class="pl-2 pr-2 lg:text-xl text-sm hover:bg-neutral-800 py-1 my-1 rounded-lg">Samples</p>
-                <p rel="noopener noreferrer" id="docs_synths" class="pl-2 pr-2 lg:text-xl text-sm hover:bg-neutral-800 py-1 my-1 rounded-lg">Synths</p>
-                <p rel="noopener noreferrer" id="docs_midi" class="pl-2 pr-2 lg:text-xl text-sm hover:bg-neutral-800 py-1 my-1 rounded-lg">MIDI</p>
-							</div>
-						</div>
-            <div class="space-y-2">
-              <h2 class="font-semibold lg:text-xl pb-1 pt-1 text-gray-400">Patterns</h2>
-              <div class="flex flex-col">
-                <p rel="noopener noreferrer" id="docs_patterns" class="pl-2 pr-2 lg:text-xl text-sm hover:bg-neutral-800 py-1 my-1 rounded-lg">Patterns</p>
-                <p rel="noopener noreferrer" id="docs_variables" class="pl-2 pr-2 lg:text-xl text-sm hover:bg-neutral-800 py-1 my-1 rounded-lg">Variables</p>
-                <p rel="noopener noreferrer" id="docs_lfos" class="pl-2 pr-2 lg:text-xl text-sm hover:bg-neutral-800 py-1 my-1 rounded-lg">LFOs</p>
-                <p rel="noopener noreferrer" id="docs_probabilities" class="pl-2 pr-2 lg:text-xl text-sm hover:bg-neutral-800 py-1 my-1 rounded-lg">Probabilities</p>
-                <p rel="noopener noreferrer" id="docs_chaining" class="pl-2 pr-2 lg:text-xl text-sm hover:bg-neutral-800 py-1 my-1 rounded-lg">Chaining</p>
-                <p rel="noopener noreferrer" id="docs_functions" class="pl-2 pr-2 lg:text-xl text-sm hover:bg-neutral-800 py-1 my-1 rounded-lg">Functions</p>
-                <p rel="noopener noreferrer" id="docs_ziffers" class="pl-2 pr-2 lg:text-xl text-sm hover:bg-neutral-800 py-1 my-1 rounded-lg">Ziffers</p>
-								<!--
+        <a title="Open Documentation (Ctrl+D)" id="collaborate-button"
+          class="flex flex-row hover:text-gray-900 hover:bg-gray-800 px-2 py-2 rounded-lg">
+          <svg class="w-6 h-6 text-gray-800 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+            fill="currentColor" viewBox="0 0 20 19">
+            <path
+              d="M14.5 0A3.987 3.987 0 0 0 11 2.1a4.977 4.977 0 0 1 3.9 5.858A3.989 3.989 0 0 0 14.5 0ZM9 13h2a4 4 0 0 1 4 4v2H5v-2a4 4 0 0 1 4-4Z" />
+            <path
+              d="M5 19h10v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2ZM5 7a5.008 5.008 0 0 1 4-4.9 3.988 3.988 0 1 0-3.9 5.859A4.974 4.974 0 0 1 5 7Zm5 3a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm5-1h-.424a5.016 5.016 0 0 1-1.942 2.232A6.007 6.007 0 0 1 17 17h2a1 1 0 0 0 1-1v-2a5.006 5.006 0 0 0-5-5ZM5.424 9H5a5.006 5.006 0 0 0-5 5v2a1 1 0 0 0 1 1h2a6.007 6.007 0 0 1 4.366-5.768A5.016 5.016 0 0 1 5.424 9Z" />
+          </svg>
+          <p class="hidden lg:block text-xl pl-2 text-white inline-block">Docs</p>
+        </a>
+
+      </nav>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Collaborate Modal -->
+  <div id="collaborate-modal" class="hidden bg-gray-800  w-full h-full flex justify-center">
+    <div class="flex flex-col">
+      <h2>Collaborate</h2>
+      <p>Start a live collaboration session</p>
+      <p>Pseudo</p>
+      <input
+        class="bg-gray-50 border border-gray-300 text-gray-900 
+      text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 
+      dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        type="text" id="collaborate-pseudo" name="pseudo" placeholder="Pseudo" />
+      <p>Room</p>
+      <input
+        class="bg-gray-50 border border-gray-300 text-gray-900 
+      text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 
+      dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        type="text" id="collaborate-room" name="room" placeholder="Room" />
+      <button id="start-collaboration-button"
+        class="bg-gray-800 hover:bg-gray-900 text-white font-bold lg:py-4 lg:px-2 px-1 py-2 rounded-lg inline-flex items-center mx-4">
+        Collaborate
+      </button>
+    </div>
+
+  </div>
+
+  <!-- Documentation -->
+  <div id="documentation" class="hidden">
+    <div id="documentation-page" class="flex flex-row">
+      <aside class="w-1/8 flex-shrink-0 h-screen overflow-y-auto p-1 lg:p-6 bg-neutral-900 text-white">
+        <nav class="text-xl sm:text-sm overflow-y-scroll mb-24">
+          <div class="">
+            <h2 class="font-semibold lg:text-xl text-gray-400">Basics</h2>
+            <div class="flex flex-col">
+              <p rel="noopener noreferrer" id="docs_introduction"
+                class="pl-2 pr-2 lg:text-xl text-sm hover:bg-neutral-800 py-1 my-1 rounded-lg">Introduction </p>
+              <p rel="noopener noreferrer" id="docs_interface"
+                class="pl-2 pr-2 lg:text-xl text-sm hover:bg-neutral-800 py-1 my-1 rounded-lg">Interface</p>
+              <p rel="noopener noreferrer" id="docs_interaction"
+                class="pl-2 pr-2 lg:text-xl text-sm hover:bg-neutral-800 py-1 my-1 rounded-lg">Interaction</p>
+              <p rel="noopener noreferrer" id="docs_shortcuts"
+                class="pl-2 pr-2 lg:text-xl text-sm hover:bg-neutral-800 py-1 my-1 rounded-lg">Keyboard</p>
+              <p rel="noopener noreferrer" id="docs_code"
+                class="pl-2 pr-2 lg:text-xl text-sm hover:bg-neutral-800 py-1 my-1 rounded-lg">Coding</p>
+            </div>
+          </div>
+          <div class="space-y-2">
+            <h2 class="font-semibold lg:text-xl pb-1 pt-1 text-gray-400">Learning</h2>
+            <div class="flex flex-col">
+              <p rel="noopener noreferrer" id="docs_time"
+                class="pl-2 pr-2 lg:text-xl text-sm hover:bg-neutral-800 py-1 my-1 rounded-lg">Time/Rhythm</p>
+              <p rel="noopener noreferrer" id="docs_sound"
+                class="pl-2 pr-2 lg:text-xl text-sm hover:bg-neutral-800 py-1 my-1 rounded-lg">Audio Engine</p>
+              <p rel="noopener noreferrer" id="docs_samples"
+                class="pl-2 pr-2 lg:text-xl text-sm hover:bg-neutral-800 py-1 my-1 rounded-lg">Samples</p>
+              <p rel="noopener noreferrer" id="docs_synths"
+                class="pl-2 pr-2 lg:text-xl text-sm hover:bg-neutral-800 py-1 my-1 rounded-lg">Synths</p>
+              <p rel="noopener noreferrer" id="docs_midi"
+                class="pl-2 pr-2 lg:text-xl text-sm hover:bg-neutral-800 py-1 my-1 rounded-lg">MIDI</p>
+            </div>
+          </div>
+          <div class="space-y-2">
+            <h2 class="font-semibold lg:text-xl pb-1 pt-1 text-gray-400">Patterns</h2>
+            <div class="flex flex-col">
+              <p rel="noopener noreferrer" id="docs_patterns"
+                class="pl-2 pr-2 lg:text-xl text-sm hover:bg-neutral-800 py-1 my-1 rounded-lg">Patterns</p>
+              <p rel="noopener noreferrer" id="docs_variables"
+                class="pl-2 pr-2 lg:text-xl text-sm hover:bg-neutral-800 py-1 my-1 rounded-lg">Variables</p>
+              <p rel="noopener noreferrer" id="docs_lfos"
+                class="pl-2 pr-2 lg:text-xl text-sm hover:bg-neutral-800 py-1 my-1 rounded-lg">LFOs</p>
+              <p rel="noopener noreferrer" id="docs_probabilities"
+                class="pl-2 pr-2 lg:text-xl text-sm hover:bg-neutral-800 py-1 my-1 rounded-lg">Probabilities</p>
+              <p rel="noopener noreferrer" id="docs_chaining"
+                class="pl-2 pr-2 lg:text-xl text-sm hover:bg-neutral-800 py-1 my-1 rounded-lg">Chaining</p>
+              <p rel="noopener noreferrer" id="docs_functions"
+                class="pl-2 pr-2 lg:text-xl text-sm hover:bg-neutral-800 py-1 my-1 rounded-lg">Functions</p>
+              <p rel="noopener noreferrer" id="docs_ziffers"
+                class="pl-2 pr-2 lg:text-xl text-sm hover:bg-neutral-800 py-1 my-1 rounded-lg">Ziffers</p>
+              <!--
                 <p rel="noopener noreferrer" id="docs_reference" class="pl-2 pr-2 lg:text-xl text-sm hover:bg-neutral-800 py-1 my-1 rounded-lg">Reference</p>
 								-->
-              </div>
             </div>
-            <div class="space-y-2">
-              <h2 class="font-semibold lg:text-xl text-gray-400">More</h2>
-              <div class="flex flex-col">
-                <a rel="noopener noreferrer" id="docs_bonus" class="pl-2 pr-2 lg:text-xl text-sm hover:bg-neutral-800 py-1 my-1 rounded-lg">Bonus/Trivia</a>
-                <a rel="noopener noreferrer" id="docs_about" class="pl-2 pr-2 lg:text-xl text-sm hover:bg-neutral-800 py-1 my-1 rounded-lg">About Topos</a>
-              </div>
+          </div>
+          <div class="space-y-2">
+            <h2 class="font-semibold lg:text-xl text-gray-400">More</h2>
+            <div class="flex flex-col">
+              <a rel="noopener noreferrer" id="docs_bonus"
+                class="pl-2 pr-2 lg:text-xl text-sm hover:bg-neutral-800 py-1 my-1 rounded-lg">Bonus/Trivia</a>
+              <a rel="noopener noreferrer" id="docs_about"
+                class="pl-2 pr-2 lg:text-xl text-sm hover:bg-neutral-800 py-1 my-1 rounded-lg">About Topos</a>
             </div>
-         </nav>
-        </aside>
-        <div id="documentation-content" class="w-full flex-grow-1 h-screen overflow-y-scroll lg:px-12 mx-2 my-2 break-words pb-32">
+          </div>
+        </nav>
+      </aside>
+      <div id="documentation-content"
+        class="w-full flex-grow-1 h-screen overflow-y-scroll lg:px-12 mx-2 my-2 break-words pb-32">
+      </div>
+    </div>
+  </div>
+
+  <!-- App -->
+  <div id="app">
+    <!-- This modal is used for switching between buffers -->
+    <div id="modal-buffers"
+      class="invisible bg-gray-900 bg-opacity-50 flex justify-center items-center absolute top-0 right-0 bottom-0 left-0">
+      <div id="start-button" class="px-16 pt-4 pb-4 rounded-md text-center bg-white">
+        <p class="text-semibold text-2xl pb-4">Known universes</p>
+        <p id="existing-universes" class="text-xl"></p>
+        <div id="disclaimer" class="pb-4">
+          <form id="universe-creator">
+            <label for="search" class="mb-2 text-sm font-medium text-gray-900 sr-only text-white">Search</label>
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                <svg class="w-4 h-4 text-gray-500 text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                  fill="none" viewBox="0 0 20 20">
+                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
+                </svg>
+              </div>
+              <input name="universe" minlength="2" autocomplete="off" type="text" id="buffer-search"
+                class="block w-full p-4 pl-10 text-sm border border-neutral-800 outline-0 rounded-lg bg-neutral-800 text-white"
+                placeholder="Buffer..." required>
+              <button id="load-universe-button"
+                class="text-black absolute right-2.5 bottom-2.5 bg-white hover:bg-white focus:outline-none font-medium rounded-lg text-sm px-4 py-2">Go</button>
+            </div>
+          </form>
+          <div class="mt-2 flex space-x-6 border-t border-gray-200 rounded-b dark:border-gray-600 border-spacing-y-4">
+            <button id="close-universes-button" data-modal-hide="defaultModal" type="button"
+              class="mt-2 hover:bg-neutral-700 bg-neutral-800 text-white focus:ring-4  font-medium rounded-lg text-sm px-5 py-2.5 text-center">Close</button>
+          </div>
+
         </div>
       </div>
     </div>
 
-    <div id="app">
-      <!-- This modal is used for switching between buffers -->
-      <div id="modal-buffers" class="invisible bg-gray-900 bg-opacity-50 flex justify-center items-center absolute top-0 right-0 bottom-0 left-0">
-        <div id="start-button" class="px-16 pt-4 pb-4 rounded-md text-center bg-white">
-					<p class="text-semibold text-2xl pb-4">Known universes</p>
-					<p id="existing-universes" class="text-xl"></p>
-          <div id="disclaimer" class="pb-4">
-          <form id="universe-creator">
-            <label for="search" class="mb-2 text-sm font-medium text-gray-900 sr-only text-white">Search</label>
-            <div class="relative">
-            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-            <svg class="w-4 h-4 text-gray-500 text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
-            </svg>
-        </div>
-                <input name="universe" minlength="2" autocomplete="off" type="text" id="buffer-search" class="block w-full p-4 pl-10 text-sm border border-neutral-800 outline-0 rounded-lg bg-neutral-800 text-white" placeholder="Buffer..." required>
-                <button id="load-universe-button" class="text-black absolute right-2.5 bottom-2.5 bg-white hover:bg-white focus:outline-none font-medium rounded-lg text-sm px-4 py-2">Go</button>
-            </div>
-          </form>
-              <div class="mt-2 flex space-x-6 border-t border-gray-200 rounded-b dark:border-gray-600 border-spacing-y-4">
-                <button id="close-universes-button" data-modal-hide="defaultModal" type="button" class="mt-2 hover:bg-neutral-700 bg-neutral-800 text-white focus:ring-4  font-medium rounded-lg text-sm px-5 py-2.5 text-center">Close</button>
-              </div>
-
-          </div>
-        </div>
-      </div>
-
-      <!-- This modal is used for settings -->
-      <div id="modal-settings" class="invisible bg-neutral-900 bg-opacity-50 flex
+    <!-- This modal is used for settings -->
+    <div id="modal-settings" class="invisible bg-neutral-900 bg-opacity-50 flex
               absolute lg:justify-center lg:items-center overflow-y-scroll owerflow-x-scroll
-              md:top-0 md:bottom-0 md:w-auto md:h-auto h-screen w-screen"
-      >
-        <div class="grid grid-col-3">
-          <div class="bg-white rounded-lg lg:mx-48 mx-0 lg:space-y-8 space-y-4 lg:px-8">
+              md:top-0 md:bottom-0 md:w-auto md:h-auto h-screen w-screen">
+      <div class="grid grid-col-3">
+        <div class="bg-white rounded-lg lg:mx-48 mx-0 lg:space-y-8 space-y-4 lg:px-8">
           <h1 class="lg:mt-12 mt-0 font-semibold rounded-lg
                      bg-gray-800 justify-center lg:text-center lg:pl-0 pl-8 text-white mx-4
                      text-sm lg:text-xl border-b border-gray-300 py-4">Topos Application Settings</h1>
-            <div class="flex lg:flex-row flex-col mr-4 ml-4">
+          <div class="flex lg:flex-row flex-col mr-4 ml-4">
             <!-- Font Size Selection -->
-              <div class="bg-gray-200 rounded-lg ml-0 lg:w-1/3 w-3/4 pt-2 pb-1 mb-2">
-                <p class="font-bold lg:text-xl text-sm ml-4 lg:pb-4 pb-2 underline underline-offset-4">Font Settings</p>
-                <div class="mb-6 mx-4 font-semibold">
-                  <label for="default-input" class="block mb-2 ml-1 font-normal sd:text-sm">Size:</label>
-                  <input type="text" id="font-size-input" type="number" class="bg-gray-50 border border-gray-300 text-gray-900 
+            <div class="bg-gray-200 rounded-lg ml-0 lg:w-1/3 w-3/4 pt-2 pb-1 mb-2">
+              <p class="font-bold lg:text-xl text-sm ml-4 lg:pb-4 pb-2 underline underline-offset-4">Font Settings</p>
+              <div class="mb-6 mx-4 font-semibold">
+                <label for="default-input" class="block mb-2 ml-1 font-normal sd:text-sm">Size:</label>
+                <input type="text" id="font-size-input" type="number"
+                  class="bg-gray-50 border border-gray-300 text-gray-900 
                   text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 
                   dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                </div>
-                <label for="font" class="block ml-5 mb-2 font-medium sd:text-sm">Font:</label>
-                  <select id="font-family" class="bg-gray-50 ml-4 border border-gray-300 mb-2
-                  text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block  p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
-                    <option selected>Choose a font</option>
-                    <option value="US">IBM Plex Mono</option>
-                    <option value="CA">Victor Mono</option>
-                    <option value="FR">Courier</option>
-                  </select>
               </div>
-              <!-- Editor mode selection -->
+              <label for="font" class="block ml-5 mb-2 font-medium sd:text-sm">Font:</label>
+              <select id="font-family"
+                class="bg-gray-50 ml-4 border border-gray-300 mb-2
+                  text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block  p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                <option selected>Choose a font</option>
+                <option value="US">IBM Plex Mono</option>
+                <option value="CA">Victor Mono</option>
+                <option value="FR">Courier</option>
+              </select>
+            </div>
+            <!-- Editor mode selection -->
             <div class="bg-gray-200 rounded-lg lg:ml-4 lg:w-1/3 w-3/4 pt-2 pb-1 mb-2">
               <p class="font-bold lg:text-xl text-sm ml-4 pb-4 underline underline-offset-4">Editor options</p>
               <!-- Checkboxes  -->
-  					  <div class="pr-4">
-							  <div  class="flex items-center mb-4 ml-5">
-            	    <input id="vim-mode" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-             	    <label for="default-checkbox" class="ml-2 text-sm font-medium text-dark">Vim Mode</label>
-             	  </div>
-							  <div class="flex items-center mb-4 ml-5">
-             	    <input id="show-line-numbers" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-             	    <label for="default-checkbox" class="ml-2 text-sm font-medium text-dark">Show Line Numbers</label>
-             	  </div>
-             	  <div class="flex items-center mb-4 ml-5">
-             	    <input id="show-time-position" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-             	    <label for="default-checkbox" class="ml-2 text-sm font-medium text-dark">Show Time Position</label>
-             	  </div>
-             	  <div class="flex items-center mb-4 ml-5">
-             	    <input id="show-tips" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-             	    <label for="default-checkbox" class="ml-2 text-sm font-medium text-dark">Show Hovering Tips</label>
-             	  </div>
-             	  <div class="flex items-center mb-4 ml-5">
-             	    <input id="load-demo-songs" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-             	    <label for="default-checkbox" class="ml-2 text-sm font-medium text-dark">Load Demo Song</label>
-             	  </div>
-						  </div>
+              <div class="pr-4">
+                <div class="flex items-center mb-4 ml-5">
+                  <input id="vim-mode" type="checkbox" value=""
+                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                  <label for="default-checkbox" class="ml-2 text-sm font-medium text-dark">Vim Mode</label>
+                </div>
+                <div class="flex items-center mb-4 ml-5">
+                  <input id="show-line-numbers" type="checkbox" value=""
+                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                  <label for="default-checkbox" class="ml-2 text-sm font-medium text-dark">Show Line Numbers</label>
+                </div>
+                <div class="flex items-center mb-4 ml-5">
+                  <input id="show-time-position" type="checkbox" value=""
+                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                  <label for="default-checkbox" class="ml-2 text-sm font-medium text-dark">Show Time Position</label>
+                </div>
+                <div class="flex items-center mb-4 ml-5">
+                  <input id="show-tips" type="checkbox" value=""
+                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                  <label for="default-checkbox" class="ml-2 text-sm font-medium text-dark">Show Hovering Tips</label>
+                </div>
+                <div class="flex items-center mb-4 ml-5">
+                  <input id="load-demo-songs" type="checkbox" value=""
+                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                  <label for="default-checkbox" class="ml-2 text-sm font-medium text-dark">Load Demo Song</label>
+                </div>
+              </div>
             </div>
 
             <div class="bg-gray-200 rounded-lg lg:ml-4 lg:w-1/3 w-3/4 pt-2 pb-1 mb-2">
               <p class="font-bold lg:text-xl text-sm ml-4 pb-4 underline underline-offset-4">File Management</p>
               <div class="flex flex-col space-y-2 pb-2">
-                <button id="download-universes" class="bg-gray-800 hover:bg-gray-900 text-white font-bold lg:py-4 lg:px-2 px-1 py-2 rounded-lg inline-flex items-center mx-4">
-                  <svg class="fill-current w-4 h-6 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M13 8V2H7v6H2l8 8 8-8h-5zM0 18h20v2H0v-2z"/></svg>
+                <button id="download-universes"
+                  class="bg-gray-800 hover:bg-gray-900 text-white font-bold lg:py-4 lg:px-2 px-1 py-2 rounded-lg inline-flex items-center mx-4">
+                  <svg class="fill-current w-4 h-6 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                    <path d="M13 8V2H7v6H2l8 8 8-8h-5zM0 18h20v2H0v-2z" />
+                  </svg>
                   <span>Download universes</span>
                 </button>
-                <button id="upload-universes" class="bg-gray-800 hover:bg-gray-900 text-white font-bold lg:py-4 lg:px-2 px-1 py-2 rounded-lg inline-flex items-center mx-4">
-                  <svg class="rotate-180 fill-current w-4 h-6 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M13 8V2H7v6H2l8 8 8-8h-5zM0 18h20v2H0v-2z"/></svg>
+                <button id="upload-universes"
+                  class="bg-gray-800 hover:bg-gray-900 text-white font-bold lg:py-4 lg:px-2 px-1 py-2 rounded-lg inline-flex items-center mx-4">
+                  <svg class="rotate-180 fill-current w-4 h-6 mr-2" xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20">
+                    <path d="M13 8V2H7v6H2l8 8 8-8h-5zM0 18h20v2H0v-2z" />
+                  </svg>
                   <span>Upload universes</span>
                 </button>
-                <button id="destroy-universes" class="bg-red-800 hover:bg-red-900 text-white font-bold lg:px-2 px-1 py-2 rounded-lg inline-flex items-center mx-4">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-6 mr-2">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+                <button id="destroy-universes"
+                  class="bg-red-800 hover:bg-red-900 text-white font-bold lg:px-2 px-1 py-2 rounded-lg inline-flex items-center mx-4">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                    stroke="currentColor" class="w-4 h-6 mr-2">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                      d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
                   </svg>
                   <span>Destroy universes</span>
                 </button>
@@ -276,38 +382,44 @@
             </div>
           </div>
 
-            <!-- Midi settings -->
-            <div id="midi-settings-container" class="bg-gray-200 rounded-lg flex lg:flex-row flex-col mx-4 my-4 pt-4">
+          <!-- Midi settings -->
+          <div id="midi-settings-container" class="bg-gray-200 rounded-lg flex lg:flex-row flex-col mx-4 my-4 pt-4">
             <div class="lg:flex lg:flex-row w-fit">
-            <p class="font-bold lg:text-xl text-sm ml-4 pb-4 underline underline-offset-4">MIDI I/O Settings</p>
+              <p class="font-bold lg:text-xl text-sm ml-4 pb-4 underline underline-offset-4">MIDI I/O Settings</p>
               <div class="flex items-center mb-4 ml-6">
                 <label for="default-checkbox" class="ml-2 text-sm font-medium text-dark">MIDI Clock:&nbsp;</label>
-                <select id="midi-clock-input" class="w-32 h-8 text-sm font-medium text-black bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2">
+                <select id="midi-clock-input"
+                  class="w-32 h-8 text-sm font-medium text-black bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2">
                   <option value="-1">Internal</option>
                 </select>
               </div>
               <div class="lg:flex block items-center mb-4 ml-6">
                 <label for="default-checkbox" class="ml-2 text-sm font-medium text-dark">Clock PPQN:&nbsp;</label>
-                <select id="midi-clock-ppqn-input" class="w-32 h-8 text-sm font-medium text-black bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2">
+                <select id="midi-clock-ppqn-input"
+                  class="w-32 h-8 text-sm font-medium text-black bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2">
                   <option value="24">24</option>
                   <option value="48">48</option>
                 </select>
               </div>
               <div class="lg:flex block items-center mb-4 ml-6">
-                  <input id="send-midi-clock" type="checkbox" value="" class="lg:w-8 lg:h-8 h-4 w-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                  <label for="default-checkbox" class="ml-2 text-sm font-medium text-dark">Send MIDI Clock</label>
+                <input id="send-midi-clock" type="checkbox" value=""
+                  class="lg:w-8 lg:h-8 h-4 w-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                <label for="default-checkbox" class="ml-2 text-sm font-medium text-dark">Send MIDI Clock</label>
               </div>
             </div>
             <div class="lg:flex block flex-row">
               <div class="flex items-center mb-4 ml-6">
                 <label for="default-checkbox" class="ml-2 text-sm font-medium text-dark">MIDI input:&nbsp;</label>
-                <select id="default-midi-input" class="w-32 h-8 text-sm font-medium text-black bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2">
+                <select id="default-midi-input"
+                  class="w-32 h-8 text-sm font-medium text-black bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2">
                   <option value="-1">None</option>
                 </select>
               </div>
               <div class="lg:flex block items-center mb-4 ml-6">
-                <input id="midi-channels-scripts" type="checkbox" value="" class="lg:w-8 lg:h-8 h-4 w-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                <label for="default-checkbox" class="ml-2 text-sm font-medium text-dark">Route channels to scripts</label>
+                <input id="midi-channels-scripts" type="checkbox" value=""
+                  class="lg:w-8 lg:h-8 h-4 w-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                <label for="default-checkbox" class="ml-2 text-sm font-medium text-dark">Route channels to
+                  scripts</label>
               </div>
             </div>
           </div>
@@ -317,44 +429,25 @@
             <p class="font-bold lg:text-xl text-sm ml-4 pb-4 underline underline-offset-4">Audio/Event Nudging</p>
             <div class="flex flex-column pb-2">
               <p class="pt-0.5 ml-4">Clock:</p>
-              <input
-                type="range" id="audio_nudge"
-                name="audiorangeInput"
-                min="-200" max="200"
-                value="0"
-                class="w-full ml-4"
-                oninput="nudgenumber.value=audio_nudge.value"
-              >
-              <output 
-                name="nudgenumber" 
-                id="nudgenumber" 
-                for="audiorangeInput" 
-                class="bg-gray-500 rounded-lg ml-2 mr-4 px-4 py-1 text-white"
-              >0</output>
+              <input type="range" id="audio_nudge" name="audiorangeInput" min="-200" max="200" value="0"
+                class="w-full ml-4" oninput="nudgenumber.value=audio_nudge.value">
+              <output name="nudgenumber" id="nudgenumber" for="audiorangeInput"
+                class="bg-gray-500 rounded-lg ml-2 mr-4 px-4 py-1 text-white">0</output>
             </div>
 
             <div class="flex flex-column">
 
               <p class="pt-0.5 ml-4">Audio:</p>
-              <input
-                type="range" id="dough_nudge"
-                name="doughrangeInput"
-                min="0" max="100"
-                value="0"
-                class="w-full ml-4"
-                oninput="doughnumber.value=dough_nudge.value"
-              >
-              <output 
-                name="doughnumber" 
-                id="doughnumber" 
-                for="doughrangeInput" 
-                class="bg-gray-500 rounded-lg ml-2 mr-4 px-4 py-1 text-white"
-              >0</output>
+              <input type="range" id="dough_nudge" name="doughrangeInput" min="0" max="100" value="0"
+                class="w-full ml-4" oninput="doughnumber.value=dough_nudge.value">
+              <output name="doughnumber" id="doughnumber" for="doughrangeInput"
+                class="bg-gray-500 rounded-lg ml-2 mr-4 px-4 py-1 text-white">0</output>
             </div>
 
           </div>
 
-          <div class="flex space-x-6 border-t border-gray-200 rounded-b dark:border-gray-600 mx-4 border-spacing-y-4 pb-14 lg:pb-0">
+          <div
+            class="flex space-x-6 border-t border-gray-200 rounded-b dark:border-gray-600 mx-4 border-spacing-y-4 pb-14 lg:pb-0">
             <button id="close-settings-button" data-modal-hide="defaultModal" type="button" class="
             hover:bg-gray-700 bg-gray-800 mt-4 mb-4 text-white focus:ring-4
             font-medium rounded-lg text-sm px-5 py-2.5 text-center">OK</button>
@@ -363,105 +456,128 @@
       </div>
     </div>
 
-      <div class="flex flex-row max-h-fit">
+    <div class="flex flex-row max-h-fit">
 
-				<!-- This is a lateral bar that will inherit the header buttons if the window is too small. -->
-        <aside class="
+      <!-- This is a lateral bar that will inherit the header buttons if the window is too small. -->
+      <aside class="
 					flex flex-col items-center w-14
 					h-screen py-2 border-r 
 					rtl:border-l max-h-fit
 					rtl:border-r-0 bg-neutral-900
-					dark:border-neutral-700 border-none"
-				>
+					dark:border-neutral-700 border-none">
         <nav class="flex flex-col space-y-6">
-            <a title="Local Scripts (Ctrl + L)" id="local-button" class="pl-2 p-1.5 focus:outline-nones transition-colors duration-200 rounded-lg text-white hover:bg-gray-800">
-							<svg class="w-8 h-8 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 18">
-    <path d="M18 5H0v11a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5Zm-7.258-2L9.092.8a2.009 2.009 0 0 0-1.6-.8H2.049a2 2 0 0 0-2 2v1h10.693Z"/>
-  </svg>
-                     </svg>
-            </a>
-          
-            <a title="Global Script (Ctrl + G)" id="global-button" class="pl-2 p-1.5 text-white focus:outline-nones transition-colors duration-200 rounded-lg hover:bg-gray-800">
-							<svg class="w-8 h-8 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 16">
-    <path d="M14.316.051A1 1 0 0 0 13 1v8.473A4.49 4.49 0 0 0 11 9c-2.206 0-4 1.525-4 3.4s1.794 3.4 4 3.4 4-1.526 4-3.4a2.945 2.945 0 0 0-.067-.566c.041-.107.064-.22.067-.334V2.763A2.974 2.974 0 0 1 16 5a1 1 0 0 0 2 0C18 1.322 14.467.1 14.316.051ZM10 3H1a1 1 0 0 1 0-2h9a1 1 0 1 1 0 2Z"/>
-    <path d="M10 7H1a1 1 0 0 1 0-2h9a1 1 0 1 1 0 2Zm-5 4H1a1 1 0 0 1 0-2h4a1 1 0 1 1 0 2Z"/>
-  </svg>
-                   </a>
-          
-            <a title="Initialisation Script (Ctrl + I)" id="init-button" class="pl-2 p-1.5 focus:outline-nones transition-colors duration-200 rounded-lg text-white hover:bg-gray-800">
-							<svg class="w-8 h-8 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 14">
-    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 1v12m0 0 4-4m-4 4L1 9"/>
-  </svg>
-                   </a>
+          <a title="Local Scripts (Ctrl + L)" id="local-button"
+            class="pl-2 p-1.5 focus:outline-nones transition-colors duration-200 rounded-lg text-white hover:bg-gray-800">
+            <svg class="w-8 h-8 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+              viewBox="0 0 18 18">
+              <path
+                d="M18 5H0v11a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5Zm-7.258-2L9.092.8a2.009 2.009 0 0 0-1.6-.8H2.049a2 2 0 0 0-2 2v1h10.693Z" />
+            </svg>
+            </svg>
+          </a>
 
-            <a title="Project notes (Ctrl + N)" id="note-button" class="pl-2 p-1.5 text-white focus:outline-nones transition-colors duration-200 rounded-lg text-white hover:bg-gray-800">
-							<svg class="w-8 h-8 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-    <path d="m13.835 7.578-.005.007-7.137 7.137 2.139 2.138 7.143-7.142-2.14-2.14Zm-10.696 3.59 2.139 2.14 7.138-7.137.007-.005-2.141-2.141-7.143 7.143Zm1.433 4.261L2 12.852.051 18.684a1 1 0 0 0 1.265 1.264L7.147 18l-2.575-2.571Zm14.249-14.25a4.03 4.03 0 0 0-5.693 0L11.7 2.611 17.389 8.3l1.432-1.432a4.029 4.029 0 0 0 0-5.689Z"/>
-  </svg>
-			      </a>
+          <a title="Global Script (Ctrl + G)" id="global-button"
+            class="pl-2 p-1.5 text-white focus:outline-nones transition-colors duration-200 rounded-lg hover:bg-gray-800">
+            <svg class="w-8 h-8 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+              viewBox="0 0 18 16">
+              <path
+                d="M14.316.051A1 1 0 0 0 13 1v8.473A4.49 4.49 0 0 0 11 9c-2.206 0-4 1.525-4 3.4s1.794 3.4 4 3.4 4-1.526 4-3.4a2.945 2.945 0 0 0-.067-.566c.041-.107.064-.22.067-.334V2.763A2.974 2.974 0 0 1 16 5a1 1 0 0 0 2 0C18 1.322 14.467.1 14.316.051ZM10 3H1a1 1 0 0 1 0-2h9a1 1 0 1 1 0 2Z" />
+              <path d="M10 7H1a1 1 0 0 1 0-2h9a1 1 0 1 1 0 2Zm-5 4H1a1 1 0 0 1 0-2h4a1 1 0 1 1 0 2Z" />
+            </svg>
+          </a>
 
-            <a title="Application Settings" id="settings-button" class="pl-2 p-1.5 text-white focus:outline-nones transition-colors duration-200 rounded-lg text-white hover:bg-gray-800">
-							<svg class="w-8 h-8 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M10.343 3.94c.09-.542.56-.94 1.11-.94h1.093c.55 0 1.02.398 1.11.94l.149.894c.07.424.384.764.78.93.398.164.855.142 1.205-.108l.737-.527a1.125 1.125 0 011.45.12l.773.774c.39.389.44 1.002.12 1.45l-.527.737c-.25.35-.272.806-.107 1.204.165.397.505.71.93.78l.893.15c.543.09.94.56.94 1.109v1.094c0 .55-.397 1.02-.94 1.11l-.893.149c-.425.07-.765.383-.93.78-.165.398-.143.854.107 1.204l.527.738c.32.447.269 1.06-.12 1.45l-.774.773a1.125 1.125 0 01-1.449.12l-.738-.527c-.35-.25-.806-.272-1.203-.107-.397.165-.71.505-.781.929l-.149.894c-.09.542-.56.94-1.11.94h-1.094c-.55 0-1.019-.398-1.11-.94l-.148-.894c-.071-.424-.384-.764-.781-.93-.398-.164-.854-.142-1.204.108l-.738.527c-.447.32-1.06.269-1.45-.12l-.773-.774a1.125 1.125 0 01-.12-1.45l.527-.737c.25-.35.273-.806.108-1.204-.165-.397-.505-.71-.93-.78l-.894-.15c-.542-.09-.94-.56-.94-1.109v-1.094c0-.55.398-1.02.94-1.11l.894-.149c.424-.07.765-.383.93-.78.165-.398.143-.854-.107-1.204l-.527-.738a1.125 1.125 0 01.12-1.45l.773-.773a1.125 1.125 0 011.45-.12l.737.527c.35.25.807.272 1.204.107.397-.165.71-.505.78-.929l.15-.894z" />
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
+          <a title="Initialisation Script (Ctrl + I)" id="init-button"
+            class="pl-2 p-1.5 focus:outline-nones transition-colors duration-200 rounded-lg text-white hover:bg-gray-800">
+            <svg class="w-8 h-8 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+              viewBox="0 0 10 14">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M5 1v12m0 0 4-4m-4 4L1 9" />
+            </svg>
+          </a>
 
-  </svg>
-			      </a>
+          <a title="Project notes (Ctrl + N)" id="note-button"
+            class="pl-2 p-1.5 text-white focus:outline-nones transition-colors duration-200 rounded-lg text-white hover:bg-gray-800">
+            <svg class="w-8 h-8 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+              viewBox="0 0 20 20">
+              <path
+                d="m13.835 7.578-.005.007-7.137 7.137 2.139 2.138 7.143-7.142-2.14-2.14Zm-10.696 3.59 2.139 2.14 7.138-7.137.007-.005-2.141-2.141-7.143 7.143Zm1.433 4.261L2 12.852.051 18.684a1 1 0 0 0 1.265 1.264L7.147 18l-2.575-2.571Zm14.249-14.25a4.03 4.03 0 0 0-5.693 0L11.7 2.611 17.389 8.3l1.432-1.432a4.029 4.029 0 0 0 0-5.689Z" />
+            </svg>
+          </a>
+
+          <a title="Application Settings" id="settings-button"
+            class="pl-2 p-1.5 text-white focus:outline-nones transition-colors duration-200 rounded-lg text-white hover:bg-gray-800">
+            <svg class="w-8 h-8 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+              viewBox="0 0 20 20">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                stroke="currentColor" class="w-6 h-6">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M10.343 3.94c.09-.542.56-.94 1.11-.94h1.093c.55 0 1.02.398 1.11.94l.149.894c.07.424.384.764.78.93.398.164.855.142 1.205-.108l.737-.527a1.125 1.125 0 011.45.12l.773.774c.39.389.44 1.002.12 1.45l-.527.737c-.25.35-.272.806-.107 1.204.165.397.505.71.93.78l.893.15c.543.09.94.56.94 1.109v1.094c0 .55-.397 1.02-.94 1.11l-.893.149c-.425.07-.765.383-.93.78-.165.398-.143.854.107 1.204l.527.738c.32.447.269 1.06-.12 1.45l-.774.773a1.125 1.125 0 01-1.449.12l-.738-.527c-.35-.25-.806-.272-1.203-.107-.397.165-.71.505-.781.929l-.149.894c-.09.542-.56.94-1.11.94h-1.094c-.55 0-1.019-.398-1.11-.94l-.148-.894c-.071-.424-.384-.764-.781-.93-.398-.164-.854-.142-1.204.108l-.738.527c-.447.32-1.06.269-1.45-.12l-.773-.774a1.125 1.125 0 01-.12-1.45l.527-.737c.25-.35.273-.806.108-1.204-.165-.397-.505-.71-.93-.78l-.894-.15c-.542-.09-.94-.56-.94-1.109v-1.094c0-.55.398-1.02.94-1.11l.894-.149c.424-.07.765-.383.93-.78.165-.398.143-.854-.107-1.204l-.527-.738a1.125 1.125 0 01.12-1.45l.773-.773a1.125 1.125 0 011.45-.12l.737.527c.35.25.807.272 1.204.107.397-.165.71-.505.78-.929l.15-.894z" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+
+            </svg>
+          </a>
 
 
-        </aside>
+      </aside>
 
-        <!-- Tabs for local files -->
-        <div class="min-w-screen flex grow flex-col">
-          <ul id="local-script-tabs" class="text-xl flex text-sm font-medium text-center text-white bg-neutral-900 space-x-2 lg:space-x-8">
-            <li class="pl-5">
-                <a title="Local Script 1 (F1)" id="tab-1" class="bg-orange-300 inline-block px-4 py-1 text-white hover:bg-gray-800">1</a>
-            </li>
-            <li class="">
-                <a title="Local Script 2 (F2)" id="tab-2" class="inline-block px-4 py-1 hover:bg-gray-800">2</a>
-            </li>
-            <li class="">
-                <a title="Local Script 3 (F3)" id="tab-3" class="inline-block px-4 py-1 hover:bg-gray-800">3</a>
-            </li>
-            <li class="">
-                <a title="Local Script 4 (F4)" id="tab-4" class="inline-block px-4 py-1 hover:bg-gray-800">4</a>
-            </li>
-            <li class="">
-                <a title="Local Script 5 (F5)" id="tab-5" class="inline-block px-4 py-1 hover:bg-gray-800">5</a>
-            </li>
-            <li class="">
-                <a title="Local Script 6 (F6)" id="tab-6" class="inline-block px-4 py-1 hover:bg-gray-800">6</a>
-            </li>
-            <li class="">
-                <a title="Local Script 7 (F7)" id="tab-7" class="inline-block px-4 py-1 hover:bg-gray-800">7</a>
-            </li>
-            <li class="">
-                <a title="Local Script 8 (F8)" id="tab-8" class="inline-block px-4 py-1 hover:bg-gray-800">8</a>
-            </li>
-            <li class="">
-                <a title="Local Script 9 (F9)" id="tab-9" class="inline-block px-4 py-1 hover:bg-gray-800">9</a>
-            </li>
- 
-         </ul>
-         <!-- Here comes the editor itself -->
-          <div id="editor" class="relative flex flex-row h-screen overflow-y-hidden">
-            <canvas id="hydra-bg"></canvas>
-					</div>
-          <p id="error_line" class="hidden text-red-400 w-screen bg-neutral-900 font-mono absolute bottom-0 pl-2 py-2">Hello kids</p>
+      <!-- Tabs for local files -->
+      <div class="min-w-screen flex grow flex-col">
+        <ul id="local-script-tabs"
+          class="text-xl flex text-sm font-medium text-center text-white bg-neutral-900 space-x-2 lg:space-x-8">
+          <li class="pl-5">
+            <a title="Local Script 1 (F1)" id="tab-1"
+              class="bg-orange-300 inline-block px-4 py-1 text-white hover:bg-gray-800">1</a>
+          </li>
+          <li class="">
+            <a title="Local Script 2 (F2)" id="tab-2" class="inline-block px-4 py-1 hover:bg-gray-800">2</a>
+          </li>
+          <li class="">
+            <a title="Local Script 3 (F3)" id="tab-3" class="inline-block px-4 py-1 hover:bg-gray-800">3</a>
+          </li>
+          <li class="">
+            <a title="Local Script 4 (F4)" id="tab-4" class="inline-block px-4 py-1 hover:bg-gray-800">4</a>
+          </li>
+          <li class="">
+            <a title="Local Script 5 (F5)" id="tab-5" class="inline-block px-4 py-1 hover:bg-gray-800">5</a>
+          </li>
+          <li class="">
+            <a title="Local Script 6 (F6)" id="tab-6" class="inline-block px-4 py-1 hover:bg-gray-800">6</a>
+          </li>
+          <li class="">
+            <a title="Local Script 7 (F7)" id="tab-7" class="inline-block px-4 py-1 hover:bg-gray-800">7</a>
+          </li>
+          <li class="">
+            <a title="Local Script 8 (F8)" id="tab-8" class="inline-block px-4 py-1 hover:bg-gray-800">8</a>
+          </li>
+          <li class="">
+            <a title="Local Script 9 (F9)" id="tab-9" class="inline-block px-4 py-1 hover:bg-gray-800">9</a>
+          </li>
+
+        </ul>
+        <!-- Here comes the editor itself -->
+        <div id="editor" class="relative flex flex-row h-screen overflow-y-hidden">
+          <canvas id="hydra-bg"></canvas>
         </div>
+        <p id="error_line" class="hidden text-red-400 w-screen bg-neutral-900 font-mono absolute bottom-0 pl-2 py-2">
+          Hello kids</p>
       </div>
-      <script type="module" src="/src/main.ts"></script>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
 
-      <template id="ui-known-universe-item-template">
-        <!-- A known universe button in "opening" interface -->
-        <li class="hover:fill-black hover:bg-white py-2 hover:text-black flex justify-between px-4">
-          <button class="universe-name load-universe" title="Load this universe">Universe Name</button>
-          <button class="delete-universe" title="Delete this universe">🗑</button>
-        </li>
-      </template>
-  </body>
-	<p id="timeviewer" class="rounded-lg px-2 py-2 font-bold bg-white cursor-textpointer-events-none select-none text-black text-sm absolute bottom-2 right-2"></p>
-	<p id="fillviewer" class="invisible rounded-lg px-2 py-2 font-bold bg-white cursor-textpointer-events-none select-none text-black text-sm absolute right-2 bottom-12">/////// Fill ///////</p>
+    <template id="ui-known-universe-item-template">
+      <!-- A known universe button in "opening" interface -->
+      <li class="hover:fill-black hover:bg-white py-2 hover:text-black flex justify-between px-4">
+        <button class="universe-name load-universe" title="Load this universe">Universe Name</button>
+        <button class="delete-universe" title="Delete this universe">🗑</button>
+      </li>
+    </template>
+</body>
+<p id="timeviewer"
+  class="rounded-lg px-2 py-2 font-bold bg-white cursor-textpointer-events-none select-none text-black text-sm absolute bottom-2 right-2">
+</p>
+<p id="fillviewer"
+  class="invisible rounded-lg px-2 py-2 font-bold bg-white cursor-textpointer-events-none select-none text-black text-sm absolute right-2 bottom-12">
+  /////// Fill ///////</p>
+
 </html>

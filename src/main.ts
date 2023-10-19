@@ -1,7 +1,9 @@
-import { uniqueNamesGenerator, colors, animals } from "unique-names-generator";
+import { uniqueNamesGenerator, colors, animals, adjectives } from "unique-names-generator";
 import { examples } from "./examples/excerpts";
 import * as Y from 'yjs'
+// @ts-ignore
 import { yCollab } from 'y-codemirror.next'
+// @ts-ignore
 import { WebrtcProvider } from 'y-webrtc'
 import * as random from 'lib0/random'
 import { EditorState, Compartment } from "@codemirror/state";
@@ -56,9 +58,8 @@ import { makeStringExtensions } from "./StringExtensions";
 //   false
 // );
 
-// #################### COLLAB ################
-
-export const usercolors = [
+// #################### COLLAB VARS ################
+const usercolors = [
   { color: '#30bced', light: '#30bced33' },
   { color: '#6eeb83', light: '#6eeb8333' },
   { color: '#ffbc42', light: '#ffbc4233' },
@@ -69,20 +70,19 @@ export const usercolors = [
   { color: '#1be7ff', light: '#1be7ff33' }
 ]
 
-// select a random color for this user
-export const userColor = usercolors[random.uint32() % usercolors.length]
+  //from url get param ?users = 1,2,3
+  let room = new URLSearchParams(window.location.search).get('room') || uniqueNamesGenerator({ dictionaries: [adjectives, animals] })
+  let pseudo = uniqueNamesGenerator({ dictionaries: [colors, animals] })
 
-const ydoc = new Y.Doc()
-const provider = new WebrtcProvider('codemirror6-demo-room',  ydoc, { signaling: [import.meta.env.VITE_DEFAULT_WEBRTC_SERVER] })
-const ytext = ydoc.getText('codemirror')
+  // select a random color for this user
+  const userColor = usercolors[random.uint32() % usercolors.length]
 
-const undoManager = new Y.UndoManager(ytext)
+  const ydoc = new Y.Doc()
+  const provider = new WebrtcProvider(room,  ydoc, { signaling: [import.meta.env.VITE_DEFAULT_WEBRTC_SERVER] })
+  const ytext = ydoc.getText('codemirror')
 
-provider.awareness.setLocalStateField('user', {
-  name: 'Anonymous ' + Math.floor(Math.random() * 100),
-  color: userColor.color,
-  colorLight: userColor.light
-})
+  const undoManager = new Y.UndoManager(ytext)
+
 
 const classMap = {
   h1: "text-white lg:text-4xl text-xl lg:ml-4 lg:mx-4 mx-2 lg:my-4 my-2 lg:mb-4 mb-4 bg-neutral-900 rounded-lg py-2 px-2",
@@ -191,6 +191,7 @@ export class Editor {
     "destroy-universes"
   ) as HTMLButtonElement;
 
+
   documentation_button: HTMLButtonElement = document.getElementById(
     "doc-button-1"
   ) as HTMLButtonElement;
@@ -198,6 +199,11 @@ export class Editor {
   collaborate_button: HTMLButtonElement = document.getElementById(
     "collaborate-button"
   ) as HTMLButtonElement;
+  
+  start_collaboration_button: HTMLButtonElement = document.getElementById(
+    "start-collaboration-button"
+  ) as HTMLButtonElement;
+
   eval_button: HTMLButtonElement = document.getElementById(
     "eval-button-1"
   ) as HTMLButtonElement;
@@ -371,6 +377,7 @@ export class Editor {
           structuredClone(template_universe);
     }
     this.universe_viewer.innerHTML = `Topos: ${this.selected_universe}`;
+
 
     // ================================================================================
     // Audio context and clock
@@ -653,6 +660,10 @@ export class Editor {
 
     this.collaborate_button.addEventListener("click", () => {
       this.showCollaboration();
+    });
+
+    this.start_collaboration_button.addEventListener("click", () => {
+      this.startCollaboration();
     });
 
     this.destroy_universes_button.addEventListener("click", () => {
@@ -983,8 +994,94 @@ export class Editor {
       (globalThis as Record<string, any>)[name] = value;
     });
 
+
+  
+
+
+
+
+  provider.awareness.setLocalStateField('user', {
+    name: pseudo,
+    color: userColor.color,
+    colorLight: userColor.light
+  })
+
+
+   // ================================================================================
+    // Yjs Document Setup
+    // ================================================================================
+
+    const global = new Y.Doc()
+    global.getText(this.universes[this.selected_universe].global.candidate)
+    const init = new Y.Doc()
+    init.getText(this.universes[this.selected_universe].init.candidate)
+    const notes = new Y.Doc()
+    notes.getText(this.universes[this.selected_universe].notes.candidate)
+
+    const local_1 = new Y.Doc()
+    local_1.getText(this.universes[this.selected_universe].locals["1"].candidate)
+    const local_2 = new Y.Doc()
+    local_2.getText(this.universes[this.selected_universe].locals["2"].candidate)
+    const local_3 = new Y.Doc()
+    local_3.getText(this.universes[this.selected_universe].locals["3"].candidate)
+    const local_4 = new Y.Doc()
+    local_4.getText(this.universes[this.selected_universe].locals["4"].candidate)
+    const local_5 = new Y.Doc()
+    local_5.getText(this.universes[this.selected_universe].locals["5"].candidate)
+    const local_6 = new Y.Doc()
+    local_6.getText(this.universes[this.selected_universe].locals["6"].candidate)
+    const local_7 = new Y.Doc()
+    local_7.getText(this.universes[this.selected_universe].locals["7"].candidate)
+    const local_8 = new Y.Doc()
+    local_8.getText(this.universes[this.selected_universe].locals["8"].candidate)
+    const local_9 = new Y.Doc()
+    local_9.getText(this.universes[this.selected_universe].locals["9"].candidate)
+
+  
+
+    // set folder
+    const folder = global.getMap('folder')
+    folder.set('init', init)
+    folder.set('notes', notes)
+    folder.set('local_1', local_1)
+    folder.set('local_2', local_2)
+    folder.set('local_3', local_3)
+    folder.set('local_4', local_4)
+    folder.set('local_5', local_5)
+    folder.set('local_6', local_6)
+    folder.set('local_7', local_7)
+    folder.set('local_8', local_8)
+    folder.set('local_9', local_9)
+
+
+    function ydocToUniverse(ydoc: Y.Doc): Universe {
+      return {
+        global: { candidate: ydoc.getText('global').toString(), committed: ydoc.getText('global').toString(), evaluations: 0 },
+        locals: {
+          1: { candidate: ydoc.getText('local_1').toString(), committed: ydoc.getText('local_1').toString(), evaluations: 0 },
+          2: { candidate: ydoc.getText('local_2').toString(), committed: ydoc.getText('local_2').toString(), evaluations: 0 },
+          3: { candidate: ydoc.getText('local_3').toString(), committed: ydoc.getText('local_3').toString(), evaluations: 0 },
+          4: { candidate: ydoc.getText('local_4').toString(), committed: ydoc.getText('local_4').toString(), evaluations: 0 },
+          5: { candidate: ydoc.getText('local_5').toString(), committed: ydoc.getText('local_5').toString(), evaluations: 0 },
+          6: { candidate: ydoc.getText('local_6').toString(), committed: ydoc.getText('local_6').toString(), evaluations: 0 },
+          7: { candidate: ydoc.getText('local_7').toString(), committed: ydoc.getText('local_7').toString(), evaluations: 0 },
+          8: { candidate: ydoc.getText('local_8').toString(), committed: ydoc.getText('local_8').toString(), evaluations: 0 },
+          9: { candidate: ydoc.getText('local_9').toString(), committed: ydoc.getText('local_9').toString(), evaluations: 0 },
+        },
+        init: { candidate: ydoc.getText('init').toString(), committed: ydoc.getText('init').toString(), evaluations: 0 },
+        example: { candidate: "", committed: "", evaluations: 0 },
+        notes: { candidate: ydoc.getText('notes').toString() },
+
+      }
+    }
+
+
+
+
+
     this.state = EditorState.create({
       doc: ytext.toString(),
+      //doc: this.universes[this.selected_universe].global.candidate,
       extensions: [
         ...this.editorExtensions,
         EditorView.lineWrapping,
@@ -1002,7 +1099,6 @@ export class Editor {
         ),
         keymap.of([indentWithTab]),
       ],
-      //doc: this.universes[this.selected_universe].global.candidate,
       
     });
 
@@ -1030,8 +1126,6 @@ export class Editor {
             dictionaries: [colors, animals],
           });
           this.loadUniverse(randomName, new_universe["universe"]);
-          this.emptyUrl();
-          this.emptyUrl();
         }
       }
     }
@@ -1121,6 +1215,33 @@ export class Editor {
     window.history.replaceState({}, "", url.toString());
     // Copy the text inside the text field
     navigator.clipboard.writeText(url.toString());
+  }
+
+  showCollaboration(){
+    // hide or display collaborate-modal
+    if (document.getElementById("collaborate-modal")?.classList.contains("hidden")) {
+      document.getElementById("collaborate-modal")?.classList.remove("hidden");
+      // if room is not empty, we fill the room input
+      document.getElementById("collaborate-room")?.setAttribute("value", room);
+      // if pseudo is not empty, we fill the pseudo input
+      document.getElementById("collaborate-pseudo")?.setAttribute("value", pseudo);
+    } else {
+      document.getElementById("collaborate-modal")?.classList.add("hidden");
+    }
+  }
+
+  startCollaboration(){
+    console.log("Starting collaboration");
+    const pseudo = document.getElementById("collaborate-pseudo")?.value as HTMLInputElement || "anonymous";
+    const room = document.getElementById("collaborate-room") as HTMLInputElement;
+    // set awareness state
+    provider.awareness.setLocalStateField("user", {name: pseudo});
+
+    
+    window.history.replaceState({}, "", "?room=" + room.value);
+    // click on the share button
+    this.share_button.click();
+    
   }
 
   showDocumentation() {
