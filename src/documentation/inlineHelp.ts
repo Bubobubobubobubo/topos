@@ -31,6 +31,78 @@ const completionDatabase: CompletionDatabase = {
     description: "Toss a coin, true or false",
     example: "toss() : log('heads')",
   },
+  lpadsr: {
+    name: "lpadsr",
+    category: "synthesis",
+    description: "Lowpass filter ADSR envelope",
+    example: "sound('sawtooth').lpadsr(2, 0, .1, 0, 0).out()",
+  },
+  lpenv: {
+    name: "lpenv",
+    category: "synthesis",
+    description: "Lowpass filter ADSR envelope amount",
+    example: "sound('sawtooth').lpenv(2).lpd(.2).out()",
+  },
+  hpadsr: {
+    name: "hpadsr",
+    category: "synthesis",
+    description: "Highpass filter ADSR envelope",
+    example: "sound('sawtooth').hpadsr(2, 0, .1, 0, 0).out()",
+  },
+  hpenv: {
+    name: "hpenv",
+    category: "synthesis",
+    description: "Highpass filter ADSR envelope amount",
+    example: "sound('sawtooth').hpenv(2).hpd(.2).out()",
+  },
+  bpadsr: {
+    name: "bpadsr",
+    category: "synthesis",
+    description: "Bandpass filter ADSR envelope",
+    example: "sound('sawtooth').bpadsr(2, 0, .1, 0, 0).out()",
+  },
+  bpattack: {
+    name: "bpattack",
+    category: "synthesis",
+    description: "Bandpass filter ADSR envelope attack time (in seconds)",
+    example: "sound('sawtooth').bpf(2000).bpenv(2).bpa(.2).out()",
+  },
+  bpdecay: {
+    name: "bpdecay",
+    category: "synthesis",
+    description: "Bandpass filter ADSR envelope decay time (in seconds)",
+    example: "sound('sawtooth').bpf(2000).bpenv(2).bpd(.2).out()",
+  },
+  bpsustain: {
+    name: "bpsustain",
+    category: "synthesis",
+    description: "Bandpass filter ADSR envelope sustain level (0-1)",
+    example: "sound('sawtooth').bpf(2000).bpenv(2).bpsustain(0.5).out()",
+  },
+  bprelease: {
+    name: "bprelease",
+    category: "synthesis",
+    description: "Bandpass filter ADSR envelope release time (in seconds)",
+    example: "sound('sawtooth').bpf(2000).bpenv(2).bpr(.2).out()",
+  },
+  bpenv: {
+    name: "bpenv",
+    category: "synthesis",
+    description: "Bandpass filter ADSR envelope amount",
+    example: "sound('sawtooth').bpenv(2).bpd(.2).out()",
+  },
+  adsr: {
+    name: "adsr",
+    category: "synthesis",
+    description: "ADSR envelope",
+    example: "sound('sawtooth').adsr(0, .1, 0, 0).out()",
+  },
+  ad: {
+    name: "ad",
+    category: "synthesis",
+    description: "AD envelope times (in seconds)",
+    example: "sound('sawtooth').ad(0, .1).out()",
+  },
   attack: {
     name: "attack",
     category: "synthesis",
@@ -97,11 +169,11 @@ const completionDatabase: CompletionDatabase = {
     description: "FM synth modulator ADSR envelope release time (in seconds)",
     example: "sound('sine').fmi(2).fmrelease(.5).out()",
   },
-  repeatAll: {
-    name: "repeatAll",
+  repeat: {
+    name: "repeat",
     category: "patterns",
     description: "Repeat every array elements <i>n</i> times",
-    example: "[0,1,2,3].repeatAll(2)",
+    example: "[0,1,2,3].repeat(2)",
   },
   quant: {
     name: "quant",
@@ -120,7 +192,7 @@ const completionDatabase: CompletionDatabase = {
     category: "patterns",
     description:
       "Returns  true and false alternatively or next value every <i>n</i> beats (arrays)",
-    example: "flip(4, 50) // 2 beats of true, 2 beats of false, 50/50.",
+    example: "flip(4, 50) // 4 beats of true, 4 beats of false, 50/50.",
   },
   n: {
     name: "n",
@@ -246,7 +318,7 @@ const completionDatabase: CompletionDatabase = {
   room: {
     name: "room",
     category: "effect",
-    description: "Reverb effect room amount",
+    description: "Reverb effect room amount (0-1 or +)",
     example: "sound('cp').room(.5).out()",
   },
   size: {
@@ -254,6 +326,24 @@ const completionDatabase: CompletionDatabase = {
     category: "effect",
     description: "Reverb effect room size",
     example: "sound('cp').size(.5).out()",
+  },
+  roomlp: {
+    name: "roomlp",
+    category: "effect",
+    description: "Reverb effect room lowpass filter cutoff frequency",
+    example: "sound('cp').room(.5).size(.5).roomlp(.5).out()",
+  },
+  roomfade: {
+    name: "roomfade",
+    category: "effect",
+    description: "Reverb effect room fade time (in seconds)",
+    example: "sound('cp').room(.5).size(.5).roomfade(.5).out()",
+  },
+  roomdim: {
+    name: "roomdim",
+    category: "effect",
+    description: "Reverb lowpass frequency at -60db (in hertz)",
+    example: "sound('cp').room(.5).size(.5).roomdim(.5).out()",
   },
   usine: {
     name: "usine",
@@ -786,6 +876,60 @@ const completionDatabase: CompletionDatabase = {
     category: "synthesis",
     description: "ZzFX sound generator",
     example: "sound('zzfx').zzfx(...).out()",
+  },
+  vib: {
+    name: "vib",
+    category: "synthesis",
+    description: "Vibrato frequency",
+    example: "sound('sine').vib(1).vibmod(0.5).out()",
+  },
+  vibmod: {
+    name: "vibmod",
+    category: "synthesis",
+    description: "Vibrato modulation amount",
+    example: "sound('sine').vib(1).vibmod(4).out()",
+  },
+  fill: {
+    name: "fill",
+    category: "performance",
+    description: "Detects if the Alt key is pressed",
+    example: "fill() ? 1 : 0.5",
+  },
+  comp: {
+    name: "comp",
+    category: "synthesis",
+    description: "Compressor threshold (dB)",
+    example: "sound('sine').comp(-4).out()",
+  },
+  ratio: {
+    name: "ratio",
+    category: "synthesis",
+    description: "Compressor ratio",
+    example: "sound('sine').comp(1).ratio(4).out()",
+  },
+  knee: {
+    name: "knee",
+    category: "synthesis",
+    description: "Compressor knee (dB)",
+    example: "sound('sine').comp(-4).knee(4).out()",
+  },
+  compAttack: {
+    name: "compAttack",
+    category: "synthesis",
+    description: "Compressor attack time (in seconds)",
+    example: "sound('sine').comp(-4).compAttack(0.1).out()",
+  },
+  compRelease: {
+    name: "compRelease",
+    category: "synthesis",
+    description: "Compressor release time (in seconds)",
+    example: "sound('sine').comp(-4).compRelease(0.1).out()",
+  },
+  noise: {
+    name: "noise",
+    category: "synthesis",
+    description: "Noise amount in the signal (0-1)",
+    example: "sound('triangle').noise(.25).out()",
   },
 };
 
