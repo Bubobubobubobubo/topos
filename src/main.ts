@@ -188,7 +188,7 @@ export class Editor {
 
     let list = document.createElement("ul");
     list.className =
-      "lg:h-80 lg:w-80 lg:pb-2 lg:pt-2 overflow-y-scroll text-white lg:mb-4 border rounded-lg bg-neutral-800";
+      "lg:h-80 lg:text-normal text-sm h-auto lg:w-80 w-auto lg:pb-2 lg:pt-2 overflow-y-scroll text-white lg:mb-4 border rounded-lg bg-neutral-800";
 
     list.append(
       ...Object.keys(this.universes).map((it) => {
