@@ -212,6 +212,21 @@ export const installInterfaceLogic = (app: Editor) => {
     //@ts-ignore
     let new_font = (app.interface.font_family_selector as HTMLSelectElement)
       .value;
+    console.log("Picking new font : " + new_font);
+    app.settings.font = new_font;
+
+    app.view.dispatch({
+      effects: app.fontSize.reconfigure(
+        EditorView.theme({
+          "&": { fontSize: app.settings.font_size + "px" },
+          ".cm-content": {
+            fontFamily: new_font,
+            fontSize: app.settings.font_size + "px",
+          },
+          ".cm-gutters": { fontSize: app.settings.font_size + "px" },
+        })
+      ),
+    });
   });
 
   app.interface.font_size_input.addEventListener("input", () => {
@@ -219,9 +234,30 @@ export const installInterfaceLogic = (app: Editor) => {
       app.interface.font_size_input as HTMLInputElement
     ).value;
     app.settings.font_size = parseInt(new_value);
+    // TODO: update the font size
+    app.view.dispatch({
+      effects: app.fontSize.reconfigure(
+        EditorView.theme({
+          "&": { fontSize: app.settings.font_size + "px" },
+          ".cm-content": {
+            fontFamily: app.settings.font,
+            fontSize: app.settings.font_size + "px",
+          },
+          ".cm-gutters": { fontSize: app.settings.font_size + "px" },
+        })
+      ),
+    });
   });
 
   app.interface.settings_button.addEventListener("click", () => {
+    // Populate the font selector
+    const fontFamilySelect = document.getElementById(
+      "font-family"
+    ) as HTMLSelectElement | null;
+    if (fontFamilySelect) {
+      fontFamilySelect.value = app.settings.font;
+    }
+
     // Populate the font family selector
     const doughNudgeRange = app.interface.dough_nudge_range as HTMLInputElement;
     doughNudgeRange.value = app.dough_nudge.toString();
@@ -230,9 +266,6 @@ export const installInterfaceLogic = (app: Editor) => {
       "doughnumber"
     ) as HTMLInputElement;
     doughNumber.value = app.dough_nudge.toString();
-    (app.interface.font_family_selector as HTMLSelectElement).value =
-      app.settings.font;
-
     if (app.settings.font_size === null) {
       app.settings.font_size = 12;
     }
@@ -273,12 +306,15 @@ export const installInterfaceLogic = (app: Editor) => {
     let editor = document.getElementById("editor");
     modal_settings?.classList.add("invisible");
     editor?.classList.remove("invisible");
-    // Update the font size once again
+    let new_value: string = (app.interface.font_size_input as HTMLInputElement)
+      .value;
+    app.settings.font_size = parseInt(new_value);
+    // Update fontSize compartment with new font size value
     app.view.dispatch({
       effects: app.fontSize.reconfigure(
         EditorView.theme({
           "&": { fontSize: app.settings.font_size + "px" },
-          "&content": {
+          ".cm-content": {
             fontFamily: app.settings.font,
             fontSize: app.settings.font_size + "px",
           },

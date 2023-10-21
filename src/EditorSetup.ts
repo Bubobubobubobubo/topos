@@ -73,7 +73,7 @@ export const installEditor = (app: Editor) => {
       fontSize: `${app.settings.font_size}px`,
     },
     $content: {
-      fontFamily: `${app.settings.font}, Menlo, Monaco, Lucida Console, monospace`,
+      fontFamily: `${app.settings.font}`,
       fontSize: `${app.settings.font_size}px`,
     },
     ".cm-gutters": {
@@ -116,5 +116,23 @@ export const installEditor = (app: Editor) => {
   app.view = new EditorView({
     parent: document.getElementById("editor") as HTMLElement,
     state: app.state,
+  });
+
+  // Re-apply font size and font family change
+  app.view.dispatch({
+    effects: app.fontSize.reconfigure(
+      EditorView.theme({
+        "&": {
+          fontSize: `${app.settings.font_size}px`,
+        },
+        $content: {
+          fontFamily: `${app.settings.font}`,
+          fontSize: `${app.settings.font_size}px`,
+        },
+        ".cm-gutters": {
+          fontSize: `${app.settings.font_size}px`,
+        },
+      })
+    ),
   });
 };
