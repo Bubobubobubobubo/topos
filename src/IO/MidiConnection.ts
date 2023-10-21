@@ -1,19 +1,19 @@
 import { UserAPI } from "../API";
-import { AppSettings } from "../AppSettings";
+import { AppSettings } from "../FileManagement";
 
 export type MidiNoteEvent = {
   note: number;
   velocity: number;
   channel: number;
   timestamp: number;
-}
+};
 
 export type MidiCCEvent = {
   control: number;
   value: number;
   channel: number;
   timestamp: number;
-}
+};
 
 export class MidiConnection {
   /**
@@ -45,7 +45,8 @@ export class MidiConnection {
   public lastNote: MidiNoteEvent | undefined = undefined;
   public lastCC: { [control: number]: number } = {};
   public lastNoteInChannel: { [channel: number]: MidiNoteEvent } = {};
-  public lastCCInChannel: { [channel: number]: { [control: number]: number } } = {};
+  public lastCCInChannel: { [channel: number]: { [control: number]: number } } =
+    {};
 
   /* MIDI clock stuff */
   private midiClockInputIndex: number | undefined = undefined;
@@ -173,8 +174,12 @@ export class MidiConnection {
      * Updates the MIDI clock input select element with the available MIDI inputs.
      */
     if (this.midiInputs.length > 0) {
-      const midiClockSelect = document.getElementById("midi-clock-input") as HTMLSelectElement;
-      const midiInputSelect = document.getElementById("default-midi-input") as HTMLSelectElement;
+      const midiClockSelect = document.getElementById(
+        "midi-clock-input"
+      ) as HTMLSelectElement;
+      const midiInputSelect = document.getElementById(
+        "default-midi-input"
+      ) as HTMLSelectElement;
 
       midiClockSelect.innerHTML = "";
       midiInputSelect.innerHTML = "";
@@ -201,7 +206,9 @@ export class MidiConnection {
       });
 
       if (this.settings.midi_clock_input) {
-        const clockMidiInputIndex = this.getMidiInputIndex(this.settings.midi_clock_input);
+        const clockMidiInputIndex = this.getMidiInputIndex(
+          this.settings.midi_clock_input
+        );
         midiClockSelect.value = clockMidiInputIndex.toString();
         if (clockMidiInputIndex > 0) {
           this.midiClockInput = this.midiInputs[clockMidiInputIndex];
@@ -212,7 +219,9 @@ export class MidiConnection {
       }
 
       if (this.settings.default_midi_input) {
-        const defaultMidiInputIndex = this.getMidiInputIndex(this.settings.default_midi_input);
+        const defaultMidiInputIndex = this.getMidiInputIndex(
+          this.settings.default_midi_input
+        );
         midiInputSelect.value = defaultMidiInputIndex.toString();
         if (defaultMidiInputIndex > 0) {
           this.currentInputIndex = defaultMidiInputIndex;
@@ -226,16 +235,25 @@ export class MidiConnection {
       midiClockSelect.addEventListener("change", (event) => {
         const value = (event.target as HTMLSelectElement).value;
         if (value === "-1") {
-          if (this.midiClockInput && this.midiClockInputIndex != this.currentInputIndex) this.midiClockInput.onmidimessage = null;
+          if (
+            this.midiClockInput &&
+            this.midiClockInputIndex != this.currentInputIndex
+          )
+            this.midiClockInput.onmidimessage = null;
           this.midiClockInput = undefined;
           this.settings.midi_clock_input = undefined;
         } else {
           const clockInputIndex = parseInt(value);
           this.midiClockInputIndex = clockInputIndex;
-          if (this.midiClockInput && this.midiClockInputIndex != this.currentInputIndex) this.midiClockInput.onmidimessage = null;
+          if (
+            this.midiClockInput &&
+            this.midiClockInputIndex != this.currentInputIndex
+          )
+            this.midiClockInput.onmidimessage = null;
           this.midiClockInput = this.midiInputs[clockInputIndex];
           this.registerMidiInputListener(clockInputIndex);
-          this.settings.midi_clock_input = this.midiClockInput.name || undefined;
+          this.settings.midi_clock_input =
+            this.midiClockInput.name || undefined;
         }
       });
 
@@ -243,17 +261,25 @@ export class MidiConnection {
       midiInputSelect.addEventListener("change", (event) => {
         const value = (event.target as HTMLSelectElement).value;
         if (value === "-1") {
-          if (this.currentInputIndex && this.currentInputIndex != this.midiClockInputIndex) this.unregisterMidiInputListener(this.currentInputIndex);
+          if (
+            this.currentInputIndex &&
+            this.currentInputIndex != this.midiClockInputIndex
+          )
+            this.unregisterMidiInputListener(this.currentInputIndex);
           this.currentInputIndex = undefined;
           this.settings.default_midi_input = undefined;
         } else {
-          if (this.currentInputIndex && this.currentInputIndex != this.midiClockInputIndex) this.unregisterMidiInputListener(this.currentInputIndex);
+          if (
+            this.currentInputIndex &&
+            this.currentInputIndex != this.midiClockInputIndex
+          )
+            this.unregisterMidiInputListener(this.currentInputIndex);
           this.currentInputIndex = parseInt(value);
           this.registerMidiInputListener(this.currentInputIndex);
-          this.settings.default_midi_input = this.midiInputs[this.currentInputIndex].name || undefined;
+          this.settings.default_midi_input =
+            this.midiInputs[this.currentInputIndex].name || undefined;
         }
       });
-
     }
   }
 
@@ -290,36 +316,60 @@ export class MidiConnection {
           }
           /* DEFAULT MIDI INPUT */
           if (input.name === this.settings.default_midi_input) {
-
             // If message is one of note ons
-            if (message.data[0] >= 0x90 && message.data[0] <= 0x9F) {
+            if (message.data[0] >= 0x90 && message.data[0] <= 0x9f) {
               const channel = message.data[0] - 0x90 + 1;
               const note = message.data[1];
               const velocity = message.data[2];
 
-              this.lastNote = { note, velocity, channel, timestamp: event.timeStamp };
-              this.lastNoteInChannel[channel] = { note, velocity, channel, timestamp: event.timeStamp };
+              this.lastNote = {
+                note,
+                velocity,
+                channel,
+                timestamp: event.timeStamp,
+              };
+              this.lastNoteInChannel[channel] = {
+                note,
+                velocity,
+                channel,
+                timestamp: event.timeStamp,
+              };
 
               if (this.settings.midi_channels_scripts) this.api.script(channel);
 
-              this.pushToMidiInputBuffer({ note, velocity, channel, timestamp: event.timeStamp });
-              this.activeNotes.push({ note, velocity, channel, timestamp: event.timeStamp });
+              this.pushToMidiInputBuffer({
+                note,
+                velocity,
+                channel,
+                timestamp: event.timeStamp,
+              });
+              this.activeNotes.push({
+                note,
+                velocity,
+                channel,
+                timestamp: event.timeStamp,
+              });
 
               const sticky = this.removeFromStickyNotes(note, channel);
-              if (!sticky) this.stickyNotes.push({ note, velocity, channel, timestamp: event.timeStamp });
+              if (!sticky)
+                this.stickyNotes.push({
+                  note,
+                  velocity,
+                  channel,
+                  timestamp: event.timeStamp,
+                });
             }
 
             // If note off
-            if (message.data[0] >= 0x80 && message.data[0] <= 0x8F) {
+            if (message.data[0] >= 0x80 && message.data[0] <= 0x8f) {
               const channel = message.data[0] - 0x80 + 1;
               const note = message.data[1];
               this.removeFromActiveNotes(note, channel);
             }
 
             // If message is one of CCs
-            if (message.data[0] >= 0xB0 && message.data[0] <= 0xBF) {
-
-              const channel = message.data[0] - 0xB0 + 1;
+            if (message.data[0] >= 0xb0 && message.data[0] <= 0xbf) {
+              const channel = message.data[0] - 0xb0 + 1;
               const control = message.data[1];
               const value = message.data[2];
 
@@ -333,13 +383,15 @@ export class MidiConnection {
 
               //console.log(`CC: ${control} VALUE: ${value} CHANNEL: ${channel}`);
 
-              this.pushToMidiCCBuffer({ control, value, channel, timestamp: event.timeStamp });
-
+              this.pushToMidiCCBuffer({
+                control,
+                value,
+                channel,
+                timestamp: event.timeStamp,
+              });
             }
-
-
           }
-        }
+        };
       }
     }
   }
@@ -347,16 +399,22 @@ export class MidiConnection {
   /* Methods for handling active midi notes */
 
   public removeFromActiveNotes(note: number, channel: number): void {
-    const index = this.activeNotes.findIndex((e) => e.note === note && e.channel === channel);
+    const index = this.activeNotes.findIndex(
+      (e) => e.note === note && e.channel === channel
+    );
     if (index >= 0) this.activeNotes.splice(index, 1);
   }
 
   public removeFromStickyNotes(note: number, channel: number): boolean {
-    const index = this.stickyNotes.findIndex((e) => e.note === note && e.channel === channel);
+    const index = this.stickyNotes.findIndex(
+      (e) => e.note === note && e.channel === channel
+    );
     if (index >= 0) {
       this.stickyNotes.splice(index, 1);
       return true;
-    } else { return false; }
+    } else {
+      return false;
+    }
   }
 
   public stickyNotesFromChannel(channel: number): MidiNoteEvent[] {
@@ -425,7 +483,6 @@ export class MidiConnection {
     }
   }
 
-
   public onMidiClock(timestamp: number): void {
     /**
      * Called when a MIDI clock message is received.
@@ -434,7 +491,6 @@ export class MidiConnection {
     this.clockTicks += 1;
 
     if (this.lastTimestamp > 0) {
-
       if (this.lastTimestamp === timestamp) {
         // This is error handling for odd MIDI clock messages with the same timestamp
         this.clockErrorCount += 1;
@@ -452,12 +508,13 @@ export class MidiConnection {
           this.skipOnError = this.settings.midi_clock_ppqn / 4;
           timestamp = 0; // timestamp 0 == lastTimestamp 0
         } else {
-
           this.midiClockDelta = timestamp - this.lastTimestamp;
-          this.lastBPM = 60 * (1000 / this.midiClockDelta / this.settings.midi_clock_ppqn);
+          this.lastBPM =
+            60 * (1000 / this.midiClockDelta / this.settings.midi_clock_ppqn);
 
           this.clockBuffer.push(this.lastBPM);
-          if (this.clockBuffer.length > this.clockBufferLength) this.clockBuffer.shift();
+          if (this.clockBuffer.length > this.clockBufferLength)
+            this.clockBuffer.shift();
 
           const estimatedBPM = this.estimatedBPM();
           if (estimatedBPM !== this.roundedBPM) {
@@ -465,13 +522,11 @@ export class MidiConnection {
             this.api.bpm(estimatedBPM);
             this.roundedBPM = estimatedBPM;
           }
-
         }
       }
     }
 
     this.lastTimestamp = timestamp;
-
   }
 
   public estimatedBPM(): number {
@@ -523,7 +578,8 @@ export class MidiConnection {
     if (typeof output === "number") {
       if (output < 0 || output >= this.midiOutputs.length) {
         console.error(
-          `Invalid MIDI output index. Index must be in the range 0-${this.midiOutputs.length - 1
+          `Invalid MIDI output index. Index must be in the range 0-${
+            this.midiOutputs.length - 1
           }.`
         );
         return this.currentOutputIndex;
@@ -552,7 +608,8 @@ export class MidiConnection {
     if (typeof input === "number") {
       if (input < 0 || input >= this.midiInputs.length) {
         console.error(
-          `Invalid MIDI input index. Index must be in the range 0-${this.midiInputs.length - 1
+          `Invalid MIDI input index. Index must be in the range 0-${
+            this.midiInputs.length - 1
           }.`
         );
         return -1;
@@ -625,26 +682,35 @@ export class MidiConnection {
     }
   }
 
-  public sendMidiOn(note: number, channel: number, velocity: number, port: number | string = this.currentOutputIndex) {
-    /** 
+  public sendMidiOn(
+    note: number,
+    channel: number,
+    velocity: number,
+    port: number | string = this.currentOutputIndex
+  ) {
+    /**
      * Sending Midi Note on message
      */
-    if(typeof port === "string") port = this.getMidiOutputIndex(port);
+    if (typeof port === "string") port = this.getMidiOutputIndex(port);
     const output = this.midiOutputs[port];
     note = Math.min(Math.max(note, 0), 127);
     if (output) {
       const noteOnMessage = [0x90 + channel, note, velocity];
       output.send(noteOnMessage);
-     } else {
+    } else {
       console.error("MIDI output not available.");
     }
   }
 
-  sendMidiOff(note: number, channel: number, port: number | string = this.currentOutputIndex) {
+  sendMidiOff(
+    note: number,
+    channel: number,
+    port: number | string = this.currentOutputIndex
+  ) {
     /**
-    * Sending Midi Note off message
+     * Sending Midi Note off message
      */
-    if(typeof port === "string") port = this.getMidiOutputIndex(port);
+    if (typeof port === "string") port = this.getMidiOutputIndex(port);
     const output = this.midiOutputs[port];
     note = Math.min(Math.max(note, 0), 127);
     if (output) {
@@ -655,11 +721,14 @@ export class MidiConnection {
     }
   }
 
-  sendAllNotesOff(channel: number, port: number | string = this.currentOutputIndex) {
+  sendAllNotesOff(
+    channel: number,
+    port: number | string = this.currentOutputIndex
+  ) {
     /**
-    * Sending Midi Note off message
+     * Sending Midi Note off message
      */
-    if(typeof port === "string") port = this.getMidiOutputIndex(port);
+    if (typeof port === "string") port = this.getMidiOutputIndex(port);
     const output = this.midiOutputs[port];
     if (output) {
       const noteOffMessage = [0xb0 + channel, 123, 0];
@@ -669,11 +738,14 @@ export class MidiConnection {
     }
   }
 
-  sendAllSoundOff(channel: number, port: number | string = this.currentOutputIndex) {
+  sendAllSoundOff(
+    channel: number,
+    port: number | string = this.currentOutputIndex
+  ) {
     /**
-    * Sending all sound off
+     * Sending all sound off
      */
-    if(typeof port === "string") port = this.getMidiOutputIndex(port);
+    if (typeof port === "string") port = this.getMidiOutputIndex(port);
     const output = this.midiOutputs[port];
     if (output) {
       const noteOffMessage = [0xb0 + channel, 120, 0];

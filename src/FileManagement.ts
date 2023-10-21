@@ -1,5 +1,9 @@
 import { tutorial_universe } from "./universes/tutorial";
-
+import { gzipSync, decompressSync, strFromU8 } from "fflate";
+import { examples } from "./examples/excerpts";
+import { type Editor } from "./main";
+import { uniqueNamesGenerator, colors, animals } from "unique-names-generator";
+import { tryEvaluate } from "./Evaluator";
 export type Universes = { [key: string]: Universe };
 
 export interface Universe {
@@ -62,9 +66,9 @@ export interface Settings {
   tips: boolean;
   send_clock: boolean;
   midi_channels_scripts: boolean;
-  midi_clock_input: string|undefined;
+  midi_clock_input: string | undefined;
   midi_clock_ppqn: number;
-  default_midi_input: string|undefined;
+  default_midi_input: string | undefined;
 }
 
 export const template_universe = {
@@ -139,8 +143,8 @@ export class AppSettings {
   public tips: boolean = true;
   public send_clock: boolean = false;
   public midi_channels_scripts: boolean = true;
-  public midi_clock_input: string|undefined = undefined;
-  public default_midi_input: string|undefined = undefined;
+  public midi_clock_input: string | undefined = undefined;
+  public default_midi_input: string | undefined = undefined;
   public midi_clock_ppqn: number = 24;
   public load_demo_songs: boolean = true;
 
@@ -225,3 +229,137 @@ export class AppSettings {
     localStorage.setItem("topos", JSON.stringify(this.data));
   }
 }
+
+export const initializeSelectedUniverse = (app: Editor): void => {
+  /**
+   * Initializes the selected universe. If there is no selected universe, it
+   * will create a new one. If there is a selected universe, it will load it.
+   *
+   * @param app - The main application
+   * @returns void
+   */
+  if (app.settings.load_demo_songs) {
+    let random_example = examples[Math.floor(Math.random() * examples.length)];
+    app.selected_universe = "Welcome";
+    app.universes[app.selected_universe].global.committed = random_example;
+    app.universes[app.selected_universe].global.candidate = random_example;
+  } else {
+    app.selected_universe = app.settings.selected_universe;
+    if (app.universes[app.selected_universe] === undefined)
+      app.universes[app.selected_universe] = structuredClone(template_universe);
+  }
+  app.interface.universe_viewer.innerHTML = `Topos: ${app.selected_universe}`;
+};
+
+export const emptyUrl = () => {
+  window.history.replaceState({}, document.title, "/");
+};
+
+export const share = async (app: Editor) => {
+  async function bufferToBase64(buffer: Uint8Array) {
+    const base64url: string = await new Promise((r) => {
+      const reader = new FileReader();
+      reader.onload = () => r(reader.result as string);
+      reader.readAsDataURL(new Blob([buffer]));
+    });
+    return base64url.slice(base64url.indexOf(",") + 1);
+  }
+  let data = JSON.stringify({
+    universe: app.settings.universes[app.selected_universe],
+  });
+  let encoded_data = gzipSync(new TextEncoder().encode(data), { level: 9 });
+  const hashed_table = await bufferToBase64(encoded_data);
+  const url = new URL(window.location.href);
+  url.searchParams.set("universe", hashed_table);
+  window.history.replaceState({}, "", url.toString());
+  // Copy the text inside the text field
+  navigator.clipboard.writeText(url.toString());
+};
+
+export const loadUniverserFromUrl = (app: Editor): void => {
+  /**
+   * Loads a universe from the URL bar.
+   * @param app - The main application
+   * @returns void
+   */
+  // Loading from URL bar
+  let url = new URLSearchParams(window.location.search);
+  if (url !== undefined) {
+    let new_universe;
+    if (url !== null) {
+      const universeParam = url.get("universe");
+      if (universeParam !== null) {
+        let data = Uint8Array.from(atob(universeParam), (c) => c.charCodeAt(0));
+        new_universe = JSON.parse(strFromU8(decompressSync(data)));
+        const randomName: string = uniqueNamesGenerator({
+          length: 2,
+          separator: "_",
+          dictionaries: [colors, animals],
+        });
+        loadUniverse(app, randomName, new_universe["universe"]);
+        emptyUrl();
+      }
+    }
+  }
+};
+
+export const loadUniverse = (
+  app: Editor,
+  universeName: string,
+  universe: Universe = template_universe
+): void => {
+  console.log(universeName, universe);
+  app.currentFile().candidate = app.view.state.doc.toString();
+
+  // Getting the new universe name and moving on
+  let selectedUniverse = universeName.trim();
+  if (app.universes[selectedUniverse] === undefined) {
+    app.settings.universes[selectedUniverse] = universe;
+    app.universes[selectedUniverse] = universe;
+  }
+  app.selected_universe = selectedUniverse;
+  app.settings.selected_universe = app.selected_universe;
+  app.interface.universe_viewer.innerHTML = `Topos: ${selectedUniverse}`;
+
+  // Updating the editor View to reflect the selected universe
+  app.updateEditorView();
+
+  // Evaluating the initialisation script for the selected universe
+  tryEvaluate(app, app.universes[app.selected_universe.toString()].init);
+};
+
+export const openUniverseModal = (): void => {
+  // If the modal is hidden, unhide it and hide the editor
+  if (
+    document.getElementById("modal-buffers")!.classList.contains("invisible")
+  ) {
+    document.getElementById("editor")!.classList.add("invisible");
+    document.getElementById("modal-buffers")!.classList.remove("invisible");
+    document.getElementById("buffer-search")!.focus();
+  } else {
+    closeUniverseModal();
+  }
+};
+
+export const closeUniverseModal = (): void => {
+  // @ts-ignore
+  document.getElementById("buffer-search")!.value = "";
+  document.getElementById("editor")!.classList.remove("invisible");
+  document.getElementById("modal-buffers")!.classList.add("invisible");
+};
+
+export const openSettingsModal = (): void => {
+  if (
+    document.getElementById("modal-settings")!.classList.contains("invisible")
+  ) {
+    document.getElementById("editor")!.classList.add("invisible");
+    document.getElementById("modal-settings")!.classList.remove("invisible");
+  } else {
+    closeSettingsModal();
+  }
+};
+
+export const closeSettingsModal = (): void => {
+  document.getElementById("editor")!.classList.remove("invisible");
+  document.getElementById("modal-settings")!.classList.add("invisible");
+};

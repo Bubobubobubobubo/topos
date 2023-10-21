@@ -1,5 +1,5 @@
 import type { Editor } from "./main";
-import type { File } from "./AppSettings";
+import type { File } from "./FileManagement";
 
 const delay = (ms: number) =>
   new Promise((_, reject) =>
@@ -24,7 +24,7 @@ const tryCatchWrapper = (
       ).call(application.api);
       resolve(true);
     } catch (error) {
-      application.error_line.innerHTML = error as string;
+      application.interface.error_line.innerHTML = error as string;
       console.log(error);
       resolve(false);
     }
@@ -74,7 +74,7 @@ export const tryEvaluate = async (
       }
     }
   } catch (error) {
-    application.error_line.innerHTML = error as string;
+    application.interface.error_line.innerHTML = error as string;
     console.log(error);
   }
 };
@@ -91,7 +91,7 @@ export const evaluate = async (
     ]);
     if (code.evaluations) code.evaluations++;
   } catch (error) {
-    application.error_line.innerHTML = error as string;
+    application.interface.error_line.innerHTML = error as string;
     console.log(error);
   }
 };

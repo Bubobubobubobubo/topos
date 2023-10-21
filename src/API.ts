@@ -11,7 +11,11 @@ import { SoundEvent } from "./classes/SoundEvent";
 import { MidiEvent } from "./classes/MidiEvent";
 import { LRUCache } from "lru-cache";
 import { InputOptions, Player } from "./classes/ZPlayer";
-import { template_universes } from "./AppSettings";
+import {
+  loadUniverse,
+  openUniverseModal,
+  template_universes,
+} from "./FileManagement";
 import {
   samples,
   initAudioOnFirstClick,
@@ -71,8 +75,8 @@ export class UserAPI {
   }
 
   _loadUniverseFromInterface = (universe: string) => {
-    this.app.loadUniverse(universe as string);
-    this.app.openBuffersModal();
+    loadUniverse(this.app, universe as string);
+    openUniverseModal();
   };
 
   _deleteUniverseFromInterface = (universe: string) => {
@@ -141,11 +145,11 @@ export class UserAPI {
     console.log(error);
     clearTimeout(this.errorTimeoutID);
     clearTimeout(this.printTimeoutID);
-    this.app.error_line.innerHTML = error as string;
-    this.app.error_line.style.color = "color-red-800";
-    this.app.error_line.classList.remove("hidden");
+    this.app.interface.error_line.innerHTML = error as string;
+    this.app.interface.error_line.style.color = "color-red-800";
+    this.app.interface.error_line.classList.remove("hidden");
     this.errorTimeoutID = setTimeout(
-      () => this.app.error_line.classList.add("hidden"),
+      () => this.app.interface.error_line.classList.add("hidden"),
       2000
     );
   };
@@ -154,11 +158,11 @@ export class UserAPI {
     console.log(message);
     clearTimeout(this.printTimeoutID);
     clearTimeout(this.errorTimeoutID);
-    this.app.error_line.innerHTML = message as string;
-    this.app.error_line.style.color = "white";
-    this.app.error_line.classList.remove("hidden");
+    this.app.interface.error_line.innerHTML = message as string;
+    this.app.interface.error_line.style.color = "white";
+    this.app.interface.error_line.classList.remove("hidden");
     this.printTimeoutID = setTimeout(
-      () => this.app.error_line.classList.add("hidden"),
+      () => this.app.interface.error_line.classList.add("hidden"),
       4000
     );
   };
@@ -591,8 +595,9 @@ export class UserAPI {
     root: number | string,
     scale: number | string,
     channel: number = 0,
-    port: number | string = (this.MidiConnection.currentOutputIndex || 0),
-    soundOff: boolean = false): void => {
+    port: number | string = this.MidiConnection.currentOutputIndex || 0,
+    soundOff: boolean = false
+  ): void => {
     /**
      * Sends given scale to midi output for visual aid
      */
@@ -600,47 +605,53 @@ export class UserAPI {
       this.hide_scale(root, scale, channel, port);
       const scaleNotes = getAllScaleNotes(scale, root);
       // Send each scale note to current midi out
-      scaleNotes.forEach(note => {
+      scaleNotes.forEach((note) => {
         this.MidiConnection.sendMidiOn(note, channel, 1, port);
         if (soundOff) this.MidiConnection.sendAllSoundOff(channel, port);
       });
 
       this.scale_aid = scale;
     }
-  }
+  };
 
   public hide_scale = (
     // @ts-ignore
     root: number | string = 0,
-    // @ts-ignore 
+    // @ts-ignore
     scale: number | string = 0,
     channel: number = 0,
-    port: number | string = (this.MidiConnection.currentOutputIndex || 0)): void => {
+    port: number | string = this.MidiConnection.currentOutputIndex || 0
+  ): void => {
     /**
      * Hides all notes by sending all notes off to midi output
      */
     const allNotes = Array.from(Array(128).keys());
     // Send each scale note to current midi out
-    allNotes.forEach(note => {
+    allNotes.forEach((note) => {
       this.MidiConnection.sendMidiOff(note, channel, port);
     });
     this.scale_aid = undefined;
+  };
 
-  }
-
-  midi_notes_off = (channel: number = 0, port: number | string = (this.MidiConnection.currentOutputIndex || 0)): void => {
+  midi_notes_off = (
+    channel: number = 0,
+    port: number | string = this.MidiConnection.currentOutputIndex || 0
+  ): void => {
     /**
      * Sends all notes off to midi output
      */
     this.MidiConnection.sendAllNotesOff(channel, port);
-  }
+  };
 
-  midi_sound_off = (channel: number = 0, port: number | string = (this.MidiConnection.currentOutputIndex || 0)): void => {
+  midi_sound_off = (
+    channel: number = 0,
+    port: number | string = this.MidiConnection.currentOutputIndex || 0
+  ): void => {
     /**
      * Sends all sound off to midi output
      */
     this.MidiConnection.sendAllSoundOff(channel, port);
-  }
+  };
 
   // =============================================================
   // Ziffers related functions
@@ -1255,7 +1266,6 @@ export class UserAPI {
 
   denominator = this.meter;
 
-
   // =============================================================
   // Fill
   // =============================================================
@@ -1276,7 +1286,9 @@ export class UserAPI {
     const nArray = Array.isArray(n) ? n : [n];
     const results: boolean[] = nArray.map(
       (value) =>
-        (this.app.clock.pulses_since_origin - Math.floor(nudge * this.ppqn())) % Math.floor(value * this.ppqn()) === 0
+        (this.app.clock.pulses_since_origin - Math.floor(nudge * this.ppqn())) %
+          Math.floor(value * this.ppqn()) ===
+        0
     );
     return results.some((value) => value === true);
   };
@@ -1284,17 +1296,19 @@ export class UserAPI {
 
   public bar = (n: number | number[] = 1, nudge: number = 0): boolean => {
     /**
-    * Determine if the current pulse is on a specified bar, with optional nudge.
-    * @param n Single bar multiplier or array of bar multipliers
-    * @param nudge Offset in bars to nudge the bar forward or backward
-    * @returns True if the current pulse is on one of the specified bars (considering nudge), false otherwise
-    */
+     * Determine if the current pulse is on a specified bar, with optional nudge.
+     * @param n Single bar multiplier or array of bar multipliers
+     * @param nudge Offset in bars to nudge the bar forward or backward
+     * @returns True if the current pulse is on one of the specified bars (considering nudge), false otherwise
+     */
     const nArray = Array.isArray(n) ? n : [n];
     const barLength = this.app.clock.time_signature[1] * this.ppqn();
     const nudgeInPulses = Math.floor(nudge * barLength);
     const results: boolean[] = nArray.map(
       (value) =>
-        (this.app.clock.pulses_since_origin - nudgeInPulses) % Math.floor(value * barLength) === 0
+        (this.app.clock.pulses_since_origin - nudgeInPulses) %
+          Math.floor(value * barLength) ===
+        0
     );
     return results.some((value) => value === true);
   };
@@ -1302,11 +1316,11 @@ export class UserAPI {
 
   public pulse = (n: number | number[] = 1, nudge: number = 0): boolean => {
     /**
-    * Determine if the current pulse is on a specified pulse count, with optional nudge.
-    * @param n Single pulse count or array of pulse counts
-    * @param nudge Offset in pulses to nudge the pulse forward or backward
-    * @returns True if the current pulse is on one of the specified pulse counts (considering nudge), false otherwise
-    */
+     * Determine if the current pulse is on a specified pulse count, with optional nudge.
+     * @param n Single pulse count or array of pulse counts
+     * @param nudge Offset in pulses to nudge the pulse forward or backward
+     * @returns True if the current pulse is on one of the specified pulse counts (considering nudge), false otherwise
+     */
     const nArray = Array.isArray(n) ? n : [n];
     const results: boolean[] = nArray.map(
       (value) => (this.app.clock.pulses_since_origin - nudge) % value === 0
@@ -1318,11 +1332,10 @@ export class UserAPI {
   public tick = (tick: number | number[], offset: number = 0): boolean => {
     const nArray = Array.isArray(tick) ? tick : [tick];
     const results: boolean[] = nArray.map(
-      (value) => (this.app.clock.time_position.pulse === value + offset)
+      (value) => this.app.clock.time_position.pulse === value + offset
     );
-    return results.some((value) => value === true)
-  }
-
+    return results.some((value) => value === true);
+  };
 
   // =============================================================
   // Modulo based time filters
@@ -1582,7 +1595,8 @@ export class UserAPI {
      * @returns A sine wave between -1 and 1
      */
     return (
-      (Math.sin(this.app.clock.ctx.currentTime * Math.PI * 2 * freq) + offset) * times
+      (Math.sin(this.app.clock.ctx.currentTime * Math.PI * 2 * freq) + offset) *
+      times
     );
   };
 
@@ -1595,7 +1609,7 @@ export class UserAPI {
      * @returns A sine wave between 0 and 1
      * @see sine
      */
-    return ((this.sine(freq, offset) + 1) / 2) * times
+    return ((this.sine(freq, offset) + 1) / 2) * times;
   };
 
   saw = (freq: number = 1, times: number = 1, offset: number = 0): number => {
@@ -1610,7 +1624,9 @@ export class UserAPI {
      * @see sine
      * @see noise
      */
-    return (((this.app.clock.ctx.currentTime * freq) % 1) * 2 - 1 + offset) * times;
+    return (
+      (((this.app.clock.ctx.currentTime * freq) % 1) * 2 - 1 + offset) * times
+    );
   };
 
   usaw = (freq: number = 1, times: number = 1, offset: number = 0): number => {
@@ -1625,7 +1641,11 @@ export class UserAPI {
     return ((this.saw(freq, offset) + 1) / 2) * times;
   };
 
-  triangle = (freq: number = 1, times: number = 1, offset: number = 0): number => {
+  triangle = (
+    freq: number = 1,
+    times: number = 1,
+    offset: number = 0
+  ): number => {
     /**
      * Returns a triangle wave between -1 and 1.
      *
@@ -1638,7 +1658,11 @@ export class UserAPI {
     return (Math.abs(this.saw(freq, offset)) * 2 - 1) * times;
   };
 
-  utriangle = (freq: number = 1, times: number = 1, offset: number = 0): number => {
+  utriangle = (
+    freq: number = 1,
+    times: number = 1,
+    offset: number = 0
+  ): number => {
     /**
      * Returns a triangle wave between 0 and 1.
      *
@@ -1740,14 +1764,16 @@ export class UserAPI {
   };
 
   public range = (
-    inputY: number, yMin: number,
-    yMax: number, xMin: number,
-    xMax: number): number => {
+    inputY: number,
+    yMin: number,
+    yMax: number,
+    xMin: number,
+    xMax: number
+  ): number => {
     const percent = (inputY - yMin) / (yMax - yMin);
     const outputX = percent * (xMax - xMin) + xMin;
     return outputX;
   };
-
 
   limit = (value: number, min: number, max: number): number => {
     /**

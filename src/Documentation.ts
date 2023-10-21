@@ -20,6 +20,18 @@ import { reference } from "./documentation/reference";
 import { synths } from "./documentation/synths";
 import { bonus } from "./documentation/bonus";
 
+// Setting up the Markdown converter with syntax highlighting
+import showdown from "showdown";
+import showdownHighlight from "showdown-highlight";
+showdown.setFlavor("github");
+import { classMap } from "./DomElements";
+const bindings = Object.keys(classMap).map((key) => ({
+  type: "output",
+  regex: new RegExp(`<${key}([^>]*)>`, "g"),
+  //@ts-ignore
+  replace: (match, p1) => `<${key} class="${classMap[key]}" ${p1}>`,
+}));
+
 export const key_shortcut = (shortcut: string): string => {
   return `<kbd class="lg:px-2 lg:py-1.5 px-1 py-1 lg:text-sm text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg dark:bg-gray-600 dark:text-gray-100 dark:border-gray-500">${shortcut}</kbd>`;
 };
@@ -38,8 +50,8 @@ export const makeExampleFactory = (application: Editor): Function => {
 <details ${open ? "open" : ""}>
   <summary >${description}
     <button class="py-1 align-top text-base rounded-lg pl-2 pr-2 hover:bg-green-700 bg-green-600 inline-block" onclick="app.api._playDocExample(app.api.codeExamples['${codeId}'])">▶️ Play</button>
-    <button class="py-1 text-base rounded-lg pl-2 pr-2 hover:bg-neutral-600 bg-neutral-500 inline-block pl-2" onclick="app.api._stopDocExample()">&#x23f8;&#xFE0F; Pause</button>
-    <button class="py-1 text-base rounded-lg pl-2 pr-2 hover:bg-neutral-900 bg-neutral-800 inline-block " onclick="navigator.clipboard.writeText(app.api.codeExamples['${codeId}'])">📎 Copy</button>
+    <button class="py-1 text-base rounded-lg pr-2 hover:bg-neutral-600 bg-neutral-500 inline-block pl-2" onclick="app.api._stopDocExample()">&#x23f8;&#xFE0F; Pause</button>
+    <button class="py-1 text-base rounded-lg pr-2 hover:bg-neutral-900 bg-neutral-800 inline-block " onclick="navigator.clipboard.writeText(app.api.codeExamples['${codeId}'])">📎 Copy</button>
   </summary>
   \`\`\`javascript
   ${code}
@@ -76,4 +88,38 @@ export const documentation_factory = (application: Editor) => {
     bonus: bonus(application),
     about: about(),
   };
+};
+
+export const showDocumentation = (app: Editor) => {
+  if (document.getElementById("app")?.classList.contains("hidden")) {
+    document.getElementById("app")?.classList.remove("hidden");
+    document.getElementById("documentation")?.classList.add("hidden");
+    app.exampleIsPlaying = false;
+  } else {
+    document.getElementById("app")?.classList.add("hidden");
+    document.getElementById("documentation")?.classList.remove("hidden");
+    // Load and convert Markdown content from the documentation file
+    updateDocumentationContent(app);
+  }
+};
+
+export const hideDocumentation = () => {
+  if (document.getElementById("app")?.classList.contains("hidden")) {
+    document.getElementById("app")?.classList.remove("hidden");
+    document.getElementById("documentation")?.classList.add("hidden");
+  }
+};
+
+export const updateDocumentationContent = (app: Editor) => {
+  const converter = new showdown.Converter({
+    emoji: true,
+    moreStyling: true,
+    backslashEscapesHTMLTags: true,
+    extensions: [showdownHighlight({ auto_detection: true }), ...bindings],
+  });
+  const converted_markdown = converter.makeHtml(
+    app.docs[app.currentDocumentationPane]
+  );
+  document.getElementById("documentation-content")!.innerHTML =
+    converted_markdown;
 };
