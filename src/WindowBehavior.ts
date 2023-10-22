@@ -1,7 +1,6 @@
 import { type Editor } from "./main";
 
-const handleResize = (app: Editor) => {
-  const canvas = app.interface.feedback as HTMLCanvasElement | null; // add type guard
+const handleResize = (canvas: HTMLCanvasElement) => {
   if (!canvas) return;
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
@@ -22,7 +21,12 @@ export const installWindowBehaviors = (
   window: Window,
   preventMultipleTabs: boolean = false
 ) => {
-  window.addEventListener("resize", () => handleResize(app));
+  window.addEventListener("resize", () =>
+    handleResize(app.interface.scope as HTMLCanvasElement)
+  );
+  window.addEventListener("resize", () =>
+    handleResize(app.interface.feedback as HTMLCanvasElement)
+  );
   window.addEventListener("beforeunload", () => {
     // @ts-ignore
     event.preventDefault();

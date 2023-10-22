@@ -62,7 +62,6 @@ export class Editor {
   osc: OscilloscopeConfig = {
     enabled: true,
     color: "#fdba74",
-    randomColor: true,
     thickness: 2,
     fftSize: 2048,
     orientation: "horizontal",
@@ -92,7 +91,8 @@ export class Editor {
     this.initializeElements();
     this.initializeButtonGroups();
     this.initializeHydra();
-    this.setCanvas();
+    this.setCanvas(this.interface.feedback as HTMLCanvasElement);
+    this.setCanvas(this.interface.scope as HTMLCanvasElement);
 
     // ================================================================================
     // Loading the universe from local storage
@@ -148,7 +148,7 @@ export class Editor {
     // ================================================================================
 
     installEditor(this);
-    runOscilloscope(this.interface.feedback as HTMLCanvasElement, this);
+    runOscilloscope(this.interface.scope as HTMLCanvasElement, this);
 
     // First evaluation of the init file
     tryEvaluate(this, this.universes[this.selected_universe.toString()].init);
@@ -456,9 +456,7 @@ export class Editor {
     this.hydra = this.hydra_backend.synth;
   }
 
-  private setCanvas(): void {
-    const canvas = this.interface.feedback as HTMLCanvasElement | null; // add type guard
-
+  private setCanvas(canvas: HTMLCanvasElement): void {
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
 
