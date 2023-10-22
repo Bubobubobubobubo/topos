@@ -22,7 +22,12 @@
       padding: 0;
     }
 
-    #hydra-bg {
+    .fluid-bg-transition {
+      transition: background-color 0.05s ease-in-out;
+    }
+
+
+    .fullscreencanvas {
       position: fixed; /* ignore margins */
       top: 0px;
       left: 0px;
@@ -33,7 +38,6 @@
       z-index: -1; /* place behind everything else */
       display: block;
     }
-
 
 		details br {
 			display: none;
@@ -160,6 +164,7 @@
             <div class="space-y-2">
               <h2 class="font-semibold lg:text-xl text-gray-400">More</h2>
               <div class="flex flex-col">
+                <a rel="noopener noreferrer" id="docs_oscilloscope" class="pl-2 pr-2 lg:text-xl text-sm hover:bg-neutral-800 py-1 my-1 rounded-lg">Oscilloscope</a>
                 <a rel="noopener noreferrer" id="docs_bonus" class="pl-2 pr-2 lg:text-xl text-sm hover:bg-neutral-800 py-1 my-1 rounded-lg">Bonus/Trivia</a>
                 <a rel="noopener noreferrer" id="docs_about" class="pl-2 pr-2 lg:text-xl text-sm hover:bg-neutral-800 py-1 my-1 rounded-lg">About Topos</a>
               </div>
@@ -447,7 +452,9 @@
          </ul>
          <!-- Here comes the editor itself -->
           <div id="editor" class="relative flex flex-row h-screen overflow-y-hidden">
-            <canvas id="hydra-bg"></canvas>
+            <canvas id="hydra-bg" class="fullscreencanvas"></canvas>
+            <canvas id="scope" class="fullscreencanvas"></canvas>
+            <canvas id="feedback" class="fullscreencanvas"></canvas>
 					</div>
           <p id="error_line" class="hidden text-red-400 w-screen bg-neutral-900 font-mono absolute bottom-0 pl-2 py-2">Hello kids</p>
         </div>

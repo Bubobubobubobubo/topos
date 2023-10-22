@@ -47,6 +47,8 @@ export const singleElements = {
   dough_nudge_range: "dough_nudge",
   error_line: "error_line",
   hydra_canvas: "hydra-bg",
+  feedback: "feedback",
+  scope: "scope",
 };
 
 export const buttonGroups = {

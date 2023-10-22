@@ -1,6 +1,11 @@
 import { type Editor } from "../main";
 import { AudibleEvent } from "./AbstractEvents";
-import { chord as parseChord, midiToFreq, noteFromPc, noteNameToMidi } from "zifferjs";
+import {
+  chord as parseChord,
+  midiToFreq,
+  noteFromPc,
+  noteNameToMidi,
+} from "zifferjs";
 
 import {
   superdough,
@@ -10,10 +15,9 @@ import {
 export type SoundParams = {
   dur: number;
   s?: string;
-}
+};
 
 export class SoundEvent extends AudibleEvent {
-
   nudge: number;
 
   constructor(sound: string | object, public app: Editor) {
@@ -25,9 +29,10 @@ export class SoundEvent extends AudibleEvent {
           s: sound.split(":")[0],
           n: sound.split(":")[1],
           dur: app.clock.convertPulseToSecond(app.clock.ppqn),
+          analyze: true,
         };
       } else {
-        this.values = { s: sound, dur: 0.5 };
+        this.values = { s: sound, dur: 0.5, analyze: true };
       }
     } else {
       this.values = sound;
@@ -116,7 +121,7 @@ export class SoundEvent extends AudibleEvent {
     this.sustain(0.0);
     this.release(0.0);
     return this;
-  }
+  };
 
   // Lowpass filter
   public lpenv = (value: number) => this.updateValue("lpenv", value);
@@ -247,30 +252,43 @@ export class SoundEvent extends AudibleEvent {
   // Frequency management
 
   public sound = (value: string) => this.updateValue("s", value);
-  public chord = (value: string | object[] | number[] | number, ...kwargs: number[]) => {
+  public chord = (
+    value: string | object[] | number[] | number,
+    ...kwargs: number[]
+  ) => {
     if (typeof value === "string") {
       const chord = parseChord(value);
-      value = chord.map((note: number) => { return { note: note, freq: midiToFreq(note) } });
+      value = chord.map((note: number) => {
+        return { note: note, freq: midiToFreq(note) };
+      });
     } else if (value instanceof Array && typeof value[0] === "number") {
-      value = (value as number[]).map((note: number) => { return { note: note, freq: midiToFreq(note) } });
+      value = (value as number[]).map((note: number) => {
+        return { note: note, freq: midiToFreq(note) };
+      });
     } else if (typeof value === "number" && kwargs.length > 0) {
-      value = [value, ...kwargs].map((note: number) => { return { note: note, freq: midiToFreq(note) } });
+      value = [value, ...kwargs].map((note: number) => {
+        return { note: note, freq: midiToFreq(note) };
+      });
     }
     return this.updateValue("chord", value);
-  }
+  };
   public invert = (howMany: number = 0) => {
     if (this.values.chord) {
-      let notes = this.values.chord.map((obj: { [key: string]: number }) => obj.note);
+      let notes = this.values.chord.map(
+        (obj: { [key: string]: number }) => obj.note
+      );
       notes = howMany < 0 ? [...notes].reverse() : notes;
       for (let i = 0; i < Math.abs(howMany); i++) {
         notes[i % notes.length] += howMany <= 0 ? -12 : 12;
       }
-      const chord = notes.map((note: number) => { return { note: note, freq: midiToFreq(note) } });
+      const chord = notes.map((note: number) => {
+        return { note: note, freq: midiToFreq(note) };
+      });
       return this.updateValue("chord", chord);
     } else {
       return this;
     }
-  }
+  };
   public snd = this.sound;
   public cut = (value: number) => this.updateValue("cut", value);
   public clip = (value: number) => this.updateValue("clip", value);
@@ -309,7 +327,7 @@ export class SoundEvent extends AudibleEvent {
 
   // Reverb management
   public room = (value: number) => this.updateValue("room", value);
-  public rm = this.room
+  public rm = this.room;
   public roomfade = (value: number) => this.updateValue("roomfade", value);
   public rfade = this.roomfade;
   public roomlp = (value: number) => this.updateValue("roomlp", value);
@@ -320,25 +338,26 @@ export class SoundEvent extends AudibleEvent {
   public sz = this.size;
 
   // Compressor
-  public comp = (value: number) => this.updateValue('compressor', value);
+  public comp = (value: number) => this.updateValue("compressor", value);
   public cmp = this.comp;
-  public ratio = (value: number) => this.updateValue('compressorRatio', value);
+  public ratio = (value: number) => this.updateValue("compressorRatio", value);
   public rt = this.ratio;
-  public knee = (value: number) => this.updateValue('compressorKnee', value);
+  public knee = (value: number) => this.updateValue("compressorKnee", value);
   public kn = this.knee;
-  public compAttack = (value: number) => this.updateValue('compressorAttack', value);
+  public compAttack = (value: number) =>
+    this.updateValue("compressorAttack", value);
   public cmpa = this.compAttack;
-  public compRelease = (value: number) => this.updateValue('compressorRelease', value);
+  public compRelease = (value: number) =>
+    this.updateValue("compressorRelease", value);
   public cmpr = this.compRelease;
-
 
   // Unit
   public stretch = (beat: number) => {
     this.updateValue("unit", "c");
-    this.updateValue("speed", 1 / beat)
-    this.updateValue("cut", beat)
+    this.updateValue("speed", 1 / beat);
+    this.updateValue("cut", beat);
     return this;
-  }
+  };
 
   // ================================================================================
   // AbstactEvent overrides
@@ -368,7 +387,7 @@ export class SoundEvent extends AudibleEvent {
     if (this.values.chord) {
       this.values.chord.forEach((obj: { [key: string]: number }) => {
         const copy = { ...this.values };
-        copy.freq = obj.freq
+        copy.freq = obj.freq;
         superdough(copy, this.nudge, this.values.dur);
       });
     } else {

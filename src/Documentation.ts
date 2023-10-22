@@ -1,5 +1,6 @@
 import { type Editor } from "./main";
 import { introduction } from "./documentation/introduction";
+import { oscilloscope } from "./documentation/oscilloscope";
 import { samples } from "./documentation/samples";
 import { chaining } from "./documentation/chaining";
 import { software_interface } from "./documentation/interface";
@@ -85,6 +86,7 @@ export const documentation_factory = (application: Editor) => {
     functions: functions(application),
     reference: reference(),
     shortcuts: shortcuts(),
+    oscilloscope: oscilloscope(application),
     bonus: bonus(application),
     about: about(),
   };
