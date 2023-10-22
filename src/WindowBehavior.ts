@@ -1,10 +1,28 @@
 import { type Editor } from "./main";
 
+const handleResize = (app: Editor) => {
+  const canvas = app.interface.feedback as HTMLCanvasElement | null; // add type guard
+  if (!canvas) return;
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  const ctx = canvas.getContext("2d");
+  const dpr = window.devicePixelRatio || 1;
+
+  // Assuming the canvas takes up the whole window
+  canvas.width = window.innerWidth * dpr;
+  canvas.height = window.innerHeight * dpr;
+
+  if (ctx) {
+    ctx.scale(dpr, dpr);
+  }
+};
+
 export const installWindowBehaviors = (
   app: Editor,
   window: Window,
   preventMultipleTabs: boolean = false
 ) => {
+  window.addEventListener("resize", () => handleResize(app));
   window.addEventListener("beforeunload", () => {
     // @ts-ignore
     event.preventDefault();

@@ -26,6 +26,7 @@ import {
 } from "superdough";
 import { Speaker } from "./StringExtensions";
 import { getScaleNotes } from "zifferjs";
+import { blinkScript } from "./AudioVisualisation";
 
 interface ControlChange {
   channel: number;
@@ -269,10 +270,13 @@ export class UserAPI {
      * @returns The result of the evaluation
      */
     args.forEach((arg) => {
-      tryEvaluate(
-        this.app,
-        this.app.universes[this.app.selected_universe].locals[arg]
-      );
+      if (arg >= 1 && arg <= 9) {
+        blinkScript(this.app, "local", arg);
+        tryEvaluate(
+          this.app,
+          this.app.universes[this.app.selected_universe].locals[arg]
+        );
+      }
     });
   };
   s = this.script;

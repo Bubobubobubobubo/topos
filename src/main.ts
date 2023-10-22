@@ -24,6 +24,7 @@ import showdown from "showdown";
 import { makeStringExtensions } from "./StringExtensions";
 import { installInterfaceLogic } from "./InterfaceLogic";
 import { installWindowBehaviors } from "./WindowBehavior";
+import { drawEmptyBlinkers } from "./AudioVisualisation";
 
 export class Editor {
   // Universes and settings
@@ -56,6 +57,7 @@ export class Editor {
   show_error: boolean = false;
   buttonElements: Record<string, HTMLButtonElement[]> = {};
   interface: ElementMap = {};
+  blinkTimeouts: Record<number, number> = {};
 
   // UserAPI
   api: UserAPI;
@@ -79,6 +81,7 @@ export class Editor {
     this.initializeElements();
     this.initializeButtonGroups();
     this.initializeHydra();
+    this.setCanvas();
 
     // ================================================================================
     // Loading the universe from local storage
@@ -127,6 +130,7 @@ export class Editor {
     registerFillKeys(this);
     registerOnKeyDown(this);
     installInterfaceLogic(this);
+    drawEmptyBlinkers(this);
 
     // ================================================================================
     // Building CodeMirror Editor
@@ -381,24 +385,35 @@ export class Editor {
   }
 
   /**
-   * @param color the color to flash the background
-   * @param duration the duration of the flash
+   * Flashes the background of the view and its gutters.
+   * @param {string} color - The color to set.
+   * @param {number} duration - Duration in milliseconds to maintain the color.
    */
   flashBackground(color: string, duration: number): void {
-    // Set the flashing color
-    this.view.dom.style.backgroundColor = color;
-    const gutters = this.view.dom.getElementsByClassName(
+    const domElement = this.view.dom;
+    const gutters = domElement.getElementsByClassName(
       "cm-gutter"
     ) as HTMLCollectionOf<HTMLElement>;
+
+    domElement.classList.add("fluid-bg-transition");
+    Array.from(gutters).forEach((gutter) =>
+      gutter.classList.add("fluid-bg-transition")
+    );
+
+    domElement.style.backgroundColor = color;
     Array.from(gutters).forEach(
       (gutter) => (gutter.style.backgroundColor = color)
     );
 
-    // Reset to original color after duration
     setTimeout(() => {
-      this.view.dom.style.backgroundColor = "";
+      domElement.style.backgroundColor = "";
       Array.from(gutters).forEach(
         (gutter) => (gutter.style.backgroundColor = "")
+      );
+
+      domElement.classList.remove("fluid-bg-transition");
+      Array.from(gutters).forEach((gutter) =>
+        gutter.classList.remove("fluid-bg-transition")
       );
     }, duration);
   }
@@ -427,6 +442,23 @@ export class Editor {
       enableStreamCapture: false,
     });
     this.hydra = this.hydra_backend.synth;
+  }
+
+  private setCanvas(): void {
+    const canvas = this.interface.feedback as HTMLCanvasElement | null; // add type guard
+
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+
+    const dpr = window.devicePixelRatio || 1;
+
+    // Assuming the canvas takes up the whole window
+    canvas.width = window.innerWidth * dpr;
+    canvas.height = window.innerHeight * dpr;
+
+    if (ctx) {
+      ctx.scale(dpr, dpr);
+    }
   }
 }
 
