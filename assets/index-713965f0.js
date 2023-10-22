@@ -372,9 +372,22 @@ Audio samples are dynamically loaded from the web. By default, Topos is providin
 ${wP(r)}
 </div>
 
-# Loading your own samples
+# Loading custom samples
 
 Topos is exposing the <ic>samples</ic> function that you can use to load your own set of samples. Samples are loaded on-the-fly from the web. Topos is a web application living in the browser. It is running in a sandboxed environment. Thus, it cannot have access to the files stored on your local system. Loading samples requires building a _map_ of the audio files, where a name is associated to a specific file:
+
+${e("Loading samples from a map",`samples({
+    bd: ['bd/BT0AADA.wav','bd/BT0AAD0.wav'],
+    sd: ['sd/rytm-01-classic.wav','sd/rytm-00-hard.wav'],
+    hh: ['hh27/000_hh27closedhh.wav','hh/000_hh3closedhh.wav'],
+  }, 'github:tidalcycles/Dirt-Samples/master/');`,!0)}
+
+This example is loading two samples from each folder declared in the original repository (in the <ic>strudel.json</ic> file). You can then play with them using the syntax you are already used to:
+
+${e("Playing with the loaded samples",`rhythm(.5, 5, 8)::sound('bd').n(ir(1,2)).end(1).out()
+  `,!0)}
+
+Internally, Topos is loading samples using a different technique where sample maps are directly taken from the previously mentioned <ic>strudel.json</ic> file that lives in each repository:
 
 ${e("This is how Topos is loading its own samples",`
 // Visit the concerned repos and search for 'strudel.json'
