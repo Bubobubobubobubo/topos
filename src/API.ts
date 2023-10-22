@@ -26,7 +26,7 @@ import {
 } from "superdough";
 import { Speaker } from "./StringExtensions";
 import { getScaleNotes } from "zifferjs";
-import { blinkScript } from "./AudioVisualisation";
+import { OscilloscopeConfig, blinkScript } from "./AudioVisualisation";
 
 interface ControlChange {
   channel: number;
@@ -1967,5 +1967,16 @@ export class UserAPI {
      * @returns A palindrome of the array
      */
     return array.concat(array.slice(0, array.length - 1).reverse());
+  };
+
+  // =============================================================
+  // Oscilloscope Configuration
+  // =============================================================
+  public scope = (config: OscilloscopeConfig): void => {
+    /**
+     * Configures the oscilloscope.
+     * @param config - The configuration object
+     */
+    this.app.oscilloscope_config = config;
   };
 }

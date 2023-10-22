@@ -1,3 +1,4 @@
+import { OscilloscopeConfig, runOscilloscope } from "./AudioVisualisation";
 import { EditorState, Compartment } from "@codemirror/state";
 import { javascript } from "@codemirror/lang-javascript";
 import { markdown } from "@codemirror/lang-markdown";
@@ -58,6 +59,14 @@ export class Editor {
   buttonElements: Record<string, HTMLButtonElement[]> = {};
   interface: ElementMap = {};
   blinkTimeouts: Record<number, number> = {};
+  oscilloscope_config: OscilloscopeConfig = {
+    enabled: true,
+    color: "#fdba74",
+    thickness: 2,
+    fftSize: 2048,
+    orientation: "horizontal",
+    is3D: true,
+  };
 
   // UserAPI
   api: UserAPI;
@@ -137,6 +146,7 @@ export class Editor {
     // ================================================================================
 
     installEditor(this);
+    runOscilloscope(this.interface.feedback as HTMLCanvasElement, this);
 
     // First evaluation of the init file
     tryEvaluate(this, this.universes[this.selected_universe.toString()].init);

@@ -1,5 +1,5 @@
 // @ts-ignore
-import { analyser, getAnalyzerData } from "superdough";
+import { getAnalyser } from "superdough";
 import { type Editor } from "./main";
 
 /**
@@ -112,4 +112,80 @@ export const drawEmptyBlinkers = (app: Editor) => {
       "white"
     );
   }
+};
+
+export interface OscilloscopeConfig {
+  enabled: boolean;
+  color: string;
+  thickness: number;
+  fftSize: number; // multiples of 256
+  orientation: "horizontal" | "vertical";
+  is3D: boolean;
+}
+
+/**
+ * Initializes and runs an oscilloscope using an AnalyzerNode.
+ * @param {HTMLCanvasElement} canvas - The canvas element to draw the oscilloscope.
+ * @param {OscilloscopeConfig} config - Configuration for the oscilloscope's appearance and behavior.
+ */
+export const runOscilloscope = (
+  canvas: HTMLCanvasElement,
+  app: Editor
+): void => {
+  let config = app.oscilloscope_config;
+  let analyzer = getAnalyser(config.fftSize);
+  let dataArray = new Float32Array(analyzer.frequencyBinCount);
+  const canvasCtx = canvas.getContext("2d")!;
+  const WIDTH = canvas.width;
+  const HEIGHT = canvas.height;
+
+  function draw() {
+    if (!app.oscilloscope_config.enabled) {
+      canvasCtx.clearRect(0, 0, WIDTH, HEIGHT);
+      return;
+    }
+
+    // Update analyzer and dataArray if fftSize changes
+    if (analyzer.fftSize !== app.oscilloscope_config.fftSize) {
+      analyzer = getAnalyser(app.oscilloscope_config.fftSize);
+      dataArray = new Float32Array(analyzer.frequencyBinCount);
+    }
+
+    requestAnimationFrame(draw);
+    analyzer.getFloatTimeDomainData(dataArray);
+
+    canvasCtx.fillStyle = "rgba(0, 0, 0, 0)";
+    canvasCtx.fillRect(0, 0, WIDTH, HEIGHT);
+    canvasCtx.clearRect(0, 0, WIDTH, HEIGHT);
+
+    canvasCtx.lineWidth = app.oscilloscope_config.thickness;
+    canvasCtx.strokeStyle = app.oscilloscope_config.color;
+    canvasCtx.beginPath();
+
+    // Drawing logic varies based on orientation and 3D setting
+    if (app.oscilloscope_config.is3D) {
+      // For demonstration, assume dataArray alternates between left and right channel
+      for (let i = 0; i < dataArray.length; i += 2) {
+        const x = dataArray[i] * WIDTH + WIDTH / 2;
+        const y = dataArray[i + 1] * HEIGHT + HEIGHT / 2;
+        i === 0 ? canvasCtx.moveTo(x, y) : canvasCtx.lineTo(x, y);
+      }
+    } else if (app.oscilloscope_config.orientation === "horizontal") {
+      let x = 0;
+      const sliceWidth = (WIDTH * 1.0) / dataArray.length;
+      for (let i = 0; i < dataArray.length; i++) {
+        const v = dataArray[i] * 0.5 * HEIGHT;
+        const y = v + HEIGHT / 2;
+        i === 0 ? canvasCtx.moveTo(x, y) : canvasCtx.lineTo(x, y);
+        x += sliceWidth;
+      }
+      canvasCtx.lineTo(WIDTH, HEIGHT / 2);
+    } else {
+      // Vertical drawing logic
+    }
+
+    canvasCtx.stroke();
+  }
+
+  draw();
 };
