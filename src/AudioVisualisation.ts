@@ -141,6 +141,7 @@ export const runOscilloscope = (
   const HEIGHT = canvas.height;
 
   function draw() {
+    requestAnimationFrame(draw);
     if (!app.osc.enabled) {
       canvasCtx.clearRect(0, 0, WIDTH, HEIGHT);
       return;
@@ -152,7 +153,6 @@ export const runOscilloscope = (
       dataArray = new Float32Array(analyzer.frequencyBinCount);
     }
 
-    requestAnimationFrame(draw);
     analyzer.getFloatTimeDomainData(dataArray);
 
     canvasCtx.fillStyle = "rgba(0, 0, 0, 0)";

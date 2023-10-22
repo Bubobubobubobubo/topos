@@ -62,10 +62,10 @@ export class Editor {
   osc: OscilloscopeConfig = {
     enabled: true,
     color: "#fdba74",
-    thickness: 2,
-    fftSize: 2048,
+    thickness: 4,
+    fftSize: 256,
     orientation: "horizontal",
-    is3D: true,
+    is3D: false,
     size: 1,
   };
 

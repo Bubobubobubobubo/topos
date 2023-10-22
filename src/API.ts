@@ -26,7 +26,11 @@ import {
 } from "superdough";
 import { Speaker } from "./StringExtensions";
 import { getScaleNotes } from "zifferjs";
-import { OscilloscopeConfig, blinkScript } from "./AudioVisualisation";
+import {
+  OscilloscopeConfig,
+  blinkScript,
+  runOscilloscope,
+} from "./AudioVisualisation";
 
 interface ControlChange {
   channel: number;
