@@ -26,11 +26,7 @@ import {
 } from "superdough";
 import { Speaker } from "./StringExtensions";
 import { getScaleNotes } from "zifferjs";
-import {
-  OscilloscopeConfig,
-  blinkScript,
-  runOscilloscope,
-} from "./AudioVisualisation";
+import { OscilloscopeConfig, blinkScript } from "./AudioVisualisation";
 
 interface ControlChange {
   channel: number;
@@ -1982,9 +1978,6 @@ export class UserAPI {
      * Configures the oscilloscope.
      * @param config - The configuration object
      */
-    // Dispatch the config to the old object so that missing options
-    // are still specified
-
     this.app.osc = {
       ...this.app.osc,
       ...config,
