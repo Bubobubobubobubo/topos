@@ -172,7 +172,6 @@ export const runOscilloscope = (
 
     // Drawing logic varies based on orientation and 3D setting
     if (app.osc.is3D) {
-      // For demonstration, assume dataArray alternates between left and right channel
       for (let i = 0; i < dataArray.length; i += 2) {
         const x = (dataArray[i] * WIDTH * app.osc.size) / 2 + WIDTH / 4;
         const y = (dataArray[i + 1] * HEIGHT * app.osc.size) / 2 + HEIGHT / 4;
@@ -190,7 +189,16 @@ export const runOscilloscope = (
       }
       canvasCtx.lineTo(WIDTH, yOffset);
     } else {
-      // Vertical drawing logic
+      let y = 0;
+      const sliceHeight = (HEIGHT * 1.0) / dataArray.length;
+      const xOffset = WIDTH / 4; // Adjust this to move the oscilloscope to the side
+      for (let i = 0; i < dataArray.length; i++) {
+        const v = dataArray[i] * 0.5 * WIDTH * app.osc.size;
+        const x = v + xOffset;
+        i === 0 ? canvasCtx.moveTo(x, y) : canvasCtx.lineTo(x, y);
+        y += sliceHeight;
+      }
+      canvasCtx.lineTo(xOffset, HEIGHT);
     }
 
     canvasCtx.stroke();
