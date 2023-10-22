@@ -1977,6 +1977,6 @@ export class UserAPI {
      * Configures the oscilloscope.
      * @param config - The configuration object
      */
-    this.app.oscilloscope_config = config;
+    this.app.osc = config;
   };
 }

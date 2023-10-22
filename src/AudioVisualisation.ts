@@ -121,6 +121,7 @@ export interface OscilloscopeConfig {
   fftSize: number; // multiples of 256
   orientation: "horizontal" | "vertical";
   is3D: boolean;
+  size: number;
 }
 
 /**
@@ -132,7 +133,7 @@ export const runOscilloscope = (
   canvas: HTMLCanvasElement,
   app: Editor
 ): void => {
-  let config = app.oscilloscope_config;
+  let config = app.osc;
   let analyzer = getAnalyser(config.fftSize);
   let dataArray = new Float32Array(analyzer.frequencyBinCount);
   const canvasCtx = canvas.getContext("2d")!;
@@ -140,14 +141,14 @@ export const runOscilloscope = (
   const HEIGHT = canvas.height;
 
   function draw() {
-    if (!app.oscilloscope_config.enabled) {
+    if (!app.osc.enabled) {
       canvasCtx.clearRect(0, 0, WIDTH, HEIGHT);
       return;
     }
 
     // Update analyzer and dataArray if fftSize changes
-    if (analyzer.fftSize !== app.oscilloscope_config.fftSize) {
-      analyzer = getAnalyser(app.oscilloscope_config.fftSize);
+    if (analyzer.fftSize !== app.osc.fftSize) {
+      analyzer = getAnalyser(app.osc.fftSize);
       dataArray = new Float32Array(analyzer.frequencyBinCount);
     }
 
@@ -158,28 +159,36 @@ export const runOscilloscope = (
     canvasCtx.fillRect(0, 0, WIDTH, HEIGHT);
     canvasCtx.clearRect(0, 0, WIDTH, HEIGHT);
 
-    canvasCtx.lineWidth = app.oscilloscope_config.thickness;
-    canvasCtx.strokeStyle = app.oscilloscope_config.color;
+    canvasCtx.lineWidth = app.osc.thickness;
+
+    if (app.osc.color === "random") {
+      if (app.clock.time_position.pulse % 16 === 0) {
+        canvasCtx.strokeStyle = `hsl(${Math.random() * 360}, 100%, 50%)`;
+      }
+    } else {
+      canvasCtx.strokeStyle = app.osc.color;
+    }
     canvasCtx.beginPath();
 
     // Drawing logic varies based on orientation and 3D setting
-    if (app.oscilloscope_config.is3D) {
+    if (app.osc.is3D) {
       // For demonstration, assume dataArray alternates between left and right channel
       for (let i = 0; i < dataArray.length; i += 2) {
-        const x = dataArray[i] * WIDTH + WIDTH / 2;
-        const y = dataArray[i + 1] * HEIGHT + HEIGHT / 2;
+        const x = (dataArray[i] * WIDTH * app.osc.size) / 2 + WIDTH / 4;
+        const y = (dataArray[i + 1] * HEIGHT * app.osc.size) / 2 + HEIGHT / 4;
         i === 0 ? canvasCtx.moveTo(x, y) : canvasCtx.lineTo(x, y);
       }
-    } else if (app.oscilloscope_config.orientation === "horizontal") {
+    } else if (app.osc.orientation === "horizontal") {
       let x = 0;
       const sliceWidth = (WIDTH * 1.0) / dataArray.length;
+      const yOffset = HEIGHT / 4; // Adjust this to move the oscilloscope up
       for (let i = 0; i < dataArray.length; i++) {
-        const v = dataArray[i] * 0.5 * HEIGHT;
-        const y = v + HEIGHT / 2;
+        const v = dataArray[i] * 0.5 * HEIGHT * app.osc.size;
+        const y = v + yOffset;
         i === 0 ? canvasCtx.moveTo(x, y) : canvasCtx.lineTo(x, y);
         x += sliceWidth;
       }
-      canvasCtx.lineTo(WIDTH, HEIGHT / 2);
+      canvasCtx.lineTo(WIDTH, yOffset);
     } else {
       // Vertical drawing logic
     }

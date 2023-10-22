@@ -59,13 +59,15 @@ export class Editor {
   buttonElements: Record<string, HTMLButtonElement[]> = {};
   interface: ElementMap = {};
   blinkTimeouts: Record<number, number> = {};
-  oscilloscope_config: OscilloscopeConfig = {
+  osc: OscilloscopeConfig = {
     enabled: true,
     color: "#fdba74",
+    randomColor: true,
     thickness: 2,
     fftSize: 2048,
     orientation: "horizontal",
     is3D: true,
+    size: 1,
   };
 
   // UserAPI
