@@ -34,6 +34,19 @@
       display: block;
     }
 
+    #feedback {
+      position: fixed; /* ignore margins */
+      top: 0px;
+      left: 0px;
+      width: 100%; /* fill screen */
+      height: 100%;
+      background-size: cover;
+      overflow-y: hidden;
+      z-index: -1; /* place behind everything else */
+      display: block;
+    }
+
+
 
 		details br {
 			display: none;
@@ -447,6 +460,7 @@
          </ul>
          <!-- Here comes the editor itself -->
           <div id="editor" class="relative flex flex-row h-screen overflow-y-hidden">
+            <canvas id="feedback"></canvas>
             <canvas id="hydra-bg"></canvas>
 					</div>
           <p id="error_line" class="hidden text-red-400 w-screen bg-neutral-900 font-mono absolute bottom-0 pl-2 py-2">Hello kids</p>
