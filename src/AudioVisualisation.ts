@@ -147,7 +147,6 @@ export const runOscilloscope = (
       return;
     }
 
-    // Update analyzer and dataArray if fftSize changes
     if (analyzer.fftSize !== app.osc.fftSize) {
       analyzer = getAnalyser(app.osc.fftSize);
       dataArray = new Float32Array(analyzer.frequencyBinCount);
@@ -180,7 +179,7 @@ export const runOscilloscope = (
     } else if (app.osc.orientation === "horizontal") {
       let x = 0;
       const sliceWidth = (WIDTH * 1.0) / dataArray.length;
-      const yOffset = HEIGHT / 4; // Adjust this to move the oscilloscope up
+      const yOffset = HEIGHT / 4;
       for (let i = 0; i < dataArray.length; i++) {
         const v = dataArray[i] * 0.5 * HEIGHT * app.osc.size;
         const y = v + yOffset;
@@ -191,7 +190,7 @@ export const runOscilloscope = (
     } else {
       let y = 0;
       const sliceHeight = (HEIGHT * 1.0) / dataArray.length;
-      const xOffset = WIDTH / 4; // Adjust this to move the oscilloscope to the side
+      const xOffset = WIDTH / 4;
       for (let i = 0; i < dataArray.length; i++) {
         const v = dataArray[i] * 0.5 * WIDTH * app.osc.size;
         const x = v + xOffset;

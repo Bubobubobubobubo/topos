@@ -60,7 +60,7 @@ export class Editor {
   interface: ElementMap = {};
   blinkTimeouts: Record<number, number> = {};
   osc: OscilloscopeConfig = {
-    enabled: true,
+    enabled: false,
     color: "#fdba74",
     thickness: 4,
     fftSize: 256,
