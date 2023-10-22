@@ -1976,11 +1976,18 @@ export class UserAPI {
   // =============================================================
   // Oscilloscope Configuration
   // =============================================================
+
   public scope = (config: OscilloscopeConfig): void => {
     /**
      * Configures the oscilloscope.
      * @param config - The configuration object
      */
-    this.app.osc = config;
+    // Dispatch the config to the old object so that missing options
+    // are still specified
+
+    this.app.osc = {
+      ...this.app.osc,
+      ...config,
+    };
   };
 }
