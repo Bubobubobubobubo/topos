@@ -196,7 +196,7 @@ These filters all come with their own set of parameters. Note that we are descri
 | Method     | Alias     | Description                     |
 |------------|-----------|---------------------------------|
 | <ic>cutoff</ic>     | <ic>lpf</ic>       | cutoff frequency of the lowpass filter |
-| <ic>resonance</ic>  | <ic>lpq</ic>       | resonance of the lowpass filter |
+| <ic>resonance</ic>  | <ic>lpq</ic>       | resonance of the lowpass filter (0-1) |
 
 ${makeExample(
     "Filtering a bass",
@@ -209,7 +209,7 @@ ${makeExample(
 | Method     | Alias     | Description                     |
 |------------|-----------|---------------------------------|
 | <ic>hcutoff</ic>     | <ic>hpf</ic>       | cutoff frequency of the highpass filter |
-| <ic>hresonance</ic>  | <ic>hpq</ic>       | resonance of the highpass filter |
+| <ic>hresonance</ic>  | <ic>hpq</ic>       | resonance of the highpass filter (0-1) |
 
 ${makeExample(
     "Filtering a noise source",
@@ -222,7 +222,7 @@ ${makeExample(
 | Method     | Alias     | Description                     |
 |------------|-----------|---------------------------------|
 | <ic>bandf</ic>      | <ic>bpf</ic>       | cutoff frequency of the bandpass filter |
-| <ic>bandq</ic>      | <ic>bpq</ic>       | resonance of the bandpass filter |
+| <ic>bandq</ic>      | <ic>bpq</ic>       | resonance of the bandpass filter (0-1) |
 
 ${makeExample(
     "Sweeping the filter on the same guitar sample",
@@ -249,7 +249,7 @@ ${makeExample(
     `
 beat(.5) && snd('sawtooth')
   .cutoff([2000,500].pick() + usine(.5) * 4000)
-  .resonance(0.9).freq([100,150].pick())
+  .resonance(0.2).freq([100,150].pick())
   .out()
 	`,
     true
@@ -357,7 +357,7 @@ ${makeExample(
 beat(.25) :: sound('wt_symetric:8').note([50,55,57,60].beat(.25) - [12,0]
   .pick()).ftype('12db').adsr(0.05/4, 1/16, 0.25/4, 0)
   .cutoff(1500 + usine(1/8) * 5000).lpadsr(16, 0.2, 0.2, 0.125/2, 0)
-  .room(0.9).size(0.9).resonance(20).gain(0.3).out()
+  .room(0.9).size(0.9).resonance(0.2).gain(0.3).out()
 beat(1) :: sound('kick').n(4).out()
 beat(2) :: sound('snare').out()
 beat(.5) :: sound('hh').out()`,

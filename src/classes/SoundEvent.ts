@@ -136,8 +136,11 @@ export class SoundEvent extends AudibleEvent {
   public lpr = this.lprelease;
   public cutoff = (value: number) => this.updateValue("cutoff", value);
   public lpf = this.cutoff;
-  public resonance = (value: number) =>
-    this.updateValue("resonance", Math.min(Math.max(value, 0), 50));
+  public resonance = (value: number) => {
+    if (value >= 0 || value <= 1) {
+      this.updateValue("resonance", 50 * Math.min(Math.max(value, 0), 1));
+    }
+  }
   public lpq = this.resonance;
   public lpadsr = (
     depth: number,
