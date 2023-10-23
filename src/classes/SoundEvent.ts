@@ -153,6 +153,17 @@ export class SoundEvent extends AudibleEvent {
     this.lprelease(r);
     return this;
   };
+  public lpad = (
+    depth: number,
+    a: number,
+    d: number,
+  ) => {
+    this.lpenv(depth);
+    this.lpattack(a);
+    this.lpdecay(d);
+    return this;
+  };
+
 
   // Highpass filter
 
@@ -182,6 +193,16 @@ export class SoundEvent extends AudibleEvent {
     this.hpdecay(d);
     this.hpsustain(s);
     this.hprelease(r);
+    return this;
+  };
+  public hpad = (
+    depth: number,
+    a: number,
+    d: number,
+  ) => {
+    this.hpenv(depth);
+    this.hpattack(a);
+    this.hpdecay(d);
     return this;
   };
 
@@ -215,6 +236,17 @@ export class SoundEvent extends AudibleEvent {
     this.bprelease(r);
     return this;
   };
+  public bpad = (
+    depth: number,
+    a: number,
+    d: number,
+  ) => {
+    this.bpenv(depth);
+    this.bpattack(a);
+    this.bpdecay(d);
+    return this;
+  };
+
 
   public freq = (value: number) => this.updateValue("freq", value);
   public f = this.freq;
