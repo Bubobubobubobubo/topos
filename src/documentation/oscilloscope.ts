@@ -8,8 +8,8 @@ export const oscilloscope = (application: Editor): string => {
 You can turn on the oscilloscope to generate interesting visuals or to inspect audio. Use the <ic>scope()</ic> function to turn it on and off. The oscilloscope is off by default.
 
 ${makeExample(
-  "Oscilloscope configuration",
-  `
+    "Oscilloscope configuration",
+    `
 scope({
     enabled: true, // off by default
     color: "#fdba74", // any valid CSS color or "random"
@@ -18,10 +18,11 @@ scope({
     orientation: "horizontal", // "vertical" or "horizontal"
     is3D: false, // 3D oscilloscope
     size: 1, // size of the oscilloscope
+    refresh: 1 // refresh rate (in pulses)
 })
   `,
-  true
-)}
+    true
+  )}
 
 Note that these values can be patterned as well! You can transform the oscilloscope into its own light show if you want. The picture is not stable anyway so you won't have much use of it for precision work :)
 

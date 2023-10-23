@@ -116,6 +116,7 @@ export const drawEmptyBlinkers = (app: Editor) => {
 
 export interface OscilloscopeConfig {
   enabled: boolean;
+  refresh: number;
   color: string;
   thickness: number;
   fftSize: number; // multiples of 256
@@ -139,9 +140,18 @@ export const runOscilloscope = (
   const canvasCtx = canvas.getContext("2d")!;
   const WIDTH = canvas.width;
   const HEIGHT = canvas.height;
+  let lastDrawTime = 0;
+  let frameInterval = 1000 / 30;
+
 
   function draw() {
+    const currentTime = Date.now();
     requestAnimationFrame(draw);
+    if (currentTime - lastDrawTime < frameInterval) {
+      return;
+    }
+    lastDrawTime = currentTime;
+
     if (!app.osc.enabled) {
       canvasCtx.clearRect(0, 0, WIDTH, HEIGHT);
       return;
@@ -156,7 +166,9 @@ export const runOscilloscope = (
 
     canvasCtx.fillStyle = "rgba(0, 0, 0, 0)";
     canvasCtx.fillRect(0, 0, WIDTH, HEIGHT);
-    canvasCtx.clearRect(0, 0, WIDTH, HEIGHT);
+    if (app.clock.time_position.pulse % app.osc.refresh == 0) {
+      canvasCtx.clearRect(0, 0, WIDTH, HEIGHT);
+    }
 
     canvasCtx.lineWidth = app.osc.thickness;
 
@@ -202,6 +214,5 @@ export const runOscilloscope = (
 
     canvasCtx.stroke();
   }
-
   draw();
 };

@@ -63,6 +63,7 @@ export class Editor {
     enabled: false,
     color: "#fdba74",
     thickness: 4,
+    refresh: 1,
     fftSize: 256,
     orientation: "horizontal",
     is3D: false,
