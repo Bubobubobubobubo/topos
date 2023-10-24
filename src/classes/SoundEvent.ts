@@ -149,6 +149,7 @@ export class SoundEvent extends AudibleEvent {
         50 * value
       );
     }
+    return this;
   }
   public lpq = this.resonance;
   public lpadsr = (
