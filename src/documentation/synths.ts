@@ -230,6 +230,8 @@ ${makeExample(
     true
   )}
 
+Alternatively, <ic>lpf</ic>, <ic>hpf</ic> and <ic>bpf</ic> can take a second argument, the **resonance**.
+
 ## Filter order (type)
 
 You can also use the <ic>ftype</ic> method to change the filter type (order). There are two types by default, <ic>12db</ic> for a gentle slope or <ic>24db</ic> for a really steep filtering slope. The <ic>24db</ic> type is particularly useful for substractive synthesis if you are trying to emulate some of the Moog or Prophet sounds:

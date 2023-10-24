@@ -134,11 +134,20 @@ export class SoundEvent extends AudibleEvent {
   public lps = this.lpsustain;
   public lprelease = (value: number) => this.updateValue("lprelease", value);
   public lpr = this.lprelease;
-  public cutoff = (value: number) => this.updateValue("cutoff", value);
+  public cutoff = (value: number, resonance?: number) => {
+    this.updateValue("cutoff", value);
+    if (resonance) {
+      this.resonance(resonance)
+    }
+    return this;
+  }
   public lpf = this.cutoff;
   public resonance = (value: number) => {
-    if (value >= 0 || value <= 1) {
-      this.updateValue("resonance", 50 * Math.min(Math.max(value, 0), 1));
+    if (value >= 0 && value <= 1) {
+      this.updateValue(
+        "resonance",
+        50 * value
+      );
     }
   }
   public lpq = this.resonance;
@@ -182,7 +191,13 @@ export class SoundEvent extends AudibleEvent {
   public hpr = this.hprelease;
   public hcutoff = (value: number) => this.updateValue("hcutoff", value);
   public hpf = this.hcutoff;
-  public hresonance = (value: number) => this.updateValue("hresonance", value);
+  public hresonance = (value: number, resonance?: number) => {
+    this.updateValue("hresonance", value);
+    if (resonance) {
+      this.resonance(resonance)
+    }
+    return this;
+  }
   public hpq = this.hresonance;
   public hpadsr = (
     depth: number,
@@ -221,7 +236,13 @@ export class SoundEvent extends AudibleEvent {
   public bps = this.bpsustain;
   public bprelease = (value: number) => this.updateValue("bprelease", value);
   public bpr = this.bprelease;
-  public bandf = (value: number) => this.updateValue("bandf", value);
+  public bandf = (value: number, resonance?: number) => {
+    this.updateValue("bandf", value);
+    if (resonance) {
+      this.resonance(resonance)
+    }
+    return this;
+  }
   public bpf = this.bandf;
   public bandq = (value: number) => this.updateValue("bandq", value);
   public bpq = this.bandq;
