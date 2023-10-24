@@ -1,6 +1,6 @@
 import { type UserAPI } from "./API";
 import { safeScale, stepsToScale } from "zifferjs";
-export {};
+export { };
 
 declare global {
   interface Array<T> {
@@ -8,6 +8,8 @@ declare global {
     sub(amount: number): number[];
     mult(amount: number): number[];
     div(amount: number): number[];
+    mouseX(): T[],
+    mouseY(): T[],
     palindrome(): T[];
     random(index: number): T;
     rand(index: number): T;
@@ -34,14 +36,36 @@ declare global {
 }
 
 export const makeArrayExtensions = (api: UserAPI) => {
-  Array.prototype.square = function (): number[] {
+
+  Array.prototype.mouseX = function <T>(this: T[]): T {
+    /**
+     * @returns Value from list based on mouse X position
+     */
+    const mouse_position = api.mouseX();
+    const screenWidth = window.innerWidth;
+    const zoneWidth = screenWidth / this.length;
+    const zoneIndex = Math.floor(mouse_position / zoneWidth);
+
+    return this[zoneIndex];
+  };
+
+  Array.prototype.mouseY = function <T>(this: T[]): T {
+    const mouse_position = api.mouseY();
+    const screenHeight = window.innerHeight;
+    const zoneHeight = screenHeight / this.length;
+    const zoneIndex = Math.floor(mouse_position / zoneHeight);
+
+    return this[zoneIndex];
+  };
+
+  Array.prototype.square = function(): number[] {
     /**
      * @returns New array with squared values.
      */
     return this.map((x: number) => x * x);
   };
 
-  Array.prototype.sometimes = function (func: Function): number[] {
+  Array.prototype.sometimes = function(func: Function): number[] {
     if (api.randomGen() < 0.5) {
       return func(this);
     } else {
@@ -49,11 +73,11 @@ export const makeArrayExtensions = (api: UserAPI) => {
     }
   };
 
-  Array.prototype.apply = function (func: Function): number[] {
+  Array.prototype.apply = function(func: Function): number[] {
     return func(this);
   };
 
-  Array.prototype.sqrt = function (): number[] {
+  Array.prototype.sqrt = function(): number[] {
     /**
      * @returns New array with square roots of values. Throws if any element is negative.
      */
@@ -62,7 +86,7 @@ export const makeArrayExtensions = (api: UserAPI) => {
     return this.map((x: number) => Math.sqrt(x));
   };
 
-  Array.prototype.add = function (amount: number): number[] {
+  Array.prototype.add = function(amount: number): number[] {
     /**
      * @param amount - The value to add to each element in the array.
      * @returns New array with added values.
@@ -70,7 +94,7 @@ export const makeArrayExtensions = (api: UserAPI) => {
     return this.map((x: number) => x + amount);
   };
 
-  Array.prototype.sub = function (amount: number): number[] {
+  Array.prototype.sub = function(amount: number): number[] {
     /**
      * @param amount - The value to subtract from each element in the array.
      * @returns New array with subtracted values.
@@ -78,7 +102,7 @@ export const makeArrayExtensions = (api: UserAPI) => {
     return this.map((x: number) => x - amount);
   };
 
-  Array.prototype.mult = function (amount: number): number[] {
+  Array.prototype.mult = function(amount: number): number[] {
     /**
      * @param amount - The value to multiply with each element in the array.
      * @returns New array with multiplied values.
@@ -86,7 +110,7 @@ export const makeArrayExtensions = (api: UserAPI) => {
     return this.map((x: number) => x * amount);
   };
 
-  Array.prototype.div = function (amount: number): number[] {
+  Array.prototype.div = function(amount: number): number[] {
     /**
      * @param amount - The value to divide each element in the array by.
      * @returns New array with divided values. Throws if division by zero.
@@ -95,7 +119,7 @@ export const makeArrayExtensions = (api: UserAPI) => {
     return this.map((x: number) => x / amount);
   };
 
-  Array.prototype.pick = function () {
+  Array.prototype.pick = function() {
     /**
      * Returns a random element from an array.
      *
@@ -104,7 +128,7 @@ export const makeArrayExtensions = (api: UserAPI) => {
     return this[Math.floor(api.randomGen() * this.length)];
   };
 
-  Array.prototype.gen = function (min: number, max: number, times: number) {
+  Array.prototype.gen = function(min: number, max: number, times: number) {
     /**
      * Returns an array of random numbers.
      * @param min - The minimum value of the random numbers
@@ -121,7 +145,7 @@ export const makeArrayExtensions = (api: UserAPI) => {
     );
   };
 
-  Array.prototype.bar = function (value: number = 1) {
+  Array.prototype.bar = function(value: number = 1) {
     /**
      * Returns an element from an array based on the current bar.
      *
@@ -136,7 +160,7 @@ export const makeArrayExtensions = (api: UserAPI) => {
     }
   };
 
-  Array.prototype.beat = function (divisor: number = 1) {
+  Array.prototype.beat = function(divisor: number = 1) {
     const chunk_size = divisor; // Get the first argument (chunk size)
     const timepos = api.app.clock.pulses_since_origin;
     const slice_count = Math.floor(
@@ -146,7 +170,7 @@ export const makeArrayExtensions = (api: UserAPI) => {
   };
   Array.prototype.b = Array.prototype.beat;
 
-  Array.prototype.shuffle = function () {
+  Array.prototype.shuffle = function() {
     /**
      * Shuffles the array in place.
      *
@@ -165,7 +189,7 @@ export const makeArrayExtensions = (api: UserAPI) => {
     return this;
   };
 
-  Array.prototype.rotate = function (steps: number) {
+  Array.prototype.rotate = function(steps: number) {
     /**
      * Rotates the array in place.
      *
@@ -185,7 +209,7 @@ export const makeArrayExtensions = (api: UserAPI) => {
     return this;
   };
 
-  Array.prototype.unique = function () {
+  Array.prototype.unique = function() {
     /**
      * Removes duplicate elements from the array in place.
      *
@@ -218,7 +242,7 @@ export const makeArrayExtensions = (api: UserAPI) => {
     if (this.length <= 1) {
       return this;
     }
-    for (let i = 0; i < this.length; ) {
+    for (let i = 0; i < this.length;) {
       const rand = api.randomGen() * 100;
       if (rand < amount) {
         if (this.length > 1) {
@@ -331,7 +355,7 @@ export const makeArrayExtensions = (api: UserAPI) => {
     return left_to_right.concat(right_to_left);
   };
 
-  Array.prototype.loop = function (index: number) {
+  Array.prototype.loop = function(index: number) {
     /**
      * Returns an element from the array based on the index.
      * The index will wrap over the array.
@@ -342,7 +366,7 @@ export const makeArrayExtensions = (api: UserAPI) => {
     return this[index % this.length];
   };
 
-  Array.prototype.random = function () {
+  Array.prototype.random = function() {
     /**
      * Returns a random element from the array.
      *
@@ -353,7 +377,7 @@ export const makeArrayExtensions = (api: UserAPI) => {
   Array.prototype.rand = Array.prototype.random;
 };
 
-Array.prototype.scale = function (
+Array.prototype.scale = function(
   scale: string = "major",
   base_note: number = 0
 ) {
@@ -377,7 +401,7 @@ Array.prototype.scale = function (
   });
 };
 
-Array.prototype.scaleArp = function (
+Array.prototype.scaleArp = function(
   scaleName: string = "major",
   boundary: number = 0
 ) {
