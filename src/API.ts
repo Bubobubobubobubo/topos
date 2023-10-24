@@ -1280,6 +1280,25 @@ export class UserAPI {
   // Time Filters
   // =============================================================
 
+
+  public seq = (expr: string, duration: number): boolean => {
+    let len = expr.length * duration
+    let output: number[] = [];
+
+    for (let i = 1; i <= len + 1; i += duration) {
+      output.push(Math.floor(i * 10) / 10);
+    }
+    output.pop()
+
+    output = output.filter((_, idx) => {
+      const exprIdx = idx % expr.length;
+      return expr[exprIdx] === 'x';
+    });
+
+    return this.oncount(output, len)
+  }
+
+
   public beat = (n: number | number[] = 1, nudge: number = 0): boolean => {
     /**
      * Determine if the current pulse is on a specified beat, with optional nudge.
