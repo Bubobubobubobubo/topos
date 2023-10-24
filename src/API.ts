@@ -143,18 +143,25 @@ export class UserAPI {
   };
 
   _reportError = (error: any): void => {
-
-    const extractLineNumber = (error: Error) => {
+    const extractLineAndColumn = (error: Error) => {
       const stackLines = error.stack?.split("\n");
-      if (stackLines && stackLines.length > 1) {
-        const match = stackLines[1].match(/:(\d+):/);
-        if (match) return parseInt(match[1], 10);
+      if (stackLines) {
+        for (const line of stackLines) {
+          if (line.includes('<anonymous>')) {
+            const match = line.match(/<anonymous>:(\d+):(\d+)/);
+            if (match) return { line: parseInt(match[1], 10), column: parseInt(match[2], 10) };
+          }
+        }
       }
-      return null;
+      return { line: null, column: null };
     };
 
-    const lineNumber = extractLineNumber(error);
-    const errorMessage = lineNumber ? `${error.message} (Line: ${lineNumber})` : error.message;
+    const { line, column } = extractLineAndColumn(error);
+    const errorMessage = line && column
+      ? `${error.message} (Line: ${line - 2}, Column: ${column})`
+      : error.message;
+
+
     clearTimeout(this.errorTimeoutID);
     clearTimeout(this.printTimeoutID);
     this.app.interface.error_line.innerHTML = errorMessage;
