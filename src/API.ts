@@ -1280,8 +1280,15 @@ export class UserAPI {
   // Time Filters
   // =============================================================
 
+  public fullseq = (sequence: string, duration: number) => {
+    if (sequence.split('').every(c => c === 'x' || c === 'o')) {
+      return [...sequence].map(c => c === 'x').beat(duration);
+    } else {
+      return false
+    }
+  }
 
-  public seq = (expr: string, duration: number): boolean => {
+  public seq = (expr: string, duration: number = 0.5): boolean => {
     let len = expr.length * duration
     let output: number[] = [];
 
