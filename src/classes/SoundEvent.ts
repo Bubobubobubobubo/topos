@@ -398,6 +398,18 @@ export class SoundEvent extends AudibleEvent {
   public rdim = this.roomdim;
   public size = (value: number) => this.updateValue("roomsize", value);
   public sz = this.size;
+  public rev = (room: number, size: number, fade?: number, lp?: number, dim?: number) => {
+    this.updateValue("room", room)
+    this.updateValue("roomsize", size)
+    if (fade)
+      this.updateValue("roomfade", fade)
+    if (lp)
+      this.updateValue("roomlp", lp)
+    if (dim)
+      this.updateValue("roomdim", dim)
+
+    return this;
+  }
 
   // Compressor
   public comp = (value: number) => this.updateValue("compressor", value);
