@@ -25,7 +25,7 @@ const tryCatchWrapper = (
       resolve(true);
     } catch (error) {
       application.interface.error_line.innerHTML = error as string;
-      console.log(error);
+      application.api._reportError(error as string)
       resolve(false);
     }
   });
@@ -75,7 +75,7 @@ export const tryEvaluate = async (
     }
   } catch (error) {
     application.interface.error_line.innerHTML = error as string;
-    console.log(error);
+    application.api._reportError(error as string)
   }
 };
 

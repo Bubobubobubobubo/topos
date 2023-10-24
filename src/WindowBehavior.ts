@@ -21,6 +21,9 @@ export const installWindowBehaviors = (
   window: Window,
   preventMultipleTabs: boolean = false
 ) => {
+
+
+
   window.addEventListener("resize", () =>
     handleResize(app.interface.scope as HTMLCanvasElement)
   );
@@ -42,7 +45,7 @@ export const installWindowBehaviors = (
     localStorage.openpages = Date.now();
     window.addEventListener(
       "storage",
-      function (e) {
+      function(e) {
         if (e.key == "openpages") {
           // Listen if anybody else is opening the same page!
           localStorage.page_available = Date.now();
@@ -57,4 +60,12 @@ export const installWindowBehaviors = (
       false
     );
   }
+
+  window.addEventListener('error', e => {
+    console.log("Je suis bien installé !")
+    console.log(e.message
+      , '\n', e.filename, ':', e.lineno, (e.colno ? ':' + e.colno : '')
+      , e.error && e.error.stack ? '\n' : '', e.error ? e.error.stack : undefined
+    );
+  }, false);
 };

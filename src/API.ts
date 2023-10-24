@@ -143,10 +143,21 @@ export class UserAPI {
   };
 
   _reportError = (error: any): void => {
-    console.log(error);
+
+    const extractLineNumber = (error: Error) => {
+      const stackLines = error.stack?.split("\n");
+      if (stackLines && stackLines.length > 1) {
+        const match = stackLines[1].match(/:(\d+):/);
+        if (match) return parseInt(match[1], 10);
+      }
+      return null;
+    };
+
+    const lineNumber = extractLineNumber(error);
+    const errorMessage = lineNumber ? `${error.message} (Line: ${lineNumber})` : error.message;
     clearTimeout(this.errorTimeoutID);
     clearTimeout(this.printTimeoutID);
-    this.app.interface.error_line.innerHTML = error as string;
+    this.app.interface.error_line.innerHTML = errorMessage;
     this.app.interface.error_line.style.color = "color-red-800";
     this.app.interface.error_line.classList.remove("hidden");
     this.errorTimeoutID = setTimeout(
