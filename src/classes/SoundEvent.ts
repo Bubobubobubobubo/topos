@@ -173,6 +173,8 @@ export class SoundEvent extends AudibleEvent {
     this.lpenv(depth);
     this.lpattack(a);
     this.lpdecay(d);
+    this.lpsustain(0);
+    this.lprelease(0);
     return this;
   };
 
@@ -221,6 +223,8 @@ export class SoundEvent extends AudibleEvent {
     this.hpenv(depth);
     this.hpattack(a);
     this.hpdecay(d);
+    this.hpsustain(0);
+    this.hprelease(0);
     return this;
   };
 
@@ -268,6 +272,8 @@ export class SoundEvent extends AudibleEvent {
     this.bpenv(depth);
     this.bpattack(a);
     this.bpdecay(d);
+    this.bpsustain(0);
+    this.bprelease(0);
     return this;
   };
 
