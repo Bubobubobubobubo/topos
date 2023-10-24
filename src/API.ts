@@ -1291,7 +1291,7 @@ export class UserAPI {
     const results: boolean[] = nArray.map(
       (value) =>
         (this.app.clock.pulses_since_origin - Math.floor(nudge * this.ppqn())) %
-          Math.floor(value * this.ppqn()) ===
+        Math.floor(value * this.ppqn()) ===
         0
     );
     return results.some((value) => value === true);
@@ -1311,7 +1311,7 @@ export class UserAPI {
     const results: boolean[] = nArray.map(
       (value) =>
         (this.app.clock.pulses_since_origin - nudgeInPulses) %
-          Math.floor(value * barLength) ===
+        Math.floor(value * barLength) ===
         0
     );
     return results.some((value) => value === true);
@@ -1613,7 +1613,7 @@ export class UserAPI {
      * @returns A sine wave between 0 and 1
      * @see sine
      */
-    return ((this.sine(freq, offset) + 1) / 2) * times;
+    return ((this.sine(freq, times, offset) + 1) / 2) * times;
   };
 
   saw = (freq: number = 1, times: number = 1, offset: number = 0): number => {
@@ -1642,7 +1642,7 @@ export class UserAPI {
      * @returns A saw wave between 0 and 1
      * @see saw
      */
-    return ((this.saw(freq, offset) + 1) / 2) * times;
+    return ((this.saw(freq, times, offset) + 1) / 2) * times;
   };
 
   triangle = (
@@ -1659,7 +1659,7 @@ export class UserAPI {
      * @see sine
      * @see noise
      */
-    return (Math.abs(this.saw(freq, offset)) * 2 - 1) * times;
+    return (Math.abs(this.saw(freq, times, offset)) * 2 - 1) * times;
   };
 
   utriangle = (
@@ -1675,7 +1675,7 @@ export class UserAPI {
      * @returns A triangle wave between 0 and 1
      * @see triangle
      */
-    return ((this.triangle(freq, offset) + 1) / 2) * times;
+    return ((this.triangle(freq, times, offset) + 1) / 2) * times;
   };
 
   square = (
@@ -1712,7 +1712,7 @@ export class UserAPI {
      * @returns A square wave between 0 and 1
      * @see square
      */
-    return ((this.square(freq, offset, duty) + 1) / 2) * times;
+    return ((this.square(freq, times, offset, duty) + 1) / 2) * times;
   };
 
   noise = (times: number = 1): number => {
