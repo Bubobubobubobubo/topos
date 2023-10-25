@@ -1221,6 +1221,8 @@ Topos is a free and open-source software distributed under [GPL-3.0](https://git
 - Frank Force for the [ZzFX](https://github.com/KilledByAPixel/ZzFX) synthesizer.
 - Kristoffer Ekstrand for the [AKWF](https://www.adventurekid.se/akrt/waveforms/adventure-kid-waveforms/) waveforms.
 - Ryan Kirkbride for some of the audio samples in the [Dough-Fox](https://github.com/Bubobubobubobubo/Dough-Fox) sample pack, taken from [here](https://github.com/Qirky/FoxDot/tree/master/FoxDot/snd).
+- Adel Faure for the [JGS](https://adelfaure.net/https://adelfaure.net/) font.
+- Raphaël Bastide for the [Steps Mono](https://github.com/raphaelbastide/steps-mono/) font.
 
 - All the [Topos](https//github.com/Bubobubobubobubo/Topos) contributors!
 
