@@ -1,3 +1,4 @@
+import { EditorView } from '@codemirror/view';
 import { getAllScaleNotes, seededRandom } from "zifferjs";
 import {
   MidiCCEvent,
@@ -2027,4 +2028,25 @@ export class UserAPI {
       ...config,
     };
   };
+
+  // =============================================================
+  // Ralt144mi section
+  // =============================================================
+
+  raltfont = (mainFont: string, commentFont: string): void => {
+    this.app.view.dispatch({
+      effects: this.app.fontSize.reconfigure(
+        EditorView.theme({
+          "&": { fontFamily: mainFont },
+          ".cm-gutters": { fontFamily: mainFont, },
+          ".cm-content": {
+            fontFamily: mainFont,
+          },
+          ".cm-comment": {
+            fontFamily: commentFont,
+          },
+        })
+      ),
+    });
+  }
 }
