@@ -34,9 +34,6 @@ export const installInterfaceLogic = (app: Editor) => {
     app.settings.midi_channels_scripts;
   (app.interface.midi_clock_ppqn as HTMLInputElement).value =
     app.settings.midi_clock_ppqn.toString();
-  if (!app.settings.time_position) {
-    (app.interface.timeviewer as HTMLElement).classList.add("hidden");
-  }
   (app.interface.load_demo_songs as HTMLInputElement).checked =
     app.settings.load_demo_songs;
 
