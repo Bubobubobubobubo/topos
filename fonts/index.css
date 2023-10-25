@@ -33,3 +33,62 @@
   font-style: italic;
   font-display: swap;
 }
+
+@font-face {
+  font-family: "Comic Mono";
+  font-weight: normal;
+  src: url(./woff/ComicMono.woff) format("woff"),
+       url(./woff2/ComicMono.woff2) format("wooff2");
+}
+
+@font-face {
+  font-family: "Comic Mono";
+  font-weight: bold;
+  src: url(./woff/ComicMono-Bold.woff) format("woff"),
+       url(./woff/ComicMono-Bold.woff2) format("woff2"),
+}
+
+
+@font-face {
+    font-family: 'jgs7';
+    src: url('./woff2/jgs7.woff2') format('woff2'),
+         url('./woff/jgs7.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'jgs5';
+    src: url('./woff2/jgs5.woff2') format('woff2'),
+         url('./woff/jgs5.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'jgs9';
+    src: url('./woff2/jgs9.woff2') format('woff2'),
+         url('./woff/jgs9.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+
+@font-face {
+    font-family: 'Steps Mono';
+    src: url('./woff2/Steps-Mono.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Steps Mono Thin';
+    src: url('./woff2/Steps-Mono-Thin.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
