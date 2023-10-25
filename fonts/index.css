@@ -92,3 +92,21 @@
     font-style: normal;
     font-display: swap;
 }
+
+
+@font-face {
+    font-family: 'Jet Brains';
+    src: url('./woff2/JetBrainsMono-Regular.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+
+@font-face {
+    font-family: 'Jet Brains';
+    src: url('./woff2/JetBrainsMono-Bold.woff2') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
