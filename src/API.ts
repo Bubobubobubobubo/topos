@@ -683,6 +683,10 @@ export class UserAPI {
     return args.map((arg) => JSON.stringify(arg)).join(",");
   };
 
+  public resetAllFromCache = (): void => {
+    this.patternCache.forEach((player) => (player as Player).reset());
+  }
+
   public z = (
     input: string,
     options: InputOptions = {},
@@ -701,7 +705,7 @@ export class UserAPI {
     }
 
     if (!player) {
-      player = new Player(input, options, this.app);
+      player = new Player(input, options, this.app, zid);
       this.app.api.patternCache.set(key, player);
     }
 
@@ -709,7 +713,7 @@ export class UserAPI {
 
     player.updateLastCallTime();
 
-    if (id !== "") {
+    if (id !== "" && zid !== "z0") {
       // Sync named patterns to z0 by default
       player.sync("z0");
     }

@@ -201,6 +201,7 @@ export class Clock {
      * @remark also sends a MIDI message if a port is declared
      */
     this.app.clock.tick = -1;
+    this.time_position = { bar: -1, beat: -1, pulse: -1 };
     this.app.api.MidiConnection.sendStopMessage();
     this.transportNode?.stop();
   }

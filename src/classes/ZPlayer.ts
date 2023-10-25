@@ -15,7 +15,6 @@ export class Player extends Event {
   startCallTime: number = 0;
   lastCallTime: number = 0;
   waitTime = 0;
-  startBeat: number = 0;
   played: boolean = false;
   current!: Pitch | Chord | ZRest;
   retro: boolean = false;
@@ -23,13 +22,25 @@ export class Player extends Event {
   zid: string = "";
   options: InputOptions = {};
   skipIndex = 0;
-  endTime = 0;
 
-  constructor(input: string, options: InputOptions, public app: Editor) {
+  constructor(input: string, options: InputOptions, public app: Editor, zid: string = "") {
     super(app);
     this.input = input;
     this.options = options;
     this.ziffers = new Ziffers(input, options);
+    this.zid = zid;
+  }
+
+  reset() {
+    this.initCallTime = 0;
+    this.startCallTime = 0;
+    this.lastCallTime = 0;
+    this.waitTime = 0;
+    this.index = 0;
+    this.skipIndex = 0;
+    this.played = false;
+    this.skipIndex = 0;
+    this.ziffers.reset();
   }
 
   get ticks(): number {
@@ -94,18 +105,13 @@ export class Player extends Event {
   areWeThereYet = (): boolean => {
     // If clock has stopped
     if (this.app.clock.pulses_since_origin < this.lastCallTime) {
-      this.lastCallTime = 0;
-      this.startCallTime = 0;
-      this.index = 0;
-      this.waitTime = 0;
-      this.skipIndex = 0;
-      this.ziffers.index = 0;
+      this.app.api.resetAllFromCache();
     }
 
     const patternIsStarting = (this.notStarted() &&
     (this.pulse() === 0 || this.origin() >= this.nextBeatInTicks()) &&
     this.origin() >= this.waitTime);
-    
+
     const timeToPlayNext = (this.current &&
       this.pulseToSecond(this.origin()) >=
       this.pulseToSecond(this.lastCallTime) +
