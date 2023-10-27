@@ -18,7 +18,7 @@ export class TransportNode extends AudioWorkletNode {
       } else if (message.data.type === "bang") {
         if (this.app.settings.send_clock)
           this.app.api.MidiConnection.sendMidiClock();
-        this.app.clock.tick++;
+        this.app.clock.incrementTick();
         const futureTimeStamp = this.app.clock.convertTicksToTimeposition(
           this.app.clock.tick
         );

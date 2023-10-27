@@ -33,7 +33,8 @@ export class Clock {
    */
 
   ctx: AudioContext;
-  elapsed: number
+  elapsed: number;
+  logicalTime: number;
   transportNode: TransportNode | null;
   private _bpm: number;
   time_signature: number[];
@@ -45,6 +46,7 @@ export class Clock {
     this.time_position = { bar: 0, beat: 0, pulse: 0 };
     this.time_signature = [4, 4];
     this.elapsed = 0;
+    this.logicalTime = 0;
     this.tick = 0;
     this._bpm = 120;
     this._ppqn = 48;
@@ -144,10 +146,6 @@ export class Clock {
     return this._ppqn;
   }
 
-  get logicalTime(): number {
-    return this.tick * this.pulse_duration;
-  }
-
   get realTime(): number {
     return this.elapsed;
   }
@@ -161,6 +159,11 @@ export class Clock {
       this._ppqn = ppqn;
       this.transportNode?.setPPQN(ppqn);
     }
+  }
+
+  public incrementTick() {
+    this.tick++;
+    this.logicalTime += this.pulse_duration;
   }
 
   public nextTickFrom(time: number, nudge: number): number {
