@@ -463,10 +463,10 @@ export class SoundEvent extends AudibleEvent {
       this.values.chord.forEach((obj: { [key: string]: number }) => {
         const copy = { ...this.values };
         copy.freq = obj.freq;
-        superdough(copy, this.nudge, this.values.dur);
+        superdough(copy, this.nudge - this.app.clock.deviation, this.values.dur);
       });
     } else {
-      superdough(this.values, this.nudge, this.values.dur);
+      superdough(this.values, this.nudge - this.app.clock.deviation, this.values.dur);
     }
   };
 }

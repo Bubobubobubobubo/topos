@@ -152,6 +152,10 @@ export class Clock {
     return this.elapsed;
   }
 
+  get deviation(): number {
+    return Math.abs(this.logicalTime - this.realTime)
+  }
+
   set ppqn(ppqn: number) {
     if (ppqn > 0 && this._ppqn !== ppqn) {
       this._ppqn = ppqn;
@@ -215,8 +219,8 @@ export class Clock {
      *
      * @remark also sends a MIDI message if a port is declared
      */
-    this.app.clock.tick = -1;
-    this.time_position = { bar: -1, beat: -1, pulse: -1 };
+    this.app.clock.tick = 0;
+    this.time_position = { bar: 0, beat: 0, pulse: 0 };
     this.app.api.MidiConnection.sendStopMessage();
     this.transportNode?.stop();
   }
