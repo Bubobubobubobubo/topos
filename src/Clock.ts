@@ -184,7 +184,11 @@ export class Clock {
      */
     this.app.audioContext.resume();
     this.app.api.MidiConnection.sendStartMessage();
-    this.transportNode?.start();
+    if (this.tick > 0) {
+      this.transportNode?.resume();
+    } else {
+      this.transportNode?.start();
+    }
   }
 
   public pause(): void {
