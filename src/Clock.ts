@@ -144,6 +144,14 @@ export class Clock {
     return this._ppqn;
   }
 
+  get logicalTime(): number {
+    return this.tick * this.pulse_duration;
+  }
+
+  get realTime(): number {
+    return this.elapsed;
+  }
+
   set ppqn(ppqn: number) {
     if (ppqn > 0 && this._ppqn !== ppqn) {
       this._ppqn = ppqn;
