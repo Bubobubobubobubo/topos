@@ -138,6 +138,7 @@ export class Clock {
   set bpm(bpm: number) {
     if (bpm > 0 && this._bpm !== bpm) {
       this.transportNode?.setBPM(bpm);
+      this._bpm = bpm
     }
   }
 
