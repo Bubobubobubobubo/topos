@@ -30,8 +30,6 @@ export class TransportNode extends AudioWorkletNode {
         } else {
           tryEvaluate(this.app, this.app.global_buffer);
         }
-      } else if (message.data.type === "bpm") {
-        this.app.clock.bpm = message.data.value;
       }
     }
   };
