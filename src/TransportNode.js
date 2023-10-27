@@ -41,6 +41,10 @@ export class TransportNode extends AudioWorkletNode {
     this.port.postMessage("pause");
   }
 
+  resume() {
+    this.port.postMessage("resume");
+  }
+
   setBPM(bpm) {
     this.port.postMessage({ type: "bpm", value: bpm });
   }

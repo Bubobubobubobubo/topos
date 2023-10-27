@@ -17,6 +17,8 @@ class TransportProcessor extends AudioWorkletProcessor {
     } else if (message.data === "start") {
       this.started = true;
       this.lastPlayPressTime = currentTime;
+    } else if (message.data === "resume") {
+      this.started = true;
     } else if (message.data === "pause") {
       this.started = false;
     } else if (message.data === "stop") {
