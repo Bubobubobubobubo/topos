@@ -23,6 +23,7 @@ export class Clock {
    *
    * @param app - The main application instance
    * @param ctx - The current AudioContext used by app
+   * @param elapsed - Time elapsed since play been pressed
    * @param transportNode - The TransportNode helper
    * @param bpm - The current beats per minute value
    * @param time_signature - The time signature
@@ -32,6 +33,7 @@ export class Clock {
    */
 
   ctx: AudioContext;
+  elapsed: number
   transportNode: TransportNode | null;
   private _bpm: number;
   time_signature: number[];
@@ -42,6 +44,7 @@ export class Clock {
   constructor(public app: Editor, ctx: AudioContext) {
     this.time_position = { bar: -1, beat: -1, pulse: -1 };
     this.time_signature = [4, 4];
+    this.elapsed = 0;
     this.tick = -1;
     this._bpm = 120;
     this._ppqn = 48;

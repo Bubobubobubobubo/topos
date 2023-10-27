@@ -16,6 +16,7 @@ class TransportProcessor extends AudioWorkletProcessor {
       this.port.postMessage(message.data);
     } else if (message.data === "start") {
       this.started = true;
+      this.lastPlayPressTime = currentTime;
     } else if (message.data === "pause") {
       this.started = false;
     } else if (message.data === "stop") {
@@ -36,6 +37,8 @@ class TransportProcessor extends AudioWorkletProcessor {
       const adjustedCurrentTime = currentTime + (this.nudge / 100);
       const beatNumber = adjustedCurrentTime / (60 / this.bpm);
       const currentPulsePosition = Math.ceil(beatNumber * this.ppqn);
+      const elapsedTime = currentTime - this.lastPlayPressTime;
+      this.port.postMessage({ type: "elapsed", value: elapsedTime })
       if (currentPulsePosition > this.currentPulsePosition) {
         this.currentPulsePosition = currentPulsePosition;
         this.port.postMessage({ type: "bang" });
