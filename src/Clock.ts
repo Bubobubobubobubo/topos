@@ -42,10 +42,10 @@ export class Clock {
   tick: number;
 
   constructor(public app: Editor, ctx: AudioContext) {
-    this.time_position = { bar: -1, beat: -1, pulse: -1 };
+    this.time_position = { bar: 0, beat: 0, pulse: 0 };
     this.time_signature = [4, 4];
     this.elapsed = 0;
-    this.tick = -1;
+    this.tick = 0;
     this._bpm = 120;
     this._ppqn = 48;
     this.transportNode = null;
