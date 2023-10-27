@@ -459,6 +459,7 @@ export class SoundEvent extends AudibleEvent {
   };
 
   out = (): void => {
+    console.log(this.app.clock.deviation)
     if (this.values.chord) {
       this.values.chord.forEach((obj: { [key: string]: number }) => {
         const copy = { ...this.values };
