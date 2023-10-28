@@ -11,7 +11,6 @@ class TransportProcessor extends AudioWorkletProcessor {
     this.currentPulsePosition = 0;
     this.totalPausedTime = 0;
     this.lastPauseTime = null;
-
   }
 
   handleMessage = (message) => {
@@ -35,13 +34,13 @@ class TransportProcessor extends AudioWorkletProcessor {
       this.started = false;
     } else if (message.data.type === 'bpm') {
       this.bpm = message.data.value;
+      this.currentPulsePosition = currentTime;
     } else if (message.data.type === 'ppqn') {
       this.ppqn = message.data.value;
     } else if (message.data.type === 'nudge') {
-      this.nudge = message.data.value
+      this.nudge = message.data.value;
     }
-    // Log difference between currentTime and message.data.sentAt
-     console.log("Message delay: ", currentTime - message.data.sentAt);
+    console.log("Message delay: ", currentTime - message.data.sentAt);
   }
 
   process(inputs, outputs, parameters) {
@@ -50,10 +49,12 @@ class TransportProcessor extends AudioWorkletProcessor {
       const beatNumber = adjustedCurrentTime / (60 / this.bpm);
       const currentPulsePosition = Math.ceil(beatNumber * this.ppqn);
       const elapsedTime = (currentTime - this.lastPlayPressTime) - this.totalPausedTime;
-      this.port.postMessage({ type: "elapsed", value: elapsedTime })
+      this.port.postMessage({ type: "elapsed", value: elapsedTime });
       if (currentPulsePosition > this.currentPulsePosition) {
         this.currentPulsePosition = currentPulsePosition;
-        this.port.postMessage({ type: "bang" });
+        this.port.postMessage({ type: "bang", bpm: this.bpm });
+      } else {
+        console.log("No bang", currentPulsePosition, this.currentPulsePosition);
       }
     }
     return true;

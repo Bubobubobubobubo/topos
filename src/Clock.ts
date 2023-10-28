@@ -131,6 +131,13 @@ export class Clock {
     return 60 / this.bpm / this.ppqn;
   }
 
+  public pulse_duration_at_bpm(bpm: number = this.bpm): number {
+    /**
+     * Returns the duration of a pulse in seconds at a specific bpm.
+     */
+    return 60 / bpm / this.ppqn;
+  }
+
   get bpm(): number {
     return this._bpm;
   }
@@ -167,9 +174,9 @@ export class Clock {
     }
   }
 
-  public incrementTick() {
+  public incrementTick(bpm: number) {
     this.tick++;
-    this.logicalTime += this.pulse_duration;
+    this.logicalTime += this.pulse_duration_at_bpm(bpm);
   }
 
   public nextTickFrom(time: number, nudge: number): number {

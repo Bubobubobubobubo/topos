@@ -31,7 +31,7 @@ export class TransportNode extends AudioWorkletNode {
           } else {
             tryEvaluate(this.app, this.app.global_buffer);
           }
-          this.app.clock.incrementTick();
+          this.app.clock.incrementTick(message.data.bpm);
         } else {
           console.log("STILLLLLLLLLLLLLLLL BANGING!");
         }
