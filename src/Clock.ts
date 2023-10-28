@@ -42,6 +42,7 @@ export class Clock {
   private _ppqn: number;
   tick: number;
   running: boolean;
+  messageSent: number;
 
   constructor(public app: Editor, ctx: AudioContext) {
     this.time_position = { bar: 0, beat: 0, pulse: 0 };
@@ -54,6 +55,7 @@ export class Clock {
     this.transportNode = null;
     this.ctx = ctx;
     this.running = true;
+    this.messageSent = 0;
     ctx.audioWorklet
       .addModule(TransportProcessor)
       .then((e) => {
@@ -139,7 +141,8 @@ export class Clock {
 
   set bpm(bpm: number) {
     if (bpm > 0 && this._bpm !== bpm) {
-      this.transportNode?.setBPM(bpm);
+      this.messageSent = this.app.audioContext.currentTime;
+      this.transportNode?.setBPM(bpm, this.messageSent);
       this._bpm = bpm;
     }
   }
@@ -159,7 +162,8 @@ export class Clock {
   set ppqn(ppqn: number) {
     if (ppqn > 0 && this._ppqn !== ppqn) {
       this._ppqn = ppqn;
-      this.transportNode?.setPPQN(ppqn);
+      this.messageSent = this.app.audioContext.currentTime;
+      this.transportNode?.setPPQN(ppqn, this.messageSent);
     }
   }
 
@@ -201,12 +205,14 @@ export class Clock {
      */
     this.app.audioContext.resume();
     this.running = true;
+    this.messageSent = this.app.audioContext.currentTime;
     this.app.api.MidiConnection.sendStartMessage();
     if (this.tick > 0) {
-      this.transportNode?.resume();
+      this.transportNode?.resume(this.messageSent);
     } else {
-      this.transportNode?.start();
+      this.transportNode?.start(this.messageSent);
     }
+
   }
 
   public pause(): void {
@@ -216,7 +222,8 @@ export class Clock {
      * @remark also sends a MIDI message if a port is declared
      */
     this.running = false;
-    this.transportNode?.pause();
+    this.messageSent = this.app.audioContext.currentTime;
+    this.transportNode?.pause(this.messageSent);
     this.app.api.MidiConnection.sendStopMessage();
   }
 
@@ -232,6 +239,7 @@ export class Clock {
     this.elapsed = 0;
     this.time_position = { bar: 0, beat: 0, pulse: 0 };
     this.app.api.MidiConnection.sendStopMessage();
-    this.transportNode?.stop();
+    this.messageSent = this.app.audioContext.currentTime;
+    this.transportNode?.stop(this.messageSent);
   }
 }

@@ -17,21 +17,21 @@ class TransportProcessor extends AudioWorkletProcessor {
   handleMessage = (message) => {
     if (message.data && message.data.type === "ping") {
       this.port.postMessage(message.data);
-    } else if (message.data === "start") {
+    } else if (message.data.type === "start") {
       this.started = true;
       this.lastPlayPressTime = currentTime;
       this.totalPausedTime = 0;
 
-    } else if (message.data === "resume") {
+    } else if (message.data.type === "resume") {
       this.started = true;
       if (this.lastPauseTime !== null) {
         this.totalPausedTime += currentTime - this.lastPauseTime;
         this.lastPauseTime = null;
       }
-    } else if (message.data === "pause") {
+    } else if (message.data.type === "pause") {
       this.started = false;
       this.lastPauseTime = currentTime;
-    } else if (message.data === "stop") {
+    } else if (message.data.type === "stop") {
       this.started = false;
     } else if (message.data.type === 'bpm') {
       this.bpm = message.data.value;
@@ -40,6 +40,8 @@ class TransportProcessor extends AudioWorkletProcessor {
     } else if (message.data.type === 'nudge') {
       this.nudge = message.data.value
     }
+    // Log difference between currentTime and message.data.sentAt
+     console.log("Message delay: ", currentTime - message.data.sentAt);
   }
 
   process(inputs, outputs, parameters) {

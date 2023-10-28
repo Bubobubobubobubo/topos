@@ -39,31 +39,31 @@ export class TransportNode extends AudioWorkletNode {
     }
   };
 
-  start() {
-    this.port.postMessage("start");
+  start(sentAt) {
+    this.port.postMessage({ type: "start", sentAt: sentAt});
   }
 
-  pause() {
-    this.port.postMessage("pause");
+  pause(sentAt) {
+    this.port.postMessage({ type: "pause", sentAt: sentAt});
   }
 
-  resume() {
-    this.port.postMessage("resume");
+  resume(sentAt) {
+    this.port.postMessage({ type: "resume", sentAt: sentAt });
   }
 
-  setBPM(bpm) {
-    this.port.postMessage({ type: "bpm", value: bpm });
+  setBPM(bpm, sentAt) {
+    this.port.postMessage({ type: "bpm", value: bpm, sentAt: sentAt });
   }
 
-  setPPQN(ppqn) {
-    this.port.postMessage({ type: "ppqn", value: ppqn });
+  setPPQN(ppqn, sentAt) {
+    this.port.postMessage({ type: "ppqn", value: ppqn, sentAt: sentAt });
   }
 
-  setNudge(nudge) {
-    this.port.postMessage({ type: "nudge", value: nudge });
+  setNudge(nudge, sentAt) {
+    this.port.postMessage({ type: "nudge", value: nudge, sentAt: sentAt });
   }
 
-  stop() {
-    this.port.postMessage("stop");
+  stop(sentAt) {
+    this.port.postMessage({type: "stop", sentAt: sentAt});
   }
 }
