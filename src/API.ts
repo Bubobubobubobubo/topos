@@ -115,6 +115,7 @@ export class UserAPI {
         ? code
         : (this.app.selectedExample as string);
     }
+    this.stop();
     this.play();
   };
 
@@ -125,7 +126,7 @@ export class UserAPI {
       current_universe.example.candidate! = "";
       current_universe.example.committed! = "";
     }
-    this.pause();
+    this.stop();
   };
 
   _playDocExampleOnce = (code?: string) => {
@@ -134,6 +135,7 @@ export class UserAPI {
       current_universe.example.candidate! = "";
       current_universe.example.committed! = "";
     }
+    this.stop();
     this.play();
     this.app.exampleIsPlaying = true;
     evaluateOnce(this.app, code as string);
@@ -206,13 +208,11 @@ export class UserAPI {
 
   public pause = (): void => {
     this.app.setButtonHighlighting("pause", true);
-    this.MidiConnection.sendStopMessage();
     this.app.clock.pause();
   };
 
   public stop = (): void => {
     this.app.setButtonHighlighting("stop", true);
-    this.MidiConnection.sendStopMessage();
     this.app.clock.stop();
   };
   silence = this.stop;

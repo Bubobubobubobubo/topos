@@ -13,9 +13,7 @@ export class TransportNode extends AudioWorkletNode {
   /** @type {(this: MessagePort, ev: MessageEvent<any>) => any} */
   handleMessage = (message) => {
     if(message.data) {
-      if (message.data.type === "elapsed") {
-        this.app.clock.elapsed = message.data.value
-      } else if (message.data.type === "bang") {
+      if (message.data.type === "bang") {
         if(this.app.clock.running) {
           if (this.app.settings.send_clock) {
             this.app.api.MidiConnection.sendMidiClock();
@@ -32,38 +30,36 @@ export class TransportNode extends AudioWorkletNode {
             tryEvaluate(this.app, this.app.global_buffer);
           }
           this.app.clock.incrementTick(message.data.bpm);
-        } else {
-          console.log("STILLLLLLLLLLLLLLLL BANGING!");
         }
       }
     }
   };
 
-  start(sentAt) {
-    this.port.postMessage({ type: "start", sentAt: sentAt});
+  start() {
+    this.port.postMessage({ type: "start" });
   }
 
-  pause(sentAt) {
-    this.port.postMessage({ type: "pause", sentAt: sentAt});
+  pause() {
+    this.port.postMessage({ type: "pause" });
   }
 
-  resume(sentAt) {
-    this.port.postMessage({ type: "resume", sentAt: sentAt });
+  resume() {
+    this.port.postMessage({ type: "resume" });
   }
 
-  setBPM(bpm, sentAt) {
-    this.port.postMessage({ type: "bpm", value: bpm, sentAt: sentAt });
+  setBPM(bpm) {
+    this.port.postMessage({ type: "bpm", value: bpm });
   }
 
-  setPPQN(ppqn, sentAt) {
-    this.port.postMessage({ type: "ppqn", value: ppqn, sentAt: sentAt });
+  setPPQN(ppqn) {
+    this.port.postMessage({ type: "ppqn", value: ppqn });
   }
 
-  setNudge(nudge, sentAt) {
-    this.port.postMessage({ type: "nudge", value: nudge, sentAt: sentAt });
+  setNudge(nudge) {
+    this.port.postMessage({ type: "nudge", value: nudge });
   }
 
-  stop(sentAt) {
-    this.port.postMessage({type: "stop", sentAt: sentAt});
+  stop() {
+    this.port.postMessage({type: "stop" });
   }
 }

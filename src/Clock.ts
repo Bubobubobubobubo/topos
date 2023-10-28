@@ -23,17 +23,19 @@ export class Clock {
    *
    * @param app - The main application instance
    * @param ctx - The current AudioContext used by app
-   * @param elapsed - Time elapsed since play been pressed
    * @param transportNode - The TransportNode helper
    * @param bpm - The current beats per minute value
    * @param time_signature - The time signature
    * @param time_position - The current time position
    * @param ppqn - The pulses per quarter note
    * @param tick - The current tick since origin
+   * @param running - Is the clock running?
+   * @param lastPauseTime - The last time the clock was paused
+   * @param lastPlayPressTime - The last time the clock was started
+   * @param totalPauseTime - The total time the clock has been paused / stopped
    */
 
   ctx: AudioContext;
-  elapsed: number;
   logicalTime: number;
   transportNode: TransportNode | null;
   private _bpm: number;
@@ -42,12 +44,13 @@ export class Clock {
   private _ppqn: number;
   tick: number;
   running: boolean;
-  messageSent: number;
+  lastPauseTime: number;
+  lastPlayPressTime: number;
+  totalPauseTime: number;
 
   constructor(public app: Editor, ctx: AudioContext) {
     this.time_position = { bar: 0, beat: 0, pulse: 0 };
     this.time_signature = [4, 4];
-    this.elapsed = 0;
     this.logicalTime = 0;
     this.tick = 0;
     this._bpm = 120;
@@ -55,7 +58,9 @@ export class Clock {
     this.transportNode = null;
     this.ctx = ctx;
     this.running = true;
-    this.messageSent = 0;
+    this.lastPauseTime = 0;
+    this.lastPlayPressTime = 0;
+    this.totalPauseTime = 0;
     ctx.audioWorklet
       .addModule(TransportProcessor)
       .then((e) => {
@@ -148,8 +153,7 @@ export class Clock {
 
   set bpm(bpm: number) {
     if (bpm > 0 && this._bpm !== bpm) {
-      this.messageSent = this.app.audioContext.currentTime;
-      this.transportNode?.setBPM(bpm, this.messageSent);
+      this.transportNode?.setBPM(bpm);
       this._bpm = bpm;
     }
   }
@@ -159,7 +163,7 @@ export class Clock {
   }
 
   get realTime(): number {
-    return this.elapsed;
+    return this.app.audioContext.currentTime - this.lastPlayPressTime - this.totalPauseTime;
   }
 
   get deviation(): number {
@@ -169,8 +173,7 @@ export class Clock {
   set ppqn(ppqn: number) {
     if (ppqn > 0 && this._ppqn !== ppqn) {
       this._ppqn = ppqn;
-      this.messageSent = this.app.audioContext.currentTime;
-      this.transportNode?.setPPQN(ppqn, this.messageSent);
+      this.transportNode?.setPPQN(ppqn);
     }
   }
 
@@ -212,14 +215,12 @@ export class Clock {
      */
     this.app.audioContext.resume();
     this.running = true;
-    this.messageSent = this.app.audioContext.currentTime;
     this.app.api.MidiConnection.sendStartMessage();
+    this.lastPlayPressTime = this.app.audioContext.currentTime;
     if (this.tick > 0) {
-      this.transportNode?.resume(this.messageSent);
-    } else {
-      this.transportNode?.start(this.messageSent);
+      this.totalPauseTime += this.app.audioContext.currentTime - this.lastPauseTime;
     }
-
+    this.transportNode?.start();
   }
 
   public pause(): void {
@@ -229,9 +230,9 @@ export class Clock {
      * @remark also sends a MIDI message if a port is declared
      */
     this.running = false;
-    this.messageSent = this.app.audioContext.currentTime;
-    this.transportNode?.pause(this.messageSent);
+    this.transportNode?.pause();
     this.app.api.MidiConnection.sendStopMessage();
+    this.lastPauseTime = this.app.audioContext.currentTime;
   }
 
   public stop(): void {
@@ -243,10 +244,9 @@ export class Clock {
     this.running = false;
     this.app.clock.tick = 0;
     this.logicalTime = 0;
-    this.elapsed = 0;
+    this.totalPauseTime = 0;
     this.time_position = { bar: 0, beat: 0, pulse: 0 };
     this.app.api.MidiConnection.sendStopMessage();
-    this.messageSent = this.app.audioContext.currentTime;
-    this.transportNode?.stop(this.messageSent);
+    this.transportNode?.stop();
   }
 }
