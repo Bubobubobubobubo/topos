@@ -41,6 +41,7 @@ export class Clock {
   time_position: TimePosition;
   private _ppqn: number;
   tick: number;
+  running: boolean;
 
   constructor(public app: Editor, ctx: AudioContext) {
     this.time_position = { bar: 0, beat: 0, pulse: 0 };
@@ -52,6 +53,7 @@ export class Clock {
     this._ppqn = 48;
     this.transportNode = null;
     this.ctx = ctx;
+    this.running = true;
     ctx.audioWorklet
       .addModule(TransportProcessor)
       .then((e) => {
@@ -138,7 +140,7 @@ export class Clock {
   set bpm(bpm: number) {
     if (bpm > 0 && this._bpm !== bpm) {
       this.transportNode?.setBPM(bpm);
-      this._bpm = bpm
+      this._bpm = bpm;
     }
   }
 
@@ -198,6 +200,7 @@ export class Clock {
      * @remark also sends a MIDI message if a port is declared
      */
     this.app.audioContext.resume();
+    this.running = true;
     this.app.api.MidiConnection.sendStartMessage();
     if (this.tick > 0) {
       this.transportNode?.resume();
@@ -212,6 +215,7 @@ export class Clock {
      *
      * @remark also sends a MIDI message if a port is declared
      */
+    this.running = false;
     this.transportNode?.pause();
     this.app.api.MidiConnection.sendStopMessage();
   }
@@ -222,6 +226,7 @@ export class Clock {
      *
      * @remark also sends a MIDI message if a port is declared
      */
+    this.running = false;
     this.app.clock.tick = 0;
     this.logicalTime = 0;
     this.elapsed = 0;

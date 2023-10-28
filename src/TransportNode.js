@@ -16,19 +16,24 @@ export class TransportNode extends AudioWorkletNode {
       if (message.data.type === "elapsed") {
         this.app.clock.elapsed = message.data.value
       } else if (message.data.type === "bang") {
-        if (this.app.settings.send_clock)
-          this.app.api.MidiConnection.sendMidiClock();
-        this.app.clock.incrementTick();
-        const futureTimeStamp = this.app.clock.convertTicksToTimeposition(
-          this.app.clock.tick
-        );
-        this.app.clock.time_position = futureTimeStamp;
-        this.timeviewer.innerHTML = `${zeroPad(futureTimeStamp.bar, 2)}:${futureTimeStamp.beat + 1
-          }:${zeroPad(futureTimeStamp.pulse, 2)} / ${this.app.clock.bpm}`;
-        if (this.app.exampleIsPlaying) {
-          tryEvaluate(this.app, this.app.example_buffer);
+        if(this.app.clock.running) {
+          if (this.app.settings.send_clock) {
+            this.app.api.MidiConnection.sendMidiClock();
+          }
+          const futureTimeStamp = this.app.clock.convertTicksToTimeposition(
+            this.app.clock.tick
+          );
+          this.app.clock.time_position = futureTimeStamp;
+          this.timeviewer.innerHTML = `${zeroPad(futureTimeStamp.bar, 2)}:${futureTimeStamp.beat + 1
+            }:${zeroPad(futureTimeStamp.pulse, 2)} / ${this.app.clock.bpm}`;
+          if (this.app.exampleIsPlaying) {
+            tryEvaluate(this.app, this.app.example_buffer);
+          } else {
+            tryEvaluate(this.app, this.app.global_buffer);
+          }
+          this.app.clock.incrementTick();
         } else {
-          tryEvaluate(this.app, this.app.global_buffer);
+          console.log("STILLLLLLLLLLLLLLLL BANGING!");
         }
       }
     }
