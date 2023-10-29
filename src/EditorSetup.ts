@@ -34,6 +34,12 @@ import { EditorView } from "codemirror";
 import { toposTheme } from "./themes/toposTheme";
 import { javascript } from "@codemirror/lang-javascript";
 import { inlineHoveringTips } from "./documentation/inlineHelp";
+import { toposCompletions } from "./documentation/inlineHelp";
+import { javascriptLanguage } from "@codemirror/lang-javascript"
+
+const jsCompletions = javascriptLanguage.data.of({
+  autocomplete: toposCompletions
+})
 
 export const editorSetup: Extension = (() => [
   highlightActiveLineGutter(),
@@ -47,8 +53,7 @@ export const editorSetup: Extension = (() => [
   bracketMatching(),
   closeBrackets(),
   autocompletion(),
-  // rectangularSelection(),
-  // crosshairCursor(),
+  jsCompletions,
   highlightActiveLine(),
   highlightSelectionMatches(),
   keymap.of([

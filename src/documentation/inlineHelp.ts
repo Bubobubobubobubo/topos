@@ -1,5 +1,7 @@
 import { hoverTooltip } from "@codemirror/view";
 import { type EditorView } from "@codemirror/view";
+import { CompletionContext } from "@codemirror/autocomplete"
+
 
 interface InlineCompletion {
   name: string;
@@ -968,3 +970,21 @@ export const inlineHoveringTips = hoverTooltip(
     };
   }
 );
+
+
+export const toposCompletions = (context: CompletionContext) => {
+  let word = context.matchBefore(/\w*/)
+  if (word) {
+    if (word.from == word.to && !context.explicit)
+      return null
+    return {
+      from: word.from,
+      options: Object.keys(completionDatabase).map((key) => ({
+        label: key,
+        type: completionDatabase[key].category,
+        info: `${completionDatabase[key].description}`,
+      }))
+    }
+  }
+}
+
