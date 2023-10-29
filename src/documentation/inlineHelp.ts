@@ -25,7 +25,7 @@ const completionDatabase: CompletionDatabase = {
     name: "delayr",
     category: "time",
     description: "Delay a function <i>n</i> times by <i>t</i> ms",
-    example: "delayr(50, 3, () => beat(1) :: log('delayed'))",
+    example: "delayr(50,3,()=> beat(1)::log('hey!'))",
   },
   toss: {
     name: "toss",
@@ -37,7 +37,7 @@ const completionDatabase: CompletionDatabase = {
     name: "lpadsr",
     category: "synthesis",
     description: "Lowpass filter ADSR envelope",
-    example: "sound('sawtooth').lpadsr(2, 0, .1, 0, 0).out()",
+    example: "sound('sawtooth').lpadsr(2,0,.1,0,0).out()",
   },
   lpenv: {
     name: "lpenv",
@@ -987,7 +987,7 @@ export const toposCompletions = (context: CompletionContext) => {
           div.innerHTML = `
       <h1 class="text-orange-300 text-base pb-1">${completionDatabase[key].name} [<em class="text-white">${completionDatabase[key].category}</em>]</h1>
       <p class="text-base pl-4">${completionDatabase[key].description}</p>
-      <div class="rounded px-2 ml-4 mt-2 bg-neutral-800"><code class="text-sm">${completionDatabase[key].example}</code></div>
+      <div class="overflow-hidden overflow-scroll rounded px-2 ml-4 mt-2 bg-neutral-800"><code class="text-sm">${completionDatabase[key].example}</code></div>
       `
           div.classList.add("px-4", "py-2", "rounded-lg", "w-92");
           return div
