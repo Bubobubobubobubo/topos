@@ -42,6 +42,7 @@ export class Editor {
   withLineNumbers!: Compartment;
   vimModeCompartment!: Compartment;
   hoveringCompartment!: Compartment;
+  completionsCompartment!: Compartment;
   chosenLanguage!: Compartment;
   dynamicPlugins!: Compartment;
   currentDocumentationPane: string = "introduction";

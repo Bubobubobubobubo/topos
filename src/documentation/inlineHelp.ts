@@ -971,7 +971,6 @@ export const inlineHoveringTips = hoverTooltip(
   }
 );
 
-
 export const toposCompletions = (context: CompletionContext) => {
   let word = context.matchBefore(/\w*/)
   if (word) {
