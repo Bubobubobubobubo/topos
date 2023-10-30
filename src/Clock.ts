@@ -155,6 +155,7 @@ export class Clock {
     if (bpm > 0 && this._bpm !== bpm) {
       this.transportNode?.setBPM(bpm);
       this._bpm = bpm;
+      this.logicalTime = this.realTime;
     }
   }
 
