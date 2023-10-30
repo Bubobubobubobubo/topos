@@ -82,7 +82,7 @@ export class Player extends Event {
   };
 
   origin = (): number => {
-    return this.app.clock.pulses_since_origin;
+    return this.app.clock.pulses_since_origin + 1;
   };
 
   pulse = (): number => {

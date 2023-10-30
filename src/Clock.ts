@@ -163,11 +163,11 @@ export class Clock {
   }
 
   get realTime(): number {
-    return this.app.audioContext.currentTime - this.lastPlayPressTime - this.totalPauseTime;
+     return this.app.audioContext.currentTime - this.totalPauseTime;
   }
 
   get deviation(): number {
-    return Math.abs(this.logicalTime - this.realTime)
+    return Math.abs(this.logicalTime - this.realTime);
   }
 
   set ppqn(ppqn: number) {
@@ -217,9 +217,7 @@ export class Clock {
     this.running = true;
     this.app.api.MidiConnection.sendStartMessage();
     this.lastPlayPressTime = this.app.audioContext.currentTime;
-    if (this.tick > 0) {
-      this.totalPauseTime += this.app.audioContext.currentTime - this.lastPauseTime;
-    }
+    this.totalPauseTime += (this.lastPlayPressTime - this.lastPauseTime);
     this.transportNode?.start();
   }
 
@@ -233,6 +231,7 @@ export class Clock {
     this.transportNode?.pause();
     this.app.api.MidiConnection.sendStopMessage();
     this.lastPauseTime = this.app.audioContext.currentTime;
+    this.logicalTime = this.realTime;
   }
 
   public stop(): void {
@@ -242,9 +241,9 @@ export class Clock {
      * @remark also sends a MIDI message if a port is declared
      */
     this.running = false;
-    this.app.clock.tick = 0;
-    this.logicalTime = 0;
-    this.totalPauseTime = 0;
+    this.tick = 0;
+    this.lastPauseTime = this.app.audioContext.currentTime;
+    this.logicalTime = this.realTime;
     this.time_position = { bar: 0, beat: 0, pulse: 0 };
     this.app.api.MidiConnection.sendStopMessage();
     this.transportNode?.stop();
