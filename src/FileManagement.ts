@@ -48,6 +48,7 @@ export interface Settings {
    * @param line_numbers - Whether or not to show line numbers
    * @param time_position - Whether or not to show time position
    * @param tips - Whether or not to show tips
+   * @param completions- Whether or not to show completions
    * @param send_clock - Whether or not to send midi clock
    * @param midi_channels_scripts - Whether midi input channels fires scripts
    * @param midi_clock_input - The name of the midi clock input
@@ -64,6 +65,7 @@ export interface Settings {
   time_position: boolean;
   load_demo_songs: boolean;
   tips: boolean;
+  completions: boolean;
   send_clock: boolean;
   midi_channels_scripts: boolean;
   midi_clock_input: string | undefined;
@@ -125,6 +127,7 @@ export class AppSettings {
    * @param line_numbers - Whether or not to show line numbers
    * @param time_position - Whether or not to show time position
    * @param tips - Whether or not to show tips
+   * @param completions - Whether or not to show completions
    * @param send_clock - Whether or not to send midi clock
    * @param midi_channels_scripts - Whether midi input channels fires scripts
    * @param midi_clock_input - The name of the midi clock input
@@ -140,7 +143,8 @@ export class AppSettings {
   public selected_universe: string = "Default";
   public line_numbers: boolean = true;
   public time_position: boolean = true;
-  public tips: boolean = true;
+  public tips: boolean = false;
+  public completions: boolean = false;
   public send_clock: boolean = false;
   public midi_channels_scripts: boolean = true;
   public midi_clock_input: string | undefined = undefined;
@@ -164,6 +168,7 @@ export class AppSettings {
       this.line_numbers = settingsFromStorage.line_numbers;
       this.time_position = settingsFromStorage.time_position;
       this.tips = settingsFromStorage.tips;
+      this.completions = settingsFromStorage.completions;
       this.send_clock = settingsFromStorage.send_clock;
       this.midi_channels_scripts = settingsFromStorage.midi_channels_scripts;
       this.midi_clock_input = settingsFromStorage.midi_clock_input;
@@ -193,6 +198,7 @@ export class AppSettings {
       line_numbers: this.line_numbers,
       time_position: this.time_position,
       tips: this.tips,
+      completions: this.completions,
       send_clock: this.send_clock,
       midi_channels_scripts: this.midi_channels_scripts,
       midi_clock_input: this.midi_clock_input,
@@ -220,6 +226,7 @@ export class AppSettings {
     this.line_numbers = settings.line_numbers;
     this.time_position = settings.time_position;
     this.tips = settings.tips;
+    this.completions = settings.completions;
     this.send_clock = settings.send_clock;
     this.midi_channels_scripts = settings.midi_channels_scripts;
     this.midi_clock_input = settings.midi_clock_input;

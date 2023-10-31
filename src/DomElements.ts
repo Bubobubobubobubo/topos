@@ -1,12 +1,12 @@
 export type ElementMap = {
   [key: string]:
-    | HTMLElement
-    | HTMLButtonElement
-    | HTMLDivElement
-    | HTMLInputElement
-    | HTMLSelectElement
-    | HTMLCanvasElement
-    | HTMLFormElement;
+  | HTMLElement
+  | HTMLButtonElement
+  | HTMLDivElement
+  | HTMLInputElement
+  | HTMLSelectElement
+  | HTMLCanvasElement
+  | HTMLFormElement;
 };
 
 export const singleElements = {
@@ -36,6 +36,7 @@ export const singleElements = {
   line_numbers_checkbox: "show-line-numbers",
   time_position_checkbox: "show-time-position",
   tips_checkbox: "show-tips",
+  completion_checkbox: "show-completions",
   midi_clock_checkbox: "send-midi-clock",
   midi_channels_scripts: "midi-channels-scripts",
   midi_clock_ppqn: "midi-clock-ppqn-input",

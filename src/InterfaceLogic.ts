@@ -21,6 +21,7 @@ import { loadSamples } from "./API";
 import { tryEvaluate } from "./Evaluator";
 import { inlineHoveringTips } from "./documentation/inlineHelp";
 import { lineNumbers } from "@codemirror/view";
+import { jsCompletions } from "./EditorSetup";
 
 export const installInterfaceLogic = (app: Editor) => {
   (app.interface.line_numbers_checkbox as HTMLInputElement).checked =
@@ -28,6 +29,8 @@ export const installInterfaceLogic = (app: Editor) => {
   (app.interface.time_position_checkbox as HTMLInputElement).checked =
     app.settings.time_position;
   (app.interface.tips_checkbox as HTMLInputElement).checked = app.settings.tips;
+  (app.interface.completion_checkbox as HTMLInputElement).checked = app.settings.completions;
+
   (app.interface.midi_clock_checkbox as HTMLInputElement).checked =
     app.settings.send_clock;
   (app.interface.midi_channels_scripts as HTMLInputElement).checked =
@@ -374,6 +377,18 @@ export const installInterfaceLogic = (app: Editor) => {
     app.view.dispatch({
       effects: app.hoveringCompartment.reconfigure(
         checked ? inlineHoveringTips : []
+      ),
+    });
+  });
+
+  app.interface.completion_checkbox.addEventListener("change", () => {
+    let checked = (app.interface.completion_checkbox as HTMLInputElement).checked
+      ? true
+      : false;
+    app.settings.completions = checked;
+    app.view.dispatch({
+      effects: app.completionsCompartment.reconfigure(
+        checked ? jsCompletions : []
       ),
     });
   });
