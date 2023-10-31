@@ -125,6 +125,8 @@ export interface OscilloscopeConfig {
   size: number;
 }
 
+let lastZeroCrossingType: string | null = null;  // 'negToPos' or 'posToNeg'
+
 /**
  * Initializes and runs an oscilloscope using an AnalyzerNode.
  * @param {HTMLCanvasElement} canvas - The canvas element to draw the oscilloscope.
@@ -163,6 +165,8 @@ export const runOscilloscope = (
     }
 
     analyzer.getFloatTimeDomainData(dataArray);
+    canvasCtx.globalCompositeOperation = 'source-over';
+
 
     canvasCtx.fillStyle = "rgba(0, 0, 0, 0)";
     canvasCtx.fillRect(0, 0, WIDTH, HEIGHT);
@@ -179,40 +183,65 @@ export const runOscilloscope = (
     } else {
       canvasCtx.strokeStyle = app.osc.color;
     }
+    const remainingRefreshTime = app.clock.time_position.pulse % app.osc.refresh;
+    const opacityRatio = 1 - (remainingRefreshTime / app.osc.refresh);
+    canvasCtx.globalAlpha = opacityRatio;
     canvasCtx.beginPath();
 
-    // Drawing logic varies based on orientation and 3D setting
+
+    let startIndex = 0;
+    for (let i = 1; i < dataArray.length; ++i) {
+      let currentType = null;
+      if (dataArray[i] >= 0 && dataArray[i - 1] < 0) {
+        currentType = 'negToPos';
+      } else if (dataArray[i] < 0 && dataArray[i - 1] >= 0) {
+        currentType = 'posToNeg';
+      }
+
+      if (currentType) {
+        if (lastZeroCrossingType === null || currentType === lastZeroCrossingType) {
+          startIndex = i;
+          lastZeroCrossingType = currentType;
+          break;
+        }
+      }
+    }
+
+
     if (app.osc.is3D) {
-      for (let i = 0; i < dataArray.length; i += 2) {
+      for (let i = startIndex; i < dataArray.length; i += 2) {
         const x = (dataArray[i] * WIDTH * app.osc.size) / 2 + WIDTH / 4;
         const y = (dataArray[i + 1] * HEIGHT * app.osc.size) / 2 + HEIGHT / 4;
-        i === 0 ? canvasCtx.moveTo(x, y) : canvasCtx.lineTo(x, y);
+        i === startIndex ? canvasCtx.moveTo(x, y) : canvasCtx.lineTo(x, y);
       }
     } else if (app.osc.orientation === "horizontal") {
-      let x = 0;
       const sliceWidth = (WIDTH * 1.0) / dataArray.length;
       const yOffset = HEIGHT / 4;
-      for (let i = 0; i < dataArray.length; i++) {
+      let x = 0;
+      for (let i = startIndex; i < dataArray.length; i++) {
         const v = dataArray[i] * 0.5 * HEIGHT * app.osc.size;
         const y = v + yOffset;
-        i === 0 ? canvasCtx.moveTo(x, y) : canvasCtx.lineTo(x, y);
+        i === startIndex ? canvasCtx.moveTo(x, y) : canvasCtx.lineTo(x, y);
         x += sliceWidth;
       }
       canvasCtx.lineTo(WIDTH, yOffset);
     } else {
-      let y = 0;
       const sliceHeight = (HEIGHT * 1.0) / dataArray.length;
       const xOffset = WIDTH / 4;
-      for (let i = 0; i < dataArray.length; i++) {
+      let y = 0;
+      for (let i = startIndex; i < dataArray.length; i++) {
         const v = dataArray[i] * 0.5 * WIDTH * app.osc.size;
         const x = v + xOffset;
-        i === 0 ? canvasCtx.moveTo(x, y) : canvasCtx.lineTo(x, y);
+        i === startIndex ? canvasCtx.moveTo(x, y) : canvasCtx.lineTo(x, y);
         y += sliceHeight;
       }
       canvasCtx.lineTo(xOffset, HEIGHT);
     }
 
     canvasCtx.stroke();
+    canvasCtx.globalAlpha = 1.0;
   }
+
+
   draw();
 };
