@@ -163,6 +163,8 @@ export const runOscilloscope = (
     }
 
     analyzer.getFloatTimeDomainData(dataArray);
+    canvasCtx.globalCompositeOperation = 'source-over';
+
 
     canvasCtx.fillStyle = "rgba(0, 0, 0, 0)";
     canvasCtx.fillRect(0, 0, WIDTH, HEIGHT);
@@ -179,6 +181,9 @@ export const runOscilloscope = (
     } else {
       canvasCtx.strokeStyle = app.osc.color;
     }
+    const remainingRefreshTime = app.clock.time_position.pulse % app.osc.refresh;
+    const opacityRatio = 1 - (remainingRefreshTime / app.osc.refresh);
+    canvasCtx.globalAlpha = opacityRatio;
     canvasCtx.beginPath();
 
     // Drawing logic varies based on orientation and 3D setting
@@ -213,6 +218,7 @@ export const runOscilloscope = (
     }
 
     canvasCtx.stroke();
+    canvasCtx.globalAlpha = 1.0;  // Reset globalAlpha to default
   }
   draw();
 };
