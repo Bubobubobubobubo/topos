@@ -12,6 +12,9 @@ import {
   // @ts-ignore
 } from "superdough";
 
+
+type Param = number | number[];
+
 export type SoundParams = {
   dur: number;
   s?: string;
@@ -20,76 +23,101 @@ export type SoundParams = {
 export class SoundEvent extends AudibleEvent {
   nudge: number;
 
-  constructor(sound: string | object, public app: Editor) {
+  constructor(sound: string | object | (string | object)[], public app: Editor) {
     super(app);
     this.nudge = app.dough_nudge / 100;
-    if (typeof sound === "string") {
-      if (sound.includes(":")) {
-        this.values = {
-          s: sound.split(":")[0],
-          n: sound.split(":")[1],
-          dur: app.clock.convertPulseToSecond(app.clock.ppqn),
-          analyze: true,
-        };
-      } else {
-        this.values = { s: sound, dur: 0.5, analyze: true };
-      }
+    if (Array.isArray(sound)) {
+      this.values = sound.map(s => this.initializeSound(s));
     } else {
-      this.values = sound;
+      this.values = this.initializeSound(sound);
     }
   }
 
-  private updateValue<T>(key: string, value: T): this {
-    this.values[key] = value;
+  private initializeSound(sound: string | object): object {
+    if (typeof sound === "string") {
+      if (sound.includes(":")) {
+        return {
+          s: sound.split(":")[0],
+          n: sound.split(":")[1],
+          dur: this.app.clock.convertPulseToSecond(this.app.clock.ppqn),
+          analyze: true,
+        };
+      } else {
+        return { s: sound, dur: 0.5, analyze: true };
+      }
+    } else {
+      return sound;
+    }
+  }
+
+  public updateValue = <T>(key: string, value: T): this => {
+    if (Array.isArray(this.values)) {
+      if (Array.isArray(value)) {
+        let originalLength = this.values.length;
+        for (let i = 0; i < value.length; i++) {
+          if (i >= originalLength) {
+            let newObject = { ...this.values[i % originalLength] };
+            this.values.push(newObject);
+          }
+          this.values[i][key] = value[i];
+        }
+      } else {
+        this.values.forEach(obj => obj[key] = value);
+      }
+    } else {
+      this.values[key] = value;
+    }
     return this;
   }
+
 
   // ================================================================================
   // ZZFX Sound Parameters
   // ================================================================================
 
-  public volume = (value: number) => this.updateValue("volume", value);
+
+  public volume = (value: Param) => this.updateValue("volume", value);
   public vol = this.volume;
-  public zrand = (value: number) => this.updateValue("zrand", value);
-  public curve = (value: number) => this.updateValue("curve", value);
-  public slide = (value: number) => this.updateValue("slide", value);
+  public zrand = (value: Param) => this.updateValue("zrand", value);
+  public curve = (value: Param) => this.updateValue("curve", value);
+  public slide = (value: Param) => this.updateValue("slide", value);
   public sld = this.slide;
-  public deltaSlide = (value: number) => this.updateValue("deltaSlide", value);
+  public deltaSlide = (value: number | number[]) => this.updateValue("deltaSlide", value);
   public dslide = this.deltaSlide;
   public pitchJump = (value: number) => this.updateValue("pitchJump", value);
   public pj = this.pitchJump;
   public pitchJumpTime = (value: number) =>
     this.updateValue("pitchJumpTime", value);
   public pjt = this.pitchJumpTime;
-  public lfo = (value: number) => this.updateValue("lfo", value);
-  public znoise = (value: number) => this.updateValue("znoise", value);
-  public noise = (value: number) => this.updateValue("noise", value);
-  public zmod = (value: number) => this.updateValue("zmod", value);
-  public zcrush = (value: number) => this.updateValue("zcrush", value);
-  public zdelay = (value: number) => this.updateValue("zdelay", value);
-  public sustainVolume = (value: number) =>
+  public lfo = (value: Param) => this.updateValue("lfo", value);
+  public znoise = (value: Param) => this.updateValue("znoise", value);
+  public noise = (value: Param) => this.updateValue("noise", value);
+  public zmod = (value: Param) => this.updateValue("zmod", value);
+  public zcrush = (value: Param) => this.updateValue("zcrush", value);
+  public zdelay = (value: Param) => this.updateValue("zdelay", value);
+  public sustainVolume = (value: Param) =>
     this.updateValue("sustainVolume", value);
-  public tremolo = (value: number) => this.updateValue("tremolo", value);
-  public dur = (value: number) => this.updateValue("dur", value);
-  public zzfx = (value: number[]) => this.updateValue("zzfx", value);
+  public tremolo = (value: Param) => this.updateValue("tremolo", value);
+  public dur = (value: Param) => this.updateValue("dur", value);
+  public zzfx = (value: Param[]) => this.updateValue("zzfx", value);
 
   // ================================================================================
   // Basic Audio Engine Parameters
   // ================================================================================
 
   // FM Synthesis
-  public fmi = (value: number) => this.updateValue("fmi", value);
-  public fmh = (value: number) => this.updateValue("fmh", value);
+  public fmi = (value: Param) => this.updateValue("fmi", value);
+  public fmh = (value: Param) => this.updateValue("fmh", value);
   public fmenv = (value: "lin" | "exp") => this.updateValue("fmenv", value);
-  public fmattack = (value: number) => this.updateValue("fmattack", value);
+  public fmattack = (value: Param) => this.updateValue("fmattack", value);
   public fmatk = this.fmattack;
-  public fmdecay = (value: number) => this.updateValue("fmdecay", value);
+  public fmdecay = (value: Param) => this.updateValue("fmdecay", value);
   public fmdec = this.fmdecay;
-  public fmsustain = (value: number) => this.updateValue("fmsustain", value);
+  public fmsustain = (value: Param) => this.updateValue("fmsustain", value);
   public fmsus = this.fmsustain;
-  public fmrelease = (value: number) => this.updateValue("fmrelease", value);
+  public fmrelease = (value: Param) => this.updateValue("fmrelease", value);
   public fmrel = this.fmrelease;
-  public fmvelocity = (value: number) => this.updateValue("fmvelocity", value);
+  public fmvelocity = (value: Param) => this.updateValue("fmvelocity", value);
   public fmvel = this.fmvelocity;
   public fmwave = (value: "sine" | "triangle" | "sawtooth" | "square") =>
     this.updateValue("fmwave", value);
@@ -97,25 +125,25 @@ export class SoundEvent extends AudibleEvent {
 
   // Filter type
   public ftype = (value: "12db" | "24db") => this.updateValue("ftype", value);
-  public fanchor = (value: number) => this.updateValue("fanchor", value);
+  public fanchor = (value: Param) => this.updateValue("fanchor", value);
 
   // Amplitude Envelope
-  public attack = (value: number) => this.updateValue("attack", value);
+  public attack = (value: Param) => this.updateValue("attack", value);
   public atk = this.attack;
-  public decay = (value: number) => this.updateValue("decay", value);
+  public decay = (value: Param) => this.updateValue("decay", value);
   public dec = this.decay;
-  public sustain = (value: number) => this.updateValue("sustain", value);
+  public sustain = (value: Param) => this.updateValue("sustain", value);
   public sus = this.sustain;
-  public release = (value: number) => this.updateValue("release", value);
+  public release = (value: Param) => this.updateValue("release", value);
   public rel = this.release;
-  public adsr = (a: number, d: number, s: number, r: number) => {
+  public adsr = (a: Param, d: Param, s: Param, r: Param) => {
     this.attack(a);
     this.decay(d);
     this.sustain(s);
     this.release(r);
     return this;
   };
-  public ad = (a: number, d: number) => {
+  public ad = (a: Param, d: Param) => {
     this.attack(a);
     this.decay(d);
     this.sustain(0.0);
@@ -124,17 +152,17 @@ export class SoundEvent extends AudibleEvent {
   };
 
   // Lowpass filter
-  public lpenv = (value: number) => this.updateValue("lpenv", value);
-  public lpe = (value: number) => this.updateValue("lpenv", value);
-  public lpattack = (value: number) => this.updateValue("lpattack", value);
+  public lpenv = (value: Param) => this.updateValue("lpenv", value);
+  public lpe = (value: Param) => this.updateValue("lpenv", value);
+  public lpattack = (value: Param) => this.updateValue("lpattack", value);
   public lpa = this.lpattack;
-  public lpdecay = (value: number) => this.updateValue("lpdecay", value);
+  public lpdecay = (value: Param) => this.updateValue("lpdecay", value);
   public lpd = this.lpdecay;
-  public lpsustain = (value: number) => this.updateValue("lpsustain", value);
+  public lpsustain = (value: Param) => this.updateValue("lpsustain", value);
   public lps = this.lpsustain;
-  public lprelease = (value: number) => this.updateValue("lprelease", value);
+  public lprelease = (value: Param) => this.updateValue("lprelease", value);
   public lpr = this.lprelease;
-  public cutoff = (value: number, resonance?: number) => {
+  public cutoff = (value: Param, resonance?: Param) => {
     this.updateValue("cutoff", value);
     if (resonance) {
       this.resonance(resonance)
@@ -142,7 +170,7 @@ export class SoundEvent extends AudibleEvent {
     return this;
   }
   public lpf = this.cutoff;
-  public resonance = (value: number) => {
+  public resonance = (value: Param | number) => {
     if (value >= 0 && value <= 1) {
       this.updateValue(
         "resonance",
@@ -153,11 +181,11 @@ export class SoundEvent extends AudibleEvent {
   }
   public lpq = this.resonance;
   public lpadsr = (
-    depth: number,
-    a: number,
-    d: number,
-    s: number,
-    r: number
+    depth: Param,
+    a: Param,
+    d: Param,
+    s: Param,
+    r: Param
   ) => {
     this.lpenv(depth);
     this.lpattack(a);
@@ -167,9 +195,9 @@ export class SoundEvent extends AudibleEvent {
     return this;
   };
   public lpad = (
-    depth: number,
-    a: number,
-    d: number,
+    depth: Param,
+    a: Param,
+    d: Param,
   ) => {
     this.lpenv(depth);
     this.lpattack(a);
@@ -182,19 +210,19 @@ export class SoundEvent extends AudibleEvent {
 
   // Highpass filter
 
-  public hpenv = (value: number) => this.updateValue("hpenv", value);
-  public hpe = (value: number) => this.updateValue("hpe", value);
-  public hpattack = (value: number) => this.updateValue("hpattack", value);
+  public hpenv = (value: Param) => this.updateValue("hpenv", value);
+  public hpe = (value: Param) => this.updateValue("hpe", value);
+  public hpattack = (value: Param) => this.updateValue("hpattack", value);
   public hpa = this.hpattack;
-  public hpdecay = (value: number) => this.updateValue("hpdecay", value);
+  public hpdecay = (value: Param) => this.updateValue("hpdecay", value);
   public hpd = this.hpdecay;
-  public hpsustain = (value: number) => this.updateValue("hpsustain", value);
+  public hpsustain = (value: Param) => this.updateValue("hpsustain", value);
   public hpsus = this.hpsustain;
-  public hprelease = (value: number) => this.updateValue("hprelease", value);
+  public hprelease = (value: Param) => this.updateValue("hprelease", value);
   public hpr = this.hprelease;
-  public hcutoff = (value: number) => this.updateValue("hcutoff", value);
+  public hcutoff = (value: Param) => this.updateValue("hcutoff", value);
   public hpf = this.hcutoff;
-  public hresonance = (value: number, resonance?: number) => {
+  public hresonance = (value: Param, resonance?: Param) => {
     this.updateValue("hresonance", value);
     if (resonance) {
       this.resonance(resonance)
@@ -203,11 +231,11 @@ export class SoundEvent extends AudibleEvent {
   }
   public hpq = this.hresonance;
   public hpadsr = (
-    depth: number,
-    a: number,
-    d: number,
-    s: number,
-    r: number
+    depth: Param,
+    a: Param,
+    d: Param,
+    s: Param,
+    r: Param
   ) => {
     this.hpenv(depth);
     this.hpattack(a);
@@ -217,9 +245,9 @@ export class SoundEvent extends AudibleEvent {
     return this;
   };
   public hpad = (
-    depth: number,
-    a: number,
-    d: number,
+    depth: Param,
+    a: Param,
+    d: Param,
   ) => {
     this.hpenv(depth);
     this.hpattack(a);
@@ -231,17 +259,17 @@ export class SoundEvent extends AudibleEvent {
 
   // Bandpass filter
 
-  public bpenv = (value: number) => this.updateValue("bpenv", value);
-  public bpe = (value: number) => this.updateValue("bpe", value);
-  public bpattack = (value: number) => this.updateValue("bpattack", value);
+  public bpenv = (value: Param) => this.updateValue("bpenv", value);
+  public bpe = (value: Param) => this.updateValue("bpe", value);
+  public bpattack = (value: Param) => this.updateValue("bpattack", value);
   public bpa = this.bpattack;
-  public bpdecay = (value: number) => this.updateValue("bpdecay", value);
+  public bpdecay = (value: Param) => this.updateValue("bpdecay", value);
   public bpd = this.bpdecay;
-  public bpsustain = (value: number) => this.updateValue("bpsustain", value);
+  public bpsustain = (value: Param) => this.updateValue("bpsustain", value);
   public bps = this.bpsustain;
-  public bprelease = (value: number) => this.updateValue("bprelease", value);
+  public bprelease = (value: Param) => this.updateValue("bprelease", value);
   public bpr = this.bprelease;
-  public bandf = (value: number, resonance?: number) => {
+  public bandf = (value: Param, resonance?: Param) => {
     this.updateValue("bandf", value);
     if (resonance) {
       this.resonance(resonance)
@@ -249,14 +277,14 @@ export class SoundEvent extends AudibleEvent {
     return this;
   }
   public bpf = this.bandf;
-  public bandq = (value: number) => this.updateValue("bandq", value);
+  public bandq = (value: Param) => this.updateValue("bandq", value);
   public bpq = this.bandq;
   public bpadsr = (
-    depth: number,
-    a: number,
-    d: number,
-    s: number,
-    r: number
+    depth: Param,
+    a: Param,
+    d: Param,
+    s: Param,
+    r: Param
   ) => {
     this.bpenv(depth);
     this.bpattack(a);
@@ -266,9 +294,9 @@ export class SoundEvent extends AudibleEvent {
     return this;
   };
   public bpad = (
-    depth: number,
-    a: number,
-    d: number,
+    depth: Param,
+    a: Param,
+    d: Param,
   ) => {
     this.bpenv(depth);
     this.bpattack(a);
@@ -279,11 +307,11 @@ export class SoundEvent extends AudibleEvent {
   };
 
 
-  public freq = (value: number) => this.updateValue("freq", value);
+  public freq = (value: Param) => this.updateValue("freq", value);
   public f = this.freq;
-  public vib = (value: number) => this.updateValue("vib", value);
-  public vibmod = (value: number) => this.updateValue("vibmod", value);
-  public fm = (value: number | string) => {
+  public vib = (value: Param) => this.updateValue("vib", value);
+  public vibmod = (value: Param) => this.updateValue("vibmod", value);
+  public fm = (value: Param | string) => {
     if (typeof value === "number") {
       this.values["fmi"] = value;
     } else {
@@ -295,22 +323,22 @@ export class SoundEvent extends AudibleEvent {
   };
 
   // Sampler looping
-  public loop = (value: number) => this.updateValue("loop", value);
-  public loopBegin = (value: number) => this.updateValue("loopBegin", value);
-  public loopEnd = (value: number) => this.updateValue("loopEnd", value);
-  public begin = (value: number) => this.updateValue("begin", value);
-  public end = (value: number) => this.updateValue("end", value);
+  public loop = (value: Param) => this.updateValue("loop", value);
+  public loopBegin = (value: Param) => this.updateValue("loopBegin", value);
+  public loopEnd = (value: Param) => this.updateValue("loopEnd", value);
+  public begin = (value: Param) => this.updateValue("begin", value);
+  public end = (value: Param) => this.updateValue("end", value);
 
   // Gain management
-  public gain = (value: number) => this.updateValue("gain", value);
-  public dbgain = (value: number) =>
+  public gain = (value: Param) => this.updateValue("gain", value);
+  public dbgain = (value: Param) =>
     this.updateValue("gain", Math.min(Math.pow(10, value / 20), 10));
   public db = this.dbgain;
-  public velocity = (value: number) => this.updateValue("velocity", value);
+  public velocity = (value: Param) => this.updateValue("velocity", value);
   public vel = this.velocity;
 
   // Panoramic control (stereo)
-  public pan = (value: number) => this.updateValue("pan", value);
+  public pan = (value: Param) => this.updateValue("pan", value);
 
   // Frequency management
 
@@ -353,10 +381,10 @@ export class SoundEvent extends AudibleEvent {
     }
   };
   public snd = this.sound;
-  public cut = (value: number) => this.updateValue("cut", value);
-  public clip = (value: number) => this.updateValue("clip", value);
-  public n = (value: number) => this.updateValue("n", value);
-  public note = (value: number | string | null) => {
+  public cut = (value: Param) => this.updateValue("cut", value);
+  public clip = (value: Param) => this.updateValue("clip", value);
+  public n = (value: Param) => this.updateValue("n", value);
+  public note = (value: Param | string | null) => {
     if (typeof value === "string") {
       return this.updateValue("note", noteNameToMidi(value));
     } else if (typeof value == null || value == undefined) {
@@ -365,41 +393,41 @@ export class SoundEvent extends AudibleEvent {
       return this.updateValue("note", value);
     }
   };
-  public speed = (value: number) => this.updateValue("speed", value);
+  public speed = (value: Param) => this.updateValue("speed", value);
   public spd = this.speed;
 
   // Creative sampler effects
-  public coarse = (value: number) => this.updateValue("coarse", value);
-  public crush = (value: number) => this.updateValue("crush", value);
-  public shape = (value: number) => this.updateValue("shape", value);
-  public vowel = (value: number) => this.updateValue("vowel", value);
+  public coarse = (value: Param) => this.updateValue("coarse", value);
+  public crush = (value: Param) => this.updateValue("crush", value);
+  public shape = (value: Param) => this.updateValue("shape", value);
+  public vowel = (value: Param) => this.updateValue("vowel", value);
   public vow = this.vowel;
 
   // Delay control
-  public delay = (value: number) => this.updateValue("delay", value);
+  public delay = (value: Param) => this.updateValue("delay", value);
   public del = this.delay;
-  public delayfeedback = (value: number) =>
+  public delayfeedback = (value: Param) =>
     this.updateValue("delayfeedback", value);
   public delayfb = this.delayfeedback;
-  public delaytime = (value: number) => this.updateValue("delaytime", value);
+  public delaytime = (value: Param) => this.updateValue("delaytime", value);
   public delayt = this.delaytime;
 
   // Orbit management
-  public orbit = (value: number) => this.updateValue("orbit", value);
+  public orbit = (value: Param) => this.updateValue("orbit", value);
   public o = this.orbit;
 
   // Reverb management
-  public room = (value: number) => this.updateValue("room", value);
+  public room = (value: Param) => this.updateValue("room", value);
   public rm = this.room;
-  public roomfade = (value: number) => this.updateValue("roomfade", value);
+  public roomfade = (value: Param) => this.updateValue("roomfade", value);
   public rfade = this.roomfade;
-  public roomlp = (value: number) => this.updateValue("roomlp", value);
+  public roomlp = (value: Param) => this.updateValue("roomlp", value);
   public rlp = this.roomlp;
-  public roomdim = (value: number) => this.updateValue("roomdim", value);
+  public roomdim = (value: Param) => this.updateValue("roomdim", value);
   public rdim = this.roomdim;
-  public size = (value: number) => this.updateValue("roomsize", value);
+  public size = (value: Param) => this.updateValue("roomsize", value);
   public sz = this.size;
-  public rev = (room: number, size: number, fade?: number, lp?: number, dim?: number) => {
+  public rev = (room: Param, size: Param, fade?: Param, lp?: Param, dim?: Param) => {
     this.updateValue("room", room)
     this.updateValue("roomsize", size)
     if (fade)
@@ -413,21 +441,21 @@ export class SoundEvent extends AudibleEvent {
   }
 
   // Compressor
-  public comp = (value: number) => this.updateValue("compressor", value);
+  public comp = (value: Param) => this.updateValue("compressor", value);
   public cmp = this.comp;
-  public ratio = (value: number) => this.updateValue("compressorRatio", value);
+  public ratio = (value: Param) => this.updateValue("compressorRatio", value);
   public rt = this.ratio;
-  public knee = (value: number) => this.updateValue("compressorKnee", value);
+  public knee = (value: Param) => this.updateValue("compressorKnee", value);
   public kn = this.knee;
-  public compAttack = (value: number) =>
+  public compAttack = (value: Param) =>
     this.updateValue("compressorAttack", value);
   public cmpa = this.compAttack;
-  public compRelease = (value: number) =>
+  public compRelease = (value: Param) =>
     this.updateValue("compressorRelease", value);
   public cmpr = this.compRelease;
 
   // Unit
-  public stretch = (beat: number) => {
+  public stretch = (beat: Param) => {
     this.updateValue("unit", "c");
     this.updateValue("speed", 1 / beat);
     this.updateValue("cut", beat);
@@ -459,14 +487,16 @@ export class SoundEvent extends AudibleEvent {
   };
 
   out = (): void => {
-    if (this.values.chord) {
-      this.values.chord.forEach((obj: { [key: string]: number }) => {
-        const copy = { ...this.values };
-        copy.freq = obj.freq;
-        superdough(copy, this.nudge, this.values.dur);
+    console.log(this.values)
+    if (Array.isArray(this.values)) {
+      this.values.forEach((soundObj) => {
+        superdough(soundObj, this.nudge, soundObj.dur);
       });
     } else {
       superdough(this.values, this.nudge, this.values.dur);
     }
   };
+
+
+
 }
