@@ -382,6 +382,55 @@ export class SoundEvent extends AudibleEvent {
     return output;
   };
 
+  public chord = (
+    value: string | object[] | number[] | number,
+    ...kwargs: number[]
+  ) => {
+    if (typeof value === "string") {
+      const chord = parseChord(value);
+      value = chord.map((note: number) => {
+        return { note: note, freq: midiToFreq(note) };
+      });
+    } else if (value instanceof Array && typeof value[0] === "number") {
+      value = (value as number[]).map((note: number) => {
+        return { note: note, freq: midiToFreq(note) };
+      });
+    } else if (typeof value === "number" && kwargs.length > 0) {
+      value = [value, ...kwargs].map((note: number) => {
+        return { note: note, freq: midiToFreq(note) };
+      });
+    }
+    return this.updateValue("chord", value);
+  };
+  public invert = (howMany: number = 0) => {
+    if (this.values.chord) {
+      let notes = this.values.chord.map(
+        (obj: { [key: string]: number }) => obj.note
+      );
+      notes = howMany < 0 ? [...notes].reverse() : notes;
+      for (let i = 0; i < Math.abs(howMany); i++) {
+        notes[i % notes.length] += howMany <= 0 ? -12 : 12;
+      }
+      const chord = notes.map((note: number) => {
+        return { note: note, freq: midiToFreq(note) };
+      });
+      return this.updateValue("chord", chord);
+    } else {
+      return this;
+    }
+  };
+  public note = (value: number | string | null) => {
+    if (typeof value === "string") {
+      return this.updateValue("note", noteNameToMidi(value));
+    } else if (typeof value == null || value == undefined) {
+      return this.updateValue("note", 0).updateValue("gain", 0);
+    } else {
+      return this.updateValue("note", value);
+    }
+  };
+
+
+
   out = (): void => {
     const input = this.values.chord || this.values;
     const events = this.generateEvents(input);
