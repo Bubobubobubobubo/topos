@@ -241,6 +241,7 @@ export class SoundEvent extends AudibleEvent {
     roomfade: ["roomfade", "rfade"],
     roomlp: ["roomlp", "rlp"],
     roomdim: ["roomdim", "rdim"],
+    sound: ["sound", "s"],
     size: (value: number) => {
       this.updateValue("roomsize", value);
       return this;
@@ -310,9 +311,17 @@ export class SoundEvent extends AudibleEvent {
         dur: this.app.clock.convertPulseToSecond(this.app.clock.ppqn),
         analyze: true
       };
+    } else if (typeof sound === 'object') {
+      console.log(sound)
+      const validatedObj: ValuesType = {
+        dur: this.app.clock.convertPulseToSecond(this.app.clock.ppqn),
+        analyze: true,
+        ...sound as Partial<ValuesType>
+      };
+      return validatedObj;
     } else {
-      if ((sound as string).includes(":")) {
-        const [s, n] = (sound as string).split(":");
+      if (sound.includes(":")) {
+        const [s, n] = sound.split(":");
         return {
           s,
           n,
