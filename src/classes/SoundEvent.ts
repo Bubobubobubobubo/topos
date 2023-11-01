@@ -12,6 +12,8 @@ import {
   // @ts-ignore
 } from "superdough";
 
+type EventObj = { [key: string]: number | number[] };
+
 export type SoundParams = {
   dur: number;
   s?: string;
@@ -86,14 +88,14 @@ export class SoundEvent extends AudibleEvent {
     cutoff: (value: number, resonance?: number) => {
       this.updateValue("cutoff", value);
       if (resonance) {
-        this.resonance(resonance);
+        this.updateValue("resonance", resonance);
       }
       return this;
     },
     lpf: (value: number, resonance?: number) => {
       this.updateValue("cutoff", value);
       if (resonance) {
-        this.resonance(resonance);
+        this.updateValue("resonance", resonance);
       }
       return this;
     },
@@ -318,15 +320,42 @@ export class SoundEvent extends AudibleEvent {
     this.values.freq = midiToFreq(note);
   };
 
+  generateEvents = (input: EventObj): EventObj[] => {
+    const keys = Object.keys(input);
+    const maxLength = Math.max(
+      ...keys.map((k) =>
+        Array.isArray(input[k]) ? (input[k] as number[]).length : 1
+      )
+    );
+
+    const output: EventObj[] = [];
+
+    for (let i = 0; i < maxLength; i++) {
+      const event: EventObj = {};
+      for (const k of keys) {
+        if (Array.isArray(input[k])) {
+          // @ts-ignore
+          event[k] = input[k][i % (input[k] as number[]).length];
+        } else {
+          event[k] = input[k];
+        }
+      }
+      output.push(event);
+    }
+
+    return output;
+  };
+
   out = (): void => {
-    if (this.values.chord) {
-      this.values.chord.forEach((obj: { [key: string]: number }) => {
-        const copy = { ...this.values };
-        copy.freq = obj.freq;
-        superdough(copy, this.nudge, this.values.dur);
-      });
-    } else {
-      superdough(this.values, this.nudge, this.values.dur);
+    const input = this.values.chord || this.values;
+    const events = this.generateEvents(input);
+    console.log(events);
+    for (const event of events) {
+      superdough(
+        { ...event, ...{ freq: event.freq, dur: this.values.dur } },
+        this.nudge,
+        this.values.dur
+      );
     }
   };
 }
