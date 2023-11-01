@@ -19,6 +19,13 @@ export type SoundParams = {
   s?: string;
 };
 
+type ValuesType = {
+  s: string | string[];
+  n?: string | string[];
+  dur: number;
+  analyze: boolean;
+};
+
 export class SoundEvent extends AudibleEvent {
   nudge: number;
 
@@ -59,6 +66,7 @@ export class SoundEvent extends AudibleEvent {
     fmad: (a: number, d: number) => {
       this.updateValue("fmattack", a);
       this.updateValue("fmdecay", d);
+      return this;
     },
     ftype: ["ftype"],
     fanchor: ["fanchor"],
@@ -209,9 +217,11 @@ export class SoundEvent extends AudibleEvent {
     gain: ["gain"],
     dbgain: (value: number) => {
       this.updateValue("gain", Math.min(Math.pow(10, value / 20), 10));
+      return this;
     },
     db: (value: number) => {
       this.updateValue("gain", Math.min(Math.pow(10, value / 20), 10));
+      return this;
     },
     velocity: ["velocity", "vel"],
     pan: ["pan"],
@@ -233,22 +243,28 @@ export class SoundEvent extends AudibleEvent {
     roomdim: ["roomdim", "rdim"],
     size: (value: number) => {
       this.updateValue("roomsize", value);
+      return this;
     },
     sz: (value: number) => {
       this.updateValue("roomsize", value);
+      return this;
     },
     comp: ["compressor", "cmp"],
     ratio: (value: number) => {
       this.updateValue("compressorRatio", value);
+      return this;
     },
     knee: (value: number) => {
       this.updateValue("compressorKnee", value);
+      return this;
     },
     compAttack: (value: number) => {
       this.updateValue("compressorAttack", value);
+      return this;
     },
     compRelease: (value: number) => {
       this.updateValue("compressorRelease", value);
+      return this;
     },
     stretch: (beat: number) => {
       this.updateValue("unit", "c");
@@ -258,7 +274,8 @@ export class SoundEvent extends AudibleEvent {
     },
   };
 
-  constructor(sound: string | object, public app: Editor) {
+
+  constructor(sound: string | string[] | object, public app: Editor) {
     super(app);
     this.nudge = app.dough_nudge / 100;
 
@@ -273,22 +290,41 @@ export class SoundEvent extends AudibleEvent {
         this[methodName] = keys;
       }
     }
+    this.values = this.processSound(sound);
+  }
 
-    if (typeof sound === "string") {
-      if (sound.includes(":")) {
-        this.values = {
-          s: sound.split(":")[0],
-          n: sound.split(":")[1],
-          dur: app.clock.convertPulseToSecond(app.clock.ppqn),
-          analyze: true,
+  private processSound = (sound: string | string[] | object): ValuesType => {
+    if (Array.isArray(sound)) {
+      const s: string[] = [];
+      const n: string[] = [];
+      sound.forEach(str => {
+        const parts = str.split(":");
+        s.push(parts[0]);
+        if (parts[1]) {
+          n.push(parts[1]);
+        }
+      });
+      return {
+        s,
+        n: n.length > 0 ? n : undefined,
+        dur: this.app.clock.convertPulseToSecond(this.app.clock.ppqn),
+        analyze: true
+      };
+    } else {
+      if ((sound as string).includes(":")) {
+        const [s, n] = (sound as string).split(":");
+        return {
+          s,
+          n,
+          dur: this.app.clock.convertPulseToSecond(this.app.clock.ppqn),
+          analyze: true
         };
       } else {
-        this.values = { s: sound, dur: 0.5, analyze: true };
+        return { s: sound, dur: 0.5, analyze: true };
       }
-    } else {
-      this.values = sound;
     }
   }
+
 
   private updateValue<T>(key: string, value: T | T[] | null): this {
     if (value == null) return this;
