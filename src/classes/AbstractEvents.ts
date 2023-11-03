@@ -2,9 +2,7 @@ import { type Editor } from "../main";
 import {
   freqToMidi,
   resolvePitchBend,
-  getScale,
-  isScale,
-  parseScala,
+  safeScale
 } from "zifferjs";
 
 export abstract class Event {
@@ -204,11 +202,20 @@ export abstract class Event {
     return this.modify(func);
   };
 
-  noteLength = (value: number): Event => {
+  noteLength = (value: number | number[], ...kwargs: number[]): Event => {
     /**
      * This function is used to set the note length of the Event.
      */
-    this.values["noteLength"] = value;
+    if(kwargs.length > 0) {
+      value = (Array.isArray(value) ? value.concat(kwargs) : [value, ...kwargs]);
+    }
+    if(Array.isArray(value)) {
+      this.values["noteLength"] = value;
+      this.values.dur = value.map((v) => this.app.clock.convertPulseToSecond(v*4*this.app.clock.ppqn));
+    } else {
+      this.values["noteLength"] = value;
+      this.values.dur = this.app.clock.convertPulseToSecond(value*4*this.app.clock.ppqn);
+    }
     return this;
   };
 }
@@ -218,12 +225,15 @@ export abstract class AudibleEvent extends Event {
     super(app);
   }
 
-  pitch = (value: number): this => {
+  pitch = (value: number | number[], ...kwargs: number[]): this => {
     /* 
       * This function is used to set the pitch of the Event.
       * @param value - The pitch value
       * @returns The Event
       */
+    if(kwargs.length > 0) {
+      value = (Array.isArray(value) ? value.concat(kwargs) : [value, ...kwargs]);
+    }
     this.values["pitch"] = value;
     if(this.values.key && this.values.parsedScale) this.update();
     return this;
@@ -231,57 +241,85 @@ export abstract class AudibleEvent extends Event {
 
   pc = this.pitch;
 
-  octave = (value: number): this => {
+  octave = (value: number | number[], ...kwargs: number[]): this => {
     /*
       * This function is used to set the octave of the Event.
       * @param value - The octave value
       * @returns The Event
       */
+    if(kwargs.length > 0) {
+      value = (Array.isArray(value) ? value.concat(kwargs) : [value, ...kwargs]);
+    }
     this.values["octave"] = value;
-    if(this.values.key && this.values.pitch && this.values.parsedScale) this.update();
+    if(this.values.key && (this.values.pitch || this.values.pitch === 0) && this.values.parsedScale) this.update();
     return this;
   };
 
-  key = (value: string): this => {
+  key = (value: string | string[], ...kwargs: string[]): this => {
     /* 
       * This function is used to set the key of the Event.
       * @param value - The key value
       * @returns The Event
       */
+    if(kwargs.length > 0) {
+      value = (Array.isArray(value) ? value.concat(kwargs) : [value, ...kwargs]);
+    }
     this.values["key"] = value;
-    if(this.values.pitch && this.values.parsedScale) this.update();
+    if((this.values.pitch || this.values.pitch === 0) && this.values.parsedScale) this.update();
     return this;
   };
 
-  scale = (value: string): this => {
+  scale = (value: string | number | (number|string)[], ...kwargs: (string|number)[]): this => {
     /*
       * This function is used to set the scale of the Event.
       * @param value - The scale value
       * @returns The Event
     */
-    if (!isScale(value)) {
-      this.values.parsedScale = parseScala(value) as number[];
-    } else {
-      this.values.scaleName = value;
-      this.values.parsedScale = getScale(value) as number[];
+    if(kwargs.length > 0) {
+      value = (Array.isArray(value) ? value.concat(kwargs) : [value, ...kwargs]);
     }
-    if(this.values.key && this.values.pitch) this.update();
+    if (typeof value === "string" || typeof value === "number") {
+      this.values.parsedScale = safeScale(value) as number[];
+    } else if(Array.isArray(value)) {
+      this.values.parsedScale = value.map((v) => safeScale(v));
+    }
+    if(this.values.key && (this.values.pitch || this.values.pitch === 0)) {
+     this.update();
+    }
     return this;
   };
 
-  freq = (value: number): this => {
+  freq = (value: number | number[], ...kwargs: number[]): this => {
     /*
       * This function is used to set the frequency of the Event.
       * @param value - The frequency value
       * @returns The Event
     */
+    if(kwargs.length > 0) {
+      value = (Array.isArray(value) ? value.concat(kwargs) : [value, ...kwargs]);
+    }
     this.values["freq"] = value;
-    const midiNote = freqToMidi(value);
-    if (midiNote % 1 !== 0) {
-      this.values["note"] = Math.floor(midiNote);
-      this.values["bend"] = resolvePitchBend(midiNote)[1];
+    if(Array.isArray(value)) {
+      this.values["note"] = [];
+      this.values["bend"] = [];
+      for(const v of value) {
+        const midiNote = freqToMidi(v);
+        if (midiNote % 1 !== 0) {
+          this.values["note"].push(Math.floor(midiNote));
+          this.values["bend"].push(resolvePitchBend(midiNote)[1]);
+        } else {
+          this.values["note"].push(midiNote);
+        }
+      }
+      if(this.values.bend.length === 0) delete this.values.bend;
     } else {
-      this.values["note"] = midiNote;
+      const midiNote = freqToMidi(value);
+      if (midiNote % 1 !== 0) {
+        this.values["note"] = Math.floor(midiNote);
+        this.values["bend"] = resolvePitchBend(midiNote)[1];
+      } else {
+        this.values["note"] = midiNote;
+      }
     }
     return this;
   };

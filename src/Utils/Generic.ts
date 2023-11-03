@@ -7,6 +7,7 @@
  * 
  */
 export function objectWithArraysToArrayOfObjects(input: Record<string, any>, ignoredKeys: string[]): Record<string, any>[] {
+    ignoredKeys = ignoredKeys.map((k) => Array.isArray(input[k]) ? undefined : k).filter((k) => k !== undefined) as string[];
     const keys = Object.keys(input).filter((k) => !ignoredKeys.includes(k));
     const maxLength = Math.max(
       ...keys.map((k) =>
