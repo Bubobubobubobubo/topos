@@ -1,5 +1,6 @@
 import { type Editor } from "../main";
 import { AudibleEvent } from "./AbstractEvents";
+import { filterObject, arrayOfObjectsToObjectWithArrays, objectWithArraysToArrayOfObjects } from "../Utils/Generic";
 import {
   chord as parseChord,
   midiToFreq,
@@ -12,22 +13,23 @@ import {
   // @ts-ignore
 } from "superdough";
 
-type EventObj = { [key: string]: number | number[] };
-
 export type SoundParams = {
-  dur: number;
-  s?: string;
-};
-
-type ValuesType = {
-  s: string | string[];
-  n?: string | string[];
-  dur: number;
-  analyze: boolean;
+  dur: number | number[];
+  s?: undefined | string | string[];
+  n?: undefined | number | number[];
+  analyze?: boolean;
+  note?: number | number[];
+  freq?: number | number[];
+  pitch?: number | number[];
+  key?: string;
+  scale?: string;
+  parsedScale?: number[];
+  octave?: number | number[];
 };
 
 export class SoundEvent extends AudibleEvent {
   nudge: number;
+  sound: any;
 
   private methodMap = {
     volume: ["volume", "vol"],
@@ -276,7 +278,7 @@ export class SoundEvent extends AudibleEvent {
   };
 
 
-  constructor(sound: string | string[] | object, public app: Editor) {
+  constructor(sound: string | string[] | SoundParams, public app: Editor) {
     super(app);
     this.nudge = app.dough_nudge / 100;
 
@@ -294,15 +296,15 @@ export class SoundEvent extends AudibleEvent {
     this.values = this.processSound(sound);
   }
 
-  private processSound = (sound: string | string[] | object): ValuesType => {
-    if (Array.isArray(sound)) {
+  private processSound = (sound: string | string[] | SoundParams | SoundParams[]): SoundParams => {
+    if (Array.isArray(sound) && typeof sound[0] === 'string') {
       const s: string[] = [];
-      const n: string[] = [];
+      const n: number[] = [];
       sound.forEach(str => {
-        const parts = str.split(":");
+        const parts = (str as string).split(":");
         s.push(parts[0]);
         if (parts[1]) {
-          n.push(parts[1]);
+          n.push(parseInt(parts[1]));
         }
       });
       return {
@@ -312,16 +314,17 @@ export class SoundEvent extends AudibleEvent {
         analyze: true
       };
     } else if (typeof sound === 'object') {
-      console.log(sound)
-      const validatedObj: ValuesType = {
+      const validatedObj: SoundParams = {
         dur: this.app.clock.convertPulseToSecond(this.app.clock.ppqn),
         analyze: true,
-        ...sound as Partial<ValuesType>
+        ...sound as Partial<SoundParams>
       };
       return validatedObj;
     } else {
       if (sound.includes(":")) {
-        const [s, n] = sound.split(":");
+        const vals = sound.split(":");
+        const s = vals[0];
+        const n = parseInt(vals[1]);
         return {
           s,
           n,
@@ -334,8 +337,7 @@ export class SoundEvent extends AudibleEvent {
     }
   }
 
-
-  private updateValue<T>(key: string, value: T | T[] | null): this {
+  private updateValue<T>(key: string, value: T | T[] | SoundParams[] | null): this {
     if (value == null) return this;
     this.values[key] = value;
     return this;
@@ -356,61 +358,31 @@ export class SoundEvent extends AudibleEvent {
   };
 
   update = (): void => {
-    const [note, _] = noteFromPc(
-      this.values.key || "C4",
-      this.values.pitch || 0,
-      this.values.parsedScale || "MAJOR",
-      this.values.octave || 0
-    );
-    this.values.freq = midiToFreq(note);
+    const filteredValues = filterObject(this.values, ["key", "pitch", "parsedScale", "octave"]);
+    const events = objectWithArraysToArrayOfObjects(filteredValues,["parsedScale"]);
+
+    events.forEach((event) => {
+      const [note, _] = noteFromPc(
+        event.key as number || "C4",
+        event.pitch as number || 0,
+        event.parsedScale as number[] || event.scale || "MAJOR",
+        event.octave as number || 0
+      );
+      event.note = note;
+      event.freq = midiToFreq(note);
+    });
+
+    const newArrays = arrayOfObjectsToObjectWithArrays(events) as SoundParams;
+
+    this.values.note = newArrays.note;
+    this.values.freq = newArrays.freq;
   };
 
-  generateEvents = (input: EventObj): EventObj[] => {
-    const keys = Object.keys(input);
-    const maxLength = Math.max(
-      ...keys.map((k) =>
-        Array.isArray(input[k]) ? (input[k] as number[]).length : 1
-      )
-    );
-
-    const output: EventObj[] = [];
-
-    for (let i = 0; i < maxLength; i++) {
-      const event: EventObj = {};
-      for (const k of keys) {
-        if (Array.isArray(input[k])) {
-          // @ts-ignore
-          event[k] = input[k][i % (input[k] as number[]).length];
-        } else {
-          event[k] = input[k];
-        }
-      }
-      output.push(event);
-    }
-
-    return output;
-  };
-
-  public chord = (
-    value: string | object[] | number[] | number,
-    ...kwargs: number[]
-  ) => {
-    if (typeof value === "string") {
+  public chord = (value: string) => {
       const chord = parseChord(value);
-      value = chord.map((note: number) => {
-        return { note: note, freq: midiToFreq(note) };
-      });
-    } else if (value instanceof Array && typeof value[0] === "number") {
-      value = (value as number[]).map((note: number) => {
-        return { note: note, freq: midiToFreq(note) };
-      });
-    } else if (typeof value === "number" && kwargs.length > 0) {
-      value = [value, ...kwargs].map((note: number) => {
-        return { note: note, freq: midiToFreq(note) };
-      });
-    }
-    return this.updateValue("chord", value);
+      return this.updateValue("note", chord);
   };
+
   public invert = (howMany: number = 0) => {
     if (this.values.chord) {
       let notes = this.values.chord.map(
@@ -438,17 +410,13 @@ export class SoundEvent extends AudibleEvent {
     }
   };
 
-
-
   out = (): void => {
-    const input = this.values.chord || this.values;
-    const events = this.generateEvents(input);
-    console.log(events);
+    const events = objectWithArraysToArrayOfObjects(this.values,["parsedScale"]);
     for (const event of events) {
       superdough(
-        { ...event, ...{ freq: event.freq, dur: this.values.dur } },
+        event,
         this.nudge,
-        this.values.dur
+        event.dur
       );
     }
   };

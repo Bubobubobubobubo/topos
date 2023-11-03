@@ -204,8 +204,11 @@ export abstract class Event {
     return this.modify(func);
   };
 
-  length = (value: number): Event => {
-    this.values["length"] = value;
+  noteLength = (value: number): Event => {
+    /**
+     * This function is used to set the note length of the Event.
+     */
+    this.values["noteLength"] = value;
     return this;
   };
 }
@@ -215,30 +218,63 @@ export abstract class AudibleEvent extends Event {
     super(app);
   }
 
+  pitch = (value: number): this => {
+    /* 
+      * This function is used to set the pitch of the Event.
+      * @param value - The pitch value
+      * @returns The Event
+      */
+    this.values["pitch"] = value;
+    if(this.values.key && this.values.parsedScale) this.update();
+    return this;
+  }
+
+  pc = this.pitch;
+
   octave = (value: number): this => {
+    /*
+      * This function is used to set the octave of the Event.
+      * @param value - The octave value
+      * @returns The Event
+      */
     this.values["octave"] = value;
-    this.update();
+    if(this.values.key && this.values.pitch && this.values.parsedScale) this.update();
     return this;
   };
 
   key = (value: string): this => {
+    /* 
+      * This function is used to set the key of the Event.
+      * @param value - The key value
+      * @returns The Event
+      */
     this.values["key"] = value;
-    this.update();
+    if(this.values.pitch && this.values.parsedScale) this.update();
     return this;
   };
 
   scale = (value: string): this => {
+    /*
+      * This function is used to set the scale of the Event.
+      * @param value - The scale value
+      * @returns The Event
+    */
     if (!isScale(value)) {
       this.values.parsedScale = parseScala(value) as number[];
     } else {
       this.values.scaleName = value;
       this.values.parsedScale = getScale(value) as number[];
     }
-    this.update();
+    if(this.values.key && this.values.pitch) this.update();
     return this;
   };
 
   freq = (value: number): this => {
+    /*
+      * This function is used to set the frequency of the Event.
+      * @param value - The frequency value
+      * @returns The Event
+    */
     this.values["freq"] = value;
     const midiNote = freqToMidi(value);
     if (midiNote % 1 !== 0) {
