@@ -9,7 +9,7 @@ import { tryEvaluate, evaluateOnce } from "./Evaluator";
 import { DrunkWalk } from "./Utils/Drunk";
 import { Editor } from "./main";
 import { SoundEvent } from "./classes/SoundEvent";
-import { MidiEvent } from "./classes/MidiEvent";
+import { MidiEvent, MidiParams } from "./classes/MidiEvent";
 import { LRUCache } from "lru-cache";
 import { InputOptions, Player } from "./classes/ZPlayer";
 import {
@@ -28,6 +28,7 @@ import {
 import { Speaker } from "./StringExtensions";
 import { getScaleNotes } from "zifferjs";
 import { OscilloscopeConfig, blinkScript } from "./AudioVisualisation";
+import { SkipEvent } from './classes/SkipEvent';
 
 interface ControlChange {
   channel: number;
@@ -390,9 +391,10 @@ export class UserAPI {
   };
 
   public midi = (
-    value: number | object = 60,
-    velocity?: number,
-    channel?: number
+    value: number | number[] = 60,
+    velocity?: number | number[],
+    channel?: number | number[],
+    port?: number | string | number[] | string[]
   ): MidiEvent => {
     /**
      * Sends a MIDI note to the current MIDI output.
@@ -402,24 +404,9 @@ export class UserAPI {
      *                { channel: 0, velocity: 100, duration: 0.5 }
      */
 
-    if (velocity !== undefined) {
-      // Check if value is of type number
-      if (typeof value === "number") {
-        value = { note: value };
-      }
-      // @ts-ignore
-      value["velocity"] = velocity;
-    }
+    const event = {note: value, velocity, channel, port} as MidiParams
 
-    if (channel !== undefined) {
-      if (typeof value === "number") {
-        value = { note: value };
-      }
-      // @ts-ignore
-      value["channel"] = channel;
-    }
-
-    return new MidiEvent(value, this.app);
+    return new MidiEvent(event, this.app);
   };
 
   public sysex = (data: Array<number>): void => {
@@ -1893,8 +1880,9 @@ export class UserAPI {
   // Trivial functions
   // =============================================================
 
-  sound = (sound: string | object) => {
-    return new SoundEvent(sound, this.app);
+  sound = (sound: string | string[] | null | undefined) => {
+    if(sound) return new SoundEvent(sound, this.app);
+    else return new SkipEvent();
   };
 
   snd = this.sound;

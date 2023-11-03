@@ -34,6 +34,12 @@ import { EditorView } from "codemirror";
 import { toposTheme } from "./themes/toposTheme";
 import { javascript } from "@codemirror/lang-javascript";
 import { inlineHoveringTips } from "./documentation/inlineHelp";
+import { toposCompletions } from "./documentation/inlineHelp";
+import { javascriptLanguage } from "@codemirror/lang-javascript"
+
+export const jsCompletions = javascriptLanguage.data.of({
+  autocomplete: toposCompletions
+})
 
 export const editorSetup: Extension = (() => [
   highlightActiveLineGutter(),
@@ -47,8 +53,6 @@ export const editorSetup: Extension = (() => [
   bracketMatching(),
   closeBrackets(),
   autocompletion(),
-  // rectangularSelection(),
-  // crosshairCursor(),
   highlightActiveLine(),
   highlightSelectionMatches(),
   keymap.of([
@@ -62,6 +66,7 @@ export const editorSetup: Extension = (() => [
 export const installEditor = (app: Editor) => {
   app.vimModeCompartment = new Compartment();
   app.hoveringCompartment = new Compartment();
+  app.completionsCompartment = new Compartment();
   app.withLineNumbers = new Compartment();
   app.chosenLanguage = new Compartment();
   app.fontSize = new Compartment();
@@ -86,6 +91,7 @@ export const installEditor = (app: Editor) => {
     app.withLineNumbers.of(lines),
     app.fontSize.of(fontModif),
     app.hoveringCompartment.of(app.settings.tips ? inlineHoveringTips : []),
+    app.completionsCompartment.of(app.settings.completions ? jsCompletions : []),
     editorSetup,
     toposTheme,
     app.chosenLanguage.of(javascript()),

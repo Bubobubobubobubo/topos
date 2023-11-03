@@ -5,6 +5,7 @@ import { SkipEvent } from "./SkipEvent";
 import { SoundEvent, SoundParams } from "./SoundEvent";
 import { MidiEvent, MidiParams } from "./MidiEvent";
 import { RestEvent } from "./RestEvent";
+import { arrayOfObjectsToObjectWithArrays } from "../Utils/Generic";
 
 export type InputOptions = { [key: string]: string | number };
 
@@ -23,7 +24,12 @@ export class Player extends Event {
   options: InputOptions = {};
   skipIndex = 0;
 
-  constructor(input: string, options: InputOptions, public app: Editor, zid: string = "") {
+  constructor(
+    input: string,
+    options: InputOptions,
+    public app: Editor,
+    zid: string = ""
+  ) {
     super(app);
     this.input = input;
     this.options = options;
@@ -108,15 +114,17 @@ export class Player extends Event {
       this.app.api.resetAllFromCache();
     }
 
-    const patternIsStarting = (this.notStarted() &&
+    const patternIsStarting =
+      this.notStarted() &&
       (this.pulse() === 0 || this.origin() >= this.nextBeatInTicks()) &&
-      this.origin() >= this.waitTime);
+      this.origin() >= this.waitTime;
 
-    const timeToPlayNext = (this.current &&
+    const timeToPlayNext =
+      this.current &&
       this.pulseToSecond(this.origin()) >=
-      this.pulseToSecond(this.lastCallTime) +
-      this.pulseToSecond(this.current.duration * 4 * this.app.clock.ppqn) &&
-      this.origin() >= this.waitTime);
+        this.pulseToSecond(this.lastCallTime) +
+          this.pulseToSecond(this.current.duration * 4 * this.app.clock.ppqn) &&
+      this.origin() >= this.waitTime;
 
     // If pattern is starting or it's time to play next event
     const areWeThereYet = patternIsStarting || timeToPlayNext;
@@ -139,37 +147,44 @@ export class Player extends Event {
   };
 
   sound(name?: string) {
-
     if (this.areWeThereYet()) {
       const event = this.next() as Pitch | Chord | ZRest;
-      const noteLengthInSeconds = this.app.clock.convertPulseToSecond(event.duration * 4 * this.app.clock.ppqn);
+      const noteLengthInSeconds = this.app.clock.convertPulseToSecond(
+        event.duration * 4 * this.app.clock.ppqn
+      );
       if (event instanceof Pitch) {
         const obj = event.getExisting(
           "freq",
+          "note",
           "pitch",
           "key",
           "scale",
           "octave",
           "parsedScale"
-        );
+        ) as SoundParams;
         if (event.sound) name = event.sound as string;
-        if (event.soundIndex) obj.n = event.soundIndex;
+        if (event.soundIndex) obj.n = event.soundIndex as number;
         obj.dur = noteLengthInSeconds;
         return new SoundEvent(obj, this.app).sound(name || "sine");
       } else if (event instanceof Chord) {
         const pitches = event.pitches.map((p) => {
           return p.getExisting(
             "freq",
+            "note",
             "pitch",
             "key",
             "scale",
             "octave",
             "parsedScale"
           );
-        });
-        const sound: SoundParams = { dur: noteLengthInSeconds };
-        if (name) sound.s = name;
-        return new SoundEvent(sound, this.app).chord(pitches);
+        }) as SoundParams[];
+        const add = { dur: noteLengthInSeconds } as SoundParams;
+        if (name) add.s = name;
+        let sound = arrayOfObjectsToObjectWithArrays(
+          pitches,
+          add
+        ) as SoundParams;
+        return new SoundEvent(sound, this.app);
       } else if (event instanceof ZRest) {
         return RestEvent.createRestProxy(event.duration, this.app);
       }
@@ -188,17 +203,18 @@ export class Player extends Event {
         "key",
         "scale",
         "octave",
-        "parsedScale",
-      );
+        "parsedScale"
+      ) as MidiParams;
       if (event instanceof Pitch) {
-        if (event.soundIndex) obj.channel = event.soundIndex;
+        if (event.soundIndex) obj.channel = event.soundIndex as number;
         const note = new MidiEvent(obj, this.app);
         return value ? note.note(value) : note;
       } else if (event instanceof ZRest) {
         return RestEvent.createRestProxy(event.duration, this.app);
       } else if (event instanceof Chord) {
         const pitches = event.midiChord() as MidiParams[];
-        return new MidiEvent(obj, this.app).chord(pitches);
+        const obj = arrayOfObjectsToObjectWithArrays(pitches) as MidiParams;
+        return new MidiEvent(obj, this.app);
       }
     } else {
       return SkipEvent.createSkipProxy();
@@ -232,7 +248,7 @@ export class Player extends Event {
       this.ziffers.invert(n);
     }
     return this;
-  }
+  };
 
   retrograde() {
     if (this.atTheBeginning()) this.ziffers.retrograde();

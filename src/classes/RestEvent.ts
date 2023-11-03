@@ -4,11 +4,11 @@ import { Event } from "./AbstractEvents";
 export class RestEvent extends Event {
   constructor(length: number, app: Editor) {
     super(app);
-    this.values["length"] = length;
+    this.values["noteLength"] = length;
   }
 
   _fallbackMethod = (): Event => {
-    return RestEvent.createRestProxy(this.values["length"], this.app);
+    return RestEvent.createRestProxy(this.values["noteLength"], this.app);
   };
 
   public static createRestProxy = (

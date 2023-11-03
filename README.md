@@ -14,9 +14,9 @@
   </p>
 </p>
 
-Topos is a web-based application that lives [here](https://topos.raphaelforment.fr). Documentation and description is directly included in the application itself.
+Topos is a web-based live coding environment. It lives [here](https://topos.raphaelforment.fr). Documentation is directly embedded in the application itself. Topos is an emulation and extension of the [Monome Teletype](https://monome.org/docs/teletype/) that gradually evolved into something a bit more personal. 
 
-![Screenshot](https://github.com/Bubobubobubobubo/Topos/blob/main/img/screnshot.png)
+![Screenshot](https://github.com/Bubobubobubobubo/Topos/blob/main/img/topos_gif.gif)
 
 ## Disclaimer
 
