@@ -430,7 +430,7 @@ export class SoundEvent extends AudibleEvent {
       "parsedScale",
     ]);
     for (const event of events) {
-      superdough(event, this.nudge, event.dur);
+      superdough(event, this.nudge + this.app.clock.deviation, event.dur);
     }
   };
 }
