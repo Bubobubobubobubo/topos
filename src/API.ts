@@ -28,6 +28,7 @@ import {
 import { Speaker } from "./StringExtensions";
 import { getScaleNotes } from "zifferjs";
 import { OscilloscopeConfig, blinkScript } from "./AudioVisualisation";
+import { SkipEvent } from './classes/SkipEvent';
 
 interface ControlChange {
   channel: number;
@@ -1879,8 +1880,9 @@ export class UserAPI {
   // Trivial functions
   // =============================================================
 
-  sound = (sound: string | string[]) => {
-    return new SoundEvent(sound, this.app);
+  sound = (sound: string | string[] | null | undefined) => {
+    if(sound) return new SoundEvent(sound, this.app);
+    else return new SkipEvent();
   };
 
   snd = this.sound;
