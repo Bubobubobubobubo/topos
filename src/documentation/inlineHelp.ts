@@ -1,6 +1,8 @@
 import { hoverTooltip } from "@codemirror/view";
 import { type EditorView } from "@codemirror/view";
 import { CompletionContext } from "@codemirror/autocomplete"
+// @ts-ignore
+import { soundMap } from "superdough";
 
 
 interface InlineCompletion {
@@ -996,3 +998,21 @@ export const toposCompletions = (context: CompletionContext) => {
   }
 }
 
+
+export const soundCompletions = (context: CompletionContext) => {
+  let map = soundMap.get();
+  delete map._base;
+  let match = context.matchBefore(/sound\(/);
+  if (match) {
+    let from = match.from + "sound(".length;
+    return {
+      from,
+      options: Object.keys(map).map(key => ({
+        label: key,
+        type: map[key].data.type,
+        apply: `"${key}"`
+      })),
+    };
+  }
+  return null;
+};

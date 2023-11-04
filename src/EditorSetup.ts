@@ -34,11 +34,15 @@ import { EditorView } from "codemirror";
 import { toposTheme } from "./themes/toposTheme";
 import { javascript } from "@codemirror/lang-javascript";
 import { inlineHoveringTips } from "./documentation/inlineHelp";
-import { toposCompletions } from "./documentation/inlineHelp";
+import { toposCompletions, soundCompletions } from "./documentation/inlineHelp";
 import { javascriptLanguage } from "@codemirror/lang-javascript"
 
 export const jsCompletions = javascriptLanguage.data.of({
   autocomplete: toposCompletions
+})
+
+export const toposSoundCompletions = javascriptLanguage.data.of({
+  autocomplete: soundCompletions
 })
 
 export const editorSetup: Extension = (() => [
@@ -91,7 +95,7 @@ export const installEditor = (app: Editor) => {
     app.withLineNumbers.of(lines),
     app.fontSize.of(fontModif),
     app.hoveringCompartment.of(app.settings.tips ? inlineHoveringTips : []),
-    app.completionsCompartment.of(app.settings.completions ? jsCompletions : []),
+    app.completionsCompartment.of(app.settings.completions ? [jsCompletions, toposSoundCompletions] : []),
     editorSetup,
     toposTheme,
     app.chosenLanguage.of(javascript()),
