@@ -375,7 +375,6 @@ export class SoundEvent extends AudibleEvent {
     const events = objectWithArraysToArrayOfObjects(filteredValues, [
       "parsedScale",
     ]);
-
     events.forEach((event) => {
       const [note, _] = noteFromPc(
         (event.key as number) || "C4",
