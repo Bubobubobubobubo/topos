@@ -1,6 +1,10 @@
 import { type Editor } from "../main";
 import { AudibleEvent } from "./AbstractEvents";
-import { filterObject, arrayOfObjectsToObjectWithArrays, objectWithArraysToArrayOfObjects } from "../Utils/Generic";
+import {
+  filterObject,
+  arrayOfObjectsToObjectWithArrays,
+  objectWithArraysToArrayOfObjects,
+} from "../Utils/Generic";
 import {
   chord as parseChord,
   midiToFreq,
@@ -277,7 +281,6 @@ export class SoundEvent extends AudibleEvent {
     },
   };
 
-
   constructor(sound: string | string[] | SoundParams, public app: Editor) {
     super(app);
     this.nudge = app.dough_nudge / 100;
@@ -296,11 +299,13 @@ export class SoundEvent extends AudibleEvent {
     this.values = this.processSound(sound);
   }
 
-  private processSound = (sound: string | string[] | SoundParams | SoundParams[]): SoundParams => {
-    if (Array.isArray(sound) && typeof sound[0] === 'string') {
+  private processSound = (
+    sound: string | string[] | SoundParams | SoundParams[]
+  ): SoundParams => {
+    if (Array.isArray(sound) && typeof sound[0] === "string") {
       const s: string[] = [];
       const n: number[] = [];
-      sound.forEach(str => {
+      sound.forEach((str) => {
         const parts = (str as string).split(":");
         s.push(parts[0]);
         if (parts[1]) {
@@ -311,13 +316,13 @@ export class SoundEvent extends AudibleEvent {
         s,
         n: n.length > 0 ? n : undefined,
         dur: this.app.clock.convertPulseToSecond(this.app.clock.ppqn),
-        analyze: true
+        analyze: true,
       };
-    } else if (typeof sound === 'object') {
+    } else if (typeof sound === "object") {
       const validatedObj: SoundParams = {
         dur: this.app.clock.convertPulseToSecond(this.app.clock.ppqn),
         analyze: true,
-        ...sound as Partial<SoundParams>
+        ...(sound as Partial<SoundParams>),
       };
       return validatedObj;
     } else {
@@ -329,15 +334,18 @@ export class SoundEvent extends AudibleEvent {
           s,
           n,
           dur: this.app.clock.convertPulseToSecond(this.app.clock.ppqn),
-          analyze: true
+          analyze: true,
         };
       } else {
         return { s: sound, dur: 0.5, analyze: true };
       }
     }
-  }
+  };
 
-  private updateValue<T>(key: string, value: T | T[] | SoundParams[] | null): this {
+  private updateValue<T>(
+    key: string,
+    value: T | T[] | SoundParams[] | null
+  ): this {
     if (value == null) return this;
     this.values[key] = value;
     return this;
@@ -358,15 +366,21 @@ export class SoundEvent extends AudibleEvent {
   };
 
   update = (): void => {
-    const filteredValues = filterObject(this.values, ["key", "pitch", "parsedScale", "octave"]);
-    const events = objectWithArraysToArrayOfObjects(filteredValues,["parsedScale"]);
-
+    const filteredValues = filterObject(this.values, [
+      "key",
+      "pitch",
+      "parsedScale",
+      "octave",
+    ]);
+    const events = objectWithArraysToArrayOfObjects(filteredValues, [
+      "parsedScale",
+    ]);
     events.forEach((event) => {
       const [note, _] = noteFromPc(
-        event.key as number || "C4",
-        event.pitch as number || 0,
-        event.parsedScale as number[] || event.scale || "MAJOR",
-        event.octave as number || 0
+        (event.key as number) || "C4",
+        (event.pitch as number) || 0,
+        (event.parsedScale as number[]) || event.scale || "MAJOR",
+        (event.octave as number) || 0
       );
       event.note = note;
       event.freq = midiToFreq(note);
@@ -379,8 +393,8 @@ export class SoundEvent extends AudibleEvent {
   };
 
   public chord = (value: string) => {
-      const chord = parseChord(value);
-      return this.updateValue("note", chord);
+    const chord = parseChord(value);
+    return this.updateValue("note", chord);
   };
 
   public invert = (howMany: number = 0) => {
@@ -411,13 +425,11 @@ export class SoundEvent extends AudibleEvent {
   };
 
   out = (): void => {
-    const events = objectWithArraysToArrayOfObjects(this.values,["parsedScale"]);
+    const events = objectWithArraysToArrayOfObjects(this.values, [
+      "parsedScale",
+    ]);
     for (const event of events) {
-      superdough(
-        event,
-        this.nudge,
-        event.dur
-      );
+      superdough(event, this.nudge + this.app.clock.deviation, event.dur);
     }
   };
 }

@@ -14,20 +14,19 @@ class TransportProcessor extends AudioWorkletProcessor {
   handleMessage = (message) => {
     if (message.data && message.data.type === "ping") {
       this.port.postMessage(message.data);
-    } else if (message.data === "start") {
+    } else if (message.data.type === "start") {
       this.started = true;
-    } else if (message.data === "pause") {
+    } else if (message.data.type === "pause") {
       this.started = false;
-    } else if (message.data === "stop") {
+    } else if (message.data.type === "stop") {
       this.started = false;
     } else if (message.data.type === 'bpm') {
       this.bpm = message.data.value;
-      this.currentPulsePosition = 0;
+      this.currentPulsePosition = currentTime;
     } else if (message.data.type === 'ppqn') {
       this.ppqn = message.data.value;
-      this.currentPulsePosition = 0;
     } else if (message.data.type === 'nudge') {
-      this.nudge = message.data.value
+      this.nudge = message.data.value;
     }
   }
 
@@ -38,7 +37,7 @@ class TransportProcessor extends AudioWorkletProcessor {
       const currentPulsePosition = Math.ceil(beatNumber * this.ppqn);
       if (currentPulsePosition > this.currentPulsePosition) {
         this.currentPulsePosition = currentPulsePosition;
-        this.port.postMessage({ type: "bang" });
+        this.port.postMessage({ type: "bang", bpm: this.bpm });
       }
     }
     return true;

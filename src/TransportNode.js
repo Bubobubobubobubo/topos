@@ -12,31 +12,39 @@ export class TransportNode extends AudioWorkletNode {
 
   /** @type {(this: MessagePort, ev: MessageEvent<any>) => any} */
   handleMessage = (message) => {
-    if (message.data && message.data.type === "bang") {
-      if (this.app.settings.send_clock)
-        this.app.api.MidiConnection.sendMidiClock();
-      this.app.clock.tick++;
-      const futureTimeStamp = this.app.clock.convertTicksToTimeposition(
-        this.app.clock.tick
-      );
-      this.app.clock.time_position = futureTimeStamp;
-      this.timeviewer.innerHTML = `${zeroPad(futureTimeStamp.bar, 2)}:${
-        futureTimeStamp.beat + 1
-      }:${zeroPad(futureTimeStamp.pulse, 2)} / ${this.app.clock.bpm}`;
-      if (this.app.exampleIsPlaying) {
-        tryEvaluate(this.app, this.app.example_buffer);
-      } else {
-        tryEvaluate(this.app, this.app.global_buffer);
+    if(message.data) {
+      if (message.data.type === "bang") {
+        if(this.app.clock.running) {
+          if (this.app.settings.send_clock) {
+            this.app.api.MidiConnection.sendMidiClock();
+          }
+          const futureTimeStamp = this.app.clock.convertTicksToTimeposition(
+            this.app.clock.tick
+          );
+          this.app.clock.time_position = futureTimeStamp;
+          this.timeviewer.innerHTML = `${zeroPad(futureTimeStamp.bar, 2)}:${futureTimeStamp.beat + 1
+            }:${zeroPad(futureTimeStamp.pulse, 2)} / ${this.app.clock.bpm}`;
+          if (this.app.exampleIsPlaying) {
+            tryEvaluate(this.app, this.app.example_buffer);
+          } else {
+            tryEvaluate(this.app, this.app.global_buffer);
+          }
+          this.app.clock.incrementTick(message.data.bpm);
+        }
       }
     }
   };
 
   start() {
-    this.port.postMessage("start");
+    this.port.postMessage({ type: "start" });
   }
 
   pause() {
-    this.port.postMessage("pause");
+    this.port.postMessage({ type: "pause" });
+  }
+
+  resume() {
+    this.port.postMessage({ type: "resume" });
   }
 
   setBPM(bpm) {
@@ -52,6 +60,6 @@ export class TransportNode extends AudioWorkletNode {
   }
 
   stop() {
-    this.port.postMessage("stop");
+    this.port.postMessage({type: "stop" });
   }
 }

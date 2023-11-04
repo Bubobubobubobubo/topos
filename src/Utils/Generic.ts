@@ -6,9 +6,15 @@
  * @returns {Record<string, any>[]} Array of objects
  * 
  */
-export function objectWithArraysToArrayOfObjects(input: Record<string, any>, ignoredKeys: string[]): Record<string, any>[] {
-    ignoredKeys = ignoredKeys.map((k) => Array.isArray(input[k]) ? undefined : k).filter((k) => k !== undefined) as string[];
-    const keys = Object.keys(input).filter((k) => !ignoredKeys.includes(k));
+export function objectWithArraysToArrayOfObjects(input: Record<string, any>, arraysToArrays: string[]): Record<string, any>[] {
+    arraysToArrays.forEach((k) => {
+        // Transform single array to array of arrays and keep array of arrays as is
+        if (Array.isArray(input[k]) && !Array.isArray(input[k][0])) {
+            input[k] = [input[k]];
+        }
+    });
+    const keys = Object.keys(input);
+    
     const maxLength = Math.max(
       ...keys.map((k) =>
         Array.isArray(input[k]) ? (input[k] as any[]).length : 1
@@ -20,14 +26,10 @@ export function objectWithArraysToArrayOfObjects(input: Record<string, any>, ign
     for (let i = 0; i < maxLength; i++) {
       const event: Record<string, any> = {};
       for (const k of keys) {
-        if (ignoredKeys.includes(k)) {
-           event[k] = input[k];
-        } else {
-          if (Array.isArray(input[k])) {
+        if (Array.isArray(input[k])) {
             event[k] = (input[k] as any[])[i % (input[k] as any[]).length];
-          } else {
+        } else {
             event[k] = input[k];
-          }
         }
       }
       output.push(event);
