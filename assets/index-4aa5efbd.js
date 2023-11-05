@@ -350,6 +350,8 @@ beat(.25) :: sound('sid').note(
 	
 Topos is deeply inspired by the [Monome Teletype](https://monome.org/). The Teletype is/was an open source hardware module for Eurorack synthesizers. While the Teletype was initially born as an hardware module, Topos aims to be a web-browser based software sequencer from the same family! It is a sequencer, a scriptable interface, a companion for algorithmic music-making.  Topos wishes to fullfill the same goal as the Teletype, keeping the same spirit alive on the web. It is free, open-source, and made to be shared and used by everyone.
 	
+Learn more about live coding on [livecoding.fr](https://livecoding.fr).
+
 ## Demo Songs
 
 Reloading the application will get you one random song example to study every time. Press ${gt("F5")} and listen to them all! The demo songs are also used a bit everywhere in the documentation to illustrate some of the working principles :).
@@ -1210,7 +1212,7 @@ Topos is an experimental web based algorithmic sequencer programmed by **BuboBub
 ## About Live Coding
 	
 **Amiika** and I are both very involved in the [TOPLAP](https://toplap.org) and [Algorave](https://algorave.com) scenes. We previously worked on the [Sardine](https://sardine.raphaelforment.fr) live coding environment for Python. **Amiika** has been working hard on its own algorithmic pattern language called [Ziffers](https://github.com/amiika/ziffers). A version of it is available in Topos! **Raphaël** is doing live coding with other folks from the [Cookie Collective](https://cookie.paris) and from the city of Lyon (France).
-	
+
 ## Free and open-source software
 
 Topos is a free and open-source software distributed under [GPL-3.0](https://github.com/Bubobubobubobubo/Topos/blob/main/LICENSE) licence. We welcome all contributions and ideas. You can find the source code on [GitHub](https://github.com/Bubobubobubobubo/topos). You can also join us on [Discord](https://discord.gg/dnUTPbu6bN) to discuss about the project and live coding in general.
