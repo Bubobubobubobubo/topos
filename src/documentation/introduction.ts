@@ -53,6 +53,8 @@ beat(.25) :: sound('sid').note(
 	
 Topos is deeply inspired by the [Monome Teletype](https://monome.org/). The Teletype is/was an open source hardware module for Eurorack synthesizers. While the Teletype was initially born as an hardware module, Topos aims to be a web-browser based software sequencer from the same family! It is a sequencer, a scriptable interface, a companion for algorithmic music-making.  Topos wishes to fullfill the same goal as the Teletype, keeping the same spirit alive on the web. It is free, open-source, and made to be shared and used by everyone.
 	
+Learn more about live coding on [livecoding.fr](https://livecoding.fr).
+
 ## Demo Songs
 
 Reloading the application will get you one random song example to study every time. Press ${key_shortcut(
