@@ -22,8 +22,18 @@ import { tryEvaluate } from "./Evaluator";
 import { inlineHoveringTips } from "./documentation/inlineHelp";
 import { lineNumbers } from "@codemirror/view";
 import { jsCompletions } from "./EditorSetup";
+import { createDocumentationStyle } from "./DomElements";
 
 export const installInterfaceLogic = (app: Editor) => {
+  // Initialize style
+  const documentationStyle = createDocumentationStyle(app);
+  const bindings = Object.keys(documentationStyle).map((key) => ({
+    type: "output",
+    regex: new RegExp(`<${key}([^>]*)>`, "g"),
+    //@ts-ignore
+    replace: (match, p1) => `<${key} class="${documentationStyle[key]}" ${p1}>`,
+  }));
+
   (app.interface.line_numbers_checkbox as HTMLInputElement).checked =
     app.settings.line_numbers;
   (app.interface.time_position_checkbox as HTMLInputElement).checked =
@@ -469,13 +479,13 @@ export const installInterfaceLogic = (app: Editor) => {
     document.getElementById(name)!.addEventListener("click", async () => {
       if (name !== "docs_samples") {
         app.currentDocumentationPane = e;
-        updateDocumentationContent(app);
+        updateDocumentationContent(app, bindings);
       } else {
         console.log("Loading samples!");
         await loadSamples().then(() => {
           app.docs = documentation_factory(app);
           app.currentDocumentationPane = e;
-          updateDocumentationContent(app);
+          updateDocumentationContent(app, bindings);
         });
       }
     });

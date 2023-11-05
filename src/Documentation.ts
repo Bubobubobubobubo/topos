@@ -24,14 +24,8 @@ import { bonus } from "./documentation/bonus";
 // Setting up the Markdown converter with syntax highlighting
 import showdown from "showdown";
 import showdownHighlight from "showdown-highlight";
+import { createDocumentationStyle } from "./DomElements";
 showdown.setFlavor("github");
-import { classMap } from "./DomElements";
-const bindings = Object.keys(classMap).map((key) => ({
-  type: "output",
-  regex: new RegExp(`<${key}([^>]*)>`, "g"),
-  //@ts-ignore
-  replace: (match, p1) => `<${key} class="${classMap[key]}" ${p1}>`,
-}));
 
 export const key_shortcut = (shortcut: string): string => {
   return `<kbd class="lg:px-2 lg:py-1.5 px-1 py-1 lg:text-sm text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg dark:bg-gray-600 dark:text-gray-100 dark:border-gray-500">${shortcut}</kbd>`;
@@ -64,6 +58,7 @@ export const makeExampleFactory = (application: Editor): Function => {
 };
 
 export const documentation_factory = (application: Editor) => {
+
   // Initialize a data structure to store code examples by their unique IDs
   application.api.codeExamples = {};
 
@@ -93,6 +88,7 @@ export const documentation_factory = (application: Editor) => {
 };
 
 export const showDocumentation = (app: Editor) => {
+
   if (document.getElementById("app")?.classList.contains("hidden")) {
     document.getElementById("app")?.classList.remove("hidden");
     document.getElementById("documentation")?.classList.add("hidden");
@@ -101,7 +97,14 @@ export const showDocumentation = (app: Editor) => {
     document.getElementById("app")?.classList.add("hidden");
     document.getElementById("documentation")?.classList.remove("hidden");
     // Load and convert Markdown content from the documentation file
-    updateDocumentationContent(app);
+    let style = createDocumentationStyle(app);
+    let bindings = Object.keys(style).map((key) => ({
+      type: "output",
+      regex: new RegExp(`<${key}([^>]*)>`, "g"),
+      //@ts-ignore
+      replace: (match, p1) => `<${key} class="${style[key]}" ${p1}>`,
+    }));
+    updateDocumentationContent(app, bindings);
   }
 };
 
@@ -112,7 +115,7 @@ export const hideDocumentation = () => {
   }
 };
 
-export const updateDocumentationContent = (app: Editor) => {
+export const updateDocumentationContent = (app: Editor, bindings: any) => {
   const converter = new showdown.Converter({
     emoji: true,
     moreStyling: true,
