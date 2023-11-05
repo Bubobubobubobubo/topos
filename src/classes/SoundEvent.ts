@@ -147,6 +147,13 @@ export class SoundEvent extends AudibleEvent {
       }
       return this;
     },
+    hpf: (value: number, resonance?: number) => {
+      this.updateValue("hcutoff", value);
+      if (resonance) {
+        this.updateValue("hresonance", resonance);
+      }
+      return this;
+    },
     hpq: (value: number) => {
       this.updateValue("hresonance", value);
       return this;
