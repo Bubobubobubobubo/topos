@@ -1,6 +1,9 @@
 import { key_shortcut } from "../Documentation";
+import { type Editor } from "../main";
+import { makeExampleFactory } from "../Documentation";
 
-export const shortcuts = (): string => {
+export const shortcuts = (app: Editor): string => {
+  let makeExample = makeExampleFactory(app);
   return `
 # Keybindings
 	
@@ -40,13 +43,34 @@ Topos is made to be controlled entirely with a keyboard. It is recommanded to st
 | Shortcut | Key   | Description                                                |
 |----------|-------|------------------------------------------------------------|
 |Evaluate|${key_shortcut("Ctrl + Enter")}| Evaluate the current script        |
-|Local Eval|${key_shortcut("Ctrl + F1")} to ${key_shortcut("Ctrl + F9")}|Local File Evaluation|
-|Force Eval|${key_shortcut("Ctrl + Shift + Enter")}|Force evaluation of the current script|
+|Local Eval|${key_shortcut("Ctrl + F1")} to ${key_shortcut(
+    "Ctrl + F9"
+  )}|Local File Evaluation|
+|Force Eval|${key_shortcut(
+    "Ctrl + Shift + Enter"
+  )}|Force evaluation of the current script|
 	
 ## Special
 
 | Shortcut | Key   | Description                                                |
 |----------|-------|------------------------------------------------------------|
 |Vim Mode|${key_shortcut("Ctrl + V")}| Switch between Vim and Normal Mode|
+
+## Keyboard Fill
+
+By pressing the ${key_shortcut(
+    "Alt"
+  )} key, you can trigger the <ic>Fill</ic> mode which can either be <ic>true</ic> or <ic>false</ic>. The fill will be set to <ic>true</ic> as long as the key is held. Try pressing ${key_shortcut(
+    "Alt"
+  )} when playing this example:
+
+${makeExample(
+  "Claping twice as fast with fill",
+  `
+beat(fill() ? 1/4 : 1/2)::sound('cp').out()
+`,
+  true
+)}
+
 `;
 };

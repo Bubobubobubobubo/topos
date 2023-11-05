@@ -1,21 +1,21 @@
 import { key_shortcut, makeExampleFactory } from "../Documentation";
 import { type Editor } from "../main";
-import topos_arch from './topos_arch.svg';
-import many_universes from './many_universes.svg';
+import topos_arch from "./topos_arch.svg";
+import many_universes from "./many_universes.svg";
 
 export const software_interface = (application: Editor): string => {
   const makeExample = makeExampleFactory(application);
   return `
 # Interface
 	
-The Topos interface is entirely dedicated to highlight the core concepts at play: _scripts_ and _universes_. By understanding the interface, you will already understand quite a lot about Topos and how to play music with it. Make sure to learn the dedicated keybindings as well and you will fly!
+The Topos interface is modeled around the core concepts at play: _scripts_ and _universes_. By understanding the interface, you will already understand quite a lot about Topos and how to play music with it. Make sure to learn the dedicated keybindings as well and you will fly!
 	
 <object type="image/svg+xml" data=${topos_arch} style="width: 100%; height: auto; background-color: transparent"></object>
 
 
 ## Scripts
 
-Every Topos session is composed of several small scripts. A set of scripts is called a _universe_. Every script is written using the JavaScript programming language and describes a musical or algorithmic process that takes place over time.
+Every Topos session is composed of several scripts: **local**, **global** and **init** scripts. Considered as a whole, these scripts form a structure called a "_universe_".  A "universe" is a set of functions, a song, a sketch from an improvisation, or whatever you would like to do with **Topos**. All the scripts are written using the JavaScript programming language. They describe a musical or algorithmic process. You can call them anytime.
 	
 - **the global script** (${key_shortcut(
     "Ctrl + G"
@@ -38,28 +38,34 @@ Every Topos session is composed of several small scripts. A set of scripts is ca
 	
 
 ${makeExample(
-    "To take the most out of Topos...",
-    `// Write your code in multiple scripts. Use all the code buffers!
+  "Calling scripts to form a musical piece",
+  `
+// Write your code in multiple scripts.
+// Use all the code buffers!
 beat(1) :: script(1)
 flip(4) :: beat(.5) :: script(2)
 `,
-    true
-  )}
+  true
+)}
 
 ${makeExample(
-    "Script execution can become musical too!",
-    `// You can play your scripts... algorithmically.
+  "Script execution can become musical too!",
+  `
+// You can play your scripts... algorithmically.
 beat(1) :: script([1,3,5].pick())
-flip(4) :: beat([.5, .25].beat(16)) :: script([5,6,7,8].loop($(2)))
+flip(4) :: beat([.5, .25].beat(16)) :: script([5,6,7,8].beat())
 `,
-    false
-  )}
+  false
+)}
 
+## Navigating the interface
 
-There are some useful functions to help you manage your scripts:
+The interface is centered around the manipulation of scripts. Take a look at the left bar:
+- **pencil icon:** notes. Used to take project notes about your "_universe_".
+- **down arrow**: init script. Runs once when the project is loaded.
+- **text with note**: global script, it acts as the **conductor** for your piece.
+- **folder icon**: local scripts (from 1 to 9).
 
-- <ic>copy_script(from: number, to: number)</ic>: copy the content of a script to another.
-- <ic>delete_script(index: number)</ic>: clear the content of a script. Warning: this is irreversible! 
 
 ## Universes
 	
@@ -87,5 +93,14 @@ There are some useful functions to help you manage your universes:
 - Topos will automatically fetch and switch to the universe that was sent to you. Your previous universe is still accessible if you switch to it, don't worry!
 
 **Note:** links are currently super long and unsharable! Sorry about that, minifying takes a server and we don't have one yet. We will fix that soon. In the meantime, you can use a service like [tinyurl](https://tinyurl.com/) to shorten your links.
+
+## More
+
+There are some useful functions to help you manage your scripts:
+
+- <ic>copy_script(from: number, to: number)</ic>: copy the content of a script to another.
+- <ic>delete_script(index: number)</ic>: clear the content of a script. Warning: this is irreversible! 
+
+
 `;
 };

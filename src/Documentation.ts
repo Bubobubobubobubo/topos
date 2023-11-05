@@ -1,6 +1,7 @@
 import { type Editor } from "./main";
 import { introduction } from "./documentation/introduction";
 import { oscilloscope } from "./documentation/oscilloscope";
+import { synchronisation } from "./documentation/synchronisation";
 import { samples } from "./documentation/samples";
 import { chaining } from "./documentation/chaining";
 import { software_interface } from "./documentation/interface";
@@ -11,6 +12,7 @@ import { code } from "./documentation/code";
 import { about } from "./documentation/about";
 import { sound } from "./documentation/engine";
 import { shortcuts } from "./documentation/keyboard";
+import { mouse } from "./documentation/mouse";
 import { patterns } from "./documentation/patterns";
 import { functions } from "./documentation/functions";
 import { variables } from "./documentation/variables";
@@ -58,7 +60,6 @@ export const makeExampleFactory = (application: Editor): Function => {
 };
 
 export const documentation_factory = (application: Editor) => {
-
   // Initialize a data structure to store code examples by their unique IDs
   application.api.codeExamples = {};
 
@@ -80,15 +81,16 @@ export const documentation_factory = (application: Editor) => {
     probabilities: probabilities(application),
     functions: functions(application),
     reference: reference(),
-    shortcuts: shortcuts(),
+    shortcuts: shortcuts(application),
+    mouse: mouse(application),
     oscilloscope: oscilloscope(application),
+    synchronisation: synchronisation(application),
     bonus: bonus(application),
     about: about(),
   };
 };
 
 export const showDocumentation = (app: Editor) => {
-
   if (document.getElementById("app")?.classList.contains("hidden")) {
     document.getElementById("app")?.classList.remove("hidden");
     document.getElementById("documentation")?.classList.add("hidden");
