@@ -7,9 +7,9 @@ export const introduction = (application: Editor): string => {
   return `
 # Welcome
 	
-Welcome to the Topos documentation. These pages are offering you an introduction to the software and to the ideas behind it. You can jump here anytime by pressing ${key_shortcut(
+Welcome to the **Topos** documentation. You can jump here anytime by pressing ${key_shortcut(
     "Ctrl + D"
-  )}.  Press again to make the documentation disappear. All your contributions are welcome!
+  )}.  Press again to make the documentation disappear. Contributions are much appreciated! The documentation [lives here](https://github.com/Bubobubobubobubo/topos/tree/main/src/documentation).
 
 ${makeExample(
     "Welcome! Eval to get started",
@@ -19,7 +19,9 @@ ${makeExample(
 	
 ## What is Topos?
 	
-Topos is an _algorithmic_ sequencer. Topos uses small algorithms to represent musical sequences and processes. These can be written in just a few lines of code. Topos is made to be _live-coded_. The _live coder_ strives for the constant interaction with algorithms and sound during a musical performance. Topos is aiming to be a digital playground for live algorithmic music.
+Topos is an _algorithmic_ sequencer. Topos is a _live coding_ environment. Think making music in real time through code. Code used as an expressive medium for musical improvisation! Topos uses small algorithms to represent musical sequences and processes. 
+
+The syntax is voluntarily terse. The software is designed like this to encourage the user to write complex musical expressions very fast while on stage. The _live coder_ strives for the constant interaction with algorithms and sound during a musical performance. Topos is aiming to be a digital playground for live algorithmic music.
 	
 ${makeExample(
     "Small algorithms for direct musical expression",
