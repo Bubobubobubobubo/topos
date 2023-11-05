@@ -61,6 +61,7 @@ export const buttonGroups = {
   clear_buttons: ["clear-button-1"],
 };
 
+//@ts-ignore
 export const createDocumentationStyle = (app: Editor) => {
   return {
     h1: "text-white lg:text-4xl text-xl lg:ml-4 lg:mx-4 mx-2 lg:my-4 my-2 lg:mb-4 mb-4 bg-neutral-900 rounded-lg underline underline-offset-8 pt-2 pb-3 px-2",
