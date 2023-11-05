@@ -204,7 +204,6 @@ export const makeArrayExtensions = (api: UserAPI) => {
       const valueDurationInPulses = adjustedDurations[i] as any * ppqn;
       cumulativeDuration += valueDurationInPulses;
       if (loopPosition < cumulativeDuration) {
-        console.log(`Hit on pulse: ${loopPosition}`);
         return this[i];
       }
     }

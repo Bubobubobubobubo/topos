@@ -432,11 +432,12 @@ export class SoundEvent extends AudibleEvent {
   };
 
   out = (): void => {
+    console.log(this.app.clock.time_position.pulse)
     const events = objectWithArraysToArrayOfObjects(this.values, [
       "parsedScale",
     ]);
     for (const event of events) {
-      superdough(event, this.nudge + this.app.clock.deviation, event.dur);
+      superdough(event, this.nudge - this.app.clock.deviation, event.dur);
     }
   };
 }
