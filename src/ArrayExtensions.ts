@@ -196,6 +196,7 @@ export const makeArrayExtensions = (api: UserAPI) => {
     const timepos = api.app.clock.pulses_since_origin;
     const ppqn = api.ppqn();
     const adjustedDurations = this.map((_, index) => durations[index % durations.length]);
+    // @ts-ignore
     const totalDurationInPulses = adjustedDurations.reduce((acc, duration) => acc + duration * ppqn, 0);
     const loopPosition = timepos % totalDurationInPulses;
     let cumulativeDuration = 0;
