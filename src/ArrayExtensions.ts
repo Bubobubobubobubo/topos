@@ -18,6 +18,7 @@ declare global {
     repeatEven(amount: number): T;
     repeatOdd(amount: number): T;
     beat(division: number): T;
+    dur(durations: number[]): T;
     b(division: number): T;
     bar(): T;
     pick(): T;
@@ -169,6 +170,46 @@ export const makeArrayExtensions = (api: UserAPI) => {
     return this[slice_count % this.length];
   };
   Array.prototype.b = Array.prototype.beat;
+
+  // Array.prototype.dur = function(...durations) {
+  //   const timepos = api.app.clock.pulses_since_origin;
+  //   const ppqn = api.ppqn();
+  //   let adjustedDurations = [];
+  //   for (let i = 0; i < this.length; i++) {
+  //     adjustedDurations.push(durations[i % durations.length]);
+  //   }
+  //   let cumulativeDuration = 0;
+  //   let totalDuration = adjustedDurations.reduce((acc, duration) => acc + duration * ppqn, 0);
+  //   let modulatedTimePos = timepos % totalDuration;
+  //   for (let i = 0; i < this.length; i++) {
+  //     const valueDuration = adjustedDurations[i] as any * ppqn;
+  //     if (modulatedTimePos < cumulativeDuration + valueDuration) {
+  //       return this[i];
+  //     }
+  //     cumulativeDuration += valueDuration;
+  //   }
+  //   // This point should not be reached if durations are correctly specified
+  //   throw new Error('Durations array does not match the pattern length.');
+  // };
+
+  Array.prototype.dur = function(...durations) {
+    const timepos = api.app.clock.pulses_since_origin;
+    const ppqn = api.ppqn();
+    const adjustedDurations = this.map((_, index) => durations[index % durations.length]);
+    const totalDurationInPulses = adjustedDurations.reduce((acc, duration) => acc + duration * ppqn, 0);
+    const loopPosition = timepos % totalDurationInPulses;
+    let cumulativeDuration = 0;
+    for (let i = 0; i < this.length; i++) {
+      const valueDurationInPulses = adjustedDurations[i] as any * ppqn;
+      cumulativeDuration += valueDurationInPulses;
+      if (loopPosition < cumulativeDuration) {
+        console.log(`Hit on pulse: ${loopPosition}`);
+        return this[i];
+      }
+    }
+    throw new Error('Durations array does not match the pattern length.');
+  };
+
 
   Array.prototype.shuffle = function() {
     /**
