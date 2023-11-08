@@ -92,7 +92,11 @@ export class Editor {
 
     this.initializeElements();
     this.initializeButtonGroups();
-    this.initializeHydra();
+    try {
+      this.initializeHydra();
+    } catch (error) {
+      console.log("Couldn't start Hydra: ", error);
+    }
     this.setCanvas(this.interface.feedback as HTMLCanvasElement);
     this.setCanvas(this.interface.scope as HTMLCanvasElement);
 

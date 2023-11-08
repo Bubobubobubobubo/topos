@@ -9,7 +9,7 @@ export const shortcuts = (app: Editor): string => {
 	
 Topos is made to be controlled entirely with a keyboard. It is recommanded to stop using the mouse as much as possible when you are _live coding_. Here is a list of the most important keybindings:
 	
-## Transport
+### Transport
 
 | Shortcut | Key   | Description                                                |
 |----------|-------|------------------------------------------------------------|
@@ -20,7 +20,7 @@ Topos is made to be controlled entirely with a keyboard. It is recommanded to st
     "Ctrl + S"
   )}|Stop and rewind audio playback|
 	
-## Moving in the interface
+### Moving in the interface
 
 | Shortcut | Key   | Description                                                |
 |----------|-------|------------------------------------------------------------|
@@ -38,7 +38,7 @@ Topos is made to be controlled entirely with a keyboard. It is recommanded to st
   )}|Switch to a specific local script|
 |Documentation|${key_shortcut("Ctrl + D")}|Open the documentation|
 	
-## Evaluating code
+### Evaluating code
 
 | Shortcut | Key   | Description                                                |
 |----------|-------|------------------------------------------------------------|
@@ -50,13 +50,13 @@ Topos is made to be controlled entirely with a keyboard. It is recommanded to st
     "Ctrl + Shift + Enter"
   )}|Force evaluation of the current script|
 	
-## Special
+### Special
 
 | Shortcut | Key   | Description                                                |
 |----------|-------|------------------------------------------------------------|
 |Vim Mode|${key_shortcut("Ctrl + V")}| Switch between Vim and Normal Mode|
 
-## Keyboard Fill
+# Keyboard Fill
 
 By pressing the ${key_shortcut(
     "Alt"
@@ -65,12 +65,12 @@ By pressing the ${key_shortcut(
   )} when playing this example:
 
 ${makeExample(
-  "Claping twice as fast with fill",
-  `
+    "Claping twice as fast with fill",
+    `
 beat(fill() ? 1/4 : 1/2)::sound('cp').out()
 `,
-  true
-)}
+    true
+  )}
 
 `;
 };

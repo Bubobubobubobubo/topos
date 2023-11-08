@@ -4,9 +4,9 @@ import { makeExampleFactory } from "../Documentation";
 export const mouse = (app: Editor): string => {
   let makeExample = makeExampleFactory(app);
   return `
-## Mouse
+# Mouse
 	
-Using the mouse is a fun way to control reactive code. It's basically an X/Y controller that you don't have to pay for! There are clever actions you can do with the mouse from generating notes to activating scripts conditionally!
+Using the mouse is a fun way to control your code. It's basically an X/Y controller that you don't have to pay for! There are clever actions you can do with the mouse from generating notes to activating scripts conditionally!
 
 ## Mouse position 
 
@@ -16,16 +16,18 @@ You can get the current position of the mouse on the screen by using the followi
 - <ic>mouseY()</ic>: the vertical position of the mouse on the screen (as a floating point number).
 	
 ${makeExample(
-  "FM Synthesizer controlled using the mouse",
-  `
+    "FM Synthesizer controlled using the mouse",
+    `
 beat(.25) :: sound('sine')
   .fmi(mouseX() / 100)
   .fmh(mouseY() / 100)
   .vel(0.2)
   .room(0.9).out()
 `,
-  true
-)}
+    true
+  )}
+
+<br>
 
 Current mouse position can also be used to generate notes:
 	
@@ -34,8 +36,8 @@ Current mouse position can also be used to generate notes:
 	
 
 ${makeExample(
-  "The same synthesizer, with note control!",
-  `
+    "The same synthesizer, with note control!",
+    `
 beat(.25) :: sound('sine')
   .fmi(mouseX() / 100)
   .note(noteX())
@@ -43,8 +45,8 @@ beat(.25) :: sound('sine')
   .vel(0.2)
   .room(0.9).out()
 `,
-  true
-)}
+    true
+  )}
 
 ## Mouse and Arrays
 
@@ -55,14 +57,14 @@ You can use the mouse to explore the valuesq contained in an Array:
 
 
 ${makeExample(
-  "Taking values out of an Array with the mouse",
-  `
+    "Taking values out of an Array with the mouse",
+    `
 log([1,2,3,4].mouseX())
 log([4,5,6,7].mouseY())
 
   `,
-  true
-)}
+    true
+  )}
 
 
 
