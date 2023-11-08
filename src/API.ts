@@ -2046,65 +2046,67 @@ export class UserAPI {
   // =============================================================
   // Resolution
   // =============================================================
-  //
 
-  public showGif = (options: any) => {
+  public gif = (options: any) => {
     /**
-    * Displays a GIF on the webpage with various customizable options including rotation and fading.
+    * Displays a GIF on the webpage with customizable options including rotation and timed fade-out.
     * @param {Object} options - The configuration object for displaying the GIF.
-    * @param {string} options.gifUrl - The URL of the GIF to display.
+    * @param {string} options.url - The URL of the GIF to display.
     * @param {number} [options.posX=0] - The X-coordinate to place the GIF at.
     * @param {number} [options.posY=0] - The Y-coordinate to place the GIF at.
-    * @param {number} [options.opacity=1] - The opacity level of the GIF.
+    * @param {number} [options.opacity=1] - The initial opacity level of the GIF.
     * @param {string} [options.size='auto'] - The size of the GIF (can be 'cover', 'contain', or specific dimensions).
-    * @param {number} [options.zIndex=1000] - The z-index of the GIF.
     * @param {boolean} [options.center=false] - Whether to center the GIF in the window.
     * @param {number} [options.rotation=0] - The rotation angle of the GIF in degrees.
     * @param {string} [options.filter='none'] - The CSS filter function to apply for color alterations.
-    * @param {number} [options.fadeDuration=0] - The duration of the fade-in effect in seconds.
+    * @param {number} [options.duration=10] - The total duration the GIF is displayed, in pulses.
     */
     const {
-      gifUrl,
+      url,
       posX = 0,
       posY = 0,
       opacity = 1,
       size = 'auto',
-      zIndex = 1000,
       center = false,
       rotation = 0,
       filter = 'none',
-      fadeDuration = 0
+      dur = 1
     } = options;
 
+    let real_duration = dur * this.app.clock.pulse_duration * this.app.clock.ppqn;
+    let fadeOutDuration = real_duration * 0.1;
+    let visibilityDuration = real_duration - fadeOutDuration;
     const gifElement = document.createElement('img');
-    gifElement.src = gifUrl;
-    // @ts-ignore
-    gifElement.style = `
-    position: fixed;
-    left: ${center ? '50%' : `${posX}px`};
-    top: ${center ? '50%' : `${posY}px`};
-    opacity: ${fadeDuration > 0 ? 0 : opacity}; /* Start with opacity 0 if fading in */
-    z-index: ${zIndex};
-    ${size !== 'auto' ? `width: ${size}; height: ${size};` : ''}
-    ${center ? 'transform: translate(-50%, -50%) rotate(${rotation}deg);' : `transform: rotate(${rotation}deg);`}
-    filter: ${filter};
-    transition: opacity ${fadeDuration}s ease;
-  `;
-    gifElement.classList.add('top-level-gif'); // Add a class for easier removal
-
+    gifElement.src = url;
+    gifElement.style.position = 'fixed';
+    gifElement.style.left = center ? '50%' : `${posX}px`;
+    gifElement.style.top = center ? '50%' : `${posY}px`;
+    gifElement.style.opacity = `${opacity}`;
+    gifElement.style.zIndex = '-1';
+    if (size !== 'auto') {
+      gifElement.style.width = size;
+      gifElement.style.height = size;
+    }
+    const transformRules = [`rotate(${rotation}deg)`];
+    if (center) {
+      transformRules.unshift('translate(-50%, -50%)');
+    }
+    gifElement.style.transform = transformRules.join(' ');
+    gifElement.style.filter = filter;
+    gifElement.style.transition = `opacity ${fadeOutDuration}s ease`;
     document.body.appendChild(gifElement);
 
-    // If fadeDuration is specified, fade the image in
-    if (fadeDuration > 0) {
-      setTimeout(() => {
-        gifElement.style.opacity = opacity;
-      }, 10); // Timeout to ensure the element is rendered before starting the transition
-    }
+    // Start the fade-out at the end of the visibility duration
+    setTimeout(() => {
+      gifElement.style.opacity = '0';
+    }, visibilityDuration * 1000);
+
+    // Remove the GIF from the DOM after the fade-out duration
+    setTimeout(() => {
+      if (document.body.contains(gifElement)) {
+        document.body.removeChild(gifElement);
+      }
+    }, real_duration * 1000);
   }
 
-
-  public clearGif = () => {
-    const gifs = document.querySelectorAll('.top-level-gif');
-    gifs.forEach(gif => gif.remove());
-  }
 }
