@@ -1,5 +1,5 @@
 import { EditorView } from '@codemirror/view';
-import { getAllScaleNotes, seededRandom } from "zifferjs";
+import { getAllScaleNotes, nearScales, seededRandom } from "zifferjs";
 import {
   MidiCCEvent,
   MidiConnection,
@@ -25,7 +25,7 @@ import {
   soundMap,
   // @ts-ignore
 } from "superdough";
-import { Speaker } from "./StringExtensions";
+import { Speaker } from "./extensions/StringExtensions";
 import { getScaleNotes } from "zifferjs";
 import { OscilloscopeConfig, blinkScript } from "./AudioVisualisation";
 import { SkipEvent } from './classes/SkipEvent';
@@ -675,8 +675,12 @@ export class UserAPI {
     this.patternCache.forEach((player) => (player as Player).reset());
   }
 
+  public removePatternFromCache = (id: string): void => {
+    this.patternCache.delete(id);
+  }
+
   public z = (
-    input: string,
+    input: string | Generator<number>,
     options: InputOptions = {},
     id: number | string = ""
   ): Player => {
@@ -687,7 +691,7 @@ export class UserAPI {
 
     if (this.app.api.patternCache.has(key)) {
       player = this.app.api.patternCache.get(key) as Player;
-      if (player.input !== input) {
+      if (typeof input === "string" && player.input !== input) {
         player = undefined;
       }
     }
@@ -695,6 +699,10 @@ export class UserAPI {
     if (!player) {
       player = new Player(input, options, this.app, zid);
       this.app.api.patternCache.set(key, player);
+    }
+
+    if(player.ziffers.generator && player.ziffers.generatorDone) {
+       this.removePatternFromCache(key);
     }
 
     if (typeof id === "number") player.zid = zid;
@@ -1894,6 +1902,8 @@ export class UserAPI {
   };
 
   scale = getScaleNotes;
+
+  nearScales = nearScales;
 
   rate = (rate: number): void => {
     rate = rate;

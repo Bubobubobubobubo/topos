@@ -1,6 +1,6 @@
 import { noteNameToMidi } from "zifferjs";
-import { type UserAPI } from "./API";
-import { Player } from "./classes/ZPlayer";
+import { type UserAPI } from "../API";
+import { Player } from "../classes/ZPlayer";
 export {};
 
 // Extend String prototype

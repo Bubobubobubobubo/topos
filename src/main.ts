@@ -16,16 +16,19 @@ import { documentation_factory } from "./Documentation";
 import { EditorView } from "codemirror";
 import { Clock } from "./Clock";
 import { loadSamples, UserAPI } from "./API";
-import { makeArrayExtensions } from "./ArrayExtensions";
+import * as oeis from 'jisg'
+import * as zpatterns from 'zifferjs/src/patterns.ts'
+import { makeArrayExtensions } from "./extensions/ArrayExtensions";
 import "./style.css";
 import { Universes, File, template_universes } from "./FileManagement";
 import { tryEvaluate } from "./Evaluator";
 // @ts-ignore
 import showdown from "showdown";
-import { makeStringExtensions } from "./StringExtensions";
+import { makeStringExtensions } from "./extensions/StringExtensions";
 import { installInterfaceLogic } from "./InterfaceLogic";
 import { installWindowBehaviors } from "./WindowBehavior";
 import { drawEmptyBlinkers } from "./AudioVisualisation";
+import { makeNumberExtensions } from "./extensions/NumberExtensions";
 
 export class Editor {
   // Universes and settings
@@ -120,9 +123,20 @@ export class Editor {
     this.api = new UserAPI(this);
     makeArrayExtensions(this.api);
     makeStringExtensions(this.api);
+    makeNumberExtensions(this.api);
 
     // Passing the API to the User
     Object.entries(this.api).forEach(([name, value]) => {
+      (globalThis as Record<string, any>)[name] = value;
+    });
+
+    // Passing OEIS generators to the User
+    Object.entries(oeis).forEach(([name, value]) => {
+      (globalThis as Record<string, any>)[name] = value;
+    });
+
+    // Passing ziffers sequences to the User
+    Object.entries(zpatterns).forEach(([name, value]) => {
       (globalThis as Record<string, any>)[name] = value;
     });
 
