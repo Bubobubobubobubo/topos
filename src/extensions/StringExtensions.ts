@@ -213,6 +213,7 @@ export class Speaker {
                 synth.cancel();
                 // Set timeout
                 if(speakerTimeout) clearTimeout(speakerTimeout);
+                // @ts-ignore
                 speakerTimeout = setTimeout(() => {
                     synth.speak(utterance);
                 }, 200);
