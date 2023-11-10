@@ -683,7 +683,7 @@ export class UserAPI {
 
   public removePatternFromCache = (id: string): void => {
     this.patternCache.delete(id);
-  }
+  };
 
   public z = (
     input: string | Generator<number>,
