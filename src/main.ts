@@ -83,7 +83,7 @@ export class Editor {
   // Audio stuff
   audioContext: AudioContext;
   clock: Clock;
-  dough_nudge: number = 20;
+  dough_nudge: number = 40;
   manualPlay: boolean = false;
   isPlaying: boolean = false;
 
