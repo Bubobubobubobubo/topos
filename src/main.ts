@@ -500,7 +500,7 @@ export class Editor {
   }
 
   private setPeriodicSave(interval: number): void {
-    setInterval(saveBeforeExit(this), interval)
+    setInterval(() => saveBeforeExit(this), interval)
   }
 }
 
