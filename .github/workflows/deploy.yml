@@ -42,8 +42,13 @@ jobs:
           name: production-files
           path: ./dist
 
+      - name: Checkout main branch for favicon
+        uses: actions/checkout@v3
+        with:
+          path: "main"
+
       - name: Copy favicon folder
-        run: cp -r favicon ./dist/
+        run: cp -r main/favicon ./dist/
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
