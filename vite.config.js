@@ -30,7 +30,28 @@ const vitePWAconfiguration = {
   workbox: {
     sourcemap: true,
     cleanupOutdatedCaches: true,
-    globPatterns: ["**/*.{js,css,html,ico,png,svg}"],
+    globPatterns: ["**/*.{js,css,html,json,ogg,wav,mp3,ico,png,svg}"],
+    // Thanks Froos :)
+    runtimeCaching: [
+      {
+        urlPattern: ({ url }) =>
+          [
+            /^https:\/\/raw\.githubusercontent\.com\/.*/i,
+            /^https:\/\/shabda\.ndre\.gr\/.*/i,
+          ].some((regex) => regex.test(url)),
+        handler: 'CacheFirst',
+        options: {
+          cacheName: 'external-samples',
+          expiration: {
+            maxEntries: 5000,
+            maxAgeSeconds: 60 * 60 * 24 * 30, // <== 14 days
+          },
+          cacheableResponse: {
+            statuses: [0, 200],
+          },
+        },
+      },
+    ],
   },
   includeAssets: [
     "favicon/favicon.icon",
