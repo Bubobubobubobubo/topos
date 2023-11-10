@@ -26,6 +26,12 @@ import { makeStringExtensions } from "./StringExtensions";
 import { installInterfaceLogic } from "./InterfaceLogic";
 import { installWindowBehaviors } from "./WindowBehavior";
 import { drawEmptyBlinkers } from "./AudioVisualisation";
+// @ts-ignore
+import { registerSW } from "virtual:pwa-register";
+
+if ("serviceWorker" in navigator) {
+  registerSW();
+}
 
 export class Editor {
   // Universes and settings
@@ -92,13 +98,13 @@ export class Editor {
 
     this.initializeElements();
     this.initializeButtonGroups();
+    this.setCanvas(this.interface.feedback as HTMLCanvasElement);
+    this.setCanvas(this.interface.scope as HTMLCanvasElement);
     try {
-      this.initializeHydra();
+      this.loadHydraSynthAsync();
     } catch (error) {
       console.log("Couldn't start Hydra: ", error);
     }
-    this.setCanvas(this.interface.feedback as HTMLCanvasElement);
-    this.setCanvas(this.interface.scope as HTMLCanvasElement);
 
     // ================================================================================
     // Loading the universe from local storage
@@ -452,8 +458,22 @@ export class Editor {
     }
   }
 
+  private loadHydraSynthAsync(): void {
+    var script = document.createElement("script");
+    script.src = "https://unpkg.com/hydra-synth";
+    script.async = true;
+    script.onload = () => {
+      console.log("Hydra loaded successfully");
+      this.initializeHydra();
+    };
+    script.onerror = function () {
+      console.error("Error loading Hydra script");
+    };
+    document.head.appendChild(script);
+  }
+
   private initializeHydra(): void {
-    //@ts-ignore
+    // @ts-ignore
     this.hydra_backend = new Hydra({
       canvas: this.interface.hydra_canvas as HTMLCanvasElement,
       detectAudio: false,

@@ -23,27 +23,29 @@ const webManifest = {
   ],
 };
 
+const vitePWAconfiguration = {
+  devOptions: {
+    enabled: true,
+  },
+  workbox: {
+    sourcemap: true,
+    cleanupOutdatedCaches: true,
+    globPatterns: ["**/*.{js,css,html,ico,png,svg}"],
+  },
+  includeAssets: [
+    "favicon/favicon.icon",
+    "favicon/apple-touch-icon.png",
+    "mask-icon.svg",
+  ],
+  manifest: webManifest,
+  registerType: "autoUpdate",
+  injectRegister: "auto",
+};
+
 export default defineConfig(({ command, mode, ssrBuild }) => {
   if (command === "serve") {
     return {
-      plugins: [
-        viteCompression(),
-        VitePWA({
-          workbox: {
-            sourcemap: true,
-            cleanupOutdatedCaches: true,
-            globPatterns: ["**/*.{js,css,html,ico,png,svg}"],
-          },
-          includeAssets: [
-            "favicon/favicon.icon",
-            "favicon/apple-touch-icon.png",
-            "mask-icon.svg",
-          ],
-          manifest: webManifest,
-          registerType: "autoUpdate",
-          injectRegister: "auto",
-        }),
-      ],
+      plugins: [viteCompression(), VitePWA(vitePWAconfiguration)],
       assetsInclude: ["**/*.md"],
       server: {
         port: 8000,
@@ -52,24 +54,7 @@ export default defineConfig(({ command, mode, ssrBuild }) => {
     };
   } else {
     return {
-      plugins: [
-        viteCompression(),
-        VitePWA({
-          workbox: {
-            sourcemap: true,
-            cleanupOutdatedCaches: true,
-            globPatterns: ["**/*.{js,css,html,ico,png,svg}"],
-          },
-          includeAssets: [
-            "favicon/favicon.icon",
-            "favicon/apple-touch-icon.png",
-            "mask-icon.svg",
-          ],
-          manifest: webManifest,
-          registerType: "autoUpdate",
-          injectRegister: "auto",
-        }),
-      ],
+      plugins: [viteCompression(), VitePWA(vitePWAconfiguration)],
       chunkSizeWarningLimit: 1600 * 2,
       build: {
         outDir: "dist",
