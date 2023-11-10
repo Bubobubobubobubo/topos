@@ -16,13 +16,22 @@ const handleResize = (canvas: HTMLCanvasElement) => {
   }
 };
 
+const saveBeforeExit = (app: Editor): void => {
+  // @ts-ignore
+  event.preventDefault();
+  // Iterate over all local files and set the candidate to the committed
+  app.currentFile().candidate = app.view.state.doc.toString();
+  app.currentFile().committed = app.view.state.doc.toString();
+  app.settings.saveApplicationToLocalStorage(app.universes, app.settings);
+  app.clock.stop();
+  return null;
+};
+
 export const installWindowBehaviors = (
   app: Editor,
   window: Window,
   preventMultipleTabs: boolean = false
 ) => {
-
-
 
   window.addEventListener("resize", () =>
     handleResize(app.interface.scope as HTMLCanvasElement)
@@ -31,14 +40,10 @@ export const installWindowBehaviors = (
     handleResize(app.interface.feedback as HTMLCanvasElement)
   );
   window.addEventListener("beforeunload", () => {
-    // @ts-ignore
-    event.preventDefault();
-    // Iterate over all local files and set the candidate to the committed
-    app.currentFile().candidate = app.view.state.doc.toString();
-    app.currentFile().committed = app.view.state.doc.toString();
-    app.settings.saveApplicationToLocalStorage(app.universes, app.settings);
-    app.clock.stop();
-    return null;
+    saveBeforeExit(app)
+  });
+  window.addEventListener("visibilitychange", () => {
+    saveBeforeExit(app)
   });
 
   if (preventMultipleTabs) {
