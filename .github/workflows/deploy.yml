@@ -43,7 +43,7 @@ jobs:
           path: ./dist
 
       - name: Copy favicon folder
-        run: cp -r main/favicon ./dist/
+        run: cp -r favicon ./dist/
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
