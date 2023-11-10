@@ -1,6 +1,6 @@
 import { defineConfig } from "vite";
-import { VitePWA } from 'vite-plugin-pwa';
-// import * as mdPlugin from 'vite-plugin-markdown';
+import { VitePWA } from "vite-plugin-pwa";
+import viteCompression from "vite-plugin-compression";
 
 const webManifest = {
   name: "Topos",
@@ -9,31 +9,34 @@ const webManifest = {
   theme_color: "#ffffff",
   icons: [
     {
-      src: 'favicon/android-chrome-192x192.png',
-      sizes: '192x192',
-      type: 'image/png'
+      src: "favicon/android-chrome-192x192.png",
+      sizes: "192x192",
+      type: "image/png",
+      purpose: "any maskable",
     },
     {
-      src: 'favicon/android-chrome-512x512.png',
-      sizes: '512x512',
-      type: 'image/png'
+      src: "favicon/android-chrome-512x512.png",
+      sizes: "512x512",
+      type: "image/png",
+      purpose: "any maskable",
     },
-  ]
-}
+  ],
+};
 
 export default defineConfig(({ command, mode, ssrBuild }) => {
   if (command === "serve") {
     return {
       plugins: [
+        viteCompression(),
         VitePWA({
           includeAssets: [
-            'favicon/favicon.icon',
-            'favicon/apple-touch-icon.png',
-            'mask-icon.svg'
+            "favicon/favicon.icon",
+            "favicon/apple-touch-icon.png",
+            "mask-icon.svg",
           ],
           manifest: webManifest,
-          registerType: 'autoUpdate'
-        })
+          registerType: "autoUpdate",
+        }),
       ],
       assetsInclude: ["**/*.md"],
       server: {
@@ -44,15 +47,16 @@ export default defineConfig(({ command, mode, ssrBuild }) => {
   } else {
     return {
       plugins: [
+        viteCompression(),
         VitePWA({
           includeAssets: [
-            'favicon/favicon.icon',
-            'favicon/apple-touch-icon.png',
-            'mask-icon.svg'
+            "favicon/favicon.icon",
+            "favicon/apple-touch-icon.png",
+            "mask-icon.svg",
           ],
           manifest: webManifest,
-          registerType: 'autoUpdate'
-        })
+          registerType: "autoUpdate",
+        }),
       ],
       chunkSizeWarningLimit: 1600 * 2,
       build: {
