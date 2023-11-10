@@ -481,13 +481,11 @@ export class Editor {
 let app = new Editor();
 installWindowBehaviors(app, window, false);
 if ("serviceWorker" in navigator) {
-  window.addEventListener("load", function() {
+  window.addEventListener("load", function () {
     navigator.serviceWorker
-      .register("./generate-sw.js")
+      .register("./registerSW.js")
       // @ts-ignore
-      .then(res => console.log("Service worker registered"))
-      .catch(err => console.log("Service worker not registered: ", err))
-
-  })
+      .then((res) => console.log("Service worker registered"))
+      .catch((err) => console.log("Service worker not registered: ", err));
+  });
 }
-
