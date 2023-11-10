@@ -24,7 +24,7 @@ import { tryEvaluate } from "./Evaluator";
 import showdown from "showdown";
 import { makeStringExtensions } from "./StringExtensions";
 import { installInterfaceLogic } from "./InterfaceLogic";
-import { installWindowBehaviors } from "./WindowBehavior";
+import { installWindowBehaviors, saveBeforeExit } from "./WindowBehavior";
 import { drawEmptyBlinkers } from "./AudioVisualisation";
 // @ts-ignore
 import { registerSW } from "virtual:pwa-register";
@@ -170,6 +170,8 @@ export class Editor {
 
     // Loading universe from URL (if needed)
     loadUniverserFromUrl(this);
+
+    this.setPeriodicSave(5000);
   }
 
   private getBuffer(type: string): any {
@@ -466,7 +468,7 @@ export class Editor {
       console.log("Hydra loaded successfully");
       this.initializeHydra();
     };
-    script.onerror = function () {
+    script.onerror = function() {
       console.error("Error loading Hydra script");
     };
     document.head.appendChild(script);
@@ -495,6 +497,10 @@ export class Editor {
     if (ctx) {
       ctx.scale(dpr, dpr);
     }
+  }
+
+  private setPeriodicSave(interval: number): void {
+    setInterval(saveBeforeExit(this), interval)
   }
 }
 

@@ -16,7 +16,7 @@ const handleResize = (canvas: HTMLCanvasElement) => {
   }
 };
 
-const saveBeforeExit = (app: Editor): null => {
+export const saveBeforeExit = (app: Editor): null => {
   // @ts-ignore
   event.preventDefault();
   // Iterate over all local files and set the candidate to the committed
