@@ -171,6 +171,7 @@ export class UserAPI {
     this.app.interface.error_line.innerHTML = errorMessage;
     this.app.interface.error_line.style.color = "color-red-800";
     this.app.interface.error_line.classList.remove("hidden");
+    // @ts-ignore
     this.errorTimeoutID = setTimeout(
       () => this.app.interface.error_line.classList.add("hidden"),
       2000
@@ -184,6 +185,7 @@ export class UserAPI {
     this.app.interface.error_line.innerHTML = message as string;
     this.app.interface.error_line.style.color = "white";
     this.app.interface.error_line.classList.remove("hidden");
+    // @ts-ignore
     this.printTimeoutID = setTimeout(
       () => this.app.interface.error_line.classList.add("hidden"),
       4000
