@@ -716,6 +716,7 @@ ${e("Printing the transport","\nlog(`${cbar()}, ${cbeat()}, ${cpulse()}`)\n  ",!
 
 The base functions to control time are:
 - <ic>bpm(number?)</ic> : get or set the current tempo.
+- <ic>tempo(number?)</ic> : alias to <ic>bpm</ic>.
 - <ic>ppqn(number?)</ic> : get or set the granularity of time
   - The function name comes from [PPQN](https://en.wikipedia.org/wiki/Pulses_per_quarter_note) (_pulses per quarter notes_).
 
