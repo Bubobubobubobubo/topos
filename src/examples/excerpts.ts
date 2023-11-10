@@ -88,8 +88,9 @@ if (flip(8, 75)) {
     .end(1).out()
   beat(.5) :: sound('ST01').note(melody).n($(1)).gain(0.4).end(1).out()  
   beat(1) :: sound('ST02').note(melody).n($(1)).gain(0.4).end(1).out() 
-}`, `// Race day - Bubobubobubo
-bpm(125);
+}`,
+  `// Race day - Bubobubobubo
+tempo(125);
 beat(.5) :: sound('STB6').n(irand(1,10)).gain(1).out()
 rhythm(flip(4) ? 1 : .5, 5, 8) :: sound('kick').out()
 rhythm(flip(2) ? .5 : .25, 7, 8) :: sound('click')
@@ -113,7 +114,7 @@ rhythm(flip(2) ? .5 : .25, flip(4) ? 8 : 11, 12) :: sound('hat')
   .orbit(3).room(0.5).size(0.5).n(0).out()
 `,
   `// Part-Dieu - Bubobubobubo
-bpm(90);
+tempo(90);
 beat(rarely(12) ? .5 : .25) :: sound('ST22')
   .note([30, 30, 30, 31].repeat(8).beat(.5))
   .cut(1).n([19, 21].beat(.75))
@@ -127,10 +128,11 @@ beat(.5) :: snd('dr')
   .gain(1).out()
 beat(flip(2) ? 1 : 0.75) :: snd('bd').n(2).out()
 beat(4) :: snd('snare').n(5)
-  .delay(0.5).delayt(bpm() / 60 / 8)
+  .delay(0.5).delayt(tempo() / 60 / 8)
   .delayfb(0.25).out()
-`, `// Atarism - Bubobubobubo
-bpm(85);
+`,
+  `// Atarism - Bubobubobubo
+tempo(85);
 let modifier = [.5, 1, 2].beat(8);
 let othermod = [1, .5, 4].beat(4);
 beat(modifier / 2):: sound('STA9').n([0,2].beat(.5)).vel(0.5).out()
@@ -159,7 +161,7 @@ beat(1/4)::snd(['sawtooth', 'triangle', 'square'].beat(1))
   .sustain(0.01 + usine(.25) / 10).out()
 beat(4)::snd('amencutup').n($(19)).cut(1).orbit(2).pan(rand(0.0,1.0)).out()`,
   `// Crazy arpeggios - Bubobubobubo
-bpm(110)
+tempo(110)
 beat([0.25, 0.5].beat(4)) && sound('sawtooth')
   .note([60, 62, 63, 67, 70].beat(.125) + 
         [-12,0,12].beat() + [0, 0, 5, 7].bar())
@@ -194,7 +196,8 @@ beat([.25,.125, .5].beat(4))::snd('arpy:4')
   .cutoff(100 + usine(1/8) * 800).lpadsr(5, 0, [1/8, 1.16].beat(), 0, 0)
   .resonance(0.2).gain(0.4).end(0.8).room(0.9).size(0.9).n(3).out();
 beat(.5) :: snd('arpy').note([30, 33, 35].repeat(4).beat(1) - [24,12].beat(0.5))
-  .cutoff(500).lpadsr(8, 0.05, .125, 0, 0).out()`, `// Naïf et agréable -- Bubobubobubo
+  .cutoff(500).lpadsr(8, 0.05, .125, 0, 0).out()`,
+  `// Naïf et agréable -- Bubobubobubo
 z1('1/8 024!3 035 024 0124').sound('wt_stereo')
   .adsr(0, .4, 0.5, .4).gain(0.1)
   .lpadsr(4, 0, .2, 0, 0)
@@ -211,7 +214,7 @@ z4('1/4 kick kick snare kick').sound().gain(1).cutoff(osci).out()`,
 
   /*
   `// Numerology - Bubobubobubo
-bpm(130);
+tempo(130);
 let mel = [
   "0.125 _ (0 3 7 0 3 5 0 3 9)+(0 2)", "0.125 (0 7 0 10 0 5)+(0 3)",
   "0.125 (0 3 7 0 3 5 0 3 9)+(0 2)", "0.125 (0 2 4 5 9 10)+(0 2)",
@@ -219,7 +222,7 @@ let mel = [
 z0(mel)
   .scale('minor').sound('wt_piano').cutoff(800 + usine(.5) * 5000)
   .fmi([2, 4, 8].beat(2)).fmh(flip(2) ? 2 : 4)
-  .delay(bpm() / 60 / 9).delayt(0.25).delayfb(0.5)
+  .delay(tempo() / 60 / 9).delayt(0.25).delayfb(0.5)
   .fmsus(0.3).fmrel(0.3).rel(rand(0.5,0.8))
   .sus(rand(0.05, 0.1)).out();
 beat(1) :: sound(flip(2) ? 'kick' : ['sd', 'cp'].beat(3)).out();

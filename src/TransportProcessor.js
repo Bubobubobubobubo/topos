@@ -1,5 +1,4 @@
 class TransportProcessor extends AudioWorkletProcessor {
-
   constructor(options) {
     super(options);
     this.port.addEventListener("message", this.handleMessage);
@@ -20,19 +19,20 @@ class TransportProcessor extends AudioWorkletProcessor {
       this.started = false;
     } else if (message.data.type === "stop") {
       this.started = false;
-    } else if (message.data.type === 'bpm') {
+    } else if (message.data.type === "bpm") {
       this.bpm = message.data.value;
       this.currentPulsePosition = currentTime;
-    } else if (message.data.type === 'ppqn') {
+    } else if (message.data.type === "ppqn") {
       this.ppqn = message.data.value;
-    } else if (message.data.type === 'nudge') {
+      this.currentPulsePosition = currentTime;
+    } else if (message.data.type === "nudge") {
       this.nudge = message.data.value;
     }
-  }
+  };
 
   process(inputs, outputs, parameters) {
     if (this.started) {
-      const adjustedCurrentTime = currentTime + (this.nudge / 100);
+      const adjustedCurrentTime = currentTime + this.nudge / 100;
       const beatNumber = adjustedCurrentTime / (60 / this.bpm);
       const currentPulsePosition = Math.ceil(beatNumber * this.ppqn);
       if (currentPulsePosition > this.currentPulsePosition) {
@@ -44,7 +44,4 @@ class TransportProcessor extends AudioWorkletProcessor {
   }
 }
 
-registerProcessor(
-  "transport",
-  TransportProcessor
-);
+registerProcessor("transport", TransportProcessor);

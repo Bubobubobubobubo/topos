@@ -164,7 +164,7 @@ export class Clock {
   }
 
   get realTime(): number {
-     return this.app.audioContext.currentTime - this.totalPauseTime;
+    return this.app.audioContext.currentTime - this.totalPauseTime;
   }
 
   get deviation(): number {
@@ -175,6 +175,7 @@ export class Clock {
     if (ppqn > 0 && this._ppqn !== ppqn) {
       this._ppqn = ppqn;
       this.transportNode?.setPPQN(ppqn);
+      this.logicalTime = this.realTime;
     }
   }
 
@@ -192,14 +193,11 @@ export class Clock {
      */
     const pulseDuration = this.pulse_duration;
     const nudgedTime = time + nudge;
-    const nextTickTime = Math.ceil(nudgedTime /
-      pulseDuration) * pulseDuration;
+    const nextTickTime = Math.ceil(nudgedTime / pulseDuration) * pulseDuration;
     const remainingTime = nextTickTime - nudgedTime;
 
     return remainingTime;
   }
-
-
 
   public convertPulseToSecond(n: number): number {
     /**
@@ -218,7 +216,7 @@ export class Clock {
     this.running = true;
     this.app.api.MidiConnection.sendStartMessage();
     this.lastPlayPressTime = this.app.audioContext.currentTime;
-    this.totalPauseTime += (this.lastPlayPressTime - this.lastPauseTime);
+    this.totalPauseTime += this.lastPlayPressTime - this.lastPauseTime;
     this.transportNode?.start();
   }
 
