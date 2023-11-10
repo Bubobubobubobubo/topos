@@ -29,6 +29,11 @@ export default defineConfig(({ command, mode, ssrBuild }) => {
       plugins: [
         viteCompression(),
         VitePWA({
+          workbox: {
+            sourcemap: true,
+            cleanupOutdatedCaches: true,
+            globPatterns: ["**/*.{js,css,html,ico,png,svg}"],
+          },
           includeAssets: [
             "favicon/favicon.icon",
             "favicon/apple-touch-icon.png",
@@ -36,6 +41,7 @@ export default defineConfig(({ command, mode, ssrBuild }) => {
           ],
           manifest: webManifest,
           registerType: "autoUpdate",
+          injectRegister: "auto",
         }),
       ],
       assetsInclude: ["**/*.md"],
@@ -49,6 +55,11 @@ export default defineConfig(({ command, mode, ssrBuild }) => {
       plugins: [
         viteCompression(),
         VitePWA({
+          workbox: {
+            sourcemap: true,
+            cleanupOutdatedCaches: true,
+            globPatterns: ["**/*.{js,css,html,ico,png,svg}"],
+          },
           includeAssets: [
             "favicon/favicon.icon",
             "favicon/apple-touch-icon.png",
@@ -56,6 +67,7 @@ export default defineConfig(({ command, mode, ssrBuild }) => {
           ],
           manifest: webManifest,
           registerType: "autoUpdate",
+          injectRegister: "auto",
         }),
       ],
       chunkSizeWarningLimit: 1600 * 2,
