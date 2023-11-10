@@ -54,7 +54,7 @@ export class Clock {
     this.logicalTime = 0;
     this.tick = 0;
     this._bpm = 120;
-    this._ppqn = 48 * 2;
+    this._ppqn = 48;
     this.transportNode = null;
     this.ctx = ctx;
     this.running = true;
@@ -175,6 +175,7 @@ export class Clock {
     if (ppqn > 0 && this._ppqn !== ppqn) {
       this._ppqn = ppqn;
       this.transportNode?.setPPQN(ppqn);
+      this.logicalTime = this.realTime;
     }
   }
 

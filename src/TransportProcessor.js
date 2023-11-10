@@ -24,6 +24,7 @@ class TransportProcessor extends AudioWorkletProcessor {
       this.currentPulsePosition = currentTime;
     } else if (message.data.type === "ppqn") {
       this.ppqn = message.data.value;
+      this.currentPulsePosition = currentTime;
     } else if (message.data.type === "nudge") {
       this.nudge = message.data.value;
     }
