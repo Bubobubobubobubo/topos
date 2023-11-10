@@ -175,7 +175,6 @@ export class Clock {
     if (ppqn > 0 && this._ppqn !== ppqn) {
       this._ppqn = ppqn;
       this.transportNode?.setPPQN(ppqn);
-      this.logicalTime = this.realTime;
     }
   }
 
