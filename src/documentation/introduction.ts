@@ -7,9 +7,9 @@ export const introduction = (application: Editor): string => {
   return `
 # Welcome
 	
-Welcome to the Topos documentation. These pages are offering you an introduction to the software and to the ideas behind it. You can jump here anytime by pressing ${key_shortcut(
+Welcome to the **Topos** documentation. You can jump here anytime by pressing ${key_shortcut(
     "Ctrl + D"
-  )}.  Press again to make the documentation disappear. All your contributions are welcome!
+  )}.  Press again to make the documentation disappear. Contributions are much appreciated! The documentation [lives here](https://github.com/Bubobubobubobubo/topos/tree/main/src/documentation).
 
 ${makeExample(
     "Welcome! Eval to get started",
@@ -17,26 +17,36 @@ ${makeExample(
     true
   )}
 	
-## What is Topos?
+# What is Topos?
 	
-Topos is an _algorithmic_ sequencer. Topos uses small algorithms to represent musical sequences and processes. These can be written in just a few lines of code. Topos is made to be _live-coded_. The _live coder_ strives for the constant interaction with algorithms and sound during a musical performance. Topos is aiming to be a digital playground for live algorithmic music.
+Topos is an _algorithmic_ sequencer. Topos is also a _live coding_ environment. To sum it up, think: "_making music in real time through code_". Code used as an expressive medium for musical improvisation! Topos uses small algorithms to represent musical sequences and processes.
 	
 ${makeExample(
     "Small algorithms for direct musical expression",
     `
-beat(1) :: sound(['kick', 'hat', 'snare', 'hat'].beat(1)).out()
-beat(.5) :: sound('jvbass').note(35 + [0,12].beat()).out()
-beat([0.5, 0.25].beat(1)) :: sound('east')
-  .room(.9).speed(flip(4) ? 1 : 0.95).size(0.9).o(2).n($(1)).out()`,
+rhythm(.5, 4, 8) :: sound('drum').out()
+rhythm(.25, [5, 7].beat(2), 8) :: sound(['hc', 'fikea', 'hat'].pick(1))
+  .lpf([500, 4000+usine(1/2)*2000]).pan(r(0, 1)).ad(0, [1, .5])
+  .db(-ir(1,8)).speed([1,[0.5, 2].pick()]).room(0.5).size(3).o(4).out()
+beat([2,0.5].dur(13.5, 0.5))::snd('fsoftsnare')
+  .n(0).speed([1, 0.5]).o(4).out()`,
     false
   )}
 
 ${makeExample(
     "Computer music should be immediate and intuitive",
-    `beat(.5)::snd('sine')
-  .delay(0.5).delayt(0.25).delayfb(0.7)
-  .room(0.8).size(0.8)
-  .freq(mouseX()).out()`,
+    `
+let chord_prog = [0, 0, 5].bar() // Chord progression
+beat(.25)::snd('sine')
+  .note(chord_prog + [60, 64, 67, 71].mouseX() 
+        + [-12,0,12].beat(0.25)) // Notes
+  .fmi([1, 1.5, 2, 4].beat()) // FM synthesis
+  .ad(0, r(0.1, .25)) // Envelope
+  .lpf(500 + usine(1/4)*1500) // Filter Envelope
+  .lpad(4, 0, .125) 
+  .delay(0.5).delayt(0.25).delayfb(0.7) // Delay
+  .room(0.5).size(8) // Reverb
+  .out()`,
     false
   )}
 
@@ -51,9 +61,7 @@ beat(.25) :: sound('sid').note(
     false
   )}
 	
-Topos is deeply inspired by the [Monome Teletype](https://monome.org/). The Teletype is/was an open source hardware module for Eurorack synthesizers. While the Teletype was initially born as an hardware module, Topos aims to be a web-browser based software sequencer from the same family! It is a sequencer, a scriptable interface, a companion for algorithmic music-making.  Topos wishes to fullfill the same goal as the Teletype, keeping the same spirit alive on the web. It is free, open-source, and made to be shared and used by everyone.
-	
-Learn more about live coding on [livecoding.fr](https://livecoding.fr).
+Topos is deeply inspired by the [Monome Teletype](https://monome.org/). The Teletype is/was an open source hardware module for Eurorack synthesizers. While the Teletype was initially born as an hardware module, Topos aims to be a web-browser based cousin of it! It is a sequencer, a scriptable interface, a companion for algorithmic music-making. Topos wishes to fullfill the same goal as the Teletype, keeping the same spirit alive on the web. It is free, open-source, and made to be shared and used by everyone.  Learn more about live coding on [livecoding.fr](https://livecoding.fr).
 
 ## Demo Songs
 

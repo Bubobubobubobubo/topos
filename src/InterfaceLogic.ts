@@ -39,7 +39,8 @@ export const installInterfaceLogic = (app: Editor) => {
   (app.interface.time_position_checkbox as HTMLInputElement).checked =
     app.settings.time_position;
   (app.interface.tips_checkbox as HTMLInputElement).checked = app.settings.tips;
-  (app.interface.completion_checkbox as HTMLInputElement).checked = app.settings.completions;
+  (app.interface.completion_checkbox as HTMLInputElement).checked =
+    app.settings.completions;
 
   (app.interface.midi_clock_checkbox as HTMLInputElement).checked =
     app.settings.send_clock;
@@ -392,7 +393,8 @@ export const installInterfaceLogic = (app: Editor) => {
   });
 
   app.interface.completion_checkbox.addEventListener("change", () => {
-    let checked = (app.interface.completion_checkbox as HTMLInputElement).checked
+    let checked = (app.interface.completion_checkbox as HTMLInputElement)
+      .checked
       ? true
       : false;
     app.settings.completions = checked;
@@ -458,6 +460,9 @@ export const installInterfaceLogic = (app: Editor) => {
     "interaction",
     "code",
     "time",
+    "linear",
+    "cyclic",
+    "longform",
     "sound",
     "samples",
     "synths",
@@ -470,6 +475,8 @@ export const installInterfaceLogic = (app: Editor) => {
     "probabilities",
     "variables",
     // "reference",
+    "synchronisation",
+    "mouse",
     "shortcuts",
     "about",
     "bonus",

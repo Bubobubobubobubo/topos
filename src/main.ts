@@ -26,9 +26,15 @@ import { tryEvaluate } from "./Evaluator";
 import showdown from "showdown";
 import { makeStringExtensions } from "./extensions/StringExtensions";
 import { installInterfaceLogic } from "./InterfaceLogic";
-import { installWindowBehaviors } from "./WindowBehavior";
+import { installWindowBehaviors, saveBeforeExit } from "./WindowBehavior";
 import { drawEmptyBlinkers } from "./AudioVisualisation";
 import { makeNumberExtensions } from "./extensions/NumberExtensions";
+// @ts-ignore
+import { registerSW } from "virtual:pwa-register";
+
+if ("serviceWorker" in navigator) {
+  registerSW();
+}
 
 export class Editor {
   // Universes and settings
@@ -95,9 +101,13 @@ export class Editor {
 
     this.initializeElements();
     this.initializeButtonGroups();
-    this.initializeHydra();
     this.setCanvas(this.interface.feedback as HTMLCanvasElement);
     this.setCanvas(this.interface.scope as HTMLCanvasElement);
+    try {
+      this.loadHydraSynthAsync();
+    } catch (error) {
+      console.log("Couldn't start Hydra: ", error);
+    }
 
     // ================================================================================
     // Loading the universe from local storage
@@ -174,6 +184,8 @@ export class Editor {
 
     // Loading universe from URL (if needed)
     loadUniverserFromUrl(this);
+
+    this.setPeriodicSave(5000);
   }
 
   private getBuffer(type: string): any {
@@ -462,8 +474,22 @@ export class Editor {
     }
   }
 
+  private loadHydraSynthAsync(): void {
+    var script = document.createElement("script");
+    script.src = "https://unpkg.com/hydra-synth";
+    script.async = true;
+    script.onload = () => {
+      console.log("Hydra loaded successfully");
+      this.initializeHydra();
+    };
+    script.onerror = function() {
+      console.error("Error loading Hydra script");
+    };
+    document.head.appendChild(script);
+  }
+
   private initializeHydra(): void {
-    //@ts-ignore
+    // @ts-ignore
     this.hydra_backend = new Hydra({
       canvas: this.interface.hydra_canvas as HTMLCanvasElement,
       detectAudio: false,
@@ -485,6 +511,10 @@ export class Editor {
     if (ctx) {
       ctx.scale(dpr, dpr);
     }
+  }
+
+  private setPeriodicSave(interval: number): void {
+    setInterval(() => saveBeforeExit(this), interval)
   }
 }
 

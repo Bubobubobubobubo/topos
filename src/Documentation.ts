@@ -1,16 +1,21 @@
 import { type Editor } from "./main";
 import { introduction } from "./documentation/introduction";
 import { oscilloscope } from "./documentation/oscilloscope";
+import { synchronisation } from "./documentation/synchronisation";
 import { samples } from "./documentation/samples";
 import { chaining } from "./documentation/chaining";
 import { software_interface } from "./documentation/interface";
 import { interaction } from "./documentation/interaction";
 import { time } from "./documentation/time";
+import { linear_time } from "./documentation/linear_time";
+import { cyclical_time } from "./documentation/cyclical_time";
+import { long_forms } from "./documentation/long_forms";
 import { midi } from "./documentation/midi";
 import { code } from "./documentation/code";
 import { about } from "./documentation/about";
 import { sound } from "./documentation/engine";
 import { shortcuts } from "./documentation/keyboard";
+import { mouse } from "./documentation/mouse";
 import { patterns } from "./documentation/patterns";
 import { functions } from "./documentation/functions";
 import { variables } from "./documentation/variables";
@@ -44,9 +49,9 @@ export const makeExampleFactory = (application: Editor): Function => {
     return `
 <details ${open ? "open" : ""}>
   <summary >${description}
-    <button class="py-1 align-top text-base rounded-lg pl-2 pr-2 hover:bg-green-700 bg-green-600 inline-block" onclick="app.api._playDocExample(app.api.codeExamples['${codeId}'])">▶️ Play</button>
-    <button class="py-1 text-base rounded-lg pr-2 hover:bg-neutral-600 bg-neutral-500 inline-block pl-2" onclick="app.api._stopDocExample()">&#x23f8;&#xFE0F; Pause</button>
-    <button class="py-1 text-base rounded-lg pr-2 hover:bg-neutral-900 bg-neutral-800 inline-block " onclick="navigator.clipboard.writeText(app.api.codeExamples['${codeId}'])">📎 Copy</button>
+    <button class="ml-4 py-1 align-top text-base px-4 hover:bg-green-700 bg-emerald-600 inline-block" onclick="app.api._playDocExample(app.api.codeExamples['${codeId}'])">▶️ Play</button>
+    <button class="py-1 text-base px-4 hover:bg-neutral-600 bg-neutral-500 inline-block " onclick="app.api._stopDocExample()">&#x23f8;&#xFE0F; Pause</button>
+    <button class="py-1 text-base px-4 hover:bg-neutral-900 bg-neutral-800 inline-block " onclick="navigator.clipboard.writeText(app.api.codeExamples['${codeId}'])">📎 Copy</button>
   </summary>
   \`\`\`javascript
   ${code}
@@ -58,7 +63,6 @@ export const makeExampleFactory = (application: Editor): Function => {
 };
 
 export const documentation_factory = (application: Editor) => {
-
   // Initialize a data structure to store code examples by their unique IDs
   application.api.codeExamples = {};
 
@@ -68,6 +72,9 @@ export const documentation_factory = (application: Editor) => {
     interaction: interaction(application),
     code: code(application),
     time: time(application),
+    linear: linear_time(application),
+    cyclic: cyclical_time(application),
+    longform: long_forms(application),
     sound: sound(application),
     samples: samples(application),
     synths: synths(application),
@@ -80,15 +87,16 @@ export const documentation_factory = (application: Editor) => {
     probabilities: probabilities(application),
     functions: functions(application),
     reference: reference(),
-    shortcuts: shortcuts(),
+    shortcuts: shortcuts(application),
+    mouse: mouse(application),
     oscilloscope: oscilloscope(application),
+    synchronisation: synchronisation(application),
     bonus: bonus(application),
     about: about(),
   };
 };
 
 export const showDocumentation = (app: Editor) => {
-
   if (document.getElementById("app")?.classList.contains("hidden")) {
     document.getElementById("app")?.classList.remove("hidden");
     document.getElementById("documentation")?.classList.add("hidden");

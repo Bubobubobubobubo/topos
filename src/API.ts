@@ -1,4 +1,4 @@
-import { EditorView } from '@codemirror/view';
+import { EditorView } from "@codemirror/view";
 import { getAllScaleNotes, nearScales, seededRandom } from "zifferjs";
 import {
   MidiCCEvent,
@@ -28,7 +28,7 @@ import {
 import { Speaker } from "./extensions/StringExtensions";
 import { getScaleNotes } from "zifferjs";
 import { OscilloscopeConfig, blinkScript } from "./AudioVisualisation";
-import { SkipEvent } from './classes/SkipEvent';
+import { SkipEvent } from "./classes/SkipEvent";
 
 interface ControlChange {
   channel: number;
@@ -151,9 +151,13 @@ export class UserAPI {
       const stackLines = error.stack?.split("\n");
       if (stackLines) {
         for (const line of stackLines) {
-          if (line.includes('<anonymous>')) {
+          if (line.includes("<anonymous>")) {
             const match = line.match(/<anonymous>:(\d+):(\d+)/);
-            if (match) return { line: parseInt(match[1], 10), column: parseInt(match[2], 10) };
+            if (match)
+              return {
+                line: parseInt(match[1], 10),
+                column: parseInt(match[2], 10),
+              };
           }
         }
       }
@@ -161,16 +165,17 @@ export class UserAPI {
     };
 
     const { line, column } = extractLineAndColumn(error);
-    const errorMessage = line && column
-      ? `${error.message} (Line: ${line - 2}, Column: ${column})`
-      : error.message;
-
+    const errorMessage =
+      line && column
+        ? `${error.message} (Line: ${line - 2}, Column: ${column})`
+        : error.message;
 
     clearTimeout(this.errorTimeoutID);
     clearTimeout(this.printTimeoutID);
     this.app.interface.error_line.innerHTML = errorMessage;
     this.app.interface.error_line.style.color = "color-red-800";
     this.app.interface.error_line.classList.remove("hidden");
+    // @ts-ignore
     this.errorTimeoutID = setTimeout(
       () => this.app.interface.error_line.classList.add("hidden"),
       2000
@@ -184,6 +189,7 @@ export class UserAPI {
     this.app.interface.error_line.innerHTML = message as string;
     this.app.interface.error_line.style.color = "white";
     this.app.interface.error_line.classList.remove("hidden");
+    // @ts-ignore
     this.printTimeoutID = setTimeout(
       () => this.app.interface.error_line.classList.add("hidden"),
       4000
@@ -404,7 +410,7 @@ export class UserAPI {
      *                { channel: 0, velocity: 100, duration: 0.5 }
      */
 
-    const event = {note: value, velocity, channel, port} as MidiParams
+    const event = { note: value, velocity, channel, port } as MidiParams;
 
     return new MidiEvent(event, this.app);
   };
@@ -673,7 +679,7 @@ export class UserAPI {
 
   public resetAllFromCache = (): void => {
     this.patternCache.forEach((player) => (player as Player).reset());
-  }
+  };
 
   public removePatternFromCache = (id: string): void => {
     this.patternCache.delete(id);
@@ -1012,74 +1018,6 @@ export class UserAPI {
   cmp = this.clamp;
 
   // =============================================================
-  // Transport functions
-  // =============================================================
-
-  public nudge = (nudge?: number): number => {
-    /**
-     * Sets or returns the current clock nudge.
-     *
-     * @param nudge - [optional] the nudge to set
-     * @returns The current nudge
-     */
-    if (nudge) {
-      this.app.clock.nudge = nudge;
-    }
-    return this.app.clock.nudge;
-  };
-
-  public bpm = (n?: number): number => {
-    /**
-     * Sets or returns the current bpm.
-     *
-     * @param bpm - [optional] The bpm to set
-     * @returns The current bpm
-     */
-    if (n === undefined) return this.app.clock.bpm;
-
-    if (n < 1 || n > 500) console.log(`Setting bpm to ${n}`);
-    this.app.clock.bpm = n;
-    return n;
-  };
-  tempo = this.bpm;
-
-  public bpb = (n?: number): number => {
-    /**
-     * Sets or returns the number of beats per bar.
-     *
-     * @param bpb - [optional] The number of beats per bar to set
-     * @returns The current bpb
-     */
-    if (n === undefined) return this.app.clock.time_signature[0];
-
-    if (n < 1) console.log(`Setting bpb to ${n}`);
-    this.app.clock.time_signature[0] = n;
-    return n;
-  };
-
-  public ppqn = (n?: number) => {
-    /**
-     * Sets or returns the number of pulses per quarter note.
-     */
-    if (n === undefined) return this.app.clock.ppqn;
-
-    if (n < 1) console.log(`Setting ppqn to ${n}`);
-    this.app.clock.ppqn = n;
-    return n;
-  };
-
-  public time_signature = (numerator: number, denominator: number): void => {
-    /**
-     * Sets the time signature.
-     *
-     * @param numerator - The numerator of the time signature
-     * @param denominator - The denominator of the time signature
-     * @returns The current time signature
-     */
-    this.app.clock.time_signature = [numerator, denominator];
-  };
-
-  // =============================================================
   // Probability functions
   // =============================================================
 
@@ -1299,30 +1237,29 @@ export class UserAPI {
   // =============================================================
 
   public fullseq = (sequence: string, duration: number) => {
-    if (sequence.split('').every(c => c === 'x' || c === 'o')) {
-      return [...sequence].map(c => c === 'x').beat(duration);
+    if (sequence.split("").every((c) => c === "x" || c === "o")) {
+      return [...sequence].map((c) => c === "x").beat(duration);
     } else {
-      return false
+      return false;
     }
-  }
+  };
 
   public seq = (expr: string, duration: number = 0.5): boolean => {
-    let len = expr.length * duration
+    let len = expr.length * duration;
     let output: number[] = [];
 
     for (let i = 1; i <= len + 1; i += duration) {
       output.push(Math.floor(i * 10) / 10);
     }
-    output.pop()
+    output.pop();
 
     output = output.filter((_, idx) => {
       const exprIdx = idx % expr.length;
-      return expr[exprIdx] === 'x';
+      return expr[exprIdx] === "x";
     });
 
-    return this.oncount(output, len)
-  }
-
+    return this.oncount(output, len);
+  };
 
   public beat = (n: number | number[] = 1, nudge: number = 0): boolean => {
     /**
@@ -1335,7 +1272,7 @@ export class UserAPI {
     const results: boolean[] = nArray.map(
       (value) =>
         (this.app.clock.pulses_since_origin - Math.floor(nudge * this.ppqn())) %
-        Math.floor(value * this.ppqn()) ===
+          Math.floor(value * this.ppqn()) ===
         0
     );
     return results.some((value) => value === true);
@@ -1355,7 +1292,7 @@ export class UserAPI {
     const results: boolean[] = nArray.map(
       (value) =>
         (this.app.clock.pulses_since_origin - nudgeInPulses) %
-        Math.floor(value * barLength) ===
+          Math.floor(value * barLength) ===
         0
     );
     return results.some((value) => value === true);
@@ -1889,7 +1826,7 @@ export class UserAPI {
   // =============================================================
 
   sound = (sound: string | string[] | null | undefined) => {
-    if(sound) return new SoundEvent(sound, this.app);
+    if (sound) return new SoundEvent(sound, this.app);
     else return new SkipEvent();
   };
 
@@ -2040,7 +1977,7 @@ export class UserAPI {
       effects: this.app.fontSize.reconfigure(
         EditorView.theme({
           "&": { fontFamily: mainFont },
-          ".cm-gutters": { fontFamily: mainFont, },
+          ".cm-gutters": { fontFamily: mainFont },
           ".cm-content": {
             fontFamily: mainFont,
           },
@@ -2050,5 +1987,140 @@ export class UserAPI {
         })
       ),
     });
-  }
+  };
+
+  // =============================================================
+  // Resolution
+  // =============================================================
+
+  public gif = (options: any) => {
+    /**
+     * Displays a GIF on the webpage with customizable options including rotation and timed fade-out.
+     * @param {Object} options - The configuration object for displaying the GIF.
+     * @param {string} options.url - The URL of the GIF to display.
+     * @param {number} [options.posX=0] - The X-coordinate to place the GIF at.
+     * @param {number} [options.posY=0] - The Y-coordinate to place the GIF at.
+     * @param {number} [options.opacity=1] - The initial opacity level of the GIF.
+     * @param {string} [options.size='auto'] - The size of the GIF (can be 'cover', 'contain', or specific dimensions).
+     * @param {boolean} [options.center=false] - Whether to center the GIF in the window.
+     * @param {number} [options.rotation=0] - The rotation angle of the GIF in degrees.
+     * @param {string} [options.filter='none'] - The CSS filter function to apply for color alterations.
+     * @param {number} [options.duration=10] - The total duration the GIF is displayed, in pulses.
+     */
+    const {
+      url,
+      posX = 0,
+      posY = 0,
+      opacity = 1,
+      size = "auto",
+      center = false,
+      rotation = 0,
+      filter = "none",
+      dur = 1,
+    } = options;
+
+    let real_duration =
+      dur * this.app.clock.pulse_duration * this.app.clock.ppqn;
+    let fadeOutDuration = real_duration * 0.1;
+    let visibilityDuration = real_duration - fadeOutDuration;
+    const gifElement = document.createElement("img");
+    gifElement.src = url;
+    gifElement.style.position = "fixed";
+    gifElement.style.left = center ? "50%" : `${posX}px`;
+    gifElement.style.top = center ? "50%" : `${posY}px`;
+    gifElement.style.opacity = `${opacity}`;
+    gifElement.style.zIndex = "-1";
+    if (size !== "auto") {
+      gifElement.style.width = size;
+      gifElement.style.height = size;
+    }
+    const transformRules = [`rotate(${rotation}deg)`];
+    if (center) {
+      transformRules.unshift("translate(-50%, -50%)");
+    }
+    gifElement.style.transform = transformRules.join(" ");
+    gifElement.style.filter = filter;
+    gifElement.style.transition = `opacity ${fadeOutDuration}s ease`;
+    document.body.appendChild(gifElement);
+
+    // Start the fade-out at the end of the visibility duration
+    setTimeout(() => {
+      gifElement.style.opacity = "0";
+    }, visibilityDuration * 1000);
+
+    // Remove the GIF from the DOM after the fade-out duration
+    setTimeout(() => {
+      if (document.body.contains(gifElement)) {
+        document.body.removeChild(gifElement);
+      }
+    }, real_duration * 1000);
+  };
+
+  // =============================================================
+  // Transport functions
+  // =============================================================
+
+  public nudge = (nudge?: number): number => {
+    /**
+     * Sets or returns the current clock nudge.
+     *
+     * @param nudge - [optional] the nudge to set
+     * @returns The current nudge
+     */
+    if (nudge) {
+      this.app.clock.nudge = nudge;
+    }
+    return this.app.clock.nudge;
+  };
+
+  public bpm = (n?: number): number => {
+    /**
+     * Sets or returns the current bpm.
+     *
+     * @param bpm - [optional] The bpm to set
+     * @returns The current bpm
+     */
+    if (n === undefined) return this.app.clock.bpm;
+
+    if (n < 1 || n > 500) console.log(`Setting bpm to ${n}`);
+    this.app.clock.bpm = n;
+    return n;
+  };
+  tempo = this.bpm;
+
+  public bpb = (n?: number): number => {
+    /**
+     * Sets or returns the number of beats per bar.
+     *
+     * @param bpb - [optional] The number of beats per bar to set
+     * @returns The current bpb
+     */
+    if (n === undefined) return this.app.clock.time_signature[0];
+
+    if (n < 1) console.log(`Setting bpb to ${n}`);
+    this.app.clock.time_signature[0] = n;
+    return n;
+  };
+
+  public ppqn = (n?: number) => {
+    /**
+     * Sets or returns the number of pulses per quarter note.
+     */
+    if (n === undefined) return this.app.clock.ppqn;
+
+    if (n < 1) console.log(`Setting ppqn to ${n}`);
+    this.app.clock.ppqn = n;
+    return n;
+  };
+
+  public time_signature = (numerator: number, denominator: number): void => {
+    /**
+     * Sets the time signature.
+     *
+     * @param numerator - The numerator of the time signature
+     * @param denominator - The denominator of the time signature
+     * @returns The current time signature
+     */
+    this.app.clock.time_signature = [numerator, denominator];
+  };
 }

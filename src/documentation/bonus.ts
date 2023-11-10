@@ -7,7 +7,7 @@ export const bonus = (application: Editor): string => {
   return `
 # Bonus features
 
-Some features are not part of the core of Topos but are still very useful. They are not described in the main documentation but are still available in the API. These features are sometimes coming from personal experiments, from a thinking-out-loud process or from a sudden desire to hack things. This bonus set of functionalities is not guaranteed to be stable.
+Some features are here "just for fun" or "just because I can". They are not very interesting per se but are still available nonetheless. They mostly gravitate towards manipulating visuals or patterning other multimedia formats.
 
 ## Hydra Visual Live Coding
 
@@ -18,10 +18,10 @@ Some features are not part of the core of Topos but are still very useful. They 
 [Hydra](https://hydra.ojack.xyz/?sketch_id=mahalia_1) is a popular live-codable video synthesizer developed by [Olivia Jack](https://ojack.xyz/) and other contributors. It follows the metaphor of analog synthesizer patching to allow its user to create complex live visuals from a web browser window. Being very easy to use, extremely powerful and also very rewarding to use, Hydra has become a popular choice for adding visuals into a live code performance. Topos provides a simple way to integrate Hydra into a live coding session and to blend it with regular Topos code.
 
 ${makeExample(
-  "Hydra integration",
-  `beat(4) :: app.hydra.osc(3, 0.5, 2).out()`,
-  true
-)}
+    "Hydra integration",
+    `beat(4) :: app.hydra.osc(3, 0.5, 2).out()`,
+    true
+  )}
 
 You may feel like it's doing nothing! Press ${key_shortcut(
     "Ctrl+D"
@@ -32,17 +32,38 @@ Be careful not to call <ic>app.hydra</ic> too often as it can impact performance
 Stopping **Hydra** is simple:
 
 ${makeExample(
-  "Stopping Hydra",
-  `
+    "Stopping Hydra",
+    `
 beat(4) :: stop_hydra()     // this one
 beat(4) :: app.hydra.hush() // or this one
 `,
-  true
-)}
+    true
+  )}
 
 I won't teach you how to play with Hydra. You can find some great resources on the [Hydra website](https://hydra.ojack.xyz/):
   - [Hydra interactive documentation](https://hydra.ojack.xyz/docs/)
   - [List of Hydra Functions](https://hydra.ojack.xyz/api/)
   - [Source code on GitHub](https://github.com/hydra-synth/hydra)
+
+## GIF player
+
+Topos embeds a small <ic>.gif</ic> picture player with a small API. GIFs are automatically fading out after the given duration. Look at the following example:
+
+${makeExample(
+    "Playing many gifs",
+    `
+beat(0.25)::gif({
+  url:v('gif')[$(1)%6], // Any URL will do!
+  opacity: r(0.5, 1), // Opacity (0-1)
+  size:"300px", // CSS size property
+  center:false, // Centering on the screen?
+  filter:'none', // CSS Filter
+  dur: 2, // In beats (Topos unit)
+  rotation: ir(1, 360), // Rotation (in degrees)
+  posX: ir(1,1200), // CSS Horizontal Position
+  posY: ir(1, 800), // CSS Vertical Position
+`, true
+  )}
 `;
 };
+

@@ -81,6 +81,7 @@ export const blinkScript = (
     _drawBlinker(shiftAmount);
 
     // Save timeout ID for later clearing
+    // @ts-ignore
     app.blinkTimeouts[shiftAmount] = setTimeout(() => {
       _clearBlinker(shiftAmount);
       // Clear the canvas before drawing new blinkers

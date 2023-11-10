@@ -1,21 +1,21 @@
 import { key_shortcut, makeExampleFactory } from "../Documentation";
 import { type Editor } from "../main";
-import topos_arch from './topos_arch.svg';
-import many_universes from './many_universes.svg';
+import topos_arch from "./topos_arch.svg";
+import many_universes from "./many_universes.svg";
 
 export const software_interface = (application: Editor): string => {
   const makeExample = makeExampleFactory(application);
   return `
 # Interface
 	
-The Topos interface is entirely dedicated to highlight the core concepts at play: _scripts_ and _universes_. By understanding the interface, you will already understand quite a lot about Topos and how to play music with it. Make sure to learn the dedicated keybindings as well and you will fly!
+The Topos interface is designed on a simple concept: _scripts_ and _universes_. By understanding how the interface works, you will already understand quite a lot. Make sure to learn the dedicated keybindings as well. They will give you extra powers!
 	
 <object type="image/svg+xml" data=${topos_arch} style="width: 100%; height: auto; background-color: transparent"></object>
 
 
-## Scripts
+# Scripts
 
-Every Topos session is composed of several small scripts. A set of scripts is called a _universe_. Every script is written using the JavaScript programming language and describes a musical or algorithmic process that takes place over time.
+Every Topos session is composed of **local**, **global** and **init** scripts. These scripts form a structure called a "_universe_".  The scripts can describe whatever you want: songs, sketches, small tools, or whatever. All the scripts are written using the JavaScript programming language. They describe a musical or algorithmic process. You can call them anytime.
 	
 - **the global script** (${key_shortcut(
     "Ctrl + G"
@@ -38,54 +38,65 @@ Every Topos session is composed of several small scripts. A set of scripts is ca
 	
 
 ${makeExample(
-    "To take the most out of Topos...",
-    `// Write your code in multiple scripts. Use all the code buffers!
-beat(1) :: script(1)
-flip(4) :: beat(.5) :: script(2)
+    "Calling scripts to form a musical piece",
+    `
+beat(1) :: script(1) // Calling local script n°1 
+flip(4) :: beat(.5) :: script(2) // Calling script n°2
 `,
     true
   )}
 
 ${makeExample(
     "Script execution can become musical too!",
-    `// You can play your scripts... algorithmically.
-beat(1) :: script([1,3,5].pick())
-flip(4) :: beat([.5, .25].beat(16)) :: script([5,6,7,8].loop($(2)))
+    `
+// Use algorithms to pick a script.
+beat(1) :: script([1, 3, 5].pick())
+flip(4) :: beat([.5, .25].beat(16)) :: script(
+  [5, 6, 7, 8].beat())
 `,
     false
   )}
 
+### Navigating the interface
+
+The interface is centered around the manipulation of scripts. Take a look at the left bar:
+- **pencil icon:** notes. Used to take project notes about your "_universe_".
+- **down arrow**: init script. Runs once when the project is loaded.
+- **text with note**: global script, it acts as the **conductor** for your piece.
+- **folder icon**: local scripts (from 1 to 9).
+
+### Managing scripts programatically
 
 There are some useful functions to help you manage your scripts:
 
 - <ic>copy_script(from: number, to: number)</ic>: copy the content of a script to another.
 - <ic>delete_script(index: number)</ic>: clear the content of a script. Warning: this is irreversible! 
 
-## Universes
+
+
+
+# Universes
 	
 <object type="image/svg+xml" data=${many_universes} style="width: 100%; height: auto; background-color: transparent"></object>
 
 
-A set of files is called a _universe_. Topos can store several universes and switch immediately from one to another. You can switch between universes by pressing ${key_shortcut(
+A set of files is called a _universe_. You can switch between universes immediately immediately by pressing ${key_shortcut(
     "Ctrl + B"
-  )}. You can also create a new universe by entering a name that has never been used before. _Universes_ are only referenced by their names. Once a universe is loaded, it is not possible to call any data/code from any other universe.
-	
-Switching between universes will not stop the transport nor reset the clock. You are switching the context but time keeps flowing. This can be useful to prepare immediate transitions between songs and parts. Think of universes as an algorithmic set of music. All scripts in a given universe are aware about how many times they have been runned already. You can reset that value programatically.
-	
-You can clear the current universe by pressing the flame button on the top right corner of the interface. This will clear all the scripts and the note file. **Note:** there is no shortcut for clearing a universe. We do not want to loose your work by mistake!
+  )}. You can also create a new universe by entering a name. Load a universe by typing its name. Once a universe is loaded, it is not possible to call any data/code from any other universe. Switching between universes does not stop the transport nor reset the clock. The context switches but time keeps flowing. This can be useful for transitioning between songs / parts. 
 
 There are some useful functions to help you manage your universes:
 
-- <ic>copy_universe(from: string, to: string)</ic>: copy the content of a universe to another. This is useful to create a backup of your work.
+- <ic>copy_universe(from: string, to: string)</ic>: copy the content of a universe to another.
 - <ic>delete_universe(name: string)</ic>: delete a universe. Warning: this is irreversible!
 	
 # Sharing your work
 	
-**Click on the Topos logo in the top bar**. Your URL will change to something much longer and complex. The same URL will be copied to your clipboard. Send this link to your friends to share the universe you are currently working on with them. 
+**Click the share button**. The URL of the website will change to something much longer. This URL will automatically be copied to your clipboard.  Send this link to your friends to share the universe you are currently working on with them. You can use a service like [tinyurl](https://tinyurl.com/) to shorten your links.
+
 	
 - The imported universe will always get a randomly generated name such as: <ic>random_silly_llama</ic>.
-- Topos will automatically fetch and switch to the universe that was sent to you. Your previous universe is still accessible if you switch to it, don't worry!
+- Topos will automatically fetch and switch to the universe that was sent to you.
 
-**Note:** links are currently super long and unsharable! Sorry about that, minifying takes a server and we don't have one yet. We will fix that soon. In the meantime, you can use a service like [tinyurl](https://tinyurl.com/) to shorten your links.
+
 `;
 };

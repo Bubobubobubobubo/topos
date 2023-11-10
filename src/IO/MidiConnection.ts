@@ -578,8 +578,7 @@ export class MidiConnection {
     if (typeof output === "number") {
       if (output < 0 || output >= this.midiOutputs.length) {
         console.error(
-          `Invalid MIDI output index. Index must be in the range 0-${
-            this.midiOutputs.length - 1
+          `Invalid MIDI output index. Index must be in the range 0-${this.midiOutputs.length - 1
           }.`
         );
         return this.currentOutputIndex;
@@ -608,8 +607,7 @@ export class MidiConnection {
     if (typeof input === "number") {
       if (input < 0 || input >= this.midiInputs.length) {
         console.error(
-          `Invalid MIDI input index. Index must be in the range 0-${
-            this.midiInputs.length - 1
+          `Invalid MIDI input index. Index must be in the range 0-${this.midiInputs.length - 1
           }.`
         );
         return -1;
@@ -676,6 +674,7 @@ export class MidiConnection {
         delete this.scheduledNotes[noteNumber];
       }, (duration - 0.02) * 1000);
 
+      // @ts-ignore
       this.scheduledNotes[noteNumber] = timeoutId;
     } else {
       console.error("MIDI output not available.");
