@@ -6,7 +6,7 @@ class TransportProcessor extends AudioWorkletProcessor {
     this.nudge = 0;
     this.started = false;
     this.bpm = 120;
-    this.ppqn = 48;
+    this.ppqn = 96;
     this.currentPulsePosition = 0;
   }
 
