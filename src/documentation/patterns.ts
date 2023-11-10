@@ -196,6 +196,19 @@ beat(1)::snd('sine').sustain(0.1).freq([100,100,100,100,200].unique().beat()).ou
     true
   )}
 
+  - <ic>pitch()</ic>: convert a list of integers to pitch classes
+
+${makeExample(
+    "Converting a list of integers to pitch classes using key and scale",
+    `
+    beat(0.25) :: snd('sine')
+    .pitch([0,1,2,3,4,6,7,8].beat(0.125))
+    .key(["F4","F3"].beat(2.0))
+    .scale("minor").out()
+`,
+    true
+  )}
+
   - <ic>scale(scale: string, base note: number)</ic>: Map each element of the list to the closest note of the slected scale. [0, 2, 3, 5 ].scale("major", 50) returns [50, 52, <ic>54</ic>, 55]. You can use western scale names like (Major, Minor, Minor pentatonic ...) or [zeitler](https://ianring.com/musictheory/scales/traditions/zeitler) scale names. Alternatively you can also use the integers as used by Ian Ring in his [study of scales](https://ianring.com/musictheory/scales/).
 
 ${makeExample(

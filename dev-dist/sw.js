@@ -67,7 +67,7 @@ if (!self.define) {
     });
   };
 }
-define(['./workbox-5357ef54'], (function (workbox) { 'use strict';
+define(['./workbox-b7fccfec'], (function (workbox) { 'use strict';
 
   self.skipWaiting();
   workbox.clientsClaim();
@@ -82,12 +82,23 @@ define(['./workbox-5357ef54'], (function (workbox) { 'use strict';
     "revision": "3ca0b8505b4bec776b69afdba2768812"
   }, {
     "url": "index.html",
-    "revision": "0.aa2tv1h0in8"
+    "revision": "0.jotcvf5uhvo"
   }], {});
   workbox.cleanupOutdatedCaches();
   workbox.registerRoute(new workbox.NavigationRoute(workbox.createHandlerBoundToURL("index.html"), {
     allowlist: [/^\/$/]
   }));
+  workbox.registerRoute(({
+    url
+  }) => [/^https:\/\/raw\.githubusercontent\.com\/.*/i, /^https:\/\/shabda\.ndre\.gr\/.*/i].some(regex => regex.test(url)), new workbox.CacheFirst({
+    "cacheName": "external-samples",
+    plugins: [new workbox.ExpirationPlugin({
+      maxEntries: 5000,
+      maxAgeSeconds: 2592000
+    }), new workbox.CacheableResponsePlugin({
+      statuses: [0, 200]
+    })]
+  }), 'GET');
 
 }));
 //# sourceMappingURL=sw.js.map

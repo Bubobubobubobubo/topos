@@ -244,6 +244,16 @@ export class Player extends Event {
     return this;
   }
 
+  tonnetz(transform: string) {
+    if (this.atTheBeginning()) this.ziffers.tonnetzTransformation(transform);
+    return this;
+  }
+
+  tonnetzChord(chord: string) {
+    if (this.atTheBeginning()) this.ziffers.tonnetzChords(chord);
+    return this;
+  }
+
   voiceleading() {
     if (this.atTheBeginning()) this.ziffers.lead();
     return this;
