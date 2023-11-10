@@ -1,9 +1,8 @@
 import { hoverTooltip } from "@codemirror/view";
 import { type EditorView } from "@codemirror/view";
-import { CompletionContext } from "@codemirror/autocomplete"
+import { CompletionContext } from "@codemirror/autocomplete";
 // @ts-ignore
 import { soundMap } from "superdough";
-
 
 interface InlineCompletion {
   name: string;
@@ -562,6 +561,13 @@ const completionDatabase: CompletionDatabase = {
     description: "Get or set the current beats per minute.",
     example: "bpm(135) // set the bpm to 135",
   },
+  tempo: {
+    name: "tempo",
+    category: "time",
+    description: "Get or set the current beats per minute.",
+    example: "tempo(135) // set the bpm to 135",
+  },
+
   out: {
     name: "out",
     category: "audio",
@@ -974,30 +980,28 @@ export const inlineHoveringTips = hoverTooltip(
 );
 
 export const toposCompletions = (context: CompletionContext) => {
-  let word = context.matchBefore(/\w*/)
+  let word = context.matchBefore(/\w*/);
   if (word) {
-    if (word.from == word.to && !context.explicit)
-      return null
+    if (word.from == word.to && !context.explicit) return null;
     return {
       from: word.from,
       options: Object.keys(completionDatabase).map((key) => ({
         label: key,
         type: completionDatabase[key].category,
         info: () => {
-          let div = document.createElement('div');
+          let div = document.createElement("div");
           div.innerHTML = `
       <h1 class="text-orange-300 text-base pb-1">${completionDatabase[key].name} [<em class="text-white">${completionDatabase[key].category}</em>]</h1>
       <p class="text-base pl-4">${completionDatabase[key].description}</p>
       <div class="overflow-hidden overflow-scroll rounded px-2 ml-4 mt-2 bg-neutral-800"><code class="text-sm">${completionDatabase[key].example}</code></div>
-      `
+      `;
           div.classList.add("px-4", "py-2", "rounded-lg", "w-92");
-          return div
-        }
-      }))
-    }
+          return div;
+        },
+      })),
+    };
   }
-}
-
+};
 
 export const soundCompletions = (context: CompletionContext) => {
   let map = soundMap.get();
@@ -1007,10 +1011,10 @@ export const soundCompletions = (context: CompletionContext) => {
     let from = match.from + "sound(".length;
     return {
       from,
-      options: Object.keys(map).map(key => ({
+      options: Object.keys(map).map((key) => ({
         label: key,
         type: map[key].data.type,
-        apply: `"${key}"`
+        apply: `"${key}"`,
       })),
     };
   }

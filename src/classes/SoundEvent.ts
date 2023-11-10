@@ -432,7 +432,6 @@ export class SoundEvent extends AudibleEvent {
   };
 
   out = (): void => {
-    console.log(this.app.clock.time_position.pulse)
     const events = objectWithArraysToArrayOfObjects(this.values, [
       "parsedScale",
     ]);
