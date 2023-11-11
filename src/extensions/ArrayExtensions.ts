@@ -1,4 +1,4 @@
-import { type UserAPI } from "./API";
+import { type UserAPI } from "../API";
 import { safeScale, stepsToScale } from "zifferjs";
 export { };
 

@@ -10,7 +10,7 @@ import { arrayOfObjectsToObjectWithArrays } from "../Utils/Generic";
 export type InputOptions = { [key: string]: string | number };
 
 export class Player extends Event {
-  input: string;
+  input: string|number;
   ziffers: Ziffers;
   initCallTime: number = 0;
   startCallTime: number = 0;
@@ -25,15 +25,23 @@ export class Player extends Event {
   skipIndex = 0;
 
   constructor(
-    input: string,
+    input: string|number|Generator<number>,
     options: InputOptions,
     public app: Editor,
     zid: string = ""
   ) {
     super(app);
-    this.input = input;
     this.options = options;
-    this.ziffers = new Ziffers(input, options);
+    if (typeof input === "string") {
+      this.input = input;
+      this.ziffers = new Ziffers(input, options);
+    } else if (typeof input === "number") {
+      this.input = input;
+      this.ziffers = Ziffers.fromNumber(input,options);
+    } else {
+      this.ziffers = Ziffers.fromGenerator(input,options);
+      this.input = this.ziffers.input;
+    }
     this.zid = zid;
   }
 
@@ -233,6 +241,16 @@ export class Player extends Event {
 
   octave(value: number) {
     if (this.atTheBeginning()) this.ziffers.octave(value);
+    return this;
+  }
+
+  tonnetz(transform: string) {
+    if (this.atTheBeginning()) this.ziffers.tonnetzTransformation(transform);
+    return this;
+  }
+
+  tonnetzChord(chord: string) {
+    if (this.atTheBeginning()) this.ziffers.tonnetzChords(chord);
     return this;
   }
 
