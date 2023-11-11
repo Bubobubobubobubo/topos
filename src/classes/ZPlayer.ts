@@ -6,6 +6,7 @@ import { SoundEvent, SoundParams } from "./SoundEvent";
 import { MidiEvent, MidiParams } from "./MidiEvent";
 import { RestEvent } from "./RestEvent";
 import { arrayOfObjectsToObjectWithArrays } from "../Utils/Generic";
+import { TonnetzSpaces } from "zifferjs/src/tonnetz";
 
 export type InputOptions = { [key: string]: string | number };
 
@@ -244,8 +245,28 @@ export class Player extends Event {
     return this;
   }
 
-  tonnetz(transform: string) {
-    if (this.atTheBeginning()) this.ziffers.tonnetzTransformation(transform);
+  triadTonnetz(transform: string, tonnetz: TonnetzSpaces = [3, 4, 5]) {
+    if (this.atTheBeginning()) this.ziffers.triadTonnetz(transform, tonnetz);
+    return this;
+  }
+
+  tetraTonnetz(transform: string, tonnetz: TonnetzSpaces = [3, 4, 5]) {
+    if (this.atTheBeginning()) this.ziffers.tetraTonnetz(transform, tonnetz);
+    return this;
+  }
+
+  octaCycle(tonnetz: TonnetzSpaces = [3, 4, 5]) {
+    if (this.atTheBeginning()) this.ziffers.octaCycle(tonnetz);
+    return this;
+  }
+
+  hexaCycle(tonnetz: TonnetzSpaces = [3, 4, 5]) {
+    if (this.atTheBeginning()) this.ziffers.hexaCycle(tonnetz);
+    return this;
+  }
+
+  enneaCycle(tonnetz: TonnetzSpaces = [3, 4, 5]) {
+    if (this.atTheBeginning()) this.ziffers.enneaCycle(tonnetz);
     return this;
   }
 
