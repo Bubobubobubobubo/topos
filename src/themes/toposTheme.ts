@@ -22,7 +22,7 @@ const base00 = "#262626",
   base_lightgreen = "#A3BE8C";
 
 const invalid = base_red,
-  darkBackground = "#fdf6e3",
+  darkBackground = "#262626",
   highlightBackground = "#252525",
   // background = base00,
   tooltipBackground = base01,
@@ -46,18 +46,19 @@ export const toposDarkTheme = EditorView.theme(
       borderLeftColor: cursor,
     },
     "&.cm-focused .cm-selectionBackground, .cm-selectionBackground, .cm-content ::selection":
-      {
-        backgroundColor: base00,
-        border: `0.5px solid ${base00}`,
-      },
+    {
+      backgroundColor: base00,
+      border: `0.5px solid ${base00}`,
+    },
     ".cm-panels": {
       backgroundColor: darkBackground,
       color: base05,
     },
     ".cm-panels.cm-panels-top": { borderBottom: "2px solid black" },
     ".cm-panels.cm-panels-bottom": { borderTop: "2px solid black" },
+    ".cm-search.cm-panel": { backgroundColor: "transparent" },
     ".cm-searchMatch": {
-      outline: `1px solid ${base_yellow}`,
+      outline: `1px solid ${base_cyan}`,
     },
     ".cm-searchMatch.cm-searchMatch-selected": {
       backgroundColor: highlightBackground,
