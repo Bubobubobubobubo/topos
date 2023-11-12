@@ -17,8 +17,6 @@ const handleResize = (canvas: HTMLCanvasElement) => {
 };
 
 export const saveBeforeExit = (app: Editor): null => {
-  // @ts-ignore
-  event.preventDefault();
   // Iterate over all local files and set the candidate to the committed
   app.currentFile().candidate = app.view.state.doc.toString();
   app.currentFile().committed = app.view.state.doc.toString();
@@ -38,10 +36,12 @@ export const installWindowBehaviors = (
   window.addEventListener("resize", () =>
     handleResize(app.interface.feedback as HTMLCanvasElement)
   );
-  window.addEventListener("beforeunload", () => {
+  window.addEventListener("beforeunload", (event) => {
+    event.preventDefault()
     saveBeforeExit(app)
   });
-  window.addEventListener("visibilitychange", () => {
+  window.addEventListener("visibilitychange", (event) => {
+    event.preventDefault();
     saveBeforeExit(app)
   });
 
