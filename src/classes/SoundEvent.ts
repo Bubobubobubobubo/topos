@@ -438,7 +438,9 @@ export class SoundEvent extends AudibleEvent {
 
     for (const event of events) {
       // Filter non superdough parameters
-      const filteredEvent = filterObject(event, ["analyze","note","dur","freq","s"]);
+      // TODO: Should filter relevant fields for superdough
+      // const filteredEvent = filterObject(event, ["analyze","note","dur","freq","s"]);
+      const filteredEvent = event;
       // No need for note if there is freq
       if(filteredEvent.freq) { delete filteredEvent.note; }
       superdough(filteredEvent, this.nudge - this.app.clock.deviation, filteredEvent.dur);
