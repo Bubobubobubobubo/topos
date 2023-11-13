@@ -30,7 +30,7 @@ const vitePWAconfiguration = {
   workbox: {
     sourcemap: true,
     cleanupOutdatedCaches: true,
-    globPatterns: ["**/*.{js,css,html,json,ogg,wav,mp3,ico,png,svg}"],
+    globPatterns: ["**/*.{js,css,html,gif,png,json,woff,json,ogg,wav,mp3,ico,png,svg}"],
     // Thanks Froos :)
     runtimeCaching: [
       {
