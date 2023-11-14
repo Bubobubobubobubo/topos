@@ -16,6 +16,11 @@ const handleResize = (canvas: HTMLCanvasElement) => {
   }
 };
 
+export const saveState = (app: Editor): null => {
+  app.settings.saveApplicationToLocalStorage(app.universes, app.settings);
+  return null;
+};
+
 export const saveBeforeExit = (app: Editor): null => {
   // Iterate over all local files and set the candidate to the committed
   app.currentFile().candidate = app.view.state.doc.toString();
@@ -29,7 +34,6 @@ export const installWindowBehaviors = (
   window: Window,
   preventMultipleTabs: boolean = false
 ) => {
-
   window.addEventListener("resize", () =>
     handleResize(app.interface.scope as HTMLCanvasElement)
   );
@@ -37,19 +41,19 @@ export const installWindowBehaviors = (
     handleResize(app.interface.feedback as HTMLCanvasElement)
   );
   window.addEventListener("beforeunload", (event) => {
-    event.preventDefault()
-    saveBeforeExit(app)
+    event.preventDefault();
+    saveBeforeExit(app);
   });
   window.addEventListener("visibilitychange", (event) => {
     event.preventDefault();
-    saveBeforeExit(app)
+    saveBeforeExit(app);
   });
 
   if (preventMultipleTabs) {
     localStorage.openpages = Date.now();
     window.addEventListener(
       "storage",
-      function(e) {
+      function (e) {
         if (e.key == "openpages") {
           // Listen if anybody else is opening the same page!
           localStorage.page_available = Date.now();
@@ -65,11 +69,21 @@ export const installWindowBehaviors = (
     );
   }
 
-  window.addEventListener('error', e => {
-    console.log("Je suis bien installé !")
-    console.log(e.message
-      , '\n', e.filename, ':', e.lineno, (e.colno ? ':' + e.colno : '')
-      , e.error && e.error.stack ? '\n' : '', e.error ? e.error.stack : undefined
-    );
-  }, false);
+  window.addEventListener(
+    "error",
+    (e) => {
+      console.log("Je suis bien installé !");
+      console.log(
+        e.message,
+        "\n",
+        e.filename,
+        ":",
+        e.lineno,
+        e.colno ? ":" + e.colno : "",
+        e.error && e.error.stack ? "\n" : "",
+        e.error ? e.error.stack : undefined
+      );
+    },
+    false
+  );
 };

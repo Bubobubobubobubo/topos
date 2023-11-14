@@ -707,8 +707,8 @@ export class UserAPI {
       this.app.api.patternCache.set(key, player);
     }
 
-    if(player.ziffers.generator && player.ziffers.generatorDone) {
-       this.removePatternFromCache(key);
+    if (player.ziffers.generator && player.ziffers.generatorDone) {
+      this.removePatternFromCache(key);
     }
 
     if (typeof id === "number") player.zid = zid;
@@ -1320,6 +1320,12 @@ export class UserAPI {
       (value) => this.app.clock.time_position.pulse === value + offset
     );
     return results.some((value) => value === true);
+  };
+
+  public dur = (n: number | number[]): boolean => {
+    let nums: number[] = Array.isArray(n) ? n : [n];
+    // @ts-ignore
+    return this.beat(nums.dur(...nums));
   };
 
   // =============================================================

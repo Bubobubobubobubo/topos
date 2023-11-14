@@ -16,8 +16,8 @@ import { documentation_factory } from "./Documentation";
 import { EditorView } from "codemirror";
 import { Clock } from "./Clock";
 import { loadSamples, UserAPI } from "./API";
-import * as oeis from 'jisg'
-import * as zpatterns from 'zifferjs/src/patterns.ts'
+import * as oeis from "jisg";
+import * as zpatterns from "zifferjs/src/patterns.ts";
 import { makeArrayExtensions } from "./extensions/ArrayExtensions";
 import "./style.css";
 import { Universes, File, template_universes } from "./FileManagement";
@@ -26,7 +26,7 @@ import { tryEvaluate } from "./Evaluator";
 import showdown from "showdown";
 import { makeStringExtensions } from "./extensions/StringExtensions";
 import { installInterfaceLogic } from "./InterfaceLogic";
-import { installWindowBehaviors, saveBeforeExit } from "./WindowBehavior";
+import { installWindowBehaviors, saveState } from "./WindowBehavior";
 import { drawEmptyBlinkers } from "./AudioVisualisation";
 import { makeNumberExtensions } from "./extensions/NumberExtensions";
 // @ts-ignore
@@ -482,7 +482,7 @@ export class Editor {
       console.log("Hydra loaded successfully");
       this.initializeHydra();
     };
-    script.onerror = function() {
+    script.onerror = function () {
       console.error("Error loading Hydra script");
     };
     document.head.appendChild(script);
@@ -514,7 +514,7 @@ export class Editor {
   }
 
   private setPeriodicSave(interval: number): void {
-    setInterval(() => saveBeforeExit(this), interval)
+    setInterval(() => saveState(this), interval);
   }
 }
 
