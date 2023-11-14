@@ -122,11 +122,11 @@ export interface OscilloscopeConfig {
   thickness: number;
   fftSize: number; // multiples of 256
   orientation: "horizontal" | "vertical";
-  is3D: boolean;
+  mode: "3D" | "scope" | "freqscope";
   size: number;
 }
 
-let lastZeroCrossingType: string | null = null;  // 'negToPos' or 'posToNeg'
+let lastZeroCrossingType: string | null = null; // 'negToPos' or 'posToNeg'
 
 /**
  * Initializes and runs an oscilloscope using an AnalyzerNode.
@@ -140,12 +140,47 @@ export const runOscilloscope = (
   let config = app.osc;
   let analyzer = getAnalyser(config.fftSize);
   let dataArray = new Float32Array(analyzer.frequencyBinCount);
+  let freqDataArray = new Uint8Array(analyzer.frequencyBinCount);
   const canvasCtx = canvas.getContext("2d")!;
   const WIDTH = canvas.width;
   const HEIGHT = canvas.height;
   let lastDrawTime = 0;
   let frameInterval = 1000 / 30;
 
+  function drawFrequencyScope() {
+    analyzer.getByteFrequencyData(freqDataArray);
+    canvasCtx.clearRect(0, 0, WIDTH, HEIGHT);
+
+    // Ensure the number of bars does not exceed the frequency data length
+    const numBars = freqDataArray.length;
+    const barWidth = WIDTH / numBars;
+    let barHeight;
+    let x = 0;
+
+    for (let i = 0; i < numBars; i++) {
+      // Calculate index in the frequency data array using logarithmic scale
+      const logIndex = Math.floor(
+        Math.pow(i / numBars, 2) * freqDataArray.length
+      );
+      barHeight = Math.floor(
+        freqDataArray[logIndex] * ((HEIGHT / 256) * app.osc.size)
+      );
+
+      // Color configuration
+      if (app.osc.color === "random") {
+        canvasCtx.fillStyle = `hsl(${Math.random() * 360}, 100%, 50%)`;
+      } else {
+        const gradient = canvasCtx.createLinearGradient(0, 0, WIDTH / 2, 0);
+        gradient.addColorStop(0, app.osc.color || `rgb(255, 255, 255)`);
+        gradient.addColorStop(1, `rgb(${barHeight + 50},50,50)`);
+        canvasCtx.fillStyle = gradient;
+      }
+
+      canvasCtx.fillRect(x, (HEIGHT - barHeight) / 2, barWidth + 1, barHeight);
+
+      x += barWidth;
+    }
+  }
 
   function draw() {
     const currentTime = Date.now();
@@ -166,8 +201,7 @@ export const runOscilloscope = (
     }
 
     analyzer.getFloatTimeDomainData(dataArray);
-    canvasCtx.globalCompositeOperation = 'source-over';
-
+    canvasCtx.globalCompositeOperation = "source-over";
 
     canvasCtx.fillStyle = "rgba(0, 0, 0, 0)";
     canvasCtx.fillRect(0, 0, WIDTH, HEIGHT);
@@ -184,23 +218,26 @@ export const runOscilloscope = (
     } else {
       canvasCtx.strokeStyle = app.osc.color;
     }
-    const remainingRefreshTime = app.clock.time_position.pulse % app.osc.refresh;
-    const opacityRatio = 1 - (remainingRefreshTime / app.osc.refresh);
+    const remainingRefreshTime =
+      app.clock.time_position.pulse % app.osc.refresh;
+    const opacityRatio = 1 - remainingRefreshTime / app.osc.refresh;
     canvasCtx.globalAlpha = opacityRatio;
     canvasCtx.beginPath();
-
 
     let startIndex = 0;
     for (let i = 1; i < dataArray.length; ++i) {
       let currentType = null;
       if (dataArray[i] >= 0 && dataArray[i - 1] < 0) {
-        currentType = 'negToPos';
+        currentType = "negToPos";
       } else if (dataArray[i] < 0 && dataArray[i - 1] >= 0) {
-        currentType = 'posToNeg';
+        currentType = "posToNeg";
       }
 
       if (currentType) {
-        if (lastZeroCrossingType === null || currentType === lastZeroCrossingType) {
+        if (
+          lastZeroCrossingType === null ||
+          currentType === lastZeroCrossingType
+        ) {
           startIndex = i;
           lastZeroCrossingType = currentType;
           break;
@@ -208,14 +245,18 @@ export const runOscilloscope = (
       }
     }
 
-
-    if (app.osc.is3D) {
+    if (app.osc.mode === "freqscope") {
+      drawFrequencyScope();
+    } else if (app.osc.mode === "3D") {
       for (let i = startIndex; i < dataArray.length; i += 2) {
         const x = (dataArray[i] * WIDTH * app.osc.size) / 2 + WIDTH / 4;
         const y = (dataArray[i + 1] * HEIGHT * app.osc.size) / 2 + HEIGHT / 4;
         i === startIndex ? canvasCtx.moveTo(x, y) : canvasCtx.lineTo(x, y);
       }
-    } else if (app.osc.orientation === "horizontal") {
+    } else if (
+      app.osc.mode === "scope" &&
+      app.osc.orientation === "horizontal"
+    ) {
       const sliceWidth = (WIDTH * 1.0) / dataArray.length;
       const yOffset = HEIGHT / 4;
       let x = 0;
@@ -226,7 +267,7 @@ export const runOscilloscope = (
         x += sliceWidth;
       }
       canvasCtx.lineTo(WIDTH, yOffset);
-    } else {
+    } else if (app.osc.mode === "scope" && app.osc.orientation === "vertical") {
       const sliceHeight = (HEIGHT * 1.0) / dataArray.length;
       const xOffset = WIDTH / 4;
       let y = 0;
@@ -242,7 +283,6 @@ export const runOscilloscope = (
     canvasCtx.stroke();
     canvasCtx.globalAlpha = 1.0;
   }
-
 
   draw();
 };
