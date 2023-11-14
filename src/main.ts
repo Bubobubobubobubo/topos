@@ -26,7 +26,7 @@ import { tryEvaluate } from "./Evaluator";
 import showdown from "showdown";
 import { makeStringExtensions } from "./extensions/StringExtensions";
 import { installInterfaceLogic } from "./InterfaceLogic";
-import { installWindowBehaviors, saveState } from "./WindowBehavior";
+import { installWindowBehaviors } from "./WindowBehavior";
 import { drawEmptyBlinkers } from "./AudioVisualisation";
 import { makeNumberExtensions } from "./extensions/NumberExtensions";
 // @ts-ignore
@@ -511,10 +511,6 @@ export class Editor {
     if (ctx) {
       ctx.scale(dpr, dpr);
     }
-  }
-
-  private setPeriodicSave(interval: number): void {
-    setInterval(() => saveState(this), interval);
   }
 }
 
