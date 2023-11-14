@@ -178,6 +178,7 @@ export const makeArrayExtensions = (api: UserAPI) => {
     );
     // @ts-ignore
     const totalDurationInPulses = adjustedDurations.reduce(
+      // @ts-ignore
       (acc, duration) => acc + duration * ppqn,
       0
     );
