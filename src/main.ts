@@ -20,7 +20,7 @@ import * as oeis from "jisg";
 import * as zpatterns from "zifferjs/src/patterns.ts";
 import { makeArrayExtensions } from "./extensions/ArrayExtensions";
 import "./style.css";
-import { Universes, File, template_universes } from "./FileManagement";
+import { Universes, File } from "./FileManagement";
 import { tryEvaluate } from "./Evaluator";
 // @ts-ignore
 import showdown from "showdown";
@@ -39,7 +39,7 @@ if ("serviceWorker" in navigator) {
 export class Editor {
   // Universes and settings
   settings: AppSettings = new AppSettings();
-  universes: Universes = template_universes;
+  universes: Universes = {};
   selected_universe: string = "Welcome";
 
   fill: boolean = false;
@@ -115,7 +115,7 @@ export class Editor {
 
     this.universes = {
       ...this.settings.universes,
-      ...template_universes,
+      //...template_universes,
     };
     initializeSelectedUniverse(this);
 
@@ -237,7 +237,7 @@ export class Editor {
     list.append(
       ...Object.keys(this.universes).map((it) => {
         let item = itemTemplate.content.cloneNode(true) as DocumentFragment;
-        let api = window as unknown as UserAPI; // It's dirty but okey
+        let api = window as unknown as UserAPI;
         item.querySelector(".universe-name")!.textContent = it;
         item
           .querySelector(".load-universe")

@@ -61,7 +61,7 @@ const init_buffer = `// ,,
 // be available from the start. It is only executed once, so if you want to change something, you need to
 // reload the universe or force the reloading: Ctrl+Shift+Enter.
 
-bpm(140) // set the bpm to 140
+tempo(140) // set the bpm to 140
 `;
 
 const note_buffer = `# Notes

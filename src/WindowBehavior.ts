@@ -68,22 +68,4 @@ export const installWindowBehaviors = (
       false
     );
   }
-
-  window.addEventListener(
-    "error",
-    (e) => {
-      console.log("Je suis bien installé !");
-      console.log(
-        e.message,
-        "\n",
-        e.filename,
-        ":",
-        e.lineno,
-        e.colno ? ":" + e.colno : "",
-        e.error && e.error.stack ? "\n" : "",
-        e.error ? e.error.stack : undefined
-      );
-    },
-    false
-  );
 };

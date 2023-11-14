@@ -1,4 +1,4 @@
-import { tutorial_universe } from "./universes/tutorial";
+// import { tutorial_universe } from "./universes/tutorial";
 import { gzipSync, decompressSync, strFromU8 } from "fflate";
 import { examples } from "./examples/excerpts";
 import { type Editor } from "./main";
@@ -109,7 +109,7 @@ export const template_universes = {
     example: { candidate: "", committed: "", evaluations: 0 },
     notes: { candidate: "" },
   },
-  Help: tutorial_universe,
+  //Help: tutorial_universe,
 };
 
 export class AppSettings {
@@ -247,13 +247,21 @@ export const initializeSelectedUniverse = (app: Editor): void => {
    */
   if (app.settings.load_demo_songs) {
     let random_example = examples[Math.floor(Math.random() * examples.length)];
-    app.selected_universe = "Welcome";
+    app.selected_universe = "Demo";
+    app.universes[app.selected_universe] = structuredClone(template_universe);
     app.universes[app.selected_universe].global.committed = random_example;
     app.universes[app.selected_universe].global.candidate = random_example;
   } else {
-    app.selected_universe = app.settings.selected_universe;
-    if (app.universes[app.selected_universe] === undefined)
+    try {
+      app.selected_universe = app.settings.selected_universe;
+      if (app.universes[app.selected_universe] === undefined)
+        app.universes[app.selected_universe] =
+          structuredClone(template_universe);
+    } catch (error) {
+      app.settings.selected_universe = "Welcome";
+      app.selected_universe = app.settings.selected_universe;
       app.universes[app.selected_universe] = structuredClone(template_universe);
+    }
   }
   app.interface.universe_viewer.innerHTML = `Topos: ${app.selected_universe}`;
 };
@@ -315,22 +323,20 @@ export const loadUniverse = (
   universeName: string,
   universe: Universe = template_universe
 ): void => {
-  console.log(universeName, universe);
-  app.currentFile().candidate = app.view.state.doc.toString();
-
-  // Getting the new universe name and moving on
   let selectedUniverse = universeName.trim();
   if (app.universes[selectedUniverse] === undefined) {
-    app.settings.universes[selectedUniverse] = universe;
-    app.universes[selectedUniverse] = universe;
+    // Pushing a freshly cloned template universe to:
+    // 1) the current session 2) the settings
+    const freshUniverse = structuredClone(universe);
+    app.universes[selectedUniverse] = freshUniverse;
+    app.settings.universes[selectedUniverse] = freshUniverse;
   }
+  // Updating references to the currently selected universe
+  app.settings.selected_universe = selectedUniverse;
   app.selected_universe = selectedUniverse;
-  app.settings.selected_universe = app.selected_universe;
   app.interface.universe_viewer.innerHTML = `Topos: ${selectedUniverse}`;
-
   // Updating the editor View to reflect the selected universe
   app.updateEditorView();
-
   // Evaluating the initialisation script for the selected universe
   tryEvaluate(app, app.universes[app.selected_universe.toString()].init);
 };

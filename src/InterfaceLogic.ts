@@ -23,6 +23,7 @@ import { inlineHoveringTips } from "./documentation/inlineHelp";
 import { lineNumbers } from "@codemirror/view";
 import { jsCompletions } from "./EditorSetup";
 import { createDocumentationStyle } from "./DomElements";
+import { saveState } from "./WindowBehavior";
 
 export const installInterfaceLogic = (app: Editor) => {
   // Initialize style
@@ -184,8 +185,8 @@ export const installInterfaceLogic = (app: Editor) => {
   app.interface.load_universe_button.addEventListener("click", () => {
     let query = (app.interface.buffer_search as HTMLInputElement).value;
     if (query.length > 2 && query.length < 20 && !query.includes(" ")) {
-      loadUniverse(app, query);
       app.settings.selected_universe = query;
+      loadUniverse(app, query);
       (app.interface.buffer_search as HTMLInputElement).value = "";
       closeUniverseModal();
       app.view.focus();
@@ -336,6 +337,7 @@ export const installInterfaceLogic = (app: Editor) => {
   });
 
   app.interface.close_universes_button.addEventListener("click", () => {
+    saveState(app);
     openUniverseModal();
   });
 
@@ -443,8 +445,10 @@ export const installInterfaceLogic = (app: Editor) => {
 
     if (universeName) {
       if (universeName.length > 2 && universeName.length < 20) {
-        loadUniverse(app, universeName);
+        universeName = universeName.trim();
         app.settings.selected_universe = universeName;
+        app.selected_universe = universeName;
+        loadUniverse(app, universeName);
         (app.interface.buffer_search as HTMLInputElement).value = "";
         closeUniverseModal();
         app.view.focus();

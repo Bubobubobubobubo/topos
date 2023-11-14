@@ -78,12 +78,18 @@ export class UserAPI {
   }
 
   _loadUniverseFromInterface = (universe: string) => {
+    this.app.selected_universe = universe.trim();
+    this.app.settings.selected_universe = universe.trim();
     loadUniverse(this.app, universe as string);
     openUniverseModal();
   };
 
   _deleteUniverseFromInterface = (universe: string) => {
     delete this.app.universes[universe];
+    if (this.app.settings.selected_universe === universe) {
+      this.app.settings.selected_universe = "Welcome";
+      this.app.selected_universe = "Welcome";
+    }
     this.app.settings.saveApplicationToLocalStorage(
       this.app.universes,
       this.app.settings
