@@ -18,7 +18,7 @@ declare global {
     repeatEven(amount: number): T;
     repeatOdd(amount: number): T;
     beat(division: number): T;
-    dur(durations: number[]): T;
+    dur(...durations: number[]): T;
     b(division: number): T;
     bar(): T;
     pick(): T;
@@ -170,13 +170,12 @@ export const makeArrayExtensions = (api: UserAPI) => {
   };
   Array.prototype.b = Array.prototype.beat;
 
-  Array.prototype.dur = function (...durations) {
+  Array.prototype.dur = function (...durations: number[]) {
     const timepos = api.app.clock.pulses_since_origin;
     const ppqn = api.ppqn();
-    const adjustedDurations = this.map(
+    const adjustedDurations: number[] = this.map(
       (_, index) => durations[index % durations.length]
     );
-    // @ts-ignore
     const totalDurationInPulses = adjustedDurations.reduce(
       // @ts-ignore
       (acc, duration) => acc + duration * ppqn,
