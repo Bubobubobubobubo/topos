@@ -46,7 +46,7 @@ export const installWindowBehaviors = (
   });
   window.addEventListener("visibilitychange", (event) => {
     event.preventDefault();
-    saveBeforeExit(app);
+    saveState(app);
   });
 
   if (preventMultipleTabs) {
