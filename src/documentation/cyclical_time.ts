@@ -112,6 +112,58 @@ onbeat(1.5,2.5,3.5, 3.75)::snd('hat').gain(r(0.9,1.1)).out() // Cool high-hats
   true
 )}
 
+## XOX Style sequencers
+
+- <ic>seq(expr: string, duration: number = 0.5): boolean</ic> : this function takes a string composed of <ic>x</ic> and <ic>o</ic> symbols like so: <ic>"xoxxoo"</ic>. It will return <ic>true</ic> (<ic>x</ic>) or <ic>false</ic> (<ic>o</ic>) after a <ic>duration</ic> amount. 
+  - <ic>expr: string</ic>: any string composed of <ic>x</ic> or <ic>o</ic> like so: <ic>"xooxoxxoxoo"</ic>.
+  - <ic>duration: number</ic>: an optional duration (in beats) like <ic>1</ic> or </ic>4</ic>. It can be patterned.
+
+${makeExample(
+  "Sequence built using a classic XOX sequencer style",
+  `
+seq('xoxo')::sound('fhardkick').out()
+seq('ooxo')::sound('fsoftsnare').out()
+seq('xoxo', 0.25)::sound('fhh').out()
+  `,
+  true
+)}
+
+${makeExample(
+  "Another sequence using more complex parameters",
+  `
+seq('xoxooxxoo', [0.5, 0.25].dur(2, 1))::sound('fhardkick').out()
+seq('ooxo', [1, 2].bar())::sound('fsoftsnare').speed(0.5).out()
+seq(['xoxoxoxx', 'xxoo'].bar())::sound('fhh').out()
+  `,
+  true
+)}
+
+- <ic>fullseq(expr: string, duration: number = 0.5): boolean</ic> : a variant. Will return <ic>true</ic> or <ic>false</ic> for a whole period, depending on the symbol. Useful for long structure patterns.
+  - <ic>expr: string</ic>: any string composed of <ic>x</ic> or <ic>o</ic> like so: <ic>"xooxoxxoxoo"</ic>.
+  - <ic>duration: number</ic>: an optional duration (in beats) like <ic>1</ic> or </ic>4</ic>. It can be patterned.
+
+${makeExample(
+  "Long structured patterns",
+  `
+function simplePat() {
+log('Simple pattern playing!')
+  seq('xoxooxxoo', [0.5, 0.25].dur(2, 1))::sound('fhardkick').out()
+  seq('ooxo', [1, 2].bar())::sound('fsoftsnare').speed(0.5).out()
+  seq(['xoxoxoxx', 'xxoo'].bar())::sound('fhh').out()
+}
+function complexPat() {
+  log('Complex pattern playing!')
+  seq('xoxooxxoo', [0.5, 0.25].dur(2, 1))::sound('fhardkick').out()
+  seq('ooxo', [1, 2].bar())::sound('fsoftsnare').speed(0.5).out()
+  seq(['xoxoxoxx', 'xxoo'].bar())::sound('fhh').out()  
+}
+fullseq('xooxooxx', 4) ? simplePat() : complexPat()
+  `,
+  true
+)}
+
+
+
 ## Cyclical rhythm generators
 	
 We included a bunch of popular rhythm generators in Topos such as the euclidian rhythms algorithms or the one to generate rhythms based on a binary sequence. They all work using _iterators_ that you will gradually learn to use for iterating over lists. Note that they are levaraging <ic>mod(...n:number[])</ic> that you just learned about!
