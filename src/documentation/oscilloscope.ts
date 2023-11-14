@@ -14,6 +14,8 @@ scope({
     enabled: true, // off by default
     color: "#fdba74", // any valid CSS color or "random"
     thickness: 4, // stroke thickness
+    offsetY: 0, // Horizontal offset
+    offsetX: 0, // Vertical offset
     fftSize: 256, // multiples of 128
     orientation: "horizontal", // "vertical" or "horizontal"
     mode: "scope" | "3D" | "freqscope", // scope mode
