@@ -254,7 +254,7 @@ export class SoundEvent extends AudibleEvent {
     roomfade: ["roomfade", "rfade"],
     roomlp: ["roomlp", "rlp"],
     roomdim: ["roomdim", "rdim"],
-    sound: ["sound", "s"],
+    sound: ["s","sound"],
     size: (value: number) => {
       this.updateValue("roomsize", value);
       return this;
@@ -435,8 +435,15 @@ export class SoundEvent extends AudibleEvent {
     const events = objectWithArraysToArrayOfObjects(this.values, [
       "parsedScale",
     ]);
+
     for (const event of events) {
-      superdough(event, this.nudge - this.app.clock.deviation, event.dur);
+      // Filter non superdough parameters
+      // TODO: Should filter relevant fields for superdough
+      // const filteredEvent = filterObject(event, ["analyze","note","dur","freq","s"]);
+      const filteredEvent = event;
+      // No need for note if there is freq
+      if(filteredEvent.freq) { delete filteredEvent.note; }
+      superdough(filteredEvent, this.nudge - this.app.clock.deviation, filteredEvent.dur);
     }
   };
 }
