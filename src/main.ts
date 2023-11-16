@@ -76,7 +76,9 @@ export class Editor {
     refresh: 1,
     fftSize: 1024,
     orientation: "horizontal",
-    is3D: false,
+    offsetX: 0,
+    offsetY: 0,
+    mode: "scope",
     size: 1,
   };
 
