@@ -1650,12 +1650,15 @@ You can get the current position of the mouse on the screen by using the followi
 - <ic>mouseX()</ic>: the horizontal position of the mouse on the screen (as a floating point number).
 - <ic>mouseY()</ic>: the vertical position of the mouse on the screen (as a floating point number).
 	
-${e("FM Synthesizer controlled using the mouse",`
+${e("Vibrato controlled by mouse",`
 beat(.25) :: sound('sine')
-  .fmi(mouseX() / 100)
-  .fmh(mouseY() / 100)
-  .vel(0.2)
-  .room(0.9).out()
+  .note([0,4,5,10,11,15,16]
+        .palindrome()
+        .scale('pentatonic', 50).beat(.25)
+        + [-12, 0, 12].beat(0.25))
+  .vib(mouseX()/700).vibmod(mouseY()/200)
+  .pan(r(0, 1))
+  .room(0.35).size(4).out()
 `,!0)}
 
 <br>
@@ -1666,14 +1669,12 @@ Current mouse position can also be used to generate notes:
 - <ic>noteY()</ic>: returns a MIDI note number (0-127) based on the vertical position of the mouse on the screen.
 	
 
-${e("The same synthesizer, with note control!",`
+${e("Using the mouse to output a note!",`
 beat(.25) :: sound('sine')
-  .fmi(mouseX() / 100)
+  .lpf(7000)
+  .delay(0.5).delayt(1/6).delayfb(0.2)
   .note(noteX())
-  .fmh(mouseY() / 100)
-  .vel(0.2)
-  .room(0.9).out()
-`,!0)}
+  .room(0.35).size(4).out()`,!0)}
 
 ## Mouse and Arrays
 
@@ -1783,10 +1784,10 @@ beat(1)::sound(['kick', 'fsnare'].dur(3, 1))
 - <ic>pitch()</ic>: convert a list of integers to pitch classes
 
 ${e("Converting a list of integers to pitch classes using key and scale",`
-    beat(0.25) :: snd('sine')
-    .pitch([0,1,2,3,4,6,7,8].beat(0.125))
-    .key(["F4","F3"].beat(2.0))
-    .scale("minor").out()
+beat(0.25) :: snd('sine')
+  .pitch([0,1,2,3,4,6,7,8].beat(0.125))
+  .key(["F4","F3"].beat(2.0))
+  .scale("minor").ad(0, .25).out()
 `,!0)}
 
   - <ic>scale(scale: string, base note: number)</ic>: Map each element of the list to the closest note of the slected scale. [0, 2, 3, 5 ].scale("major", 50) returns [50, 52, <ic>54</ic>, 55]. You can use western scale names like (Major, Minor, Minor pentatonic ...) or [zeitler](https://ianring.com/musictheory/scales/traditions/zeitler) scale names. Alternatively you can also use the integers as used by Ian Ring in his [study of scales](https://ianring.com/musictheory/scales/).
@@ -1959,7 +1960,9 @@ flip(2) :: beat(2) :: delayr(150, 4, () => sound('east').speed([0.5,.25].beat() 
 
 # Variables
 
-By default, each script is independant from each other. Scripts live in their own bubble and you cannot get or set variables affecting a script from any other script. **However**, everybody knows that global variables are cool and should be used everywhere. This is an incredibely powerful tool to use for radically altering a composition in a few lines of code.
+By default, each script is independant from each other. Scripts live in their own bubble and you cannot get or set variables affecting a script from any other script.
+
+**However**, everybody knows that global variables are cool and should be used everywhere. Global variables are an incredibely powerful tool to radically alter a composition in a few lines of code.
 	
 - <ic>variable(a: number | string, b?: any)</ic>: if only one argument is provided, the value of the variable will be returned through its name, denoted by the first argument. If a second argument is used, it will be saved as a global variable under the name of the first argument.
 	- <ic>delete_variable(name: string)</ic>: deletes a global variable from storage.
