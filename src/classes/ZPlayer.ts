@@ -1,6 +1,6 @@
 import { Chord, Pitch, Rest as ZRest, Ziffers } from "zifferjs";
 import { Editor } from "../main";
-import { Event } from "./AbstractEvents";
+import { AbstractEvent } from "./AbstractEvents";
 import { SkipEvent } from "./SkipEvent";
 import { SoundEvent, SoundParams } from "./SoundEvent";
 import { MidiEvent, MidiParams } from "./MidiEvent";
@@ -10,7 +10,7 @@ import { TonnetzSpaces } from "zifferjs/src/tonnetz";
 
 export type InputOptions = { [key: string]: string | number };
 
-export class Player extends Event {
+export class Player extends AbstractEvent {
   input: string|number;
   ziffers: Ziffers;
   initCallTime: number = 0;

@@ -5,7 +5,13 @@ import {
   safeScale
 } from "zifferjs";
 
-export abstract class Event {
+export type EventOperation<T> = (instance: T) => void;
+
+export interface AbstractEvent {
+  [key: string]: any
+}
+
+export class AbstractEvent {
   /**
    * The Event class is the base class for all events. It provides a set of
    * functions that can be used to transform an Event. The functions are used
@@ -66,7 +72,7 @@ export abstract class Event {
     }
   };
 
-  odds = (probability: number, func: Function): Event => {
+  odds = (probability: number, func: Function): AbstractEvent => {
     /**
      * Returns a transformed Event with a given probability.
      *
@@ -80,7 +86,7 @@ export abstract class Event {
   };
 
   // @ts-ignore
-  never = (func: Function): Event => {
+  never = (func: Function): AbstractEvent => {
     /**
      * Never return a transformed Event.
      *
@@ -90,7 +96,7 @@ export abstract class Event {
     return this;
   };
 
-  almostNever = (func: Function): Event => {
+  almostNever = (func: Function): AbstractEvent => {
     /**
      * Returns a transformed Event with a probability of 0.025.
      * @param func - The function to be applied to the Event
@@ -99,7 +105,7 @@ export abstract class Event {
     return this.odds(0.025, func);
   };
 
-  rarely = (func: Function): Event => {
+  rarely = (func: Function): AbstractEvent => {
     /**
      * Returns a transformed Event with a probability of 0.1.
      * @param func - The function to be applied to the Event
@@ -108,7 +114,7 @@ export abstract class Event {
     return this.odds(0.1, func);
   };
 
-  scarcely = (func: Function): Event => {
+  scarcely = (func: Function): AbstractEvent => {
     /**
      * Returns a transformed Event with a probability of 0.25.
      * @param func - The function to be applied to the Event
@@ -117,7 +123,7 @@ export abstract class Event {
     return this.odds(0.25, func);
   };
 
-  sometimes = (func: Function): Event => {
+  sometimes = (func: Function): AbstractEvent => {
     /**
      * Returns a transformed Event with a probability of 0.5.
      * @param func - The function to be applied to the Event
@@ -126,7 +132,7 @@ export abstract class Event {
     return this.odds(0.5, func);
   };
 
-  often = (func: Function): Event => {
+  often = (func: Function): AbstractEvent => {
     /**
      * Returns a transformed Event with a probability of 0.75.
      * @param func - The function to be applied to the Event
@@ -135,7 +141,7 @@ export abstract class Event {
     return this.odds(0.75, func);
   };
 
-  frequently = (func: Function): Event => {
+  frequently = (func: Function): AbstractEvent => {
     /**
      * Returns a transformed Event with a probability of 0.9.
      * @param func - The function to be applied to the Event
@@ -144,7 +150,7 @@ export abstract class Event {
     return this.odds(0.9, func);
   };
 
-  almostAlways = (func: Function): Event => {
+  almostAlways = (func: Function): AbstractEvent => {
     /**
      * Returns a transformed Event with a probability of 0.985.
      * @param func - The function to be applied to the Event
@@ -153,7 +159,7 @@ export abstract class Event {
     return this.odds(0.985, func);
   };
 
-  always = (func: Function): Event => {
+  always = (func: Function): AbstractEvent => {
     /**
      * Returns a transformed Event with a probability of 1.
      * @param func - The function to be applied to the Event
@@ -162,7 +168,7 @@ export abstract class Event {
     return this.modify(func);
   };
 
-  modify = (func: Function): Event => {
+  modify = (func: Function): AbstractEvent => {
     /**
      * Returns a transformed Event. This function is used internally by the
      * other functions of this class. It is just a wrapper for the function
@@ -171,7 +177,7 @@ export abstract class Event {
     return func(this);
   };
 
-  seed = (value: string | number): Event => {
+  seed = (value: string | number): AbstractEvent => {
     /**
      * This function is used to set the seed of the random number generator.
      * @param value - The seed value
@@ -182,7 +188,7 @@ export abstract class Event {
     return this;
   };
 
-  clear = (): Event => {
+  clear = (): AbstractEvent => {
     /**
      * This function is used to clear the seed of the random number generator.
      * @returns The Event
@@ -191,7 +197,7 @@ export abstract class Event {
     return this;
   };
 
-  apply = (func: Function): Event => {
+  apply = (func: Function): AbstractEvent => {
     /**
      * This function is used to apply a function to the Event.
      * Simple function applicator
@@ -202,7 +208,7 @@ export abstract class Event {
     return this.modify(func);
   };
 
-  noteLength = (value: number | number[], ...kwargs: number[]): Event => {
+  noteLength = (value: number | number[], ...kwargs: number[]): AbstractEvent => {
     /**
      * This function is used to set the note length of the Event.
      */
@@ -220,7 +226,7 @@ export abstract class Event {
   };
 }
 
-export abstract class AudibleEvent extends Event {
+export abstract class AudibleEvent extends AbstractEvent {
   constructor(app: Editor) {
     super(app);
   }

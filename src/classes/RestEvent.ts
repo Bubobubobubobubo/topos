@@ -1,13 +1,13 @@
 import { type Editor } from "../main";
-import { Event } from "./AbstractEvents";
+import { AbstractEvent } from "./AbstractEvents";
 
-export class RestEvent extends Event {
+export class RestEvent extends AbstractEvent {
   constructor(length: number, app: Editor) {
     super(app);
     this.values["noteLength"] = length;
   }
 
-  _fallbackMethod = (): Event => {
+  _fallbackMethod = (): AbstractEvent => {
     return RestEvent.createRestProxy(this.values["noteLength"], this.app);
   };
 

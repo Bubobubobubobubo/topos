@@ -29,6 +29,7 @@ import { Speaker } from "./extensions/StringExtensions";
 import { getScaleNotes } from "zifferjs";
 import { OscilloscopeConfig, blinkScript } from "./AudioVisualisation";
 import { SkipEvent } from "./classes/SkipEvent";
+import { AbstractEvent, EventOperation } from "./classes/AbstractEvents";
 
 interface ControlChange {
   channel: number;
@@ -1896,6 +1897,12 @@ export class UserAPI {
   // =============================================================
   // High Order Functions
   // =============================================================
+
+  register = (name: string, operation: EventOperation<AbstractEvent>): void => {
+    AbstractEvent.prototype[name] = function (this: AbstractEvent) {
+        return operation(this);
+    };
+  }
 
   public shuffle = <T>(array: T[]): T[] => {
     /**
