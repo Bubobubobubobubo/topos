@@ -404,30 +404,86 @@ To learn more about the audio sample loading mechanism, please refer to [this pa
 `},A7=r=>{const e=Jt(r);return`
 # Chaining
 
-Method chaining can be used to manipulate objects returned by both <ic>sound()</ic> and <ic>midi()</ic> functions. Think of it as another way to create interesting musical patterns! Method chaining, unlike patterns, is acting on the sound chain level and is not really dependant on time. You can combine chaining and good old patterns if you want!
+You might have noticed that **Topos** is using chains a lot. Chains are a very common pattern when programming, especially when you deal with objets that can be composed from many changing properties. Method chaining is used by many objects but mostly by <ic>sound()</ic> and <ic>midi()</ic>. It looks like this:
 
-Probability functions can be chained to apply different modifiers randomly. Probability functions are named as global probability functions (see **Probabilities** in the **Function** page) but take a function as an input.
+${e("Method chaining",`
+beat(1)::sound('bd').speed(2).lpf(500).out()
+`,!0)}
 
-## Chaining sound events
+Method chains become fun if you add just a little bit of complexity to them. You can start to add conditions, start to register complex chains to be re-used later on, etc.. We will not remind you how to write basic chains. The whole documentation is full of examples! Let's explore more delicate patterns!
+
+## Registering a chain
+
+You can use the <ic>register()</ic> function to... register a chain that you would like to re-use later on.
+
+${e("Re-creating a classic Tidal function",`
+// Playing with extreme panning and playback rate
+register('juxrev', n=>n.pan([0, 1]).speed([1, -1]))
+
+// Using our new abstraction
+beat(1)::sound('fhh').juxrev().out()
+`,!0)}
+
+This is an extremely powerful construct. For example, you can use it to create synthesizer presets!
+
+${e("Re-creating a classic Tidal function",`
+// Registering a specific synth architecture
+register('sub', n=>n.ad(0, .25)
+  .fmi(4).pan([0, 1])
+  .delay(0.5).delayt(1/8).delayfb(1/3)
+  .lpf(25+usine(1/3)*80)
+  .lpad(4, 0, .25)
+)
+
+// Using it with an arpeggio
+rhythm(.25, [6, 8].beat(), 12)::sound('sine')
+  .note([0, 2, 4, 5].scale('minor', 50).beat(0.5))
+  .sub().out()`,!0)}
+
+
+## Conditional chaining
+
+There are cases when you don't always want to apply one or many elements that are composing your chain. You can use conditionals to set a specific probability for the chaining to happen.
 
 All functions from the sound object can be used to modify the event, for example:
+
 ${e("Modifying sound events with probabilities",`
-beat(.5) && sound('numbers')
+beat(.5) && sound('fhh')
   .odds(1/4, s => s.speed(irand(1,4)))
-  .rarely(s => s.crush(3))
-  .out()
-`,!0)}
-${e("Chance to change to a different note",`
+  .rarely(s => s.room(0.5).size(8).speed(0.5))
+  .out()`,!0)}
+${e("Chance to play a random note",`
 rhythm(.5, 3, 8) && sound('pluck').note(38).out()
 beat(.5) && sound('pluck').note(60)
   .often(s => s.note(57))
   .sometimes(s => s.note(64).n(irand(1,4)))
   .note(62)
+  .room(0.5).size(3)
   .out()`,!1)}
 
-## Chaining midi events
+There is a growing collection of probability and chance methods you can use:
 
-All the functions from the MIDI object can be used to modify the event with probabilities. Values can also be incremented using <ic>+=</ic> notation.
+| Function Name  | Description | Example |
+|----------------|-------------|---------|
+| <ic>evenbar</ic>      | If the current bar is even | <ic>.evenbar(s => s.note(58))</ic> |
+| <ic>even</ic>         | If the current beat is even | <ic>.even(s => s.note(59))</ic> |
+| <ic>odd</ic>          | If the current beat is odd | <ic>.odd(s => s.note(61))</ic> |
+| <ic>odds</ic>         | With a given probability | <ic>.odds(0.3, s => s.note(62))</ic> |
+| <ic>never</ic>        | Never transforms the event | <ic>.never(s => s.note(63))</ic> |
+| <ic>almostNever</ic>  | With a 2.5% probability. | <ic>.almostNever(s => s.note(64))</ic> |
+| <ic>rarely</ic>       | With a 10% probability.  | <ic>.rarely(s => s.note(65))</ic> |
+| <ic>scarcely</ic>     | With a 25% probability.  | <ic>.scarcely(s => s.note(66))</ic> |
+| <ic>sometimes</ic>    | With a 50% probability.  | <ic>.sometimes(s => s.note(67))</ic> |
+| <ic>often</ic>        | With a 75% probability. | <ic>.often(s => s.note(68))</ic> |
+| <ic>frequently</ic>   | With a 90% probability. | <ic>.frequently(s => s.note(69))</ic> |
+| <ic>almostAlways</ic> | With a 98.5% probability. | <ic>.almostAlways(s => s.note(70))</ic> |
+| <ic>always</ic>       | Always transforms the Event.  | <ic>.always(s => s.note(71))</ic> |
+
+
+
+### MIDI Chaining
+
+The conditional chaining also applies to MIDI. Values can also be incremented using <ic>+=</ic> notation.
 
 ${e("Modifying midi events with probabilities",`beat(.5) && midi(60).channel(1)
   .odds(1/4, n => n.channel(2))
