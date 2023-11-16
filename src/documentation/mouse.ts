@@ -16,13 +16,16 @@ You can get the current position of the mouse on the screen by using the followi
 - <ic>mouseY()</ic>: the vertical position of the mouse on the screen (as a floating point number).
 	
 ${makeExample(
-    "FM Synthesizer controlled using the mouse",
+    "Vibrato controlled by mouse",
     `
 beat(.25) :: sound('sine')
-  .fmi(mouseX() / 100)
-  .fmh(mouseY() / 100)
-  .vel(0.2)
-  .room(0.9).out()
+  .note([0,4,5,10,11,15,16]
+        .palindrome()
+        .scale('pentatonic', 50).beat(.25)
+        + [-12, 0, 12].beat(0.25))
+  .vib(mouseX()/700).vibmod(mouseY()/200)
+  .pan(r(0, 1))
+  .room(0.35).size(4).out()
 `,
     true
   )}
@@ -36,15 +39,13 @@ Current mouse position can also be used to generate notes:
 	
 
 ${makeExample(
-    "The same synthesizer, with note control!",
+    "Using the mouse to output a note!",
     `
 beat(.25) :: sound('sine')
-  .fmi(mouseX() / 100)
+  .lpf(7000)
+  .delay(0.5).delayt(1/6).delayfb(0.2)
   .note(noteX())
-  .fmh(mouseY() / 100)
-  .vel(0.2)
-  .room(0.9).out()
-`,
+  .room(0.35).size(4).out()`,
     true
   )}
 

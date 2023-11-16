@@ -7,7 +7,9 @@ export const variables = (application: Editor): string => {
 
 # Variables
 
-By default, each script is independant from each other. Scripts live in their own bubble and you cannot get or set variables affecting a script from any other script. **However**, everybody knows that global variables are cool and should be used everywhere. This is an incredibely powerful tool to use for radically altering a composition in a few lines of code.
+By default, each script is independant from each other. Scripts live in their own bubble and you cannot get or set variables affecting a script from any other script.
+
+**However**, everybody knows that global variables are cool and should be used everywhere. Global variables are an incredibely powerful tool to radically alter a composition in a few lines of code.
 	
 - <ic>variable(a: number | string, b?: any)</ic>: if only one argument is provided, the value of the variable will be returned through its name, denoted by the first argument. If a second argument is used, it will be saved as a global variable under the name of the first argument.
 	- <ic>delete_variable(name: string)</ic>: deletes a global variable from storage.
