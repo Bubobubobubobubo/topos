@@ -3882,10 +3882,10 @@ yaml@^2.1.1:
   resolved "https://registry.yarnpkg.com/yaml/-/yaml-2.3.1.tgz#02fe0975d23cd441242aa7204e09fc28ac2ac33b"
   integrity sha512-2eHWfjaoXgTBC2jNM1LRef62VQa0umtvRiDSk6HSzW7RvS5YtkabJrwYLLEKWBc8a5U2PTSCs+dJjUTJdlHsWQ==
 
-zifferjs@^0.0.36:
-  version "0.0.36"
-  resolved "https://registry.yarnpkg.com/zifferjs/-/zifferjs-0.0.36.tgz#a7f0139c56cae38a5c68a0182363bab4ffeaad79"
-  integrity sha512-zpzN2obiNYrmCxFdzqv3jzOHYPhgAkzW6ZeHxSoHtybLHf/HlDXWs3KtB1u8HOJt2ZPIogegNEDX+mMCQtxbMQ==
+zifferjs@^0.0.37:
+  version "0.0.37"
+  resolved "https://registry.yarnpkg.com/zifferjs/-/zifferjs-0.0.37.tgz#ac618ffa7e6211b7bc1887b9cba714dc6be22fbc"
+  integrity sha512-jOkCrrOvecUuIC2ThK0y/CyiWClnnxc+WmXDlMs6VJ5fOSBQMB5r/sKbauL2FZrQQRoMw08uBClIB2kG+O8jhQ==
 
 zzfx@^1.2.0:
   version "1.2.0"
