@@ -1,5 +1,5 @@
-import { type Editor } from "../main";
-import { makeExampleFactory } from "../Documentation";
+import { type Editor } from "../../main";
+import { makeExampleFactory } from "../../Documentation";
 
 export const mouse = (app: Editor): string => {
   let makeExample = makeExampleFactory(app);

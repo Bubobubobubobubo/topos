@@ -26,7 +26,9 @@ const webManifest = {
 const vitePWAconfiguration = {
   devOptions: {
     enabled: true,
+    suppressWarnings: true,
   },
+
   workbox: {
     sourcemap: false,
     cleanupOutdatedCaches: true,

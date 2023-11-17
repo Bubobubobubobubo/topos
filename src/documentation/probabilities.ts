@@ -9,8 +9,8 @@ export const probabilities = (application: Editor): string => {
 
 There are some simple functions to play with probabilities.
 
-- <ic>rand(min: number, max:number)</ic>: returns a random number between <ic>min</ic> and <ic>max</ic>. Shorthand _r()_.
-- <ic>irand(min: number, max:number)</ic>: returns a random integer between <ic>min</ic> and <ic>max</ic>. Shorthands _ir()_ or _rI()_.
+- <ic>rand(min: number, max:number)</ic>: returns a random number between <ic>min</ic> and <ic>max</ic>. Shorthand <ic>r()</ic>.
+- <ic>irand(min: number, max:number)</ic>: returns a random integer between <ic>min</ic> and <ic>max</ic>. Shorthands <ic>ir()</ic> or <ic>rI()</ic>.
 
 ${makeExample(
     "Bleep bloop, what were you expecting?",

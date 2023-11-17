@@ -1,5 +1,5 @@
-import { key_shortcut, makeExampleFactory } from "../Documentation";
-import { type Editor } from "../main";
+import { key_shortcut, makeExampleFactory } from "../../Documentation";
+import { type Editor } from "../../main";
 import topos_arch from "./topos_arch.svg";
 import many_universes from "./many_universes.svg";
 
