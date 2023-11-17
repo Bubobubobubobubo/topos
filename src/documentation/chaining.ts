@@ -19,7 +19,7 @@ Method chains become fun if you add just a little bit of complexity to them. You
 
 ## Registering a chain
 
-You can use the <ic>register()</ic> function to... register a chain that you would like to re-use later on.
+You can use the <ic>register(...args)</ic> function to... register a chain that you would like to re-use later on.
 
 ${makeExample(
     "Re-creating a classic Tidal function",
@@ -32,23 +32,23 @@ beat(1)::sound('fhh').juxrev().out()
 `, true
   )}
 
-This is an extremely powerful construct. For example, you can use it to create synthesizer presets!
+This is an extremely powerful construct. For example, you can use it to create synthesizer presets and reuse them later on. You can also define parameters for your registered functions. For example:
 
 ${makeExample(
     "Re-creating a classic Tidal function",
     `
 // Registering a specific synth architecture
-register('sub', n=>n.ad(0, .25)
-  .fmi(4).pan([0, 1])
+register('sub', (n,x=4,y=80)=>n.ad(0, .25)
+  .fmi(x).pan([0, 1])
   .delay(0.5).delayt(1/8).delayfb(1/3)
-  .lpf(25+usine(1/3)*80)
+  .lpf(25+usine(1/3)*y)
   .lpad(4, 0, .25)
 )
 
 // Using it with an arpeggio
 rhythm(.25, [6, 8].beat(), 12)::sound('sine')
   .note([0, 2, 4, 5].scale('minor', 50).beat(0.5))
-  .sub().out()`, true
+  .sub(8).out()`, true
   )}
 
 
