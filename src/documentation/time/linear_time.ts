@@ -1,5 +1,5 @@
-import { type Editor } from "../main";
-import { makeExampleFactory } from "../Documentation";
+import { type Editor } from "../../main";
+import { makeExampleFactory } from "../../Documentation";
 import pulses from "./pulses.svg";
 
 export const linear_time = (app: Editor): string => {
@@ -22,12 +22,12 @@ export const linear_time = (app: Editor): string => {
 There is a tiny widget at the bottom right of the screen showing you the current BPM and the status of the transport. You can turn it on or off in the settings menu.
 
 ${makeExample(
-  "Printing the transport",
-  `
+    "Printing the transport",
+    `
 log(\`\$\{cbar()}\, \$\{cbeat()\}, \$\{cpulse()\}\`)
   `,
-  true
-)}
+    true
+  )}
 
 ### BPM and PPQN
 
@@ -64,8 +64,8 @@ These values are **extremely useful** to craft more complex syntax or to write m
 You can use time primitives as conditionals. The following example will play a pattern A for 2 bars and a pattern B for 2 bars:
 	
 ${makeExample(
-  "Manual mode: using time primitives!",
-  `
+    "Manual mode: using time primitives!",
+    `
 // Manual time condition
 if((cbar() % 4) > 1) {
   beat(2) && sound('kick').out()
@@ -83,8 +83,8 @@ if((cbar() % 4) > 1) {
 // This is always playing no matter what happens
 beat([.5, .5, 1, .25].beat(0.5)) :: sound('shaker').out() 
 `,
-  true
-)}
+    true
+  )}
 
 ## Time Warping
 
@@ -94,8 +94,8 @@ Time generally flows from the past to the future. However, you can manipulate it
 
 
 ${makeExample(
-  "Time is now super elastic!",
-  `
+    "Time is now super elastic!",
+    `
 // Obscure Shenanigans - Bubobubobubo
 beat([1/4,1/8,1/16].beat(8)):: sound('sine')
 	.freq([100,50].beat(16) + 50 * ($(1)%10))
@@ -108,14 +108,14 @@ flip(3) :: beat([.25,.5].beat(.5)) :: sound('dr')
 // Jumping back and forth in time
 beat(.25) :: warp([12, 48, 24, 1, 120, 30].pick())
 `,
-  true
-)}
+    true
+  )}
 	
 - <ic>beat_warp(beat: number)</ic>: this function jumps to the _n_ beat of the clock. The first beat is <ic>1</ic>.
 
 ${makeExample(
-  "Jumping back and forth with beats",
-  `
+    "Jumping back and forth with beats",
+    `
 // Resonance bliss - Bubobubobubo
 beat(.25)::snd('arpy')
   .note(30 + [0,3,7,10].beat())
@@ -130,40 +130,40 @@ beat(.5) :: snd('arpy').note(
 // Comment me to stop warping!
 beat(1) :: beat_warp([2,4,5,10,11].pick())
 `,
-  true
-)}
+    true
+  )}
 
 ## Transport-based rhythm generators
 
 - <ic>onbeat(...n: number[])</ic>: The <ic>onbeat</ic> function allows you to lock on to a specific beat from the clock to execute code. It can accept multiple arguments. It's usage is very straightforward and not hard to understand. You can pass either integers or floating point numbers. By default, topos is using a <ic>4/4</ic> bar meaning that you can target any of these beats (or in-between) with this function.
 
 ${makeExample(
-  "Some simple yet detailed rhythms",
-  `
+    "Some simple yet detailed rhythms",
+    `
 onbeat(1,2,3,4)::snd('kick').out() // Bassdrum on each beat
 onbeat(2,4)::snd('snare').n([8,4].beat(4)).out() // Snare on acccentuated beats
 onbeat(1.5,2.5,3.5, 3.75)::snd('hat').gain(r(0.9,1.1)).out() // Cool high-hats
 `,
-  true
-)}
+    true
+  )}
 
 ${makeExample(
-  "Let's do something more complex",
-  `
+    "Let's do something more complex",
+    `
 onbeat(0.5, 2, 3, 3.75)::snd('kick').n(2).out()
 onbeat(2, [1.5, 3, 4].pick(), 4)::snd('snare').n(8).out()
 beat([.25, 1/8].beat(1.5))::snd('hat').n(2)
   .gain(rand(0.4, 0.7)).end(0.05)
   .pan(usine()).out()
 `,
-  false
-)}
+    false
+  )}
 
 - <ic>oncount(beats: number[], meter: number)</ic>: This function is similar to <ic>onbeat</ic> but it allows you to specify a custom number of beats as the last argument.
 
 ${makeExample(
-  "Using oncount to create more variation in the rhythm",
-  `
+    "Using oncount to create more variation in the rhythm",
+    `
 z1('1/16 (0 2 3 4)+(0 2 4 6)').scale('pentatonic').sound('sawtooth')
   .cutoff([400,500,1000,2000].beat(1))
   .lpadsr(2, 0, .2, 0, 0)
@@ -171,20 +171,20 @@ z1('1/16 (0 2 3 4)+(0 2 4 6)').scale('pentatonic').sound('sawtooth')
 onbeat(1,1.5,2,3,4) :: sound('bd').gain(2.0).out()
 oncount([1,3,5.5,7,7.5,8],8) :: sound('hh').gain(irand(1.0,4.0)).out()
 `,
-  true
-)}
+    true
+  )}
 
 ${makeExample(
-  "Using oncount to create rhythms with a custom meter",
-  `
+    "Using oncount to create rhythms with a custom meter",
+    `
 bpm(200)
 oncount([1, 5, 9, 13],16) :: sound('808bd').n(4).shape(0.5).gain(1.0).out()
 oncount([5, 6, 13],16) :: sound('shaker').room(0.25).gain(0.9).out()
 oncount([2, 3, 3.5, 6, 7, 10, 15],16) :: sound('hh').n(8).gain(0.8).out()
 oncount([1, 4, 5, 8, 9, 10, 11, 12, 13, 14, 15, 16],16) :: sound('hh').out()
 `,
-  true
-)}
+    true
+  )}
 
 
 
