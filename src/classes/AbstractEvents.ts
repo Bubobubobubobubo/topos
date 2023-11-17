@@ -5,7 +5,7 @@ import {
   safeScale
 } from "zifferjs";
 
-export type EventOperation<T> = (instance: T) => void;
+export type EventOperation<T> = (instance: T, ...args: any[]) => void;
 
 export interface AbstractEvent {
   [key: string]: any

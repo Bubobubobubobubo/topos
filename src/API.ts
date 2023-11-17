@@ -1899,8 +1899,8 @@ export class UserAPI {
   // =============================================================
 
   register = (name: string, operation: EventOperation<AbstractEvent>): void => {
-    AbstractEvent.prototype[name] = function (this: AbstractEvent) {
-        return operation(this);
+    AbstractEvent.prototype[name] = function (this: AbstractEvent, ...args: any[]) {
+        return operation(this, ...args);
     };
   }
 
