@@ -3319,10 +3319,10 @@ sucrase@^3.32.0:
     pirates "^4.0.1"
     ts-interface-checker "^0.1.9"
 
-superdough@^0.9.10:
-  version "0.9.10"
-  resolved "https://registry.yarnpkg.com/superdough/-/superdough-0.9.10.tgz#9554964741c508b4c5d596fa8acbb2efea822250"
-  integrity sha512-IGu0+fBXpSS4l4Q+4ATRhSFXnas7t2G6uc5Ry+keQ4G+nc6uK6twAP0YyBlSB4RUdGpZCIS1o0t8qJ7MaBg4gw==
+superdough@^0.9.11:
+  version "0.9.11"
+  resolved "https://registry.yarnpkg.com/superdough/-/superdough-0.9.11.tgz#3a3842a47d6340477f77d39077303f05e15274dd"
+  integrity sha512-s0SNSg/EJHwp2sUnE2A7pTZ0G2luiSEq9NVKJvodjJw11Tn0fOp9XcnegNXINYz3U6mAsUYRoeaj4NmuTL13fA==
   dependencies:
     nanostores "^0.8.1"
 
