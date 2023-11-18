@@ -263,7 +263,7 @@ export const initializeSelectedUniverse = (app: Editor): void => {
       app.universes[app.selected_universe] = structuredClone(template_universe);
     }
   }
-  app.interface.universe_viewer.innerHTML = `Topos: ${app.selected_universe}`;
+  app.interface.universe_viewer.placeholder! = `${app.selected_universe}`;
 };
 
 export const emptyUrl = () => {
@@ -334,7 +334,7 @@ export const loadUniverse = (
   // Updating references to the currently selected universe
   app.settings.selected_universe = selectedUniverse;
   app.selected_universe = selectedUniverse;
-  app.interface.universe_viewer.innerHTML = `Topos: ${selectedUniverse}`;
+  app.interface.universe_viewer.placeholder! = `${selectedUniverse}`;
   // Updating the editor View to reflect the selected universe
   app.updateEditorView();
   // Evaluating the initialisation script for the selected universe
