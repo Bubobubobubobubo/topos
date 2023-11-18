@@ -1,11 +1,15 @@
 import { type Editor } from "./main";
+// Basics
 import { introduction } from "./documentation/basics/welcome";
 import { software_interface } from "./documentation/basics/interface";
 import { shortcuts } from "./documentation/basics/keyboard";
 import { code } from "./documentation/basics/code";
 import { mouse } from "./documentation/basics/mouse";
-import { oscilloscope } from "./documentation/oscilloscope";
-import { synchronisation } from "./documentation/synchronisation";
+// More
+import { oscilloscope } from "./documentation/more/oscilloscope";
+import { synchronisation } from "./documentation/more/synchronisation";
+import { about } from "./documentation/more/about";
+import { bonus } from "./documentation/more/bonus";
 import { samples } from "./documentation/samples";
 import { chaining } from "./documentation/chaining";
 import { interaction } from "./documentation/interaction";
@@ -14,7 +18,6 @@ import { linear_time } from "./documentation/time/linear_time";
 import { cyclical_time } from "./documentation/time/cyclical_time";
 import { long_forms } from "./documentation/long_forms";
 import { midi } from "./documentation/midi";
-import { about } from "./documentation/about";
 import { sound } from "./documentation/engine";
 import { patterns } from "./documentation/patterns";
 import { functions } from "./documentation/functions";
@@ -24,7 +27,6 @@ import { lfos } from "./documentation/lfos";
 import { ziffers } from "./documentation/ziffers";
 import { reference } from "./documentation/reference";
 import { synths } from "./documentation/synths";
-import { bonus } from "./documentation/bonus";
 
 // Setting up the Markdown converter with syntax highlighting
 import showdown from "showdown";
