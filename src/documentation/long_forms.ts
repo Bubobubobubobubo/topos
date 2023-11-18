@@ -140,7 +140,7 @@ flipbar(2)
 ${makeExample(
     "Using onbar for filler drums",
     `
-bpm(150);
+tempo(150);
 // Only play on the third and fourth bar of the cycle.
 onbar([3,4], 4)::beat(.25)::snd('hh').out(); 
 // Using JavaScript regular control flow

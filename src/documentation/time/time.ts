@@ -1,5 +1,5 @@
-import { makeExampleFactory } from "../Documentation";
-import { type Editor } from "../main";
+import { makeExampleFactory } from "../../Documentation";
+import { type Editor } from "../../main";
 import times from "./times.svg";
 
 export const time = (application: Editor): string => {

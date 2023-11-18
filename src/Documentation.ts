@@ -1,30 +1,37 @@
 import { type Editor } from "./main";
-import { introduction } from "./documentation/introduction";
-import { oscilloscope } from "./documentation/oscilloscope";
-import { synchronisation } from "./documentation/synchronisation";
-import { samples } from "./documentation/samples";
+// Basics
+import { introduction } from "./documentation/basics/welcome";
+import { loading_samples } from "./documentation/samples/loading_samples";
+import { amplitude } from "./documentation/audio_engine/amplitude";
+import { reverb } from "./documentation/audio_engine/reverb_delay";
+import { sampler } from "./documentation/audio_engine/sampler";
+import { sample_banks } from "./documentation/samples/sample_banks";
+import { audio_basics } from "./documentation/audio_engine/audio_basics";
+import { sample_list } from "./documentation/samples/sample_list";
+import { software_interface } from "./documentation/basics/interface";
+import { shortcuts } from "./documentation/basics/keyboard";
+import { code } from "./documentation/basics/code";
+import { mouse } from "./documentation/basics/mouse";
+// More
+import { oscilloscope } from "./documentation/more/oscilloscope";
+import { synchronisation } from "./documentation/more/synchronisation";
+import { about } from "./documentation/more/about";
+import { bonus } from "./documentation/more/bonus";
 import { chaining } from "./documentation/chaining";
-import { software_interface } from "./documentation/interface";
 import { interaction } from "./documentation/interaction";
-import { time } from "./documentation/time";
-import { linear_time } from "./documentation/linear_time";
-import { cyclical_time } from "./documentation/cyclical_time";
+import { time } from "./documentation/time/time";
+import { linear_time } from "./documentation/time/linear_time";
+import { cyclical_time } from "./documentation/time/cyclical_time";
 import { long_forms } from "./documentation/long_forms";
 import { midi } from "./documentation/midi";
-import { code } from "./documentation/code";
-import { about } from "./documentation/about";
 import { sound } from "./documentation/engine";
-import { shortcuts } from "./documentation/keyboard";
-import { mouse } from "./documentation/mouse";
 import { patterns } from "./documentation/patterns";
 import { functions } from "./documentation/functions";
 import { variables } from "./documentation/variables";
 import { probabilities } from "./documentation/probabilities";
 import { lfos } from "./documentation/lfos";
 import { ziffers } from "./documentation/ziffers";
-import { reference } from "./documentation/reference";
 import { synths } from "./documentation/synths";
-import { bonus } from "./documentation/bonus";
 
 // Setting up the Markdown converter with syntax highlighting
 import showdown from "showdown";
@@ -76,7 +83,6 @@ export const documentation_factory = (application: Editor) => {
     cyclic: cyclical_time(application),
     longform: long_forms(application),
     sound: sound(application),
-    samples: samples(application),
     synths: synths(application),
     chaining: chaining(application),
     patterns: patterns(application),
@@ -86,12 +92,18 @@ export const documentation_factory = (application: Editor) => {
     variables: variables(application),
     probabilities: probabilities(application),
     functions: functions(application),
-    reference: reference(),
     shortcuts: shortcuts(application),
+    amplitude: amplitude(application),
+    reverb_delay: reverb(application),
+    sampler: sampler(application),
     mouse: mouse(application),
     oscilloscope: oscilloscope(application),
+    audio_basics: audio_basics(application),
     synchronisation: synchronisation(application),
     bonus: bonus(application),
+    sample_list: sample_list(application),
+    sample_banks: sample_banks(application),
+    loading_samples: loading_samples(application),
     about: about(),
   };
 };

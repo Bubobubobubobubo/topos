@@ -39,6 +39,7 @@ export class SoundEvent extends AudibleEvent {
     volume: ["volume", "vol"],
     zrand: ["zrand", "zr"],
     curve: ["curve"],
+    bank: ["bank"],
     slide: ["slide", "sld"],
     deltaSlide: ["deltaSlide", "dslide"],
     pitchJump: ["pitchJump", "pj"],
@@ -62,6 +63,10 @@ export class SoundEvent extends AudibleEvent {
     fmrelease: ["fmrelease", "fmrel"],
     fmvelocity: ["fmvelocity", "fmvel"],
     fmwave: ["fmwave", "fmw"],
+    phaser: ["phaser", "phas"],
+    phaserDepth: ["phaserDepth", "phasdepth"],
+    phaserSweep: ["phaserSweep", "phassweep"],
+    phaserCenter: ["phaserCenter", "phascenter"],
     fmadsr: (a: number, d: number, s: number, r: number) => {
       this.updateValue("fmattack", a);
       this.updateValue("fmdecay", d);
@@ -254,7 +259,7 @@ export class SoundEvent extends AudibleEvent {
     roomfade: ["roomfade", "rfade"],
     roomlp: ["roomlp", "rlp"],
     roomdim: ["roomdim", "rdim"],
-    sound: ["s","sound"],
+    sound: ["s", "sound"],
     size: (value: number) => {
       this.updateValue("roomsize", value);
       return this;
@@ -431,7 +436,8 @@ export class SoundEvent extends AudibleEvent {
     }
   };
 
-  out = (): void => {
+  out = (orbit?: number | number[]): void => {
+    if (orbit) this.values["orbit"] = orbit;
     const events = objectWithArraysToArrayOfObjects(this.values, [
       "parsedScale",
     ]);
@@ -442,7 +448,7 @@ export class SoundEvent extends AudibleEvent {
       // const filteredEvent = filterObject(event, ["analyze","note","dur","freq","s"]);
       const filteredEvent = event;
       // No need for note if there is freq
-      if(filteredEvent.freq) { delete filteredEvent.note; }
+      if (filteredEvent.freq) { delete filteredEvent.note; }
       superdough(filteredEvent, this.nudge - this.app.clock.deviation, filteredEvent.dur);
     }
   };

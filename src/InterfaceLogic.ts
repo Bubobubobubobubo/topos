@@ -116,6 +116,25 @@ export const installInterfaceLogic = (app: Editor) => {
     }
   });
 
+  app.interface.universe_viewer.addEventListener("keydown", (event: any) => {
+    if (event.key === "Enter") {
+      let content = (app.interface.universe_viewer as HTMLInputElement).value.trim();
+      if (content.length > 2 && content.length < 40) {
+        if (content !== app.selected_universe) {
+          Object.defineProperty(app.universes, content,
+            // @ts-ignore
+            Object.getOwnPropertyDescriptor(app.universes, app.selected_universe));
+          delete app.universes[app.selected_universe];
+        }
+        app.selected_universe = content;
+        loadUniverse(app, app.selected_universe);
+        (app.interface.universe_viewer as HTMLInputElement).placeholder = content;
+        (app.interface.universe_viewer as HTMLInputElement).value = '';
+      }
+    }
+  });
+
+
   app.interface.audio_nudge_range.addEventListener("input", () => {
     app.clock.nudge = parseInt(
       (app.interface.audio_nudge_range as HTMLInputElement).value
@@ -460,6 +479,10 @@ export const installInterfaceLogic = (app: Editor) => {
 
   [
     "introduction",
+    "sampler",
+    "amplitude",
+    "audio_basics",
+    "reverb_delay",
     "interface",
     "interaction",
     "code",
@@ -467,8 +490,7 @@ export const installInterfaceLogic = (app: Editor) => {
     "linear",
     "cyclic",
     "longform",
-    "sound",
-    "samples",
+    // "sound",
     "synths",
     "chaining",
     "patterns",
@@ -478,15 +500,17 @@ export const installInterfaceLogic = (app: Editor) => {
     "lfos",
     "probabilities",
     "variables",
-    // "reference",
     "synchronisation",
     "mouse",
     "shortcuts",
     "about",
     "bonus",
     "oscilloscope",
+    "sample_list",
+    "loading_samples",
   ].forEach((e) => {
     let name = `docs_` + e;
+    console.log(name)
     document.getElementById(name)!.addEventListener("click", async () => {
       if (name !== "docs_samples") {
         app.currentDocumentationPane = e;

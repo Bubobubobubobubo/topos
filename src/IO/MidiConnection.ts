@@ -64,7 +64,7 @@ export class MidiConnection {
   constructor(api: UserAPI, settings: AppSettings) {
     this.api = api;
     this.settings = settings;
-    this.lastBPM = api.bpm();
+    this.lastBPM = api.tempo();
     this.roundedBPM = this.lastBPM;
     this.initializeMidiAccess();
   }
@@ -519,7 +519,7 @@ export class MidiConnection {
           const estimatedBPM = this.estimatedBPM();
           if (estimatedBPM !== this.roundedBPM) {
             console.log("Estimated BPM: ", estimatedBPM);
-            this.api.bpm(estimatedBPM);
+            this.api.tempo(estimatedBPM);
             this.roundedBPM = estimatedBPM;
           }
         }

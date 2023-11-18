@@ -30,6 +30,7 @@ import { getScaleNotes } from "zifferjs";
 import { OscilloscopeConfig, blinkScript } from "./AudioVisualisation";
 import { SkipEvent } from "./classes/SkipEvent";
 import { AbstractEvent, EventOperation } from "./classes/AbstractEvents";
+import drums from "./tidal-drum-machines.json";
 
 interface ControlChange {
   channel: number;
@@ -40,15 +41,16 @@ interface ControlChange {
 export async function loadSamples() {
   return Promise.all([
     initAudioOnFirstClick(),
-    samples("github:tidalcycles/Dirt-Samples/master").then(() =>
+    samples("github:tidalcycles/Dirt-Samples/master", undefined, { tag: "Tidal" }).then(() =>
       registerSynthSounds()
     ),
     registerZZFXSounds(),
-    samples("github:Bubobubobubobubo/Dough-Fox/main"),
-    samples("github:Bubobubobubobubo/Dough-Samples/main"),
-    samples("github:Bubobubobubobubo/Dough-Amiga/main"),
-    samples("github:Bubobubobubobubo/Dough-Amen/main"),
-    samples("github:Bubobubobubobubo/Dough-Waveforms/main"),
+    samples(drums, "github:ritchse/tidal-drum-machines/main/machines/", { tag: "Machines" }),
+    samples("github:Bubobubobubobubo/Dough-Fox/main", undefined, { tag: "FoxDot" }),
+    samples("github:Bubobubobubobubo/Dough-Samples/main", undefined, { tag: "Pack" }),
+    samples("github:Bubobubobubobubo/Dough-Amiga/main", undefined, { tag: "Amiga" }),
+    samples("github:Bubobubobubobubo/Dough-Amen/main", undefined, { tag: "Amen" }),
+    samples("github:Bubobubobubobubo/Dough-Waveforms/main", undefined, { tag: "Waveforms" }),
   ]);
 }
 
@@ -1279,7 +1281,7 @@ export class UserAPI {
     const results: boolean[] = nArray.map(
       (value) =>
         (this.app.clock.pulses_since_origin - Math.floor(nudge * this.ppqn())) %
-          Math.floor(value * this.ppqn()) ===
+        Math.floor(value * this.ppqn()) ===
         0
     );
     return results.some((value) => value === true);
@@ -1299,7 +1301,7 @@ export class UserAPI {
     const results: boolean[] = nArray.map(
       (value) =>
         (this.app.clock.pulses_since_origin - nudgeInPulses) %
-          Math.floor(value * barLength) ===
+        Math.floor(value * barLength) ===
         0
     );
     return results.some((value) => value === true);
@@ -1899,8 +1901,8 @@ export class UserAPI {
   // =============================================================
 
   register = (name: string, operation: EventOperation<AbstractEvent>): void => {
-    AbstractEvent.prototype[name] = function (this: AbstractEvent, ...args: any[]) {
-        return operation(this, ...args);
+    AbstractEvent.prototype[name] = function(this: AbstractEvent, ...args: any[]) {
+      return operation(this, ...args);
     };
   }
 
@@ -2092,7 +2094,7 @@ export class UserAPI {
     return this.app.clock.nudge;
   };
 
-  public bpm = (n?: number): number => {
+  public tempo = (n?: number): number => {
     /**
      * Sets or returns the current bpm.
      *
@@ -2105,7 +2107,7 @@ export class UserAPI {
     this.app.clock.bpm = n;
     return n;
   };
-  tempo = this.bpm;
+  // tempo = this.bpm;
 
   public bpb = (n?: number): number => {
     /**

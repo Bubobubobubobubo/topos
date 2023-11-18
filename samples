@@ -1,0 +1,8 @@
+import { type Editor } from "../../main";
+import { makeExampleFactory } from "../../Documentation";
+
+export const loading_samples = (application: Editor): string => {
+  // @ts-ignore
+  const makeExample = makeExampleFactory(application);
+  return `# Loading samples`
+}

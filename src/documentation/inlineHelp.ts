@@ -555,19 +555,12 @@ const completionDatabase: CompletionDatabase = {
       "Base function to play audio (samples / synths). Alias for <code>sound<code>.",
     example: "sound('bd').out()",
   },
-  bpm: {
-    name: "bpm",
-    category: "time",
-    description: "Get or set the current beats per minute.",
-    example: "bpm(135) // set the bpm to 135",
-  },
   tempo: {
     name: "tempo",
     category: "time",
     description: "Get or set the current beats per minute.",
     example: "tempo(135) // set the bpm to 135",
   },
-
   out: {
     name: "out",
     category: "audio",

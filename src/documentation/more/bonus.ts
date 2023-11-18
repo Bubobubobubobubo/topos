@@ -1,5 +1,5 @@
-import { type Editor } from "../main";
-import { key_shortcut, makeExampleFactory } from "../Documentation";
+import { type Editor } from "../../main";
+import { key_shortcut, makeExampleFactory } from "../../Documentation";
 
 export const bonus = (application: Editor): string => {
   const makeExample = makeExampleFactory(application);
