@@ -14,8 +14,8 @@
     
     
     <script src="https://unpkg.com/hydra-synth"></script>
-    <script type="module" crossorigin src="/assets/index-43bb1500.js"></script>
-    <link rel="stylesheet" href="/assets/index-fdb377bf.css">
+    <script type="module" crossorigin src="/assets/index-3c0a1e60.js"></script>
+    <link rel="stylesheet" href="/assets/index-51e10cc6.css">
   <link rel="manifest" href="/manifest.webmanifest"></head>
   <style>
 
@@ -78,7 +78,8 @@
           <svg id="topos-logo" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-10 h-10 text-black p-2 bg-white rounded-full" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
           </svg>
-          <span id="universe-viewer" class="hidden xl:block ml-4 text-2xl text-white">Topos</span>
+         <input id="universe-viewer" class="hidden bg-transparent xl:block ml-4 text-2xl text-white placeholder-white" id="renamer" type="text" placeholder="Topos">
+
         </a>
         <nav class="py-2 flex flex-wrap items-center text-base absolute right-0">
          <a title="Play button (Ctrl+P)" id="play-button-1" class="flex flex-row mr-2 hover:bg-gray-800 px-2 py-2 rounded-lg">
@@ -148,6 +149,8 @@
             <details class="space-y-2" open=true>
               <summary class="font-semibold lg:text-xl pb-1 pt-1 text-orange-300">Learning</summary>
               <div class="flex flex-col">
+
+                <!-- Time -->
                 <details class="space-y-2" open=false>
                   <summary class="ml-2 lg:text-xl pb-1 pt-1 text-white">Time</summary>
                   <div class="flex flex-col">
@@ -155,13 +158,31 @@
                     <p rel="noopener noreferrer" id="docs_linear" class="ml-8 pr-2 lg:text-xl text-sm hover:bg-neutral-800 py-1 my-1 rounded-lg">Time & Transport</p>
                     <p rel="noopener noreferrer" id="docs_cyclic" class="ml-8 pr-2 lg:text-xl text-sm hover:bg-neutral-800 py-1 my-1 rounded-lg">Time & Cycles</p>
                     <p rel="noopener noreferrer" id="docs_longform" class="ml-8 pr-2 lg:text-xl text-sm hover:bg-neutral-800 py-1 my-1 rounded-lg">Time & Structure</p>
-
                   </div>
                 </details>
+
+                <!-- Samples -->
+                <details class="space-y-2" open=false>
+                  <summary class="ml-2 lg:text-xl pb-1 pt-1 text-white">Audio Engine</summary>
+                  <div class="flex flex-col">
+                    <p rel="noopener noreferrer" id="docs_audio_basics" class="ml-8 pr-2 lg:text-xl text-sm hover:bg-neutral-800 py-1 my-1 rounded-lg">Playing a sound</p>
+                    <p rel="noopener noreferrer" id="docs_amplitude" class="ml-8 pr-2 lg:text-xl text-sm hover:bg-neutral-800 py-1 my-1 rounded-lg">Amplitude</p>
+                    <p rel="noopener noreferrer" id="docs_sampler" class="ml-8 pr-2 lg:text-xl text-sm hover:bg-neutral-800 py-1 my-1 rounded-lg">Sampler</p>
+                    <p rel="noopener noreferrer" id="docs_synths" class="ml-8 pr-2 lg:text-xl text-sm hover:bg-neutral-800 py-1 my-1 rounded-lg">Synths</p>
+                    <p rel="noopener noreferrer" id="docs_reverb_delay" class="ml-8 pr-2 lg:text-xl text-sm hover:bg-neutral-800 py-1 my-1 rounded-lg">Effects</p>
+                  </div>
+                </details>
+
+                <!-- Audio Engine -->
+                <details class="space-y-2" open=false>
+                  <summary class="ml-2 lg:text-xl pb-1 pt-1 text-white">Samples</summary>
+                  <div class="flex flex-col">
+                    <p rel="noopener noreferrer" id="docs_sample_list" class="ml-8 pr-2 lg:text-xl text-sm hover:bg-neutral-800 py-1 my-1 rounded-lg">List of samples</p>
+                    <p rel="noopener noreferrer" id="docs_loading_samples" class="ml-8 pr-2 lg:text-xl text-sm hover:bg-neutral-800 py-1 my-1 rounded-lg">Loading Samples</p>
+                  </div>
+                </details>
+
                 <p rel="noopener noreferrer" id="docs_patterns" class="pl-2 pr-2 lg:text-xl text-sm hover:bg-neutral-800 py-1 my-1 rounded-lg">Patterns</p>
-                <p rel="noopener noreferrer" id="docs_sound" class="pl-2 pr-2 lg:text-xl text-sm hover:bg-neutral-800 py-1 my-1 rounded-lg">Audio Engine</p>
-                <p rel="noopener noreferrer" id="docs_samples" class="pl-2 pr-2 lg:text-xl text-sm hover:bg-neutral-800 py-1 my-1 rounded-lg">Samples</p>
-                <p rel="noopener noreferrer" id="docs_synths" class="pl-2 pr-2 lg:text-xl text-sm hover:bg-neutral-800 py-1 my-1 rounded-lg">Synths</p>
                 <p rel="noopener noreferrer" id="docs_midi" class="pl-2 pr-2 lg:text-xl text-sm hover:bg-neutral-800 py-1 my-1 rounded-lg">MIDI</p>
 							</div>
 						</details>
