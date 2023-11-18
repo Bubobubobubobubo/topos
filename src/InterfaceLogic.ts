@@ -510,7 +510,6 @@ export const installInterfaceLogic = (app: Editor) => {
     "loading_samples",
   ].forEach((e) => {
     let name = `docs_` + e;
-    console.log(name)
     document.getElementById(name)!.addEventListener("click", async () => {
       if (name !== "docs_samples") {
         app.currentDocumentationPane = e;
