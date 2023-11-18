@@ -41,7 +41,7 @@ const vitePWAconfiguration = {
     "favicon/apple-touch-icon.png",
     "mask-icon.svg",
   ],
-  manifest: webManifest,
+  manifest: "manifest.webmanifest",
   registerType: "autoUpdate",
   injectRegister: "auto",
 };
