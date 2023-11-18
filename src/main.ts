@@ -189,6 +189,15 @@ export class Editor {
     loadUniverserFromUrl(this);
 
     // this.setPeriodicSave(5000);
+
+    // ================================================================================
+    // Displaying a scope by default!
+    // ================================================================================
+    this.api.scope({
+      enabled: true,
+      mode: "freqscope",
+      offsetY: window.innerWidth / 3.5, size: 0.80
+    } as OscilloscopeConfig)
   }
 
   private getBuffer(type: string): any {
