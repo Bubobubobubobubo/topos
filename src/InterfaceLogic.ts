@@ -116,19 +116,26 @@ export const installInterfaceLogic = (app: Editor) => {
     }
   });
 
-  app.interface.universe_viewer.addEventListener("input", () => {
-    let content = app.interface.universe_viewer.value as string;
-    content = content.trim();
-    if (content.length > 2 && content.length < 40) {
-      if (content !== app.selected_universe) {
-        Object.defineProperty(app.universes, content,
-          Object.getOwnPropertyDescriptor(app.universes, app.selected_universe));
-        delete app.universes[app.selected_universe];
+  app.interface.universe_viewer.addEventListener("keydown", (event: KeyboardEvent) => {
+    if (event.key === "Enter") {
+      let content = app.interface.universe_viewer.value.trim();
+      console.log("boum")
+
+      if (content.length > 2 && content.length < 40) {
+        if (content !== app.selected_universe) {
+          Object.defineProperty(app.universes, content,
+            Object.getOwnPropertyDescriptor(app.universes, app.selected_universe));
+          delete app.universes[app.selected_universe];
+        }
+
+        app.selected_universe = content;
+        loadUniverse(app, app.selected_universe);
+        app.interface.universe_viewer.placeholder = content;
+        app.interface.universe_viewer.value = '';
       }
-      app.selected_universe = content.trim();
-      loadUniverse(app, app.selected_universe)
     }
-  })
+  });
+
 
   app.interface.audio_nudge_range.addEventListener("input", () => {
     app.clock.nudge = parseInt(
