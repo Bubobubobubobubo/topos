@@ -39,6 +39,7 @@ export class SoundEvent extends AudibleEvent {
     volume: ["volume", "vol"],
     zrand: ["zrand", "zr"],
     curve: ["curve"],
+    bank: ["bank"],
     slide: ["slide", "sld"],
     deltaSlide: ["deltaSlide", "dslide"],
     pitchJump: ["pitchJump", "pj"],

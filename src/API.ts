@@ -30,6 +30,7 @@ import { getScaleNotes } from "zifferjs";
 import { OscilloscopeConfig, blinkScript } from "./AudioVisualisation";
 import { SkipEvent } from "./classes/SkipEvent";
 import { AbstractEvent, EventOperation } from "./classes/AbstractEvents";
+import drums from "./tidal-drum-machines.json";
 
 interface ControlChange {
   channel: number;
@@ -49,6 +50,7 @@ export async function loadSamples() {
     samples("github:Bubobubobubobubo/Dough-Amiga/main"),
     samples("github:Bubobubobubobubo/Dough-Amen/main"),
     samples("github:Bubobubobubobubo/Dough-Waveforms/main"),
+    samples(drums, "github:ritchse/tidal-drum-machines/main/machines/")
   ]);
 }
 
@@ -1279,7 +1281,7 @@ export class UserAPI {
     const results: boolean[] = nArray.map(
       (value) =>
         (this.app.clock.pulses_since_origin - Math.floor(nudge * this.ppqn())) %
-          Math.floor(value * this.ppqn()) ===
+        Math.floor(value * this.ppqn()) ===
         0
     );
     return results.some((value) => value === true);
@@ -1299,7 +1301,7 @@ export class UserAPI {
     const results: boolean[] = nArray.map(
       (value) =>
         (this.app.clock.pulses_since_origin - nudgeInPulses) %
-          Math.floor(value * barLength) ===
+        Math.floor(value * barLength) ===
         0
     );
     return results.some((value) => value === true);
@@ -1899,8 +1901,8 @@ export class UserAPI {
   // =============================================================
 
   register = (name: string, operation: EventOperation<AbstractEvent>): void => {
-    AbstractEvent.prototype[name] = function (this: AbstractEvent, ...args: any[]) {
-        return operation(this, ...args);
+    AbstractEvent.prototype[name] = function(this: AbstractEvent, ...args: any[]) {
+      return operation(this, ...args);
     };
   }
 
