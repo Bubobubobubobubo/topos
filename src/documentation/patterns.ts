@@ -113,7 +113,7 @@ ${makeExample(
 beat(0.5)::sound('notes').n([1,2].dur(1, 2))
   .room(0.5).size(8).delay(0.125).delayt(1/8)
   .speed(0.5).ad(0, .125).out()
-// Kick (3 beats), Snare (1 beat)
+// Kick (3 beats), Snare (1bpm beat)
 beat(1)::sound(['kick', 'fsnare'].dur(3, 1))
   .n([0,3].dur(3, 1)).out()
   `,

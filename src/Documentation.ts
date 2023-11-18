@@ -17,7 +17,6 @@ import { oscilloscope } from "./documentation/more/oscilloscope";
 import { synchronisation } from "./documentation/more/synchronisation";
 import { about } from "./documentation/more/about";
 import { bonus } from "./documentation/more/bonus";
-import { samples } from "./documentation/samples";
 import { chaining } from "./documentation/chaining";
 import { interaction } from "./documentation/interaction";
 import { time } from "./documentation/time/time";
@@ -32,7 +31,6 @@ import { variables } from "./documentation/variables";
 import { probabilities } from "./documentation/probabilities";
 import { lfos } from "./documentation/lfos";
 import { ziffers } from "./documentation/ziffers";
-import { reference } from "./documentation/reference";
 import { synths } from "./documentation/synths";
 
 // Setting up the Markdown converter with syntax highlighting
@@ -85,7 +83,6 @@ export const documentation_factory = (application: Editor) => {
     cyclic: cyclical_time(application),
     longform: long_forms(application),
     sound: sound(application),
-    samples: samples(application),
     synths: synths(application),
     chaining: chaining(application),
     patterns: patterns(application),
@@ -95,7 +92,6 @@ export const documentation_factory = (application: Editor) => {
     variables: variables(application),
     probabilities: probabilities(application),
     functions: functions(application),
-    reference: reference(),
     shortcuts: shortcuts(application),
     amplitude: amplitude(application),
     reverb_delay: reverb(application),

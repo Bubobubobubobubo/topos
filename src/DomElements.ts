@@ -9,7 +9,9 @@ export type ElementMap = {
   | HTMLInputElement
   | HTMLSelectElement
   | HTMLCanvasElement
-  | HTMLFormElement;
+  | HTMLFormElement
+  | HTMLInputElement
+  ;
 };
 
 export const singleElements = {

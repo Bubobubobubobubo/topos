@@ -2094,7 +2094,7 @@ export class UserAPI {
     return this.app.clock.nudge;
   };
 
-  public bpm = (n?: number): number => {
+  public tempo = (n?: number): number => {
     /**
      * Sets or returns the current bpm.
      *
@@ -2107,7 +2107,7 @@ export class UserAPI {
     this.app.clock.bpm = n;
     return n;
   };
-  tempo = this.bpm;
+  // tempo = this.bpm;
 
   public bpb = (n?: number): number => {
     /**

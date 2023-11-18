@@ -22,6 +22,8 @@ The sampler is a rather complex beast. There is a lot you can do by manipulating
 | <ic>cut</ic>     |       | Set with <ic>0</ic> or <ic>1</ic>. Will cut the sample as soon as another sample is played on the same bus |
 | <ic>clip</ic>    |       | Multiply the duration of the sample with the given number |
 | <ic>pan</ic>     |       | Stereo position of the audio playback (<ic>0</ic> = left, <ic>1</ic> = right)|
+| <ic>vib</ic>     |       | vibrato speed (in hertz)|
+| <ic>vibmod</ic>     |       | vibrato depth (from <ic>0</ic> to <ic>n</ic>)|
 	
 Let's apply some of these methods naïvely. We will then break everything using simpler examples.
 
@@ -127,4 +129,16 @@ beat(0.125)::sound('notes')
   + [-12,12].beat()).out()
 `, true)}
 
+## Adding vibrato to samples
+
+You can add vibrato to any sample using <ic>vib</ic> and <ic>vibmod</ic>:
+
+${makeExample("Adding vibrato to a sample", `
+
+beat(1)::sound('fhang').vib([1, 2, 4].bar()).vibmod([0.5, 2].beat()).out()
+`, true)}
+
+
 `}
+
+

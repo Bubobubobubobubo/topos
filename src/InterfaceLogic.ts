@@ -116,22 +116,20 @@ export const installInterfaceLogic = (app: Editor) => {
     }
   });
 
-  app.interface.universe_viewer.addEventListener("keydown", (event: KeyboardEvent) => {
+  app.interface.universe_viewer.addEventListener("keydown", (event: any) => {
     if (event.key === "Enter") {
-      let content = app.interface.universe_viewer.value.trim();
-      console.log("boum")
-
+      let content = (app.interface.universe_viewer as HTMLInputElement).value.trim();
       if (content.length > 2 && content.length < 40) {
         if (content !== app.selected_universe) {
           Object.defineProperty(app.universes, content,
+            // @ts-ignore
             Object.getOwnPropertyDescriptor(app.universes, app.selected_universe));
           delete app.universes[app.selected_universe];
         }
-
         app.selected_universe = content;
         loadUniverse(app, app.selected_universe);
-        app.interface.universe_viewer.placeholder = content;
-        app.interface.universe_viewer.value = '';
+        (app.interface.universe_viewer as HTMLInputElement).placeholder = content;
+        (app.interface.universe_viewer as HTMLInputElement).value = '';
       }
     }
   });

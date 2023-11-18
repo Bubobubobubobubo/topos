@@ -78,7 +78,7 @@ You can also add some amount of vibrato to the sound using the <ic>vib</ic> and 
 ${makeExample(
     "Different vibrato settings",
     `
-bpm(140);
+tempo(140);
 beat(1) :: sound('triangle')
   .freq(400).release(0.2)
   .vib([1/2, 1, 2, 4].beat())
@@ -94,7 +94,7 @@ A certain amount of brown noise can be added by using the <ic>.noise</ic> key:
 ${makeExample(
     "Different vibrato settings",
     `
-bpm(140);
+tempo(140);
 beat(1) :: sound('triangle')
   .freq(400).release(0.2)
   .noise([0.2,0.4,0.5].bar())
@@ -609,7 +609,7 @@ ${makeExample(
 ${makeExample(
     "Live coded poetry with array and string chaining",
     `
-  bpm(70)
+  tempo(70)
 
   const croissant = [
     "Volant", "Arc-en-ciel", "Chocolat", "Dansant", 
