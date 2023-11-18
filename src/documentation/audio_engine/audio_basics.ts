@@ -67,7 +67,7 @@ Try to remove <ic>.out</ic>. You will see that no sound is playing at all!
 - Sounds are **composed** by adding qualifiers/parameters that modify the sound or synthesizer you have picked (_e.g_ <ic>sound('...').blabla(...)..something(...).out()</ic>. Think of it as _audio chains_. 
 	
 ${makeExample(
-    '"Composing" a complex sonic object by making a sound chain',
+    'Complex sonic object',
     `
 beat(1) :: sound('pad').n(1)
   .begin(rand(0, 0.4))

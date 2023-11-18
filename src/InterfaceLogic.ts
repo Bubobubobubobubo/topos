@@ -485,7 +485,6 @@ export const installInterfaceLogic = (app: Editor) => {
     "amplitude",
     "audio_basics",
     "reverb_delay",
-    "distortion",
     "interface",
     "interaction",
     "code",

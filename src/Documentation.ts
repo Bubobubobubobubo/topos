@@ -3,7 +3,6 @@ import { type Editor } from "./main";
 import { introduction } from "./documentation/basics/welcome";
 import { loading_samples } from "./documentation/samples/loading_samples";
 import { amplitude } from "./documentation/audio_engine/amplitude";
-import { distortion } from "./documentation/audio_engine/distortion";
 import { reverb } from "./documentation/audio_engine/reverb_delay";
 import { sampler } from "./documentation/audio_engine/sampler";
 import { sample_banks } from "./documentation/samples/sample_banks";
@@ -99,7 +98,6 @@ export const documentation_factory = (application: Editor) => {
     reference: reference(),
     shortcuts: shortcuts(application),
     amplitude: amplitude(application),
-    distortion: distortion(application),
     reverb_delay: reverb(application),
     sampler: sampler(application),
     mouse: mouse(application),
