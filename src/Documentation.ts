@@ -2,7 +2,12 @@ import { type Editor } from "./main";
 // Basics
 import { introduction } from "./documentation/basics/welcome";
 import { loading_samples } from "./documentation/samples/loading_samples";
+import { amplitude } from "./documentation/audio_engine/amplitude";
+import { distortion } from "./documentation/audio_engine/distortion";
+import { reverb } from "./documentation/audio_engine/reverb_delay";
+import { sampler } from "./documentation/audio_engine/sampler";
 import { sample_banks } from "./documentation/samples/sample_banks";
+import { audio_basics } from "./documentation/audio_engine/audio_basics";
 import { sample_list } from "./documentation/samples/sample_list";
 import { software_interface } from "./documentation/basics/interface";
 import { shortcuts } from "./documentation/basics/keyboard";
@@ -93,8 +98,13 @@ export const documentation_factory = (application: Editor) => {
     functions: functions(application),
     reference: reference(),
     shortcuts: shortcuts(application),
+    amplitude: amplitude(application),
+    distortion: distortion(application),
+    reverb_delay: reverb(application),
+    sampler: sampler(application),
     mouse: mouse(application),
     oscilloscope: oscilloscope(application),
+    audio_basics: audio_basics(application),
     synchronisation: synchronisation(application),
     bonus: bonus(application),
     sample_list: sample_list(application),

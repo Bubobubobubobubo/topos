@@ -481,6 +481,11 @@ export const installInterfaceLogic = (app: Editor) => {
 
   [
     "introduction",
+    "sampler",
+    "amplitude",
+    "audio_basics",
+    "reverb_delay",
+    "distortion",
     "interface",
     "interaction",
     "code",
@@ -488,8 +493,7 @@ export const installInterfaceLogic = (app: Editor) => {
     "linear",
     "cyclic",
     "longform",
-    "sound",
-    "samples",
+    // "sound",
     "synths",
     "chaining",
     "patterns",
@@ -499,7 +503,6 @@ export const installInterfaceLogic = (app: Editor) => {
     "lfos",
     "probabilities",
     "variables",
-    // "reference",
     "synchronisation",
     "mouse",
     "shortcuts",
@@ -510,6 +513,7 @@ export const installInterfaceLogic = (app: Editor) => {
     "loading_samples",
   ].forEach((e) => {
     let name = `docs_` + e;
+    console.log(name)
     document.getElementById(name)!.addEventListener("click", async () => {
       if (name !== "docs_samples") {
         app.currentDocumentationPane = e;
