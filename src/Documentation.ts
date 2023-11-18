@@ -1,6 +1,9 @@
 import { type Editor } from "./main";
 // Basics
 import { introduction } from "./documentation/basics/welcome";
+import { loading_samples } from "./documentation/samples/loading_samples";
+import { sample_banks } from "./documentation/samples/sample_banks";
+import { sample_list } from "./documentation/samples/sample_list";
 import { software_interface } from "./documentation/basics/interface";
 import { shortcuts } from "./documentation/basics/keyboard";
 import { code } from "./documentation/basics/code";
@@ -94,6 +97,9 @@ export const documentation_factory = (application: Editor) => {
     oscilloscope: oscilloscope(application),
     synchronisation: synchronisation(application),
     bonus: bonus(application),
+    sample_list: sample_list(application),
+    sample_banks: sample_banks(application),
+    loading_samples: loading_samples(application),
     about: about(),
   };
 };

@@ -41,16 +41,16 @@ interface ControlChange {
 export async function loadSamples() {
   return Promise.all([
     initAudioOnFirstClick(),
-    samples("github:tidalcycles/Dirt-Samples/master").then(() =>
+    samples("github:tidalcycles/Dirt-Samples/master", undefined, { tag: "Tidal" }).then(() =>
       registerSynthSounds()
     ),
     registerZZFXSounds(),
-    samples("github:Bubobubobubobubo/Dough-Fox/main"),
-    samples("github:Bubobubobubobubo/Dough-Samples/main"),
-    samples("github:Bubobubobubobubo/Dough-Amiga/main"),
-    samples("github:Bubobubobubobubo/Dough-Amen/main"),
-    samples("github:Bubobubobubobubo/Dough-Waveforms/main"),
-    samples(drums, "github:ritchse/tidal-drum-machines/main/machines/")
+    samples(drums, "github:ritchse/tidal-drum-machines/main/machines/", { tag: "Machines" }),
+    samples("github:Bubobubobubobubo/Dough-Fox/main", undefined, { tag: "FoxDot" }),
+    samples("github:Bubobubobubobubo/Dough-Samples/main", undefined, { tag: "Pack" }),
+    samples("github:Bubobubobubobubo/Dough-Amiga/main", undefined, { tag: "Amiga" }),
+    samples("github:Bubobubobubobubo/Dough-Amen/main", undefined, { tag: "Amen" }),
+    samples("github:Bubobubobubobubo/Dough-Waveforms/main", undefined, { tag: "Waveforms" }),
   ]);
 }
 

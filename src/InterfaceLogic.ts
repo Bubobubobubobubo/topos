@@ -506,6 +506,8 @@ export const installInterfaceLogic = (app: Editor) => {
     "about",
     "bonus",
     "oscilloscope",
+    "sample_list",
+    "loading_samples",
   ].forEach((e) => {
     let name = `docs_` + e;
     document.getElementById(name)!.addEventListener("click", async () => {

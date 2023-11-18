@@ -159,8 +159,9 @@ export class Editor {
     let pre_loading = async () => {
       await loadSamples();
     };
-    pre_loading();
-    this.docs = documentation_factory(this);
+    pre_loading().then(() => {
+      this.docs = documentation_factory(this);
+    });
 
     // ================================================================================
     // Application event listeners
@@ -484,7 +485,7 @@ export class Editor {
       console.log("Hydra loaded successfully");
       this.initializeHydra();
     };
-    script.onerror = function () {
+    script.onerror = function() {
       console.error("Error loading Hydra script");
     };
     document.head.appendChild(script);
