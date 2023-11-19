@@ -191,11 +191,12 @@ export class Editor {
     // this.setPeriodicSave(5000);
 
     // ================================================================================
-    // Displaying a scope by default!
+    // Displaying a scope by default
     // ================================================================================
     this.api.scope({
       enabled: true,
       mode: "freqscope",
+      fftSize: 256,
       offsetY: window.innerWidth / 3.5, size: 0.80
     } as OscilloscopeConfig)
   }
