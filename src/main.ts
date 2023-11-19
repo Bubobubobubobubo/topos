@@ -187,17 +187,6 @@ export class Editor {
 
     // Loading universe from URL (if needed)
     loadUniverserFromUrl(this);
-
-    // this.setPeriodicSave(5000);
-
-    // ================================================================================
-    // Displaying a scope by default
-    // ================================================================================
-    this.api.scope({
-      enabled: true,
-      mode: "freqscope",
-      offsetY: 350, size: 1
-    } as OscilloscopeConfig)
   }
 
   private getBuffer(type: string): any {
