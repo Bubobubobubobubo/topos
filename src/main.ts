@@ -1,4 +1,4 @@
-import { OscilloscopeConfig, runOscilloscope } from "./AudioVisualisation";
+import { OscilloscopeConfig, runOscilloscope, scriptBlinkers } from "./AudioVisualisation";
 import { EditorState, Compartment } from "@codemirror/state";
 import { javascript } from "@codemirror/lang-javascript";
 import { markdown } from "@codemirror/lang-markdown";
@@ -27,7 +27,6 @@ import showdown from "showdown";
 import { makeStringExtensions } from "./extensions/StringExtensions";
 import { installInterfaceLogic } from "./InterfaceLogic";
 import { installWindowBehaviors } from "./WindowBehavior";
-import { drawEmptyBlinkers } from "./AudioVisualisation";
 import { makeNumberExtensions } from "./extensions/NumberExtensions";
 // @ts-ignore
 import { registerSW } from "virtual:pwa-register";
@@ -170,7 +169,7 @@ export class Editor {
     registerFillKeys(this);
     registerOnKeyDown(this);
     installInterfaceLogic(this);
-    drawEmptyBlinkers(this);
+    scriptBlinkers();
 
     // ================================================================================
     // Building CodeMirror Editor

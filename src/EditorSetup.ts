@@ -2,7 +2,6 @@ import { Prec } from "@codemirror/state";
 import { indentWithTab } from "@codemirror/commands";
 import {
   keymap,
-  ViewUpdate,
   lineNumbers,
   highlightSpecialChars,
   drawSelection,
