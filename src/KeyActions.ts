@@ -135,10 +135,8 @@ export const registerOnKeyDown = (app: Editor) => {
       if (event.keyCode === keycode) {
         event.preventDefault();
         if (event.ctrlKey) {
-          event.preventDefault();
           app.api.script(keycode - 111);
         } else {
-          event.preventDefault();
           app.changeModeFromInterface("local");
           app.changeToLocalBuffer(index);
           hideDocumentation();
