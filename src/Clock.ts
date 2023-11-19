@@ -54,7 +54,7 @@ export class Clock {
     this.logicalTime = 0;
     this.tick = 0;
     this._bpm = 120;
-    this._ppqn = 96;
+    this._ppqn = 48;
     this.transportNode = null;
     this.ctx = ctx;
     this.running = true;
