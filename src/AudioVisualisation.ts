@@ -129,6 +129,7 @@ export interface OscilloscopeConfig {
 }
 
 let lastZeroCrossingType: string | null = null; // 'negToPos' or 'posToNeg'
+let lastRenderTime: number = 0;
 
 /**
  * Initializes and runs an oscilloscope using an AnalyzerNode.
@@ -153,49 +154,48 @@ export const runOscilloscope = (
     offset_height: number,
     offset_width: number
   ) {
-    // Existing setup code...
+    const maxFPS = 30;
+    const now = performance.now();
+    const elapsed = now - (lastRenderTime || 0);
+  
+    if (elapsed < 1000 / maxFPS) return;
+    lastRenderTime = now;
+  
     analyzer.fftSize = app.osc.fftSize * 4;
     analyzer.getByteFrequencyData(freqDataArray);
     canvasCtx.clearRect(0, 0, width, height);
-
+  
+    const performanceFactor = 1;
+    const reducedDataSize = Math.floor(freqDataArray.length * performanceFactor);
     const numBars = Math.min(
-      freqDataArray.length,
+      reducedDataSize,
       app.osc.orientation === "horizontal" ? width : height
     );
     const barWidth =
       app.osc.orientation === "horizontal" ? width / numBars : height / numBars;
     let barHeight;
     let x = 0,
-      y = 0;
-
+        y = 0;
+  
+    canvasCtx.fillStyle = app.osc.color || `rgb(255, 255, 255)`;
+  
     for (let i = 0; i < numBars; i++) {
       barHeight = Math.floor(
-        freqDataArray[i] * ((height / 256) * app.osc.size)
+        freqDataArray[Math.floor(i * freqDataArray.length / numBars)] * ((height / 256) * app.osc.size)
       );
-
-      // Create gradient based on orientation
-      let gradient;
-      if (app.osc.orientation === "horizontal") {
-        gradient = canvasCtx.createLinearGradient(0, 0, width / 2, 0);
-      } else {
-        gradient = canvasCtx.createLinearGradient(0, 0, 0, height / 2);
-      }
-      gradient.addColorStop(0, app.osc.color || `rgb(255, 255, 255)`);
-      gradient.addColorStop(1, `rgb(${barHeight + 50},50,50)`);
-      canvasCtx.fillStyle = gradient;
-
+  
       if (app.osc.orientation === "horizontal") {
         canvasCtx.fillRect(
-          x + offset_width, // Apply horizontal offset here
-          (height - barHeight) / 2 + offset_height, // Apply vertical offset here
+          x + offset_width,
+          (height - barHeight) / 2 + offset_height,
           barWidth + 1,
           barHeight
         );
         x += barWidth;
       } else {
         canvasCtx.fillRect(
-          (width - barHeight) / 2 + offset_width, // Apply horizontal offset here
-          y + offset_height, // Apply vertical offset here
+          (width - barHeight) / 2 + offset_width,
+          y + offset_height,
           barHeight,
           barWidth + 1
         );
@@ -203,6 +203,7 @@ export const runOscilloscope = (
       }
     }
   }
+
 
   function draw() {
     // Update the canvas position on each cycle
