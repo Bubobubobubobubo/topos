@@ -436,12 +436,12 @@ export class SoundEvent extends AudibleEvent {
     }
   };
 
+
   out = (orbit?: number | number[]): void => {
     if (orbit) this.values["orbit"] = orbit;
     const events = objectWithArraysToArrayOfObjects(this.values, [
       "parsedScale",
     ]);
-
     for (const event of events) {
       // Filter non superdough parameters
       // TODO: Should filter relevant fields for superdough
@@ -449,7 +449,8 @@ export class SoundEvent extends AudibleEvent {
       const filteredEvent = event;
       // No need for note if there is freq
       if (filteredEvent.freq) { delete filteredEvent.note; }
-      superdough(filteredEvent, this.nudge - this.app.clock.deviation, filteredEvent.dur);
+      const correction = Math.max(this.nudge - this.app.clock.deviation, 0);
+      superdough(filteredEvent, correction, filteredEvent.dur);
     }
   };
 }
