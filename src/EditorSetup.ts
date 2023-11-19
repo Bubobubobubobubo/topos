@@ -2,7 +2,6 @@ import { Prec } from "@codemirror/state";
 import { indentWithTab } from "@codemirror/commands";
 import {
   keymap,
-  ViewUpdate,
   lineNumbers,
   highlightSpecialChars,
   drawSelection,
@@ -100,9 +99,6 @@ export const installEditor = (app: Editor) => {
     editorSetup,
     toposTheme,
     app.chosenLanguage.of(javascript()),
-    EditorView.updateListener.of((v: ViewUpdate) => {
-      v;
-    }),
   ];
   app.dynamicPlugins = new Compartment();
   app.state = EditorState.create({

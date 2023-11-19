@@ -93,26 +93,29 @@ export const blinkScript = (
           (app.interface.feedback as HTMLCanvasElement).width,
           (app.interface.feedback as HTMLCanvasElement).height
         );
-      drawEmptyBlinkers(app);
     }, blinkDuration);
   }
 };
 
 /**
- * Draws a series of 9 white circles.
+ * Manages animation updates using requestAnimationFrame.
  * @param app - The Editor application context.
  */
-export const drawEmptyBlinkers = (app: Editor) => {
-  for (let no = 1; no <= 9; no++) {
-    const shiftAmount = no * 25;
-    drawCircle(
-      app,
-      50 + shiftAmount,
-      app.interface.feedback.clientHeight - 15,
-      8,
-      "white"
-    );
-  }
+export const scriptBlinkers = () => {
+  let lastFrameTime = Date.now();
+  const frameRate = 10;
+  const minFrameDelay = 1000 / frameRate;
+
+  const update = () => {
+    const now = Date.now();
+    const timeSinceLastFrame = now - lastFrameTime;
+
+    if (timeSinceLastFrame >= minFrameDelay) {
+      lastFrameTime = now;
+    }
+    requestAnimationFrame(update);
+  };
+  requestAnimationFrame(update);
 };
 
 export interface OscilloscopeConfig {
@@ -157,14 +160,14 @@ export const runOscilloscope = (
     const maxFPS = 30;
     const now = performance.now();
     const elapsed = now - (lastRenderTime || 0);
-  
+
     if (elapsed < 1000 / maxFPS) return;
     lastRenderTime = now;
-  
+
     analyzer.fftSize = app.osc.fftSize * 4;
     analyzer.getByteFrequencyData(freqDataArray);
     canvasCtx.clearRect(0, 0, width, height);
-  
+
     const performanceFactor = 1;
     const reducedDataSize = Math.floor(freqDataArray.length * performanceFactor);
     const numBars = Math.min(
@@ -175,15 +178,15 @@ export const runOscilloscope = (
       app.osc.orientation === "horizontal" ? width / numBars : height / numBars;
     let barHeight;
     let x = 0,
-        y = 0;
-  
+      y = 0;
+
     canvasCtx.fillStyle = app.osc.color || `rgb(255, 255, 255)`;
-  
+
     for (let i = 0; i < numBars; i++) {
       barHeight = Math.floor(
         freqDataArray[Math.floor(i * freqDataArray.length / numBars)] * ((height / 256) * app.osc.size)
       );
-  
+
       if (app.osc.orientation === "horizontal") {
         canvasCtx.fillRect(
           x + offset_width,

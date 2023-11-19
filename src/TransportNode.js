@@ -12,9 +12,9 @@ export class TransportNode extends AudioWorkletNode {
 
   /** @type {(this: MessagePort, ev: MessageEvent<any>) => any} */
   handleMessage = (message) => {
-    if(message.data) {
+    if (message.data) {
       if (message.data.type === "bang") {
-        if(this.app.clock.running) {
+        if (this.app.clock.running) {
           if (this.app.settings.send_clock) {
             this.app.api.MidiConnection.sendMidiClock();
           }
@@ -22,8 +22,10 @@ export class TransportNode extends AudioWorkletNode {
             this.app.clock.tick
           );
           this.app.clock.time_position = futureTimeStamp;
-          this.timeviewer.innerHTML = `${zeroPad(futureTimeStamp.bar, 2)}:${futureTimeStamp.beat + 1
-            }:${zeroPad(futureTimeStamp.pulse, 2)} / ${this.app.clock.bpm}`;
+          if (futureTimeStamp.pulse % this.app.clock.ppqn == 0) {
+            this.timeviewer.innerHTML = `${zeroPad(futureTimeStamp.bar, 2)}:${futureTimeStamp.beat + 1
+              } / ${this.app.clock.bpm}`;
+          }
           if (this.app.exampleIsPlaying) {
             tryEvaluate(this.app, this.app.example_buffer);
           } else {
@@ -60,6 +62,6 @@ export class TransportNode extends AudioWorkletNode {
   }
 
   stop() {
-    this.port.postMessage({type: "stop" });
+    this.port.postMessage({ type: "stop" });
   }
 }
