@@ -196,8 +196,7 @@ export class Editor {
     this.api.scope({
       enabled: true,
       mode: "freqscope",
-      fftSize: 256,
-      offsetY: window.innerWidth / 3.5, size: 0.80
+      offsetY: 350, size: 1
     } as OscilloscopeConfig)
   }
 
