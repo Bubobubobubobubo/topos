@@ -33,6 +33,7 @@ export class Clock {
    * @param lastPauseTime - The last time the clock was paused
    * @param lastPlayPressTime - The last time the clock was started
    * @param totalPauseTime - The total time the clock has been paused / stopped
+   * @param _nudge - The current nudge value
    */
 
   ctx: AudioContext;
@@ -45,7 +46,7 @@ export class Clock {
   running: boolean;
   private timerWorker: Worker | null = null;
   private timeAtStart: number;
-  nudge: number;
+  _nudge: number;
 
   timeviewer: HTMLElement;
 
@@ -57,7 +58,7 @@ export class Clock {
     this.tick = 0;
     this._bpm = 120;
     this._ppqn = 48;
-    this.nudge = 0;
+    this._nudge = 0;
     this.ctx = ctx;
     this.running = true;
     this.timeAtStart = ctx.currentTime;
@@ -110,7 +111,7 @@ export class Clock {
      * @returns void
      */
     if (this.running) {
-      const adjustedCurrentTime = this.ctx.currentTime + this.nudge / 1000;
+      const adjustedCurrentTime = this.ctx.currentTime + this._nudge / 1000;
       const beatNumber = adjustedCurrentTime / (60 / this._bpm);
       const currentPulsePosition = Math.ceil(beatNumber * this._ppqn);
 
@@ -229,6 +230,25 @@ export class Clock {
      * @returns current BPM
      */
     return this._bpm;
+  }
+
+  set nudge(nudge: number) {
+    /**
+     * Sets the nudge.
+     *
+     * @param nudge - nudge in seconds
+     * @returns void
+     */
+    this._nudge = nudge;
+  }
+
+  get nudge(): number {
+    /**
+     * Returns the current nudge.
+     *
+     * @returns current nudge
+     */
+    return this._nudge;
   }
 
   set bpm(bpm: number) {
