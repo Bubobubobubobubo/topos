@@ -1,7 +1,7 @@
 // @ts-ignore
-import { TransportNode } from "./TransportNode";
-import TransportProcessor from "./TransportProcessor?worker&url";
 import { Editor } from "./main";
+import { tryEvaluate } from "./Evaluator";
+const zeroPad = (num: number, places: number) => String(num).padStart(places, "0");
 
 export interface TimePosition {
   /**
@@ -23,7 +23,6 @@ export class Clock {
    *
    * @param app - The main application instance
    * @param ctx - The current AudioContext used by app
-   * @param transportNode - The TransportNode helper
    * @param bpm - The current beats per minute value
    * @param time_signature - The time signature
    * @param time_position - The current time position
@@ -37,41 +36,74 @@ export class Clock {
 
   ctx: AudioContext;
   logicalTime: number;
-  transportNode: TransportNode | null;
   private _bpm: number;
   time_signature: number[];
   time_position: TimePosition;
   private _ppqn: number;
   tick: number;
   running: boolean;
-  lastPauseTime: number;
-  lastPlayPressTime: number;
-  totalPauseTime: number;
+  private timerWorker: Worker | null = null;
+  private timeAtStart: number;
+
+  timeviewer: HTMLElement
+
 
   constructor(public app: Editor, ctx: AudioContext) {
+    this.timeviewer = document.getElementById("timeviewer")!;
     this.time_position = { bar: 0, beat: 0, pulse: 0 };
     this.time_signature = [4, 4];
     this.logicalTime = 0;
     this.tick = 0;
     this._bpm = 120;
     this._ppqn = 48;
-    this.transportNode = null;
     this.ctx = ctx;
     this.running = true;
-    this.lastPauseTime = 0;
-    this.lastPlayPressTime = 0;
-    this.totalPauseTime = 0;
-    ctx.audioWorklet
-      .addModule(TransportProcessor)
-      .then((e) => {
-        this.transportNode = new TransportNode(ctx, {}, this.app);
-        this.transportNode.connect(ctx.destination);
-        return e;
-      })
-      .catch((e) => {
-        console.log("Error loading TransportProcessor.js:", e);
-      });
+    this.initializeWorker();
   }
+
+  private initializeWorker(): void {
+    const workerScript = 'onmessage = (e) => { setInterval(() => { postMessage(true) }, e.data)}';
+    const blob = new Blob([workerScript], { type: 'text/javascript' });
+    this.timerWorker = new Worker(URL.createObjectURL(blob));
+    this.timerWorker.onmessage = () => {
+      // Handle tick update
+      this.run();
+    };
+  }
+
+  private setWorkerInterval(): void {
+    // Calculate the duration of one beat in milliseconds
+    const beatDurationMs = 60000 / this._bpm;
+
+    // Calculate the duration of one pulse
+    const pulseDurationMs = beatDurationMs / this._ppqn;
+
+    // Set this as the interval for the worker
+    this.timerWorker?.postMessage(pulseDurationMs);
+  }
+
+  private run = () => {
+    if (this.running) {
+      if (this.app.settings.send_clock) {
+        this.app.api.MidiConnection.sendMidiClock();
+      }
+      const futureTimeStamp = this.convertTicksToTimeposition(
+        this.tick
+      );
+      this.time_position = futureTimeStamp;
+      if (futureTimeStamp.pulse % this.app.clock.ppqn == 0) {
+        this.timeviewer.innerHTML = `${zeroPad(futureTimeStamp.bar, 2)}:${futureTimeStamp.beat + 1
+          } / ${this.bpm}`;
+      }
+      if (this.app.exampleIsPlaying) {
+        tryEvaluate(this.app, this.app.example_buffer);
+      } else {
+        tryEvaluate(this.app, this.app.global_buffer);
+      }
+      this.app.clock.incrementTick(this.bpm);
+    }
+  }
+
 
   convertTicksToTimeposition(ticks: number): TimePosition {
     const beatsPerBar = this.app.clock.time_signature[0];
@@ -147,16 +179,24 @@ export class Clock {
     return this._bpm;
   }
 
-  set nudge(nudge: number) {
-    this.transportNode?.setNudge(nudge);
-  }
-
   set bpm(bpm: number) {
     if (bpm > 0 && this._bpm !== bpm) {
-      this.transportNode?.setBPM(bpm);
       this._bpm = bpm;
-      this.logicalTime = this.realTime;
+
+      // Restart the worker with the new BPM if the clock is running
+      if (this.running) {
+        this.restartWorker();
+      }
     }
+  }
+
+  private restartWorker(): void {
+    // Terminate the existing worker and start a new one with updated interval
+    if (this.timerWorker) {
+      this.timerWorker.terminate();
+    }
+    this.initializeWorker();
+    this.setWorkerInterval();
   }
 
   get ppqn(): number {
@@ -164,17 +204,17 @@ export class Clock {
   }
 
   get realTime(): number {
-    return this.app.audioContext.currentTime - this.totalPauseTime;
+    return this.app.audioContext.currentTime;
   }
 
+
   get deviation(): number {
-    return Math.abs(this.logicalTime - this.realTime);
+    return this.logicalTime - this.realTime;
   }
 
   set ppqn(ppqn: number) {
     if (ppqn > 0 && this._ppqn !== ppqn) {
       this._ppqn = ppqn;
-      this.transportNode?.setPPQN(ppqn);
       this.logicalTime = this.realTime;
     }
   }
@@ -207,31 +247,31 @@ export class Clock {
   }
 
   public start(): void {
-    /**
-     * Starts the TransportNode (starts the clock).
-     *
-     * @remark also sends a MIDI message if a port is declared
-     */
-    this.app.audioContext.resume();
+    if (this.running) {
+      return;
+    }
+
     this.running = true;
+    this.app.audioContext.resume();
     this.app.api.MidiConnection.sendStartMessage();
-    this.lastPlayPressTime = this.app.audioContext.currentTime;
-    this.totalPauseTime += this.lastPlayPressTime - this.lastPauseTime;
-    this.transportNode?.start();
+
+    if (!this.timerWorker) {
+      this.initializeWorker();
+    }
+    this.setWorkerInterval();
+    this.timeAtStart = this.ctx.currentTime;
+    this.logicalTime = this.timeAtStart
   }
 
   public pause(): void {
-    /**
-     * Pauses the TransportNode (pauses the clock).
-     *
-     * @remark also sends a MIDI message if a port is declared
-     */
     this.running = false;
-    this.transportNode?.pause();
     this.app.api.MidiConnection.sendStopMessage();
-    this.lastPauseTime = this.app.audioContext.currentTime;
-    this.logicalTime = this.realTime;
+    if (this.timerWorker) {
+      this.timerWorker.terminate();
+      this.timerWorker = null;
+    }
   }
+
 
   public stop(): void {
     /**
@@ -241,10 +281,11 @@ export class Clock {
      */
     this.running = false;
     this.tick = 0;
-    this.lastPauseTime = this.app.audioContext.currentTime;
-    this.logicalTime = this.realTime;
     this.time_position = { bar: 0, beat: 0, pulse: 0 };
     this.app.api.MidiConnection.sendStopMessage();
-    this.transportNode?.stop();
+    if (this.timerWorker) {
+      this.timerWorker.terminate();
+      this.timerWorker = null;
+    }
   }
 }
