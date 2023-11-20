@@ -1,7 +1,8 @@
 // @ts-ignore
 import { Editor } from "./main";
 import { tryEvaluate } from "./Evaluator";
-const zeroPad = (num: number, places: number) => String(num).padStart(places, "0");
+const zeroPad = (num: number, places: number) =>
+  String(num).padStart(places, "0");
 
 export interface TimePosition {
   /**
@@ -44,10 +45,9 @@ export class Clock {
   running: boolean;
   private timerWorker: Worker | null = null;
   private timeAtStart: number;
-  nudge: number
+  nudge: number;
 
-  timeviewer: HTMLElement
-
+  timeviewer: HTMLElement;
 
   constructor(public app: Editor, ctx: AudioContext) {
     this.timeviewer = document.getElementById("timeviewer")!;
@@ -60,12 +60,23 @@ export class Clock {
     this.nudge = 0;
     this.ctx = ctx;
     this.running = true;
+    this.timeAtStart = ctx.currentTime;
     this.initializeWorker();
   }
 
   private initializeWorker(): void {
-    const workerScript = 'onmessage = (e) => { setInterval(() => { postMessage(true) }, e.data)}';
-    const blob = new Blob([workerScript], { type: 'text/javascript' });
+    /**
+     * Initializes the worker responsible for sending clock pulses. The worker
+     * is responsible for sending clock pulses at a regular interval. The
+     * interval is set by the `setWorkerInterval` function. The worker is
+     * restarted when the BPM is changed. The worker is terminated when the
+     * clock is stopped.
+     *
+     * @returns void
+     */
+    const workerScript =
+      "onmessage = (e) => { setInterval(() => { postMessage(true) }, e.data)}";
+    const blob = new Blob([workerScript], { type: "text/javascript" });
     this.timerWorker = new Worker(URL.createObjectURL(blob));
     this.timerWorker.onmessage = () => {
       this.run();
@@ -73,38 +84,52 @@ export class Clock {
   }
 
   private setWorkerInterval(): void {
-    // Calculate the duration of one beat in milliseconds
+    /**
+     * Sets the interval for the worker responsible for sending clock pulses.
+     * The interval is set by calculating the duration of one pulse. The
+     * duration of one pulse is calculated by dividing the duration of one beat
+     * by the number of pulses per quarter note.
+     *
+     * @remark The BPM is off constantly by 3~5 BPM.
+     * @returns void
+     */
     const beatDurationMs = 60000 / this._bpm;
-
-    // Calculate the duration of one pulse
     const pulseDurationMs = beatDurationMs / this._ppqn;
-
-    // Set this as the interval for the worker
     this.timerWorker?.postMessage(pulseDurationMs);
   }
 
   private run = () => {
+    /**
+     * This function is called by the worker responsible for sending clock
+     * pulses. It is called at a regular interval. The interval is set by the
+     * `setWorkerInterval` function. This function is responsible for updating
+     * the time position and sending MIDI clock messages. It is also responsible
+     * for evaluating the global buffer. The global buffer is evaluated at the
+     * beginning of each pulse.
+     *
+     * @returns void
+     */
     if (this.running) {
-      const adjustedCurrentTime = this.ctx.currentTime + (this.nudge / 1000);
+      const adjustedCurrentTime = this.ctx.currentTime + this.nudge / 1000;
       const beatNumber = adjustedCurrentTime / (60 / this._bpm);
       const currentPulsePosition = Math.ceil(beatNumber * this._ppqn);
 
       if (currentPulsePosition > this.time_position.pulse) {
-        const futureTimeStamp = this.convertTicksToTimeposition(
-          this.tick
-        );
+        const futureTimeStamp = this.convertTicksToTimeposition(this.tick);
         this.app.clock.incrementTick(this.bpm);
 
         this.time_position.pulse = currentPulsePosition;
 
         if (this.app.settings.send_clock) {
-          if (futureTimeStamp.pulse % 2 == 0) // TODO: Why?
+          if (futureTimeStamp.pulse % 2 == 0)
+            // TODO: Why?
             this.app.api.MidiConnection.sendMidiClock();
         }
         this.time_position = futureTimeStamp;
         if (futureTimeStamp.pulse % this.app.clock.ppqn == 0) {
-          this.timeviewer.innerHTML = `${zeroPad(futureTimeStamp.bar, 2)}:${futureTimeStamp.beat + 1
-            } / ${this.bpm}`;
+          this.timeviewer.innerHTML = `${zeroPad(futureTimeStamp.bar, 2)}:${
+            futureTimeStamp.beat + 1
+          } / ${this.bpm}`;
         }
         if (this.app.exampleIsPlaying) {
           tryEvaluate(this.app, this.app.example_buffer);
@@ -113,9 +138,14 @@ export class Clock {
         }
       }
     }
-  }
+  };
 
   convertTicksToTimeposition(ticks: number): TimePosition {
+    /**
+     * This function converts a number of ticks to a time position.
+     * @param ticks - number of ticks
+     * @returns time position
+     */
     const beatsPerBar = this.app.clock.time_signature[0];
     const ppqnPosition = ticks % this.app.clock.ppqn;
     const beatNumber = Math.floor(ticks / this.app.clock.ppqn);
@@ -149,6 +179,8 @@ export class Clock {
   get beats_per_bar(): number {
     /**
      * Returns the number of beats per bar.
+     *
+     * @returns number of beats per bar
      */
     return this.time_signature[0];
   }
@@ -174,6 +206,8 @@ export class Clock {
   get pulse_duration(): number {
     /**
      * Returns the duration of a pulse in seconds.
+     *
+     * @returns duration of a pulse in seconds
      */
     return 60 / this._bpm / this.ppqn;
   }
@@ -181,15 +215,29 @@ export class Clock {
   public pulse_duration_at_bpm(bpm: number = this.bpm): number {
     /**
      * Returns the duration of a pulse in seconds at a specific bpm.
+     *
+     * @param bpm - beats per minute
+     * @returns duration of a pulse in seconds
      */
     return 60 / bpm / this.ppqn;
   }
 
   get bpm(): number {
+    /**
+     * Returns the current BPM.
+     *
+     * @returns current BPM
+     */
     return this._bpm;
   }
 
   set bpm(bpm: number) {
+    /**
+     * Sets the BPM.
+     *
+     * @param bpm - beats per minute
+     * @returns void
+     */
     if (bpm > 0 && this._bpm !== bpm) {
       this._bpm = bpm;
 
@@ -201,6 +249,11 @@ export class Clock {
   }
 
   private restartWorker(): void {
+    /**
+     * Restarts the worker responsible for sending clock pulses.
+     *
+     * @returns void
+     */
     if (this.timerWorker) {
       this.timerWorker.terminate();
     }
@@ -209,24 +262,52 @@ export class Clock {
   }
 
   get ppqn(): number {
+    /**
+     * Returns the current PPQN.
+     *
+     * @returns current PPQN
+     */
     return this._ppqn;
   }
 
   get realTime(): number {
+    /**
+     * Returns the current time of the audio context.
+     *
+     * @returns current time of the audio context
+     * @remark This is the time of the audio context, not the time of the clock.
+     */
     return this.app.audioContext.currentTime;
   }
 
   get deviation(): number {
+    /**
+     * Returns the deviation between the logical time and the real time.
+     *
+     * @returns deviation between the logical time and the real time
+     */
     return this.logicalTime - this.realTime;
   }
 
   set ppqn(ppqn: number) {
+    /**
+     * Sets the PPQN.
+     *
+     * @param ppqn - pulses per quarter note
+     * @returns void
+     */
     if (ppqn > 0 && this._ppqn !== ppqn) {
       this._ppqn = ppqn;
     }
   }
 
   public incrementTick(bpm: number) {
+    /**
+     * Increments the tick by one.
+     *
+     * @param bpm - beats per minute
+     * @returns void
+     */
     this.tick++;
     this.logicalTime += this.pulse_duration_at_bpm(bpm);
   }
@@ -248,12 +329,21 @@ export class Clock {
 
   public convertPulseToSecond(n: number): number {
     /**
-     * Converts a pulse to a second.
+     * Converts a number of pulses to a number of seconds.
+     *
+     * @param n - number of pulses
+     * @returns number of seconds
      */
     return n * this.pulse_duration;
   }
 
   public start(): void {
+    /**
+     * This function starts the worker.
+     *
+     * @remark also sends a MIDI message if a port is declared
+     * @returns void
+     */
     if (this.running) {
       return;
     }
@@ -267,10 +357,16 @@ export class Clock {
     }
     this.setWorkerInterval();
     this.timeAtStart = this.ctx.currentTime;
-    this.logicalTime = this.timeAtStart
+    this.logicalTime = this.timeAtStart;
   }
 
   public pause(): void {
+    /**
+     * Pauses the Transport worker.
+     *
+     * @remark also sends a MIDI message if a port is declared
+     * @returns void
+     */
     this.running = false;
     this.app.api.MidiConnection.sendStopMessage();
     if (this.timerWorker) {
@@ -281,9 +377,12 @@ export class Clock {
 
   public stop(): void {
     /**
-     * Stops the TransportNode (stops the clock).
+     * Stops the Transport worker and resets the tick to 0. The time position
+     * is also reset to 0. The clock is stopped by terminating the worker
+     * responsible for sending clock pulses.
      *
      * @remark also sends a MIDI message if a port is declared
+     * @returns void
      */
     this.running = false;
     this.tick = 0;
