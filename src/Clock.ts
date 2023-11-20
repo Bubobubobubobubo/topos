@@ -44,6 +44,7 @@ export class Clock {
   running: boolean;
   private timerWorker: Worker | null = null;
   private timeAtStart: number;
+  nudge: number
 
   timeviewer: HTMLElement
 
@@ -56,6 +57,7 @@ export class Clock {
     this.tick = 0;
     this._bpm = 120;
     this._ppqn = 48;
+    this.nudge = 0;
     this.ctx = ctx;
     this.running = true;
     this.initializeWorker();
@@ -66,7 +68,6 @@ export class Clock {
     const blob = new Blob([workerScript], { type: 'text/javascript' });
     this.timerWorker = new Worker(URL.createObjectURL(blob));
     this.timerWorker.onmessage = () => {
-      // Handle tick update
       this.run();
     };
   }
@@ -84,26 +85,35 @@ export class Clock {
 
   private run = () => {
     if (this.running) {
-      if (this.app.settings.send_clock) {
-        this.app.api.MidiConnection.sendMidiClock();
+      const adjustedCurrentTime = this.ctx.currentTime + (this.nudge / 1000);
+      const beatNumber = adjustedCurrentTime / (60 / this._bpm);
+      const currentPulsePosition = Math.ceil(beatNumber * this._ppqn);
+
+      if (currentPulsePosition > this.time_position.pulse) {
+        const futureTimeStamp = this.convertTicksToTimeposition(
+          this.tick
+        );
+        this.app.clock.incrementTick(this.bpm);
+
+        this.time_position.pulse = currentPulsePosition;
+
+        if (this.app.settings.send_clock) {
+          if (futureTimeStamp.pulse % 2 == 0) // TODO: Why?
+            this.app.api.MidiConnection.sendMidiClock();
+        }
+        this.time_position = futureTimeStamp;
+        if (futureTimeStamp.pulse % this.app.clock.ppqn == 0) {
+          this.timeviewer.innerHTML = `${zeroPad(futureTimeStamp.bar, 2)}:${futureTimeStamp.beat + 1
+            } / ${this.bpm}`;
+        }
+        if (this.app.exampleIsPlaying) {
+          tryEvaluate(this.app, this.app.example_buffer);
+        } else {
+          tryEvaluate(this.app, this.app.global_buffer);
+        }
       }
-      const futureTimeStamp = this.convertTicksToTimeposition(
-        this.tick
-      );
-      this.time_position = futureTimeStamp;
-      if (futureTimeStamp.pulse % this.app.clock.ppqn == 0) {
-        this.timeviewer.innerHTML = `${zeroPad(futureTimeStamp.bar, 2)}:${futureTimeStamp.beat + 1
-          } / ${this.bpm}`;
-      }
-      if (this.app.exampleIsPlaying) {
-        tryEvaluate(this.app, this.app.example_buffer);
-      } else {
-        tryEvaluate(this.app, this.app.global_buffer);
-      }
-      this.app.clock.incrementTick(this.bpm);
     }
   }
-
 
   convertTicksToTimeposition(ticks: number): TimePosition {
     const beatsPerBar = this.app.clock.time_signature[0];
@@ -165,7 +175,7 @@ export class Clock {
     /**
      * Returns the duration of a pulse in seconds.
      */
-    return 60 / this.bpm / this.ppqn;
+    return 60 / this._bpm / this.ppqn;
   }
 
   public pulse_duration_at_bpm(bpm: number = this.bpm): number {
@@ -191,7 +201,6 @@ export class Clock {
   }
 
   private restartWorker(): void {
-    // Terminate the existing worker and start a new one with updated interval
     if (this.timerWorker) {
       this.timerWorker.terminate();
     }
@@ -207,7 +216,6 @@ export class Clock {
     return this.app.audioContext.currentTime;
   }
 
-
   get deviation(): number {
     return this.logicalTime - this.realTime;
   }
@@ -215,7 +223,6 @@ export class Clock {
   set ppqn(ppqn: number) {
     if (ppqn > 0 && this._ppqn !== ppqn) {
       this._ppqn = ppqn;
-      this.logicalTime = this.realTime;
     }
   }
 
@@ -271,7 +278,6 @@ export class Clock {
       this.timerWorker = null;
     }
   }
-
 
   public stop(): void {
     /**
