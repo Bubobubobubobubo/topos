@@ -245,6 +245,11 @@ export class Player extends AbstractEvent {
     return this;
   }
 
+  tonnetz(transform: string, tonnetz: TonnetzSpaces = [3, 4, 5]) {
+    if (this.atTheBeginning()) this.ziffers.tonnetz(transform, tonnetz);
+    return this;
+  }
+
   triadTonnetz(transform: string, tonnetz: TonnetzSpaces = [3, 4, 5]) {
     if (this.atTheBeginning()) this.ziffers.triadTonnetz(transform, tonnetz);
     return this;
