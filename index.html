@@ -14,7 +14,7 @@
     
     
     <script src="https://unpkg.com/hydra-synth"></script>
-    <script type="module" crossorigin src="/assets/index-5dc5a0ba.js"></script>
+    <script type="module" crossorigin src="/assets/index-e34ad400.js"></script>
     <link rel="stylesheet" href="/assets/index-125a7191.css">
   <link rel="manifest" href="/manifest.webmanifest"></head>
   <style>
@@ -73,7 +73,7 @@
 
 		<!-- The header is hidden on smaller devices -->
     <header class="py-0 block text-white bg-neutral-900">
-      <div class="mx-auto flex flex-wrap pl-2 py-1 flex-row items-center">
+      <div id="topbar" class="mx-auto flex flex-wrap pl-2 py-1 flex-row items-center">
         <a class="flex title-font font-medium items-center text-black mb-0">
           <img id="topos-logo" src="/assets/topos_frog-e8ab87d1.svg" class="w-12 h-12 text-black p-2 bg-white rounded-full" alt="Topos Frog Logo" />
          <input id="universe-viewer" class="hidden bg-transparent xl:block ml-4 text-2xl text-white placeholder-white" id="renamer" type="text" placeholder="Topos">
@@ -431,7 +431,7 @@
       <div class="flex flex-row max-h-fit">
 
 				<!-- This is a lateral bar that will inherit the header buttons if the window is too small. -->
-        <aside class="
+        <aside id="sidebar" class="
 					flex flex-col items-center w-14
 					h-screen py-2 border-r 
 					rtl:border-l max-h-fit
