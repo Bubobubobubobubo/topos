@@ -48,6 +48,7 @@ export class SoundEvent extends AudibleEvent {
     lfo: ["lfo"],
     znoise: ["znoise"],
     address: ["address", "add"],
+    port: ["port"],
     noise: ["noise"],
     zmod: ["zmod"],
     zcrush: ["zcrush"],
@@ -450,8 +451,14 @@ export class SoundEvent extends AudibleEvent {
       // const filteredEvent = filterObject(event, ["analyze","note","dur","freq","s"]);
       const filteredEvent = event;
       // No need for note if there is freq
-      if (filteredEvent.freq) { delete filteredEvent.note; }
-      superdough(filteredEvent, this.nudge - this.app.clock.deviation, filteredEvent.dur);
+      if (filteredEvent.freq) {
+        delete filteredEvent.note;
+      }
+      superdough(
+        filteredEvent,
+        this.nudge - this.app.clock.deviation,
+        filteredEvent.dur
+      );
     }
   };
 
@@ -463,15 +470,17 @@ export class SoundEvent extends AudibleEvent {
     for (const event of events) {
       const filteredEvent = event;
 
-      let oscAddress = this.values["address"]?.startsWith('/') ? this.values["address"] : `/${this.values["address"]}` || "/topos";
+      let oscAddress = "address" in event ? event.address : "/topos";
+      oscAddress = oscAddress?.startsWith("/") ? oscAddress : "/" + oscAddress;
 
-
-      if (filteredEvent.freq) { delete filteredEvent.note; }
+      if (filteredEvent.freq) {
+        delete filteredEvent.note;
+      }
       sendToServer({
         address: oscAddress,
         message: event,
-        timetag: Math.round(Date.now() + this.nudge - this.app.clock.deviation)
-      } as OSCMessage)
+        timetag: Math.round(Date.now() + this.nudge - this.app.clock.deviation),
+      } as OSCMessage);
     }
-  }
+  };
 }
