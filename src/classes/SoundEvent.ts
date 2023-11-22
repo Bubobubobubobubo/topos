@@ -1,5 +1,6 @@
 import { type Editor } from "../main";
 import { AudibleEvent } from "./AbstractEvents";
+import { sendToServer, type OSCMessage } from "../IO/OSC";
 import {
   filterObject,
   arrayOfObjectsToObjectWithArrays,
@@ -46,6 +47,7 @@ export class SoundEvent extends AudibleEvent {
     pitchJumpTime: ["pitchJumpTime", "pjt"],
     lfo: ["lfo"],
     znoise: ["znoise"],
+    address: ["address", "add"],
     noise: ["noise"],
     zmod: ["zmod"],
     zcrush: ["zcrush"],
@@ -452,4 +454,24 @@ export class SoundEvent extends AudibleEvent {
       superdough(filteredEvent, this.nudge - this.app.clock.deviation, filteredEvent.dur);
     }
   };
+
+  osc = (orbit?: number | number[]): void => {
+    if (orbit) this.values["orbit"] = orbit;
+    const events = objectWithArraysToArrayOfObjects(this.values, [
+      "parsedScale",
+    ]);
+    for (const event of events) {
+      const filteredEvent = event;
+
+      let oscAddress = this.values["address"]?.startsWith('/') ? this.values["address"] : `/${this.values["address"]}` || "/topos";
+
+
+      if (filteredEvent.freq) { delete filteredEvent.note; }
+      sendToServer({
+        address: oscAddress,
+        message: event,
+        timetag: Math.round(Date.now() + this.nudge - this.app.clock.deviation)
+      } as OSCMessage)
+    }
+  }
 }

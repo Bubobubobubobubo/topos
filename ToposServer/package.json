@@ -1,0 +1,15 @@
+{
+  "name": "topos-server",
+  "version": "1.0.0",
+  "description": "Topos OSC Server",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Raphaël Forment",
+  "license": "GPL-3.0-or-later",
+  "dependencies": {
+    "osc": "^2.4.4",
+    "ws": "^8.14.2"
+  }
+}
