@@ -27,12 +27,6 @@ socket.onopen = function (event) {
 };
 
 export function sendToServer(message: OSCMessage) {
-  // Check the port in the message and change port if necessary
-  if (message.port != parseInt(socket.url.split(":")[2])) {
-    socket.close();
-    socket = new WebSocket(`ws://localhost:${message.port}`);
-  }
-
   if (socket.readyState === WebSocket.OPEN) {
     socket.send(JSON.stringify(message));
   } else {

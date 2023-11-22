@@ -473,11 +473,14 @@ export class SoundEvent extends AudibleEvent {
       let oscAddress = "address" in event ? event.address : "/topos";
       oscAddress = oscAddress?.startsWith("/") ? oscAddress : "/" + oscAddress;
 
+      let oscPort = "port" in event ? event.port : 57120;
+
       if (filteredEvent.freq) {
         delete filteredEvent.note;
       }
       sendToServer({
         address: oscAddress,
+        port: oscPort,
         message: event,
         timetag: Math.round(Date.now() + this.nudge - this.app.clock.deviation),
       } as OSCMessage);
