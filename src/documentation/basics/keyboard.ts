@@ -55,6 +55,7 @@ Topos is made to be controlled entirely with a keyboard. It is recommanded to st
 | Shortcut | Key   | Description                                                |
 |----------|-------|------------------------------------------------------------|
 |Vim Mode|${key_shortcut("Ctrl + V")}| Switch between Vim and Normal Mode|
+|Maximize|${key_shortcut("Ctrl + M")}| Show/Hide the interface|
 
 # Keyboard Fill
 
@@ -65,12 +66,12 @@ By pressing the ${key_shortcut(
   )} when playing this example:
 
 ${makeExample(
-    "Claping twice as fast with fill",
-    `
+  "Claping twice as fast with fill",
+  `
 beat(fill() ? 1/4 : 1/2)::sound('cp').out()
 `,
-    true
-  )}
+  true
+)}
 
 `;
 };

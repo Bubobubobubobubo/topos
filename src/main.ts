@@ -1,4 +1,8 @@
-import { OscilloscopeConfig, runOscilloscope, scriptBlinkers } from "./AudioVisualisation";
+import {
+  OscilloscopeConfig,
+  runOscilloscope,
+  scriptBlinkers,
+} from "./AudioVisualisation";
 import { EditorState, Compartment } from "@codemirror/state";
 import { javascript } from "@codemirror/lang-javascript";
 import { markdown } from "@codemirror/lang-markdown";
@@ -46,6 +50,7 @@ export class Editor {
 
   // Editor logic
   editor_mode: "global" | "local" | "init" | "notes" = "global";
+  hidden_interface: boolean = false;
   fontSize!: Compartment;
   withLineNumbers!: Compartment;
   vimModeCompartment!: Compartment;
@@ -482,7 +487,7 @@ export class Editor {
       console.log("Hydra loaded successfully");
       this.initializeHydra();
     };
-    script.onerror = function() {
+    script.onerror = function () {
       console.error("Error loading Hydra script");
     };
     document.head.appendChild(script);
