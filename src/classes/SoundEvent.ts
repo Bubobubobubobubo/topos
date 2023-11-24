@@ -449,8 +449,7 @@ export class SoundEvent extends AudibleEvent {
       const filteredEvent = event;
       // No need for note if there is freq
       if (filteredEvent.freq) { delete filteredEvent.note; }
-      // const correction = Math.max(this.nudge - this.app.clock.deviation, 0);
-      superdough(filteredEvent, this.nudge, filteredEvent.dur);
+      superdough(filteredEvent, this.nudge - this.app.clock.deviation, filteredEvent.dur);
     }
   };
 }

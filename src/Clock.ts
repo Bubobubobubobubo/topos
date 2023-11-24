@@ -35,9 +35,8 @@ export class Clock {
    * @param totalPauseTime - The total time the clock has been paused / stopped
    * @param _nudge - The current nudge value
    */
-
-  ctx: AudioContext;
-  logicalTime: number;
+  lastPulseAt: number;
+  afterEvaluation: number;
   private _bpm: number;
   time_signature: number[];
   time_position: TimePosition;
@@ -45,24 +44,21 @@ export class Clock {
   tick: number;
   running: boolean;
   private timerWorker: Worker | null = null;
-  private timeAtStart: number;
   _nudge: number;
 
   timeviewer: HTMLElement;
 
-  constructor(public app: Editor, ctx: AudioContext) {
+  constructor(public app: Editor) {
     this.timeviewer = document.getElementById("timeviewer")!;
     this.time_position = { bar: 0, beat: 0, pulse: 0 };
     this.time_signature = [4, 4];
-    this.logicalTime = 0;
+    this.lastPulseAt = 0;
+    this.afterEvaluation = 0;
     this.tick = 0;
     this._bpm = 120;
     this._ppqn = 48;
     this._nudge = 0;
-    this.ctx = ctx;
-    this.running = true;
-    this.timeAtStart = ctx.currentTime;
-    this.initializeWorker();
+    this.running = false;
   }
 
   private initializeWorker(): void {
@@ -111,22 +107,12 @@ export class Clock {
      * @returns void
      */
     if (this.running) {
-      const adjustedCurrentTime = this.ctx.currentTime + this._nudge / 1000;
-      const beatNumber = adjustedCurrentTime / (60 / this._bpm);
-      const currentPulsePosition = Math.ceil(beatNumber * this._ppqn);
-
-      if (currentPulsePosition > this.time_position.pulse) {
+        this.lastPulseAt = performance.now();
         const futureTimeStamp = this.convertTicksToTimeposition(this.tick);
-        this.app.clock.incrementTick(this.bpm);
-
-        this.time_position.pulse = currentPulsePosition;
-
+        this.time_position = futureTimeStamp;
         if (this.app.settings.send_clock) {
-          if (futureTimeStamp.pulse % 2 == 0)
-            // TODO: Why?
             this.app.api.MidiConnection.sendMidiClock();
         }
-        this.time_position = futureTimeStamp;
         if (futureTimeStamp.pulse % this.app.clock.ppqn == 0) {
           this.timeviewer.innerHTML = `${zeroPad(futureTimeStamp.bar, 2)}:${
             futureTimeStamp.beat + 1
@@ -137,7 +123,9 @@ export class Clock {
         } else {
           tryEvaluate(this.app, this.app.global_buffer);
         }
-      }
+        this.afterEvaluation = performance.now();
+        console.log("DEVIATION", this.deviation);
+        this.tick++;
     }
   };
 
@@ -297,7 +285,7 @@ export class Clock {
      * @returns current time of the audio context
      * @remark This is the time of the audio context, not the time of the clock.
      */
-    return this.app.audioContext.currentTime;
+    return this.lastPulseAt;
   }
 
   get deviation(): number {
@@ -306,7 +294,7 @@ export class Clock {
      *
      * @returns deviation between the logical time and the real time
      */
-    return this.logicalTime - this.realTime;
+    return (this.afterEvaluation - this.lastPulseAt) / 1000;
   }
 
   set ppqn(ppqn: number) {
@@ -319,17 +307,6 @@ export class Clock {
     if (ppqn > 0 && this._ppqn !== ppqn) {
       this._ppqn = ppqn;
     }
-  }
-
-  public incrementTick(bpm: number) {
-    /**
-     * Increments the tick by one.
-     *
-     * @param bpm - beats per minute
-     * @returns void
-     */
-    this.tick++;
-    this.logicalTime += this.pulse_duration_at_bpm(bpm);
   }
 
   public nextTickFrom(time: number, nudge: number): number {
@@ -369,15 +346,15 @@ export class Clock {
     }
 
     this.running = true;
-    this.app.audioContext.resume();
     this.app.api.MidiConnection.sendStartMessage();
+    this.lastPulseAt = 0;
+    this.afterEvaluation = 0;
 
     if (!this.timerWorker) {
       this.initializeWorker();
     }
     this.setWorkerInterval();
-    this.timeAtStart = this.ctx.currentTime;
-    this.logicalTime = this.timeAtStart;
+
   }
 
   public pause(): void {

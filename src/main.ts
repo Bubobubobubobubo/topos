@@ -125,7 +125,7 @@ export class Editor {
     // ================================================================================
 
     this.audioContext = new AudioContext({ latencyHint: "playback" });
-    this.clock = new Clock(this, this.audioContext);
+    this.clock = new Clock(this);
 
     // ================================================================================
     // User API

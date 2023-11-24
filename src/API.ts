@@ -213,7 +213,7 @@ export class UserAPI {
     /**
      * @returns the current AudioContext time (wall clock)
      */
-    return this.app.audioContext.currentTime;
+    return this.app.clock.lastPulseAt;
   };
 
   public play = (): void => {
@@ -1595,7 +1595,7 @@ export class UserAPI {
      * @returns A sine wave between -1 and 1
      */
     return (
-      (Math.sin(this.app.clock.ctx.currentTime * Math.PI * 2 * freq) + offset) *
+      (Math.sin(this.app.clock.lastPulseAt * Math.PI * 2 * freq) + offset) *
       times
     );
   };
@@ -1625,7 +1625,7 @@ export class UserAPI {
      * @see noise
      */
     return (
-      (((this.app.clock.ctx.currentTime * freq) % 1) * 2 - 1 + offset) * times
+      (((this.app.clock.lastPulseAt * freq) % 1) * 2 - 1 + offset) * times
     );
   };
 
