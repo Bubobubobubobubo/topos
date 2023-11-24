@@ -8,8 +8,8 @@ const handleResize = (canvas: HTMLCanvasElement) => {
   const dpr = window.devicePixelRatio || 1;
 
   // Assuming the canvas takes up the whole window
-  canvas.width = window.innerWidth * dpr;
-  canvas.height = window.innerHeight * dpr;
+  canvas.width = window.innerWidth * dpr * 0.25;
+  canvas.height = window.innerHeight * dpr * 0.25;
 
   if (ctx) {
     ctx.scale(dpr, dpr);
