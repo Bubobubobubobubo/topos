@@ -294,6 +294,7 @@ export class Clock {
      *
      * @returns deviation between the logical time and the real time
      */
+    if(this.afterEvaluation<this.lastPulseAt) return 0;
     return (this.afterEvaluation - this.lastPulseAt) / 1000;
   }
 
