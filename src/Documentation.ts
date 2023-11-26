@@ -47,7 +47,7 @@ export const makeExampleFactory = (application: Editor): Function => {
   const make_example = (
     description: string,
     code: string,
-    open: boolean = false,
+    open: boolean = false
   ) => {
     const codeId = `codeExample${application.exampleCounter++}`;
     // Store the code snippet in the data structure
@@ -70,7 +70,11 @@ export const makeExampleFactory = (application: Editor): Function => {
 };
 
 export const documentation_factory = (application: Editor) => {
-  // Initialize a data structure to store code examples by their unique IDs
+  /**
+   * Creates the documentation for the given application.
+   * @param application The editor application.
+   * @returns An object containing various documentation sections.
+   */
   application.api.codeExamples = {};
 
   return {
@@ -109,6 +113,10 @@ export const documentation_factory = (application: Editor) => {
 };
 
 export const showDocumentation = (app: Editor) => {
+  /**
+   * Shows or hides the documentation based on the current state of the app.
+   * @param app - The Editor instance.
+   */
   if (document.getElementById("app")?.classList.contains("hidden")) {
     document.getElementById("app")?.classList.remove("hidden");
     document.getElementById("documentation")?.classList.add("hidden");
@@ -129,6 +137,9 @@ export const showDocumentation = (app: Editor) => {
 };
 
 export const hideDocumentation = () => {
+  /**
+   * Hides the documentation section and shows the main application.
+   */
   if (document.getElementById("app")?.classList.contains("hidden")) {
     document.getElementById("app")?.classList.remove("hidden");
     document.getElementById("documentation")?.classList.add("hidden");
@@ -136,6 +147,12 @@ export const hideDocumentation = () => {
 };
 
 export const updateDocumentationContent = (app: Editor, bindings: any) => {
+  /**
+   * Updates the content of the documentation pane with the converted markdown.
+   *
+   * @param app - The editor application.
+   * @param bindings - Additional bindings for the showdown converter.
+   */
   const converter = new showdown.Converter({
     emoji: true,
     moreStyling: true,
@@ -143,7 +160,7 @@ export const updateDocumentationContent = (app: Editor, bindings: any) => {
     extensions: [showdownHighlight({ auto_detection: true }), ...bindings],
   });
   const converted_markdown = converter.makeHtml(
-    app.docs[app.currentDocumentationPane],
+    app.docs[app.currentDocumentationPane]
   );
   document.getElementById("documentation-content")!.innerHTML =
     converted_markdown;

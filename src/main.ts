@@ -101,6 +101,19 @@ export class Editor {
   public hydra: any;
 
   constructor() {
+    /**
+     * This is the entry point of the application. The Editor instance is created when the page is loaded.
+     * It is responsible for:
+     * - Initializing the user interface
+     * - Loading the universe from local storage
+     * - Initializing the audio context and the clock
+     * - Building the user API
+     * - Building the documentation
+     * - Installing event listeners
+     * - Building the CodeMirror editor
+     * - Evaluating the init file
+     */
+
     // ================================================================================
     // Build user interface
     // ================================================================================
@@ -194,6 +207,11 @@ export class Editor {
   }
 
   private getBuffer(type: string): any {
+    /**
+     * Retrieves the buffer based on the specified type.
+     * @param type - The type of buffer to retrieve.
+     * @returns The buffer object.
+     */
     const universe = this.universes[this.selected_universe.toString()];
     return type === "locals"
       ? universe[type][this.local_index]
@@ -221,6 +239,12 @@ export class Editor {
   }
 
   updateKnownUniversesView = () => {
+    /**
+     * Updates the known universes view.
+     * This function generates and populates a list of known universes based on the data stored in the 'universes' property.
+     * It retrieves the necessary HTML elements and template, creates the list, and attaches event listeners to the generated items.
+     * If any required elements or templates are missing, warning messages are logged and the function returns early.
+     */
     let itemTemplate = document.getElementById(
       "ui-known-universe-item-template"
     ) as HTMLTemplateElement;
@@ -261,7 +285,13 @@ export class Editor {
   };
 
   changeToLocalBuffer(i: number) {
-    // Updating the CSS accordingly
+    /**
+     * Changes the local buffer based on the provided index.
+     * Updates the CSS accordingly by adding a specific class to the selected tab and removing it from other tabs.
+     * Updates the local index and updates the editor view.
+     *
+     * @param i The index of the tab to change the local buffer to.
+     */
     const tabs = document.querySelectorAll('[id^="tab-"]');
     const tab = tabs[i] as HTMLElement;
     tab.classList.add("bg-orange-300");
@@ -274,6 +304,11 @@ export class Editor {
   }
 
   changeModeFromInterface(mode: "global" | "local" | "init" | "notes") {
+    /**
+     * Changes the mode of the interface.
+     *
+     * @param mode - The mode to change to. Can be one of "global", "local", "init", or "notes".
+     */
     const interface_buttons: HTMLElement[] = [
       this.interface.local_button,
       this.interface.global_button,
@@ -345,6 +380,12 @@ export class Editor {
     button: "play" | "pause" | "stop" | "clear",
     highlight: boolean
   ) {
+    /**
+     * Sets the highlighting for a specific button.
+     *
+     * @param button - The button to highlight ("play", "pause", "stop", or "clear").
+     * @param highlight - A boolean indicating whether to highlight the button or not.
+     */
     document.getElementById("play-label")!.textContent =
       button !== "pause" ? "Pause" : "Play";
     if (button !== "pause") {
@@ -429,12 +470,12 @@ export class Editor {
     }
   }
 
-  /**
-   * Flashes the background of the view and its gutters.
-   * @param {string} color - The color to set.
-   * @param {number} duration - Duration in milliseconds to maintain the color.
-   */
   flashBackground(color: string, duration: number): void {
+    /**
+     * Flashes the background of the view and its gutters.
+     * @param {string} color - The color to set.
+     * @param {number} duration - Duration in milliseconds to maintain the color.
+     */
     const domElement = this.view.dom;
     const gutters = domElement.getElementsByClassName(
       "cm-gutter"
@@ -480,6 +521,12 @@ export class Editor {
   }
 
   private loadHydraSynthAsync(): void {
+    /**
+     * Loads the Hydra Synth asynchronously by creating a script element
+     * and appending it to the document head.  * Once the script is
+     * loaded successfully, it initializes the Hydra Synth. If there
+     * is an error loading the script, it logs an error message.
+     */
     var script = document.createElement("script");
     script.src = "https://unpkg.com/hydra-synth";
     script.async = true;
@@ -494,6 +541,9 @@ export class Editor {
   }
 
   private initializeHydra(): void {
+    /**
+     * Initializes the Hydra backend and sets up the Hydra synth.
+     */
     // @ts-ignore
     this.hydra_backend = new Hydra({
       canvas: this.interface.hydra_canvas as HTMLCanvasElement,
@@ -506,6 +556,11 @@ export class Editor {
   }
 
   private setCanvas(canvas: HTMLCanvasElement): void {
+    /**
+     * Sets the canvas element and configures its size and context.
+     *
+     * @param canvas - The HTMLCanvasElement to set.
+     */
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
     const dpr = window.devicePixelRatio || 1;

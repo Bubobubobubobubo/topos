@@ -2,19 +2,19 @@
 import { getAnalyser } from "superdough";
 import { type Editor } from "./main";
 
-/**
- * Draw a circle at a specific position on the canvas.
- * @param {number} x - The x-coordinate of the circle's center.
- * @param {number} y - The y-coordinate of the circle's center.
- * @param {number} radius - The radius of the circle.
- * @param {string} color - The fill color of the circle.
- */
 export const drawCircle = (
+  /**
+   * Draw a circle at a specific position on the canvas.
+   * @param {number} x - The x-coordinate of the circle's center.
+   * @param {number} y - The y-coordinate of the circle's center.
+   * @param {number} radius - The radius of the circle.
+   * @param {string} color - The fill color of the circle.
+   */
   app: Editor,
   x: number,
   y: number,
   radius: number,
-  color: string,
+  color: string
 ): void => {
   // @ts-ignore
   const canvas: HTMLCanvasElement = app.interface.feedback;
@@ -28,15 +28,15 @@ export const drawCircle = (
   ctx.closePath();
 };
 
-/**
- * Blinks a script indicator circle.
- * @param script - The type of script.
- * @param no - The shift amount multiplier.
- */
 export const blinkScript = (
+  /**
+   * Blinks a script indicator circle.
+   * @param script - The type of script.
+   * @param no - The shift amount multiplier.
+   */
   app: Editor,
   script: "local" | "global" | "init",
-  no?: number,
+  no?: number
 ) => {
   if (no !== undefined && no < 1 && no > 9) return;
   const blinkDuration =
@@ -55,15 +55,15 @@ export const blinkScript = (
       horizontalOffset + shift,
       app.interface.feedback.clientHeight - 15,
       8,
-      "#fdba74",
+      "#fdba74"
     );
   };
 
-  /**
-   * Clears the circle at a given shift.
-   * @param shift - The pixel distance from the origin.
-   */
   const _clearBlinker = (shift: number) => {
+    /**
+     * Clears the circle at a given shift.
+     * @param shift - The pixel distance from the origin.
+     */
     const x = 50 + shift;
     const y = app.interface.feedback.clientHeight - 15;
     const radius = 8;
@@ -91,17 +91,18 @@ export const blinkScript = (
           0,
           0,
           (app.interface.feedback as HTMLCanvasElement).width,
-          (app.interface.feedback as HTMLCanvasElement).height,
+          (app.interface.feedback as HTMLCanvasElement).height
         );
     }, blinkDuration);
   }
 };
 
-/**
- * Manages animation updates using requestAnimationFrame.
- * @param app - The Editor application context.
- */
 export const scriptBlinkers = () => {
+  /**
+   * Manages animation updates using requestAnimationFrame.
+   * @param app - The Editor application context.
+   */
+
   let lastFrameTime = Date.now();
   const frameRate = 10;
   const minFrameDelay = 1000 / frameRate;
@@ -134,15 +135,16 @@ export interface OscilloscopeConfig {
 let lastZeroCrossingType: string | null = null; // 'negToPos' or 'posToNeg'
 let lastRenderTime: number = 0;
 
-/**
- * Initializes and runs an oscilloscope using an AnalyzerNode.
- * @param {HTMLCanvasElement} canvas - The canvas element to draw the oscilloscope.
- * @param {OscilloscopeConfig} config - Configuration for the oscilloscope's appearance and behavior.
- */
 export const runOscilloscope = (
   canvas: HTMLCanvasElement,
-  app: Editor,
+  app: Editor
 ): void => {
+  /**
+   * Runs the oscilloscope visualization on the provided canvas element.
+   *
+   * @param canvas - The HTMLCanvasElement on which to render the visualization.
+   * @param app - The Editor object containing the configuration for the oscilloscope.
+   */
   let config = app.osc;
   let analyzer = getAnalyser(config.fftSize);
   let dataArray = new Float32Array(analyzer.frequencyBinCount);
@@ -155,7 +157,7 @@ export const runOscilloscope = (
     width: number,
     height: number,
     offset_height: number,
-    offset_width: number,
+    offset_width: number
   ) {
     const maxFPS = 30;
     const now = performance.now();
@@ -170,11 +172,11 @@ export const runOscilloscope = (
 
     const performanceFactor = 1;
     const reducedDataSize = Math.floor(
-      freqDataArray.length * performanceFactor,
+      freqDataArray.length * performanceFactor
     );
     const numBars = Math.min(
       reducedDataSize,
-      app.osc.orientation === "horizontal" ? width : height,
+      app.osc.orientation === "horizontal" ? width : height
     );
     const barWidth =
       app.osc.orientation === "horizontal" ? width / numBars : height / numBars;
@@ -187,7 +189,7 @@ export const runOscilloscope = (
     for (let i = 0; i < numBars; i++) {
       barHeight = Math.floor(
         freqDataArray[Math.floor((i * freqDataArray.length) / numBars)] *
-          ((height / 256) * app.osc.size),
+          ((height / 256) * app.osc.size)
       );
 
       if (app.osc.orientation === "horizontal") {
@@ -195,7 +197,7 @@ export const runOscilloscope = (
           x + offset_width,
           (height - barHeight) / 2 + offset_height,
           barWidth + 1,
-          barHeight,
+          barHeight
         );
         x += barWidth;
       } else {
@@ -203,7 +205,7 @@ export const runOscilloscope = (
           (width - barHeight) / 2 + offset_width,
           y + offset_height,
           barHeight,
-          barWidth + 1,
+          barWidth + 1
         );
         y += barWidth;
       }
@@ -232,12 +234,19 @@ export const runOscilloscope = (
         -OFFSET_WIDTH,
         -OFFSET_HEIGHT,
         WIDTH + 2 * OFFSET_WIDTH,
-        HEIGHT + 2 * OFFSET_HEIGHT,
+        HEIGHT + 2 * OFFSET_HEIGHT
       );
       return;
     }
 
     if (analyzer.fftSize !== app.osc.fftSize) {
+      // Disconnect and release the old analyzer if it exists
+      if (analyzer) {
+        analyzer.disconnect();
+        analyzer = null; // Release the reference for garbage collection
+      }
+
+      // Create a new analyzer with the updated FFT size
       analyzer = getAnalyser(app.osc.fftSize);
       dataArray = new Float32Array(analyzer.frequencyBinCount);
     }
@@ -252,7 +261,7 @@ export const runOscilloscope = (
         -OFFSET_WIDTH,
         -OFFSET_HEIGHT,
         WIDTH + 2 * OFFSET_WIDTH,
-        HEIGHT + 2 * OFFSET_HEIGHT,
+        HEIGHT + 2 * OFFSET_HEIGHT
       );
     }
     canvasCtx.lineWidth = app.osc.thickness;

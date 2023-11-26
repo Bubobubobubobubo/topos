@@ -48,10 +48,7 @@ export class Clock {
   lastPlayPressTime: number;
   totalPauseTime: number;
 
-  constructor(
-    public app: Editor,
-    ctx: AudioContext,
-  ) {
+  constructor(public app: Editor, ctx: AudioContext) {
     this.time_position = { bar: 0, beat: 0, pulse: 0 };
     this.time_signature = [4, 4];
     this.logicalTime = 0;
@@ -77,6 +74,12 @@ export class Clock {
   }
 
   convertTicksToTimeposition(ticks: number): TimePosition {
+    /**
+     * Converts ticks to a TimePosition object.
+     * @param ticks The number of ticks to convert.
+     * @returns The TimePosition object representing the converted ticks.
+     */
+
     const beatsPerBar = this.app.clock.time_signature[0];
     const ppqnPosition = ticks % this.app.clock.ppqn;
     const beatNumber = Math.floor(ticks / this.app.clock.ppqn);
