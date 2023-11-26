@@ -1,15 +1,15 @@
-/*
- * Transforms object with arrays into array of objects
- *
- * @param {Record<string, any>} input - Object with arrays
- * @param {string[]} ignoredKeys - Keys to ignore
- * @returns {Record<string, any>[]} Array of objects
- *
- */
 export function objectWithArraysToArrayOfObjects(
   input: Record<string, any>,
-  arraysToArrays: string[],
+  arraysToArrays: string[]
 ): Record<string, any>[] {
+  /*
+   * Transforms object with arrays into array of objects
+   *
+   * @param {Record<string, any>} input - Object with arrays
+   * @param {string[]} ignoredKeys - Keys to ignore
+   * @returns {Record<string, any>[]} Array of objects
+   *
+   */
   const inputCopy = { ...input };
   arraysToArrays.forEach((k) => {
     if (Array.isArray(inputCopy[k]) && !Array.isArray(inputCopy[k][0])) {
@@ -24,7 +24,7 @@ export function objectWithArraysToArrayOfObjects(
       acc.keys.push(key);
       return acc;
     },
-    { keys: [] as string[], maxLength: 0 },
+    { keys: [] as string[], maxLength: 0 }
   );
 
   const output: Record<string, any>[] = [];
@@ -42,46 +42,43 @@ export function objectWithArraysToArrayOfObjects(
   return output;
 }
 
-/*
- * Transforms array of objects into object with arrays
- *
- * @param {Record<string, any>[]} array - Array of objects
- * @param {Record<string, any>} mergeObject - Object that is merged to each object in the array
- * @returns {object} Merged object with arrays
- *
- */
 export function arrayOfObjectsToObjectWithArrays<T extends Record<string, any>>(
   array: T[],
-  mergeObject: Record<string, any> = {},
+  mergeObject: Record<string, any> = {}
 ): Record<string, any> {
-  return array.reduce(
-    (acc, obj) => {
-      const mergedObj = { ...obj, ...mergeObject };
-      Object.keys(mergedObj).forEach((key) => {
-        if (!acc[key]) {
-          acc[key] = [];
-        }
-        acc[key].push(mergedObj[key]);
-      });
-      return acc;
-    },
-    {} as Record<string, any>,
-  );
+  /*
+   * Transforms array of objects into object with arrays
+   *
+   * @param {Record<string, any>[]} array - Array of objects
+   * @param {Record<string, any>} mergeObject - Object that is merged to each object in the array
+   * @returns {object} Merged object with arrays
+   *
+   */
+  return array.reduce((acc, obj) => {
+    const mergedObj = { ...obj, ...mergeObject };
+    Object.keys(mergedObj).forEach((key) => {
+      if (!acc[key]) {
+        acc[key] = [];
+      }
+      acc[key].push(mergedObj[key]);
+    });
+    return acc;
+  }, {} as Record<string, any>);
 }
 
-/*
- * Filter certain keys from object
- *
- * @param {Record<string, any>} obj - Object to filter
- * @param {string[]} filter - Keys to filter
- * @returns {object} Filtered object
- *
- */
 export function filterObject(
   obj: Record<string, any>,
-  filter: string[],
+  filter: string[]
 ): Record<string, any> {
+  /*
+   * Filter certain keys from object
+   *
+   * @param {Record<string, any>} obj - Object to filter
+   * @param {string[]} filter - Keys to filter
+   * @returns {object} Filtered object
+   *
+   */
   return Object.fromEntries(
-    Object.entries(obj).filter(([key]) => filter.includes(key)),
+    Object.entries(obj).filter(([key]) => filter.includes(key))
   );
 }
