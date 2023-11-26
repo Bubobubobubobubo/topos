@@ -16,7 +16,7 @@ import {
   superdough,
   // @ts-ignore
 } from "superdough";
-import { Sound } from "zifferjs/src/types";
+// import { Sound } from "zifferjs/src/types";
 
 export type SoundParams = {
   dur: number | number[];
@@ -347,7 +347,7 @@ export class SoundEvent extends AudibleEvent {
           this[key] = (value: number) => this.updateValue(keys[0], value);
         }
       } else {
-        // this[methodName] = keys.bind(this);
+        // @ts-ignore
         this[methodName] = (...args) => keys(this, ...args);
       }
     }
