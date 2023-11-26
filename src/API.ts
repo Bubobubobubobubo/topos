@@ -86,6 +86,7 @@ export class UserAPI {
   private printTimeoutID: number = 0;
   public MidiConnection: MidiConnection;
   public scale_aid: string | number | undefined = undefined;
+  public hydra: any;
   load: samples;
 
   constructor(public app: Editor) {

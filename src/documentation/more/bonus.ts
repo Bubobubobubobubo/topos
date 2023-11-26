@@ -7,7 +7,7 @@ export const bonus = (application: Editor): string => {
   return `
 # Bonus features
 
-Some features are here "just for fun" or "just because I can". They are not very interesting per se but are still available nonetheless. They mostly gravitate towards manipulating visuals or patterning other multimedia formats.
+Some features have been included as a bonus. These features are often about patterning over things that are not directly related to sound: pictures, video, etc.
 
 ## Hydra Visual Live Coding
 
@@ -15,19 +15,19 @@ Some features are here "just for fun" or "just because I can". They are not very
 <warning>⚠️ This feature can generate flashing images that could trigger photosensitivity or epileptic seizures. ⚠️ </warning>
 </div>
 
-[Hydra](https://hydra.ojack.xyz/?sketch_id=mahalia_1) is a popular live-codable video synthesizer developed by [Olivia Jack](https://ojack.xyz/) and other contributors. It follows the metaphor of analog synthesizer patching to allow its user to create complex live visuals from a web browser window. Being very easy to use, extremely powerful and also very rewarding to use, Hydra has become a popular choice for adding visuals into a live code performance. Topos provides a simple way to integrate Hydra into a live coding session and to blend it with regular Topos code.
+[Hydra](https://hydra.ojack.xyz/?sketch_id=mahalia_1) is a popular live-codable video synthesizer developed by [Olivia Jack](https://ojack.xyz/) and other contributors. It follows an analog synthesizer patching metaphor to encourage live coding complex shaders. Being very easy to use, extremely powerful and also very rewarding to use, Hydra has become a popular choice for adding visuals into a live code performance.
 
 ${makeExample(
   "Hydra integration",
-  `beat(4) :: app.hydra.osc(3, 0.5, 2).out()`,
-  true,
+  `beat(4) :: hydra.osc(3, 0.5, 2).out()`,
+  true
 )}
 
-You may feel like it's doing nothing! Press ${key_shortcut(
-    "Ctrl+D",
-  )} to close the documentation. **Boom, all shiny!**
+Close the documentation to see the effect: ${key_shortcut(
+    "Ctrl+D"
+  )}! **Boom, all shiny!**
 
-Be careful not to call <ic>app.hydra</ic> too often as it can impact performances. You can use any rhythmical function like <ic>mod()</ic> function to limit the number of function calls. You can write any Topos code like <ic>[1,2,3].beat()</ic> to bring some life and movement in your Hydra sketches.
+Be careful not to call <ic>hydra</ic> too often as it can impact performances. You can use any rhythmical function like <ic>beat()</ic> function to limit the number of function calls. You can write any Topos code like <ic>[1,2,3].beat()</ic> to bring some life and movement in your Hydra sketches.
 
 Stopping **Hydra** is simple:
 
@@ -35,15 +35,34 @@ ${makeExample(
   "Stopping Hydra",
   `
 beat(4) :: stop_hydra()     // this one
-beat(4) :: app.hydra.hush() // or this one
+beat(4) :: hydra.hush() // or this one
 `,
-  true,
+  true
 )}
 
-I won't teach you how to play with Hydra. You can find some great resources on the [Hydra website](https://hydra.ojack.xyz/):
+
+### Changing the resolution
+
+You can change Hydra resolution using this simple method:
+
+${makeExample(
+  "Changing Hydra resolution",
+  `hydra.setResolution(1024, 768)`,
+  true
+)}
+
+### Documentation
+
+I won't teach Hydra. You can find some great resources directly on the [Hydra website](https://hydra.ojack.xyz/):
   - [Hydra interactive documentation](https://hydra.ojack.xyz/docs/)
   - [List of Hydra Functions](https://hydra.ojack.xyz/api/)
   - [Source code on GitHub](https://github.com/hydra-synth/hydra)
+
+### The Hydra namespace
+
+In comparison with the basic Hydra editor, please note that you have to prefix all Hydra functions with <ic>hydra.</ic> to avoid conflicts with Topos functions. For example, <ic>osc()</ic> becomes <ic>hydra.osc()</ic>.
+
+${makeExample("Hydra namespace", `hydra.voronoi(20).out()`, true)}
 
 ## GIF player
 
@@ -63,7 +82,7 @@ beat(0.25)::gif({
   posX: ir(1,1200), // CSS Horizontal Position
   posY: ir(1, 800), // CSS Vertical Position
 `,
-  true,
+  true
 )}
 `;
 };
