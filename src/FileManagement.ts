@@ -154,7 +154,7 @@ export class AppSettings {
 
   constructor() {
     const settingsFromStorage = JSON.parse(
-      localStorage.getItem("topos") || "{}"
+      localStorage.getItem("topos") || "{}",
     );
 
     if (settingsFromStorage && Object.keys(settingsFromStorage).length !== 0) {
@@ -210,7 +210,7 @@ export class AppSettings {
 
   saveApplicationToLocalStorage(
     universes: Universes,
-    settings: Settings
+    settings: Settings,
   ): void {
     /**
      * Main method to store the application to local storage.
@@ -263,7 +263,9 @@ export const initializeSelectedUniverse = (app: Editor): void => {
       app.universes[app.selected_universe] = structuredClone(template_universe);
     }
   }
-  (app.interface.universe_viewer as HTMLInputElement).placeholder! = `${app.selected_universe}`;
+  (
+    app.interface.universe_viewer as HTMLInputElement
+  ).placeholder! = `${app.selected_universe}`;
 };
 
 export const emptyUrl = () => {
@@ -321,7 +323,7 @@ export const loadUniverserFromUrl = (app: Editor): void => {
 export const loadUniverse = (
   app: Editor,
   universeName: string,
-  universe: Universe = template_universe
+  universe: Universe = template_universe,
 ): void => {
   let selectedUniverse = universeName.trim();
   if (app.universes[selectedUniverse] === undefined) {
@@ -334,7 +336,9 @@ export const loadUniverse = (
   // Updating references to the currently selected universe
   app.settings.selected_universe = selectedUniverse;
   app.selected_universe = selectedUniverse;
-  (app.interface.universe_viewer as HTMLInputElement).placeholder! = `${selectedUniverse}`;
+  (
+    app.interface.universe_viewer as HTMLInputElement
+  ).placeholder! = `${selectedUniverse}`;
   // Updating the editor View to reflect the selected universe
   app.updateEditorView();
   // Evaluating the initialisation script for the selected universe

@@ -14,7 +14,7 @@ export const drawCircle = (
   x: number,
   y: number,
   radius: number,
-  color: string
+  color: string,
 ): void => {
   // @ts-ignore
   const canvas: HTMLCanvasElement = app.interface.feedback;
@@ -36,7 +36,7 @@ export const drawCircle = (
 export const blinkScript = (
   app: Editor,
   script: "local" | "global" | "init",
-  no?: number
+  no?: number,
 ) => {
   if (no !== undefined && no < 1 && no > 9) return;
   const blinkDuration =
@@ -55,7 +55,7 @@ export const blinkScript = (
       horizontalOffset + shift,
       app.interface.feedback.clientHeight - 15,
       8,
-      "#fdba74"
+      "#fdba74",
     );
   };
 
@@ -91,7 +91,7 @@ export const blinkScript = (
           0,
           0,
           (app.interface.feedback as HTMLCanvasElement).width,
-          (app.interface.feedback as HTMLCanvasElement).height
+          (app.interface.feedback as HTMLCanvasElement).height,
         );
     }, blinkDuration);
   }
@@ -141,7 +141,7 @@ let lastRenderTime: number = 0;
  */
 export const runOscilloscope = (
   canvas: HTMLCanvasElement,
-  app: Editor
+  app: Editor,
 ): void => {
   let config = app.osc;
   let analyzer = getAnalyser(config.fftSize);
@@ -155,7 +155,7 @@ export const runOscilloscope = (
     width: number,
     height: number,
     offset_height: number,
-    offset_width: number
+    offset_width: number,
   ) {
     const maxFPS = 30;
     const now = performance.now();
@@ -169,10 +169,12 @@ export const runOscilloscope = (
     canvasCtx.clearRect(0, 0, width, height);
 
     const performanceFactor = 1;
-    const reducedDataSize = Math.floor(freqDataArray.length * performanceFactor);
+    const reducedDataSize = Math.floor(
+      freqDataArray.length * performanceFactor,
+    );
     const numBars = Math.min(
       reducedDataSize,
-      app.osc.orientation === "horizontal" ? width : height
+      app.osc.orientation === "horizontal" ? width : height,
     );
     const barWidth =
       app.osc.orientation === "horizontal" ? width / numBars : height / numBars;
@@ -184,7 +186,8 @@ export const runOscilloscope = (
 
     for (let i = 0; i < numBars; i++) {
       barHeight = Math.floor(
-        freqDataArray[Math.floor(i * freqDataArray.length / numBars)] * ((height / 256) * app.osc.size)
+        freqDataArray[Math.floor((i * freqDataArray.length) / numBars)] *
+          ((height / 256) * app.osc.size),
       );
 
       if (app.osc.orientation === "horizontal") {
@@ -192,7 +195,7 @@ export const runOscilloscope = (
           x + offset_width,
           (height - barHeight) / 2 + offset_height,
           barWidth + 1,
-          barHeight
+          barHeight,
         );
         x += barWidth;
       } else {
@@ -200,13 +203,12 @@ export const runOscilloscope = (
           (width - barHeight) / 2 + offset_width,
           y + offset_height,
           barHeight,
-          barWidth + 1
+          barWidth + 1,
         );
         y += barWidth;
       }
     }
   }
-
 
   function draw() {
     // Update the canvas position on each cycle
@@ -230,7 +232,7 @@ export const runOscilloscope = (
         -OFFSET_WIDTH,
         -OFFSET_HEIGHT,
         WIDTH + 2 * OFFSET_WIDTH,
-        HEIGHT + 2 * OFFSET_HEIGHT
+        HEIGHT + 2 * OFFSET_HEIGHT,
       );
       return;
     }
@@ -250,7 +252,7 @@ export const runOscilloscope = (
         -OFFSET_WIDTH,
         -OFFSET_HEIGHT,
         WIDTH + 2 * OFFSET_WIDTH,
-        HEIGHT + 2 * OFFSET_HEIGHT
+        HEIGHT + 2 * OFFSET_HEIGHT,
       );
     }
     canvasCtx.lineWidth = app.osc.thickness;

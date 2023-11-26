@@ -48,7 +48,10 @@ export class Clock {
   lastPlayPressTime: number;
   totalPauseTime: number;
 
-  constructor(public app: Editor, ctx: AudioContext) {
+  constructor(
+    public app: Editor,
+    ctx: AudioContext,
+  ) {
     this.time_position = { bar: 0, beat: 0, pulse: 0 };
     this.time_signature = [4, 4];
     this.logicalTime = 0;

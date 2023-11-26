@@ -19,12 +19,13 @@ export class TransportNode extends AudioWorkletNode {
             this.app.api.MidiConnection.sendMidiClock();
           }
           const futureTimeStamp = this.app.clock.convertTicksToTimeposition(
-            this.app.clock.tick
+            this.app.clock.tick,
           );
           this.app.clock.time_position = futureTimeStamp;
           if (futureTimeStamp.pulse % this.app.clock.ppqn == 0) {
-            this.timeviewer.innerHTML = `${zeroPad(futureTimeStamp.bar, 2)}:${futureTimeStamp.beat + 1
-              } / ${this.app.clock.bpm}`;
+            this.timeviewer.innerHTML = `${zeroPad(futureTimeStamp.bar, 2)}:${
+              futureTimeStamp.beat + 1
+            } / ${this.app.clock.bpm}`;
           }
           if (this.app.exampleIsPlaying) {
             tryEvaluate(this.app, this.app.example_buffer);

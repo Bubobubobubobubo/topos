@@ -11,7 +11,7 @@ import { TonnetzSpaces } from "zifferjs/src/tonnetz";
 export type InputOptions = { [key: string]: string | number };
 
 export class Player extends AbstractEvent {
-  input: string|number;
+  input: string | number;
   ziffers: Ziffers;
   initCallTime: number = 0;
   startCallTime: number = 0;
@@ -26,7 +26,7 @@ export class Player extends AbstractEvent {
   skipIndex = 0;
 
   constructor(
-    input: string|number|Generator<number>,
+    input: string | number | Generator<number>,
     options: InputOptions,
     public app: Editor,
     zid: string = ""
@@ -38,9 +38,9 @@ export class Player extends AbstractEvent {
       this.ziffers = new Ziffers(input, options);
     } else if (typeof input === "number") {
       this.input = input;
-      this.ziffers = Ziffers.fromNumber(input,options);
+      this.ziffers = Ziffers.fromNumber(input, options);
     } else {
-      this.ziffers = Ziffers.fromGenerator(input,options);
+      this.ziffers = Ziffers.fromGenerator(input, options);
       this.input = this.ziffers.input;
     }
     this.zid = zid;
@@ -246,6 +246,7 @@ export class Player extends AbstractEvent {
   }
 
   tonnetz(transform: string, tonnetz: TonnetzSpaces = [3, 4, 5]) {
+    // @ts-ignore
     if (this.atTheBeginning()) this.ziffers.tonnetz(transform, tonnetz);
     return this;
   }

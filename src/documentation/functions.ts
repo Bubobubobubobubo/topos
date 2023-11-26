@@ -15,20 +15,20 @@ You can control scripts programatically. This is the core concept of Topos after
 - <ic>copy_script(from: number, to: number)</ic>: copies a local script denoted by its number to another local script. **This is a destructive operation!**
 
 ${makeExample(
-    "Calling a script! The most important feature!",
-    `
+  "Calling a script! The most important feature!",
+  `
 beat(1) :: script(1)
 `,
-    true
-  )}
+  true,
+)}
 
 ${makeExample(
-    "Calling mutliple scripts at the same time.",
-    `
+  "Calling mutliple scripts at the same time.",
+  `
 beat(1) :: script(1, 3, 5)
 `,
-    false
-  )}
+  false,
+)}
 
 ## Math functions
 	
@@ -42,24 +42,24 @@ beat(1) :: script(1, 3, 5)
 - <ic>delay(ms: number, func: Function): void</ic>: Delays the execution of a function by a given number of milliseconds.
 
 ${makeExample(
-    "Phased woodblocks",
-    `
+  "Phased woodblocks",
+  `
 // Some very low-budget version of phase music
 beat(.5) :: delay(usine(.125) * 80, () => sound('east').out())
 beat(.5) :: delay(50, () => sound('east').out())
 `,
-    true
-  )}
+  true,
+)}
 
 - <ic>delayr(ms: number, nb: number, func: Function): void</ic>: Delays the execution of a function by a given number of milliseconds, repeated a given number of times.
 
 ${makeExample(
-    "Another woodblock texture",
-    `
+  "Another woodblock texture",
+  `
 beat(1) :: delayr(50, 4, () => sound('east').speed([0.5,.25].beat()).out())
 flip(2) :: beat(2) :: delayr(150, 4, () => sound('east').speed([0.5,.25].beat() * 4).out())
 `,
-    true
-  )};
+  true,
+)};
 `;
 };

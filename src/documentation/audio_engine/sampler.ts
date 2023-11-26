@@ -28,8 +28,8 @@ The sampler is a rather complex beast. There is a lot you can do by manipulating
 Let's apply some of these methods naïvely. We will then break everything using simpler examples.
 
 ${makeExample(
-    "Complex sampling duties",
-    `
+  "Complex sampling duties",
+  `
 // Using some of the modifiers described above :)
 beat(.5)::snd('pad').begin(0.2)
   .speed([1, 0.9, 0.8].beat(4))
@@ -38,45 +38,61 @@ beat(.5)::snd('pad').begin(0.2)
   .room(0.8).size(0.5)
   .clip(1).out()
 	`,
-    true
-  )};
+  true,
+)};
 
 
 ## Playback speed / pitching samples
 
 Let's play with the <ic>speed</ic> parameter to control the pitch of sample playback:
 
-${makeExample("Controlling the playback speed", `
+${makeExample(
+  "Controlling the playback speed",
+  `
 beat(0.5)::sound('notes')
   .speed([1,2,3,4].palindrome().beat(0.5)).out()
-`, true)}
+`,
+  true,
+)}
 
 It also works by using negative values. It reverses the playback:
 
-${makeExample("Playing samples backwards", `
+${makeExample(
+  "Playing samples backwards",
+  `
 beat(0.5)::sound('notes')
   .speed(-[1,2,3,4].palindrome().beat(0.5)).out()
-`, true)}
+`,
+  true,
+)}
 	
 Of course you can play melodies using samples:
 
 
-${makeExample("Playing melodies using samples", `
+${makeExample(
+  "Playing melodies using samples",
+  `
 beat(0.5)::sound('notes')
   .room(0.5).size(4)
   .note([0, 2, 3, 4, 5].scale('minor', 50).beat(0.5)).out()
-`, true)}
+`,
+  true,
+)}
 
 ## Panning
 
 To pan samples, use the <ic>.pan</ic> method with a number between <ic>0</ic> and <ic>1</ic>.
 
 
-${makeExample("Playing melodies using samples", `
+${makeExample(
+  "Playing melodies using samples",
+  `
 beat(0.25)::sound('notes')
   .room(0.5).size(4).pan(r(0, 1))
   .note([0, 2, 3, 4, 5].scale('minor', 50).beat(0.25)).out()
-`, true)}
+`,
+  true,
+)}
 
 
 ## Looping over a sample
@@ -84,26 +100,30 @@ beat(0.25)::sound('notes')
 Using <ic>loop</ic> (<ic>1</ic> for looping), <ic>loopBegin</ic> and <ic>loopEnd</ic> (between <ic>0</ic> and <ic>1</ic>), you can loop over the length of a sample. It can be super effective to create granular effects.
 
 
-${makeExample("Granulation using loop", `
+${makeExample(
+  "Granulation using loop",
+  `
 beat(0.25)::sound('fikea').loop(1)
   .lpf(ir(2000, 5000))
   .loopBegin(0).loopEnd(r(0, 1))
   .room(0.5).size(4).pan(r(0, 1))
   .note([0, 2, 3, 4, 5].scale('minor', 50).beat(0.25)).out()
-`, true)}
+`,
+  true,
+)}
 
 ## Stretching a sample
 
 The <ic>stretch</ic> parameter can help you to stretch long samples like amen breaks:
 
 ${makeExample(
-    "Playing an amen break",
-    `
+  "Playing an amen break",
+  `
 // Note that stretch has the same value as beat
 beat(4) :: sound('amen1').n(11).stretch(4).out()
 beat(1) :: sound('kick').shape(0.35).out()`,
-    true,
-  )};
+  true,
+)};
 
 ## Cutting samples
 
@@ -111,34 +131,45 @@ Sometimes, you will find it necessary to cut a sample. It can be because the sam
 
 Know about the <ic>begin</ic> and <ic>end</ic> parameters. They are not related to the sampler itself, but to the length of the event you are playing. Let's cut the granular example:
 
-${makeExample("Cutting a sample using end", `
+${makeExample(
+  "Cutting a sample using end",
+  `
 beat(0.25)::sound('notes')
   .end(usine(1/2)/0.5)
   .room(0.5).size(4).pan(r(0, 1))
   .note([0, 2, 3, 4, 5].scale('minor', 50).beat(0.25)).out()
-`, true)}
+`,
+  true,
+)}
 
 You can also use <ic>clip</ic> to cut the sample everytime a new sample comes in:
 
 
-${makeExample("Cutting a sample using end", `
+${makeExample(
+  "Cutting a sample using end",
+  `
 beat(0.125)::sound('notes')
   .cut(1)
   .room(0.5).size(4).pan(r(0, 1))
   .note([0, 2, 3, 4, 5].scale('minor', 50).beat(0.125) 
   + [-12,12].beat()).out()
-`, true)}
+`,
+  true,
+)}
 
 ## Adding vibrato to samples
 
 You can add vibrato to any sample using <ic>vib</ic> and <ic>vibmod</ic>:
 
-${makeExample("Adding vibrato to a sample", `
+${makeExample(
+  "Adding vibrato to a sample",
+  `
 
 beat(1)::sound('fhang').vib([1, 2, 4].bar()).vibmod([0.5, 2].beat()).out()
-`, true)}
+`,
+  true,
+)}
 
 
-`}
-
-
+`;
+};

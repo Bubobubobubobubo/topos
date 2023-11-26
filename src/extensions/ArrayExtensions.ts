@@ -141,7 +141,7 @@ export const makeArrayExtensions = (api: UserAPI) => {
     }
     return Array.from(
       { length: times },
-      () => Math.floor(api.randomGen() * (max - min + 1)) + min
+      () => Math.floor(api.randomGen() * (max - min + 1)) + min,
     );
   };
 
@@ -164,7 +164,7 @@ export const makeArrayExtensions = (api: UserAPI) => {
     const chunk_size = divisor; // Get the first argument (chunk size)
     const timepos = api.app.clock.pulses_since_origin;
     const slice_count = Math.floor(
-      timepos / Math.floor(chunk_size * api.ppqn())
+      timepos / Math.floor(chunk_size * api.ppqn()),
     );
     return this[slice_count % this.length];
   };
@@ -174,12 +174,12 @@ export const makeArrayExtensions = (api: UserAPI) => {
     const timepos = api.app.clock.pulses_since_origin;
     const ppqn = api.ppqn();
     const adjustedDurations: number[] = this.map(
-      (_, index) => durations[index % durations.length]
+      (_, index) => durations[index % durations.length],
     );
     const totalDurationInPulses = adjustedDurations.reduce(
       // @ts-ignore
       (acc, duration) => acc + duration * ppqn,
-      0
+      0,
     );
     const loopPosition = timepos % totalDurationInPulses;
     let cumulativeDuration = 0;
@@ -402,7 +402,7 @@ export const makeArrayExtensions = (api: UserAPI) => {
 
 Array.prototype.scale = function (
   scale: string = "major",
-  base_note: number = 0
+  base_note: number = 0,
 ) {
   /**
    * @param scale - the scale name
@@ -426,7 +426,7 @@ Array.prototype.scale = function (
 
 Array.prototype.scaleArp = function (
   scaleName: string = "major",
-  boundary: number = 0
+  boundary: number = 0,
 ) {
   /*
    * @param scaleName - the scale name

@@ -14,10 +14,10 @@ Topos is made to be controlled entirely with a keyboard. It is recommanded to st
 | Shortcut | Key   | Description                                                |
 |----------|-------|------------------------------------------------------------|
 |**Start/Pause** transport|${key_shortcut(
-    "Ctrl + P"
+    "Ctrl + P",
   )}|Start or pause audio playback|
 |**Stop** the transport |${key_shortcut(
-    "Ctrl + S"
+    "Ctrl + S",
   )}|Stop and rewind audio playback|
 	
 ### Moving in the interface
@@ -26,15 +26,15 @@ Topos is made to be controlled entirely with a keyboard. It is recommanded to st
 |----------|-------|------------------------------------------------------------|
 |Universe switch|${key_shortcut("Ctrl + B")}|Switch to a new universe|
 |Global Script|${key_shortcut("Ctrl + G")} or ${key_shortcut(
-    "F10"
+    "F10",
   )}|Switch to global script |
 |Local scripts|${key_shortcut("Ctrl + L")} or ${key_shortcut(
-    "F11"
+    "F11",
   )}|Switch to local scripts |
 |Init script|${key_shortcut("Ctrl + L")}|Switch to init script|
 |Note File|${key_shortcut("Ctrl + N")}|Switch to note file|
 |Local Script|${key_shortcut("F1")} to ${key_shortcut(
-    "F9"
+    "F9",
   )}|Switch to a specific local script|
 |Documentation|${key_shortcut("Ctrl + D")}|Open the documentation|
 	
@@ -44,10 +44,10 @@ Topos is made to be controlled entirely with a keyboard. It is recommanded to st
 |----------|-------|------------------------------------------------------------|
 |Evaluate|${key_shortcut("Ctrl + Enter")}| Evaluate the current script        |
 |Local Eval|${key_shortcut("Ctrl + F1")} to ${key_shortcut(
-    "Ctrl + F9"
+    "Ctrl + F9",
   )}|Local File Evaluation|
 |Force Eval|${key_shortcut(
-    "Ctrl + Shift + Enter"
+    "Ctrl + Shift + Enter",
   )}|Force evaluation of the current script|
 	
 ### Special
@@ -60,9 +60,9 @@ Topos is made to be controlled entirely with a keyboard. It is recommanded to st
 # Keyboard Fill
 
 By pressing the ${key_shortcut(
-    "Alt"
+    "Alt",
   )} key, you can trigger the <ic>Fill</ic> mode which can either be <ic>true</ic> or <ic>false</ic>. The fill will be set to <ic>true</ic> as long as the key is held. Try pressing ${key_shortcut(
-    "Alt"
+    "Alt",
   )} when playing this example:
 
 ${makeExample(
@@ -70,7 +70,7 @@ ${makeExample(
   `
 beat(fill() ? 1/4 : 1/2)::sound('cp').out()
 `,
-  true
+  true,
 )}
 
 `;

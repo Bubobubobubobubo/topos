@@ -25,8 +25,8 @@ There are some basic controls over the playback of each sample. This allows you 
 | <ic>pan</ic>     |       | Stereo position of the audio playback (<ic>0</ic> = left, <ic>1</ic> = right)|
 	
 ${makeExample(
-    "Complex sampling duties",
-    `
+  "Complex sampling duties",
+  `
 // Using some of the modifiers described above :)
 beat(.5)::snd('pad').begin(0.2)
   .speed([1, 0.9, 0.8].beat(4))
@@ -35,17 +35,17 @@ beat(.5)::snd('pad').begin(0.2)
   .room(0.8).size(0.5)
   .clip(1).out()
 	`,
-    true
-  )};
+  true,
+)};
 	
 ${makeExample(
-    "Playing an amen break",
-    `
+  "Playing an amen break",
+  `
 // Note that stretch has the same value as beat
 beat(4) :: sound('amen1').n(11).stretch(4).out()
 beat(1) :: sound('kick').shape(0.35).out()`,
-    true,
-  )};
+  true,
+)};
 
 	
 ## Filters
@@ -63,15 +63,15 @@ There are three basic filters: a _lowpass_, _highpass_ and _bandpass_ filters wi
 | <ic>vowel</ic> |       | Formant filter with (vocal quality)     |
 
 ${makeExample(
-    "Filter sweep using a low frequency oscillator",
-    `
+  "Filter sweep using a low frequency oscillator",
+  `
 beat(.5) && snd('sawtooth')
   .cutoff([2000,500].pick() + usine(.5) * 4000)
   .resonance(0.9).freq([100,150].pick())
   .out()
 	`,
-    true
-  )};
+  true,
+)};
 	
 	
 ## Compression

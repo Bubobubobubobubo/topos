@@ -41,16 +41,28 @@ interface ControlChange {
 export async function loadSamples() {
   return Promise.all([
     initAudioOnFirstClick(),
-    samples("github:tidalcycles/Dirt-Samples/master", undefined, { tag: "Tidal" }).then(() =>
-      registerSynthSounds()
-    ),
+    samples("github:tidalcycles/Dirt-Samples/master", undefined, {
+      tag: "Tidal",
+    }).then(() => registerSynthSounds()),
     registerZZFXSounds(),
-    samples(drums, "github:ritchse/tidal-drum-machines/main/machines/", { tag: "Machines" }),
-    samples("github:Bubobubobubobubo/Dough-Fox/main", undefined, { tag: "FoxDot" }),
-    samples("github:Bubobubobubobubo/Dough-Samples/main", undefined, { tag: "Pack" }),
-    samples("github:Bubobubobubobubo/Dough-Amiga/main", undefined, { tag: "Amiga" }),
-    samples("github:Bubobubobubobubo/Dough-Amen/main", undefined, { tag: "Amen" }),
-    samples("github:Bubobubobubobubo/Dough-Waveforms/main", undefined, { tag: "Waveforms" }),
+    samples(drums, "github:ritchse/tidal-drum-machines/main/machines/", {
+      tag: "Machines",
+    }),
+    samples("github:Bubobubobubobubo/Dough-Fox/main", undefined, {
+      tag: "FoxDot",
+    }),
+    samples("github:Bubobubobubobubo/Dough-Samples/main", undefined, {
+      tag: "Pack",
+    }),
+    samples("github:Bubobubobubobubo/Dough-Amiga/main", undefined, {
+      tag: "Amiga",
+    }),
+    samples("github:Bubobubobubobubo/Dough-Amen/main", undefined, {
+      tag: "Amen",
+    }),
+    samples("github:Bubobubobubobubo/Dough-Waveforms/main", undefined, {
+      tag: "Waveforms",
+    }),
   ]);
 }
 
@@ -1281,7 +1293,7 @@ export class UserAPI {
     const results: boolean[] = nArray.map(
       (value) =>
         (this.app.clock.pulses_since_origin - Math.floor(nudge * this.ppqn())) %
-        Math.floor(value * this.ppqn()) ===
+          Math.floor(value * this.ppqn()) ===
         0
     );
     return results.some((value) => value === true);
@@ -1301,7 +1313,7 @@ export class UserAPI {
     const results: boolean[] = nArray.map(
       (value) =>
         (this.app.clock.pulses_since_origin - nudgeInPulses) %
-        Math.floor(value * barLength) ===
+          Math.floor(value * barLength) ===
         0
     );
     return results.some((value) => value === true);
@@ -1901,10 +1913,13 @@ export class UserAPI {
   // =============================================================
 
   register = (name: string, operation: EventOperation<AbstractEvent>): void => {
-    AbstractEvent.prototype[name] = function(this: AbstractEvent, ...args: any[]) {
+    AbstractEvent.prototype[name] = function (
+      this: AbstractEvent,
+      ...args: any[]
+    ) {
       return operation(this, ...args);
     };
-  }
+  };
 
   public shuffle = <T>(array: T[]): T[] => {
     /**

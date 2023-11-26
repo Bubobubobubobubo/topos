@@ -3,8 +3,8 @@
 @tailwind utilities;
 
 @layer utilities {
-  .striped .col-span-3, .striped .col-span-2 {
-    @apply bg-neutral-300
+  .striped .col-span-3,
+  .striped .col-span-2 {
+    @apply bg-neutral-300;
   }
 }
-

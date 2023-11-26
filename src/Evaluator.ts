@@ -1,72 +1,61 @@
 import type { Editor } from "./main";
 import type { File } from "./FileManagement";
 
-const delay = (ms: number) =>
-  new Promise((_, reject) =>
-    setTimeout(() => reject(new Error("Operation took too long")), ms)
-  );
-
+const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 const codeReplace = (code: string): string => {
-  let new_code = code.replace(/->/g, "&&").replace(/::/g, "&&");
-  return new_code;
+  return code.replace(/->|::/g, "&&");
 };
 
-const tryCatchWrapper = (
+const tryCatchWrapper = async (
   application: Editor,
-  code: string
+  code: string,
 ): Promise<boolean> => {
-  return new Promise((resolve, _) => {
-    try {
-      Function(
-        `"use strict";try{
-          ${codeReplace(code)}; /* break block comments */;
-      } catch (e) {console.log(e); _reportError(e);};`
-      ).call(application.api);
-      resolve(true);
-    } catch (error) {
-      application.interface.error_line.innerHTML = error as string;
-      application.api._reportError(error as string)
-      resolve(false);
-    }
-  });
+  try {
+    await new Function(`"use strict"; ${codeReplace(code)}`).call(
+      application.api,
+    );
+    return true;
+  } catch (error) {
+    application.interface.error_line.innerHTML = error as string;
+    application.api._reportError(error as string);
+    return false;
+  }
 };
 
 const cache = new Map<string, Function>();
-const MAX_CACHE_SIZE = 20;
+const MAX_CACHE_SIZE = 40;
 
 const addFunctionToCache = (code: string, fn: Function) => {
   if (cache.size >= MAX_CACHE_SIZE) {
-    // Delete the first item if cache size exceeds max size
     cache.delete(cache.keys().next().value);
   }
   cache.set(code, fn);
 };
 
+// Optimized evaluate function with reduced complexity
 export const tryEvaluate = async (
   application: Editor,
   code: File,
-  timeout = 5000
+  timeout = 5000,
 ): Promise<void> => {
-  try {
-    code.evaluations!++;
-    const candidateCode = code.candidate;
+  code.evaluations!++;
+  const candidateCode = code.candidate;
 
-    if (cache.has(candidateCode)) {
-      // If the code is already in cache, use it
-      cache.get(candidateCode)!.call(application.api);
+  try {
+    const cachedFunction = cache.get(candidateCode);
+    if (cachedFunction) {
+      cachedFunction.call(application.api);
     } else {
-      const wrappedCode = `let i = ${code.evaluations};` + candidateCode;
-      // Otherwise, evaluate the code and if valid, add it to the cache
+      const wrappedCode = `let i = ${code.evaluations}; ${candidateCode}`;
       const isCodeValid = await Promise.race([
-        tryCatchWrapper(application, wrappedCode as string),
+        tryCatchWrapper(application, wrappedCode),
         delay(timeout),
       ]);
+
       if (isCodeValid) {
         code.committed = code.candidate;
         const newFunction = new Function(
-          `"use strict";try{${codeReplace(
-            wrappedCode
-          )}} catch (e) {console.log(e); _reportError(e);};`
+          `"use strict"; ${codeReplace(wrappedCode)}`,
         );
         addFunctionToCache(candidateCode, newFunction);
       } else {
@@ -75,14 +64,14 @@ export const tryEvaluate = async (
     }
   } catch (error) {
     application.interface.error_line.innerHTML = error as string;
-    application.api._reportError(error as string)
+    application.api._reportError(error as string);
   }
 };
 
 export const evaluate = async (
   application: Editor,
   code: File,
-  timeout = 1000
+  timeout = 1000,
 ): Promise<void> => {
   try {
     await Promise.race([
@@ -98,7 +87,7 @@ export const evaluate = async (
 
 export const evaluateOnce = async (
   application: Editor,
-  code: string
+  code: string,
 ): Promise<void> => {
   /**
    * Evaluates the code once without any caching or error-handling mechanisms besides the tryCatchWrapper.

@@ -24,12 +24,12 @@ For that reason, it is often a good idea to set fixed reverb values per orbit. D
 | <ic>roomdim</ic> |     | Reverb lowpass frequency at -60db (in hertz) |
 
 ${makeExample(
-    "Clapping in the cavern",
-    `
+  "Clapping in the cavern",
+  `
 beat(2)::snd('cp').room(0.5).size(4).out()
 	`,
-    true
-  )};
+  true,
+)};
 	
 ## Delay
 	
@@ -42,10 +42,13 @@ A good sounding delay unit that can go into feedback territory. Use it without m
 | <ic>delayfeedback</ic> | delayfb | Delay feedback (between <ic>0</ic> and <ic>1</ic>) |
 	
 ${makeExample(
-    "Who doesn't like delay?", `
+  "Who doesn't like delay?",
+  `
 beat(2)::snd('cp').delay(0.5).delaytime(0.75).delayfb(0.8).out()
 beat(4)::snd('snare').out()
-beat(1)::snd('kick').out()`, true)}
+beat(1)::snd('kick').out()`,
+  true,
+)}
 
 ## Phaser
 
@@ -56,13 +59,17 @@ beat(1)::snd('kick').out()`, true)}
 | <ic>phaserSweep</ic> | <ic>phassweep</ic>  | Phaser frequency sweep (in hertz) |
 | <ic>phaserCenter</ic> | <ic>phascenter</ic>  | Phaser center frequency (default to 1000) |
 
-${makeExample("Super cool phaser lick", `
+${makeExample(
+  "Super cool phaser lick",
+  `
 rhythm(.5, 7, 8)::sound('wt_stereo')
   .phaser(0.75).phaserSweep(3000)
   .phaserCenter(1500).phaserDepth(1)
   .note([0, 1, 2, 3, 4, 5, 6].scale('pentatonic', 50).beat(0.25))
   .room(0.5).size(4).out()
-`, true)}
+`,
+  true,
+)}
 
 ## Distorsion, saturation, destruction
 
@@ -76,11 +83,12 @@ Three additional effects that are easy enough to understand. These effects are d
 	
 	
 ${makeExample(
-      "Crunch... crunch... crunch!",
-      `
+  "Crunch... crunch... crunch!",
+  `
 beat(.5)::snd('pad').coarse($(1) % 16).clip(.5).out(); // Comment me
 beat(.5)::snd('pad').crush([16, 8, 4].beat(2)).clip(.5).out()
 	`,
-      true
-    )};
-`}
+  true,
+)};
+`;
+};

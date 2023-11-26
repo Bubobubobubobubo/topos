@@ -118,32 +118,40 @@ export const installInterfaceLogic = (app: Editor) => {
 
   app.interface.universe_viewer.addEventListener("keydown", (event: any) => {
     if (event.key === "Enter") {
-      let content = (app.interface.universe_viewer as HTMLInputElement).value.trim();
+      let content = (
+        app.interface.universe_viewer as HTMLInputElement
+      ).value.trim();
       if (content.length > 2 && content.length < 40) {
         if (content !== app.selected_universe) {
-          Object.defineProperty(app.universes, content,
+          Object.defineProperty(
+            app.universes,
+            content,
             // @ts-ignore
-            Object.getOwnPropertyDescriptor(app.universes, app.selected_universe));
+            Object.getOwnPropertyDescriptor(
+              app.universes,
+              app.selected_universe,
+            ),
+          );
           delete app.universes[app.selected_universe];
         }
         app.selected_universe = content;
         loadUniverse(app, app.selected_universe);
-        (app.interface.universe_viewer as HTMLInputElement).placeholder = content;
-        (app.interface.universe_viewer as HTMLInputElement).value = '';
+        (app.interface.universe_viewer as HTMLInputElement).placeholder =
+          content;
+        (app.interface.universe_viewer as HTMLInputElement).value = "";
       }
     }
   });
 
-
   app.interface.audio_nudge_range.addEventListener("input", () => {
     app.clock.nudge = parseInt(
-      (app.interface.audio_nudge_range as HTMLInputElement).value
+      (app.interface.audio_nudge_range as HTMLInputElement).value,
     );
   });
 
   app.interface.dough_nudge_range.addEventListener("input", () => {
     app.dough_nudge = parseInt(
-      (app.interface.dough_nudge_range as HTMLInputElement).value
+      (app.interface.dough_nudge_range as HTMLInputElement).value,
     );
   });
 
@@ -227,16 +235,16 @@ export const installInterfaceLogic = (app: Editor) => {
   });
 
   app.interface.local_button.addEventListener("click", () =>
-    app.changeModeFromInterface("local")
+    app.changeModeFromInterface("local"),
   );
   app.interface.global_button.addEventListener("click", () =>
-    app.changeModeFromInterface("global")
+    app.changeModeFromInterface("global"),
   );
   app.interface.init_button.addEventListener("click", () =>
-    app.changeModeFromInterface("init")
+    app.changeModeFromInterface("init"),
   );
   app.interface.note_button.addEventListener("click", () =>
-    app.changeModeFromInterface("notes")
+    app.changeModeFromInterface("notes"),
   );
 
   app.interface.font_family_selector.addEventListener("change", () => {
@@ -255,7 +263,7 @@ export const installInterfaceLogic = (app: Editor) => {
             fontSize: app.settings.font_size + "px",
           },
           ".cm-gutters": { fontSize: app.settings.font_size + "px" },
-        })
+        }),
       ),
     });
   });
@@ -275,7 +283,7 @@ export const installInterfaceLogic = (app: Editor) => {
             fontSize: app.settings.font_size + "px",
           },
           ".cm-gutters": { fontSize: app.settings.font_size + "px" },
-        })
+        }),
       ),
     });
   });
@@ -283,7 +291,7 @@ export const installInterfaceLogic = (app: Editor) => {
   app.interface.settings_button.addEventListener("click", () => {
     // Populate the font selector
     const fontFamilySelect = document.getElementById(
-      "font-family"
+      "font-family",
     ) as HTMLSelectElement | null;
     if (fontFamilySelect) {
       fontFamilySelect.value = app.settings.font;
@@ -294,7 +302,7 @@ export const installInterfaceLogic = (app: Editor) => {
     doughNudgeRange.value = app.dough_nudge.toString();
     // @ts-ignore
     const doughNumber = document.getElementById(
-      "doughnumber"
+      "doughnumber",
     ) as HTMLInputElement;
     doughNumber.value = app.dough_nudge.toString();
     if (app.settings.font_size === null) {
@@ -350,7 +358,7 @@ export const installInterfaceLogic = (app: Editor) => {
             fontSize: app.settings.font_size + "px",
           },
           ".cm-gutters": { fontSize: app.settings.font_size + "px" },
-        })
+        }),
       ),
     });
   });
@@ -408,7 +416,7 @@ export const installInterfaceLogic = (app: Editor) => {
     app.settings.tips = checked;
     app.view.dispatch({
       effects: app.hoveringCompartment.reconfigure(
-        checked ? inlineHoveringTips : []
+        checked ? inlineHoveringTips : [],
       ),
     });
   });
@@ -421,7 +429,7 @@ export const installInterfaceLogic = (app: Editor) => {
     app.settings.completions = checked;
     app.view.dispatch({
       effects: app.completionsCompartment.reconfigure(
-        checked ? jsCompletions : []
+        checked ? jsCompletions : [],
       ),
     });
   });
@@ -444,7 +452,7 @@ export const installInterfaceLogic = (app: Editor) => {
 
   app.interface.midi_clock_ppqn.addEventListener("change", () => {
     let value = parseInt(
-      (app.interface.midi_clock_ppqn as HTMLInputElement).value
+      (app.interface.midi_clock_ppqn as HTMLInputElement).value,
     );
     app.settings.midi_clock_ppqn = value;
   });

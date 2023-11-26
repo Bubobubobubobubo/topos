@@ -18,14 +18,13 @@ Three additional effects that are easy enough to understand. These effects are d
 	
 	
 ${makeExample(
-    "Crunch... crunch... crunch!",
-    `
+  "Crunch... crunch... crunch!",
+  `
 beat(.5)::snd('pad').coarse($(1) % 16).clip(.5).out(); // Comment me
 beat(.5)::snd('pad').crush([16, 8, 4].beat(2)).clip(.5).out()
 	`,
-    true
-  )};
+  true,
+)};
 
-`}
-
-
+`;
+};
