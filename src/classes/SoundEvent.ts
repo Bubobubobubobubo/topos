@@ -16,6 +16,7 @@ import {
   superdough,
   // @ts-ignore
 } from "superdough";
+import { Sound } from "zifferjs/src/types";
 
 export type SoundParams = {
   dur: number | number[];
@@ -35,7 +36,16 @@ export class SoundEvent extends AudibleEvent {
   nudge: number;
   sound: any;
 
-  private methodMap = {
+  public updateValue<T>(
+    key: string,
+    value: T | T[] | SoundParams[] | null
+  ): this {
+    if (value == null) return this;
+    this.values[key] = value;
+    return this;
+  }
+
+  private static methodMap = {
     volume: ["volume", "vol"],
     zrand: ["zrand", "zr"],
     curve: ["curve"],
@@ -67,17 +77,23 @@ export class SoundEvent extends AudibleEvent {
     phaserDepth: ["phaserDepth", "phasdepth"],
     phaserSweep: ["phaserSweep", "phassweep"],
     phaserCenter: ["phaserCenter", "phascenter"],
-    fmadsr: (a: number, d: number, s: number, r: number) => {
-      this.updateValue("fmattack", a);
-      this.updateValue("fmdecay", d);
-      this.updateValue("fmsustain", s);
-      this.updateValue("fmrelease", r);
-      return this;
+    fmadsr: function (
+      self: SoundEvent,
+      a: number,
+      d: number,
+      s: number,
+      r: number
+    ) {
+      self.updateValue("fmattack", a);
+      self.updateValue("fmdecay", d);
+      self.updateValue("fmsustain", s);
+      self.updateValue("fmrelease", r);
+      return self;
     },
-    fmad: (a: number, d: number) => {
-      this.updateValue("fmattack", a);
-      this.updateValue("fmdecay", d);
-      return this;
+    fmad: function (self: SoundEvent, a: number, d: number) {
+      self.updateValue("fmattack", a);
+      self.updateValue("fmdecay", d);
+      return self;
     },
     ftype: ["ftype"],
     fanchor: ["fanchor"],
@@ -85,147 +101,174 @@ export class SoundEvent extends AudibleEvent {
     decay: ["decay", "dec"],
     sustain: ["sustain", "sus"],
     release: ["release", "rel"],
-    adsr: (a: number, d: number, s: number, r: number) => {
-      this.updateValue("attack", a);
-      this.updateValue("decay", d);
-      this.updateValue("sustain", s);
-      this.updateValue("release", r);
-      return this;
+    adsr: function (
+      self: SoundEvent,
+      a: number,
+      d: number,
+      s: number,
+      r: number
+    ) {
+      self.updateValue("attack", a);
+      self.updateValue("decay", d);
+      self.updateValue("sustain", s);
+      self.updateValue("release", r);
+      return self;
     },
-    ad: (a: number, d: number) => {
-      this.updateValue("attack", a);
-      this.updateValue("decay", d);
-      this.updateValue("sustain", 0.0);
-      this.updateValue("release", 0.0);
-      return this;
+    ad: function (self: SoundEvent, a: number, d: number) {
+      self.updateValue("attack", a);
+      self.updateValue("decay", d);
+      self.updateValue("sustain", 0.0);
+      self.updateValue("release", 0.0);
+      return self;
     },
     lpenv: ["lpenv", "lpe"],
     lpattack: ["lpattack", "lpa"],
     lpdecay: ["lpdecay", "lpd"],
     lpsustain: ["lpsustain", "lps"],
     lprelease: ["lprelease", "lpr"],
-    cutoff: (value: number, resonance?: number) => {
-      this.updateValue("cutoff", value);
+    cutoff: function (self: SoundEvent, value: number, resonance?: number) {
+      self.updateValue("cutoff", value);
       if (resonance) {
-        this.updateValue("resonance", resonance);
+        self.updateValue("resonance", resonance);
       }
-      return this;
+      return self;
     },
-    lpf: (value: number, resonance?: number) => {
-      this.updateValue("cutoff", value);
+    lpf: function (self: SoundEvent, value: number, resonance?: number) {
+      self.updateValue("cutoff", value);
       if (resonance) {
-        this.updateValue("resonance", resonance);
+        self.updateValue("resonance", resonance);
       }
-      return this;
+      return self;
     },
-    resonance: (value: number) => {
+    resonance: function (self: SoundEvent, value: number) {
       if (value >= 0 && value <= 1) {
-        this.updateValue("resonance", 50 * value);
+        self.updateValue("resonance", 50 * value);
       }
-      return this;
+      return self;
     },
-    lpadsr: (depth: number, a: number, d: number, s: number, r: number) => {
-      this.updateValue("lpenv", depth);
-      this.updateValue("lpattack", a);
-      this.updateValue("lpdecay", d);
-      this.updateValue("lpsustain", s);
-      this.updateValue("lprelease", r);
-      return this;
+    lpadsr: function (
+      self: SoundEvent,
+      depth: number,
+      a: number,
+      d: number,
+      s: number,
+      r: number
+    ) {
+      self.updateValue("lpenv", depth);
+      self.updateValue("lpattack", a);
+      self.updateValue("lpdecay", d);
+      self.updateValue("lpsustain", s);
+      self.updateValue("lprelease", r);
+      return self;
     },
-    lpad: (depth: number, a: number, d: number) => {
-      this.updateValue("lpenv", depth);
-      this.updateValue("lpattack", a);
-      this.updateValue("lpdecay", d);
-      this.updateValue("lpsustain", 0);
-      this.updateValue("lprelease", 0);
-      return this;
+    lpad: function (self: SoundEvent, depth: number, a: number, d: number) {
+      self.updateValue("lpenv", depth);
+      self.updateValue("lpattack", a);
+      self.updateValue("lpdecay", d);
+      self.updateValue("lpsustain", 0);
+      self.updateValue("lprelease", 0);
+      return self;
     },
     hpenv: ["hpenv", "hpe"],
     hpattack: ["hpattack", "hpa"],
     hpdecay: ["hpdecay", "hpd"],
     hpsustain: ["hpsustain", "hpsus"],
     hprelease: ["hprelease", "hpr"],
-    hcutoff: (value: number, resonance?: number) => {
-      this.updateValue("hcutoff", value);
+    hcutoff: function (self: SoundEvent, value: number, resonance?: number) {
+      self.updateValue("hcutoff", value);
       if (resonance) {
-        this.updateValue("hresonance", resonance);
+        self.updateValue("hresonance", resonance);
       }
-      return this;
+      return self;
     },
-    hpf: (value: number, resonance?: number) => {
-      this.updateValue("hcutoff", value);
+    hpf: function (self: SoundEvent, value: number, resonance?: number) {
+      self.updateValue("hcutoff", value);
       if (resonance) {
-        this.updateValue("hresonance", resonance);
+        self.updateValue("hresonance", resonance);
       }
-      return this;
+      return self;
     },
-    hpq: (value: number) => {
-      this.updateValue("hresonance", value);
-      return this;
+    hpq: function (self: SoundEvent, value: number) {
+      self.updateValue("hresonance", value);
+      return self;
     },
-    hpadsr: (depth: number, a: number, d: number, s: number, r: number) => {
-      this.updateValue("hpenv", depth);
-      this.updateValue("hpattack", a);
-      this.updateValue("hpdecay", d);
-      this.updateValue("hpsustain", s);
-      this.updateValue("hprelease", r);
-      return this;
+    hpadsr: function (
+      self: SoundEvent,
+      depth: number,
+      a: number,
+      d: number,
+      s: number,
+      r: number
+    ) {
+      self.updateValue("hpenv", depth);
+      self.updateValue("hpattack", a);
+      self.updateValue("hpdecay", d);
+      self.updateValue("hpsustain", s);
+      self.updateValue("hprelease", r);
+      return self;
     },
-    hpad: (depth: number, a: number, d: number) => {
-      this.updateValue("hpenv", depth);
-      this.updateValue("hpattack", a);
-      this.updateValue("hpdecay", d);
-      this.updateValue("hpsustain", 0);
-      this.updateValue("hprelease", 0);
-      return this;
+    hpad: function (self: SoundEvent, depth: number, a: number, d: number) {
+      self.updateValue("hpenv", depth);
+      self.updateValue("hpattack", a);
+      self.updateValue("hpdecay", d);
+      self.updateValue("hpsustain", 0);
+      self.updateValue("hprelease", 0);
+      return self;
     },
     bpenv: ["bpenv", "bpe"],
     bpattack: ["bpattack", "bpa"],
     bpdecay: ["bpdecay", "bpd"],
     bpsustain: ["bpsustain", "bps"],
     bprelease: ["bprelease", "bpr"],
-    bandf: (value: number, resonance?: number) => {
-      this.updateValue("bandf", value);
+    bandf: function (self: SoundEvent, value: number, resonance?: number) {
+      self.updateValue("bandf", value);
       if (resonance) {
-        this.updateValue("bandq", resonance);
+        self.updateValue("bandq", resonance);
       }
-      return this;
+      return self;
     },
-    bpf: (value: number, resonance?: number) => {
-      this.updateValue("bandf", value);
+    bpf: function (self: SoundEvent, value: number, resonance?: number) {
+      self.updateValue("bandf", value);
       if (resonance) {
-        this.updateValue("bandq", resonance);
+        self.updateValue("bandq", resonance);
       }
-      return this;
+      return self;
     },
     bandq: ["bandq", "bpq"],
-    bpadsr: (depth: number, a: number, d: number, s: number, r: number) => {
-      this.updateValue("bpenv", depth);
-      this.updateValue("bpattack", a);
-      this.updateValue("bpdecay", d);
-      this.updateValue("bpsustain", s);
-      this.updateValue("bprelease", r);
-      return this;
+    bpadsr: function (
+      self: SoundEvent,
+      depth: number,
+      a: number,
+      d: number,
+      s: number,
+      r: number
+    ) {
+      self.updateValue("bpenv", depth);
+      self.updateValue("bpattack", a);
+      self.updateValue("bpdecay", d);
+      self.updateValue("bpsustain", s);
+      self.updateValue("bprelease", r);
+      return self;
     },
-    bpad: (depth: number, a: number, d: number) => {
-      this.updateValue("bpenv", depth);
-      this.updateValue("bpattack", a);
-      this.updateValue("bpdecay", d);
-      this.updateValue("bpsustain", 0);
-      this.updateValue("bprelease", 0);
-      return this;
+    bpad: function (self: SoundEvent, depth: number, a: number, d: number) {
+      self.updateValue("bpenv", depth);
+      self.updateValue("bpattack", a);
+      self.updateValue("bpdecay", d);
+      self.updateValue("bpsustain", 0);
+      self.updateValue("bprelease", 0);
+      return self;
     },
     vib: ["vib"],
     vibmod: ["vibmod"],
-    fm: (value: number | string) => {
+    fm: function (self: SoundEvent, value: number | string) {
       if (typeof value === "number") {
-        this.values["fmi"] = value;
+        self.values["fmi"] = value;
       } else {
         let values = value.split(":");
-        this.values["fmi"] = parseFloat(values[0]);
-        if (values.length > 1) this.values["fmh"] = parseFloat(values[1]);
+        self.values["fmi"] = parseFloat(values[0]);
+        if (values.length > 1) self.values["fmh"] = parseFloat(values[1]);
       }
-      return this;
+      return self;
     },
     loop: ["loop"],
     loopBegin: ["loopBegin", "loopb"],
@@ -233,13 +276,13 @@ export class SoundEvent extends AudibleEvent {
     begin: ["begin"],
     end: ["end"],
     gain: ["gain"],
-    dbgain: (value: number) => {
-      this.updateValue("gain", Math.min(Math.pow(10, value / 20), 10));
-      return this;
+    dbgain: function (self: SoundEvent, value: number) {
+      self.updateValue("gain", Math.min(Math.pow(10, value / 20), 10));
+      return self;
     },
-    db: (value: number) => {
-      this.updateValue("gain", Math.min(Math.pow(10, value / 20), 10));
-      return this;
+    db: function (self: SoundEvent, value: number) {
+      self.updateValue("gain", Math.min(Math.pow(10, value / 20), 10));
+      return self;
     },
     velocity: ["velocity", "vel"],
     pan: ["pan"],
@@ -260,62 +303,71 @@ export class SoundEvent extends AudibleEvent {
     roomlp: ["roomlp", "rlp"],
     roomdim: ["roomdim", "rdim"],
     sound: ["s", "sound"],
-    size: (value: number) => {
-      this.updateValue("roomsize", value);
-      return this;
+    size: function (self: SoundEvent, value: number) {
+      self.updateValue("roomsize", value);
+      return self;
     },
-    sz: (value: number) => {
-      this.updateValue("roomsize", value);
-      return this;
+    sz: function (self: SoundEvent, value: number) {
+      self.updateValue("roomsize", value);
+      return self;
     },
     comp: ["compressor", "cmp"],
-    ratio: (value: number) => {
-      this.updateValue("compressorRatio", value);
-      return this;
+    ratio: function (self: SoundEvent, value: number) {
+      self.updateValue("compressorRatio", value);
+      return self;
     },
-    knee: (value: number) => {
-      this.updateValue("compressorKnee", value);
-      return this;
+    knee: function (self: SoundEvent, value: number) {
+      self.updateValue("compressorKnee", value);
+      return self;
     },
-    compAttack: (value: number) => {
-      this.updateValue("compressorAttack", value);
-      return this;
+    compAttack: function (self: SoundEvent, value: number) {
+      self.updateValue("compressorAttack", value);
+      return self;
     },
-    compRelease: (value: number) => {
-      this.updateValue("compressorRelease", value);
-      return this;
+    compRelease: function (self: SoundEvent, value: number) {
+      self.updateValue("compressorRelease", value);
+      return self;
     },
-    stretch: (beat: number) => {
-      this.updateValue("unit", "c");
-      this.updateValue("speed", 1 / beat);
-      this.updateValue("cut", beat);
-      return this;
+    stretch: function (self: SoundEvent, beat: number) {
+      self.updateValue("unit", "c");
+      self.updateValue("speed", 1 / beat);
+      self.updateValue("cut", beat);
+      return self;
     },
   };
 
-  constructor(
-    sound: string | string[] | SoundParams,
-    public app: Editor,
-  ) {
+  constructor(sound: string | string[] | SoundParams, public app: Editor) {
     super(app);
     this.nudge = app.dough_nudge / 100;
 
-    for (const [methodName, keys] of Object.entries(this.methodMap)) {
-      if (Symbol.iterator in Object(keys)) {
+    for (const [methodName, keys] of Object.entries(SoundEvent.methodMap)) {
+      if (typeof keys === "object" && Symbol.iterator in Object(keys)) {
         for (const key of keys as string[]) {
-          // @ts-ignore
+          // Using arrow function to maintain 'this' context
           this[key] = (value: number) => this.updateValue(keys[0], value);
         }
       } else {
-        // @ts-ignore
-        this[methodName] = keys;
+        // this[methodName] = keys.bind(this);
+        this[methodName] = (...args) => keys(this, ...args);
       }
     }
+
+    // for (const [methodName, keys] of Object.entries(SoundEvent.methodMap)) {
+    //   if (typeof keys === "object" && Symbol.iterator in Object(keys)) {
+    //     for (const key of keys as string[]) {
+    //       // @ts-ignore
+    //       this[key] = (value: number) => this.updateValue(this, keys[0], value);
+    //     }
+    //   } else {
+    //     // @ts-ignore
+    //     this[methodName] = keys;
+    //   }
+    // }
     this.values = this.processSound(sound);
   }
 
   private processSound = (
-    sound: string | string[] | SoundParams | SoundParams[],
+    sound: string | string[] | SoundParams | SoundParams[]
   ): SoundParams => {
     if (Array.isArray(sound) && typeof sound[0] === "string") {
       const s: string[] = [];
@@ -357,15 +409,6 @@ export class SoundEvent extends AudibleEvent {
     }
   };
 
-  private updateValue<T>(
-    key: string,
-    value: T | T[] | SoundParams[] | null,
-  ): this {
-    if (value == null) return this;
-    this.values[key] = value;
-    return this;
-  }
-
   // ================================================================================
   // AbstactEvent overrides
   // ================================================================================
@@ -395,7 +438,7 @@ export class SoundEvent extends AudibleEvent {
         (event.key as number) || "C4",
         (event.pitch as number) || 0,
         (event.parsedScale as number[]) || event.scale || "MAJOR",
-        (event.octave as number) || 0,
+        (event.octave as number) || 0
       );
       event.note = note;
       event.freq = midiToFreq(note);
@@ -415,7 +458,7 @@ export class SoundEvent extends AudibleEvent {
   public invert = (howMany: number = 0) => {
     if (this.values.chord) {
       let notes = this.values.chord.map(
-        (obj: { [key: string]: number }) => obj.note,
+        (obj: { [key: string]: number }) => obj.note
       );
       notes = howMany < 0 ? [...notes].reverse() : notes;
       for (let i = 0; i < Math.abs(howMany); i++) {
@@ -457,7 +500,7 @@ export class SoundEvent extends AudibleEvent {
       superdough(
         filteredEvent,
         this.nudge - this.app.clock.deviation,
-        filteredEvent.dur,
+        filteredEvent.dur
       );
     }
   };
