@@ -32,13 +32,13 @@ export const saveBeforeExit = (app: Editor): null => {
 export const installWindowBehaviors = (
   app: Editor,
   window: Window,
-  preventMultipleTabs: boolean = false
+  preventMultipleTabs: boolean = false,
 ) => {
   window.addEventListener("resize", () =>
-    handleResize(app.interface.scope as HTMLCanvasElement)
+    handleResize(app.interface.scope as HTMLCanvasElement),
   );
   window.addEventListener("resize", () =>
-    handleResize(app.interface.feedback as HTMLCanvasElement)
+    handleResize(app.interface.feedback as HTMLCanvasElement),
   );
   window.addEventListener("beforeunload", (event) => {
     event.preventDefault();
@@ -61,11 +61,11 @@ export const installWindowBehaviors = (
         if (e.key == "page_available") {
           document.getElementById("all")!.classList.add("invisible");
           alert(
-            "Topos is already opened in another tab. Close this tab now to prevent data loss."
+            "Topos is already opened in another tab. Close this tab now to prevent data loss.",
           );
         }
       },
-      false
+      false,
     );
   }
 };

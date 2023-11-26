@@ -29,7 +29,7 @@ export class Player extends AbstractEvent {
     input: string | number | Generator<number>,
     options: InputOptions,
     public app: Editor,
-    zid: string = ""
+    zid: string = "",
   ) {
     super(app);
     this.options = options;
@@ -159,7 +159,7 @@ export class Player extends AbstractEvent {
     if (this.areWeThereYet()) {
       const event = this.next() as Pitch | Chord | ZRest;
       const noteLengthInSeconds = this.app.clock.convertPulseToSecond(
-        event.duration * 4 * this.app.clock.ppqn
+        event.duration * 4 * this.app.clock.ppqn,
       );
       if (event instanceof Pitch) {
         const obj = event.getExisting(
@@ -169,7 +169,7 @@ export class Player extends AbstractEvent {
           "key",
           "scale",
           "octave",
-          "parsedScale"
+          "parsedScale",
         ) as SoundParams;
         if (event.sound) name = event.sound as string;
         if (event.soundIndex) obj.n = event.soundIndex as number;
@@ -184,14 +184,14 @@ export class Player extends AbstractEvent {
             "key",
             "scale",
             "octave",
-            "parsedScale"
+            "parsedScale",
           );
         }) as SoundParams[];
         const add = { dur: noteLengthInSeconds } as SoundParams;
         if (name) add.s = name;
         let sound = arrayOfObjectsToObjectWithArrays(
           pitches,
-          add
+          add,
         ) as SoundParams;
         return new SoundEvent(sound, this.app);
       } else if (event instanceof ZRest) {
@@ -212,7 +212,7 @@ export class Player extends AbstractEvent {
         "key",
         "scale",
         "octave",
-        "parsedScale"
+        "parsedScale",
       ) as MidiParams;
       if (event instanceof Pitch) {
         if (event.soundIndex) obj.channel = event.soundIndex as number;

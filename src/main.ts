@@ -246,7 +246,7 @@ export class Editor {
      * If any required elements or templates are missing, warning messages are logged and the function returns early.
      */
     let itemTemplate = document.getElementById(
-      "ui-known-universe-item-template"
+      "ui-known-universe-item-template",
     ) as HTMLTemplateElement;
     if (!itemTemplate) {
       console.warn("Missing template #ui-known-universe-item-template");
@@ -274,10 +274,10 @@ export class Editor {
         item
           .querySelector(".delete-universe")
           ?.addEventListener("click", () =>
-            api._deleteUniverseFromInterface(it)
+            api._deleteUniverseFromInterface(it),
           );
         return item;
-      })
+      }),
     );
 
     existing_universes.innerHTML = "";
@@ -369,7 +369,7 @@ export class Editor {
 
     this.view.dispatch({
       effects: this.chosenLanguage.reconfigure(
-        this.editor_mode == "notes" ? [markdown()] : [javascript()]
+        this.editor_mode == "notes" ? [markdown()] : [javascript()],
       ),
     });
 
@@ -378,7 +378,7 @@ export class Editor {
 
   setButtonHighlighting(
     button: "play" | "pause" | "stop" | "clear",
-    highlight: boolean
+    highlight: boolean,
   ) {
     /**
      * Sets the highlighting for a specific button.
@@ -432,7 +432,7 @@ export class Editor {
     // All other buttons must lose the highlighting
     document
       .querySelectorAll(
-        possible_selectors.filter((_, index) => index != selector).join(",")
+        possible_selectors.filter((_, index) => index != selector).join(","),
       )
       .forEach((button) => {
         button.children[0].classList.remove("animate-pulse");
@@ -478,28 +478,28 @@ export class Editor {
      */
     const domElement = this.view.dom;
     const gutters = domElement.getElementsByClassName(
-      "cm-gutter"
+      "cm-gutter",
     ) as HTMLCollectionOf<HTMLElement>;
 
     domElement.classList.add("fluid-bg-transition");
     Array.from(gutters).forEach((gutter) =>
-      gutter.classList.add("fluid-bg-transition")
+      gutter.classList.add("fluid-bg-transition"),
     );
 
     domElement.style.backgroundColor = color;
     Array.from(gutters).forEach(
-      (gutter) => (gutter.style.backgroundColor = color)
+      (gutter) => (gutter.style.backgroundColor = color),
     );
 
     setTimeout(() => {
       domElement.style.backgroundColor = "";
       Array.from(gutters).forEach(
-        (gutter) => (gutter.style.backgroundColor = "")
+        (gutter) => (gutter.style.backgroundColor = ""),
       );
 
       domElement.classList.remove("fluid-bg-transition");
       Array.from(gutters).forEach((gutter) =>
-        gutter.classList.remove("fluid-bg-transition")
+        gutter.classList.remove("fluid-bg-transition"),
       );
     }, duration);
   }
@@ -507,7 +507,7 @@ export class Editor {
   private initializeElements(): void {
     for (const [key, value] of Object.entries(singleElements)) {
       this.interface[key] = document.getElementById(
-        value
+        value,
       ) as ElementMap[keyof ElementMap];
     }
   }
@@ -515,7 +515,7 @@ export class Editor {
   private initializeButtonGroups(): void {
     for (const [key, ids] of Object.entries(buttonGroups)) {
       this.buttonElements[key] = ids.map(
-        (id) => document.getElementById(id) as HTMLButtonElement
+        (id) => document.getElementById(id) as HTMLButtonElement,
       );
     }
   }

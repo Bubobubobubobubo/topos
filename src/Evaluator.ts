@@ -8,7 +8,7 @@ const codeReplace = (code: string): string => {
 
 const tryCatchWrapper = async (
   application: Editor,
-  code: string
+  code: string,
 ): Promise<boolean> => {
   /**
    * Wraps the provided code in a try-catch block and executes it.
@@ -20,7 +20,7 @@ const tryCatchWrapper = async (
 
   try {
     await new Function(`"use strict"; ${codeReplace(code)}`).call(
-      application.api
+      application.api,
     );
     return true;
   } catch (error) {
@@ -48,7 +48,7 @@ const addFunctionToCache = (code: string, fn: Function) => {
 export const tryEvaluate = async (
   application: Editor,
   code: File,
-  timeout = 5000
+  timeout = 5000,
 ): Promise<void> => {
   /**
    * Tries to evaluate the provided code within a specified timeout period.
@@ -77,7 +77,7 @@ export const tryEvaluate = async (
       if (isCodeValid) {
         code.committed = code.candidate;
         const newFunction = new Function(
-          `"use strict"; ${codeReplace(wrappedCode)}`
+          `"use strict"; ${codeReplace(wrappedCode)}`,
         );
         addFunctionToCache(candidateCode, newFunction);
       } else {
@@ -93,7 +93,7 @@ export const tryEvaluate = async (
 export const evaluate = async (
   application: Editor,
   code: File,
-  timeout = 1000
+  timeout = 1000,
 ): Promise<void> => {
   /**
    * Evaluates the given code using the provided application and timeout.
@@ -117,7 +117,7 @@ export const evaluate = async (
 
 export const evaluateOnce = async (
   application: Editor,
-  code: string
+  code: string,
 ): Promise<void> => {
   /**
    * Evaluates the code once without any caching or error-handling mechanisms besides the tryCatchWrapper.

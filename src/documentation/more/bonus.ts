@@ -20,11 +20,11 @@ Some features have been included as a bonus. These features are often about patt
 ${makeExample(
   "Hydra integration",
   `beat(4) :: hydra.osc(3, 0.5, 2).out()`,
-  true
+  true,
 )}
 
 Close the documentation to see the effect: ${key_shortcut(
-    "Ctrl+D"
+    "Ctrl+D",
   )}! **Boom, all shiny!**
 
 Be careful not to call <ic>hydra</ic> too often as it can impact performances. You can use any rhythmical function like <ic>beat()</ic> function to limit the number of function calls. You can write any Topos code like <ic>[1,2,3].beat()</ic> to bring some life and movement in your Hydra sketches.
@@ -37,7 +37,7 @@ ${makeExample(
 beat(4) :: stop_hydra()     // this one
 beat(4) :: hydra.hush() // or this one
 `,
-  true
+  true,
 )}
 
 
@@ -48,7 +48,7 @@ You can change Hydra resolution using this simple method:
 ${makeExample(
   "Changing Hydra resolution",
   `hydra.setResolution(1024, 768)`,
-  true
+  true,
 )}
 
 ### Documentation
@@ -82,7 +82,7 @@ beat(0.25)::gif({
   posX: ir(1,1200), // CSS Horizontal Position
   posY: ir(1, 800), // CSS Vertical Position
 `,
-  true
+  true,
 )}
 `;
 };

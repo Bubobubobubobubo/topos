@@ -1,6 +1,6 @@
 export function objectWithArraysToArrayOfObjects(
   input: Record<string, any>,
-  arraysToArrays: string[]
+  arraysToArrays: string[],
 ): Record<string, any>[] {
   /*
    * Transforms object with arrays into array of objects
@@ -24,7 +24,7 @@ export function objectWithArraysToArrayOfObjects(
       acc.keys.push(key);
       return acc;
     },
-    { keys: [] as string[], maxLength: 0 }
+    { keys: [] as string[], maxLength: 0 },
   );
 
   const output: Record<string, any>[] = [];
@@ -44,7 +44,7 @@ export function objectWithArraysToArrayOfObjects(
 
 export function arrayOfObjectsToObjectWithArrays<T extends Record<string, any>>(
   array: T[],
-  mergeObject: Record<string, any> = {}
+  mergeObject: Record<string, any> = {},
 ): Record<string, any> {
   /*
    * Transforms array of objects into object with arrays
@@ -54,21 +54,24 @@ export function arrayOfObjectsToObjectWithArrays<T extends Record<string, any>>(
    * @returns {object} Merged object with arrays
    *
    */
-  return array.reduce((acc, obj) => {
-    const mergedObj = { ...obj, ...mergeObject };
-    Object.keys(mergedObj).forEach((key) => {
-      if (!acc[key]) {
-        acc[key] = [];
-      }
-      acc[key].push(mergedObj[key]);
-    });
-    return acc;
-  }, {} as Record<string, any>);
+  return array.reduce(
+    (acc, obj) => {
+      const mergedObj = { ...obj, ...mergeObject };
+      Object.keys(mergedObj).forEach((key) => {
+        if (!acc[key]) {
+          acc[key] = [];
+        }
+        acc[key].push(mergedObj[key]);
+      });
+      return acc;
+    },
+    {} as Record<string, any>,
+  );
 }
 
 export function filterObject(
   obj: Record<string, any>,
-  filter: string[]
+  filter: string[],
 ): Record<string, any> {
   /*
    * Filter certain keys from object
@@ -79,6 +82,6 @@ export function filterObject(
    *
    */
   return Object.fromEntries(
-    Object.entries(obj).filter(([key]) => filter.includes(key))
+    Object.entries(obj).filter(([key]) => filter.includes(key)),
   );
 }

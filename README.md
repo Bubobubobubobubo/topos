@@ -14,7 +14,7 @@
   </p>
 </p>
 
-Topos is a web-based live coding environment. It lives [here](https://topos.live). Documentation is directly embedded in the application itself. Topos is an emulation and extension of the [Monome Teletype](https://monome.org/docs/teletype/) that gradually evolved into something a bit more personal. 
+Topos is a web-based live coding environment. It lives [here](https://topos.live). Documentation is directly embedded in the application itself. Topos is an emulation and extension of the [Monome Teletype](https://monome.org/docs/teletype/) that gradually evolved into something a bit more personal.
 
 ![Screenshot](https://github.com/Bubobubobubobubo/Topos/blob/main/img/topos_gif.gif)
 
@@ -46,15 +46,18 @@ The `tauri` version is only here to quickstart future developments but nothing 
 ## Docker
 
 ### Run the application
+
 `docker run -p 8001:80 yassinsiouda/topos:latest`
 
 ### Build and run the prod image
+
 `docker compose --profile prod up`
 
 ### Build and run the dev image
 
 **First installation**
 First you need to map node_modules to your local machine for your ide intellisense to work properly
+
 ```bash
 docker compose --profile dev up -d
 docker cp topos-dev:/app/node_modules .
@@ -62,7 +65,7 @@ docker compose --profile dev down
 ```
 
 **Then**
+
 ```bash
 docker compose --profile dev up
 ```
-

@@ -38,7 +38,7 @@ export class SoundEvent extends AudibleEvent {
 
   public updateValue<T>(
     key: string,
-    value: T | T[] | SoundParams[] | null
+    value: T | T[] | SoundParams[] | null,
   ): this {
     if (value == null) return this;
     this.values[key] = value;
@@ -82,7 +82,7 @@ export class SoundEvent extends AudibleEvent {
       a: number,
       d: number,
       s: number,
-      r: number
+      r: number,
     ) {
       self.updateValue("fmattack", a);
       self.updateValue("fmdecay", d);
@@ -106,7 +106,7 @@ export class SoundEvent extends AudibleEvent {
       a: number,
       d: number,
       s: number,
-      r: number
+      r: number,
     ) {
       self.updateValue("attack", a);
       self.updateValue("decay", d);
@@ -152,7 +152,7 @@ export class SoundEvent extends AudibleEvent {
       a: number,
       d: number,
       s: number,
-      r: number
+      r: number,
     ) {
       self.updateValue("lpenv", depth);
       self.updateValue("lpattack", a);
@@ -198,7 +198,7 @@ export class SoundEvent extends AudibleEvent {
       a: number,
       d: number,
       s: number,
-      r: number
+      r: number,
     ) {
       self.updateValue("hpenv", depth);
       self.updateValue("hpattack", a);
@@ -241,7 +241,7 @@ export class SoundEvent extends AudibleEvent {
       a: number,
       d: number,
       s: number,
-      r: number
+      r: number,
     ) {
       self.updateValue("bpenv", depth);
       self.updateValue("bpattack", a);
@@ -336,7 +336,10 @@ export class SoundEvent extends AudibleEvent {
     },
   };
 
-  constructor(sound: string | string[] | SoundParams, public app: Editor) {
+  constructor(
+    sound: string | string[] | SoundParams,
+    public app: Editor,
+  ) {
     super(app);
     this.nudge = app.dough_nudge / 100;
 
@@ -367,7 +370,7 @@ export class SoundEvent extends AudibleEvent {
   }
 
   private processSound = (
-    sound: string | string[] | SoundParams | SoundParams[]
+    sound: string | string[] | SoundParams | SoundParams[],
   ): SoundParams => {
     if (Array.isArray(sound) && typeof sound[0] === "string") {
       const s: string[] = [];
@@ -438,7 +441,7 @@ export class SoundEvent extends AudibleEvent {
         (event.key as number) || "C4",
         (event.pitch as number) || 0,
         (event.parsedScale as number[]) || event.scale || "MAJOR",
-        (event.octave as number) || 0
+        (event.octave as number) || 0,
       );
       event.note = note;
       event.freq = midiToFreq(note);
@@ -458,7 +461,7 @@ export class SoundEvent extends AudibleEvent {
   public invert = (howMany: number = 0) => {
     if (this.values.chord) {
       let notes = this.values.chord.map(
-        (obj: { [key: string]: number }) => obj.note
+        (obj: { [key: string]: number }) => obj.note,
       );
       notes = howMany < 0 ? [...notes].reverse() : notes;
       for (let i = 0; i < Math.abs(howMany); i++) {
@@ -500,7 +503,7 @@ export class SoundEvent extends AudibleEvent {
       superdough(
         filteredEvent,
         this.nudge - this.app.clock.deviation,
-        filteredEvent.dur
+        filteredEvent.dur,
       );
     }
   };

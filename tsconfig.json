@@ -15,7 +15,7 @@
 
     /* Linting */
     "strict": true,
-	  "forceConsistentCasingInFileNames": true,
+    "forceConsistentCasingInFileNames": true,
     "useDefineForClassFields": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,

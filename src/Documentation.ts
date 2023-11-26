@@ -47,7 +47,7 @@ export const makeExampleFactory = (application: Editor): Function => {
   const make_example = (
     description: string,
     code: string,
-    open: boolean = false
+    open: boolean = false,
   ) => {
     const codeId = `codeExample${application.exampleCounter++}`;
     // Store the code snippet in the data structure
@@ -160,7 +160,7 @@ export const updateDocumentationContent = (app: Editor, bindings: any) => {
     extensions: [showdownHighlight({ auto_detection: true }), ...bindings],
   });
   const converted_markdown = converter.makeHtml(
-    app.docs[app.currentDocumentationPane]
+    app.docs[app.currentDocumentationPane],
   );
   document.getElementById("documentation-content")!.innerHTML =
     converted_markdown;

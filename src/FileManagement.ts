@@ -154,7 +154,7 @@ export class AppSettings {
 
   constructor() {
     const settingsFromStorage = JSON.parse(
-      localStorage.getItem("topos") || "{}"
+      localStorage.getItem("topos") || "{}",
     );
 
     if (settingsFromStorage && Object.keys(settingsFromStorage).length !== 0) {
@@ -210,7 +210,7 @@ export class AppSettings {
 
   saveApplicationToLocalStorage(
     universes: Universes,
-    settings: Settings
+    settings: Settings,
   ): void {
     /**
      * Main method to store the application to local storage.
@@ -328,7 +328,7 @@ export const loadUniverserFromUrl = (app: Editor): void => {
 export const loadUniverse = (
   app: Editor,
   universeName: string,
-  universe: Universe = template_universe
+  universe: Universe = template_universe,
 ): void => {
   /**
    * Loads a universe into the application.
