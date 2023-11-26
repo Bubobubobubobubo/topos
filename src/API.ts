@@ -57,6 +57,9 @@ export async function loadSamples() {
     samples("github:Bubobubobubobubo/Dough-Amiga/main", undefined, {
       tag: "Amiga",
     }),
+    samples("github:Bubobubobubobubo/Dough-Juj/main", undefined, {
+      tag: "Juliette",
+    }),
     samples("github:Bubobubobubobubo/Dough-Amen/main", undefined, {
       tag: "Amen",
     }),
@@ -1294,7 +1297,7 @@ export class UserAPI {
     const results: boolean[] = nArray.map(
       (value) =>
         (this.app.clock.pulses_since_origin - Math.floor(nudge * this.ppqn())) %
-          Math.floor(value * this.ppqn()) ===
+        Math.floor(value * this.ppqn()) ===
         0
     );
     return results.some((value) => value === true);
@@ -1314,7 +1317,7 @@ export class UserAPI {
     const results: boolean[] = nArray.map(
       (value) =>
         (this.app.clock.pulses_since_origin - nudgeInPulses) %
-          Math.floor(value * barLength) ===
+        Math.floor(value * barLength) ===
         0
     );
     return results.some((value) => value === true);
@@ -1914,7 +1917,7 @@ export class UserAPI {
   // =============================================================
 
   register = (name: string, operation: EventOperation<AbstractEvent>): void => {
-    AbstractEvent.prototype[name] = function (
+    AbstractEvent.prototype[name] = function(
       this: AbstractEvent,
       ...args: any[]
     ) {
