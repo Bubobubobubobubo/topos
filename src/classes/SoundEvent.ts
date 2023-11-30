@@ -110,6 +110,10 @@ export class SoundEvent extends AudibleEvent {
       self.updateValue("release", 0.0);
       return self;
     },
+    analyze: function(self: SoundEvent) {
+      self.updateValue("analyze", true)
+      return self
+    },
     debug: function(self: SoundEvent, callback?: Function) {
       self.updateValue("debug", true)
       if (callback) {
@@ -382,12 +386,10 @@ export class SoundEvent extends AudibleEvent {
         s,
         n: n.length > 0 ? n : undefined,
         dur: this.app.clock.convertPulseToSecond(this.app.clock.ppqn),
-        analyze: true,
       };
     } else if (typeof sound === "object") {
       const validatedObj: SoundParams = {
         dur: this.app.clock.convertPulseToSecond(this.app.clock.ppqn),
-        analyze: true,
         ...(sound as Partial<SoundParams>),
       };
       return validatedObj;
@@ -400,10 +402,9 @@ export class SoundEvent extends AudibleEvent {
           s,
           n,
           dur: this.app.clock.convertPulseToSecond(this.app.clock.ppqn),
-          analyze: true,
         };
       } else {
-        return { s: sound, dur: 0.5, analyze: true };
+        return { s: sound, dur: 0.5 };
       }
     }
   };
@@ -467,8 +468,9 @@ export class SoundEvent extends AudibleEvent {
       if (this.values["debug"]) {
         if (this.values["debugFunction"]) {
           this.values["debugFunction"](filteredEvent)
+        } else {
+          console.log(filteredEvent)
         }
-        console.log(filteredEvent)
       }
       superdough(
         filteredEvent,
