@@ -110,8 +110,11 @@ export class SoundEvent extends AudibleEvent {
       self.updateValue("release", 0.0);
       return self;
     },
-    debug: function(self: SoundEvent) {
+    debug: function(self: SoundEvent, callback?: Function) {
       self.updateValue("debug", true)
+      if (callback) {
+        self.updateValue("debugFunction", callback)
+      }
       return self;
     },
     lpenv: ["lpenv", "lpe"],
@@ -462,6 +465,9 @@ export class SoundEvent extends AudibleEvent {
         delete filteredEvent.note;
       }
       if (this.values["debug"]) {
+        if (this.values["debugFunction"]) {
+          this.values["debugFunction"](filteredEvent)
+        }
         console.log(filteredEvent)
       }
       superdough(
