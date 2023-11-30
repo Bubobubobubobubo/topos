@@ -6,10 +6,8 @@ import {
   objectWithArraysToArrayOfObjects,
 } from "../Utils/Generic";
 import {
-  chord as parseChord,
   midiToFreq,
   noteFromPc,
-  noteNameToMidi,
 } from "zifferjs";
 
 import {
@@ -35,15 +33,6 @@ export type SoundParams = {
 export class SoundEvent extends AudibleEvent {
   nudge: number;
   sound: any;
-
-  public updateValue<T>(
-    key: string,
-    value: T | T[] | SoundParams[] | null,
-  ): this {
-    if (value == null) return this;
-    this.values[key] = value;
-    return this;
-  }
 
   private static methodMap = {
     volume: ["volume", "vol"],
@@ -451,38 +440,6 @@ export class SoundEvent extends AudibleEvent {
 
     this.values.note = newArrays.note;
     this.values.freq = newArrays.freq;
-  };
-
-  public chord = (value: string) => {
-    const chord = parseChord(value);
-    return this.updateValue("note", chord);
-  };
-
-  public invert = (howMany: number = 0) => {
-    if (this.values.chord) {
-      let notes = this.values.chord.map(
-        (obj: { [key: string]: number }) => obj.note,
-      );
-      notes = howMany < 0 ? [...notes].reverse() : notes;
-      for (let i = 0; i < Math.abs(howMany); i++) {
-        notes[i % notes.length] += howMany <= 0 ? -12 : 12;
-      }
-      const chord = notes.map((note: number) => {
-        return { note: note, freq: midiToFreq(note) };
-      });
-      return this.updateValue("chord", chord);
-    } else {
-      return this;
-    }
-  };
-  public note = (value: number | string | null) => {
-    if (typeof value === "string") {
-      return this.updateValue("note", noteNameToMidi(value));
-    } else if (typeof value == null || value == undefined) {
-      return this.updateValue("note", 0).updateValue("gain", 0);
-    } else {
-      return this.updateValue("note", value);
-    }
   };
 
   out = (orbit?: number | number[]): void => {

@@ -1,7 +1,7 @@
 import { AudibleEvent } from "./AbstractEvents";
 import { type Editor } from "../main";
 import { MidiConnection } from "../IO/MidiConnection";
-import { noteFromPc, chord as parseChord } from "zifferjs";
+import { noteFromPc } from "zifferjs";
 import {
   filterObject,
   arrayOfObjectsToObjectWithArrays,
@@ -28,16 +28,6 @@ export class MidiEvent extends AudibleEvent {
     this.values = input;
     this.midiConnection = app.api.MidiConnection;
   }
-
-  public chord = (value: string) => {
-    this.values.note = parseChord(value);
-    return this;
-  };
-
-  note = (value: number | number[]): this => {
-    this.values["note"] = value;
-    return this;
-  };
 
   sustain = (value: number | number[]): this => {
     this.values["sustain"] = value;
