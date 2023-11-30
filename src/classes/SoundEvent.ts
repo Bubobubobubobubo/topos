@@ -110,7 +110,7 @@ export class SoundEvent extends AudibleEvent {
       self.updateValue("release", 0.0);
       return self;
     },
-    analyze: function(self: SoundEvent) {
+    scope: function(self: SoundEvent) {
       self.updateValue("analyze", true)
       return self
     },
