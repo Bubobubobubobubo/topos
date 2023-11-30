@@ -1,9 +1,6 @@
-import {
-  OscilloscopeConfig,
-  runOscilloscope,
-  scriptBlinkers,
-} from "./AudioVisualisation";
+import { OscilloscopeConfig, runOscilloscope } from "./Visuals/Oscilloscope";
 import { EditorState, Compartment } from "@codemirror/state";
+import { scriptBlinkers } from "./Visuals/Blinkers";
 import { javascript } from "@codemirror/lang-javascript";
 import { markdown } from "@codemirror/lang-markdown";
 import { Extension } from "@codemirror/state";

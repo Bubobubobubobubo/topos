@@ -27,7 +27,8 @@ import {
 } from "superdough";
 import { Speaker } from "./extensions/StringExtensions";
 import { getScaleNotes } from "zifferjs";
-import { OscilloscopeConfig, blinkScript } from "./AudioVisualisation";
+import { OscilloscopeConfig } from "./Visuals/Oscilloscope";
+import { blinkScript } from "./Visuals/Blinkers";
 import { SkipEvent } from "./classes/SkipEvent";
 import { AbstractEvent, EventOperation } from "./classes/AbstractEvents";
 import drums from "./tidal-drum-machines.json";
