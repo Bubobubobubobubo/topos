@@ -66,7 +66,7 @@ export class SoundEvent extends AudibleEvent {
     phaserDepth: ["phaserDepth", "phasdepth"],
     phaserSweep: ["phaserSweep", "phassweep"],
     phaserCenter: ["phaserCenter", "phascenter"],
-    fmadsr: function (
+    fmadsr: function(
       self: SoundEvent,
       a: number,
       d: number,
@@ -79,7 +79,7 @@ export class SoundEvent extends AudibleEvent {
       self.updateValue("fmrelease", r);
       return self;
     },
-    fmad: function (self: SoundEvent, a: number, d: number) {
+    fmad: function(self: SoundEvent, a: number, d: number) {
       self.updateValue("fmattack", a);
       self.updateValue("fmdecay", d);
       return self;
@@ -90,7 +90,7 @@ export class SoundEvent extends AudibleEvent {
     decay: ["decay", "dec"],
     sustain: ["sustain", "sus"],
     release: ["release", "rel"],
-    adsr: function (
+    adsr: function(
       self: SoundEvent,
       a: number,
       d: number,
@@ -103,11 +103,15 @@ export class SoundEvent extends AudibleEvent {
       self.updateValue("release", r);
       return self;
     },
-    ad: function (self: SoundEvent, a: number, d: number) {
+    ad: function(self: SoundEvent, a: number, d: number) {
       self.updateValue("attack", a);
       self.updateValue("decay", d);
       self.updateValue("sustain", 0.0);
       self.updateValue("release", 0.0);
+      return self;
+    },
+    debug: function(self: SoundEvent) {
+      self.updateValue("debug", true)
       return self;
     },
     lpenv: ["lpenv", "lpe"],
@@ -115,27 +119,27 @@ export class SoundEvent extends AudibleEvent {
     lpdecay: ["lpdecay", "lpd"],
     lpsustain: ["lpsustain", "lps"],
     lprelease: ["lprelease", "lpr"],
-    cutoff: function (self: SoundEvent, value: number, resonance?: number) {
+    cutoff: function(self: SoundEvent, value: number, resonance?: number) {
       self.updateValue("cutoff", value);
       if (resonance) {
         self.updateValue("resonance", resonance);
       }
       return self;
     },
-    lpf: function (self: SoundEvent, value: number, resonance?: number) {
+    lpf: function(self: SoundEvent, value: number, resonance?: number) {
       self.updateValue("cutoff", value);
       if (resonance) {
         self.updateValue("resonance", resonance);
       }
       return self;
     },
-    resonance: function (self: SoundEvent, value: number) {
+    resonance: function(self: SoundEvent, value: number) {
       if (value >= 0 && value <= 1) {
         self.updateValue("resonance", 50 * value);
       }
       return self;
     },
-    lpadsr: function (
+    lpadsr: function(
       self: SoundEvent,
       depth: number,
       a: number,
@@ -150,7 +154,7 @@ export class SoundEvent extends AudibleEvent {
       self.updateValue("lprelease", r);
       return self;
     },
-    lpad: function (self: SoundEvent, depth: number, a: number, d: number) {
+    lpad: function(self: SoundEvent, depth: number, a: number, d: number) {
       self.updateValue("lpenv", depth);
       self.updateValue("lpattack", a);
       self.updateValue("lpdecay", d);
@@ -163,25 +167,25 @@ export class SoundEvent extends AudibleEvent {
     hpdecay: ["hpdecay", "hpd"],
     hpsustain: ["hpsustain", "hpsus"],
     hprelease: ["hprelease", "hpr"],
-    hcutoff: function (self: SoundEvent, value: number, resonance?: number) {
+    hcutoff: function(self: SoundEvent, value: number, resonance?: number) {
       self.updateValue("hcutoff", value);
       if (resonance) {
         self.updateValue("hresonance", resonance);
       }
       return self;
     },
-    hpf: function (self: SoundEvent, value: number, resonance?: number) {
+    hpf: function(self: SoundEvent, value: number, resonance?: number) {
       self.updateValue("hcutoff", value);
       if (resonance) {
         self.updateValue("hresonance", resonance);
       }
       return self;
     },
-    hpq: function (self: SoundEvent, value: number) {
+    hpq: function(self: SoundEvent, value: number) {
       self.updateValue("hresonance", value);
       return self;
     },
-    hpadsr: function (
+    hpadsr: function(
       self: SoundEvent,
       depth: number,
       a: number,
@@ -196,7 +200,7 @@ export class SoundEvent extends AudibleEvent {
       self.updateValue("hprelease", r);
       return self;
     },
-    hpad: function (self: SoundEvent, depth: number, a: number, d: number) {
+    hpad: function(self: SoundEvent, depth: number, a: number, d: number) {
       self.updateValue("hpenv", depth);
       self.updateValue("hpattack", a);
       self.updateValue("hpdecay", d);
@@ -209,14 +213,14 @@ export class SoundEvent extends AudibleEvent {
     bpdecay: ["bpdecay", "bpd"],
     bpsustain: ["bpsustain", "bps"],
     bprelease: ["bprelease", "bpr"],
-    bandf: function (self: SoundEvent, value: number, resonance?: number) {
+    bandf: function(self: SoundEvent, value: number, resonance?: number) {
       self.updateValue("bandf", value);
       if (resonance) {
         self.updateValue("bandq", resonance);
       }
       return self;
     },
-    bpf: function (self: SoundEvent, value: number, resonance?: number) {
+    bpf: function(self: SoundEvent, value: number, resonance?: number) {
       self.updateValue("bandf", value);
       if (resonance) {
         self.updateValue("bandq", resonance);
@@ -224,7 +228,7 @@ export class SoundEvent extends AudibleEvent {
       return self;
     },
     bandq: ["bandq", "bpq"],
-    bpadsr: function (
+    bpadsr: function(
       self: SoundEvent,
       depth: number,
       a: number,
@@ -239,7 +243,7 @@ export class SoundEvent extends AudibleEvent {
       self.updateValue("bprelease", r);
       return self;
     },
-    bpad: function (self: SoundEvent, depth: number, a: number, d: number) {
+    bpad: function(self: SoundEvent, depth: number, a: number, d: number) {
       self.updateValue("bpenv", depth);
       self.updateValue("bpattack", a);
       self.updateValue("bpdecay", d);
@@ -249,7 +253,7 @@ export class SoundEvent extends AudibleEvent {
     },
     vib: ["vib"],
     vibmod: ["vibmod"],
-    fm: function (self: SoundEvent, value: number | string) {
+    fm: function(self: SoundEvent, value: number | string) {
       if (typeof value === "number") {
         self.values["fmi"] = value;
       } else {
@@ -265,11 +269,11 @@ export class SoundEvent extends AudibleEvent {
     begin: ["begin"],
     end: ["end"],
     gain: ["gain"],
-    dbgain: function (self: SoundEvent, value: number) {
+    dbgain: function(self: SoundEvent, value: number) {
       self.updateValue("gain", Math.min(Math.pow(10, value / 20), 10));
       return self;
     },
-    db: function (self: SoundEvent, value: number) {
+    db: function(self: SoundEvent, value: number) {
       self.updateValue("gain", Math.min(Math.pow(10, value / 20), 10));
       return self;
     },
@@ -292,32 +296,32 @@ export class SoundEvent extends AudibleEvent {
     roomlp: ["roomlp", "rlp"],
     roomdim: ["roomdim", "rdim"],
     sound: ["s", "sound"],
-    size: function (self: SoundEvent, value: number) {
+    size: function(self: SoundEvent, value: number) {
       self.updateValue("roomsize", value);
       return self;
     },
-    sz: function (self: SoundEvent, value: number) {
+    sz: function(self: SoundEvent, value: number) {
       self.updateValue("roomsize", value);
       return self;
     },
     comp: ["compressor", "cmp"],
-    ratio: function (self: SoundEvent, value: number) {
+    ratio: function(self: SoundEvent, value: number) {
       self.updateValue("compressorRatio", value);
       return self;
     },
-    knee: function (self: SoundEvent, value: number) {
+    knee: function(self: SoundEvent, value: number) {
       self.updateValue("compressorKnee", value);
       return self;
     },
-    compAttack: function (self: SoundEvent, value: number) {
+    compAttack: function(self: SoundEvent, value: number) {
       self.updateValue("compressorAttack", value);
       return self;
     },
-    compRelease: function (self: SoundEvent, value: number) {
+    compRelease: function(self: SoundEvent, value: number) {
       self.updateValue("compressorRelease", value);
       return self;
     },
-    stretch: function (self: SoundEvent, beat: number) {
+    stretch: function(self: SoundEvent, beat: number) {
       self.updateValue("unit", "c");
       self.updateValue("speed", 1 / beat);
       self.updateValue("cut", beat);
@@ -456,6 +460,9 @@ export class SoundEvent extends AudibleEvent {
       // No need for note if there is freq
       if (filteredEvent.freq) {
         delete filteredEvent.note;
+      }
+      if (this.values["debug"]) {
+        console.log(filteredEvent)
       }
       superdough(
         filteredEvent,
