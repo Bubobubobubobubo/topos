@@ -474,7 +474,7 @@ export class SoundEvent extends AudibleEvent {
       }
       superdough(
         filteredEvent,
-        this.nudge - this.app.clock.deviation,
+        this.nudge,
         filteredEvent.dur,
       );
     }

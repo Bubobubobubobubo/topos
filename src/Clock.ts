@@ -1,8 +1,10 @@
 import { Editor } from "./main";
+import { tryEvaluate } from "./Evaluator";
 // @ts-ignore
 import { getAudioContext } from "superdough";
 // @ts-ignore
 import "zyklus";
+const zeroPad = (num: number, places: number) => String(num).padStart(places, "0");
 
 export interface TimePosition {
   /**
@@ -48,6 +50,7 @@ export class Clock {
   lastPauseTime: number;
   lastPlayPressTime: number;
   totalPauseTime: number;
+  timeviewer: HTMLElement;
 
   constructor(
     public app: Editor,
@@ -64,12 +67,32 @@ export class Clock {
     this.lastPauseTime = 0;
     this.lastPlayPressTime = 0;
     this.totalPauseTime = 0;
+    this.timeviewer = document.getElementById("timeviewer")!;
     this.clock = getAudioContext().createClock(this.clockCallback, this.pulse_duration)
  }
 
   clockCallback = (time: number, duration: number, tick: number) => {
     let deadline = time - getAudioContext().currentTime;
     this.tick = tick;
+        if (this.app.clock.running) {
+          if (this.app.settings.send_clock) {
+            this.app.api.MidiConnection.sendMidiClock();
+          }
+          const futureTimeStamp = this.app.clock.convertTicksToTimeposition(
+            this.app.clock.tick,
+          );
+          this.app.clock.time_position = futureTimeStamp;
+          if (futureTimeStamp.pulse % this.app.clock.ppqn == 0) {
+            this.timeviewer.innerHTML = `${zeroPad(futureTimeStamp.bar, 2)}:${
+              futureTimeStamp.beat + 1
+            } / ${this.app.clock.bpm}`;
+          }
+          if (this.app.exampleIsPlaying) {
+            tryEvaluate(this.app, this.app.example_buffer);
+          } else {
+            tryEvaluate(this.app, this.app.global_buffer);
+          }
+        }
 
     // Implement TransportNode clock callback and update clock info with it
 
@@ -222,6 +245,7 @@ export class Clock {
     this.app.api.MidiConnection.sendStartMessage();
     this.lastPlayPressTime = this.app.audioContext.currentTime;
     this.totalPauseTime += this.lastPlayPressTime - this.lastPauseTime;
+    this.clock.start()
   }
 
   public pause(): void {
