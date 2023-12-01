@@ -4,7 +4,8 @@ import { tryEvaluate } from "./Evaluator";
 import { getAudioContext } from "superdough";
 // @ts-ignore
 import "zyklus";
-const zeroPad = (num: number, places: number) => String(num).padStart(places, "0");
+const zeroPad = (num: number, places: number) =>
+  String(num).padStart(places, "0");
 
 export interface TimePosition {
   /**
@@ -61,35 +62,37 @@ export class Clock {
     this.running = true;
     this.deadline = 0;
     this.timeviewer = document.getElementById("timeviewer")!;
-    this.clock = getAudioContext().createClock(this.clockCallback, this.pulse_duration)
- }
+    this.clock = getAudioContext().createClock(
+      this.clockCallback,
+      this.pulse_duration,
+    );
+  }
 
   clockCallback = (time: number, duration: number, tick: number) => {
     let deadline = time - getAudioContext().currentTime;
     this.deadline = deadline;
     this.tick = tick;
-        if (this.app.clock.running) {
-          if (this.app.settings.send_clock) {
-            this.app.api.MidiConnection.sendMidiClock();
-          }
-          const futureTimeStamp = this.app.clock.convertTicksToTimeposition(
-            this.app.clock.tick,
-          );
-          this.app.clock.time_position = futureTimeStamp;
-          if (futureTimeStamp.pulse % this.app.clock.ppqn == 0) {
-            this.timeviewer.innerHTML = `${zeroPad(futureTimeStamp.bar, 2)}:${
-              futureTimeStamp.beat + 1
-            } / ${this.app.clock.bpm}`;
-          }
-          if (this.app.exampleIsPlaying) {
-            tryEvaluate(this.app, this.app.example_buffer);
-          } else {
-            tryEvaluate(this.app, this.app.global_buffer);
-          }
-        }
+    if (this.app.clock.running) {
+      if (this.app.settings.send_clock) {
+        this.app.api.MidiConnection.sendMidiClock();
+      }
+      const futureTimeStamp = this.app.clock.convertTicksToTimeposition(
+        this.app.clock.tick,
+      );
+      this.app.clock.time_position = futureTimeStamp;
+      if (futureTimeStamp.pulse % this.app.clock.ppqn == 0) {
+        this.timeviewer.innerHTML = `${zeroPad(futureTimeStamp.bar, 2)}:${
+          futureTimeStamp.beat + 1
+        } / ${this.app.clock.bpm}`;
+      }
+      if (this.app.exampleIsPlaying) {
+        tryEvaluate(this.app, this.app.example_buffer);
+      } else {
+        tryEvaluate(this.app, this.app.global_buffer);
+      }
+    }
 
     // Implement TransportNode clock callback and update clock info with it
-
   };
 
   convertTicksToTimeposition(ticks: number): TimePosition {
@@ -108,27 +111,27 @@ export class Clock {
   }
 
   get next_beat_in_ticks(): number {
-   return this.app.clock.pulses_since_origin + this.time_position.pulse;
+    return this.app.clock.pulses_since_origin + this.time_position.pulse;
   }
 
   get beats_per_bar(): number {
-   return this.time_signature[0];
+    return this.time_signature[0];
   }
 
   get beats_since_origin(): number {
-   return Math.floor(this.tick / this.ppqn);
+    return Math.floor(this.tick / this.ppqn);
   }
 
   get pulses_since_origin(): number {
-   return this.tick;
+    return this.tick;
   }
 
   get pulse_duration(): number {
-   return 60 / this.bpm / this.ppqn;
+    return 60 / this.bpm / this.ppqn;
   }
 
   public pulse_duration_at_bpm(bpm: number = this.bpm): number {
-   return 60 / bpm / this.ppqn;
+    return 60 / bpm / this.ppqn;
   }
 
   get bpm(): number {
@@ -162,7 +165,7 @@ export class Clock {
   }
 
   public nextTickFrom(time: number, nudge: number): number {
-   const pulseDuration = this.pulse_duration;
+    const pulseDuration = this.pulse_duration;
     const nudgedTime = time + nudge;
     const nextTickTime = Math.ceil(nudgedTime / pulseDuration) * pulseDuration;
     const remainingTime = nextTickTime - nudgedTime;
@@ -183,13 +186,13 @@ export class Clock {
     this.app.audioContext.resume();
     this.running = true;
     this.app.api.MidiConnection.sendStartMessage();
-    this.clock.start()
+    this.clock.start();
   }
 
   public pause(): void {
     this.running = false;
     this.app.api.MidiConnection.sendStopMessage();
-    this.clock.pause()
+    this.clock.pause();
   }
 
   public stop(): void {

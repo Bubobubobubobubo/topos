@@ -25,7 +25,7 @@ declare global {
     z15(): Player;
     z16(): Player;
     midi(): MidiEvent;
-    sound(name: string): SoundEvent|SkipEvent;
+    sound(name: string): SoundEvent | SkipEvent;
   }
 }
 
@@ -102,11 +102,11 @@ export const makeNumberExtensions = (api: UserAPI) => {
     return api.midi(this.valueOf(), ...kwargs);
   };
 
-  Number.prototype.sound = function (name: string): SoundEvent|SkipEvent {
+  Number.prototype.sound = function (name: string): SoundEvent | SkipEvent {
     if (Number.isInteger(this.valueOf())) {
       return (api.sound(name) as SoundEvent).note(this.valueOf());
     } else {
       return (api.sound(name) as SoundEvent).freq(this.valueOf());
-    } 
+    }
   };
 };

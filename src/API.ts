@@ -1581,7 +1581,9 @@ export class UserAPI {
   // Low Frequency Oscillators
   // =============================================================
 
-  line = (start: number, end: number, step: number = 1): number[] => {
+  public range = (v: number, a: number, b: number): number => v * (b - a) + a;
+
+  public line = (start: number, end: number, step: number = 1): number[] => {
     /**
      * Returns an array of values between start and end, with a given step.
      *
@@ -1603,7 +1605,11 @@ export class UserAPI {
     return result;
   };
 
-  sine = (freq: number = 1, times: number = 1, offset: number = 0): number => {
+  public sine = (
+    freq: number = 1,
+    times: number = 1,
+    offset: number = 0,
+  ): number => {
     /**
      * Returns a sine wave between -1 and 1.
      *
@@ -1617,7 +1623,11 @@ export class UserAPI {
     );
   };
 
-  usine = (freq: number = 1, times: number = 1, offset: number = 0): number => {
+  public usine = (
+    freq: number = 1,
+    times: number = 1,
+    offset: number = 0,
+  ): number => {
     /**
      * Returns a sine wave between 0 and 1.
      *
