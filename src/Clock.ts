@@ -51,6 +51,7 @@ export class Clock {
   lastPlayPressTime: number;
   totalPauseTime: number;
   timeviewer: HTMLElement;
+  deadline: number;
 
   constructor(
     public app: Editor,
@@ -65,6 +66,7 @@ export class Clock {
     this.ctx = ctx;
     this.running = true;
     this.lastPauseTime = 0;
+    this.deadline = 0;
     this.lastPlayPressTime = 0;
     this.totalPauseTime = 0;
     this.timeviewer = document.getElementById("timeviewer")!;
@@ -73,6 +75,7 @@ export class Clock {
 
   clockCallback = (time: number, duration: number, tick: number) => {
     let deadline = time - getAudioContext().currentTime;
+    this.deadline = deadline;
     this.tick = tick;
         if (this.app.clock.running) {
           if (this.app.settings.send_clock) {
