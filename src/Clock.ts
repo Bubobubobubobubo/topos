@@ -1,6 +1,8 @@
 import { Editor } from "./main";
 // @ts-ignore
-import * as zyklus from "zyklus";
+import { getAudioContext } from "superdough";
+// @ts-ignore
+import "zyklus";
 
 export interface TimePosition {
   /**
@@ -21,8 +23,8 @@ export class Clock {
    * It is also responsible for starting and stopping the Clock TransportNode.
    *
    * @param app - The main application instance
+   * @param clock - The zyklus clock
    * @param ctx - The current AudioContext used by app
-   * @param transportNode - The TransportNode helper
    * @param bpm - The current beats per minute value
    * @param time_signature - The time signature
    * @param time_position - The current time position
@@ -34,6 +36,7 @@ export class Clock {
    * @param totalPauseTime - The total time the clock has been paused / stopped
    */
 
+  clock: any;
   ctx: AudioContext;
   logicalTime: number;
   private _bpm: number;
@@ -61,7 +64,16 @@ export class Clock {
     this.lastPauseTime = 0;
     this.lastPlayPressTime = 0;
     this.totalPauseTime = 0;
+    this.clock = getAudioContext().createClock(this.clockCallback, this.pulse_duration)
  }
+
+  clockCallback = (time: number, duration: number, tick: number) => {
+    let deadline = time - getAudioContext().currentTime;
+    this.tick = tick;
+
+    // Implement TransportNode clock callback and update clock info with it
+
+  };
 
   convertTicksToTimeposition(ticks: number): TimePosition {
     /**
