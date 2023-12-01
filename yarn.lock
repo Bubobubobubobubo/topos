@@ -3887,6 +3887,11 @@ zifferjs@^0.0.44:
   resolved "https://registry.yarnpkg.com/zifferjs/-/zifferjs-0.0.44.tgz#c6b425166488ec05e349867e3de2460b74204449"
   integrity sha512-Q+0affxeUZwl+oJpsa1nb4hqHV6V4VX+pkejCQq/e9+/0H6ooTpcDQ9IDopvrWBnhA8E11k0tbwUee5TJtE8UQ==
 
+zyklus@^0.1.4:
+  version "0.1.4"
+  resolved "https://registry.yarnpkg.com/zyklus/-/zyklus-0.1.4.tgz#229b2966fd1126ef72c6004697269118762bdcd5"
+  integrity sha512-hbv2cyy4nOI7P8nL8b3ki1jswoLzkUzewPgCLDdDfABryDkV5iO8DAbU25OgO5ShRZHLjXJIylwv5PJQPl3Mpw==
+
 zzfx@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/zzfx/-/zzfx-1.2.0.tgz#021e5df8e1605f507e2dde15608eba22798b424b"

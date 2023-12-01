@@ -1,7 +1,6 @@
-// @ts-ignore
-import { TransportNode } from "./TransportNode";
-import TransportProcessor from "./TransportProcessor?worker&url";
 import { Editor } from "./main";
+// @ts-ignore
+import * as zyklus from "zyklus";
 
 export interface TimePosition {
   /**
@@ -37,7 +36,6 @@ export class Clock {
 
   ctx: AudioContext;
   logicalTime: number;
-  transportNode: TransportNode | null;
   private _bpm: number;
   time_signature: number[];
   time_position: TimePosition;
@@ -58,23 +56,12 @@ export class Clock {
     this.tick = 0;
     this._bpm = 120;
     this._ppqn = 48;
-    this.transportNode = null;
     this.ctx = ctx;
     this.running = true;
     this.lastPauseTime = 0;
     this.lastPlayPressTime = 0;
     this.totalPauseTime = 0;
-    ctx.audioWorklet
-      .addModule(TransportProcessor)
-      .then((e) => {
-        this.transportNode = new TransportNode(ctx, {}, this.app);
-        this.transportNode.connect(ctx.destination);
-        return e;
-      })
-      .catch((e) => {
-        console.log("Error loading TransportProcessor.js:", e);
-      });
-  }
+ }
 
   convertTicksToTimeposition(ticks: number): TimePosition {
     /**
@@ -157,12 +144,10 @@ export class Clock {
   }
 
   set nudge(nudge: number) {
-    this.transportNode?.setNudge(nudge);
   }
 
   set bpm(bpm: number) {
     if (bpm > 0 && this._bpm !== bpm) {
-      this.transportNode?.setBPM(bpm);
       this._bpm = bpm;
       this.logicalTime = this.realTime;
     }
@@ -183,7 +168,6 @@ export class Clock {
   set ppqn(ppqn: number) {
     if (ppqn > 0 && this._ppqn !== ppqn) {
       this._ppqn = ppqn;
-      this.transportNode?.setPPQN(ppqn);
       this.logicalTime = this.realTime;
     }
   }
@@ -226,7 +210,6 @@ export class Clock {
     this.app.api.MidiConnection.sendStartMessage();
     this.lastPlayPressTime = this.app.audioContext.currentTime;
     this.totalPauseTime += this.lastPlayPressTime - this.lastPauseTime;
-    this.transportNode?.start();
   }
 
   public pause(): void {
@@ -236,7 +219,6 @@ export class Clock {
      * @remark also sends a MIDI message if a port is declared
      */
     this.running = false;
-    this.transportNode?.pause();
     this.app.api.MidiConnection.sendStopMessage();
     this.lastPauseTime = this.app.audioContext.currentTime;
     this.logicalTime = this.realTime;
@@ -254,6 +236,5 @@ export class Clock {
     this.logicalTime = this.realTime;
     this.time_position = { bar: 0, beat: 0, pulse: 0 };
     this.app.api.MidiConnection.sendStopMessage();
-    this.transportNode?.stop();
   }
 }
