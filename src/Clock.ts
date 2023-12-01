@@ -184,10 +184,15 @@ export class Clock {
   set nudge(nudge: number) {
   }
 
+  get tickDuration() {
+    return 1 / this.ppqn;
+  }
+
   set bpm(bpm: number) {
     if (bpm > 0 && this._bpm !== bpm) {
       this._bpm = bpm;
       this.logicalTime = this.realTime;
+      this.clock.setDuration(() => (this.tickDuration * 60) / this.bpm);
     }
   }
 
@@ -261,6 +266,7 @@ export class Clock {
     this.app.api.MidiConnection.sendStopMessage();
     this.lastPauseTime = this.app.audioContext.currentTime;
     this.logicalTime = this.realTime;
+    this.clock.pause()
   }
 
   public stop(): void {
@@ -275,5 +281,6 @@ export class Clock {
     this.logicalTime = this.realTime;
     this.time_position = { bar: 0, beat: 0, pulse: 0 };
     this.app.api.MidiConnection.sendStopMessage();
+    this.clock.stop();
   }
 }
