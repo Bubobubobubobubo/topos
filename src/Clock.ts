@@ -33,9 +33,6 @@ export class Clock {
    * @param ppqn - The pulses per quarter note
    * @param tick - The current tick since origin
    * @param running - Is the clock running?
-   * @param lastPauseTime - The last time the clock was paused
-   * @param lastPlayPressTime - The last time the clock was started
-   * @param totalPauseTime - The total time the clock has been paused / stopped
    */
 
   clock: any;
@@ -47,9 +44,6 @@ export class Clock {
   private _ppqn: number;
   tick: number;
   running: boolean;
-  lastPauseTime: number;
-  lastPlayPressTime: number;
-  totalPauseTime: number;
   timeviewer: HTMLElement;
   deadline: number;
 
@@ -65,10 +59,7 @@ export class Clock {
     this._ppqn = 48;
     this.ctx = ctx;
     this.running = true;
-    this.lastPauseTime = 0;
     this.deadline = 0;
-    this.lastPlayPressTime = 0;
-    this.totalPauseTime = 0;
     this.timeviewer = document.getElementById("timeviewer")!;
     this.clock = getAudioContext().createClock(this.clockCallback, this.pulse_duration)
  }
@@ -102,12 +93,6 @@ export class Clock {
   };
 
   convertTicksToTimeposition(ticks: number): TimePosition {
-    /**
-     * Converts ticks to a TimePosition object.
-     * @param ticks The number of ticks to convert.
-     * @returns The TimePosition object representing the converted ticks.
-     */
-
     const beatsPerBar = this.app.clock.time_signature[0];
     const ppqnPosition = ticks % this.app.clock.ppqn;
     const beatNumber = Math.floor(ticks / this.app.clock.ppqn);
@@ -117,71 +102,37 @@ export class Clock {
   }
 
   get ticks_before_new_bar(): number {
-    /**
-     * This function returns the number of ticks separating the current moment
-     * from the beginning of the next bar.
-     *
-     * @returns number of ticks until next bar
-     */
     const ticskMissingFromBeat = this.ppqn - this.time_position.pulse;
     const beatsMissingFromBar = this.beats_per_bar - this.time_position.beat;
     return beatsMissingFromBar * this.ppqn + ticskMissingFromBeat;
   }
 
   get next_beat_in_ticks(): number {
-    /**
-     * This function returns the number of ticks separating the current moment
-     * from the beginning of the next beat.
-     *
-     * @returns number of ticks until next beat
-     */
-    return this.app.clock.pulses_since_origin + this.time_position.pulse;
+   return this.app.clock.pulses_since_origin + this.time_position.pulse;
   }
 
   get beats_per_bar(): number {
-    /**
-     * Returns the number of beats per bar.
-     */
-    return this.time_signature[0];
+   return this.time_signature[0];
   }
 
   get beats_since_origin(): number {
-    /**
-     * Returns the number of beats since the origin.
-     *
-     * @returns number of beats since origin
-     */
-    return Math.floor(this.tick / this.ppqn);
+   return Math.floor(this.tick / this.ppqn);
   }
 
   get pulses_since_origin(): number {
-    /**
-     * Returns the number of pulses since the origin.
-     *
-     * @returns number of pulses since origin
-     */
-    return this.tick;
+   return this.tick;
   }
 
   get pulse_duration(): number {
-    /**
-     * Returns the duration of a pulse in seconds.
-     */
-    return 60 / this.bpm / this.ppqn;
+   return 60 / this.bpm / this.ppqn;
   }
 
   public pulse_duration_at_bpm(bpm: number = this.bpm): number {
-    /**
-     * Returns the duration of a pulse in seconds at a specific bpm.
-     */
-    return 60 / bpm / this.ppqn;
+   return 60 / bpm / this.ppqn;
   }
 
   get bpm(): number {
     return this._bpm;
-  }
-
-  set nudge(nudge: number) {
   }
 
   get tickDuration() {
@@ -200,34 +151,18 @@ export class Clock {
     return this._ppqn;
   }
 
-  get realTime(): number {
-    return this.app.audioContext.currentTime - this.totalPauseTime;
-  }
-
-  get deviation(): number {
-    return Math.abs(this.logicalTime - this.realTime);
-  }
-
   set ppqn(ppqn: number) {
     if (ppqn > 0 && this._ppqn !== ppqn) {
       this._ppqn = ppqn;
-      this.logicalTime = this.realTime;
     }
   }
 
-  public incrementTick(bpm: number) {
+  public incrementTick() {
     this.tick++;
-    this.logicalTime += this.pulse_duration_at_bpm(bpm);
   }
 
   public nextTickFrom(time: number, nudge: number): number {
-    /**
-     * Compute the time remaining before the next clock tick.
-     * @param time - audio context currentTime
-     * @param nudge - nudge in the future (in seconds)
-     * @returns remainingTime
-     */
-    const pulseDuration = this.pulse_duration;
+   const pulseDuration = this.pulse_duration;
     const nudgedTime = time + nudge;
     const nextTickTime = Math.ceil(nudgedTime / pulseDuration) * pulseDuration;
     const remainingTime = nextTickTime - nudgedTime;
@@ -236,9 +171,6 @@ export class Clock {
   }
 
   public convertPulseToSecond(n: number): number {
-    /**
-     * Converts a pulse to a second.
-     */
     return n * this.pulse_duration;
   }
 
@@ -251,21 +183,12 @@ export class Clock {
     this.app.audioContext.resume();
     this.running = true;
     this.app.api.MidiConnection.sendStartMessage();
-    this.lastPlayPressTime = this.app.audioContext.currentTime;
-    this.totalPauseTime += this.lastPlayPressTime - this.lastPauseTime;
     this.clock.start()
   }
 
   public pause(): void {
-    /**
-     * Pauses the TransportNode (pauses the clock).
-     *
-     * @remark also sends a MIDI message if a port is declared
-     */
     this.running = false;
     this.app.api.MidiConnection.sendStopMessage();
-    this.lastPauseTime = this.app.audioContext.currentTime;
-    this.logicalTime = this.realTime;
     this.clock.pause()
   }
 
@@ -277,8 +200,6 @@ export class Clock {
      */
     this.running = false;
     this.tick = 0;
-    this.lastPauseTime = this.app.audioContext.currentTime;
-    this.logicalTime = this.realTime;
     this.time_position = { bar: 0, beat: 0, pulse: 0 };
     this.app.api.MidiConnection.sendStopMessage();
     this.clock.stop();
