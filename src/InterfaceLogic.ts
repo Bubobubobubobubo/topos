@@ -144,9 +144,10 @@ export const installInterfaceLogic = (app: Editor) => {
   });
 
   app.interface.audio_nudge_range.addEventListener("input", () => {
-    app.clock.nudge = parseInt(
-      (app.interface.audio_nudge_range as HTMLInputElement).value,
-    );
+    // TODO: rebuild this
+    // app.clock.nudge = parseInt(
+    //   (app.interface.audio_nudge_range as HTMLInputElement).value,
+    // );
   });
 
   app.interface.dough_nudge_range.addEventListener("input", () => {

@@ -66,6 +66,7 @@ export class Clock {
     );
   }
 
+  // @ts-ignore
   clockCallback = (time: number, duration: number, tick: number) => {
     /**
      * Callback function for the zyklus clock. Updates the clock info and sends a 
@@ -87,9 +88,8 @@ export class Clock {
       );
       this.app.clock.time_position = futureTimeStamp;
       if (futureTimeStamp.pulse % this.app.clock.ppqn == 0) {
-        this.timeviewer.innerHTML = `${zeroPad(futureTimeStamp.bar, 2)}:${
-          futureTimeStamp.beat + 1
-        } / ${this.app.clock.bpm}`;
+        this.timeviewer.innerHTML = `${zeroPad(futureTimeStamp.bar, 2)}:${futureTimeStamp.beat + 1
+          } / ${this.app.clock.bpm}`;
       }
       if (this.app.exampleIsPlaying) {
         tryEvaluate(this.app, this.app.example_buffer);

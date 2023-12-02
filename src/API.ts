@@ -1298,7 +1298,7 @@ export class UserAPI {
     const results: boolean[] = nArray.map(
       (value) =>
         (this.app.clock.pulses_since_origin - Math.floor(nudge * this.ppqn())) %
-          Math.floor(value * this.ppqn()) ===
+        Math.floor(value * this.ppqn()) ===
         0,
     );
     return results.some((value) => value === true);
@@ -1318,7 +1318,7 @@ export class UserAPI {
     const results: boolean[] = nArray.map(
       (value) =>
         (this.app.clock.pulses_since_origin - nudgeInPulses) %
-          Math.floor(value * barLength) ===
+        Math.floor(value * barLength) ===
         0,
     );
     return results.some((value) => value === true);
@@ -1790,18 +1790,6 @@ export class UserAPI {
     return sum / values.length;
   };
 
-  public range = (
-    inputY: number,
-    yMin: number,
-    yMax: number,
-    xMin: number,
-    xMax: number,
-  ): number => {
-    const percent = (inputY - yMin) / (yMax - yMin);
-    const outputX = percent * (xMax - xMin) + xMin;
-    return outputX;
-  };
-
   limit = (value: number, min: number, max: number): number => {
     /**
      * Limits a value between a minimum and a maximum.
@@ -1928,7 +1916,7 @@ export class UserAPI {
   // =============================================================
 
   register = (name: string, operation: EventOperation<AbstractEvent>): void => {
-    AbstractEvent.prototype[name] = function (
+    AbstractEvent.prototype[name] = function(
       this: AbstractEvent,
       ...args: any[]
     ) {
@@ -2110,19 +2098,6 @@ export class UserAPI {
   // =============================================================
   // Transport functions
   // =============================================================
-
-  public nudge = (nudge?: number): number => {
-    /**
-     * Sets or returns the current clock nudge.
-     *
-     * @param nudge - [optional] the nudge to set
-     * @returns The current nudge
-     */
-    if (nudge) {
-      this.app.clock.nudge = nudge;
-    }
-    return this.app.clock.nudge;
-  };
 
   public tempo = (n?: number): number => {
     /**
