@@ -1,5 +1,11 @@
 import { type Editor } from "../main";
-import { freqToMidi, chord as parseChord, noteNameToMidi, resolvePitchBend, safeScale } from "zifferjs";
+import {
+  freqToMidi,
+  chord as parseChord,
+  noteNameToMidi,
+  resolvePitchBend,
+  safeScale,
+} from "zifferjs";
 import { SkipEvent } from "./SkipEvent";
 
 export type EventOperation<T> = (instance: T, ...args: any[]) => void;
@@ -311,16 +317,16 @@ export abstract class AudibleEvent extends AbstractEvent {
     return this;
   };
 
-  protected updateValue<T>(
-    key: string,
-    value: T | T[] | null
-  ): this {
+  protected updateValue<T>(key: string, value: T | T[] | null): this {
     if (value == null) return this;
     this.values[key] = value;
     return this;
   }
 
-  public note = (value: number | string | null, ...kwargs: number[]|string[]) => {
+  public note = (
+    value: number | string | null,
+    ...kwargs: number[] | string[]
+  ) => {
     if (typeof value === "string") {
       const parsedNote = noteNameToMidi(value);
       return this.updateValue("note", [parsedNote, ...kwargs].flat(Infinity));
@@ -331,8 +337,8 @@ export abstract class AudibleEvent extends AbstractEvent {
     }
   };
 
-  public chord = (value: number|string, ...kwargs: number[]) => {
-    if(typeof value === "string") {
+  public chord = (value: number | string, ...kwargs: number[]) => {
+    if (typeof value === "string") {
       const chord = parseChord(value);
       return this.updateValue("note", chord);
     } else {

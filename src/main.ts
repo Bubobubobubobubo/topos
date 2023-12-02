@@ -246,20 +246,17 @@ export class Editor {
       "ui-known-universe-item-template",
     ) as HTMLTemplateElement;
     if (!itemTemplate) {
-      console.warn("Missing template #ui-known-universe-item-template");
       return;
     }
 
     let existing_universes = document.getElementById("existing-universes");
     if (!existing_universes) {
-      console.warn("Missing element #existing-universes");
       return;
     }
 
     let list = document.createElement("ul");
     list.className =
       "lg:h-80 lg:text-normal text-sm h-auto lg:w-80 w-auto lg:pb-2 lg:pt-2 overflow-y-scroll text-white lg:mb-4 border rounded-lg bg-neutral-800";
-
     list.append(
       ...Object.keys(this.universes).map((it) => {
         let item = itemTemplate.content.cloneNode(true) as DocumentFragment;

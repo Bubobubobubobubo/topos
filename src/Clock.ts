@@ -1,7 +1,11 @@
-// @ts-ignore
-import { TransportNode } from "./TransportNode";
-import TransportProcessor from "./TransportProcessor?worker&url";
 import { Editor } from "./main";
+import { tryEvaluate } from "./Evaluator";
+// @ts-ignore
+import { getAudioContext } from "superdough";
+// @ts-ignore
+import "zyklus";
+const zeroPad = (num: number, places: number) =>
+  String(num).padStart(places, "0");
 
 export interface TimePosition {
   /**
@@ -18,35 +22,29 @@ export interface TimePosition {
 
 export class Clock {
   /**
-   * The Clock Class is responsible for keeping track of the current time.
-   * It is also responsible for starting and stopping the Clock TransportNode.
    *
-   * @param app - The main application instance
-   * @param ctx - The current AudioContext used by app
-   * @param transportNode - The TransportNode helper
-   * @param bpm - The current beats per minute value
-   * @param time_signature - The time signature
-   * @param time_position - The current time position
-   * @param ppqn - The pulses per quarter note
-   * @param tick - The current tick since origin
+   * @param app - main application instance
+   * @param clock - zyklus clock
+   * @param ctx - current AudioContext used by app
+   * @param bpm - current beats per minute value
+   * @param time_signature - time signature
+   * @param time_position - current time position
+   * @param ppqn - pulses per quarter note
+   * @param tick - current tick since origin
    * @param running - Is the clock running?
-   * @param lastPauseTime - The last time the clock was paused
-   * @param lastPlayPressTime - The last time the clock was started
-   * @param totalPauseTime - The total time the clock has been paused / stopped
    */
 
+  private _bpm: number;
+  private _ppqn: number;
+  clock: any;
   ctx: AudioContext;
   logicalTime: number;
-  transportNode: TransportNode | null;
-  private _bpm: number;
   time_signature: number[];
   time_position: TimePosition;
-  private _ppqn: number;
   tick: number;
   running: boolean;
-  lastPauseTime: number;
-  lastPlayPressTime: number;
-  totalPauseTime: number;
+  timeviewer: HTMLElement;
+  deadline: number;
 
   constructor(
     public app: Editor,
@@ -58,31 +56,58 @@ export class Clock {
     this.tick = 0;
     this._bpm = 120;
     this._ppqn = 48;
-    this.transportNode = null;
     this.ctx = ctx;
     this.running = true;
-    this.lastPauseTime = 0;
-    this.lastPlayPressTime = 0;
-    this.totalPauseTime = 0;
-    ctx.audioWorklet
-      .addModule(TransportProcessor)
-      .then((e) => {
-        this.transportNode = new TransportNode(ctx, {}, this.app);
-        this.transportNode.connect(ctx.destination);
-        return e;
-      })
-      .catch((e) => {
-        console.log("Error loading TransportProcessor.js:", e);
-      });
+    this.deadline = 0;
+    this.timeviewer = document.getElementById("timeviewer")!;
+    this.clock = getAudioContext().createClock(
+      this.clockCallback,
+      this.pulse_duration,
+    );
   }
+
+  // @ts-ignore
+  clockCallback = (time: number, duration: number, tick: number) => {
+    /**
+     * Callback function for the zyklus clock. Updates the clock info and sends a 
+     * MIDI clock message if the setting is enabled. Also evaluates the global buffer.
+     * 
+     * @param time - precise AudioContext time when the tick should happen
+     * @param duration -  seconds between each tick
+     * @param tick - count of the current tick
+     */
+    let deadline = time - getAudioContext().currentTime;
+    this.deadline = deadline;
+    this.tick = tick;
+    if (this.app.clock.running) {
+      if (this.app.settings.send_clock) {
+        this.app.api.MidiConnection.sendMidiClock();
+      }
+      const futureTimeStamp = this.app.clock.convertTicksToTimeposition(
+        this.app.clock.tick,
+      );
+      this.app.clock.time_position = futureTimeStamp;
+      if (futureTimeStamp.pulse % this.app.clock.ppqn == 0) {
+        this.timeviewer.innerHTML = `${zeroPad(futureTimeStamp.bar, 2)}:${futureTimeStamp.beat + 1
+          } / ${this.app.clock.bpm}`;
+      }
+      if (this.app.exampleIsPlaying) {
+        tryEvaluate(this.app, this.app.example_buffer);
+      } else {
+        tryEvaluate(this.app, this.app.global_buffer);
+      }
+    }
+
+    // Implement TransportNode clock callback and update clock info with it
+  };
 
   convertTicksToTimeposition(ticks: number): TimePosition {
     /**
-     * Converts ticks to a TimePosition object.
-     * @param ticks The number of ticks to convert.
-     * @returns The TimePosition object representing the converted ticks.
+     * Converts ticks to a time position. 
+     * 
+     * @param ticks - ticks to convert
+     * @returns TimePosition
      */
-
     const beatsPerBar = this.app.clock.time_signature[0];
     const ppqnPosition = ticks % this.app.clock.ppqn;
     const beatNumber = Math.floor(ticks / this.app.clock.ppqn);
@@ -93,10 +118,9 @@ export class Clock {
 
   get ticks_before_new_bar(): number {
     /**
-     * This function returns the number of ticks separating the current moment
-     * from the beginning of the next bar.
-     *
-     * @returns number of ticks until next bar
+     * Calculates the number of ticks before the next bar.
+     * 
+     * @returns number - ticks before the next bar
      */
     const ticskMissingFromBeat = this.ppqn - this.time_position.pulse;
     const beatsMissingFromBar = this.beats_per_bar - this.time_position.beat;
@@ -105,10 +129,9 @@ export class Clock {
 
   get next_beat_in_ticks(): number {
     /**
-     * This function returns the number of ticks separating the current moment
-     * from the beginning of the next beat.
-     *
-     * @returns number of ticks until next beat
+     * Calculates the number of ticks before the next beat.
+     * 
+     * @returns number - ticks before the next beat
      */
     return this.app.clock.pulses_since_origin + this.time_position.pulse;
   }
@@ -116,6 +139,8 @@ export class Clock {
   get beats_per_bar(): number {
     /**
      * Returns the number of beats per bar.
+     * 
+     * @returns number - beats per bar
      */
     return this.time_signature[0];
   }
@@ -123,8 +148,8 @@ export class Clock {
   get beats_since_origin(): number {
     /**
      * Returns the number of beats since the origin.
-     *
-     * @returns number of beats since origin
+     * 
+     * @returns number - beats since the origin
      */
     return Math.floor(this.tick / this.ppqn);
   }
@@ -132,8 +157,8 @@ export class Clock {
   get pulses_since_origin(): number {
     /**
      * Returns the number of pulses since the origin.
-     *
-     * @returns number of pulses since origin
+     * 
+     * @returns number - pulses since the origin
      */
     return this.tick;
   }
@@ -141,119 +166,112 @@ export class Clock {
   get pulse_duration(): number {
     /**
      * Returns the duration of a pulse in seconds.
+     * @returns number - duration of a pulse in seconds
      */
     return 60 / this.bpm / this.ppqn;
   }
 
   public pulse_duration_at_bpm(bpm: number = this.bpm): number {
     /**
-     * Returns the duration of a pulse in seconds at a specific bpm.
+     * Returns the duration of a pulse in seconds at a given bpm.
+     * 
+     * @param bpm - bpm to calculate the pulse duration for
+     * @returns number - duration of a pulse in seconds
      */
     return 60 / bpm / this.ppqn;
   }
 
   get bpm(): number {
+    /**
+     * Returns the current bpm.
+     * @returns number - current bpm
+     */
     return this._bpm;
   }
 
-  set nudge(nudge: number) {
-    this.transportNode?.setNudge(nudge);
+  get tickDuration(): number {
+    /**
+     * Returns the duration of a tick in seconds.
+     * @returns number - duration of a tick in seconds
+     */
+    return 1 / this.ppqn;
   }
 
   set bpm(bpm: number) {
+    /**
+     * Sets the bpm.
+     * @param bpm - bpm to set
+     */
     if (bpm > 0 && this._bpm !== bpm) {
-      this.transportNode?.setBPM(bpm);
       this._bpm = bpm;
-      this.logicalTime = this.realTime;
+      this.clock.setDuration(() => (this.tickDuration * 60) / this.bpm);
     }
   }
 
   get ppqn(): number {
+    /**
+     * Returns the current ppqn.
+     * @returns number - current ppqn
+     */
     return this._ppqn;
   }
 
-  get realTime(): number {
-    return this.app.audioContext.currentTime - this.totalPauseTime;
-  }
-
-  get deviation(): number {
-    return Math.abs(this.logicalTime - this.realTime);
-  }
-
   set ppqn(ppqn: number) {
+    /**
+     * Sets the ppqn.
+     * @param ppqn - ppqn to set
+     * @returns number - current ppqn
+     */
     if (ppqn > 0 && this._ppqn !== ppqn) {
       this._ppqn = ppqn;
-      this.transportNode?.setPPQN(ppqn);
-      this.logicalTime = this.realTime;
     }
   }
 
-  public incrementTick(bpm: number) {
-    this.tick++;
-    this.logicalTime += this.pulse_duration_at_bpm(bpm);
-  }
-
   public nextTickFrom(time: number, nudge: number): number {
-    /**
-     * Compute the time remaining before the next clock tick.
-     * @param time - audio context currentTime
-     * @param nudge - nudge in the future (in seconds)
-     * @returns remainingTime
-     */
     const pulseDuration = this.pulse_duration;
     const nudgedTime = time + nudge;
     const nextTickTime = Math.ceil(nudgedTime / pulseDuration) * pulseDuration;
     const remainingTime = nextTickTime - nudgedTime;
-
     return remainingTime;
   }
 
   public convertPulseToSecond(n: number): number {
-    /**
-     * Converts a pulse to a second.
-     */
     return n * this.pulse_duration;
   }
 
   public start(): void {
     /**
-     * Starts the TransportNode (starts the clock).
-     *
+     * Start the clock
+     * 
      * @remark also sends a MIDI message if a port is declared
      */
     this.app.audioContext.resume();
     this.running = true;
     this.app.api.MidiConnection.sendStartMessage();
-    this.lastPlayPressTime = this.app.audioContext.currentTime;
-    this.totalPauseTime += this.lastPlayPressTime - this.lastPauseTime;
-    this.transportNode?.start();
+    this.clock.start();
   }
 
   public pause(): void {
     /**
-     * Pauses the TransportNode (pauses the clock).
-     *
+     * Pause the clock.
+     * 
      * @remark also sends a MIDI message if a port is declared
      */
     this.running = false;
-    this.transportNode?.pause();
     this.app.api.MidiConnection.sendStopMessage();
-    this.lastPauseTime = this.app.audioContext.currentTime;
-    this.logicalTime = this.realTime;
+    this.clock.pause();
   }
 
   public stop(): void {
     /**
-     * Stops the TransportNode (stops the clock).
+     * Stops the clock.
      *
      * @remark also sends a MIDI message if a port is declared
      */
     this.running = false;
     this.tick = 0;
-    this.lastPauseTime = this.app.audioContext.currentTime;
-    this.logicalTime = this.realTime;
     this.time_position = { bar: 0, beat: 0, pulse: 0 };
     this.app.api.MidiConnection.sendStopMessage();
-    this.transportNode?.stop();
+    this.clock.stop();
   }
 }
