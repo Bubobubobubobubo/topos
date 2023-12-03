@@ -294,6 +294,11 @@ Topos is deeply inspired by the [Monome Teletype](https://monome.org/). The Tele
 ## Demo Songs
 
 Reloading the application will get you one random song example to study every time. Press ${Ot("F5")} and listen to them all! The demo songs are also used a bit everywhere in the documentation to illustrate some of the working principles :).
+
+## Support
+
+<p>You can <a href='https://ko-fi.com/I2I2RSBHF' target='_blank'><img height='36' style='display: inline; border:0px;height:36px;' src='https://storage.ko-fi.com/cdn/kofi3.png?v=3' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a> to support the development :) </p>
+
 `},w7=r=>{const e=Mt(r);return`# Loading custom samples
 
 
@@ -1132,6 +1137,21 @@ Topos is an experimental web based algorithmic sequencer programmed by **BuboBub
 
 Topos is a free and open-source software distributed under [GPL-3.0](https://github.com/Bubobubobubobubo/Topos/blob/main/LICENSE) licence. We welcome all contributions and ideas. You can find the source code on [GitHub](https://github.com/Bubobubobubobubo/topos). You can also join us on [Discord](https://discord.gg/dnUTPbu6bN) to discuss about the project and live coding in general.
 	 
+## Support the project
+
+You can support the project by making a small donation on [Kofi](https://ko-fi.com/Manage/).
+
+<div style="display: flex; justify-content: center;">
+  <iframe
+    id='kofiframe'
+    src='https://ko-fi.com/raphaelbubo/?hidefeed=true&widget=true&embed=true&preview=true' 
+    style='border:none;width:40%;padding:4px;background:#f9f9f9;' 
+    height='590'
+    title='raphaelbubo'>
+  </iframe>
+</div>
+
+
 ## Credits
 
 - Felix Roos for the [SuperDough](https://www.npmjs.com/package/superdough) audio engine.
