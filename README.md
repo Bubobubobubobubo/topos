@@ -12,8 +12,12 @@
     <img src="https://contrib.rocks/image?repo=bubobubobubobubo/Topos" />
     </a>
   </p>
+  <p align="center">
   <a href='https://ko-fi.com/I2I2RSBHF' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://storage.ko-fi.com/cdn/kofi3.png?v=3' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
+  </p>
 </p>
+
+---------------------
 
 Topos is a web based live coding environment. Topos is capable of many things:
 - it is a music sequencer made for improvisation and composition alike
@@ -26,6 +30,8 @@ custom oscilloscopes, frequency visualizers and image sequencing capabilities
   [https://topos.live](https://topos.live)
 - Topos is also an emulation and personal extension of the [Monome Teletype](https://monome.org/docs/teletype/)
 ![Screenshot](https://github.com/Bubobubobubobubo/Topos/blob/main/img/topos_gif.gif)
+
+---------------------
 
 ## Disclaimer
 
