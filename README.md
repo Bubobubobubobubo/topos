@@ -29,9 +29,11 @@ custom oscilloscopes, frequency visualizers and image sequencing capabilities
 - it is made to be used without the need of installing anything, always ready at
   [https://topos.live](https://topos.live)
 - Topos is also an emulation and personal extension of the [Monome Teletype](https://monome.org/docs/teletype/)
-![Screenshot](https://github.com/Bubobubobubobubo/Topos/blob/main/img/topos_gif.gif)
 
 ---------------------
+
+![Screenshot](https://github.com/Bubobubobubobubo/Topos/blob/main/img/topos_gif.gif)
+
 
 ## Disclaimer
 
