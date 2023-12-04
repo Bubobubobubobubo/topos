@@ -20,7 +20,7 @@ import {
   bracketMatching,
 } from "@codemirror/language";
 import { defaultKeymap, historyKeymap, history } from "@codemirror/commands";
-import { searchKeymap, highlightSelectionMatches } from "@codemirror/search"
+import { searchKeymap, highlightSelectionMatches } from "@codemirror/search";
 import {
   autocompletion,
   closeBrackets,
@@ -34,15 +34,15 @@ import { toposTheme } from "./themes/toposTheme";
 import { javascript } from "@codemirror/lang-javascript";
 import { inlineHoveringTips } from "./documentation/inlineHelp";
 import { toposCompletions, soundCompletions } from "./documentation/inlineHelp";
-import { javascriptLanguage } from "@codemirror/lang-javascript"
+import { javascriptLanguage } from "@codemirror/lang-javascript";
 
 export const jsCompletions = javascriptLanguage.data.of({
-  autocomplete: toposCompletions
-})
+  autocomplete: toposCompletions,
+});
 
 export const toposSoundCompletions = javascriptLanguage.data.of({
-  autocomplete: soundCompletions
-})
+  autocomplete: soundCompletions,
+});
 
 export const editorSetup: Extension = (() => [
   highlightActiveLineGutter(),
@@ -95,7 +95,9 @@ export const installEditor = (app: Editor) => {
     app.withLineNumbers.of(lines),
     app.fontSize.of(fontModif),
     app.hoveringCompartment.of(app.settings.tips ? inlineHoveringTips : []),
-    app.completionsCompartment.of(app.settings.completions ? [jsCompletions, toposSoundCompletions] : []),
+    app.completionsCompartment.of(
+      app.settings.completions ? [jsCompletions, toposSoundCompletions] : [],
+    ),
     editorSetup,
     toposTheme,
     app.chosenLanguage.of(javascript()),
@@ -114,7 +116,7 @@ export const installEditor = (app: Editor) => {
               return true;
             },
           },
-        ])
+        ]),
       ),
       keymap.of([indentWithTab]),
     ],
@@ -139,7 +141,7 @@ export const installEditor = (app: Editor) => {
         ".cm-gutters": {
           fontSize: `${app.settings.font_size}px`,
         },
-      })
+      }),
     ),
   });
 };

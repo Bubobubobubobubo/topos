@@ -1,5 +1,6 @@
-import { OscilloscopeConfig, runOscilloscope, scriptBlinkers } from "./AudioVisualisation";
+import { OscilloscopeConfig, runOscilloscope } from "./Visuals/Oscilloscope";
 import { EditorState, Compartment } from "@codemirror/state";
+import { scriptBlinkers } from "./Visuals/Blinkers";
 import { javascript } from "@codemirror/lang-javascript";
 import { markdown } from "@codemirror/lang-markdown";
 import { Extension } from "@codemirror/state";
@@ -47,6 +48,7 @@ export class Editor {
 
   // Editor logic
   editor_mode: "global" | "local" | "init" | "notes" = "global";
+  hidden_interface: boolean = false;
   fontSize!: Compartment;
   withLineNumbers!: Compartment;
   vimModeCompartment!: Compartment;
@@ -100,6 +102,19 @@ export class Editor {
   public hydra: any;
 
   constructor() {
+    /**
+     * This is the entry point of the application. The Editor instance is created when the page is loaded.
+     * It is responsible for:
+     * - Initializing the user interface
+     * - Loading the universe from local storage
+     * - Initializing the audio context and the clock
+     * - Building the user API
+     * - Building the documentation
+     * - Installing event listeners
+     * - Building the CodeMirror editor
+     * - Evaluating the init file
+     */
+
     // ================================================================================
     // Build user interface
     // ================================================================================
@@ -194,6 +209,11 @@ export class Editor {
   }
 
   private getBuffer(type: string): any {
+    /**
+     * Retrieves the buffer based on the specified type.
+     * @param type - The type of buffer to retrieve.
+     * @returns The buffer object.
+     */
     const universe = this.universes[this.selected_universe.toString()];
     return type === "locals"
       ? universe[type][this.local_index]
@@ -221,24 +241,27 @@ export class Editor {
   }
 
   updateKnownUniversesView = () => {
+    /**
+     * Updates the known universes view.
+     * This function generates and populates a list of known universes based on the data stored in the 'universes' property.
+     * It retrieves the necessary HTML elements and template, creates the list, and attaches event listeners to the generated items.
+     * If any required elements or templates are missing, warning messages are logged and the function returns early.
+     */
     let itemTemplate = document.getElementById(
-      "ui-known-universe-item-template"
+      "ui-known-universe-item-template",
     ) as HTMLTemplateElement;
     if (!itemTemplate) {
-      console.warn("Missing template #ui-known-universe-item-template");
       return;
     }
 
     let existing_universes = document.getElementById("existing-universes");
     if (!existing_universes) {
-      console.warn("Missing element #existing-universes");
       return;
     }
 
     let list = document.createElement("ul");
     list.className =
       "lg:h-80 lg:text-normal text-sm h-auto lg:w-80 w-auto lg:pb-2 lg:pt-2 overflow-y-scroll text-white lg:mb-4 border rounded-lg bg-neutral-800";
-
     list.append(
       ...Object.keys(this.universes).map((it) => {
         let item = itemTemplate.content.cloneNode(true) as DocumentFragment;
@@ -250,10 +273,10 @@ export class Editor {
         item
           .querySelector(".delete-universe")
           ?.addEventListener("click", () =>
-            api._deleteUniverseFromInterface(it)
+            api._deleteUniverseFromInterface(it),
           );
         return item;
-      })
+      }),
     );
 
     existing_universes.innerHTML = "";
@@ -261,7 +284,13 @@ export class Editor {
   };
 
   changeToLocalBuffer(i: number) {
-    // Updating the CSS accordingly
+    /**
+     * Changes the local buffer based on the provided index.
+     * Updates the CSS accordingly by adding a specific class to the selected tab and removing it from other tabs.
+     * Updates the local index and updates the editor view.
+     *
+     * @param i The index of the tab to change the local buffer to.
+     */
     const tabs = document.querySelectorAll('[id^="tab-"]');
     const tab = tabs[i] as HTMLElement;
     tab.classList.add("bg-orange-300");
@@ -274,6 +303,11 @@ export class Editor {
   }
 
   changeModeFromInterface(mode: "global" | "local" | "init" | "notes") {
+    /**
+     * Changes the mode of the interface.
+     *
+     * @param mode - The mode to change to. Can be one of "global", "local", "init", or "notes".
+     */
     const interface_buttons: HTMLElement[] = [
       this.interface.local_button,
       this.interface.global_button,
@@ -334,7 +368,7 @@ export class Editor {
 
     this.view.dispatch({
       effects: this.chosenLanguage.reconfigure(
-        this.editor_mode == "notes" ? [markdown()] : [javascript()]
+        this.editor_mode == "notes" ? [markdown()] : [javascript()],
       ),
     });
 
@@ -343,8 +377,14 @@ export class Editor {
 
   setButtonHighlighting(
     button: "play" | "pause" | "stop" | "clear",
-    highlight: boolean
+    highlight: boolean,
   ) {
+    /**
+     * Sets the highlighting for a specific button.
+     *
+     * @param button - The button to highlight ("play", "pause", "stop", or "clear").
+     * @param highlight - A boolean indicating whether to highlight the button or not.
+     */
     document.getElementById("play-label")!.textContent =
       button !== "pause" ? "Pause" : "Play";
     if (button !== "pause") {
@@ -391,7 +431,7 @@ export class Editor {
     // All other buttons must lose the highlighting
     document
       .querySelectorAll(
-        possible_selectors.filter((_, index) => index != selector).join(",")
+        possible_selectors.filter((_, index) => index != selector).join(","),
       )
       .forEach((button) => {
         button.children[0].classList.remove("animate-pulse");
@@ -429,36 +469,36 @@ export class Editor {
     }
   }
 
-  /**
-   * Flashes the background of the view and its gutters.
-   * @param {string} color - The color to set.
-   * @param {number} duration - Duration in milliseconds to maintain the color.
-   */
   flashBackground(color: string, duration: number): void {
+    /**
+     * Flashes the background of the view and its gutters.
+     * @param {string} color - The color to set.
+     * @param {number} duration - Duration in milliseconds to maintain the color.
+     */
     const domElement = this.view.dom;
     const gutters = domElement.getElementsByClassName(
-      "cm-gutter"
+      "cm-gutter",
     ) as HTMLCollectionOf<HTMLElement>;
 
     domElement.classList.add("fluid-bg-transition");
     Array.from(gutters).forEach((gutter) =>
-      gutter.classList.add("fluid-bg-transition")
+      gutter.classList.add("fluid-bg-transition"),
     );
 
     domElement.style.backgroundColor = color;
     Array.from(gutters).forEach(
-      (gutter) => (gutter.style.backgroundColor = color)
+      (gutter) => (gutter.style.backgroundColor = color),
     );
 
     setTimeout(() => {
       domElement.style.backgroundColor = "";
       Array.from(gutters).forEach(
-        (gutter) => (gutter.style.backgroundColor = "")
+        (gutter) => (gutter.style.backgroundColor = ""),
       );
 
       domElement.classList.remove("fluid-bg-transition");
       Array.from(gutters).forEach((gutter) =>
-        gutter.classList.remove("fluid-bg-transition")
+        gutter.classList.remove("fluid-bg-transition"),
       );
     }, duration);
   }
@@ -466,7 +506,7 @@ export class Editor {
   private initializeElements(): void {
     for (const [key, value] of Object.entries(singleElements)) {
       this.interface[key] = document.getElementById(
-        value
+        value,
       ) as ElementMap[keyof ElementMap];
     }
   }
@@ -474,12 +514,18 @@ export class Editor {
   private initializeButtonGroups(): void {
     for (const [key, ids] of Object.entries(buttonGroups)) {
       this.buttonElements[key] = ids.map(
-        (id) => document.getElementById(id) as HTMLButtonElement
+        (id) => document.getElementById(id) as HTMLButtonElement,
       );
     }
   }
 
   private loadHydraSynthAsync(): void {
+    /**
+     * Loads the Hydra Synth asynchronously by creating a script element
+     * and appending it to the document head.  * Once the script is
+     * loaded successfully, it initializes the Hydra Synth. If there
+     * is an error loading the script, it logs an error message.
+     */
     var script = document.createElement("script");
     script.src = "https://unpkg.com/hydra-synth";
     script.async = true;
@@ -487,13 +533,16 @@ export class Editor {
       console.log("Hydra loaded successfully");
       this.initializeHydra();
     };
-    script.onerror = function() {
+    script.onerror = function () {
       console.error("Error loading Hydra script");
     };
     document.head.appendChild(script);
   }
 
   private initializeHydra(): void {
+    /**
+     * Initializes the Hydra backend and sets up the Hydra synth.
+     */
     // @ts-ignore
     this.hydra_backend = new Hydra({
       canvas: this.interface.hydra_canvas as HTMLCanvasElement,
@@ -501,18 +550,22 @@ export class Editor {
       enableStreamCapture: false,
     });
     this.hydra = this.hydra_backend.synth;
+    (globalThis as any).hydra = this.hydra;
+    this.hydra.setResolution(1024, 768);
   }
 
   private setCanvas(canvas: HTMLCanvasElement): void {
+    /**
+     * Sets the canvas element and configures its size and context.
+     *
+     * @param canvas - The HTMLCanvasElement to set.
+     */
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
-
     const dpr = window.devicePixelRatio || 1;
-
     // Assuming the canvas takes up the whole window
     canvas.width = window.innerWidth * dpr;
     canvas.height = window.innerHeight * dpr;
-
     if (ctx) {
       ctx.scale(dpr, dpr);
     }

@@ -154,7 +154,7 @@ export class AppSettings {
 
   constructor() {
     const settingsFromStorage = JSON.parse(
-      localStorage.getItem("topos") || "{}"
+      localStorage.getItem("topos") || "{}",
     );
 
     if (settingsFromStorage && Object.keys(settingsFromStorage).length !== 0) {
@@ -210,7 +210,7 @@ export class AppSettings {
 
   saveApplicationToLocalStorage(
     universes: Universes,
-    settings: Settings
+    settings: Settings,
   ): void {
     /**
      * Main method to store the application to local storage.
@@ -263,7 +263,9 @@ export const initializeSelectedUniverse = (app: Editor): void => {
       app.universes[app.selected_universe] = structuredClone(template_universe);
     }
   }
-  (app.interface.universe_viewer as HTMLInputElement).placeholder! = `${app.selected_universe}`;
+  (
+    app.interface.universe_viewer as HTMLInputElement
+  ).placeholder! = `${app.selected_universe}`;
 };
 
 export const emptyUrl = () => {
@@ -271,6 +273,11 @@ export const emptyUrl = () => {
 };
 
 export const share = async (app: Editor) => {
+  /**
+   * Shares the current state of the app by generating a URL with encoded data and copying it to the clipboard.
+   * @param app - The Editor instance representing the app.
+   * @returns A Promise that resolves to void.
+   */
   async function bufferToBase64(buffer: Uint8Array) {
     const base64url: string = await new Promise((r) => {
       const reader = new FileReader();
@@ -321,8 +328,20 @@ export const loadUniverserFromUrl = (app: Editor): void => {
 export const loadUniverse = (
   app: Editor,
   universeName: string,
-  universe: Universe = template_universe
+  universe: Universe = template_universe,
 ): void => {
+  /**
+   * Loads a universe into the application.
+   * If the universe does not exist, a fresh clone of the template universe is created and added to the application.
+   * The references to the selected universe are updated in the application settings.
+   * The editor view is updated to reflect the selected universe.
+   * The initialization script for the selected universe is evaluated.
+   *
+   * @param app - The Editor application instance.
+   * @param universeName - The name of the universe to load.
+   * @param universe - The template universe to clone if the specified universe does not exist.
+   */
+
   let selectedUniverse = universeName.trim();
   if (app.universes[selectedUniverse] === undefined) {
     // Pushing a freshly cloned template universe to:
@@ -334,7 +353,9 @@ export const loadUniverse = (
   // Updating references to the currently selected universe
   app.settings.selected_universe = selectedUniverse;
   app.selected_universe = selectedUniverse;
-  (app.interface.universe_viewer as HTMLInputElement).placeholder! = `${selectedUniverse}`;
+  (
+    app.interface.universe_viewer as HTMLInputElement
+  ).placeholder! = `${selectedUniverse}`;
   // Updating the editor View to reflect the selected universe
   app.updateEditorView();
   // Evaluating the initialisation script for the selected universe
@@ -342,7 +363,11 @@ export const loadUniverse = (
 };
 
 export const openUniverseModal = (): void => {
-  // If the modal is hidden, unhide it and hide the editor
+  /**
+   * Opens the universe modal.
+   * If the modal is hidden, it unhides it and hides the editor.
+   * If the modal is already visible, it closes the modal.
+   */
   if (
     document.getElementById("modal-buffers")!.classList.contains("invisible")
   ) {
@@ -355,6 +380,9 @@ export const openUniverseModal = (): void => {
 };
 
 export const closeUniverseModal = (): void => {
+  /**
+   * Closes the universe modal and performs necessary actions.
+   */
   // @ts-ignore
   document.getElementById("buffer-search")!.value = "";
   document.getElementById("editor")!.classList.remove("invisible");
@@ -362,6 +390,9 @@ export const closeUniverseModal = (): void => {
 };
 
 export const openSettingsModal = (): void => {
+  /**
+   * Opens the settings modal.
+   */
   if (
     document.getElementById("modal-settings")!.classList.contains("invisible")
   ) {
@@ -373,6 +404,9 @@ export const openSettingsModal = (): void => {
 };
 
 export const closeSettingsModal = (): void => {
+  /**
+   * Closes the settings modal and performs necessary actions.
+   */
   document.getElementById("editor")!.classList.remove("invisible");
   document.getElementById("modal-settings")!.classList.add("invisible");
 };

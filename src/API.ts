@@ -27,7 +27,8 @@ import {
 } from "superdough";
 import { Speaker } from "./extensions/StringExtensions";
 import { getScaleNotes } from "zifferjs";
-import { OscilloscopeConfig, blinkScript } from "./AudioVisualisation";
+import { OscilloscopeConfig } from "./Visuals/Oscilloscope";
+import { blinkScript } from "./Visuals/Blinkers";
 import { SkipEvent } from "./classes/SkipEvent";
 import { AbstractEvent, EventOperation } from "./classes/AbstractEvents";
 import drums from "./tidal-drum-machines.json";
@@ -41,16 +42,31 @@ interface ControlChange {
 export async function loadSamples() {
   return Promise.all([
     initAudioOnFirstClick(),
-    samples("github:tidalcycles/Dirt-Samples/master", undefined, { tag: "Tidal" }).then(() =>
-      registerSynthSounds()
-    ),
+    samples("github:tidalcycles/Dirt-Samples/master", undefined, {
+      tag: "Tidal",
+    }).then(() => registerSynthSounds()),
     registerZZFXSounds(),
-    samples(drums, "github:ritchse/tidal-drum-machines/main/machines/", { tag: "Machines" }),
-    samples("github:Bubobubobubobubo/Dough-Fox/main", undefined, { tag: "FoxDot" }),
-    samples("github:Bubobubobubobubo/Dough-Samples/main", undefined, { tag: "Pack" }),
-    samples("github:Bubobubobubobubo/Dough-Amiga/main", undefined, { tag: "Amiga" }),
-    samples("github:Bubobubobubobubo/Dough-Amen/main", undefined, { tag: "Amen" }),
-    samples("github:Bubobubobubobubo/Dough-Waveforms/main", undefined, { tag: "Waveforms" }),
+    samples(drums, "github:ritchse/tidal-drum-machines/main/machines/", {
+      tag: "Machines",
+    }),
+    samples("github:Bubobubobubobubo/Dough-Fox/main", undefined, {
+      tag: "FoxDot",
+    }),
+    samples("github:Bubobubobubobubo/Dough-Samples/main", undefined, {
+      tag: "Pack",
+    }),
+    samples("github:Bubobubobubobubo/Dough-Amiga/main", undefined, {
+      tag: "Amiga",
+    }),
+    samples("github:Bubobubobubobubo/Dough-Juj/main", undefined, {
+      tag: "Juliette",
+    }),
+    samples("github:Bubobubobubobubo/Dough-Amen/main", undefined, {
+      tag: "Amen",
+    }),
+    samples("github:Bubobubobubobubo/Dough-Waveforms/main", undefined, {
+      tag: "Waveforms",
+    }),
   ]);
 }
 
@@ -74,6 +90,7 @@ export class UserAPI {
   private printTimeoutID: number = 0;
   public MidiConnection: MidiConnection;
   public scale_aid: string | number | undefined = undefined;
+  public hydra: any;
   load: samples;
 
   constructor(public app: Editor) {
@@ -95,7 +112,7 @@ export class UserAPI {
     }
     this.app.settings.saveApplicationToLocalStorage(
       this.app.universes,
-      this.app.settings
+      this.app.settings,
     );
     this.app.updateKnownUniversesView();
   };
@@ -187,7 +204,7 @@ export class UserAPI {
     // @ts-ignore
     this.errorTimeoutID = setTimeout(
       () => this.app.interface.error_line.classList.add("hidden"),
-      2000
+      2000,
     );
   };
 
@@ -201,7 +218,7 @@ export class UserAPI {
     // @ts-ignore
     this.printTimeoutID = setTimeout(
       () => this.app.interface.error_line.classList.add("hidden"),
-      4000
+      4000,
     );
   };
 
@@ -252,7 +269,7 @@ export class UserAPI {
      */
     this.app.clock.tick = beat * this.app.clock.ppqn;
     this.app.clock.time_position = this.app.clock.convertTicksToTimeposition(
-      beat * this.app.clock.ppqn
+      beat * this.app.clock.ppqn,
     );
   };
 
@@ -309,7 +326,7 @@ export class UserAPI {
         blinkScript(this.app, "local", arg);
         tryEvaluate(
           this.app,
-          this.app.universes[this.app.selected_universe].locals[arg]
+          this.app.universes[this.app.selected_universe].locals[arg],
         );
       }
     });
@@ -356,7 +373,7 @@ export class UserAPI {
     delete this.app.universes[universe];
     this.app.settings.saveApplicationToLocalStorage(
       this.app.universes,
-      this.app.settings
+      this.app.settings,
     );
     this.app.updateKnownUniversesView();
   };
@@ -372,7 +389,7 @@ export class UserAPI {
       };
       this.app.settings.saveApplicationToLocalStorage(
         this.app.universes,
-        this.app.settings
+        this.app.settings,
       );
     }
     this.app.selected_universe = "Default";
@@ -409,7 +426,7 @@ export class UserAPI {
     value: number | number[] = 60,
     velocity?: number | number[],
     channel?: number | number[],
-    port?: number | string | number[] | string[]
+    port?: number | string | number[] | string[],
   ): MidiEvent => {
     /**
      * Sends a MIDI note to the current MIDI output.
@@ -484,7 +501,7 @@ export class UserAPI {
   };
 
   public active_note_events = (
-    channel?: number
+    channel?: number,
   ): MidiNoteEvent[] | undefined => {
     /**
      * @returns A list of currently active MIDI notes
@@ -621,7 +638,7 @@ export class UserAPI {
     scale: number | string,
     channel: number = 0,
     port: number | string = this.MidiConnection.currentOutputIndex || 0,
-    soundOff: boolean = false
+    soundOff: boolean = false,
   ): void => {
     /**
      * Sends given scale to midi output for visual aid
@@ -645,7 +662,7 @@ export class UserAPI {
     // @ts-ignore
     scale: number | string = 0,
     channel: number = 0,
-    port: number | string = this.MidiConnection.currentOutputIndex || 0
+    port: number | string = this.MidiConnection.currentOutputIndex || 0,
   ): void => {
     /**
      * Hides all notes by sending all notes off to midi output
@@ -660,7 +677,7 @@ export class UserAPI {
 
   midi_notes_off = (
     channel: number = 0,
-    port: number | string = this.MidiConnection.currentOutputIndex || 0
+    port: number | string = this.MidiConnection.currentOutputIndex || 0,
   ): void => {
     /**
      * Sends all notes off to midi output
@@ -670,7 +687,7 @@ export class UserAPI {
 
   midi_sound_off = (
     channel: number = 0,
-    port: number | string = this.MidiConnection.currentOutputIndex || 0
+    port: number | string = this.MidiConnection.currentOutputIndex || 0,
   ): void => {
     /**
      * Sends all sound off to midi output
@@ -697,7 +714,7 @@ export class UserAPI {
   public z = (
     input: string | Generator<number>,
     options: InputOptions = {},
-    id: number | string = ""
+    id: number | string = "",
   ): Player => {
     const zid = "z" + id.toString();
     const key = id === "" ? this.generateCacheKey(input, options) : zid;
@@ -774,7 +791,7 @@ export class UserAPI {
   public counter = (
     name: string | number,
     limit?: number,
-    step?: number
+    step?: number,
   ): number => {
     /**
      * Returns the current value of a counter, and increments it by the step value.
@@ -1282,7 +1299,7 @@ export class UserAPI {
       (value) =>
         (this.app.clock.pulses_since_origin - Math.floor(nudge * this.ppqn())) %
         Math.floor(value * this.ppqn()) ===
-        0
+        0,
     );
     return results.some((value) => value === true);
   };
@@ -1302,7 +1319,7 @@ export class UserAPI {
       (value) =>
         (this.app.clock.pulses_since_origin - nudgeInPulses) %
         Math.floor(value * barLength) ===
-        0
+        0,
     );
     return results.some((value) => value === true);
   };
@@ -1317,7 +1334,7 @@ export class UserAPI {
      */
     const nArray = Array.isArray(n) ? n : [n];
     const results: boolean[] = nArray.map(
-      (value) => (this.app.clock.pulses_since_origin - nudge) % value === 0
+      (value) => (this.app.clock.pulses_since_origin - nudge) % value === 0,
     );
     return results.some((value) => value === true);
   };
@@ -1326,7 +1343,7 @@ export class UserAPI {
   public tick = (tick: number | number[], offset: number = 0): boolean => {
     const nArray = Array.isArray(tick) ? tick : [tick];
     const results: boolean[] = nArray.map(
-      (value) => this.app.clock.time_position.pulse === value + offset
+      (value) => this.app.clock.time_position.pulse === value + offset,
     );
     return results.some((value) => value === true);
   };
@@ -1375,7 +1392,7 @@ export class UserAPI {
 
   public onbar = (
     bars: number[] | number,
-    n: number = this.app.clock.time_signature[0]
+    n: number = this.app.clock.time_signature[0],
   ): boolean => {
     let current_bar = (this.app.clock.time_position.bar % n) + 1;
     return typeof bars === "number"
@@ -1403,7 +1420,7 @@ export class UserAPI {
       if (decimal_part <= 0)
         decimal_part = decimal_part + this.ppqn() * this.nominator();
       final_pulses.push(
-        integral_part === this.cbeat() && this.cpulse() === decimal_part
+        integral_part === this.cbeat() && this.cpulse() === decimal_part,
       );
     });
     return final_pulses.some((p) => p == true);
@@ -1485,7 +1502,7 @@ export class UserAPI {
     iterator: number,
     pulses: number,
     length: number,
-    rotate: number = 0
+    rotate: number = 0,
   ): boolean => {
     /**
      * Returns a euclidean cycle of size length, with n pulses, rotated or not.
@@ -1504,7 +1521,7 @@ export class UserAPI {
     div: number,
     pulses: number,
     length: number,
-    rotate: number = 0
+    rotate: number = 0,
   ): boolean => {
     return (
       this.beat(div) && this._euclidean_cycle(pulses, length, rotate).beat(div)
@@ -1514,7 +1531,7 @@ export class UserAPI {
   _euclidean_cycle(
     pulses: number,
     length: number,
-    rotate: number = 0
+    rotate: number = 0,
   ): boolean[] {
     if (pulses == length) return Array.from({ length }, () => true);
     function startsDescent(list: number[], i: number): boolean {
@@ -1525,7 +1542,7 @@ export class UserAPI {
     if (pulses >= length) return [true];
     const resList = Array.from(
       { length },
-      (_, i) => (((pulses * (i - 1)) % length) + length) % length
+      (_, i) => (((pulses * (i - 1)) % length) + length) % length,
     );
     let cycle = resList.map((_, i) => startsDescent(resList, i));
     if (rotate != 0) {
@@ -1564,7 +1581,9 @@ export class UserAPI {
   // Low Frequency Oscillators
   // =============================================================
 
-  line = (start: number, end: number, step: number = 1): number[] => {
+  public range = (v: number, a: number, b: number): number => v * (b - a) + a;
+
+  public line = (start: number, end: number, step: number = 1): number[] => {
     /**
      * Returns an array of values between start and end, with a given step.
      *
@@ -1586,7 +1605,11 @@ export class UserAPI {
     return result;
   };
 
-  sine = (freq: number = 1, times: number = 1, offset: number = 0): number => {
+  public sine = (
+    freq: number = 1,
+    times: number = 1,
+    offset: number = 0,
+  ): number => {
     /**
      * Returns a sine wave between -1 and 1.
      *
@@ -1600,7 +1623,11 @@ export class UserAPI {
     );
   };
 
-  usine = (freq: number = 1, times: number = 1, offset: number = 0): number => {
+  public usine = (
+    freq: number = 1,
+    times: number = 1,
+    offset: number = 0,
+  ): number => {
     /**
      * Returns a sine wave between 0 and 1.
      *
@@ -1644,7 +1671,7 @@ export class UserAPI {
   triangle = (
     freq: number = 1,
     times: number = 1,
-    offset: number = 0
+    offset: number = 0,
   ): number => {
     /**
      * Returns a triangle wave between -1 and 1.
@@ -1661,7 +1688,7 @@ export class UserAPI {
   utriangle = (
     freq: number = 1,
     times: number = 1,
-    offset: number = 0
+    offset: number = 0,
   ): number => {
     /**
      * Returns a triangle wave between 0 and 1.
@@ -1678,7 +1705,7 @@ export class UserAPI {
     freq: number = 1,
     times: number = 1,
     offset: number = 0,
-    duty: number = 0.5
+    duty: number = 0.5,
   ): number => {
     /**
      * Returns a square wave with a specified duty cycle between -1 and 1.
@@ -1698,7 +1725,7 @@ export class UserAPI {
     freq: number = 1,
     times: number = 1,
     offset: number = 0,
-    duty: number = 0.5
+    duty: number = 0.5,
   ): number => {
     /**
      * Returns a square wave between 0 and 1.
@@ -1758,21 +1785,9 @@ export class UserAPI {
      */
     const sum = values.reduce(
       (accumulator, currentValue) => accumulator + currentValue,
-      0
+      0,
     );
     return sum / values.length;
-  };
-
-  public range = (
-    inputY: number,
-    yMin: number,
-    yMax: number,
-    xMin: number,
-    xMax: number
-  ): number => {
-    const percent = (inputY - yMin) / (yMax - yMin);
-    const outputX = percent * (xMax - xMin) + xMin;
-    return outputX;
   };
 
   limit = (value: number, min: number, max: number): number => {
@@ -1798,7 +1813,7 @@ export class UserAPI {
     lang: string = "en-US",
     voice: number = 0,
     rate: number = 1,
-    pitch: number = 1
+    pitch: number = 1,
   ): void => {
     /*
      * Speaks the given text using the browser's speech synthesis API.
@@ -1873,7 +1888,7 @@ export class UserAPI {
     const elements = args.slice(1); // Get the rest of the arguments as an array
     const timepos = this.app.clock.pulses_since_origin;
     const slice_count = Math.floor(
-      timepos / Math.floor(chunk_size * this.ppqn())
+      timepos / Math.floor(chunk_size * this.ppqn()),
     );
     return elements[slice_count % elements.length];
   };
@@ -1901,10 +1916,13 @@ export class UserAPI {
   // =============================================================
 
   register = (name: string, operation: EventOperation<AbstractEvent>): void => {
-    AbstractEvent.prototype[name] = function(this: AbstractEvent, ...args: any[]) {
+    AbstractEvent.prototype[name] = function(
+      this: AbstractEvent,
+      ...args: any[]
+    ) {
       return operation(this, ...args);
     };
-  }
+  };
 
   public shuffle = <T>(array: T[]): T[] => {
     /**
@@ -2005,7 +2023,7 @@ export class UserAPI {
           ".cm-comment": {
             fontFamily: commentFont,
           },
-        })
+        }),
       ),
     });
   };
@@ -2080,19 +2098,6 @@ export class UserAPI {
   // =============================================================
   // Transport functions
   // =============================================================
-
-  public nudge = (nudge?: number): number => {
-    /**
-     * Sets or returns the current clock nudge.
-     *
-     * @param nudge - [optional] the nudge to set
-     * @returns The current nudge
-     */
-    if (nudge) {
-      this.app.clock.nudge = nudge;
-    }
-    return this.app.clock.nudge;
-  };
 
   public tempo = (n?: number): number => {
     /**

@@ -1,7 +1,10 @@
 import { type Editor } from "../../main";
 import { makeExampleFactory } from "../../Documentation";
 
-export const samples_to_markdown = (application: Editor, tag_filter?: string) => {
+export const samples_to_markdown = (
+  application: Editor,
+  tag_filter?: string,
+) => {
   let samples = application.api._all_samples();
   let markdownList = "";
   let keys = Object.keys(samples);
@@ -44,12 +47,10 @@ export const injectAllSamples = (application: Editor): string => {
   return generatedPage;
 };
 
-
 export const injectDrumMachineSamples = (application: Editor): string => {
   let generatedPage = samples_to_markdown(application, "Machines");
   return generatedPage;
 };
-
 
 export const sample_list = (application: Editor): string => {
   // @ts-ignore
@@ -63,9 +64,13 @@ On this page, you will find an exhaustive list of all the samples currently load
 
 A very large collection of wavetables for wavetable synthesis. This collection has been released by Kristoffer Ekstrand: [AKWF Waveforms](https://www.adventurekid.se/akrt/waveforms/adventure-kid-waveforms/). Every sound sample that starts with <ic>wt_</ic> will be looped. Look at this demo:
 
-${makeExample("Wavetable synthesis made easy :)", `
+${makeExample(
+  "Wavetable synthesis made easy :)",
+  `
 beat(0.5)::sound('wt_stereo').n([0, 1].pick()).ad(0, .25).out()
-`, true)}
+`,
+  true,
+)}
 
 
 Pick one folder and spend some time exploring it. There is a lot of different waveforms.
@@ -79,9 +84,12 @@ ${samples_to_markdown(application, "Waveforms")}
 A set of 72 classic drum machines created by **Geikha**: [Geikha Drum Machines](https://github.com/geikha/tidal-drum-machines). To use them efficiently, it is best to use the <ic>.bank()</ic> parameter like so:
 
 ${makeExample(
-    "Using a classic drum machine", `
+  "Using a classic drum machine",
+  `
 beat(0.5)::sound(['bd', 'cp'].pick()).bank("AkaiLinn").out()
-`, true)}
+`,
+  true,
+)}
 
 Here is the complete list of available machines:
 
@@ -111,10 +119,12 @@ ${samples_to_markdown(application, "Amiga")}
 A collection of many different amen breaks. Use <ic>.stretch()</ic> to play with these:
 
 ${makeExample(
-      "Stretching an amen break", `
+  "Stretching an amen break",
+  `
 beat(4)::sound('amen1').stretch(4).out()
-`, true,
-    )}
+`,
+  true,
+)}
 
 The stretch should be adapted based on the length of each amen break.
 
@@ -130,5 +140,13 @@ Many live coders are expecting to find the Tidal sample library wherever they go
 <div class="lg:pl-6 lg:pr-6 w-fit rounded-lg bg-neutral-600 mx-6 mt-2 my-6 px-2 py-2 max-h-96 flex flex-row flex-wrap gap-x-2 gap-y-2 overflow-y-scroll">
 ${samples_to_markdown(application, "Tidal")}
 </div>
-`
-}
+
+## Juliette's voice
+
+This sample pack is only one folder full of french phonems! It sounds super nice.
+
+<div class="lg:pl-6 lg:pr-6 w-fit rounded-lg bg-neutral-600 mx-6 mt-2 my-6 px-2 py-2 max-h-96 flex flex-row flex-wrap gap-x-2 gap-y-2 overflow-y-scroll">
+${samples_to_markdown(application, "Juliette")}
+</div>
+`;
+};

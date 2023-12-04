@@ -1,7 +1,8 @@
 @font-face {
   font-family: "IBM Plex Mono";
-  src: url("woff2/IBMPlexMono-Regular.woff2") format("woff2"),
-       url("woff/IBMPlexMono-Regular.woff") format("woff");
+  src:
+    url("woff2/IBMPlexMono-Regular.woff2") format("woff2"),
+    url("woff/IBMPlexMono-Regular.woff") format("woff");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -9,8 +10,9 @@
 
 @font-face {
   font-family: "IBM PLex Mono";
-  src: url("woff2/IBMPlexMono-Italic.woff2") format("woff2"),
-       url("woff/IBMPlexMono-Italic.woff") format("woff");
+  src:
+    url("woff2/IBMPlexMono-Italic.woff2") format("woff2"),
+    url("woff/IBMPlexMono-Italic.woff") format("woff");
   font-weight: 400;
   font-style: italic;
   font-display: swap;
@@ -18,8 +20,9 @@
 
 @font-face {
   font-family: "IBM PLex Mono";
-  src: url("woff2/IBMPlexMono-Bold.woff2") format("woff2"),
-       url("woff/IBMPlexMono-Bold.woff") format("woff");
+  src:
+    url("woff2/IBMPlexMono-Bold.woff2") format("woff2"),
+    url("woff/IBMPlexMono-Bold.woff") format("woff");
   font-weight: 700;
   font-style: normal;
   font-display: swap;
@@ -27,8 +30,9 @@
 
 @font-face {
   font-family: "IBM Plex Mono";
-  src: url("woff2/IBMPlexMono-BoldItalic.woff2") format("woff2"),
-       url("woff/IBMPlexMono-BoldItalic.woff") format("woff");
+  src:
+    url("woff2/IBMPlexMono-BoldItalic.woff2") format("woff2"),
+    url("woff/IBMPlexMono-BoldItalic.woff") format("woff");
   font-weight: 700;
   font-style: italic;
   font-display: swap;
@@ -37,84 +41,85 @@
 @font-face {
   font-family: "Comic Mono";
   font-weight: normal;
-  src: url(./woff/ComicMono.woff) format("woff"),
-       url(./woff2/ComicMono.woff2) format("wooff2");
+  src:
+    url(./woff/ComicMono.woff) format("woff"),
+    url(./woff2/ComicMono.woff2) format("wooff2");
 }
 
 @font-face {
   font-family: "Comic Mono";
   font-weight: bold;
-  src: url(./woff/ComicMono-Bold.woff) format("woff"),
-       url(./woff/ComicMono-Bold.woff2) format("woff2"),
-}
-
-
-@font-face {
-    font-family: 'jgs7';
-    src: url('./woff2/jgs7.woff2') format('woff2'),
-         url('./woff/jgs7.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap;
+  src:
+    url(./woff/ComicMono-Bold.woff) format("woff"),
+    url(./woff/ComicMono-Bold.woff2) format("woff2");
 }
 
 @font-face {
-    font-family: 'jgs5';
-    src: url('./woff2/jgs5.woff2') format('woff2'),
-         url('./woff/jgs5.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap;
+  font-family: "jgs7";
+  src:
+    url("./woff2/jgs7.woff2") format("woff2"),
+    url("./woff/jgs7.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
-    font-family: 'jgs9';
-    src: url('./woff2/jgs9.woff2') format('woff2'),
-         url('./woff/jgs9.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap;
-}
-
-
-@font-face {
-    font-family: 'jgs_vecto';
-    src: url('./woff2/jgs_vecto.woff2') format('woff2');
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap;
+  font-family: "jgs5";
+  src:
+    url("./woff2/jgs5.woff2") format("woff2"),
+    url("./woff/jgs5.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
-    font-family: 'Steps Mono';
-    src: url('./woff2/Steps-Mono.woff2') format('woff2');
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap;
+  font-family: "jgs9";
+  src:
+    url("./woff2/jgs9.woff2") format("woff2"),
+    url("./woff/jgs9.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
-    font-family: 'Steps Mono Thin';
-    src: url('./woff2/Steps-Mono-Thin.woff2') format('woff2');
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap;
+  font-family: "jgs_vecto";
+  src: url("./woff2/jgs_vecto.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
 }
 
-
 @font-face {
-    font-family: 'Jet Brains';
-    src: url('./woff2/JetBrainsMono-Regular.woff2') format('woff2');
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap;
+  font-family: "Steps Mono";
+  src: url("./woff2/Steps-Mono.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
 }
 
+@font-face {
+  font-family: "Steps Mono Thin";
+  src: url("./woff2/Steps-Mono-Thin.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
 
 @font-face {
-    font-family: 'Jet Brains';
-    src: url('./woff2/JetBrainsMono-Bold.woff2') format('woff2');
-    font-weight: 700;
-    font-style: normal;
-    font-display: swap;
+  font-family: "Jet Brains";
+  src: url("./woff2/JetBrainsMono-Regular.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Jet Brains";
+  src: url("./woff2/JetBrainsMono-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
 }

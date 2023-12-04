@@ -969,7 +969,7 @@ export const inlineHoveringTips = hoverTooltip(
         return { dom };
       },
     };
-  }
+  },
 );
 
 export const toposCompletions = (context: CompletionContext) => {

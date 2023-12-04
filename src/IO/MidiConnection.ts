@@ -175,10 +175,10 @@ export class MidiConnection {
      */
     if (this.midiInputs.length > 0) {
       const midiClockSelect = document.getElementById(
-        "midi-clock-input"
+        "midi-clock-input",
       ) as HTMLSelectElement;
       const midiInputSelect = document.getElementById(
-        "default-midi-input"
+        "default-midi-input",
       ) as HTMLSelectElement;
 
       midiClockSelect.innerHTML = "";
@@ -207,7 +207,7 @@ export class MidiConnection {
 
       if (this.settings.midi_clock_input) {
         const clockMidiInputIndex = this.getMidiInputIndex(
-          this.settings.midi_clock_input
+          this.settings.midi_clock_input,
         );
         midiClockSelect.value = clockMidiInputIndex.toString();
         if (clockMidiInputIndex > 0) {
@@ -220,7 +220,7 @@ export class MidiConnection {
 
       if (this.settings.default_midi_input) {
         const defaultMidiInputIndex = this.getMidiInputIndex(
-          this.settings.default_midi_input
+          this.settings.default_midi_input,
         );
         midiInputSelect.value = defaultMidiInputIndex.toString();
         if (defaultMidiInputIndex > 0) {
@@ -400,14 +400,14 @@ export class MidiConnection {
 
   public removeFromActiveNotes(note: number, channel: number): void {
     const index = this.activeNotes.findIndex(
-      (e) => e.note === note && e.channel === channel
+      (e) => e.note === note && e.channel === channel,
     );
     if (index >= 0) this.activeNotes.splice(index, 1);
   }
 
   public removeFromStickyNotes(note: number, channel: number): boolean {
     const index = this.stickyNotes.findIndex(
-      (e) => e.note === note && e.channel === channel
+      (e) => e.note === note && e.channel === channel,
     );
     if (index >= 0) {
       this.stickyNotes.splice(index, 1);
@@ -578,8 +578,9 @@ export class MidiConnection {
     if (typeof output === "number") {
       if (output < 0 || output >= this.midiOutputs.length) {
         console.error(
-          `Invalid MIDI output index. Index must be in the range 0-${this.midiOutputs.length - 1
-          }.`
+          `Invalid MIDI output index. Index must be in the range 0-${
+            this.midiOutputs.length - 1
+          }.`,
         );
         return this.currentOutputIndex;
       } else {
@@ -607,8 +608,9 @@ export class MidiConnection {
     if (typeof input === "number") {
       if (input < 0 || input >= this.midiInputs.length) {
         console.error(
-          `Invalid MIDI input index. Index must be in the range 0-${this.midiInputs.length - 1
-          }.`
+          `Invalid MIDI input index. Index must be in the range 0-${
+            this.midiInputs.length - 1
+          }.`,
         );
         return -1;
       } else {
@@ -642,7 +644,7 @@ export class MidiConnection {
     velocity: number,
     duration: number,
     port: number | string = this.currentOutputIndex,
-    bend: number | undefined = undefined
+    bend: number | undefined = undefined,
   ): void {
     /**
      * Sending a MIDI Note on/off message with the same note number and channel. Automatically manages
@@ -668,11 +670,14 @@ export class MidiConnection {
       if (bend) this.sendPitchBend(bend, channel, port);
 
       // Schedule Note Off
-      const timeoutId = setTimeout(() => {
-        output.send(noteOffMessage);
-        if (bend) this.sendPitchBend(8192, channel, port);
-        delete this.scheduledNotes[noteNumber];
-      }, (duration - 0.02) * 1000);
+      const timeoutId = setTimeout(
+        () => {
+          output.send(noteOffMessage);
+          if (bend) this.sendPitchBend(8192, channel, port);
+          delete this.scheduledNotes[noteNumber];
+        },
+        (duration - 0.02) * 1000,
+      );
 
       // @ts-ignore
       this.scheduledNotes[noteNumber] = timeoutId;
@@ -685,7 +690,7 @@ export class MidiConnection {
     note: number,
     channel: number,
     velocity: number,
-    port: number | string = this.currentOutputIndex
+    port: number | string = this.currentOutputIndex,
   ) {
     /**
      * Sending Midi Note on message
@@ -704,7 +709,7 @@ export class MidiConnection {
   sendMidiOff(
     note: number,
     channel: number,
-    port: number | string = this.currentOutputIndex
+    port: number | string = this.currentOutputIndex,
   ) {
     /**
      * Sending Midi Note off message
@@ -722,7 +727,7 @@ export class MidiConnection {
 
   sendAllNotesOff(
     channel: number,
-    port: number | string = this.currentOutputIndex
+    port: number | string = this.currentOutputIndex,
   ) {
     /**
      * Sending Midi Note off message
@@ -739,7 +744,7 @@ export class MidiConnection {
 
   sendAllSoundOff(
     channel: number,
-    port: number | string = this.currentOutputIndex
+    port: number | string = this.currentOutputIndex,
   ) {
     /**
      * Sending all sound off
@@ -775,7 +780,7 @@ export class MidiConnection {
   public sendPitchBend(
     value: number,
     channel: number,
-    port: number | string = this.currentOutputIndex
+    port: number | string = this.currentOutputIndex,
   ): void {
     /**
      * Sends a MIDI Pitch Bend message to the currently selected MIDI output.
@@ -786,7 +791,7 @@ export class MidiConnection {
      */
     if (value < 0 || value > 16383) {
       console.error(
-        "Invalid pitch bend value. Value must be in the range 0-16383."
+        "Invalid pitch bend value. Value must be in the range 0-16383.",
       );
     }
     if (channel < 0 || channel > 15) {
@@ -825,7 +830,7 @@ export class MidiConnection {
   public sendMidiControlChange(
     controlNumber: number,
     value: number,
-    channel: number
+    channel: number,
   ): void {
     /**
      * Sends a MIDI Control Change message to the currently selected MIDI output.

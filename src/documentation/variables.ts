@@ -18,21 +18,21 @@ By default, each script is independant from each other. Scripts live in their ow
 **Note:** since this example is running in the documentation, we cannot take advantage of the multiple scripts paradigm. Try to send a variable from the global file to the local file n°6.
 
 ${makeExample(
-    "Setting a global variable",
-    `
+  "Setting a global variable",
+  `
 v('my_cool_variable', 2)
 `,
-    true
-  )}
+  true,
+)}
 
 ${makeExample(
-    "Getting that variable back and printing!",
-    `
+  "Getting that variable back and printing!",
+  `
 // Note that we just use one argument
 log(v('my_cool_variable'))
 `,
-    false
-  )}
+  false,
+)}
 
 
 ## Counter and iterators
@@ -51,32 +51,32 @@ You will often need to use iterators and/or counters to index over data structur
 **Note:** Counters also come with a secret syntax. They can be called with the **$** symbol!
 
 ${makeExample(
-    "Iterating over a list of samples using a counter",
-    `
+  "Iterating over a list of samples using a counter",
+  `
 rhythm(.25, 6, 8) :: sound('dr').n($(1)).end(.25).out()
 `,
-    true
-  )}
+  true,
+)}
 
 ${makeExample(
-    "Using a more complex counter",
-    `
+  "Using a more complex counter",
+  `
 // Limit is 20, step is 5
 rhythm(.25, 6, 8) :: sound('dr').n($(1, 20, 5)).end(.25).out()
 `,
-    false
-  )}
+  false,
+)}
 
 ${makeExample(
-    "Calling the drunk mechanism",
-    `
+  "Calling the drunk mechanism",
+  `
 // Limit is 20, step is 5
 rhythm(.25, 6, 8) :: sound('dr').n(drunk()).end(.25).out()
 `,
-    false
-  )}
+  false,
+)}
 
 
 
-`
-}
+`;
+};

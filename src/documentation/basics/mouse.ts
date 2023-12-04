@@ -16,8 +16,8 @@ You can get the current position of the mouse on the screen by using the followi
 - <ic>mouseY()</ic>: the vertical position of the mouse on the screen (as a floating point number).
 	
 ${makeExample(
-    "Vibrato controlled by mouse",
-    `
+  "Vibrato controlled by mouse",
+  `
 beat(.25) :: sound('sine')
   .note([0,4,5,10,11,15,16]
         .palindrome()
@@ -27,8 +27,8 @@ beat(.25) :: sound('sine')
   .pan(r(0, 1))
   .room(0.35).size(4).out()
 `,
-    true
-  )}
+  true,
+)}
 
 <br>
 
@@ -39,15 +39,15 @@ Current mouse position can also be used to generate notes:
 	
 
 ${makeExample(
-    "Using the mouse to output a note!",
-    `
+  "Using the mouse to output a note!",
+  `
 beat(.25) :: sound('sine')
   .lpf(7000)
   .delay(0.5).delayt(1/6).delayfb(0.2)
   .note(noteX())
   .room(0.35).size(4).out()`,
-    true
-  )}
+  true,
+)}
 
 ## Mouse and Arrays
 
@@ -58,14 +58,14 @@ You can use the mouse to explore the valuesq contained in an Array:
 
 
 ${makeExample(
-    "Taking values out of an Array with the mouse",
-    `
+  "Taking values out of an Array with the mouse",
+  `
 log([1,2,3,4].mouseX())
 log([4,5,6,7].mouseY())
 
   `,
-    true
-  )}
+  true,
+)}
 
 
 

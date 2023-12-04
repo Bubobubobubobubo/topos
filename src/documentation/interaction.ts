@@ -24,7 +24,7 @@ ${makeExample(
   `
   beat(1) && active_notes() && sound('sine').chord(active_notes()).out()
   `,
-  true
+  true,
 )}
 
 ${makeExample(
@@ -34,7 +34,7 @@ ${makeExample(
     active_notes().beat(0.5)+[12,24].beat(0.25)
   ).cutoff(300 + usine(1/4) * 2000).out()
   `,
-  false
+  false,
 )}
 
 
@@ -46,7 +46,7 @@ ${makeExample(
   beat(0.25) && sticky_notes() && sound('arp')
   .note(sticky_notes().palindrome().beat(0.25)).out()
   `,
-  true
+  true,
 )}
 
 * <ic>last_note(channel?: number)</ic>: returns the last note that has been received. Returns 60 if no other notes have been received.
@@ -58,7 +58,7 @@ ${makeExample(
   .vib([1, 3, 5].beat(1))
   .vibmod([1,3,2,4].beat(2)).out()
   `,
-  false
+  false,
 )}
 
 * <ic>buffer()</ic>: return true if there are notes in the buffer.
@@ -69,7 +69,7 @@ ${makeExample(
   `
   beat(1) && buffer() && sound('sine').note(buffer_note()).out()
   `,
-  false
+  false,
 )}
 
 
@@ -87,7 +87,7 @@ ${makeExample(
   `
   beat(0.5) && sound('arp').note(last_cc(74)).out()
   `,
-  true
+  true,
 )}
 
 ${makeExample(
@@ -105,7 +105,7 @@ beat(last_cc(74)/127*.5) :: sound('sine')
   .sustain(last_cc(74)/127*.25)
   .out()
   `,
-  false
+  false,
 )}
 
 
@@ -128,7 +128,7 @@ Topos can output scales to external keyboards lighted keys using the following f
 ${makeExample(
   "Show scale on external keyboard",
   `show_scale("F","aeolian",0,4)`,
-  true
+  true,
 )}
 
 ${makeExample("Hide scale", `hide_scale("F","aeolian",0,4)`, true)}

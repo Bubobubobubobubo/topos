@@ -11,10 +11,7 @@ export class RestEvent extends AbstractEvent {
     return RestEvent.createRestProxy(this.values["noteLength"], this.app);
   };
 
-  public static createRestProxy = (
-    length: number,
-    app: Editor
-  ): RestEvent => {
+  public static createRestProxy = (length: number, app: Editor): RestEvent => {
     const instance = new RestEvent(length, app);
     return new Proxy(instance, {
       // @ts-ignore

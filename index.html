@@ -71,7 +71,7 @@
 
 		<!-- The header is hidden on smaller devices -->
     <header class="py-0 block text-white bg-neutral-900">
-      <div class="mx-auto flex flex-wrap pl-2 py-1 flex-row items-center">
+      <div id="topbar" class="mx-auto flex flex-wrap pl-2 py-1 flex-row items-center">
         <a class="flex title-font font-medium items-center text-black mb-0">
           <img id="topos-logo" src="topos_frog.svg" class="w-12 h-12 text-black p-2 bg-white rounded-full" alt="Topos Frog Logo" />
          <input id="universe-viewer" class="hidden bg-transparent xl:block ml-4 text-2xl text-white placeholder-white" id="renamer" type="text" placeholder="Topos">
@@ -128,7 +128,7 @@
     </header>
 
     <div id="documentation" class="hidden">
-      <div id="documentation-page" class="flex flex-row">
+      <div id="documentation-page" class="flex flex-row bg-transparent">
         <aside class="w-1/8 flex-shrink-0 h-screen overflow-y-auto p-1 lg:p-6 bg-neutral-900 text-white">
           <nav class="text-xl sm:text-sm overflow-y-scroll mb-24">
             <details class="" open=true>
@@ -209,15 +209,18 @@
             <details class="" open=true>
               <summary class="font-semibold lg:text-xl text-orange-300">Community</summary>
                 <form action="https://github.com/Bubobubobubobubo/topos">
-                  <input rel="noopener noreferrer" id="docs_introduction" class="pl-2 pr-2 lg:text-xl text-sm hover:bg-neutral-800 py-1 my-1 rounded-lg" type="submit" value="GitHub" />
+                  <input rel="noopener noreferrer" id="github_link" class="pl-2 pr-2 lg:text-xl text-sm hover:bg-neutral-800 py-1 my-1 rounded-lg" type="submit" value="GitHub" />
                 </form>
                 <form action="https://discord.gg/6T67DqBNNT">
-                  <input rel="noopener noreferrer" id="docs_introduction" class="pl-2 pr-2 lg:text-xl text-sm hover:bg-neutral-800 py-1 my-1 rounded-lg" type="submit" value="Discord" />
+                  <input rel="noopener noreferrer" id="discord_link" class="pl-2 pr-2 lg:text-xl text-sm hover:bg-neutral-800 py-1 my-1 rounded-lg" type="submit" value="Discord" />
+                </form>
+                <form action="https://ko-fi.com/raphaelbubo">
+                  <input rel="noopener noreferrer" id="support_link" class="pl-2 pr-2 lg:text-xl text-sm hover:bg-neutral-800 py-1 my-1 rounded-lg" type="submit" value="Support" />
                 </form>
             </details>
          </nav>
         </aside>
-        <div id="documentation-content" class="w-full flex-grow-1 h-screen overflow-y-scroll lg:px-12 mx-2 my-2 break-words pb-32">
+        <div id="documentation-content" class="w-full flex-grow-1 h-screen overflow-y-scroll lg:px-12 mx-2 my-2 break-words pb-32 bg-transparent"></div>
         </div>
       </div>
     </div>
@@ -429,7 +432,7 @@
       <div class="flex flex-row max-h-fit">
 
 				<!-- This is a lateral bar that will inherit the header buttons if the window is too small. -->
-        <aside class="
+        <aside id="sidebar" class="
 					flex flex-col items-center w-14
 					h-screen py-2 border-r 
 					rtl:border-l max-h-fit

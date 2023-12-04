@@ -1,8 +1,12 @@
 import { AudibleEvent } from "./AbstractEvents";
 import { type Editor } from "../main";
 import { MidiConnection } from "../IO/MidiConnection";
-import { noteFromPc, chord as parseChord } from "zifferjs";
-import { filterObject, arrayOfObjectsToObjectWithArrays, objectWithArraysToArrayOfObjects } from "../Utils/Generic";
+import { noteFromPc } from "zifferjs";
+import {
+  filterObject,
+  arrayOfObjectsToObjectWithArrays,
+  objectWithArraysToArrayOfObjects,
+} from "../Utils/Generic";
 
 export type MidiParams = {
   note: number;
@@ -11,26 +15,19 @@ export type MidiParams = {
   port?: number;
   sustain?: number;
   velocity?: number;
-}
+};
 
 export class MidiEvent extends AudibleEvent {
   midiConnection: MidiConnection;
 
-  constructor(input: MidiParams, public app: Editor) {
+  constructor(
+    input: MidiParams,
+    public app: Editor,
+  ) {
     super(app);
     this.values = input;
     this.midiConnection = app.api.MidiConnection;
   }
-
-  public chord = (value: string) => {
-      this.values.note = parseChord(value);
-      return this;
-  };
-  
-  note = (value: number | number[]): this => {
-    this.values["note"] = value;
-    return this;
-  };
 
   sustain = (value: number | number[]): this => {
     this.values["sustain"] = value;
@@ -40,7 +37,7 @@ export class MidiEvent extends AudibleEvent {
   velocity = (value: number | number[]): this => {
     this.values["velocity"] = value;
     return this;
-  }
+  };
 
   channel = (value: number | number[]): this => {
     this.values["channel"] = value;
@@ -48,10 +45,12 @@ export class MidiEvent extends AudibleEvent {
   };
 
   port = (value: number | string | number[] | string[]): this => {
-    if(typeof value === "string"){
+    if (typeof value === "string") {
       this.values["port"] = this.midiConnection.getMidiOutputIndex(value);
-    } else if(Array.isArray(value)){
-      this.values["port"] = value.map((v) => typeof v === "string" ? this.midiConnection.getMidiOutputIndex(v) : v);
+    } else if (Array.isArray(value)) {
+      this.values["port"] = value.map((v) =>
+        typeof v === "string" ? this.midiConnection.getMidiOutputIndex(v) : v,
+      );
     }
     return this;
   };
@@ -86,25 +85,32 @@ export class MidiEvent extends AudibleEvent {
 
   update = (): void => {
     // Get key, pitch, parsedScale and octave from this.values object
-    const filteredValues = filterObject(this.values, ["key", "pitch", "parsedScale", "octave"]);
-      
-    const events = objectWithArraysToArrayOfObjects(filteredValues,["parsedScale"]);
+    const filteredValues = filterObject(this.values, [
+      "key",
+      "pitch",
+      "parsedScale",
+      "octave",
+    ]);
+
+    const events = objectWithArraysToArrayOfObjects(filteredValues, [
+      "parsedScale",
+    ]);
 
     events.forEach((event) => {
       const [note, bend] = noteFromPc(
-        event.key as number || "C4",
-        event.pitch as number || 0,
-        event.parsedScale as number[] || event.scale || "MAJOR",
-        event.octave as number || 0
+        (event.key as number) || "C4",
+        (event.pitch as number) || 0,
+        (event.parsedScale as number[]) || event.scale || "MAJOR",
+        (event.octave as number) || 0,
       );
       event.note = note;
-      if(bend) event.bend = bend;
+      if (bend) event.bend = bend;
     });
 
     const newArrays = arrayOfObjectsToObjectWithArrays(events) as MidiParams;
 
     this.values.note = newArrays.note;
-    if(newArrays.bend) this.values.bend = newArrays.bend;
+    if (newArrays.bend) this.values.bend = newArrays.bend;
   };
 
   out = (): void => {
@@ -114,9 +120,7 @@ export class MidiEvent extends AudibleEvent {
       const note = params.note ? params.note : 60;
 
       const sustain = params.sustain
-        ? params.sustain *
-          event.app.clock.pulse_duration *
-          event.app.api.ppqn()
+        ? params.sustain * event.app.clock.pulse_duration * event.app.api.ppqn()
         : event.app.clock.pulse_duration * event.app.api.ppqn();
 
       const bend = params.bend ? params.bend : undefined;
@@ -124,22 +128,23 @@ export class MidiEvent extends AudibleEvent {
       const port = params.port
         ? event.midiConnection.getMidiOutputIndex(params.port)
         : event.midiConnection.getCurrentMidiPortIndex() || 0;
-        
+
       event.midiConnection.sendMidiNote(
         note,
         channel,
         velocity,
         sustain,
         port,
-        bend
+        bend,
       );
     }
 
-    const events = objectWithArraysToArrayOfObjects(this.values,["parsedScale"]) as MidiParams[];
+    const events = objectWithArraysToArrayOfObjects(this.values, [
+      "parsedScale",
+    ]) as MidiParams[];
 
     events.forEach((p: MidiParams) => {
-      play(this,p);
+      play(this, p);
     });
-    
   };
 }

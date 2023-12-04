@@ -9,11 +9,12 @@ export const chaining = (application: Editor): string => {
 You might have noticed that **Topos** is using chains a lot. Chains are a very common pattern when programming, especially when you deal with objets that can be composed from many changing properties. Method chaining is used by many objects but mostly by <ic>sound()</ic> and <ic>midi()</ic>. It looks like this:
 
 ${makeExample(
-    "Method chaining",
-    `
+  "Method chaining",
+  `
 beat(1)::sound('bd').speed(2).lpf(500).out()
-`, true
-  )}
+`,
+  true,
+)}
 
 Method chains become fun if you add just a little bit of complexity to them. You can start to add conditions, start to register complex chains to be re-used later on, etc.. We will not remind you how to write basic chains. The whole documentation is full of examples! Let's explore more delicate patterns!
 
@@ -22,21 +23,22 @@ Method chains become fun if you add just a little bit of complexity to them. You
 You can use the <ic>register(...args)</ic> function to... register a chain that you would like to re-use later on.
 
 ${makeExample(
-    "Re-creating a classic Tidal function",
-    `
+  "Re-creating a classic Tidal function",
+  `
 // Playing with extreme panning and playback rate
 register('juxrev', n=>n.pan([0, 1]).speed([1, -1]))
 
 // Using our new abstraction
 beat(1)::sound('fhh').juxrev().out()
-`, true
-  )}
+`,
+  true,
+)}
 
 This is an extremely powerful construct. For example, you can use it to create synthesizer presets and reuse them later on. You can also define parameters for your registered functions. For example:
 
 ${makeExample(
-    "Re-creating a classic Tidal function",
-    `
+  "Re-creating a classic Tidal function",
+  `
 // Registering a specific synth architecture
 register('sub', (n,x=4,y=80)=>n.ad(0, .25)
   .fmi(x).pan([0, 1])
@@ -48,8 +50,9 @@ register('sub', (n,x=4,y=80)=>n.ad(0, .25)
 // Using it with an arpeggio
 rhythm(.25, [6, 8].beat(), 12)::sound('sine')
   .note([0, 2, 4, 5].scale('minor', 50).beat(0.5))
-  .sub(8).out()`, true
-  )}
+  .sub(8).out()`,
+  true,
+)}
 
 
 ## Conditional chaining
@@ -59,17 +62,17 @@ There are cases when you don't always want to apply one or many elements that ar
 All functions from the sound object can be used to modify the event, for example:
 
 ${makeExample(
-    "Modifying sound events with probabilities",
-    `
+  "Modifying sound events with probabilities",
+  `
 beat(.5) && sound('fhh')
   .odds(1/4, s => s.speed(irand(1,4)))
   .rarely(s => s.room(0.5).size(8).speed(0.5))
   .out()`,
-    true
-  )}
+  true,
+)}
 ${makeExample(
-    "Chance to play a random note",
-    `
+  "Chance to play a random note",
+  `
 rhythm(.5, 3, 8) && sound('pluck').note(38).out()
 beat(.5) && sound('pluck').note(60)
   .often(s => s.note(57))
@@ -77,8 +80,8 @@ beat(.5) && sound('pluck').note(60)
   .note(62)
   .room(0.5).size(3)
   .out()`,
-    false
-  )}
+  false,
+)}
 
 There is a growing collection of probability and chance methods you can use:
 
@@ -105,14 +108,14 @@ There is a growing collection of probability and chance methods you can use:
 The conditional chaining also applies to MIDI. Values can also be incremented using <ic>+=</ic> notation.
 
 ${makeExample(
-    "Modifying midi events with probabilities",
-    `beat(.5) && midi(60).channel(1)
+  "Modifying midi events with probabilities",
+  `beat(.5) && midi(60).channel(1)
   .odds(1/4, n => n.channel(2))
   .often(n => n.note+=4)
   .sometimes(s => s.velocity(irand(50,100)))
   .out()`,
-    true
-  )};
+  true,
+)};
 
 ## Ziffers
 
@@ -125,8 +128,8 @@ Ziffers patterns can be chained to <ic>sound()</ic> and <ic>midi()</ic> as well.
 * <ic>midi()</ic> - for outputting pattern as MIDI (See **MIDI**)
 
 ${makeExample(
-    "Ziffer player using a sound chain and probabilities!",
-    `
+  "Ziffer player using a sound chain and probabilities!",
+  `
 z1('s 0 5 7 0 3 7 0 2 7 0 1 7 0 1 6 5 4 3 2')
   .octave([0, 1].beat(2) - 1)
   .scale('pentatonic').sound('pluck')
@@ -134,7 +137,7 @@ z1('s 0 5 7 0 3 7 0 2 7 0 1 7 0 1 6 5 4 3 2')
   .odds(1/2, n => n.speed(0.5))
   .room(0.5).size(0.5).out()
 `,
-    true
-  )};
+  true,
+)};
 `;
 };

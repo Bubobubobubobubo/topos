@@ -1,17 +1,15 @@
 import { type Editor } from "./main";
 
-
 export type ElementMap = {
   [key: string]:
-  | HTMLElement
-  | HTMLButtonElement
-  | HTMLDivElement
-  | HTMLInputElement
-  | HTMLSelectElement
-  | HTMLCanvasElement
-  | HTMLFormElement
-  | HTMLInputElement
-  ;
+    | HTMLElement
+    | HTMLButtonElement
+    | HTMLDivElement
+    | HTMLInputElement
+    | HTMLSelectElement
+    | HTMLCanvasElement
+    | HTMLFormElement
+    | HTMLInputElement;
 };
 
 export const singleElements = {
@@ -65,6 +63,12 @@ export const buttonGroups = {
 
 //@ts-ignore
 export const createDocumentationStyle = (app: Editor) => {
+  /**
+   * Creates a documentation style object.
+   * @param {Editor} app - The editor object.
+   * @returns {Object} - The documentation style object.
+   */
+
   return {
     h1: "text-white lg:text-4xl text-xl lg:ml-4 lg:mx-4 mx-2 lg:my-4 my-2 lg:mb-4 mb-4 border-b-4 pt-4 pb-3 px-2",
     h2: "text-white lg:text-3xl text-xl lg:ml-4 lg:mx-4 mx-2 lg:my-4 my-2 lg:mb-4 mb-4 border-b-2 pt-12 pb-3 px-2",
@@ -92,6 +96,4 @@ export const createDocumentationStyle = (app: Editor) => {
     tr: "",
     box: "border bg-red-500",
   };
-}
-
-
+};

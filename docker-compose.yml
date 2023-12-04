@@ -1,9 +1,9 @@
-version: '3.7'
+version: "3.7"
 services:
   topos-dev:
     container_name: topos-dev
     profiles: ["dev"]
-    build: 
+    build:
       context: .
       target: "dev"
     volumes:
@@ -21,7 +21,7 @@ services:
   topos-prod:
     container_name: topos-prod
     profiles: ["prod"]
-    build: 
+    build:
       context: .
       target: "prod"
     ports:

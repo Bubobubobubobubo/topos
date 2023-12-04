@@ -46,10 +46,10 @@ export const toposDarkTheme = EditorView.theme(
       borderLeftColor: cursor,
     },
     "&.cm-focused .cm-selectionBackground, .cm-selectionBackground, .cm-content ::selection":
-    {
-      backgroundColor: base00,
-      border: `0.5px solid ${base00}`,
-    },
+      {
+        backgroundColor: base00,
+        border: `0.5px solid ${base00}`,
+      },
     ".cm-panels": {
       backgroundColor: darkBackground,
       color: base05,
@@ -113,7 +113,7 @@ export const toposDarkTheme = EditorView.theme(
       },
     },
   },
-  { dark: true }
+  { dark: true },
 );
 
 /// The highlighting style for code in the Material Dark theme.

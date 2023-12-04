@@ -26,6 +26,31 @@ export const registerOnKeyDown = (app: Editor) => {
       event.preventDefault();
     }
 
+    if (event.ctrlKey && event.key === "m") {
+      event.preventDefault();
+      let topbar = document.getElementById("topbar");
+      let sidebar = document.getElementById("sidebar");
+      console.log("oui ok");
+      if (app.hidden_interface) {
+        // Sidebar
+        sidebar?.classList.remove("flex");
+        sidebar?.classList.remove("flex-col");
+        sidebar?.classList.add("hidden");
+        // Topbar
+        topbar?.classList.add("hidden");
+        topbar?.classList.remove("flex");
+      } else {
+        // Sidebar
+        sidebar?.classList.remove("hidden");
+        sidebar?.classList.add("flex");
+        sidebar?.classList.add("flex-col");
+        // Topbar
+        topbar?.classList.remove("hidden");
+        topbar?.classList.add("flex");
+      }
+      app.hidden_interface = !app.hidden_interface;
+    }
+
     if (event.ctrlKey && event.key === "s") {
       event.preventDefault();
       app.setButtonHighlighting("stop", true);

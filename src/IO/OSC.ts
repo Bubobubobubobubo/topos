@@ -12,8 +12,8 @@ socket.onopen = function (event) {
   // Send an OSC-like message
   socket.send(
     JSON.stringify({
-      address: "/connected",
-      args: [1],
+      address: "/successful_connexion",
+      args: true,
     })
   );
 

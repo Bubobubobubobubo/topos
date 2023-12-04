@@ -1,14 +1,17 @@
 import { type Editor } from "../main";
 import {
   freqToMidi,
+  chord as parseChord,
+  noteNameToMidi,
   resolvePitchBend,
-  safeScale
+  safeScale,
 } from "zifferjs";
+import { SkipEvent } from "./SkipEvent";
 
 export type EventOperation<T> = (instance: T, ...args: any[]) => void;
 
 export interface AbstractEvent {
-  [key: string]: any
+  [key: string]: any;
 }
 
 export class AbstractEvent {
@@ -208,19 +211,26 @@ export class AbstractEvent {
     return this.modify(func);
   };
 
-  noteLength = (value: number | number[], ...kwargs: number[]): AbstractEvent => {
+  noteLength = (
+    value: number | number[],
+    ...kwargs: number[]
+  ): AbstractEvent => {
     /**
      * This function is used to set the note length of the Event.
      */
-    if(kwargs.length > 0) {
-      value = (Array.isArray(value) ? value.concat(kwargs) : [value, ...kwargs]);
+    if (kwargs.length > 0) {
+      value = Array.isArray(value) ? value.concat(kwargs) : [value, ...kwargs];
     }
-    if(Array.isArray(value)) {
+    if (Array.isArray(value)) {
       this.values["noteLength"] = value;
-      this.values.dur = value.map((v) => this.app.clock.convertPulseToSecond(v*4*this.app.clock.ppqn));
+      this.values.dur = value.map((v) =>
+        this.app.clock.convertPulseToSecond(v * 4 * this.app.clock.ppqn),
+      );
     } else {
       this.values["noteLength"] = value;
-      this.values.dur = this.app.clock.convertPulseToSecond(value*4*this.app.clock.ppqn);
+      this.values.dur = this.app.clock.convertPulseToSecond(
+        value * 4 * this.app.clock.ppqn,
+      );
     }
     return this;
   };
@@ -232,83 +242,138 @@ export abstract class AudibleEvent extends AbstractEvent {
   }
 
   pitch = (value: number | number[], ...kwargs: number[]): this => {
-    /* 
-      * This function is used to set the pitch of the Event.
-      * @param value - The pitch value
-      * @returns The Event
-      */
-    if(kwargs.length > 0) {
-      value = (Array.isArray(value) ? value.concat(kwargs) : [value, ...kwargs]);
+    /*
+     * This function is used to set the pitch of the Event.
+     * @param value - The pitch value
+     * @returns The Event
+     */
+    if (kwargs.length > 0) {
+      value = Array.isArray(value) ? value.concat(kwargs) : [value, ...kwargs];
     }
     this.values["pitch"] = value;
-    if(this.values.key && this.values.parsedScale) this.update();
+    if (this.values.key && this.values.parsedScale) this.update();
     return this;
-  }
+  };
 
   pc = this.pitch;
 
   octave = (value: number | number[], ...kwargs: number[]): this => {
     /*
-      * This function is used to set the octave of the Event.
-      * @param value - The octave value
-      * @returns The Event
-      */
-    if(kwargs.length > 0) {
-      value = (Array.isArray(value) ? value.concat(kwargs) : [value, ...kwargs]);
+     * This function is used to set the octave of the Event.
+     * @param value - The octave value
+     * @returns The Event
+     */
+    if (kwargs.length > 0) {
+      value = Array.isArray(value) ? value.concat(kwargs) : [value, ...kwargs];
     }
     this.values["octave"] = value;
-    if(this.values.key && (this.values.pitch || this.values.pitch === 0) && this.values.parsedScale) this.update();
+    if (
+      this.values.key &&
+      (this.values.pitch || this.values.pitch === 0) &&
+      this.values.parsedScale
+    )
+      this.update();
     return this;
   };
 
   key = (value: string | string[], ...kwargs: string[]): this => {
-    /* 
-      * This function is used to set the key of the Event.
-      * @param value - The key value
-      * @returns The Event
-      */
-    if(kwargs.length > 0) {
-      value = (Array.isArray(value) ? value.concat(kwargs) : [value, ...kwargs]);
+    /*
+     * This function is used to set the key of the Event.
+     * @param value - The key value
+     * @returns The Event
+     */
+    if (kwargs.length > 0) {
+      value = Array.isArray(value) ? value.concat(kwargs) : [value, ...kwargs];
     }
     this.values["key"] = value;
-    if((this.values.pitch || this.values.pitch === 0) && this.values.parsedScale) this.update();
+    if (
+      (this.values.pitch || this.values.pitch === 0) &&
+      this.values.parsedScale
+    )
+      this.update();
     return this;
   };
 
-  scale = (value: string | number | (number|string)[], ...kwargs: (string|number)[]): this => {
+  scale = (
+    value: string | number | (number | string)[],
+    ...kwargs: (string | number)[]
+  ): this => {
     /*
-      * This function is used to set the scale of the Event.
-      * @param value - The scale value
-      * @returns The Event
-    */
-    if(kwargs.length > 0) {
-      value = (Array.isArray(value) ? value.concat(kwargs) : [value, ...kwargs]);
+     * This function is used to set the scale of the Event.
+     * @param value - The scale value
+     * @returns The Event
+     */
+    if (kwargs.length > 0) {
+      value = Array.isArray(value) ? value.concat(kwargs) : [value, ...kwargs];
     }
     if (typeof value === "string" || typeof value === "number") {
       this.values.parsedScale = safeScale(value) as number[];
-    } else if(Array.isArray(value)) {
+    } else if (Array.isArray(value)) {
       this.values.parsedScale = value.map((v) => safeScale(v));
     }
-    if(this.values.key && (this.values.pitch || this.values.pitch === 0)) {
-     this.update();
+    if (this.values.key && (this.values.pitch || this.values.pitch === 0)) {
+      this.update();
     }
     return this;
+  };
+
+  protected updateValue<T>(key: string, value: T | T[] | null): this {
+    if (value == null) return this;
+    this.values[key] = value;
+    return this;
+  }
+
+  public note = (
+    value: number | string | null,
+    ...kwargs: number[] | string[]
+  ) => {
+    if (typeof value === "string") {
+      const parsedNote = noteNameToMidi(value);
+      return this.updateValue("note", [parsedNote, ...kwargs].flat(Infinity));
+    } else if (typeof value == null || value == undefined) {
+      return new SkipEvent();
+    } else {
+      return this.updateValue("note", [value, ...kwargs].flat(Infinity));
+    }
+  };
+
+  public chord = (value: number | string, ...kwargs: number[]) => {
+    if (typeof value === "string") {
+      const chord = parseChord(value);
+      return this.updateValue("note", chord);
+    } else {
+      const chord = [value, ...kwargs].flat(Infinity);
+      return this.updateValue("note", chord);
+    }
+  };
+
+  public invert = (howMany: number = 0) => {
+    if (this.values.note) {
+      let notes = [...this.values.note];
+      notes = howMany < 0 ? [...notes].reverse() : notes;
+      for (let i = 0; i < Math.abs(howMany); i++) {
+        notes[i % notes.length] += howMany <= 0 ? -12 : 12;
+      }
+      return this.updateValue("note", notes);
+    } else {
+      return this;
+    }
   };
 
   freq = (value: number | number[], ...kwargs: number[]): this => {
     /*
-      * This function is used to set the frequency of the Event.
-      * @param value - The frequency value
-      * @returns The Event
-    */
-    if(kwargs.length > 0) {
-      value = (Array.isArray(value) ? value.concat(kwargs) : [value, ...kwargs]);
+     * This function is used to set the frequency of the Event.
+     * @param value - The frequency value
+     * @returns The Event
+     */
+    if (kwargs.length > 0) {
+      value = Array.isArray(value) ? value.concat(kwargs) : [value, ...kwargs];
     }
     this.values["freq"] = value;
-    if(Array.isArray(value)) {
+    if (Array.isArray(value)) {
       this.values["note"] = [];
       this.values["bend"] = [];
-      for(const v of value) {
+      for (const v of value) {
         const midiNote = freqToMidi(v);
         if (midiNote % 1 !== 0) {
           this.values["note"].push(Math.floor(midiNote));
@@ -317,7 +382,7 @@ export abstract class AudibleEvent extends AbstractEvent {
           this.values["note"].push(midiNote);
         }
       }
-      if(this.values.bend.length === 0) delete this.values.bend;
+      if (this.values.bend.length === 0) delete this.values.bend;
     } else {
       const midiNote = freqToMidi(value);
       if (midiNote % 1 !== 0) {

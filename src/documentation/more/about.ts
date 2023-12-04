@@ -14,6 +14,21 @@ Topos is an experimental web based algorithmic sequencer programmed by **BuboBub
 
 Topos is a free and open-source software distributed under [GPL-3.0](https://github.com/Bubobubobubobubo/Topos/blob/main/LICENSE) licence. We welcome all contributions and ideas. You can find the source code on [GitHub](https://github.com/Bubobubobubobubo/topos). You can also join us on [Discord](https://discord.gg/dnUTPbu6bN) to discuss about the project and live coding in general.
 	 
+## Support the project
+
+You can support the project by making a small donation on [Kofi](https://ko-fi.com/Manage/).
+
+<div style="display: flex; justify-content: center;">
+  <iframe
+    id='kofiframe'
+    src='https://ko-fi.com/raphaelbubo/?hidefeed=true&widget=true&embed=true&preview=true' 
+    style='border:none;width:40%;padding:4px;background:#f9f9f9;' 
+    height='590'
+    title='raphaelbubo'>
+  </iframe>
+</div>
+
+
 ## Credits
 
 - Felix Roos for the [SuperDough](https://www.npmjs.com/package/superdough) audio engine.
