@@ -78,7 +78,7 @@ const formatAndTypeMessage = (message) => {
     if (typeof arg === 'number')
       return {type: 'f', value: arg};
     if (typeof arg === 'boolean')
-      return {type: 'f', value: arg ? 1 : 0};
+      return value ? {type: 'T', value: true} : {type: 'F', value: false};
   })
 
   newMessage.args = args
