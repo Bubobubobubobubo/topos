@@ -21,7 +21,12 @@ wss.on("connection", function (ws) {
   ws.on("message", function (data) {
     try {
       const message = JSON.parse(data);
-      sendOscMessage(formatAndTypeMessage(message));
+      sendOscMessage(
+        formatAndTypeMessage(message),
+        message.address, 
+        message.port
+      );
+      console.log(`> Message sent to ${message.address}:${message.port}: ${JSON.stringify(message.args)}`)
     } catch (error) {
       console.error("> Error processing message:", error);
     }
@@ -58,10 +63,11 @@ udpPort.on("ready", function () {
 
 udpPort.open();
 
-function sendOscMessage(message) {
+function sendOscMessage(message, address, port) {
   try {
+    udpPort.options.remotePort = port
+    message.address = address;
     udpPort.send(message);
-    console.log(message)
   } catch (error) {
     console.error("> Error sending OSC message:", error);
   }
@@ -69,6 +75,8 @@ function sendOscMessage(message) {
 
 const formatAndTypeMessage = (message) => {
   let newMessage = {};
+  delete message.args['address'];
+  delete message.args['port'];
   newMessage.address = message.address;
   newMessage.timestamp = osc.timeTag(message.timetag);
 
@@ -78,7 +86,7 @@ const formatAndTypeMessage = (message) => {
     if (typeof arg === 'number')
       return {type: 'f', value: arg};
     if (typeof arg === 'boolean')
-      return value ? {type: 'T', value: true} : {type: 'F', value: false};
+      return value ? {type: 's', value: 1} : {type: 's', value: 0};
   })
 
   newMessage.args = args
@@ -86,9 +94,9 @@ const formatAndTypeMessage = (message) => {
   return newMessage;
 }
 
-console.log(formatAndTypeMessage({ 
-  address: '/baba', 
-  port: 2000, 
-  args: { s: 'fhardkick', dur: 0.5, port: 2000, address: 'baba' }, 
-  timetag: 1701696184583
-}))
+// console.log(formatAndTypeMessage({ 
+//   address: '/baba', 
+//   port: 2000, 
+//   args: { s: 'fhardkick', dur: 0.5, port: 2000, address: 'baba' }, 
+//   timetag: 1701696184583
+// }))
