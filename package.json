@@ -33,6 +33,7 @@
     "jisg": "^0.9.7",
     "lru-cache": "^10.0.1",
     "marked": "^7.0.3",
+    "osc": "^2.4.4",
     "postcss": "^8.4.27",
     "showdown": "^2.1.0",
     "showdown-highlight": "^3.1.0",

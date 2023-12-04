@@ -1,5 +1,6 @@
 import { type Editor } from "../main";
 import { AudibleEvent } from "./AbstractEvents";
+import { sendToServer, type OSCMessage } from "../IO/OSC";
 import {
   filterObject,
   arrayOfObjectsToObjectWithArrays,
@@ -42,6 +43,8 @@ export class SoundEvent extends AudibleEvent {
     pitchJumpTime: ["pitchJumpTime", "pjt"],
     lfo: ["lfo"],
     znoise: ["znoise"],
+    address: ["address", "add"],
+    port: ["port"],
     noise: ["noise"],
     zmod: ["zmod"],
     zcrush: ["zcrush"],
@@ -462,14 +465,32 @@ export class SoundEvent extends AudibleEvent {
       if (filteredEvent.freq) {
         delete filteredEvent.note;
       }
-      if (this.values["debug"]) {
-        if (this.values["debugFunction"]) {
-          this.values["debugFunction"](filteredEvent);
-        } else {
-          console.log(filteredEvent);
-        }
-      }
       superdough(filteredEvent, this.app.clock.deadline, filteredEvent.dur);
+    }
+  };
+
+  osc = (orbit?: number | number[]): void => {
+    if (orbit) this.values["orbit"] = orbit;
+    const events = objectWithArraysToArrayOfObjects(this.values, [
+      "parsedScale",
+    ]);
+    for (const event of events) {
+      const filteredEvent = event;
+
+      let oscAddress = "address" in event ? event.address : "/topos";
+      oscAddress = oscAddress?.startsWith("/") ? oscAddress : "/" + oscAddress;
+
+      let oscPort = "port" in event ? event.port : 57120;
+
+      if (filteredEvent.freq) {
+        delete filteredEvent.note;
+      }
+      sendToServer({
+        address: oscAddress,
+        port: oscPort,
+        args: event,
+        timetag: Math.round(Date.now() + this.app.clock.deadline),
+      } as OSCMessage);
     }
   };
 }

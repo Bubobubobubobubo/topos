@@ -499,12 +499,12 @@ export const installInterfaceLogic = (app: Editor) => {
     "linear",
     "cyclic",
     "longform",
-    // "sound",
     "synths",
     "chaining",
     "patterns",
     "ziffers",
     "midi",
+    "osc",
     "functions",
     "lfos",
     "probabilities",
@@ -520,7 +520,7 @@ export const installInterfaceLogic = (app: Editor) => {
   ].forEach((e) => {
     let name = `docs_` + e;
     document.getElementById(name)!.addEventListener("click", async () => {
-      if (name !== "docs_samples") {
+      if (name !== "docs_sample_list") {
         app.currentDocumentationPane = e;
         updateDocumentationContent(app, bindings);
       } else {

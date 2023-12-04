@@ -4,6 +4,7 @@ import { scriptBlinkers } from "./Visuals/Blinkers";
 import { javascript } from "@codemirror/lang-javascript";
 import { markdown } from "@codemirror/lang-markdown";
 import { Extension } from "@codemirror/state";
+import { outputSocket } from "./IO/OSC";
 import {
   initializeSelectedUniverse,
   AppSettings,
@@ -92,6 +93,9 @@ export class Editor {
   dough_nudge: number = 20;
   manualPlay: boolean = false;
   isPlaying: boolean = false;
+
+  // OSC
+  outputSocket: WebSocket = outputSocket;
 
   // Hydra
   public hydra_backend: any;

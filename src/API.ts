@@ -1,4 +1,5 @@
 import { EditorView } from "@codemirror/view";
+import { sendToServer, type OSCMessage, oscMessages } from "./IO/OSC";
 import { getAllScaleNotes, nearScales, seededRandom } from "zifferjs";
 import {
   MidiCCEvent,
@@ -1298,7 +1299,7 @@ export class UserAPI {
     const results: boolean[] = nArray.map(
       (value) =>
         (this.app.clock.pulses_since_origin - Math.floor(nudge * this.ppqn())) %
-        Math.floor(value * this.ppqn()) ===
+          Math.floor(value * this.ppqn()) ===
         0,
     );
     return results.some((value) => value === true);
@@ -1318,7 +1319,7 @@ export class UserAPI {
     const results: boolean[] = nArray.map(
       (value) =>
         (this.app.clock.pulses_since_origin - nudgeInPulses) %
-        Math.floor(value * barLength) ===
+          Math.floor(value * barLength) ===
         0,
     );
     return results.some((value) => value === true);
@@ -1916,7 +1917,7 @@ export class UserAPI {
   // =============================================================
 
   register = (name: string, operation: EventOperation<AbstractEvent>): void => {
-    AbstractEvent.prototype[name] = function(
+    AbstractEvent.prototype[name] = function (
       this: AbstractEvent,
       ...args: any[]
     ) {
@@ -2093,6 +2094,32 @@ export class UserAPI {
         document.body.removeChild(gifElement);
       }
     }, real_duration * 1000);
+  };
+
+  // =============================================================
+  // OSC Functions
+  // =============================================================
+
+  public osc = (address: string, port: number, ...args: any[]): void => {
+    sendToServer({
+      address: address,
+      port: port,
+      args: args,
+      timetag: Math.round(Date.now() + this.app.clock.deadline),
+    } as OSCMessage);
+  };
+
+  public getOSC = (address?: string): any[] => {
+    /**
+     * Give access to incoming OSC messages. If no address is specified, returns the raw oscMessages array. If an address is specified, returns only the messages who contain the address and filter the address itself.
+     */
+    if (address) {
+      let messages = oscMessages.filter((msg) => msg.address === address);
+      messages = messages.map((msg) => msg.data);
+      return messages;
+    } else {
+      return oscMessages;
+    }
   };
 
   // =============================================================

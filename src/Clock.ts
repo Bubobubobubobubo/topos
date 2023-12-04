@@ -69,9 +69,9 @@ export class Clock {
   // @ts-ignore
   clockCallback = (time: number, duration: number, tick: number) => {
     /**
-     * Callback function for the zyklus clock. Updates the clock info and sends a 
+     * Callback function for the zyklus clock. Updates the clock info and sends a
      * MIDI clock message if the setting is enabled. Also evaluates the global buffer.
-     * 
+     *
      * @param time - precise AudioContext time when the tick should happen
      * @param duration -  seconds between each tick
      * @param tick - count of the current tick
@@ -88,8 +88,9 @@ export class Clock {
       );
       this.app.clock.time_position = futureTimeStamp;
       if (futureTimeStamp.pulse % this.app.clock.ppqn == 0) {
-        this.timeviewer.innerHTML = `${zeroPad(futureTimeStamp.bar, 2)}:${futureTimeStamp.beat + 1
-          } / ${this.app.clock.bpm}`;
+        this.timeviewer.innerHTML = `${zeroPad(futureTimeStamp.bar, 2)}:${
+          futureTimeStamp.beat + 1
+        } / ${this.app.clock.bpm}`;
       }
       if (this.app.exampleIsPlaying) {
         tryEvaluate(this.app, this.app.example_buffer);
@@ -103,8 +104,8 @@ export class Clock {
 
   convertTicksToTimeposition(ticks: number): TimePosition {
     /**
-     * Converts ticks to a time position. 
-     * 
+     * Converts ticks to a time position.
+     *
      * @param ticks - ticks to convert
      * @returns TimePosition
      */
@@ -119,7 +120,7 @@ export class Clock {
   get ticks_before_new_bar(): number {
     /**
      * Calculates the number of ticks before the next bar.
-     * 
+     *
      * @returns number - ticks before the next bar
      */
     const ticskMissingFromBeat = this.ppqn - this.time_position.pulse;
@@ -130,7 +131,7 @@ export class Clock {
   get next_beat_in_ticks(): number {
     /**
      * Calculates the number of ticks before the next beat.
-     * 
+     *
      * @returns number - ticks before the next beat
      */
     return this.app.clock.pulses_since_origin + this.time_position.pulse;
@@ -139,7 +140,7 @@ export class Clock {
   get beats_per_bar(): number {
     /**
      * Returns the number of beats per bar.
-     * 
+     *
      * @returns number - beats per bar
      */
     return this.time_signature[0];
@@ -148,7 +149,7 @@ export class Clock {
   get beats_since_origin(): number {
     /**
      * Returns the number of beats since the origin.
-     * 
+     *
      * @returns number - beats since the origin
      */
     return Math.floor(this.tick / this.ppqn);
@@ -157,7 +158,7 @@ export class Clock {
   get pulses_since_origin(): number {
     /**
      * Returns the number of pulses since the origin.
-     * 
+     *
      * @returns number - pulses since the origin
      */
     return this.tick;
@@ -174,7 +175,7 @@ export class Clock {
   public pulse_duration_at_bpm(bpm: number = this.bpm): number {
     /**
      * Returns the duration of a pulse in seconds at a given bpm.
-     * 
+     *
      * @param bpm - bpm to calculate the pulse duration for
      * @returns number - duration of a pulse in seconds
      */
@@ -242,7 +243,7 @@ export class Clock {
   public start(): void {
     /**
      * Start the clock
-     * 
+     *
      * @remark also sends a MIDI message if a port is declared
      */
     this.app.audioContext.resume();
@@ -254,7 +255,7 @@ export class Clock {
   public pause(): void {
     /**
      * Pause the clock.
-     * 
+     *
      * @remark also sends a MIDI message if a port is declared
      */
     this.running = false;
