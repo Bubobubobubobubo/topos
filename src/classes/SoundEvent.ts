@@ -465,11 +465,7 @@ export class SoundEvent extends AudibleEvent {
       if (filteredEvent.freq) {
         delete filteredEvent.note;
       }
-      superdough(
-        filteredEvent,
-        this.app.clock.deadline,
-        filteredEvent.dur
-      );
+      superdough(filteredEvent, this.app.clock.deadline, filteredEvent.dur);
     }
   };
 

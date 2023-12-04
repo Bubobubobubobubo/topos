@@ -1,14 +1,14 @@
-var pjson = require('./package.json');
+var pjson = require("./package.json");
 let banner = `
 ┏┳┓         ┏┓┏┓┏┓
  ┃ ┏┓┏┓┏┓┏  ┃┃┗┓┃ 
  ┻ ┗┛┣┛┗┛┛  ┗┛┗┛┗┛
      ┛            
-             ${pjson.version}\n`
+             ${pjson.version}\n`;
 function greet() {
-    console.log(banner)
+  console.log(banner);
 }
 
 module.exports = {
-    greet: greet
-}
+  greet: greet,
+};

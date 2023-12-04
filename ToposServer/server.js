@@ -1,9 +1,8 @@
 const WebSocket = require("ws");
 const osc = require("osc");
 
-require('./banner').greet();
+require("./banner").greet();
 // Topos to OSC
-require('./ToposToOSC')
+require("./ToposToOSC");
 // OSC to Topos
-require("./OSCtoTopos")
-
+require("./OSCtoTopos");

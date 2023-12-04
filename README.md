@@ -17,23 +17,23 @@
   </p>
 </p>
 
----------------------
+---
 
 Topos is a web based live coding environment. Topos is capable of many things:
+
 - it is a music sequencer made for improvisation and composition alike
 - it is a synthesizer capable of additive, substractive, FM and wavetable
-synthesis, backed up by a [powerful web based audio engine](https://www.npmjs.com/package/superdough)
+  synthesis, backed up by a [powerful web based audio engine](https://www.npmjs.com/package/superdough)
 - it can also generate video thanks to [Hydra](https://hydra.ojack.xyz/) and
-custom oscilloscopes, frequency visualizers and image sequencing capabilities
+  custom oscilloscopes, frequency visualizers and image sequencing capabilities
 - it can be used to sequence other MIDI devices (and soon.. OSC!)
 - it is made to be used without the need of installing anything, always ready at
   [https://topos.live](https://topos.live)
 - Topos is also an emulation and personal extension of the [Monome Teletype](https://monome.org/docs/teletype/)
 
----------------------
+---
 
 ![Screenshot](https://github.com/Bubobubobubobubo/Topos/blob/main/img/topos_gif.gif)
-
 
 ## Disclaimer
 

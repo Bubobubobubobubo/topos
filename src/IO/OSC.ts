@@ -9,15 +9,14 @@ export interface OSCMessage {
 export let outputSocket = new WebSocket("ws://localhost:3000");
 export let inputSocket = new WebSocket("ws://localhost:3001");
 
-export let oscMessages : any[] = [];
-inputSocket.addEventListener('message', (event) => {
+export let oscMessages: any[] = [];
+inputSocket.addEventListener("message", (event) => {
   let data = JSON.parse(event.data);
   if (oscMessages.length >= 1000) {
     oscMessages.shift();
   }
   oscMessages.push(data);
 });
-
 
 // @ts-ignore
 outputSocket.onopen = function (event) {
@@ -26,8 +25,9 @@ outputSocket.onopen = function (event) {
   outputSocket.send(
     JSON.stringify({
       address: "/successful_connexion",
-      port: 3000, args: {}
-    })
+      port: 3000,
+      args: {},
+    }),
   );
 
   outputSocket.onerror = function (error) {
