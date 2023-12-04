@@ -16,8 +16,11 @@ To use **OSC** with Topos, you will need to download the <ic>ToposServer</ic> by
 - 3) Start the server using <ic>npm start</ic>.
 - 4) Open the <ic>Topos</ic> application in your web browser.
 
+This server can be used both for **OSC** _input_ and _output_.
 
 ## Input
+
+Send an **OSC** message to the server at the address <ic>localhost:30000</ic>. You will receive your message in Topos as an Array containing the address and data of your message.
 
 ## Output
 

@@ -1,5 +1,5 @@
 import { EditorView } from "@codemirror/view";
-import { sendToServer, type OSCMessage } from "./IO/OSC";
+import { sendToServer, type OSCMessage, oscMessages } from "./IO/OSC";
 import { getAllScaleNotes, nearScales, seededRandom } from "zifferjs";
 import {
   MidiCCEvent,
@@ -2109,6 +2109,18 @@ export class UserAPI {
       } as OSCMessage);
   }
 
+  public getOSC = (address?: string): any[] => {
+    /**
+     * Give access to incoming OSC messages. If no address is specified, returns the raw oscMessages array. If an address is specified, returns only the messages who contain the address and filter the address itself.
+     */
+    if (address) {
+      let messages = oscMessages.filter((msg) => msg.address === address);
+      messages = messages.map((msg) => msg.data);
+      return messages
+    } else {
+      return oscMessages;
+    }
+  }
 
   // =============================================================
   // Transport functions

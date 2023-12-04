@@ -4,7 +4,7 @@ import { scriptBlinkers } from "./Visuals/Blinkers";
 import { javascript } from "@codemirror/lang-javascript";
 import { markdown } from "@codemirror/lang-markdown";
 import { Extension } from "@codemirror/state";
-import { outputSocket } from "./IO/OSC";
+import { outputSocket, oscMessages } from "./IO/OSC";
 import {
   initializeSelectedUniverse,
   AppSettings,
@@ -205,6 +205,7 @@ export class Editor {
 
     // Loading universe from URL (if needed)
     loadUniverserFromUrl(this);
+
 
   }
 
