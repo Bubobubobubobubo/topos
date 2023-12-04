@@ -41,26 +41,28 @@ wss.on("close", function () {
   console.log("> Closing websocket server")
 });
 
-let udpPort;
+let udpPort = new osc.UDPPort({
+  localAddress: "127.0.0.1",
+  localPort: 3001,
+  remoteAddress: "127.0.0.1",
+  remotePort: 57120, 
+});
 
+udpPort.on("error", function (error) {
+  console.error("> UDP Port error:", error);
+});
+
+udpPort.on("ready", function () {
+  console.log(`> UDP Port opened on port ${udpPort.options.localPort}`);
+});
+
+udpPort.open();
 
 function sendOscMessage(message) {
-  console.log("sendOscMessage")
   try {
-    if (!message.port === udpPort.remotePort) {
-      udpPort = new osc.UDPPort({
-        localAddress: "127.0.0.1",
-        localPort: 3000,
-        remoteAddress: "127.0.0.1",
-        remotePort: message.port,
-      });
-      udpPort.open();
-    }
-    udpPort.on("ready", function () {
-      console.log("> OSC Message:", message);
-      udpPort.send(message);
-    });
+    console.log("> Sending OSC message:", message);
+    udpPort.send(message);
   } catch (error) {
-    console.log(error)
+    console.error("> Error sending OSC message:", error);
   }
 }
