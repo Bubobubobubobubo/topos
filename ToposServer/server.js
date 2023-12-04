@@ -15,6 +15,18 @@ console.log("Listening to: ws://localhost:3000. Open Topos.\n");
 // Listening to WebSocket messages
 const wss = new WebSocket.Server({ port: 3000 });
 
+// Sending WebSocket messages
+const inputWss = new WebSocket.Server({ port: 3001 });
+
+inputWss.on("connection", function (ws) {
+  inputWss.clients.forEach(function each(client) {
+    // Send message to all clients except sender
+    if (client !== ws && client.readyState === WebSocket.OPEN) {
+      client.send("New client connected");
+    }
+  })
+});
+
 // Setting up for message broadcasting
 wss.on("connection", function (ws) {
   console.log("> Client connected");

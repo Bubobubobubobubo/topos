@@ -24,6 +24,7 @@ import { linear_time } from "./documentation/time/linear_time";
 import { cyclical_time } from "./documentation/time/cyclical_time";
 import { long_forms } from "./documentation/long_forms";
 import { midi } from "./documentation/midi";
+import { osc } from "./documentation/osc";
 import { sound } from "./documentation/engine";
 import { patterns } from "./documentation/patterns";
 import { functions } from "./documentation/functions";
@@ -92,6 +93,7 @@ export const documentation_factory = (application: Editor) => {
     patterns: patterns(application),
     ziffers: ziffers(application),
     midi: midi(application),
+    osc: osc(application),
     lfos: lfos(application),
     variables: variables(application),
     probabilities: probabilities(application),

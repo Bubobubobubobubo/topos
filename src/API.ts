@@ -1,4 +1,5 @@
 import { EditorView } from "@codemirror/view";
+import { sendToServer, type OSCMessage } from "./IO/OSC";
 import { getAllScaleNotes, nearScales, seededRandom } from "zifferjs";
 import {
   MidiCCEvent,
@@ -2094,6 +2095,20 @@ export class UserAPI {
       }
     }, real_duration * 1000);
   };
+
+  // =============================================================
+  // OSC Functions
+  // =============================================================
+
+  public osc = (address: string, port: number, ...args: any[]): void => {
+      sendToServer({
+        address: address,
+        port: port,
+        args: args,
+        timetag: Math.round(Date.now() + this.app.clock.deadline),
+      } as OSCMessage);
+  }
+
 
   // =============================================================
   // Transport functions

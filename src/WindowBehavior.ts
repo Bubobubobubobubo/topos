@@ -1,5 +1,5 @@
 import { type Editor } from "./main";
-import { socket } from "./IO/OSC";
+import { outputSocket, inputSocket } from "./IO/OSC";
 
 const handleResize = (canvas: HTMLCanvasElement) => {
   if (!canvas) return;
@@ -28,7 +28,8 @@ export const saveBeforeExit = (app: Editor): null => {
   app.currentFile().committed = app.view.state.doc.toString();
   app.settings.saveApplicationToLocalStorage(app.universes, app.settings);
   // Close the websocket
-  socket.close();
+  inputSocket.close();
+  outputSocket.close();
   return null;
 };
 

@@ -4,7 +4,7 @@ import { scriptBlinkers } from "./Visuals/Blinkers";
 import { javascript } from "@codemirror/lang-javascript";
 import { markdown } from "@codemirror/lang-markdown";
 import { Extension } from "@codemirror/state";
-import { socket } from "./IO/OSC";
+import { outputSocket } from "./IO/OSC";
 import {
   initializeSelectedUniverse,
   AppSettings,
@@ -95,7 +95,7 @@ export class Editor {
   isPlaying: boolean = false;
 
   // OSC
-  socket: WebSocket = socket
+  outputSocket: WebSocket = outputSocket
 
   // Hydra
   public hydra_backend: any;

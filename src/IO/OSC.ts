@@ -1,4 +1,3 @@
-export let socket = new WebSocket("ws://localhost:3000");
 export interface OSCMessage {
   address: string;
   port: number;
@@ -6,44 +5,52 @@ export interface OSCMessage {
   timetag: number;
 }
 
+// Send/receive messages from websocket
+export let outputSocket = new WebSocket("ws://localhost:3000");
+export let inputSocket = new WebSocket("ws://localhost:3001");
+
+inputSocket.onmessage= function (event) {
+  console.log("Received: ", event.data);
+}
+
 // @ts-ignore
-socket.onopen = function (event) {
+outputSocket.onopen = function (event) {
   console.log("Connected to WebSocket Server");
   // Send an OSC-like message
-  socket.send(
+  outputSocket.send(
     JSON.stringify({
       address: "/successful_connexion",
       args: true,
     })
   );
 
-  socket.onerror = function (error) {
+  outputSocket.onerror = function (error) {
     console.log("Websocket Error:", error);
   };
 
-  socket.onmessage = function (event) {
+  outputSocket.onmessage = function (event) {
     console.log("Received: ", event.data);
   };
 };
 
 export function sendToServer(message: OSCMessage) {
-  if (socket.readyState === WebSocket.OPEN) {
-    socket.send(JSON.stringify(message));
+  if (outputSocket.readyState === WebSocket.OPEN) {
+    outputSocket.send(JSON.stringify(message));
   } else {
     console.log("WebSocket is not open. Attempting to reconnect...");
     if (
-      socket.readyState === WebSocket.CONNECTING ||
-      socket.readyState === WebSocket.OPEN
+      outputSocket.readyState === WebSocket.CONNECTING ||
+      outputSocket.readyState === WebSocket.OPEN
     ) {
-      socket.close();
+      outputSocket.close();
     }
 
     // Create a new WebSocket connection
-    socket = new WebSocket("ws://localhost:3000");
+    outputSocket = new WebSocket("ws://localhost:3000");
 
     // Send the message once the socket is open
-    socket.onopen = () => {
-      socket.send(JSON.stringify(message));
+    outputSocket.onopen = () => {
+      outputSocket.send(JSON.stringify(message));
     };
   }
 }
