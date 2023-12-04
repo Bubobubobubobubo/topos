@@ -9,17 +9,14 @@ export interface OSCMessage {
 export let outputSocket = new WebSocket("ws://localhost:3000");
 export let inputSocket = new WebSocket("ws://localhost:3001");
 
-// Queue of 1000 last messages
 export let oscMessages : any[] = [];
-
 inputSocket.addEventListener('message', (event) => {
   let data = JSON.parse(event.data);
-  if (oscMessages.length > 1000) {
+  if (oscMessages.length >= 1000) {
     oscMessages.shift();
   }
   oscMessages.push(data);
 });
-
 
 
 // @ts-ignore
