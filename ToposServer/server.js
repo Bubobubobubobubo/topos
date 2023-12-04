@@ -2,21 +2,18 @@ const WebSocket = require("ws");
 const osc = require("osc");
 var pjson = require('./package.json');
 
-
-// ========================================================== 
-// SERVER SIDE OSC FORWARDING: WebSocket => OSC
-// ========================================================== 
-
-// Listening to WebSocket messages
 let banner = `
 ┏┳┓         ┏┓┏┓┏┓
  ┃ ┏┓┏┓┏┓┏  ┃┃┗┓┃ 
  ┻ ┗┛┣┛┗┛┛  ┗┛┗┛┗┛
      ┛            
              ${pjson.version}\n`
-const wss = new WebSocket.Server({ port: 3000 });
+
 console.log(banner)
 console.log("Listening to: ws://localhost:3000. Open Topos.\n");
+
+// Listening to WebSocket messages
+const wss = new WebSocket.Server({ port: 3000 });
 
 // Setting up for message broadcasting
 wss.on("connection", function (ws) {
@@ -24,7 +21,7 @@ wss.on("connection", function (ws) {
   ws.on("message", function (data) {
     try {
       const message = JSON.parse(data);
-      sendOscMessage(message);
+      sendOscMessage(formatAndTypeMessage(message));
     } catch (error) {
       console.error("> Error processing message:", error);
     }
@@ -41,10 +38,13 @@ wss.on("close", function () {
   console.log("> Closing websocket server")
 });
 
+// Setting up for OSC messages
+
 let udpPort = new osc.UDPPort({
-  localAddress: "127.0.0.1",
-  localPort: 3001,
-  remoteAddress: "127.0.0.1",
+  localAddress: "0.0.0.0",
+  localPort: 3000,
+  metadata: true,
+  remoteAddress: "0.0.0.0",
   remotePort: 57120, 
 });
 
@@ -60,9 +60,35 @@ udpPort.open();
 
 function sendOscMessage(message) {
   try {
-    console.log("> Sending OSC message:", message);
     udpPort.send(message);
+    console.log(message)
   } catch (error) {
     console.error("> Error sending OSC message:", error);
   }
 }
+
+const formatAndTypeMessage = (message) => {
+  let newMessage = {};
+  newMessage.address = message.address;
+  newMessage.timestamp = osc.timeTag(message.timetag);
+
+  args = [...Object.entries(message.args)].flat().map((arg) => {
+    if (typeof arg === 'string') 
+      return {type: 's', value: arg};
+    if (typeof arg === 'number')
+      return {type: 'f', value: arg};
+    if (typeof arg === 'boolean')
+      return {type: 'f', value: arg ? 1 : 0};
+  })
+
+  newMessage.args = args
+
+  return newMessage;
+}
+
+console.log(formatAndTypeMessage({ 
+  address: '/baba', 
+  port: 2000, 
+  args: { s: 'fhardkick', dur: 0.5, port: 2000, address: 'baba' }, 
+  timetag: 1701696184583
+}))

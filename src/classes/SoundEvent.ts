@@ -492,7 +492,7 @@ export class SoundEvent extends AudibleEvent {
       sendToServer({
         address: oscAddress,
         port: oscPort,
-        message: event,
+        args: event,
         timetag: Math.round(Date.now() + this.app.clock.deadline),
       } as OSCMessage);
     }

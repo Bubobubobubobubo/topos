@@ -2,7 +2,7 @@ export let socket = new WebSocket("ws://localhost:3000");
 export interface OSCMessage {
   address: string;
   port: number;
-  message: object;
+  args: object;
   timetag: number;
 }
 
