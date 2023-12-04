@@ -12,7 +12,7 @@ const vitePWAconfiguration = {
     sourcemap: false,
     cleanupOutdatedCaches: true,
     globPatterns: [
-      "**/*.{js,css,html,gif,png,json,woff,woff2,json,ogg,wav,mp3,ico,png,svg}",
+      "**/*.{js,js.gz,css,html,gif,png,json,woff,woff2,json,ogg,wav,mp3,ico,png,svg}",
     ],
     // Thanks Froos :)
     runtimeCaching: [
