@@ -493,4 +493,19 @@ export class SoundEvent extends AudibleEvent {
       } as OSCMessage);
     }
   };
+
+  dirt = (orbit?: number | number[]): void => {
+    if (orbit) this.values["orbit"] = orbit;
+    const events = objectWithArraysToArrayOfObjects(this.values, [
+      "parsedScale",
+    ]);
+    for (const event of events) {
+      const filteredEvent = event;
+      if (filteredEvent.freq) { delete filteredEvent.note; }
+      sendToServer({
+        address: "/dirt/play", port: 57120, 
+        args: event, timetag: Math.round(Date.now() + this.app.clock.deadline),
+      } as OSCMessage);
+    }
+  }
 }
