@@ -33,6 +33,17 @@ export class SoundEvent extends AudibleEvent {
   sound: any;
 
   private static methodMap = {
+    // SuperDirt related
+    accelerate: ["accelerate", "acc"],
+    legato: ["legato", "leg"],
+    fadeTime: ["fadeTime", "fade"],
+    tremolorate: ["tremolorate", "trem"],
+    tremolodepth: ["tremolodepth", "tremd"],
+    tilt: ["tilt"],
+    plat: ["plat"],
+    leslie: ["leslie"],
+    lrate: ["lrate"],
+    lsize: ["lsize"],
     volume: ["volume", "vol"],
     zrand: ["zrand", "zr"],
     curve: ["curve"],
