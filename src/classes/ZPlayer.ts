@@ -288,6 +288,11 @@ export class Player extends AbstractEvent {
 
   lead = () => this.voiceleading();
 
+  arpeggio(indexes: string|number[]) {
+    if (this.atTheBeginning()) this.ziffers.arpeggio(indexes);
+    return this;
+  }
+
   invert = (n: number) => {
     if (this.atTheBeginning()) {
       this.ziffers.invert(n);
