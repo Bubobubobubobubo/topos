@@ -222,15 +222,17 @@ export class AbstractEvent {
       value = Array.isArray(value) ? value.concat(kwargs) : [value, ...kwargs];
     }
     if (Array.isArray(value)) {
-      this.values["noteLength"] = value;
       this.values.dur = value.map((v) =>
         this.app.clock.convertPulseToSecond(v * 4 * this.app.clock.ppqn),
       );
     } else {
-      this.values["noteLength"] = value;
       this.values.dur = this.app.clock.convertPulseToSecond(
         value * 4 * this.app.clock.ppqn,
       );
+    }
+    if(this.current) {
+      value = Array.isArray(value) ? value[this.index%value.length] : value;
+      this.current.duration = value;
     }
     return this;
   };

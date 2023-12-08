@@ -288,7 +288,8 @@ export class Player extends AbstractEvent {
 
   lead = () => this.voiceleading();
 
-  arpeggio(indexes: string|number[]) {
+  arpeggio(indexes: string|number[], ...rest: number[]) {
+    if(typeof indexes === "number") indexes = [indexes, ...rest];
     if (this.atTheBeginning()) this.ziffers.arpeggio(indexes);
     return this;
   }
