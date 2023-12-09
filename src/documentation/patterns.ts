@@ -4,7 +4,7 @@ import { makeExampleFactory } from "../Documentation";
 export const patterns = (application: Editor): string => {
   const makeExample = makeExampleFactory(application);
   return `
-# Patterns
+# Array patterns
 
 **Topos** is using arrays as a way to make dynamic patterns of data (rhythms, melodies, etc). 
 It means that the following:
