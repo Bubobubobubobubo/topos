@@ -5,7 +5,7 @@ import { SkipEvent } from "./SkipEvent";
 import { SoundEvent, SoundParams } from "./SoundEvent";
 import { MidiEvent, MidiParams } from "./MidiEvent";
 import { RestEvent } from "./RestEvent";
-import { arrayOfObjectsToObjectWithArrays } from "../Utils/Generic";
+import { GeneratorIteratorType, GeneratorType, arrayOfObjectsToObjectWithArrays } from "../Utils/Generic";
 import { TonnetzSpaces } from "zifferjs/src/tonnetz";
 
 export type InputOptions = { [key: string]: string | number };
@@ -39,9 +39,11 @@ export class Player extends AbstractEvent {
     } else if (typeof input === "number") {
       this.input = input;
       this.ziffers = Ziffers.fromNumber(input, options);
-    } else {
+    } else if (input.constructor === GeneratorType || input.constructor === GeneratorIteratorType){
       this.ziffers = Ziffers.fromGenerator(input, options);
       this.input = this.ziffers.input;
+    } else {
+      throw new Error("Invalid input");
     }
     this.zid = zid;
   }

@@ -31,7 +31,13 @@ import { functions } from "./documentation/functions";
 import { variables } from "./documentation/variables";
 import { probabilities } from "./documentation/probabilities";
 import { lfos } from "./documentation/lfos";
-import { ziffers } from "./documentation/ziffers";
+import { ziffers_basics } from "./documentation/patterns/ziffers/ziffers_basics";
+import { ziffers_scales } from "./documentation/patterns/ziffers/ziffers_scales";
+import { ziffers_rhythm } from "./documentation/patterns/ziffers/ziffers_rhythm";
+import { ziffers_algorithmic } from "./documentation/patterns/ziffers/ziffers_algorithmic";
+
+import { ziffers_tonnetz } from "./documentation/patterns/ziffers/ziffers_tonnetz";
+
 import { synths } from "./documentation/synths";
 
 // Setting up the Markdown converter with syntax highlighting
@@ -91,7 +97,11 @@ export const documentation_factory = (application: Editor) => {
     synths: synths(application),
     chaining: chaining(application),
     patterns: patterns(application),
-    ziffers: ziffers(application),
+    ziffers_basics: ziffers_basics(application),
+    ziffers_scales: ziffers_scales(application),
+    ziffers_algorithmic: ziffers_algorithmic(application),
+    ziffers_rhythm: ziffers_rhythm(application),
+    ziffers_tonnetz: ziffers_tonnetz(application),
     midi: midi(application),
     osc: osc(application),
     lfos: lfos(application),

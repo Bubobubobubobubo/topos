@@ -85,3 +85,6 @@ export function filterObject(
     Object.entries(obj).filter(([key]) => filter.includes(key)),
   );
 }
+
+export const GeneratorType = (function*(){yield undefined;}).constructor;
+export const GeneratorIteratorType = (function*(){yield undefined;}).prototype.constructor;
