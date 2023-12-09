@@ -7,6 +7,7 @@ import {
   safeScale,
 } from "zifferjs";
 import { SkipEvent } from "./SkipEvent";
+import { SoundParams } from "./SoundEvent";
 
 export type EventOperation<T> = (instance: T, ...args: any[]) => void;
 
@@ -235,6 +236,46 @@ export class AbstractEvent {
       this.current.duration = value;
     }
     return this;
+  };
+
+  protected processSound = (
+    sound: string | string[] | SoundParams | SoundParams[],
+  ): SoundParams => {
+    if (Array.isArray(sound) && typeof sound[0] === "string") {
+      const s: string[] = [];
+      const n: number[] = [];
+      sound.forEach((str) => {
+        const parts = (str as string).split(":");
+        s.push(parts[0]);
+        if (parts[1]) {
+          n.push(parseInt(parts[1]));
+        }
+      });
+      return {
+        s,
+        n: n.length > 0 ? n : undefined,
+        dur: this.app.clock.convertPulseToSecond(this.app.clock.ppqn),
+      };
+    } else if (typeof sound === "object") {
+      const validatedObj: SoundParams = {
+        dur: this.app.clock.convertPulseToSecond(this.app.clock.ppqn),
+        ...(sound as Partial<SoundParams>),
+      };
+      return validatedObj;
+    } else {
+      if (sound.includes(":")) {
+        const vals = sound.split(":");
+        const s = vals[0];
+        const n = parseInt(vals[1]);
+        return {
+          s,
+          n,
+          dur: this.app.clock.convertPulseToSecond(this.app.clock.ppqn),
+        };
+      } else {
+        return { s: sound, dur: 0.5 };
+      }
+    }
   };
 }
 

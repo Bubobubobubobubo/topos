@@ -155,14 +155,14 @@ export class Player extends AbstractEvent {
     return areWeThereYet;
   };
 
-  sound(name?: string) {
+  sound(name?: string | string[] | SoundParams | SoundParams[]) {
     if (this.areWeThereYet()) {
       const event = this.next() as Pitch | Chord | ZRest;
       const noteLengthInSeconds = this.app.clock.convertPulseToSecond(
         event.duration * 4 * this.app.clock.ppqn,
       );
       if (event instanceof Pitch) {
-        const obj = event.getExisting(
+        let obj = event.getExisting(
           "freq",
           "note",
           "pitch",
@@ -171,10 +171,14 @@ export class Player extends AbstractEvent {
           "octave",
           "parsedScale",
         ) as SoundParams;
+        
         if (event.sound) name = event.sound as string;
+        if(name) obj = {...obj, ...this.processSound(name)};
+        else obj.s = "sine";
+
         if (event.soundIndex) obj.n = event.soundIndex as number;
         obj.dur = noteLengthInSeconds;
-        return new SoundEvent(obj, this.app).sound(name || "sine");
+        return new SoundEvent(obj, this.app);
       } else if (event instanceof Chord) {
         const pitches = event.pitches.map((p) => {
           return p.getExisting(
@@ -187,8 +191,11 @@ export class Player extends AbstractEvent {
             "parsedScale",
           );
         }) as SoundParams[];
-        const add = { dur: noteLengthInSeconds } as SoundParams;
-        if (name) add.s = name;
+
+        let add = { dur: noteLengthInSeconds} as SoundParams;
+        if(name) add = {...add, ...this.processSound(name)};
+        else add.s = "sine";
+
         let sound = arrayOfObjectsToObjectWithArrays(
           pitches,
           add,
