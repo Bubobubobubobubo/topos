@@ -133,7 +133,7 @@
       <div id="documentation-page" class="flex flex-row bg-transparent">
         <aside class="w-1/8 flex-shrink-0 h-screen overflow-y-auto p-1 lg:p-6 bg-neutral-900 text-white">
           <nav class="text-xl sm:text-sm overflow-y-scroll mb-24">
-            <details class="" open=true>
+            <details class="" open>
               <summary class="font-semibold lg:text-xl text-orange-300">Basics</summary>
               <div class="flex flex-col">
                 <p rel="noopener noreferrer" id="docs_introduction" class="pl-2 pr-2 lg:text-xl text-sm hover:bg-neutral-800 py-1 my-1 rounded-lg">Welcome </p>
@@ -144,12 +144,12 @@
                 <p rel="noopener noreferrer" id="docs_code" class="pl-2 pr-2 lg:text-xl text-sm hover:bg-neutral-800 py-1 my-1 rounded-lg">Coding</p>
 							</div>
 						</details>
-            <details class="space-y-2" open=true>
+            <details class="space-y-2" open>
               <summary class="font-semibold lg:text-xl pb-1 pt-1 text-orange-300">Learning</summary>
               <div class="flex flex-col">
 
                 <!-- Time -->
-                <details class="space-y-2" open=false>
+                <details class="space-y-2">
                   <summary class="ml-2 lg:text-xl pb-1 pt-1 text-white">Time</summary>
                   <div class="flex flex-col">
                     <p rel="noopener noreferrer" id="docs_time" class="ml-8 pr-2 lg:text-xl text-sm hover:bg-neutral-800 py-1 my-1 rounded-lg">Dealing with time</p>
@@ -160,7 +160,7 @@
                 </details>
 
                 <!-- Samples -->
-                <details class="space-y-2" open=false>
+                <details class="space-y-2">
                   <summary class="ml-2 lg:text-xl pb-1 pt-1 text-white">Audio Engine</summary>
                   <div class="flex flex-col">
                     <p rel="noopener noreferrer" id="docs_audio_basics" class="ml-8 pr-2 lg:text-xl text-sm hover:bg-neutral-800 py-1 my-1 rounded-lg">Playing a sound</p>
@@ -172,31 +172,24 @@
                 </details>
 
                 <!-- Audio Engine -->
-                <details class="space-y-2" open=false>
+                <details class="space-y-2">
                   <summary class="ml-2 lg:text-xl pb-1 pt-1 text-white">Samples</summary>
                   <div class="flex flex-col">
                     <p rel="noopener noreferrer" id="docs_sample_list" class="ml-8 pr-2 lg:text-xl text-sm hover:bg-neutral-800 py-1 my-1 rounded-lg">List of samples</p>
                     <p rel="noopener noreferrer" id="docs_loading_samples" class="ml-8 pr-2 lg:text-xl text-sm hover:bg-neutral-800 py-1 my-1 rounded-lg">Loading Samples</p>
                   </div>
                 </details>
-
-                <p rel="noopener noreferrer" id="docs_patterns" class="pl-2 pr-2 lg:text-xl text-sm hover:bg-neutral-800 py-1 my-1 rounded-lg">Array patterns</p>
                 <p rel="noopener noreferrer" id="docs_midi" class="pl-2 pr-2 lg:text-xl text-sm hover:bg-neutral-800 py-1 my-1 rounded-lg">MIDI</p>
                 <p rel="noopener noreferrer" id="docs_osc" class="pl-2 pr-2 lg:text-xl text-sm hover:bg-neutral-800 py-1 my-1 rounded-lg">OSC</p>
 							</div>
 						</details>
-            <details class="space-y-2" open=true>
+            <details class="space-y-2" open>
               <summary class="font-semibold lg:text-xl pb-1 pt-1 text-orange-300">Patterns</summary>
               <div class="flex flex-col">
-                
-                <p rel="noopener noreferrer" id="docs_variables" class="pl-2 pr-2 lg:text-xl text-sm hover:bg-neutral-800 py-1 my-1 rounded-lg">Global Variables</p>
-                <p rel="noopener noreferrer" id="docs_lfos" class="pl-2 pr-2 lg:text-xl text-sm hover:bg-neutral-800 py-1 my-1 rounded-lg">Low Freq Oscs.</p>
-                <p rel="noopener noreferrer" id="docs_probabilities" class="pl-2 pr-2 lg:text-xl text-sm hover:bg-neutral-800 py-1 my-1 rounded-lg">Probabilities</p>
-                <p rel="noopener noreferrer" id="docs_chaining" class="pl-2 pr-2 lg:text-xl text-sm hover:bg-neutral-800 py-1 my-1 rounded-lg">Chaining</p>
-                <p rel="noopener noreferrer" id="docs_functions" class="pl-2 pr-2 lg:text-xl text-sm hover:bg-neutral-800 py-1 my-1 rounded-lg">Functions</p>
-             
+
+                <p rel="noopener noreferrer" id="docs_patterns" class="pl-2 pr-2 lg:text-xl text-sm hover:bg-neutral-800 py-1 my-1 rounded-lg">Array patterns</p>
                 <!-- Ziffers -->
-                <details class="space-y-2" open=false>
+                <details class="space-y-2">
                   <summary class="ml-2 lg:text-xl pb-1 pt-1 text-white">Ziffers</summary>
                   <div class="flex flex-col">
                     <p rel="noopener noreferrer" id="docs_ziffers_basics" class="ml-8 pr-2 lg:text-xl text-sm hover:bg-neutral-800 py-1 my-1 rounded-lg">Basics</p>
@@ -206,13 +199,19 @@
                     <p rel="noopener noreferrer" id="docs_ziffers_tonnetz" class="ml-8 pr-2 lg:text-xl text-sm hover:bg-neutral-800 py-1 my-1 rounded-lg">Tonnetz</p>
                   </div>
                 </details>
+                
+                <p rel="noopener noreferrer" id="docs_variables" class="pl-2 pr-2 lg:text-xl text-sm hover:bg-neutral-800 py-1 my-1 rounded-lg">Global Variables</p>
+                <p rel="noopener noreferrer" id="docs_lfos" class="pl-2 pr-2 lg:text-xl text-sm hover:bg-neutral-800 py-1 my-1 rounded-lg">Low Freq Oscs.</p>
+                <p rel="noopener noreferrer" id="docs_probabilities" class="pl-2 pr-2 lg:text-xl text-sm hover:bg-neutral-800 py-1 my-1 rounded-lg">Probabilities</p>
+                <p rel="noopener noreferrer" id="docs_chaining" class="pl-2 pr-2 lg:text-xl text-sm hover:bg-neutral-800 py-1 my-1 rounded-lg">Chaining</p>
+                <p rel="noopener noreferrer" id="docs_functions" class="pl-2 pr-2 lg:text-xl text-sm hover:bg-neutral-800 py-1 my-1 rounded-lg">Functions</p>
 
 								<!--
                 <p rel="noopener noreferrer" id="docs_reference" class="pl-2 pr-2 lg:text-xl text-sm hover:bg-neutral-800 py-1 my-1 rounded-lg">Reference</p>
 								-->
               </div>
             </details>
-            <details class="space-y-2" open=true>
+            <details class="space-y-2" open>
               <summary class="font-semibold lg:text-xl text-orange-300">More</summary>
               <div class="flex flex-col">
                 <a rel="noopener noreferrer" id="docs_synchronisation" class="pl-2 pr-2 lg:text-xl text-sm hover:bg-neutral-800 py-1 my-1 rounded-lg">Synchronisation</a>
@@ -221,7 +220,7 @@
                 <a rel="noopener noreferrer" id="docs_about" class="pl-2 pr-2 lg:text-xl text-sm hover:bg-neutral-800 py-1 my-1 rounded-lg">About Topos</a>
               </div>
             </details>
-            <details class="" open=true>
+            <details class="" open>
               <summary class="font-semibold lg:text-xl text-orange-300">Community</summary>
                 <form action="https://github.com/Bubobubobubobubo/topos">
                   <input rel="noopener noreferrer" id="github_link" class="pl-2 pr-2 lg:text-xl text-sm hover:bg-neutral-800 py-1 my-1 rounded-lg" type="submit" value="GitHub" />
