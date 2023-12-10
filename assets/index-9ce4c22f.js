@@ -3025,7 +3025,7 @@ ${e("Arpeggios and note lengths with parameters",`
 
 ## Triad transformations
 
-Triad transofrmations can be defined explicitly using the <ic>triadTonnetz(transformation: string, tonnetzSpace: number[])</ic> method. This method will only apply spesific transformations to triad chords.
+Triad transofrmations can be defined explicitly using the <ic>triadTonnetz(transformation: string, tonnetz: number[])</ic> method. This method will only apply spesific transformations to triad chords.
 
 * p
 * l
@@ -3052,7 +3052,7 @@ Triad transofrmations can be defined explicitly using the <ic>triadTonnetz(trans
 
 ## Tetra transformations
 
-Tetra transformations can be applied using the <ic>tetraTonnetz(transformation: string, tonnetzSpace: number[])</ic> method. This method will apply spesific transformations to certain type of chords. If the chord is not the correct type, the transformation will not be applied.
+Tetra transformations can be applied to seventh chords using the <ic>tetraTonnetz(transformation: string, tonnetz: number[])</ic> method. This method will apply spesific transformations to certain type of chords. If the chord is not the correct type, the transformation will not be applied.
 
 ### 7: 7th chords
 
@@ -3116,13 +3116,13 @@ Tetra transformations can be applied using the <ic>tetraTonnetz(transformation: 
 
 ## Cyclic methods
 
-### Hexacycle
+In addition to the transformations, Ziffers implements cyclic methods that can be used to cycle through the tonnetz space. Cyclic methods turns individual pitch classes to chords using the tonnetz. The cyclic methods are:
 
-### Octacycle
+* <ic>hexaCycle(tonnetz: number[])</ic>: Cycles through chords in the hexa cycle
+* <ic>octaCycle(tonnetz: number[])</ic>: Cycles through chords in the octa cycle
+* <ic>enneaCycle(tonnetz: number[])</ic>: Cycles through chords in the ennea cycle
 
-### Enneacycle
-
-* Examples:
+### Examples:
 
 ${e("Arpeggio with ennea cycle",`
   z1("0 2 -1 3")
@@ -3136,7 +3136,7 @@ ${e("Arpeggio with ennea cycle",`
 
 ${e("Variating arpeggios",`
   z1("s 0 3 2 1")
-  .enneaCycle()
+  .octaCycle()
   .arpeggio([0,[0,2],[1,0],[0,1,2]].beat(0.15))
   .sound("triangle")
   .adsr(0.1,0.1,0.13,0.15)
