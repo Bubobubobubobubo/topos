@@ -3058,9 +3058,19 @@ Tetra transformations can be applied to seventh chords using the <ic>tetraTonnet
 
 * p: p12, p14, p18, p19
 * l: l13, l15, l71
-* r:  r12, rr19
+* r: r12, rr19
 * q: q15, qq51
 * n: n51
+
+${e("Transform seventh chord from chromatic scale",`
+  z1("1.0 047{10}")
+  .scale('chromatic')
+  .tetraTonnetz("o p18 q15 l13 n51 p19 q15")
+  .sound("sawtooth")
+  .cutoff(500 + usine(1/8) * 2000)
+  .adsr(.5,0.05,0.25,0.5)
+  .dur(2.0)
+  .out()`,!0)}
 
 ### m7: minor 7th chords
 
@@ -3111,8 +3121,6 @@ Tetra transformations can be applied to seventh chords using the <ic>tetraTonnet
   * l: l89
   * r: rr19, rr39, rr98
   * q: qq98
-
-### Examples:
 
 ## Cyclic methods
 
