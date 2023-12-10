@@ -311,7 +311,7 @@ export class SoundEvent extends AudibleEvent {
       self.updateValue("roomsize", value);
       return self;
     },
-    comp: ["compressor", "cmp"],
+    comp: ["comp","compressor", "cmp"],
     ratio: function (self: SoundEvent, value: number) {
       self.updateValue("compressorRatio", value);
       return self;

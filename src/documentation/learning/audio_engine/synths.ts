@@ -22,7 +22,6 @@ beat(.5) && snd(['sine', 'triangle', 'sawtooth', 'square'].beat()).freq(100).out
 
 Note that you can also use noise if you do not want to use a periodic oscillator:
 
-
 ${makeExample(
   "Listening to the different types of noise",
   `
@@ -69,43 +68,9 @@ ${makeExample(
     beat(.5) && snd('triangle').chord(60,64,67,72).invert([1,-3,4,-5].pick()).adsr(0,.2).out()
 `,
   true,
-)}  
-
-## Vibrato
-
-You can also add some amount of vibrato to the sound using the <ic>vib</ic> and <ic>vibmod</ic> methods. These can turn any oscillator into something more lively and/or into a sound effect when used with a high amount of modulation.
-
-${makeExample(
-  "Different vibrato settings",
-  `
-tempo(140);
-beat(1) :: sound('triangle')
-  .freq(400).release(0.2)
-  .vib([1/2, 1, 2, 4].beat())
-  .vibmod([1,2,4,8].beat(2))
-  .out()`,
-  true,
 )}
 
-## Noise
-
-A certain amount of brown noise can be added by using the <ic>.noise</ic> key:
-
-${makeExample(
-  "Different vibrato settings",
-  `
-tempo(140);
-beat(1) :: sound('triangle')
-  .freq(400).release(0.2)
-  .noise([0.2,0.4,0.5].bar())
-  .vib([1/2, 1, 2, 4].beat())
-  .vibmod([1,2,4,8].beat(2))
-  .out()`,
-  true,
-)}
-
-
-## Controlling the amplitude
+# Controlling amplitude
 
 Controlling the amplitude and duration of the sound can be done using various techniques. The most important thing to learn is probably how set the amplitude (volume) of your synthesizer:
 - <ic>gain(gain: number)</ic>: sets the gain of the oscillator.
@@ -122,6 +87,8 @@ ${makeExample(
   `beat(0.25) :: sound('sawtooth').velocity([0.0, 1/8, 1/4, 1/2, 1].beat(0.5)).out()`,
   true,
 )}
+
+## Envelopes
 
 <div class="mt-4 mb-4 lg:grid lg:grid-cols-4 lg:gap-4">
   <img class="col-span-1 lg:ml-12 bg-gray-100 rounded-lg px-2 py-2", src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/ADSR_Envelope_Graph.svg/1280px-ADSR_Envelope_Graph.svg.png" width="400" />
@@ -178,73 +145,13 @@ beat(0.5) :: sound('wt_piano')
 
 The most basic synthesis technique used since the 1970s is called substractive synthesis. This technique is based on the use of rich sound sources (oscillators) as a base to build rich and moving timbres. Because rich sources contain a lot of different harmonics, you might want to filter some of them to obtain the timbre you are looking for. To do so, Topos comes with a set of basic filters that can be used to shape the sound exactly to your liking. There are three filter types by defaut, with more to be added in the future:
 
-- **lowpass filter**: filters the high frequencies, keeping the low frequencies.
-- **highpass filter**: filtering the low frequencies, keeping the high frequencies.
-- **bandpass filter**: filters the low and high frequencies around a frequency band, keeping what's in the middle.
+See the Filters page for details on lowpass, highpass and bandpass filters. I also encourage you to study these simple examples to get more familiar with the construction of basic substractive synthesizers:
 
 ${makeExample(
   "Filtering the high frequencies of an oscillator",
   `beat(.5) :: sound('sawtooth').cutoff(50 + usine(1/8) * 2000).out()`,
   true,
 )}
-
-These filters all come with their own set of parameters. Note that we are describing the parameters of the three different filter types here. Choose the right parameters depending on the filter type you are using:
-
-
-### Lowpass filter
-
-| Method     | Alias     | Description                     |
-|------------|-----------|---------------------------------|
-| <ic>cutoff</ic>     | <ic>lpf</ic>       | cutoff frequency of the lowpass filter |
-| <ic>resonance</ic>  | <ic>lpq</ic>       | resonance of the lowpass filter (0-1) |
-
-${makeExample(
-  "Filtering a bass",
-  `beat(.5) :: sound('jvbass').lpf([250,1000,8000].beat()).out()`,
-  true,
-)}
-
-### Highpass filter
-
-| Method     | Alias     | Description                     |
-|------------|-----------|---------------------------------|
-| <ic>hcutoff</ic>     | <ic>hpf</ic>       | cutoff frequency of the highpass filter |
-| <ic>hresonance</ic>  | <ic>hpq</ic>       | resonance of the highpass filter (0-1) |
-
-${makeExample(
-  "Filtering a noise source",
-  `beat(.5) :: sound('gtr').hpf([250,1000, 2000, 3000, 4000].beat()).end(0.5).out()`,
-  true,
-)}
-
-### Bandpass filter
-
-| Method     | Alias     | Description                     |
-|------------|-----------|---------------------------------|
-| <ic>bandf</ic>      | <ic>bpf</ic>       | cutoff frequency of the bandpass filter |
-| <ic>bandq</ic>      | <ic>bpq</ic>       | resonance of the bandpass filter (0-1) |
-
-${makeExample(
-  "Sweeping the filter on the same guitar sample",
-  `beat(.5) :: sound('gtr').bandf(100 + usine(1/8) * 4000).end(0.5).out()`,
-  true,
-)}
-
-Alternatively, <ic>lpf</ic>, <ic>hpf</ic> and <ic>bpf</ic> can take a second argument, the **resonance**.
-
-## Filter order (type)
-
-You can also use the <ic>ftype</ic> method to change the filter type (order). There are two types by default, <ic>12db</ic> for a gentle slope or <ic>24db</ic> for a really steep filtering slope. The <ic>24db</ic> type is particularly useful for substractive synthesis if you are trying to emulate some of the Moog or Prophet sounds:
-
-- <ic>ftype(type: string)</ic>: sets the filter type (order), either <ic>12db</ic> or <ic>24db</ic>.
-
-${makeExample(
-  "Filtering a bass",
-  `beat(.5) :: sound('jvbass').ftype(['12db', '24db'].beat(4)).lpf([250,1000,8000].beat()).out()`,
-  true,
-)}
-
-I also encourage you to study these simple examples to get more familiar with the construction of basic substractive synthesizers:
 
 ${makeExample(
   "Simple synthesizer voice with filter",
@@ -282,72 +189,22 @@ beat(1/8)::sound('sine')
   false,
 )}
 
-## Filter envelopes
+## Noise
 
-The examples we have studied so far are static. They filter the sound around a fixed cutoff frequency. To make the sound more interesting, you can use the ADSR filter envelopes to shape the filter cutoff frequency over time. You will always find amplitude and filter envelopes on most commercial synthesizers. This is done using the following methods:
-
-### Lowpass envelope
-
-| Method     | Alias     | Description                     |
-|------------|-----------|---------------------------------|
-| <ic>lpenv</ic>      | <ic>lpe</ic>       | lowpass frequency modulation amount (negative or positive) |
-| <ic>lpattack</ic>   | <ic>lpa</ic>       | attack of the lowpass filter    |
-| <ic>lpdecay</ic>    | <ic>lpd</ic>       | decay of the lowpass filter     |
-| <ic>lpsustain</ic>  | <ic>lps</ic>       | sustain of the lowpass filter   |
-| <ic>lprelease</ic>  | <ic>lpr</ic>       | release of the lowpass filter   |
-| <ic>lpadsr</ic>     |                    | (**takes five arguments**) set all the parameters  |
-
+A certain amount of brown noise can be added by using the <ic>.noise</ic> key:
 
 ${makeExample(
-  "Filtering a sawtooth wave dynamically",
-  `beat(.5) :: sound('sawtooth').note([48,60].beat())
-  .cutoff(5000).lpa([0.05, 0.25, 0.5].beat(2))
-  .lpenv(-8).lpq(10).out()`,
+  "Different vibrato settings",
+  `
+tempo(140);
+beat(1) :: sound('triangle')
+  .freq(400).release(0.2)
+  .noise([0.2,0.4,0.5].bar())
+  .vib([1/2, 1, 2, 4].beat())
+  .vibmod([1,2,4,8].beat(2))
+  .out()`,
   true,
 )}
-
-### Highpass envelope
-
-| Method     | Alias     | Description                     |
-|------------|-----------|---------------------------------|
-| <ic>hpenv</ic>      | <ic>hpe</ic>       | highpass frequency modulation amount (negative or positive) |
-| <ic>hpattack</ic>   | <ic>hpa</ic>       | attack of the highpass filter    |
-| <ic>hpdecay</ic>    | <ic>hpd</ic>       | decay of the highpass filter     |
-| <ic>hpsustain</ic>  | <ic>hps</ic>       | sustain of the highpass filter   |
-| <ic>hprelease</ic>  | <ic>hpr</ic>       | release of the highpass filter   |
-| <ic>hpadsr</ic>     |           | (**takes five arguments**) set all the parameters  |
-
-
-${makeExample(
-  "Let's use another filter using the same example",
-  `beat(.5) :: sound('sawtooth').note([48,60].beat())
-  .hcutoff(1000).hpa([0.05, 0.25, 0.5].beat(2))
-  .hpenv(8).hpq(10).out()`,
-  true,
-)}
-
-### Bandpass envelope
-
-| Method     | Alias     | Description                     |
-|------------|-----------|---------------------------------|
-| <ic>bpenv</ic>      | <ic>bpe</ic>       | bandpass frequency modulation amount (negative or positive) |
-| <ic>bpattack</ic>   | <ic>bpa</ic>       | attack of the bandpass filter    |
-| <ic>bpdecay</ic>    | <ic>bpd</ic>       | decay of the bandpass filter     |
-| <ic>bpsustain</ic>  | <ic>bps</ic>       | sustain of the bandpass filter   |
-| <ic>bprelease</ic>  | <ic>bpr</ic>       | release of the bandpass filter   |
-| <ic>bpadsr</ic>     |           | (**takes five arguments**) set all the parameters  |
-
-
-${makeExample(
-  "And the bandpass filter, just for fun",
-  `beat(.5) :: sound('sawtooth').note([48,60].beat())
-  .bandf([500,1000,2000].beat(2))
-  .bpa([0.25, 0.125, 0.5].beat(2) * 4)
-  .bpenv(-4).release(2).out()
-  `,
-  true,
-)}
-
 
 ## Wavetable synthesis
 

@@ -1,7 +1,7 @@
 import { type Editor } from "../../../main";
 import { makeExampleFactory } from "../../../Documentation";
 
-export const reverb = (application: Editor): string => {
+export const effects = (application: Editor): string => {
   // @ts-ignore
   const makeExample = makeExampleFactory(application);
   return `
@@ -90,5 +90,34 @@ beat(.5)::snd('pad').crush([16, 8, 4].beat(2)).clip(.5).out()
 	`,
   true,
 )};
+
+## Vibrato
+
+You can also add some amount of vibrato to the sound using the <ic>vib</ic> and <ic>vibmod</ic> methods. These can turn any oscillator into something more lively and/or into a sound effect when used with a high amount of modulation.
+
+${makeExample(
+  "Different vibrato settings",
+  `
+tempo(140);
+beat(1) :: sound('triangle')
+  .freq(400).release(0.2)
+  .vib([1/2, 1, 2, 4].beat())
+  .vibmod([1,2,4,8].beat(2))
+  .out()`,
+  true,
+)}
+
+## Compression
+
+This effect is leveraging the basic WebAudio compressor. More information can be found about it on the [DynamicsCompressorNode](https://developer.mozilla.org/en-US/docs/Web/API/DynamicsCompressorNode?retiredLocale=de#instance_properties) page. This can be come quite complex :)
+
+| Method     | Alias     | Description                     |
+|------------|-----------|---------------------------------|
+| <ic>comp</ic>     | cmp | Compressor threshold value (dB) over which compressor operates |
+| <ic>ratio</ic>     | rt | Compressor ratio: input amount in dB needed for 1dB change in the output   |
+| <ic>knee</ic>     | kn | dB value defining the range over which the signal transitions to compressed section |
+| <ic>compAttack</ic>     | cmpa | In seconds, time to decrease the gain by 10db |
+| <ic>compRelease</ic>     | cmpr | In seconds, time to increase the gain by 10db |
+
 `;
 };

@@ -898,12 +898,6 @@ const completionDatabase: CompletionDatabase = {
     description: "Detects if the Alt key is pressed",
     example: "fill() ? 1 : 0.5",
   },
-  comp: {
-    name: "comp",
-    category: "synthesis",
-    description: "Compressor threshold (dB)",
-    example: "sound('sine').comp(-4).out()",
-  },
   ratio: {
     name: "ratio",
     category: "synthesis",

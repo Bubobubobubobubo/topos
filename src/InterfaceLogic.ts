@@ -491,7 +491,8 @@ export const installInterfaceLogic = (app: Editor) => {
     "sampler",
     "amplitude",
     "audio_basics",
-    "reverb_delay",
+    "filters",
+    "effects",
     "interface",
     "interaction",
     "code",
@@ -521,7 +522,6 @@ export const installInterfaceLogic = (app: Editor) => {
     "oscilloscope",
     "sample_list",
     "loading_samples",
-    "sample_controls",
   ].forEach((e) => {
     let name = `docs_` + e;
     document.getElementById(name)!.addEventListener("click", async () => {

@@ -3,12 +3,11 @@ import { type Editor } from "./main";
 import { introduction } from "./documentation/basics/welcome";
 import { loading_samples } from "./documentation/learning/samples/loading_samples";
 import { amplitude } from "./documentation/learning/audio_engine/amplitude";
-import { reverb } from "./documentation/learning/audio_engine/reverb_delay";
+import { effects } from "./documentation/learning/audio_engine/effects";
 import { sampler } from "./documentation/learning/audio_engine/sampler";
 import { sample_banks } from "./documentation/learning/samples/sample_banks";
 import { audio_basics } from "./documentation/learning/audio_engine/audio_basics";
 import { sample_list } from "./documentation/learning/samples/sample_list";
-import { sample_controls } from "./documentation/learning/samples/sample_controls";
 import { software_interface } from "./documentation/basics/interface";
 import { shortcuts } from "./documentation/basics/keyboard";
 import { code } from "./documentation/basics/code";
@@ -44,6 +43,7 @@ import { synths } from "./documentation/learning/audio_engine/synths";
 import showdown from "showdown";
 import showdownHighlight from "showdown-highlight";
 import { createDocumentationStyle } from "./DomElements";
+import { filters } from "./documentation/learning/audio_engine/filters";
 showdown.setFlavor("github");
 
 export const key_shortcut = (shortcut: string): string => {
@@ -94,6 +94,7 @@ export const documentation_factory = (application: Editor) => {
     cyclic: cyclical_time(application),
     longform: long_forms(application),
     synths: synths(application),
+    filters: filters(application),
     chaining: chaining(application),
     patterns: patterns(application),
     ziffers_basics: ziffers_basics(application),
@@ -109,7 +110,7 @@ export const documentation_factory = (application: Editor) => {
     functions: functions(application),
     shortcuts: shortcuts(application),
     amplitude: amplitude(application),
-    reverb_delay: reverb(application),
+    effects: effects(application),
     sampler: sampler(application),
     mouse: mouse(application),
     oscilloscope: oscilloscope(application),
@@ -118,7 +119,6 @@ export const documentation_factory = (application: Editor) => {
     bonus: bonus(application),
     sample_list: sample_list(application),
     sample_banks: sample_banks(application),
-    sample_controls: sample_controls(application),
     loading_samples: loading_samples(application),
     about: about(),
   };
