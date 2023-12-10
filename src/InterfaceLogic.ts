@@ -521,6 +521,7 @@ export const installInterfaceLogic = (app: Editor) => {
     "oscilloscope",
     "sample_list",
     "loading_samples",
+    "sample_controls",
   ].forEach((e) => {
     let name = `docs_` + e;
     document.getElementById(name)!.addEventListener("click", async () => {

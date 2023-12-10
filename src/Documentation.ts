@@ -8,6 +8,7 @@ import { sampler } from "./documentation/learning/audio_engine/sampler";
 import { sample_banks } from "./documentation/learning/samples/sample_banks";
 import { audio_basics } from "./documentation/learning/audio_engine/audio_basics";
 import { sample_list } from "./documentation/learning/samples/sample_list";
+import { sample_controls } from "./documentation/learning/samples/sample_controls";
 import { software_interface } from "./documentation/basics/interface";
 import { shortcuts } from "./documentation/basics/keyboard";
 import { code } from "./documentation/basics/code";
@@ -25,7 +26,6 @@ import { cyclical_time } from "./documentation/learning/time/cyclical_time";
 import { long_forms } from "./documentation/learning/time/long_forms";
 import { midi } from "./documentation/learning/midi";
 import { osc } from "./documentation/learning/osc";
-import { sound } from "./documentation/engine";
 import { patterns } from "./documentation/patterns/patterns";
 import { functions } from "./documentation/patterns/functions";
 import { variables } from "./documentation/patterns/variables";
@@ -93,7 +93,6 @@ export const documentation_factory = (application: Editor) => {
     linear: linear_time(application),
     cyclic: cyclical_time(application),
     longform: long_forms(application),
-    sound: sound(application),
     synths: synths(application),
     chaining: chaining(application),
     patterns: patterns(application),
@@ -119,6 +118,7 @@ export const documentation_factory = (application: Editor) => {
     bonus: bonus(application),
     sample_list: sample_list(application),
     sample_banks: sample_banks(application),
+    sample_controls: sample_controls(application),
     loading_samples: loading_samples(application),
     about: about(),
   };

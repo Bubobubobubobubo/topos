@@ -1,7 +1,7 @@
-import { type Editor } from "../main";
-import { makeExampleFactory } from "../Documentation";
+import { type Editor } from "../../../main";
+import { makeExampleFactory } from "../../../Documentation";
 
-export const sound = (application: Editor): string => {
+export const sample_controls = (application: Editor): string => {
   const makeExample = makeExampleFactory(application);
   return `
 
