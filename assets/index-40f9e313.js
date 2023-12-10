@@ -2748,7 +2748,7 @@ ${e("String prototypes",`
 `},wY=r=>{const e=Et(r);return`
 # Scales
 
-  Ziffers supports all the keys and scales. Keys can be defined by using [scientific pitch notation](https://en.wikipedia.org/wiki/Scientific_pitch_notation), for example <ic>F3</ic>. Western style (1490 scales) can be with scale names named after greek modes and extended by [William Zeitler](https://ianring.com/musictheory/scales/traditions/zeitler). You will never really run out of scales to play with using Ziffers. Here is a short list of some possible scales that you can play with:
+  Ziffers supports all the keys and scales. Keys can be defined by using [scientific pitch notation](https://en.wikipedia.org/wiki/Scientific_pitch_notation), for example <ic>F3</ic>. Western style (1490 scales) can be with scale names named after greek modes and extended by <a href="https://allthescales.org/intro.php" target="_blank">William Zeitler</a>. You will never really run out of scales to play with using Ziffers. Here is a short list of some possible scales that you can play with:
   
   | Scale name | Intervals              |
   |------------|------------------------|
@@ -2762,7 +2762,7 @@ ${e("String prototypes",`
   | Soryllic   | <ic>11122122</ic>|
   | Modimic    | <ic>412122</ic>  |
   | Ionalian   | <ic>1312122</ic> |
-  | ... | And it goes on for **1490** scales |
+  | ... | And it goes on for   <a href="https://ianring.com/musictheory/scales/traditions/zeitler" target="_blank">**1490** scales (See full list here)</a>. |
   
   ${e("What the hell is the Modimic scale?",`
   z1("s (0,8) 0 0 (0,5) 0 0").sound('sine')
@@ -2771,7 +2771,7 @@ ${e("String prototypes",`
       .delay(0.125).delayfb(0.25).out();
   beat(.5) :: snd(['kick', 'hat'].beat(.5)).out()
   `,!0)}
-  
+
   You can also use more traditional <a href="https://ianring.com/musictheory/scales/traditions/western" target="_blank">western names</a>:
   
   | Scale name | Intervals              |
