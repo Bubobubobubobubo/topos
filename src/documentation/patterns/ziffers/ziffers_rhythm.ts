@@ -46,43 +46,43 @@ Ziffers maps the following duration characters to the corresponding note lengths
 | l..   | 7/1   | 7.0     | Double dotted long note | Double dotted longa |
 | l.    | 6/1   | 6.0     | Long dotted note | Longa dotted |
 |	l	    |	4/1   | 4.0	    |	Long	|	Longa |
-|	p	    |	8/3   | 2.6666	|	Triplet maxima	|	Triplet longa	|
 | d..   | 7/2   | 3.5     | Double dotted long note | Double dotted breve |
-| d.    | 3/3   | 3.0     | Double whole note | Double breve |
+| d.    | 3/3   | 3.0     | Dotted whole note | Double breve |
+|	n     |	8/3   | 2.6666	|	Triplet Long	|	Triplet longa	|
 |	d	    |	2/1   | 2.0	    |	Double whole note	|	Breve	|
-|	c	    |	4/3   | 1.3333  |	Triplet long	|	Triplet breve	|
 | w..   | 7/4   | 1.75    | Double dotted whole note | Double dotted breve |
 | w.    | 3/2   | 1.5     | Dotted whole note | Dotted breve |
+|	k	    |	4/3   | 1.3333  |	Triplet double whole  |	Triplet breve	|
 |	w	    |	1/1   | 1.0	    |	Whole note	|	Semibreve	|
-|	y	    |	2/3   | 0.6666	|	Triplet half	|	Triplet semibreve	|
 | h..   | 7/8   | 0.875   | Double dotted half note | Double dotted minim |
 | h.    | 3/4   | 0.75    | Dotted half note | Dotted minim |
+|	c     |	2/3   | 0.6666	|	Triplet whole	|	Triplet semibreve	|
 |	h	    |	1/2   | 0.5	    |	Half note 	|	Minim	|
-|	n	    |	1/3   | 0.3333	|	Triplet whole	|	Triplet minim	|
+|	p     |	1/3   | 0.3333	|	Triplet half	|	Triplet minim	|
 | q..   | 7/16  | 0.4375  | Double dotted quarter note | Double dotted crotchet |
 | q.    | 3/8   | 0.375   | Dotted quarter note | Dotted crotchet |
 |	q	    |	1/4   | 0.25  	|	Quarter note	|	Crotchet	|
-|	a	    |	1/6   | 0.1666	|	Triplet quarter	|	Triplet crochet 	|
-| e..   | 7/32  | 0.2187  | Double dotted eighth note | Double dotted quaver |
-| e.    | 3/16  | 0.1875  | Dotted eighth note | Dotted quaver |
+| e..   | 7/32  | 0.2187  | Double dotted 8th | Double dotted quaver |
+| e.    | 3/16  | 0.1875  | Dotted 8th | Dotted quaver |
+|	g     |	1/6   | 0.1666	|	Triplet quarter	|	Triplet crochet 	|
 |	e	    |	1/8   | 0.125	  |	8th note	|	Quaver	|
-|	f	    |	1/12  | 0.0833	|	Triplet 8th	|	Triplet quaver	|
-| s..   | 7/64  | 0.1093  | Double dotted sixteenth note | Double dotted semiquaver |
-| s.    | 3/32  | 0.0937  | Dotted sixteenth note | Dotted semiquaver |
+| s..   | 7/64  | 0.1093  | Double dotted 16th | Double dotted semiquaver |
+|	a     |	1/12  | 0.0833	|	Triplet 8th	|	Triplet quaver	|
+| s.    | 3/32  | 0.0937  | Dotted 16th | Dotted semiquaver |
 |	s	    |	1/16  | 0.0625	|	16th note	|	Semiquaver	|
-|	x	    |	1/24  | 0.0416	|	Triplet 16th	|	Triplet semiquaver	|
-| t..   | 7/128 | 0.0546  | Double dotted thirty-second note | Double dotted demisemiquaver |
-| t.    | 3/64  | 0.0468  | Dotted thirty-second note | Dotted demisemiquaver |
+| t..   | 7/128 | 0.0546  | Double dotted 32th | Double dotted demisemiquaver |
+| t.    | 3/64  | 0.0468  | Dotted 32th | Dotted demisemiquaver |
+|	f     |	1/24  | 0.0416	|	Triplet 16th	|	Triplet semiquaver	|
 |	t	    |	1/32  | 0.0312	|	32th note	|	Demisemiquaver	|
-|	g	    |	1/48  | 0.0208	|	Triplet 32th	|	Triplet demi-semiquaver	|
-| u..   | 7/256 | 0.0273  | Double dotted sixty-fourth note | Double dotted hemidemisemiquaver |
-| u.    | 3/128 | 0.0234  | Dotted sixty-fourth note | Dotted hemidemisemiquaver |
+| u..   | 7/256 | 0.0273  | Double dotted 64th | Double dotted hemidemisemiquaver |
+| u.    | 3/128 | 0.0234  | Dotted 64th | Dotted hemidemisemiquaver |
+|	x     |	1/48  | 0.0208	|	Triplet 32th	|	Triplet demi-semiquaver	|
 |	u	    |	1/64  | 0.0156	|	64th note	|	Hemidemisemiquaver	|
-| j     |	1/96  | 0.0104	|	Triplet 64th	|	Triplet hemidemisemiquaver	|
 | o..   | 7/512 | 0.0136  | Double dotted 128th note | Double dotted semihemidemisemiquaver |
+| y     |	1/96  | 0.0104	|	Triplet 64th	|	Triplet hemidemisemiquaver	|
 | o.    | 3/256 | 0.0117  | Dotted 128th note | Dotted semihemidemisemiquaver |
 |	o	    |	1/128 | 0.0078	|	128th note	|	Semihemidemisemiquaver	|
-|	k	    |	1/192 | 0.0052	|	Triplet 128th | Triplet semihemidemisemiquaver	|
+|	j     |	1/192 | 0.0052	|	Triplet 128th | Triplet semihemidemisemiquaver	|
 |	z	    |	0/1   | 0.0	    |	No length	|	No length	|
 
 ## Samples
