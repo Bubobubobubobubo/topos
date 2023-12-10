@@ -1,5 +1,5 @@
-import { type Editor } from "../main";
-import { makeExampleFactory } from "../Documentation";
+import { type Editor } from "../../../main";
+import { makeExampleFactory } from "../../../Documentation";
 
 export const long_forms = (app: Editor): string => {
   // @ts-ignore

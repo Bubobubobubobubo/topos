@@ -1,13 +1,13 @@
 import { type Editor } from "./main";
 // Basics
 import { introduction } from "./documentation/basics/welcome";
-import { loading_samples } from "./documentation/samples/loading_samples";
-import { amplitude } from "./documentation/audio_engine/amplitude";
-import { reverb } from "./documentation/audio_engine/reverb_delay";
-import { sampler } from "./documentation/audio_engine/sampler";
-import { sample_banks } from "./documentation/samples/sample_banks";
-import { audio_basics } from "./documentation/audio_engine/audio_basics";
-import { sample_list } from "./documentation/samples/sample_list";
+import { loading_samples } from "./documentation/learning/samples/loading_samples";
+import { amplitude } from "./documentation/learning/audio_engine/amplitude";
+import { reverb } from "./documentation/learning/audio_engine/reverb_delay";
+import { sampler } from "./documentation/learning/audio_engine/sampler";
+import { sample_banks } from "./documentation/learning/samples/sample_banks";
+import { audio_basics } from "./documentation/learning/audio_engine/audio_basics";
+import { sample_list } from "./documentation/learning/samples/sample_list";
 import { software_interface } from "./documentation/basics/interface";
 import { shortcuts } from "./documentation/basics/keyboard";
 import { code } from "./documentation/basics/code";
@@ -17,20 +17,20 @@ import { oscilloscope } from "./documentation/more/oscilloscope";
 import { synchronisation } from "./documentation/more/synchronisation";
 import { about } from "./documentation/more/about";
 import { bonus } from "./documentation/more/bonus";
-import { chaining } from "./documentation/chaining";
-import { interaction } from "./documentation/interaction";
-import { time } from "./documentation/time/time";
-import { linear_time } from "./documentation/time/linear_time";
-import { cyclical_time } from "./documentation/time/cyclical_time";
-import { long_forms } from "./documentation/long_forms";
-import { midi } from "./documentation/midi";
-import { osc } from "./documentation/osc";
+import { chaining } from "./documentation/patterns/chaining";
+import { interaction } from "./documentation/basics/interaction";
+import { time } from "./documentation/learning/time/time";
+import { linear_time } from "./documentation/learning/time/linear_time";
+import { cyclical_time } from "./documentation/learning/time/cyclical_time";
+import { long_forms } from "./documentation/learning/time/long_forms";
+import { midi } from "./documentation/learning/midi";
+import { osc } from "./documentation/learning/osc";
 import { sound } from "./documentation/engine";
-import { patterns } from "./documentation/patterns";
-import { functions } from "./documentation/functions";
-import { variables } from "./documentation/variables";
-import { probabilities } from "./documentation/probabilities";
-import { lfos } from "./documentation/lfos";
+import { patterns } from "./documentation/patterns/patterns";
+import { functions } from "./documentation/patterns/functions";
+import { variables } from "./documentation/patterns/variables";
+import { probabilities } from "./documentation/patterns/probabilities";
+import { lfos } from "./documentation/patterns/lfos";
 import { ziffers_basics } from "./documentation/patterns/ziffers/ziffers_basics";
 import { ziffers_scales } from "./documentation/patterns/ziffers/ziffers_scales";
 import { ziffers_rhythm } from "./documentation/patterns/ziffers/ziffers_rhythm";
@@ -38,7 +38,7 @@ import { ziffers_algorithmic } from "./documentation/patterns/ziffers/ziffers_al
 
 import { ziffers_tonnetz } from "./documentation/patterns/ziffers/ziffers_tonnetz";
 
-import { synths } from "./documentation/synths";
+import { synths } from "./documentation/learning/audio_engine/synths";
 
 // Setting up the Markdown converter with syntax highlighting
 import showdown from "showdown";

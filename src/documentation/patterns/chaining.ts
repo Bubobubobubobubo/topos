@@ -1,5 +1,5 @@
-import { makeExampleFactory } from "../Documentation";
-import { type Editor } from "../main";
+import { makeExampleFactory } from "../../Documentation";
+import { type Editor } from "../../main";
 
 export const chaining = (application: Editor): string => {
   const makeExample = makeExampleFactory(application);

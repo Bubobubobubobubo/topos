@@ -1,5 +1,5 @@
-import { type Editor } from "../../main";
-import { makeExampleFactory } from "../../Documentation";
+import { type Editor } from "../../../main";
+import { makeExampleFactory } from "../../../Documentation";
 import pulses from "./pulses.svg";
 
 export const linear_time = (app: Editor): string => {

@@ -1,5 +1,5 @@
-import { type Editor } from "../../main";
-import { makeExampleFactory } from "../../Documentation";
+import { type Editor } from "../../../main";
+import { makeExampleFactory } from "../../../Documentation";
 
 export const audio_basics = (application: Editor): string => {
   // @ts-ignore

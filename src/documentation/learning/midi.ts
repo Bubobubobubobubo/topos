@@ -1,5 +1,5 @@
-import { type Editor } from "../main";
-import { makeExampleFactory, key_shortcut } from "../Documentation";
+import { type Editor } from "../../main";
+import { makeExampleFactory, key_shortcut } from "../../Documentation";
 
 export const midi = (application: Editor): string => {
   const makeExample = makeExampleFactory(application);

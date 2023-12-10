@@ -1,5 +1,5 @@
-import { type Editor } from "../../main";
-import { makeExampleFactory } from "../../Documentation";
+import { type Editor } from "../../../main";
+import { makeExampleFactory } from "../../../Documentation";
 
 export const distortion = (application: Editor): string => {
   // @ts-ignore
