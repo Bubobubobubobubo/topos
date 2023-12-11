@@ -6,30 +6,49 @@ export const ziffers_syncing = (application: Editor): string => {
   return `
 # Synchronization
 
-Ziffers patterns can be synced to any event using <ic>cue(name: string))</ic> and <ic>wait(name: string)</ic> or by using <ic>sync(name: Function)</ic> and <ic>wait(name: Function)</ic> methods from the ziffers patterns. 
+Ziffers patterns can be synced to any event by using **cue**, **sync**, **wait** and **listen** methods.
 
 ## Sync with cue
 
-The <ic>cue(name: string)</ic> methods can be used to send cue messages for ziffers patterns. The <ic>wait(name: string)</ic> method is used to wait for the cue message to start the pattern.
+The <ic>cue(name: string)</ic> methods can be used to send cue messages for ziffers patterns. The <ic>wait(name: string)</ic> method is used to wait for the cue message to be received before starting the next cycle.
 
     ${makeExample(
-        "Sending cue from event",
+        "Sending cue from event and wait",
         `
         beat(4.0) :: sound("bd").cue("foo").out();
-        z1("q 0 3 e 2 1 2 1").wait("foo").sound("sine").out();
+        z1("e 0 3 2 1 2 1").wait("foo").sound("sine").out();
         `,
         true,
     )}
+
+The <ic>sync(name: string)</ic> method is used to sync the ziffers pattern to the cue message. 
 
     ${makeExample(
         "Delayed start using individual cue",
         `
-        onbar(3) :: cue("bar")
-        z1("0 4 2 -2").wait("bar")
-          .sound("ST40:3").stretch([2,1,3,.1].beat(0.5)).out();
+        register('christmas', n=>n.room(0.25).size(2).speed([0.5, 0.25, 0.125])
+            .delay(0.5).delayt(1/3).delayfb(0.5).bpf(200+usine(1/3)*500).out())
+        onbar(1) :: cue("bar")
+        onbar(2) :: cue('baz')
+        z1("<0.25 0.125> 0 4 2 -2").sync("bar").sound("ST40:25").christmas()
+        z2("<0.25 0.125> 0 6 4 -4").sync("baz").sound("ST40:25").christmas()
         `,
         true,
     )}
+
+The <ic>listen(name: string)</ic> method can be used to listen for the cue messages and play one event from the pattern for every cue.
+
+    ${makeExample(
+        "Delayed start using individual cue",
+        `
+        beat(1.0) :: cue("boom")
+
+        z1("bd <hh ho>").listen("boom")
+          .sound().out()        
+        `,
+        true,
+    )}
+
 
 ## Sync with beat
 

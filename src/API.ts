@@ -745,7 +745,7 @@ export class UserAPI {
 
     if (id !== "" && zid !== "z0") {
       // Sync named patterns to z0 by default
-      player.sync("z0");
+      player.sync("z0", false);
     }
 
     return player;

@@ -17,6 +17,7 @@ export class Player extends AbstractEvent {
   startCallTime: number = 0;
   lastCallTime: number = 0;
   waitTime = 0;
+  cueName: string|undefined = undefined;
   played: boolean = false;
   current!: Pitch | Chord | ZRest;
   retro: boolean = false;
@@ -133,6 +134,7 @@ export class Player extends AbstractEvent {
 
     const timeToPlayNext =
       this.current &&
+      this.waitTime >= 0 &&
       this.pulseToSecond(this.origin()) >=
         this.pulseToSecond(this.lastCallTime) +
           this.pulseToSecond(this.current.duration * 4 * this.app.clock.ppqn) &&
@@ -158,8 +160,19 @@ export class Player extends AbstractEvent {
     return areWeThereYet;
   };
 
+  checkCue() {
+    if(this.ziffers.atLast()) {
+      if(this.cueName && this.app.api.cueTimes[this.cueName]) {
+        delete this.app.api.cueTimes[this.cueName];
+        this.cueName = undefined;
+        this.waitTime = -1;
+      }
+    }
+  }
+
   sound(name?: string | string[] | SoundParams | SoundParams[]) {
     if (this.areWeThereYet()) {
+      this.checkCue();
       const event = this.next() as Pitch | Chord | ZRest;
       const noteLengthInSeconds = this.app.clock.convertPulseToSecond(
         event.duration * 4 * this.app.clock.ppqn,
@@ -214,6 +227,7 @@ export class Player extends AbstractEvent {
 
   midi(value: number | undefined = undefined) {
     if (this.areWeThereYet()) {
+      this.checkCue();
       const event = this.next() as Pitch | Chord | ZRest;
       const obj = event.getExisting(
         "note",
@@ -316,14 +330,28 @@ export class Player extends AbstractEvent {
     return this;
   }
 
-  wait(value: number | string | Function) {
-    
+  listen(value: string) {
     if(typeof value === "string") {
       const cueTime = this.app.api.cueTimes[value];
+      this.cueName = value;
       if(cueTime && this.app.clock.pulses_since_origin <= cueTime) {
         this.waitTime = cueTime;
       } else {
-        this.waitTime = -1;
+          this.waitTime = -1;
+      }
+      return this;
+    }
+  }
+
+  wait(value: number | string | Function) {
+
+    if(typeof value === "string") {
+      const cueTime = this.app.api.cueTimes[value];
+      this.cueName = value;
+      if(cueTime && this.app.clock.pulses_since_origin <= cueTime) {
+        this.waitTime = cueTime;
+      } else if(this.atTheBeginning()){
+          this.waitTime = -1;
       }
       return this;
     }
@@ -343,12 +371,24 @@ export class Player extends AbstractEvent {
     return this;
   }
 
-  sync(value: string | Function) {
+  sync(value: string | Function, manualSync: boolean = true) {
+    
+    if(typeof value === "string") {
+      if(manualSync) {
+        const cueTime = this.app.api.cueTimes[value];
+        if(cueTime) {
+          this.waitTime = cueTime;
+        } else {
+          this.waitTime = -1;
+        }
+      }
+      return this;
+    }
+
     if (this.atTheBeginning() && this.notStarted()) {
       const origin = this.app.clock.pulses_since_origin;
-      const syncId = typeof value === "function" ? value.name : value;
       if (origin > 0) {
-        const syncPattern = this.app.api.patternCache.get(syncId) as Player;
+        const syncPattern = this.app.api.patternCache.get(value.name) as Player;
         if (syncPattern) {
           const syncPatternDuration = syncPattern.ziffers.duration;
           const syncPatternStart = syncPattern.startCallTime;
