@@ -15,7 +15,7 @@ export const ziffers_algorithmic = (application: Editor): string => {
     `
   z1("1/8 _ 0 (0 1 3)+(1 2) 0 (2 3 5)-(1 2)").sound('sine')
     .scale('pentatonic').fmi([0.25,0.5].beat(2)).fmh([2,4].beat(2))
-    .room(0.9).size(0.9).sustain(0.1).delay(0.5).delay(0.125)
+    .room(0.9).size(0.9).sustain(0.1).delay(0.125)
     .delayfb(0.25).out();
   `,
     true,
@@ -24,9 +24,11 @@ export const ziffers_algorithmic = (application: Editor): string => {
   ${makeExample(
     "List operations",
     `
-  z1('q (0 3 1 5)+(2 5) e (0 5 2)*(2 3) (0 5 2)>>(2 3) (0 5 2)%(2 3)').sound('sine')
-  .scale("Bebop major")
-  .out()
+    z1('q (0 3 1 5)+(2 5) e (0 5 2)*(2 1) (0 5 2)%(2 3)')
+    .sound('sine')
+    .room(.5).size(1.0).adsr(.15,.15,.25,.1)
+    .scale("Bebop major")
+    .out()
   `,
     true,
   )}
@@ -45,18 +47,39 @@ export const ziffers_algorithmic = (application: Editor): string => {
   `,
     true,
   )}
+  
+## Variables
+
+  * <ic>A=(0 2 3 (1,4))</ic> Assign pre-evaluated list to a variable
+  * <ic>B~(0 2 3 (1,4))</ic> Assign list with operations to a variable
 
   ${makeExample(
-    "Random numbers",
+    "Assign lists to variables",
     `
-  z1('q 0 (2,4) 4 (5,9)').sound('sine')
-  .scale("Bebop minor")
+z1("s A=(0 (1,4)) B~(2 (3,8)) A B A B A")
+  .scale("modimic")
+  .sound("triangle")
+  .adsr(0.01,0.15,0.25,0)
+  .gain(0.5)
   .out()
   `,
     true,
   )}
-  
-  * **Variables:** <ic>A=(0 2 3 4)</ic> Assign a list to a variable
+
+  ${makeExample(
+    "Combine variables into lists and do operations",
+    `
+    z1("s A=(0 3) B=(3 8) C=(((A+B)+A)*B) D=(C-B) A A+C D")
+    .sound("sawtooth")
+    .ad(0.05,1.0)
+    .gain(0.5)
+    .out()    
+  `,
+    true,
+  )}
+
+
+
 
 `;
 };
