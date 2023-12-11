@@ -125,6 +125,26 @@ z1('w [0 [5 [3 7]]] h [0 4]')
   false,
 )}
 
+## Rests
+
+${makeExample(
+  "Rest and octaves",
+  `
+z1('q 0 ^ e0 r _ 0 _ r 4 ^4 4')
+.sound('sine').scale("godian").out()
+`,
+  true,
+)}
+
+${makeExample(
+  "Rests with durations",
+  `
+ z1('q 0 4 e^r 3 e3 0.5^r h4 1/4^r e 5 r 0.125^r 0')
+ .sound('sine').scale("aeryptian").out()
+ `,
+  true,
+)}
+
 ## Chords
 
   Chords can be build by grouping pitches or using roman numeral notation, or by using named chords.
@@ -198,40 +218,38 @@ z1('w [0 [5 [3 7]]] h [0 4]')
     `,
   )}
 
-## Synchronization
+## Arpeggios
 
-Ziffers numbered methods **(z0-z16)** can be used to parse and play patterns. Each method is individually cached and can be used to play multiple patterns simultaneously. By default, each Ziffers expression can have a different duration. This system is thus necessary to make everything fit together in a loop-based environment like Topos.
-
-Numbered methods are synced automatically to **z0** method if it exsists. Syncing can also be done manually by using either the <ic>wait</ic> method, which will always wait for the current pattern to finish before starting the next cycle, or the <ic>sync</ic> method will only wait for the synced pattern to finish on the first time.
+Chords can be arpeggiated using the @-character within the ziffers notation or by using <ic>arpeggio</ic> method.
 
 ${makeExample(
-  "Automatic sync to z0",
+  "Arpeggio using the mini-notation",
   `
-z0('w 0 8').sound('peri').out()
-z1('e 0 4 5 9').sound('bell').out()
-`,
-  true,
+  z1("(i v vi%-3 iv%-2)@(s 0 2 0 1 2 1 0 2)")
+  .sound("sine").out()
+  `,
 )}
 
 ${makeExample(
-  "Sync with wait",
+  "Arpeggio from named chords with durations",
   `
-z1('w 0 5').sound('pluck').release(0.1).sustain(0.25).out()
-z2('q 6 3').wait(z1).sound('sine').release(0.16).sustain(0.55).out()
-`,
-  true,
+z1("_ Gm7 ^ C9 D7 Gm7")
+  .arpeggio("e 0 2 q 3 e 1 2")
+  .sound("sine").out()
+  `,
 )}
 
 ${makeExample(
-  "Sync on first run",
+  "Arpeggio from roman chords with inversions",
   `
-  z1('w __ 0 5 9 3').sound('bin').out()
-  z2('q __ 4 2 e 6 3 q 6').sync(z1).sound('east').out()
-`,
-  true,
+  z1("i v%-1 vi%-1 iv%-2")
+    .arpeggio(0,2,1,2)
+    .noteLength(0.125)
+    .sound("sine").out()
+  `,
 )}
 
-## Examples
+## Chaining
 	
 - Basic notation
 	
@@ -253,28 +271,10 @@ z1('0 1 2 3 4').key('G3').scale('minor').sound('sine').often(n => n.pitch+=3).ra
 )}
 
 ${makeExample(
-  "Simple options",
+  "Alternative way for inputting options",
   `
 z1('0 3 2 4',{key: 'D3', scale: 'minor pentatonic'}).sound('sine').out()
 `,
-  true,
-)}
-
-${makeExample(
-  "Rest and octaves",
-  `
-z1('q 0 ^ e0 r _ 0 _ r 4 ^4 4')
-.sound('sine').scale("godian").out()
-`,
-  true,
-)}
-
-${makeExample(
-  "Rests with durations",
-  `
- z1('q 0 4 e^r 3 e3 0.5^r h4 1/4^r e 5 r 0.125^r 0')
- .sound('sine').scale("aeryptian").out()
- `,
   true,
 )}
 

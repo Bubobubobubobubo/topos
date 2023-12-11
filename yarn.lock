@@ -4028,10 +4028,10 @@ yaml@^2.1.1:
   resolved "https://registry.yarnpkg.com/yaml/-/yaml-2.3.1.tgz#02fe0975d23cd441242aa7204e09fc28ac2ac33b"
   integrity sha512-2eHWfjaoXgTBC2jNM1LRef62VQa0umtvRiDSk6HSzW7RvS5YtkabJrwYLLEKWBc8a5U2PTSCs+dJjUTJdlHsWQ==
 
-zifferjs@^0.0.48:
-  version "0.0.48"
-  resolved "https://registry.yarnpkg.com/zifferjs/-/zifferjs-0.0.48.tgz#af61ce6c5d58c05a2573310c0afbf55557d05196"
-  integrity sha512-DqPCOO0/RKyWlugz37eia0JOkbrVbkMtpM8k+XdtQ+MCY2zdklrd5K4g9lqD/TEhA7AUGvR9fdtTbjtuvXvRMg==
+zifferjs@^0.0.50:
+  version "0.0.50"
+  resolved "https://registry.yarnpkg.com/zifferjs/-/zifferjs-0.0.50.tgz#5e8c31ba3aed00d23f9add3c7d21cfe1dc2b92bf"
+  integrity sha512-tXFqu5RfYVK5Epc1evf0OZdeX6hMKcbHSh5ZPO/XFfSBCMnnabAGde3M6eZk3SDcB6vhVt2OyiF91tYi3SSpbw==
 
 zyklus@^0.1.4:
   version "0.1.4"

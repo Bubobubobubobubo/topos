@@ -270,18 +270,18 @@ export class Player extends AbstractEvent {
     return this;
   }
 
-  octaCycle(tonnetz: TonnetzSpaces = [3, 4, 5]) {
-    if (this.atTheBeginning()) this.ziffers.octaCycle(tonnetz);
+  octaCycle(tonnetz: TonnetzSpaces = [3, 4, 5], repeats: number = 4) {
+    if (this.atTheBeginning()) this.ziffers.octaCycle(tonnetz, repeats);
     return this;
   }
 
-  hexaCycle(tonnetz: TonnetzSpaces = [3, 4, 5]) {
-    if (this.atTheBeginning()) this.ziffers.hexaCycle(tonnetz);
+  hexaCycle(tonnetz: TonnetzSpaces = [3, 4, 5], repeats: number = 3) {
+    if (this.atTheBeginning()) this.ziffers.hexaCycle(tonnetz, repeats);
     return this;
   }
 
-  enneaCycle(tonnetz: TonnetzSpaces = [3, 4, 5]) {
-    if (this.atTheBeginning()) this.ziffers.enneaCycle(tonnetz);
+  enneaCycle(tonnetz: TonnetzSpaces = [3, 4, 5], repeats: number = 3) {
+    if (this.atTheBeginning()) this.ziffers.enneaCycle(tonnetz, repeats);
     return this;
   }
 

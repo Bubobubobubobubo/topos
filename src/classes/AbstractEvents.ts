@@ -391,6 +391,7 @@ export abstract class AudibleEvent extends AbstractEvent {
   };
 
   public invert = (howMany: number = 0) => {
+    if(howMany === 0) return this;
     if (this.values.note) {
       let notes = [...this.values.note];
       notes = howMany < 0 ? [...notes].reverse() : notes;
