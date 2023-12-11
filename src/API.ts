@@ -725,7 +725,7 @@ export class UserAPI {
 
     if (this.app.api.patternCache.has(key)) {
       player = this.app.api.patternCache.get(key) as Player;
-      if (typeof input === "string" && player.input !== input) {
+      if (typeof input === "string" && player.input !== input && player.atTheBeginning()) {
         player = undefined;
       }
     }
