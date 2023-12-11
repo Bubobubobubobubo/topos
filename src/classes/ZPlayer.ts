@@ -127,8 +127,9 @@ export class Player extends AbstractEvent {
 
     const patternIsStarting =
       this.notStarted() &&
-      (this.pulse() === 0 || this.origin() >= this.nextBeatInTicks()) &&
-      this.origin() >= this.waitTime;
+      this.waitTime >= 0 &&
+      this.origin() >= this.waitTime &&
+      (this.pulse() === 0 || this.origin() >= this.nextBeatInTicks());
 
     const timeToPlayNext =
       this.current &&
@@ -315,16 +316,30 @@ export class Player extends AbstractEvent {
     return this;
   }
 
-  wait(value: number | Function) {
+  wait(value: number | string | Function) {
+    
+    if(typeof value === "string") {
+      const cueTime = this.app.api.cueTimes[value];
+      if(cueTime && this.app.clock.pulses_since_origin <= cueTime) {
+        this.waitTime = cueTime;
+      } else {
+        this.waitTime = -1;
+      }
+      return this;
+    }
+
     if (this.atTheBeginning()) {
       if (typeof value === "function") {
         const refPat = this.app.api.patternCache.get(value.name) as Player;
         if (refPat) this.waitTime = refPat.nextEndTime();
         return this;
+      } else if(typeof value === "number") {
+        this.waitTime =
+          this.origin() + Math.ceil(value * 4 * this.app.clock.ppqn);
+        return this;
       }
-      this.waitTime =
-        this.origin() + Math.ceil(value * 4 * this.app.clock.ppqn);
     }
+
     return this;
   }
 

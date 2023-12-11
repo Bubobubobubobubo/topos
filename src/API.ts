@@ -87,6 +87,7 @@ export class UserAPI {
   public currentSeed: string | undefined = undefined;
   public localSeeds = new Map<string, Function>();
   public patternCache = new LRUCache({ max: 1000, ttl: 1000 * 60 * 5 });
+  public cueTimes: { [key: string]: number } = {};
   private errorTimeoutID: number = 0;
   private printTimeoutID: number = 0;
   public MidiConnection: MidiConnection;
@@ -2176,4 +2177,10 @@ export class UserAPI {
      */
     this.app.clock.time_signature = [numerator, denominator];
   };
+
+  public cue = (functionName: string|Function): void => {
+    functionName = typeof functionName === "function" ? functionName.name : functionName;
+    this.cueTimes[functionName] = this.app.clock.pulses_since_origin;
+  };
+
 }

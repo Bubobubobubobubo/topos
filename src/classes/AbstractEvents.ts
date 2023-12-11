@@ -442,4 +442,9 @@ export abstract class AudibleEvent extends AbstractEvent {
   update = (): void => {
     // Overwrite in subclasses
   };
+
+  cue = (functionName: string|Function): this => {
+    this.app.api.cue(functionName);
+    return this;
+  }
 }

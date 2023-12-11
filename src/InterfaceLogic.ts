@@ -508,6 +508,7 @@ export const installInterfaceLogic = (app: Editor) => {
     "ziffers_rhythm",
     "ziffers_algorithmic",
     "ziffers_tonnetz",
+    "ziffers_syncing",
     "midi",
     "osc",
     "functions",

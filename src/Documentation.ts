@@ -34,8 +34,8 @@ import { ziffers_basics } from "./documentation/patterns/ziffers/ziffers_basics"
 import { ziffers_scales } from "./documentation/patterns/ziffers/ziffers_scales";
 import { ziffers_rhythm } from "./documentation/patterns/ziffers/ziffers_rhythm";
 import { ziffers_algorithmic } from "./documentation/patterns/ziffers/ziffers_algorithmic";
-
 import { ziffers_tonnetz } from "./documentation/patterns/ziffers/ziffers_tonnetz";
+import { ziffers_syncing } from "./documentation/patterns/ziffers/ziffers_syncing";
 
 import { synths } from "./documentation/learning/audio_engine/synths";
 
@@ -102,6 +102,7 @@ export const documentation_factory = (application: Editor) => {
     ziffers_algorithmic: ziffers_algorithmic(application),
     ziffers_rhythm: ziffers_rhythm(application),
     ziffers_tonnetz: ziffers_tonnetz(application),
+    ziffers_syncing: ziffers_syncing(application),
     midi: midi(application),
     osc: osc(application),
     lfos: lfos(application),
