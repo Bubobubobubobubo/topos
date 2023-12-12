@@ -718,13 +718,13 @@ export class UserAPI {
     input: string | Generator<number>,
     options: InputOptions = {},
     id: number | string = "",
-  ): Player|undefined => {
+  ): Player => {
     const zid = "z" + id.toString();
     const key = id === "" ? this.generateCacheKey(input, options) : zid;
 
     const validSyntax = typeof input === "string" && !this.invalidPatterns[input]
     if(!validSyntax) this.app.api.log(`Invalid syntax: ${input}`);
-    
+
     let player;
     let replace = false;
 
@@ -765,7 +765,7 @@ export class UserAPI {
 
       return player;
     } else {
-      return undefined;
+      throw new Error(`Invalid syntax: ${input}`);
     }
   };
 
