@@ -8,6 +8,7 @@ import {
 } from "zifferjs";
 import { SkipEvent } from "./SkipEvent";
 import { SoundParams } from "./SoundEvent";
+import { centsToSemitones, ratiosToSemitones } from "zifferjs/src/scale";
 
 export type EventOperation<T> = (instance: T, ...args: any[]) => void;
 
@@ -359,6 +360,36 @@ export abstract class AudibleEvent extends AbstractEvent {
     }
     return this;
   };
+
+  updateKeyAndPitch() {
+    if (!this.values.key) this.values.key = 60;
+    if (!(this.values.pitch || this.values.pitch === 0)) this.values.pitch = 0;
+  }
+
+  semitones(values: number|number[], ...rest: number[]) {
+    const scaleValues = typeof values === "number" ? [values, ...rest] : values;
+    this.values.parsedScale = safeScale(scaleValues);
+    this.updateKeyAndPitch();
+    this.update();
+    return this;
+  }
+  steps = this.semitones;
+  
+  cents(values: number|number[], ...rest: number[]) {
+    const scaleValues = typeof values === "number" ? [values, ...rest] : values;
+    this.values.parsedScale = safeScale(centsToSemitones(scaleValues));
+    this.updateKeyAndPitch();
+    this.update();
+    return this;
+  }
+
+  ratios(values: number|number[], ...rest: number[]) {
+    const scaleValues = typeof values === "number" ? [values, ...rest] : values;
+    this.values.parsedScale = safeScale(ratiosToSemitones(scaleValues));
+    this.updateKeyAndPitch();
+    this.update();
+    return this;
+  }
 
   protected updateValue<T>(key: string, value: T | T[] | null): this {
     if (value == null) return this;

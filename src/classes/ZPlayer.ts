@@ -258,8 +258,26 @@ export class Player extends AbstractEvent {
     }
   }
 
-  scale(name: string) {
+  scale(name: string|number[]) {
     if (this.atTheBeginning()) this.ziffers.scale(name);
+    return this;
+  }
+
+  semitones(values: number|number[], ...rest: number[]) {
+    values = typeof values === "number" ? [values, ...rest] : values;
+    if (this.atTheBeginning()) this.ziffers.semitones(values);
+    return this;
+  }
+
+  cents(values: number|number[], ...rest: number[]) {
+    values = typeof values === "number" ? [values, ...rest] : values;
+    if (this.atTheBeginning()) this.ziffers.cents(values);
+    return this;
+  }
+
+  ratios(values: number|number[], ...rest: number[]) {
+    values = typeof values === "number" ? [values, ...rest] : values;
+    if (this.atTheBeginning()) this.ziffers.ratios(values);
     return this;
   }
 

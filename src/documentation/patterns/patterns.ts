@@ -122,7 +122,6 @@ beat(1)::sound(['kick', 'fsnare'].dur(3, 1))
 
 ## Manipulating notes and scales
 
-
 - <ic>pitch()</ic>: convert a list of integers to pitch classes
 
 ${makeExample(
@@ -136,7 +135,42 @@ beat(0.25) :: snd('sine')
   true,
 )}
 
-  - <ic>scale(scale: string, base note: number)</ic>: Map each element of the list to the closest note of the slected scale. [0, 2, 3, 5 ].scale("major", 50) returns [50, 52, <ic>54</ic>, 55]. You can use western scale names like (Major, Minor, Minor pentatonic ...) or [zeitler](https://ianring.com/musictheory/scales/traditions/zeitler) scale names. Alternatively you can also use the integers as used by Ian Ring in his [study of scales](https://ianring.com/musictheory/scales/).
+- <ic>semitones(number[], ...args?)</ic>: Create scale from semitone intervals.
+
+${makeExample(
+  "Play pitches from scale created from semitone intervals",
+  `
+  beat(1) :: sound('gtr').pitch([0, 4, 3, 2].beat()).key(64)
+  .semitones(1, 1, 3, 1, 1, 2, 3).out()
+`,
+  true,
+)}
+
+- <ic>cents(number[], ...args?)</ic>: Create scale from cent intervals.
+
+${makeExample(
+  "Play pitches from scale created from cent intervals",
+  `
+  rhythm([0.5,0.25].beat(1),14,16) :: sound('pluck')
+  .stretch(r(1,5)).pitch(r(0,6)).key(57)
+.cents(120,270,540,670,785,950,1215).out()
+`,
+  true,
+)}
+
+- <ic>ratios(number[], ...args?)</ic>: Create scale from ratios.
+
+${makeExample(
+  "Play pitches from scale created from ratios",
+  `
+  rhythm([0.5,0.25].beat(0.25),5,7) :: sound('east:3')
+  .pitch([0,1,2,3,4,5,6,7,8,9,10,11].beat(0.25)).key(67)
+.ratios(2/11,4/11,6/11,8/11,10/11,11/11).out()
+`,
+  true,
+)}
+
+- <ic>scale(scale: string, base note: number)</ic>: Map each element of the list to the closest note of the slected scale. [0, 2, 3, 5 ].scale("major", 50) returns [50, 52, <ic>54</ic>, 55]. You can use western scale names like (Major, Minor, Minor pentatonic ...) or [zeitler](https://ianring.com/musictheory/scales/traditions/zeitler) scale names. Alternatively you can also use the integers as used by Ian Ring in his [study of scales](https://ianring.com/musictheory/scales/).
 
 ${makeExample(
   "Mapping the note array to the E3 major scale",
