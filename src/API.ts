@@ -87,6 +87,7 @@ export class UserAPI {
   public currentSeed: string | undefined = undefined;
   public localSeeds = new Map<string, Function>();
   public patternCache = new LRUCache({ max: 1000, ttl: 1000 * 60 * 5 });
+  public invalidPatterns: {[key: string]: boolean} = {};
   public cueTimes: { [key: string]: number } = {};
   private errorTimeoutID: number = 0;
   private printTimeoutID: number = 0;
@@ -717,38 +718,55 @@ export class UserAPI {
     input: string | Generator<number>,
     options: InputOptions = {},
     id: number | string = "",
-  ): Player => {
+  ): Player|undefined => {
     const zid = "z" + id.toString();
     const key = id === "" ? this.generateCacheKey(input, options) : zid;
 
+    const validSyntax = typeof input === "string" && !this.invalidPatterns[input]
+    if(!validSyntax) this.app.api.log(`Invalid syntax: ${input}`);
+    
     let player;
+    let replace = false;
 
     if (this.app.api.patternCache.has(key)) {
       player = this.app.api.patternCache.get(key) as Player;
-      if (typeof input === "string" && player.input !== input && player.atTheBeginning()) {
-        player = undefined;
+
+      if (typeof input === "string" && 
+          player.input !== input && 
+          player.atTheBeginning()) {
+          replace = true;
       }
     }
 
-    if (!player) {
-      player = new Player(input, options, this.app, zid);
-      this.app.api.patternCache.set(key, player);
+    if (validSyntax && (!player || replace)) {
+      const newPlayer = new Player(input, options, this.app, zid);
+      if(newPlayer.isValid()) {
+        player = newPlayer
+        this.app.api.patternCache.set(key, player);
+      } else if(typeof input === "string") {
+        this.invalidPatterns[input] = true;
+      }
     }
 
-    if (player.ziffers.generator && player.ziffers.generatorDone) {
-      this.removePatternFromCache(key);
+    if(player) {
+
+      if (player.ziffers.generator && player.ziffers.generatorDone) {
+        this.removePatternFromCache(key);
+      }
+
+      if (typeof id === "number") player.zid = zid;
+
+      player.updateLastCallTime();
+
+      if (id !== "" && zid !== "z0") {
+        // Sync named patterns to z0 by default
+        player.sync("z0", false);
+      }
+
+      return player;
+    } else {
+      return undefined;
     }
-
-    if (typeof id === "number") player.zid = zid;
-
-    player.updateLastCallTime();
-
-    if (id !== "" && zid !== "z0") {
-      // Sync named patterns to z0 by default
-      player.sync("z0", false);
-    }
-
-    return player;
   };
 
   public z0 = (input: string, opts: InputOptions = {}) =>

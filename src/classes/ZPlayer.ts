@@ -49,6 +49,10 @@ export class Player extends AbstractEvent {
     this.zid = zid;
   }
 
+  isValid() {
+    return this.ziffers.values.length > 0;
+  }
+
   reset() {
     this.initCallTime = 0;
     this.startCallTime = 0;
