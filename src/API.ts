@@ -723,7 +723,6 @@ export class UserAPI {
     const key = id === "" ? this.generateCacheKey(input, options) : zid;
 
     const validSyntax = typeof input === "string" && !this.invalidPatterns[input]
-    if(!validSyntax) this.app.api.log(`Invalid syntax: ${input}`);
 
     let player;
     let replace = false;
@@ -749,6 +748,10 @@ export class UserAPI {
     }
 
     if(player) {
+
+      if(player.atTheBeginning()) {
+        if(!validSyntax) this.app.api.log(`Invalid syntax: ${input}`);
+      }
 
       if (player.ziffers.generator && player.ziffers.generatorDone) {
         this.removePatternFromCache(key);
