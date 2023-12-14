@@ -139,13 +139,17 @@ export const showDocumentation = (app: Editor) => {
     document.getElementById("documentation")?.classList.remove("hidden");
     // Load and convert Markdown content from the documentation file
     let style = createDocumentationStyle(app);
-    let bindings = Object.keys(style).map((key) => ({
-      type: "output",
-      regex: new RegExp(`<${key}([^>]*)>`, "g"),
-      //@ts-ignore
-      replace: (match, p1) => `<${key} class="${style[key]}" ${p1}>`,
-    }));
-    updateDocumentationContent(app, bindings);
+
+    function update_and_assign(callback: Function) {
+      let bindings = Object.keys(style).map((key) => ({
+        type: "output",
+        regex: new RegExp(`<${key}([^>]*)>`, "g"),
+        //@ts-ignore
+        replace: (match, p1) => `<${key} class="${style[key]}" ${p1}>`,
+      }));
+      callback(bindings)
+    }
+    update_and_assign((e: Object) => updateDocumentationContent(app, e));
   }
 };
 
@@ -166,15 +170,28 @@ export const updateDocumentationContent = (app: Editor, bindings: any) => {
    * @param app - The editor application.
    * @param bindings - Additional bindings for the showdown converter.
    */
+  let loading_message: string = "<h1 class='border-4 py-2 px-2 mx-48 mt-48 text-center text-2xl text-white'>Loading! <b class='text-red'>Clic to refresh!</b></h1>";
   const converter = new showdown.Converter({
     emoji: true,
     moreStyling: true,
     backslashEscapesHTMLTags: true,
     extensions: [showdownHighlight({ auto_detection: true }), ...bindings],
   });
-  const converted_markdown = converter.makeHtml(
-    app.docs[app.currentDocumentationPane],
-  );
-  document.getElementById("documentation-content")!.innerHTML =
-    converted_markdown;
-};
+  console.log(app.currentDocumentationPane);
+
+  function _update_and_assign(callback: Function) {
+    const converted_markdown = converter.makeHtml(
+      app.docs[app.currentDocumentationPane],
+    );
+    callback(converted_markdown)
+  }
+  _update_and_assign((e: string)=> { 
+    let display_content = e === undefined ? loading_message : e;
+    document.getElementById("documentation-content")!.innerHTML = display_content; 
+  })
+  if (document.getElementById("documentation-content")!.innerHTML.replace(/"/g, "'") == loading_message.replace(/"/g, "'")) {
+    setTimeout(() => {
+      updateDocumentationContent(app, bindings);
+    }, 100);
+  }
+}
