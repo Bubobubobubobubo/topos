@@ -2,15 +2,15 @@ import { type Editor } from "../../../main";
 import { makeExampleFactory } from "../../../Documentation";
 
 export const ziffers_tonnetz = (application: Editor): string => {
-  const makeExample = makeExampleFactory(application);
-  return `
+    const makeExample = makeExampleFactory(application);
+    return `
 # Tonnetz
 
-The Riemannian Tonnetz is a geometric representation of tonal relationships for applying mathematical operations to analyze harmonic and melodic relationships in tonal music. Ziffers includes an implementation of live coding tonnetz developed together with <a href="https://github.com/edelveart/TypeScriptTonnetz" target="_blank">Edgar Delgado Vega</a>. Live coding tonnetz implementation combines <ic>67</ic> transformations to new explorative notation that includes all of the traditional triad transformations (PLR functions), extended PLR* transformations, film music transformations and seventh transformations (PLRQ, PLRQ*, ST).
+The Riemannian Tonnetz is a geometric representation of tonal relationships for applying mathematical operations to analyze harmonic and melodic relationships in tonal music. Ziffers includes an implementation of live coding tonnetz developed together with <a href="https://github.com/edelveart/TypeScriptTonnetz" target="_blank">Edgar Delgado Vega</a>. Live coding tonnetz implementation **combines 67 transformations** to **new explorative notation** that includes all of the traditional triad transformations (PLR functions), extended PLR* transformations, film music transformations and seventh transformations (PLRQ, PLRQ*, ST).
 
 Tonnetz can be visualized as an <a href="https://numeric-tonnetz-ziffers-6f7c9299bb4e1292f6891b9aceba16d81409236.gitlab.io/" target="_blank">numeric lattice</a> that represents the twelve pitch classes of the chromatic scale. The numeric visualization is a fork of <a href="https://hal.science/hal-03250334/" target="_blank">Web tonnetz</a> by Corentin Guichaou et al. (2021). The lattice can be arranged into multiple tonal pitch spaces which are all supported in Ziffers implementation.
 
-In addition, we have included common graphs in Neo-Riemmanian theory: HexaCycles (<ic>pl</ic>), OctaCycles (<ic>pr</ic>), Enneacycles (seventh chords), Weitzmann Regions (triad chords), Boretz Regions (triad chords) and OctaTowers (tetrachords). You can explore each of these graphs in great generality over different Tonnetz.
+In addition, we have included common graphs and cycles in Neo-Riemmanian theory: HexaCycles (<ic>pl</ic>), OctaCycles (<ic>pr</ic>), Enneacycles (seventh chords), Weitzmann Regions (triad chords), Boretz Regions (triad chords) and OctaTowers (tetrachords). You can explore each of these graphs in great generality over different Tonnetz.
 
 ## Explorative notation
 
@@ -33,41 +33,41 @@ Indexed transformations <ic>[plrfsntq][1-9]*</ic>:
 ### Examples:
 
 ${makeExample(
-    "Explorative transformations with roman chords",
-    `
+        "Explorative transformations with roman chords",
+        `
 z1('i i7').tonnetz("p1 p2 plr2")
   .sound('wt_stereo')
   .adsr(0, .1, 0, 0)
   .out()`,
-  true,
-)}
+        true,
+    )}
 
 ${makeExample(
-    "Arpeggiated explorative transformations",
-    `
+        "Arpeggiated explorative transformations",
+        `
 z1("i7")
   .tonnetz("p l2 r3 rp4l")
   .arpeggio("e _ 0 1 s ^ 0 2 1 3 h _ 012 s ^ 2 1")
   .sound("sine")
   .out()`,
-  true,
-)}
+        true,
+    )}
 
 ${makeExample(
-    "Arpeggios and note lengths with parameters",
-    `
+        "Arpeggios and note lengths with parameters",
+        `
 z1("024")
   .tonnetz("p lr rp lrp")
   .arpeggio(0,2,1,2)
   .noteLength(1/16,1/8)
   .sound("sine")
   .out()`,
-  true,
-)}
+        true,
+    )}
 
 ## Triad transformations
 
-Triad transofrmations can be defined explicitly using the <ic>triadTonnetz(transformation: string, tonnetz: number[])</ic> method. This method will only apply spesific transformations to triad chords.
+Triad transformations can be defined explicitly using the <ic>triadTonnetz(transformation: string, tonnetz: number[])</ic> method. This method will only apply specific transformations to triad chords.
 
 In the table below, we write the transformations types available for triads followed by the **transposition in semitones (+/-)** that we must perform to the **root of the chord**: <ic>0,4,3,7,5,1,8,6</ic>.
 
@@ -102,6 +102,28 @@ Therefore, you will see that paying attention to the examples will allow you to 
 * Remark B: For those curious about mathematics, what we have implemented at Ziffers is the group called **PLR\*** [(Cannas, 2018, pp. 93-100)](https://publication-theses.unistra.fr/public/theses_doctorat/2018/CANNAS_Sonia_2018_ED269.pdf).
 
 ### Examples:
+${makeExample(
+        "Synthetic 'Morton'",
+        `
+z0('3/4 0 _ q 6 h 4 3 w 2 0 3/4 ^^ 0 _q 6 h 4 3 3/4 2 5/4 0 w r')
+  .scale("minor").sound('sawtooth').key("A")
+  .room(0.9).size(9).phaser(0.25).phaserDepth(0.8)
+  .vib(4).vibmod(0.15).out()
+
+z1('w 904')
+  .scale("chromatic")
+  .tonnetz('o f l l o f l l o')
+  .sound('sine').adsr(0.1, 1, 1, 1.9).out()
+
+z2('w 904')
+  .scale("chromatic")
+  .tonnetz('o f l l o f l l o')
+  .arpeggio('s 0 2 1 0 1 2 1 0 2 1 0 1 2 0 1 0')
+  .sound('sine').pan(rand(1, 0)).adsr(0, 0.125, 0.15, 0.25).out()
+
+z3('e __ 4 s 0 e 1 2 s')
+  .sound('hat').delay(0.5).delayfb(0.35).out()`,
+    )}
 
 ## Different Tonnetz
 
@@ -109,11 +131,13 @@ At Ziffers we have strived to have fun and inspire you by exploring new sounds t
 
 The <ic>Cm</ic> chord has the tone classes: <ic>037</ic>. Notice that the distance between the third of the chord and the root of the chord is <ic>3</ic> <ic>(3-0)</ic>. In turn, the distance of the fifth from the third is <ic>4</ic> semitones <ic>(7-3)</ic>. Finally, the distance left to get from the fifth to the root is <ic>5</ic> <ic>(7+5=0)</ic>. These distances are known as **intervalic structure**. In this regard, the array <ic>[x = 3, y = 4, z = 5]</ic> of a Tonnetz tells us the intervallic structure of the chords to which we apply the Neo-Riemannian functions.
 
-In the next three Tonnetz we consider that we go from a minor chord to a major one by inversion (we change <ic>x</ic> and <ic>y<ic>).
+:warning: To have a geometric intuition of the chords that we are going to describe, we suggest you see the <a href="https://numeric-tonnetz-ziffers-6f7c9299bb4e1292f6891b9aceba16d81409236.gitlab.io/" target="_blank">numerical Tonnetz.</a>
 
-* For the Tonnetz <ic>[3, 4, 5]</ic> we have minor chords <ic>037<ic> and major chords <ic>047</ic>
-* For a Tonnetz <ic>[2, 3, 7]</ic> we have the "minor" chords <ic>025<ic> and the "major" chords <ic>035</ic>
-* For a Tonnetz <ic>[1, 4, 7]</ic> we have the "minor" chords <ic>015<ic> and the "major" chords <ic>045</ic>
+In the next three Tonnetz we consider that we go from a minor chord to a major one by inversion (we change <ic>x</ic> and <ic>y</ic>).
+
+* For the Tonnetz <ic>[3, 4, 5]</ic> we have minor chords <ic>037</ic> and major chords <ic>047</ic>
+* For a Tonnetz <ic>[2, 3, 7]</ic> we have the "minor" chords <ic>025</ic> and the "major" chords <ic>035</ic>
+* For a Tonnetz <ic>[1, 4, 7]</ic> we have the "minor" chords <ic>015</ic> and the "major" chords <ic>045</ic>
 
 Are those all the Tonnetz? In fact, there are <ic>12</ic> spaces that comply with symmetries by **transposition and inversion**:
 
@@ -133,7 +157,7 @@ Did you want to experiment with more functions? At Ziffers we have brought you N
 
 Tetra transformations can be applied to seventh chords using the <ic>tetraTonnetz(transformation: string, tonnetz: number[])</ic> method. This method will apply specific transformations to certain type of chords. If the **chord is not the correct type**, the **transformation will not be applied**.
 
-&nbsp; :warning: If you are here without having read the **triad chords transformations section**, we highly suggest you skip to it. The ideas and notation shown in this section are nothing more than an extension of what was developed above.
+:warning: If you are here without having read the **triad chords transformations section**, we highly suggest you skip to it. The ideas and notation shown in this section are nothing more than an extension of what was developed above.
 
 First, here we will deal with **9 interchangeable chord types** to which we will assign a number:
 
@@ -148,19 +172,25 @@ You are ready, these have been all the requirements. Now a couple of examples wi
 
 So that you can incorporate this new musical machinery into your game, all the possible transformations according to the type of seventh chord are listed below. You already know what each one will do.
 
-* Remark D: For those curious about the mathematics behind it, we have implemented the elements of the **PLRQ** and extended **PLRQ\*** groups [(Cannas, 2018, pp. 71-92)](https://publication-theses.unistra.fr/public/theses_doctorat/2018/CANNAS_Sonia_2018_ED269.pdf).
+* Remark D: For those curious about the mathematics behind it, we have implemented a group called **PLRQ** and another group called **PLRQ\*** extended [(Cannas, 2018, pp. 71-92)](https://publication-theses.unistra.fr/public/theses_doctorat/2018/CANNAS_Sonia_2018_ED269.pdf).
 
-### 7: 7th chords
+| Chord type |    P functions     |  L functions  |          R functions           | Q functions | N functions |
+| :--------: | :----------------: | :-----------: | :----------------------------: | :---------: | :---------: |
+|     7      | p12, p14, p18, p19 | l13, l15, l71 |           r12, rr19            |  q15, qq51  |     n51     |
+|     m7     |   p12, p23, p26    |      l42      |         r12, r23, r42          |     q62     |             |
+|   hdim7    |   p23, p35, p39    |      l13      | r23, r35, r53, r63, rr35, rr39 |  q43, qq38  |             |
+|    maj7    |   p14, p47, p64    |      l42      |              r42               |     q43     |             |
+|    dim7    |        p35         |      l15      |            r35, r53            |  q15, qq51  |     n51     |
+|  minMaj7   |      p26, p64      |               |         r63, r76, r86          |  q62, q76   |             |
+|   maj7#5   |      p47, p87      |      l71      |              r76               |     q76     |             |
+|   dom7#5   |   p18, p87, p98    |      l89      |           r86, rr98            | qq38, qq98  |             |
+|   dom7b5   |   p19, p39, p98    |      l89      |        rr19, rr39, rr98        |    qq98     |             |
 
-* p: p12, p14, p18, p19
-* l: l13, l15, l71
-* r: r12, rr19
-* q: q15, qq51
-* n: n51
+### Examples
 
 ${makeExample(
-    "Transform seventh chord from chromatic scale",
-    `
+        "Transform seventh chord from chromatic scale",
+        `
 z1("1.0 047{10}")
   .scale('chromatic')
   .tetraTonnetz("o p18 q15 l13 n51 p19 q15")
@@ -169,58 +199,8 @@ z1("1.0 047{10}")
   .adsr(.5,0.05,0.25,0.5)
   .dur(2.0)
   .out()`,
-  true,
-)}
-
-### m7: minor 7th chords
-
-  * p: p12, p23, p26
-  * l: l42
-  * r: r12, r23, r42
-  * q: q62
-
-### hdim7: Half diminished 7th chords
-
-  * p: p23, p35, p39
-  * l: l13
-  * r: r23, r35, r53, r63, rr35, rr39
-  * q: q43, qq38
-
-### maj7: Major 7th chords
-  * p: p14, p47, p64
-  * l: l42
-  * r: r42
-  * q: q43
-
-### dim7: Diminished 7th chords
-  * p: p35
-  * l: l15
-  * r: r35, r53
-  * q: q15, qq51
-  * n: n51
-
-### minMaj7: Minor major 7th chords
-  * p: p26, p64
-  * r: r63, r76, r86
-  * q: q62, q76
-
-### maj7aug5: Major 7th augmented 5th chords
-  * p: p47, p87
-  * l: l71
-  * r: r76
-  * q: q76
-
-### dom7aug5: Dominant 7th augmented 5th chords
-  * p: p18, p87, p98
-  * l: l89
-  * r: r86, rr98
-  * q: qq38, qq98
-
-### dom7b5: Dominant 7th flat 5th chords
-  * p: p19, p39, p98
-  * l: l89
-  * r: rr19, rr39, rr98
-  * q: qq98
+        true,
+    )}
 
 ## Cyclic methods
 
@@ -230,29 +210,17 @@ In addition to the transformations, Ziffers implements cyclic methods that can b
 * <ic>octaCycle(tonnetz: number[], repeats: number = 4)</ic>: Cycles through chords in the octa cycle
 * <ic>enneaCycle(tonnetz: number[], repeats: number = 3)</ic>: Cycles through chords in the ennea cycle
 
-### HexaCycle
+HexaCycles  are sequences of major and minor triads generated by the <ic>p</ic> and <ic>l</ic> transformations . Let's take the following example starting with a <ic>C</ic> chord: <ic>C -> Cm -> Ab -> Abm -> E -> Em</ic>. You can start on the chord of your choice.
 
-HexaCycles  are sequences of major and minor triads generated by the <ic>p</ic> and <ic>l</ic> transformations . Let's take the following example starting with the <ic>C</ic> chord. You can start on the chord of your choice.
+OctaCycles  are sequences of major and minor triads generated using <ic>p</ic> and <ic>r</ic> transformations. Starting at <ic>C</ic>, we have the following sequence: <ic>C -> Cm -> Eb -> Ebm -> F# -> F#m -> A -> Am</ic>.
 
-<ic>C -> Cm -> Ab -> Abm -> E -> Em</ic>.
-
-### OctaCycle
-
-OctaCycles  are sequences of major and minor triads generated using <ic>p</ic> and <ic>r</ic> transformations. Starting at <ic>C</ic>, we have the following sequence:
-
-<ic>C -> Cm -> Eb -> Ebm -> F# -> F#m -> A -> Am</ic>.
-
-### EnneaCycle
-
-Unlike HexaCycles and OctaCycles, EnneaCycles  are four-note chord sequences. Considering the functions implemented for tetrachords in Ziffers, we can interpret these sequences as generated by <ic>p12, p23, and l13</ic> transformations repeatedly.
-
-<ic>C7 -> Cm7 -> Cm7b5 -> Ab7 -> Abm7 -> Abm7b5 -> E7 -> Em7 -> Em7b5</ic>.
+Unlike HexaCycles and OctaCycles, EnneaCycles  are four-note chord sequences. Considering the functions implemented for tetrachords in Ziffers, we can interpret these sequences as generated by <ic>p12, p23, and l13</ic> transformations repeatedly: <ic>C7 -> Cm7 -> Cm7b5 -> Ab7 -> Abm7 -> Abm7b5 -> E7 -> Em7 -> Em7b5</ic>.
 
 ### Examples:
 
 ${makeExample(
-    "Arpeggio with ennea cycle",
-    `
+        "Arpeggio with ennea cycle",
+        `
 z1("0 2 -1 3")
   .enneaCycle()
   .arpeggio(0,2,1)
@@ -261,20 +229,20 @@ z1("0 2 -1 3")
   .sound("sine")
   .adsr(0.1,0.15,0.25,0.1)
   .out()`,
-  true,
-)}
+        true,
+    )}
 
 ${makeExample(
-    "Variating arpeggios",
-    `
+        "Variating arpeggios",
+        `
 z1("s 0 3 2 1")
   .octaCycle()
   .arpeggio([0,[0,2],[1,0],[0,1,2]].beat(0.15))
   .sound("triangle")
   .adsr(0.1,0.1,0.13,0.15)
   .out()`,
-  true,
-)}
+        true,
+    )}
 
 ## Cycles with vitamins and repetitions
 
@@ -282,28 +250,28 @@ Finally, cyclic methods in Ziffers can also be vitaminized with doses of differe
 
 We have the Tonnetz <ic>[2, 3, 7]</ic>, so <ic>hexaCycle([2, 3, 7])</ic>. The generated chords we hear are:
 
-<ic>035 -> 025 -> 902 -> 9{ 11 } 2 -> 69{ 11 } -> 68{ 11 } </ic>
+<ic>035 -> 025 -> 902 -> 9{11}2 -> 69{11} -> 68{11} </ic>
 
 Apparently, everything operates as we expect: six chords and we return to the first. However, here comes the unexpected and perhaps somewhat obscure question:
 
 * If we look at the graphs of the [numeric Tonnetz](https://numeric-tonnetz-ziffers-6f7c9299bb4e1292f6891b9aceba16d81409236.gitlab.io/), our hexaCycle over <ic>[2, 3, 7]</ic> which starts with the chord <ic>035</ic> goes through all the intermediate chords generated by <ic>p</ic> and <ic>l</ic> functions until reaching <ic>035</ic> again?
 
-As you can verify it manually, you will see that this is not the case. Upon reaching the <ic>68{ 11 } </ic> chord, the cycle makes a jump of two chords (<ic>368 358</ic>) towards the <ic>035</ic> chord. This does not happen with the cycles in the Tonnetz <ic>[3, 4, 5]<ic>, since all the intermediate chords are played there.
+As you can verify it manually, you will see that this is not the case. Upon reaching the <ic>68{11} </ic> chord, the cycle makes a jump of two chords (<ic>368 358</ic>) towards the <ic>035</ic> chord. This does not happen with the cycles in the Tonnetz <ic>[3, 4, 5]</ic>, since all the intermediate chords are played there.
 
 To play the chords without jumps in our hexaCycle (although the prefix "hexa" would no longer have a precise meaning), we add a number of repetitions.
 
 ${makeExample(
-  "HexaCycles with vitamins",
-  `
+        "HexaCycles with vitamins",
+        `
 z1("0")
   .scale("chromatic")
   .hexaCycle([2,3,7],4)
   .sound("sine").out()
 `,
-  true
-)}
+        true
+    )}
 
-By default hexaCycles and enneaCycles have <ic>3</ic> repetitions, while octaCycle has <ic>4</ic> repetitions. We have specified the chromatic scale although this is the default for these cycles. Also, you can see that we have specified the chromatic scale although it is the default for these cycles.Try changing the **repeats and scales** when playing with different Tonnetz.
+By default hexaCycles and enneaCycles have <ic>3</ic> repetitions, while octaCycles has <ic>4</ic> repetitions. We have specified a **chromatic scale** although this is the **default scale**. Try changing the **repeats and scales** when playing with different Tonnetz.
 
 * Remark E: These cycles in Tonnetz <ic>[3, 4, 5]</ic> are implemented based on the work of [Douthett & Steinbach (1998, pp. 245-247)](https://www.jstor.org/stable/843877)
 
