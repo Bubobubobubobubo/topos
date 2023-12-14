@@ -186,9 +186,12 @@ export class Player extends AbstractEvent {
           "freq",
           "note",
           "pitch",
+          "originalPitch",
           "key",
           "scale",
           "octave",
+          "pitchOctave",
+          "addedOctave",
           "parsedScale",
         ) as SoundParams;
         
@@ -205,9 +208,12 @@ export class Player extends AbstractEvent {
             "freq",
             "note",
             "pitch",
+            "originalPitch",
             "key",
             "scale",
             "octave",
+            "pitchOctave",
+            "addedOctave",
             "parsedScale",
           );
         }) as SoundParams[];
@@ -236,10 +242,13 @@ export class Player extends AbstractEvent {
       const obj = event.getExisting(
         "note",
         "pitch",
+        "originalPitch",
         "bend",
         "key",
         "scale",
         "octave",
+        "pitchOctave",
+        "addedOctave",
         "parsedScale",
       ) as MidiParams;
       if (event instanceof Pitch) {
@@ -278,6 +287,11 @@ export class Player extends AbstractEvent {
   ratios(values: number|number[], ...rest: number[]) {
     values = typeof values === "number" ? [values, ...rest] : values;
     if (this.atTheBeginning()) this.ziffers.ratios(values);
+    return this;
+  }
+
+  edo(value: number, scale: string|number[] = new Array(value).fill(1)) {
+    if (this.atTheBeginning()) this.ziffers.edo(value, scale);
     return this;
   }
 

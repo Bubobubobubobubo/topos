@@ -8,7 +8,7 @@ import {
 } from "zifferjs";
 import { SkipEvent } from "./SkipEvent";
 import { SoundParams } from "./SoundEvent";
-import { centsToSemitones, ratiosToSemitones } from "zifferjs/src/scale";
+import { centsToSemitones, edoToSemitones, ratiosToSemitones } from "zifferjs/src/scale";
 
 export type EventOperation<T> = (instance: T, ...args: any[]) => void;
 
@@ -295,7 +295,9 @@ export abstract class AudibleEvent extends AbstractEvent {
       value = Array.isArray(value) ? value.concat(kwargs) : [value, ...kwargs];
     }
     this.values["pitch"] = value;
-    if (this.values.key && this.values.parsedScale) this.update();
+    this.values["originalPitch"] = value;
+    this.defaultPitchKeyScale();
+    this.update();
     return this;
   };
 
@@ -310,7 +312,7 @@ export abstract class AudibleEvent extends AbstractEvent {
     if (kwargs.length > 0) {
       value = Array.isArray(value) ? value.concat(kwargs) : [value, ...kwargs];
     }
-    this.values["octave"] = value;
+    this.values["paramOctave"] = value;
     if (
       this.values.key &&
       (this.values.pitch || this.values.pitch === 0) &&
@@ -338,6 +340,12 @@ export abstract class AudibleEvent extends AbstractEvent {
     return this;
   };
 
+  defaultPitchKeyScale() {
+    if (!this.values.key) this.values.key = 60;
+    if (!(this.values.pitch || this.values.pitch === 0)) this.values.pitch = 0;
+    if (!this.values.parsedScale) this.values.parsedScale = safeScale("major");
+  }
+
   scale = (
     value: string | number | (number | string)[],
     ...kwargs: (string | number)[]
@@ -355,30 +363,24 @@ export abstract class AudibleEvent extends AbstractEvent {
     } else if (Array.isArray(value)) {
       this.values.parsedScale = value.map((v) => safeScale(v));
     }
-    if (this.values.key && (this.values.pitch || this.values.pitch === 0)) {
-      this.update();
-    }
+    this.defaultPitchKeyScale();
+    this.update();
     return this;
   };
-
-  updateKeyAndPitch() {
-    if (!this.values.key) this.values.key = 60;
-    if (!(this.values.pitch || this.values.pitch === 0)) this.values.pitch = 0;
-  }
 
   semitones(values: number|number[], ...rest: number[]) {
     const scaleValues = typeof values === "number" ? [values, ...rest] : values;
     this.values.parsedScale = safeScale(scaleValues);
-    this.updateKeyAndPitch();
+    this.defaultPitchKeyScale();
     this.update();
     return this;
   }
   steps = this.semitones;
-  
+
   cents(values: number|number[], ...rest: number[]) {
     const scaleValues = typeof values === "number" ? [values, ...rest] : values;
     this.values.parsedScale = safeScale(centsToSemitones(scaleValues));
-    this.updateKeyAndPitch();
+    this.defaultPitchKeyScale();
     this.update();
     return this;
   }
@@ -386,10 +388,17 @@ export abstract class AudibleEvent extends AbstractEvent {
   ratios(values: number|number[], ...rest: number[]) {
     const scaleValues = typeof values === "number" ? [values, ...rest] : values;
     this.values.parsedScale = safeScale(ratiosToSemitones(scaleValues));
-    this.updateKeyAndPitch();
+    this.defaultPitchKeyScale();
     this.update();
     return this;
   }
+
+  edo(value: number, intervals: string|number[] = new Array(value).fill(1)) {
+    this.values.parsedScale = edoToSemitones(value, intervals);
+    this.defaultPitchKeyScale();
+    this.update();
+    return this;
+  } 
 
   protected updateValue<T>(key: string, value: T | T[] | null): this {
     if (value == null) return this;

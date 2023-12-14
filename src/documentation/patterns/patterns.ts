@@ -170,6 +170,26 @@ ${makeExample(
   true,
 )}
 
+- <ic>edo(number, scale?: string|number[])</ic>: Create scale from equal divisions of the octave. Creates chromatic scale by default.
+
+${makeExample(
+  "Play pitches from scale created from equal divisions of the octave",
+  `
+  z0("e bd bd <bd bd [bd bd] [bd bd bd bd]>").sound().out()
+flipbar(1) :: rhythm(.25,14,16) :: sound("ST10:30").stretch(3).gain(0.5)
+.pitch([0,10,r(20,40),r(100,200),r(-200,200),r(200,300),200,r(3,666)].beat([1.0,0.5,0.25].bar(6)))
+    .octave(r(-6,6))
+    .edo(666,"rocritonic")
+    .out()
+rhythm(2.0,26,32) :: sound("ST20").n([22,5,24,34,31,5,11,19].pick()).stretch(rI(1,6))
+.pitch(rI(127,300))
+    .edo(666)
+    .out()
+`,
+  true,
+)}
+
+
 - <ic>scale(scale: string, base note: number)</ic>: Map each element of the list to the closest note of the slected scale. [0, 2, 3, 5 ].scale("major", 50) returns [50, 52, <ic>54</ic>, 55]. You can use western scale names like (Major, Minor, Minor pentatonic ...) or [zeitler](https://ianring.com/musictheory/scales/traditions/zeitler) scale names. Alternatively you can also use the integers as used by Ian Ring in his [study of scales](https://ianring.com/musictheory/scales/).
 
 ${makeExample(

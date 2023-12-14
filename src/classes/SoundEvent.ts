@@ -6,7 +6,7 @@ import {
   arrayOfObjectsToObjectWithArrays,
   objectWithArraysToArrayOfObjects,
 } from "../Utils/Generic";
-import { midiToFreq, noteFromPc } from "zifferjs";
+import { midiToFreq, resolvePitchClass } from "zifferjs";
 
 import {
   superdough,
@@ -22,10 +22,13 @@ export type SoundParams = {
   note?: number | number[];
   freq?: number | number[];
   pitch?: number | number[];
+  originalPitch?: number | number[];
   key?: string;
   scale?: string;
   parsedScale?: number[];
   octave?: number | number[];
+  addedOctave?: number | number[];
+  pitchOctave?: number | number[];
 };
 
 export class SoundEvent extends AudibleEvent {
@@ -387,27 +390,36 @@ export class SoundEvent extends AudibleEvent {
     const filteredValues = filterObject(this.values, [
       "key",
       "pitch",
+      "originalPitch",
       "parsedScale",
+      "addedOctave",
       "octave",
+      "paramOctave"
     ]);
     const events = objectWithArraysToArrayOfObjects(filteredValues, [
       "parsedScale",
     ]);
-    events.forEach((event) => {
-      const [note, _] = noteFromPc(
-        (event.key as number) || "C4",
-        (event.pitch as number) || 0,
-        (event.parsedScale as number[]) || event.scale || "MAJOR",
-        (event.octave as number) || 0,
+    events.forEach((soundEvent) => {
+      const resolvedPitchClass = resolvePitchClass(
+        (soundEvent.key || "C4"),
+        (soundEvent.originalPitch || soundEvent.pitch || 0),
+        (soundEvent.parsedScale || soundEvent.scale || "MAJOR"),
+        (soundEvent.paramOctave || 0)+(soundEvent.addedOctave || 0)
       );
-      event.note = note;
-      event.freq = midiToFreq(note);
+      soundEvent.note = resolvedPitchClass.note;
+      soundEvent.freq = midiToFreq(resolvedPitchClass.note);
+      soundEvent.pitch = resolvedPitchClass.pitch;
+      soundEvent.octave = resolvedPitchClass.octave;
     });
 
     const newArrays = arrayOfObjectsToObjectWithArrays(events) as SoundParams;
 
     this.values.note = newArrays.note;
     this.values.freq = newArrays.freq;
+    this.values.pitch = newArrays.pitch;
+    this.values.octave = newArrays.octave;
+    this.values.pitchOctave = newArrays.pitchOctave;
+
   };
 
   out = (orbit?: number | number[]): void => {
