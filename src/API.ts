@@ -13,6 +13,7 @@ import { SoundEvent } from "./classes/SoundEvent";
 import { MidiEvent, MidiParams } from "./classes/MidiEvent";
 import { LRUCache } from "lru-cache";
 import { InputOptions, Player } from "./classes/ZPlayer";
+import { isGenerator, isGeneratorFunction } from "./Utils/Generic";
 import {
   loadUniverse,
   openUniverseModal,
@@ -87,6 +88,7 @@ export class UserAPI {
   public currentSeed: string | undefined = undefined;
   public localSeeds = new Map<string, Function>();
   public patternCache = new LRUCache({ max: 1000, ttl: 1000 * 60 * 5 });
+  public tempCache = new LRUCache({ max: 1000, ttl: 1000 * 60 * 5 });
   public invalidPatterns: {[key: string]: boolean} = {};
   public cueTimes: { [key: string]: number } = {};
   private errorTimeoutID: number = 0;
@@ -701,7 +703,7 @@ export class UserAPI {
   };
 
   // =============================================================
-  // Ziffers related functions
+  // Cache functions
   // =============================================================
 
   public generateCacheKey = (...args: any[]): string => {
@@ -712,9 +714,73 @@ export class UserAPI {
     this.patternCache.forEach((player) => (player as Player).reset());
   };
 
+  public clearPatternCache = (): void => {
+    this.patternCache.clear();
+  }
+
   public removePatternFromCache = (id: string): void => {
     this.patternCache.delete(id);
   };
+
+  maybeToNumber = (something: any): number|any => {
+    // If something is BigInt
+    if(something && typeof something === "bigint") {
+      return Number(something);
+    } else {
+      return something;
+    }
+  }
+  
+  cache = (key: string, value: any) => {
+    /**
+     * Gets or sets a value in the cache.
+     *
+     * @param key - The key of the value to get or set
+     * @param value - The value to set
+     * @returns The value of the key
+     */
+    if(value !== undefined) {
+      if(isGenerator(value)) {
+          if(this.patternCache.has(key)) {
+            const cachedValue = (this.patternCache.get(key) as Generator<any>).next().value
+            if(!cachedValue) {
+              const generator = value as unknown as Generator<any>
+              this.patternCache.set(key, generator);
+              return this.maybeToNumber(generator.next().value);
+            }
+            return this.maybeToNumber(cachedValue);
+          } else {
+            const generator = value as unknown as Generator<any>
+            this.patternCache.set(key, generator);
+            return this.maybeToNumber(generator.next().value);
+          }
+        } else if(isGeneratorFunction(value)) {
+          if(this.patternCache.has(key)) {
+            const cachedValue = (this.patternCache.get(key) as Generator<any>).next().value;
+            if(cachedValue) {
+              return this.maybeToNumber(cachedValue);
+            } else {
+              const generator = value();
+              this.patternCache.set(key, generator);
+              return this.maybeToNumber(generator.next().value);
+            }
+          } else {
+            const generator = value();
+            this.patternCache.set(key, generator);
+            return this.maybeToNumber(generator.next().value);
+          }
+        } else {
+          this.patternCache.set(key, value);
+          return this.maybeToNumber(value);
+        }
+    } else {
+      return this.maybeToNumber(this.patternCache.get(key));
+    }
+  }
+
+  // =============================================================
+  // Ziffers related functions
+  // =============================================================
 
   public z = (
     input: string | Generator<number>,
@@ -739,11 +805,11 @@ export class UserAPI {
       }
     }
 
-    if (validSyntax && (!player || replace)) {
+    if ((typeof input !== "string" || validSyntax) && (!player || replace)) {
       const newPlayer = new Player(input, options, this.app, zid);
       if(newPlayer.isValid()) {
         player = newPlayer
-        this.app.api.patternCache.set(key, player);
+        this.patternCache.set(key, player);
       } else if(typeof input === "string") {
         this.invalidPatterns[input] = true;
       }
@@ -752,7 +818,7 @@ export class UserAPI {
     if(player) {
 
       if(player.atTheBeginning()) {
-        if(!validSyntax) this.app.api.log(`Invalid syntax: ${input}`);
+        if(typeof input === "string" && !validSyntax) this.app.api.log(`Invalid syntax: ${input}`);
       }
 
       if (player.ziffers.generator && player.ziffers.generatorDone) {

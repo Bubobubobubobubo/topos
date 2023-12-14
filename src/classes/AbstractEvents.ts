@@ -444,6 +444,25 @@ export abstract class AudibleEvent extends AbstractEvent {
     }
   };
 
+  public log = (key: string|string[], ...args: string[]) => {
+    /*
+     * Log values from values using log()
+     *
+     * @param key - The key(s) to log
+     * @returns this and logs the values
+     */
+    if (typeof key === "string") {
+      if(args && args.length > 0) {
+        this.app.api.log([key, ...args].map((k) => this.values[k]));
+      } else {
+         this.app.api.log(this.values[key]);
+      }
+    } else {
+      this.app.api.log([...key, ...args].map((k) => this.values[k]));
+    }
+    return this;
+  }
+
   freq = (value: number | number[], ...kwargs: number[]): this => {
     /*
      * This function is used to set the frequency of the Event.

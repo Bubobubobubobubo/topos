@@ -109,6 +109,15 @@ export const registerOnKeyDown = (app: Editor) => {
       app.flashBackground("#404040", 200);
     }
 
+    // Force eval with clearing cache
+    if (event.ctrlKey && event.shiftKey && (event.key === "Backspace" || event.key === "Delete")) {
+      event.preventDefault();
+      app.api.clearPatternCache();
+      app.currentFile().candidate = app.view.state.doc.toString();
+      tryEvaluate(app, app.currentFile());
+      app.flashBackground("#404040", 200);
+    }
+
     // app is the modal to switch between universes
     if (event.ctrlKey && event.key === "b") {
       event.preventDefault();

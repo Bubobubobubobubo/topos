@@ -88,3 +88,5 @@ export function filterObject(
 
 export const GeneratorType = (function*(){yield undefined;}).constructor;
 export const GeneratorIteratorType = (function*(){yield undefined;}).prototype.constructor;
+export const isGenerator = (v:any) => Object.prototype.toString.call(v) === '[object Generator]';
+export const isGeneratorFunction = (v:any) => Object.prototype.toString.call(v) === '[object GeneratorFunction]';
