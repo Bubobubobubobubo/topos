@@ -3455,10 +3455,10 @@ sucrase@^3.32.0:
     pirates "^4.0.1"
     ts-interface-checker "^0.1.9"
 
-superdough@^0.9.11:
-  version "0.9.11"
-  resolved "https://registry.yarnpkg.com/superdough/-/superdough-0.9.11.tgz#3a3842a47d6340477f77d39077303f05e15274dd"
-  integrity sha512-s0SNSg/EJHwp2sUnE2A7pTZ0G2luiSEq9NVKJvodjJw11Tn0fOp9XcnegNXINYz3U6mAsUYRoeaj4NmuTL13fA==
+superdough@^0.9.12:
+  version "0.9.12"
+  resolved "https://registry.yarnpkg.com/superdough/-/superdough-0.9.12.tgz#455f8860bc13cffbe1d8f391919e8f1dba1ff0b5"
+  integrity sha512-rsdCoYk5rLYster4tE5mSGjotf/TNP3gPpsuK4hxTZNxL92TkdEcbPFLnJfky5oMQJtpRY1XqAXUx3htLbHEZA==
   dependencies:
     nanostores "^0.8.1"
 
@@ -4028,10 +4028,10 @@ yaml@^2.1.1:
   resolved "https://registry.yarnpkg.com/yaml/-/yaml-2.3.1.tgz#02fe0975d23cd441242aa7204e09fc28ac2ac33b"
   integrity sha512-2eHWfjaoXgTBC2jNM1LRef62VQa0umtvRiDSk6HSzW7RvS5YtkabJrwYLLEKWBc8a5U2PTSCs+dJjUTJdlHsWQ==
 
-zifferjs@^0.0.51:
-  version "0.0.51"
-  resolved "https://registry.yarnpkg.com/zifferjs/-/zifferjs-0.0.51.tgz#567efb39a1675fa622a1edc54d671318b58c43c7"
-  integrity sha512-0uYFZNsdUL4wOv8x37HLenoEOKmcMi1hVpZIWXQwx9AsTeGvZqgVak0y02MSne5S5dMFmAO5s5ZXokc4kzbCeQ==
+zifferjs@^0.0.54:
+  version "0.0.54"
+  resolved "https://registry.yarnpkg.com/zifferjs/-/zifferjs-0.0.54.tgz#2dd4b43820f85d797c13dd35d933476ecacdb146"
+  integrity sha512-vo1I12VvW4yFdVJTVnrfOxeOpWq7tIMZ67BfXxcK0t9GveLi+3GrF1zjowq8WCDssVgw+lQHEjdGVhO5FbK3RA==
 
 zyklus@^0.1.4:
   version "0.1.4"

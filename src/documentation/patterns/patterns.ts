@@ -122,7 +122,6 @@ beat(1)::sound(['kick', 'fsnare'].dur(3, 1))
 
 ## Manipulating notes and scales
 
-
 - <ic>pitch()</ic>: convert a list of integers to pitch classes
 
 ${makeExample(
@@ -136,7 +135,62 @@ beat(0.25) :: snd('sine')
   true,
 )}
 
-  - <ic>scale(scale: string, base note: number)</ic>: Map each element of the list to the closest note of the slected scale. [0, 2, 3, 5 ].scale("major", 50) returns [50, 52, <ic>54</ic>, 55]. You can use western scale names like (Major, Minor, Minor pentatonic ...) or [zeitler](https://ianring.com/musictheory/scales/traditions/zeitler) scale names. Alternatively you can also use the integers as used by Ian Ring in his [study of scales](https://ianring.com/musictheory/scales/).
+- <ic>semitones(number[], ...args?)</ic>: Create scale from semitone intervals.
+
+${makeExample(
+  "Play pitches from scale created from semitone intervals",
+  `
+  beat(1) :: sound('gtr').pitch([0, 4, 3, 2].beat()).key(64)
+  .semitones(1, 1, 3, 1, 1, 2, 3).out()
+`,
+  true,
+)}
+
+- <ic>cents(number[], ...args?)</ic>: Create scale from cent intervals.
+
+${makeExample(
+  "Play pitches from scale created from cent intervals",
+  `
+  rhythm([0.5,0.25].beat(1),14,16) :: sound('pluck')
+  .stretch(r(1,5)).pitch(r(0,6)).key(57)
+.cents(120,270,540,670,785,950,1215).out()
+`,
+  true,
+)}
+
+- <ic>ratios(number[], ...args?)</ic>: Create scale from ratios.
+
+${makeExample(
+  "Play pitches from scale created from ratios",
+  `
+  rhythm([0.5,0.25].beat(0.25),5,7) :: sound('east:3')
+  .pitch([0,1,2,3,4,5,6,7,8,9,10,11].beat(0.25)).key(67)
+.ratios(2/11,4/11,6/11,8/11,10/11,11/11).out()
+`,
+  true,
+)}
+
+- <ic>edo(number, scale?: string|number[])</ic>: Create scale from equal divisions of the octave. Creates chromatic scale by default.
+
+${makeExample(
+  "Play pitches from scale created from equal divisions of the octave",
+  `
+  z0("e bd bd <bd bd [bd bd] [bd bd bd bd]>").sound().out()
+flipbar(1) :: rhythm(.25,14,16) :: sound("ST10:30").stretch(3).gain(0.5)
+.pitch([0,10,r(20,40),r(100,200),r(-200,200),r(200,300),200,r(3,666)].beat([1.0,0.5,0.25].bar(6)))
+    .octave(r(-6,6))
+    .edo(666,"rocritonic")
+    .out()
+rhythm(2.0,26,32) :: sound("ST20").n([22,5,24,34,31,5,11,19].pick()).stretch(rI(1,6))
+.pitch(rI(127,300))
+    .edo(666)
+    .out()
+`,
+  true,
+)}
+
+
+- <ic>scale(scale: string, base note: number)</ic>: Map each element of the list to the closest note of the slected scale. [0, 2, 3, 5 ].scale("major", 50) returns [50, 52, <ic>54</ic>, 55]. You can use western scale names like (Major, Minor, Minor pentatonic ...) or [zeitler](https://ianring.com/musictheory/scales/traditions/zeitler) scale names. Alternatively you can also use the integers as used by Ian Ring in his [study of scales](https://ianring.com/musictheory/scales/).
 
 ${makeExample(
   "Mapping the note array to the E3 major scale",

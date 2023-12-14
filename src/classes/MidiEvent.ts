@@ -1,7 +1,7 @@
 import { AudibleEvent } from "./AbstractEvents";
 import { type Editor } from "../main";
 import { MidiConnection } from "../IO/MidiConnection";
-import { noteFromPc } from "zifferjs";
+import { resolvePitchClass } from "zifferjs";
 import {
   filterObject,
   arrayOfObjectsToObjectWithArrays,
@@ -84,31 +84,32 @@ export class MidiEvent extends AudibleEvent {
   };
 
   update = (): void => {
-    // Get key, pitch, parsedScale and octave from this.values object
     const filteredValues = filterObject(this.values, [
       "key",
       "pitch",
+      "originalPitch",
       "parsedScale",
-      "octave",
+      "addedOctave"
     ]);
 
     const events = objectWithArraysToArrayOfObjects(filteredValues, [
       "parsedScale",
     ]);
 
-    events.forEach((event) => {
-      const [note, bend] = noteFromPc(
-        (event.key as number) || "C4",
-        (event.pitch as number) || 0,
-        (event.parsedScale as number[]) || event.scale || "MAJOR",
-        (event.octave as number) || 0,
+    events.forEach((soundEvent) => {
+      const resolvedPitchClass = resolvePitchClass(
+        (soundEvent.key || "C4"),
+        (soundEvent.originalPitch || soundEvent.pitch || 0),
+        (soundEvent.parsedScale || soundEvent.scale || "MAJOR"),
+        (soundEvent.addedOctave || 0)
       );
-      event.note = note;
-      if (bend) event.bend = bend;
+      soundEvent.note = resolvedPitchClass.note;
+      soundEvent.pitch = resolvedPitchClass.pitch;
+      soundEvent.octave = resolvedPitchClass.octave;
     });
 
     const newArrays = arrayOfObjectsToObjectWithArrays(events) as MidiParams;
-
+    
     this.values.note = newArrays.note;
     if (newArrays.bend) this.values.bend = newArrays.bend;
   };

@@ -146,6 +146,7 @@ export class UserAPI {
         : (this.app.selectedExample as string);
     }
     this.stop();
+    this.resetAllFromCache();
     this.play();
   };
 
@@ -168,6 +169,7 @@ export class UserAPI {
     this.stop();
     this.play();
     this.app.exampleIsPlaying = true;
+    this.resetAllFromCache();
     evaluateOnce(this.app, code as string);
   };
 
