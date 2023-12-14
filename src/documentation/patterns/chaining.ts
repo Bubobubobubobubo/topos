@@ -54,6 +54,25 @@ rhythm(.25, [6, 8].beat(), 12)::sound('sine')
   true,
 )}
 
+## Logging values from the chain
+
+You can use the <ic>log()</ic> function to print values from the current event. This can be useful to debug your code. Useful parameters to log could be **note**, **pitch**, **dur**, **octave** etc...
+
+${makeExample(
+  "Logging values from the chain",
+  `
+  beat(1) :: sound("sine").pitch(rI(1,6)).log("note").out()
+  `,
+  true,
+)}
+
+${makeExample(
+  "Logging values from ziffers pattern",
+  `
+  z1("0 3 2 5").scale("rocritonic").sound("sine").log("pitch","note","key").out()
+  `,
+  true,
+)}
 
 ## Conditional chaining
 
