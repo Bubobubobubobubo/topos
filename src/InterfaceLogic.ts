@@ -525,18 +525,25 @@ export const installInterfaceLogic = (app: Editor) => {
     "loading_samples",
   ].forEach((e) => {
     let name = `docs_` + e;
-    document.getElementById(name)!.addEventListener("click", async () => {
-      if (name !== "docs_sample_list") {
-        app.currentDocumentationPane = e;
-        updateDocumentationContent(app, bindings);
-      } else {
-        console.log("Loading samples!");
-        await loadSamples().then(() => {
-          app.docs = documentation_factory(app);
+
+    // Check if the element exists
+    let element = document.getElementById(name);
+    if (element) {
+      element.addEventListener("click", async () => {
+        if (name !== "docs_sample_list") {
           app.currentDocumentationPane = e;
           updateDocumentationContent(app, bindings);
-        });
-      }
-    });
+        } else {
+          console.log("Loading samples!");
+          await loadSamples().then(() => {
+            app.docs = documentation_factory(app);
+            app.currentDocumentationPane = e;
+            updateDocumentationContent(app, bindings);
+          });
+        }
+      });
+    } else {
+      console.log("Could not find element " + name);
+    }
   });
 };
