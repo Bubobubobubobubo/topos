@@ -436,6 +436,13 @@ export class Player extends AbstractEvent {
     return this;
   }
 
+  log(key: string, ...args: string[]) {
+    this.app.api.log(this.ziffers.evaluated.map((p) => {
+      return Object.values(p.getExisting(...[key,...args]));
+    }).join(" "));
+    return this;
+  }
+
   out = (): void => {
     // TODO?
   };
