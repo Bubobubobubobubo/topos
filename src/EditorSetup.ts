@@ -268,6 +268,7 @@ export const editorSetup: Extension = (() => [
 export const installEditor = (app: Editor) => {
   app.vimModeCompartment = new Compartment();
   app.hoveringCompartment = new Compartment();
+  app.themeCompartment = new Compartment();
   app.completionsCompartment = new Compartment();
   app.withLineNumbers = new Compartment();
   app.chosenLanguage = new Compartment();
@@ -297,7 +298,9 @@ export const installEditor = (app: Editor) => {
       app.settings.completions ? [jsCompletions, toposSoundCompletions] : [],
     ),
     editorSetup,
-    getCodeMirrorTheme(app.getColorScheme("Tomorrow Night Burns")),
+    app.themeCompartment.of(
+      getCodeMirrorTheme(app.getColorScheme("Tomorrow Night Burns")),
+    ),
     app.chosenLanguage.of(javascript()),
   ];
   app.dynamicPlugins = new Compartment();
