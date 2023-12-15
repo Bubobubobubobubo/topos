@@ -2278,8 +2278,9 @@ export class UserAPI {
     console.log("Changing color scheme for: ", color_scheme)
   }
 
-  public randomTheme = (): string => {
+  public randomTheme = (): void => {
     let theme_names = Object.keys(colorschemes);
-    return theme_names[Math.floor(Math.random() * theme_names.length)];
+    let selected_theme = theme_names[Math.floor(Math.random() * theme_names.length)];
+    this.app.readTheme(selected_theme);
   }
 }

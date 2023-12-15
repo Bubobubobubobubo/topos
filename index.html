@@ -63,59 +63,75 @@
 			z-index: 0;
     }
 
+    .bar_button {
+      @apply mx-2 px-2 py-2 flex inline bg-selection_background text-selection_foreground rounded-lg hover:bg-background hover:text-foreground
+    }
+
+    .side_button {
+      @apply px-2 py-2 bg-selection_background text-selection_foreground rounded-lg hover:bg-background hover:text-foreground
+    }
+
+
   </style>
   <body id="all" class="z-0 overflow-y-hidden bg-black">
 		<!-- The header is hidden on smaller devices -->
-    <header class="py-0 block neutral-900">
+    <header class="py-0 block">
       <div id="topbar" class="mx-auto flex flex-wrap pl-2 py-1 flex-row items-center bg-selection_background">
-        <a class="flex title-font font-medium items-center mb-0">
-          <img id="topos-logo" src="topos_frog.svg" class="w-12 h-12 text-black p-2 rounded-full fill-background" alt="Topos Frog Logo" />
-         <input id="universe-viewer" class="hidden transparent xl:block ml-4 text-color10 text-2xl placeholder-background" id="renamer" type="text" placeholder="Topos">
 
+        <a class="flex title-font font-medium items-center mb-0 text-selection_foreground">
+          <img id="topos-logo" src="topos_frog.svg" class="w-12 h-12 text-black p-2 rounded-full bg-foreground" alt="Topos Frog Logo"/>
+         <input id="universe-viewer" class="hidden transparent xl:block ml-4 text-brightwhite text-2xl bg-selection_background" id="renamer" type="text" placeholder="Topos">
         </a>
+
         <nav class="py-2 flex flex-wrap items-center text-base absolute right-0">
-         <a title="Play button (Ctrl+P)" id="play-button-1" class="flex flex-row mr-2 hover:gray-800 px-2 py-2 rounded-lg hover:bg-brightwhite text-white">
+
+          <!-- Play Button -->
+         <a title="Play button (Ctrl+P)" id="play-button-1" class="bar_button">
 							<svg id="play-icon" class="w-7 h-7" fill="currentColor" viewBox="0 0 14 16">
 								<path d="M0 .984v14.032a1 1 0 0 0 1.506.845l12.006-7.016a.974.974 0 0 0 0-1.69L1.506.139A1 1 0 0 0 0 .984Z"/>
 							</svg>
-							<svg id="pause-icon" class="hidden w-7 h-7 text-selection_foreground" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+							<svg id="pause-icon" class="hidden w-7 h-7" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
     <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9 13a1 1 0 0 1-2 0V7a1 1 0 0 1 2 0v6Zm4 0a1 1 0 0 1-2 0V7a1 1 0 0 1 2 0v6Z"/>
   </svg>
-							<p id="play-label" class="hidden lg:block text-xl pl-2 inline-block text-selection_foreground">Play</p>
+							<p id="play-label" class="hidden lg:block text-xl pl-2 inline-block">Play</p>
           </a>
-          <a title="Stop button (Ctrl+R)" id="stop-button-1" class="flex flex-row mr-2 hover:gray-800 px-2 py-2 rounded-lg hover:bg-color3 text-background">
+
+          <!-- Stop button -->
+          <a title="Stop button (Ctrl+R)" id="stop-button-1" class="bar_button">
 						<svg class="w-7 h-7 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
   <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Z"/>
-  <rect x="6.5" y="6.5" width="7" height="7" fill="black" rx="1" ry="1"/>
+  <rect x="6.5" y="6.5" width="7" height="7" fill="selection_background" rx="1" ry="1"/>
 </svg>
-						<p class="hidden lg:block text-xl pl-2 inline-block text-background">Stop</p>
+						<p class="hidden lg:block text-xl pl-2 inline-block">Stop</p>
           </a>
-          <a title="Eval button (Ctrl+Enter)" id="eval-button-1" class="flex flex-row mr-2 px-2 py-2 rounded-lg hover:bg-color3 text-background">
+
+          <!-- Eval button -->
+          <a title="Eval button (Ctrl+Enter)" id="eval-button-1" class="bar_button">
 						<svg class="w-7 h-7 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 20">
     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 1v5h-5M2 19v-5h5m10-4a8 8 0 0 1-14.947 3.97M1 10a8 8 0 0 1 14.947-3.97"/>
   </svg>
-					<p class="hidden lg:block text-xl pl-2 inline-block text-background">Eval</p>
+					<p class="hidden lg:block text-xl pl-2 inline-block">Eval</p>
           </a>
 
-          <a title="Clear button" id="clear-button-1" class="flex flex-row mr-2 px-2 py-2 rounded-lg hover:bg-color3 text-background">
+          <a title="Clear button" id="clear-button-1" class="bar_button">
 						<svg class="w-7 h-7 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 20">
     <path d="M17 4h-4V2a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v2H1a1 1 0 0 0 0 2h1v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V6h1a1 1 0 1 0 0-2ZM7 2h4v2H7V2Zm1 14a1 1 0 1 1-2 0V8a1 1 0 0 1 2 0v8Zm4 0a1 1 0 0 1-2 0V8a1 1 0 0 1 2 0v8Z"/>
   </svg>
-						<p class="hidden lg:block text-xl pl-2  inline-block">Clear</p>
+						<p class="hidden lg:block text-xl pl-2 inline-block">Clear</p>
           </a>
 
-          <a title="Share button" id="share-button" class="flex flex-row mr-2 px-2 py-2 rounded-lg hover:bg-color3 text-background">
+          <a title="Share button" id="share-button" class="bar_button">
 						<svg class="w-7 h-7 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 19 19">
     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.013 7.962a3.519 3.519 0 0 0-4.975 0l-3.554 3.554a3.518 3.518 0 0 0 4.975 4.975l.461-.46m-.461-4.515a3.518 3.518 0 0 0 4.975 0l3.553-3.554a3.518 3.518 0 0 0-4.974-4.975L10.3 3.7"/>
   </svg>
-						<p class="hidden lg:block text-xl pl-2 inline-block text-background">Share</p>
+						<p class="hidden lg:block text-xl pl-2 inline-block">Share</p>
           </a>
 
-          <a title="Open Documentation (Ctrl+D)" id="doc-button-1" class="flex flex-row px-2 py-2 rounded-lg hover:bg-color3 text-background">
+          <a title="Open Documentation (Ctrl+D)" id="doc-button-1" class="bar_button">
 						<svg class="w-7 h-7 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
     <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
   </svg>
-						<p class="hidden lg:block text-xl pl-2 inline-block text-background">Docs</p>
+						<p class="hidden lg:block text-xl pl-2 inline-block">Docs</p>
           </a>
  
         </nav>
@@ -449,7 +465,6 @@
     </div>
 
       <div class="flex flex-row max-h-fit">
-
 				<!-- This is a lateral bar that will inherit the header buttons if the window is too small. -->
         <aside id="sidebar" class="
 					flex flex-col items-center w-14
@@ -459,33 +474,33 @@
 					border-neutral-700 border-none"
 				>
         <nav class="flex flex-col space-y-6">
-            <a title="Local Scripts (Ctrl + L)" id="local-button" class="pl-2 p-1.5 focus:outline-nones transition-colors duration-200 rounded-lg text-background hover:bg-color2">
+            <a title="Local Scripts (Ctrl + L)" id="local-button" class="side_button">
 							<svg class="w-8 h-8 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 18">
     <path d="M18 5H0v11a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5Zm-7.258-2L9.092.8a2.009 2.009 0 0 0-1.6-.8H2.049a2 2 0 0 0-2 2v1h10.693Z"/>
   </svg>
                      </svg>
             </a>
           
-            <a title="Global Script (Ctrl + G)" id="global-button" class="pl-2 p-1.5 focus:outline-nones transition-colors duration-200 rounded-lg text-background hover:bg-selection_foreground">
+            <a title="Global Script (Ctrl + G)" id="global-button" class="side_button">
 							<svg class="w-8 h-8 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 16">
     <path d="M14.316.051A1 1 0 0 0 13 1v8.473A4.49 4.49 0 0 0 11 9c-2.206 0-4 1.525-4 3.4s1.794 3.4 4 3.4 4-1.526 4-3.4a2.945 2.945 0 0 0-.067-.566c.041-.107.064-.22.067-.334V2.763A2.974 2.974 0 0 1 16 5a1 1 0 0 0 2 0C18 1.322 14.467.1 14.316.051ZM10 3H1a1 1 0 0 1 0-2h9a1 1 0 1 1 0 2Z"/>
     <path d="M10 7H1a1 1 0 0 1 0-2h9a1 1 0 1 1 0 2Zm-5 4H1a1 1 0 0 1 0-2h4a1 1 0 1 1 0 2Z"/>
   </svg>
                    </a>
           
-            <a title="Initialisation Script (Ctrl + I)" id="init-button" class="pl-2 p-1.5 focus:outline-nones transition-colors duration-200 rounded-lg text-background hover:bg-selection_foreground">
+            <a title="Initialisation Script (Ctrl + I)" id="init-button" class="side_button">
 							<svg class="w-8 h-8 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 14">
     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 1v12m0 0 4-4m-4 4L1 9"/>
   </svg>
                    </a>
 
-            <a title="Project notes (Ctrl + N)" id="note-button" class="pl-2 p-1.5  focus:outline-nones transition-colors duration-200 rounded-lg  text-background hover:bg-selection_foreground">
+            <a title="Project notes (Ctrl + N)" id="note-button" class="side_button">
 							<svg class="w-8 h-8 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
     <path d="m13.835 7.578-.005.007-7.137 7.137 2.139 2.138 7.143-7.142-2.14-2.14Zm-10.696 3.59 2.139 2.14 7.138-7.137.007-.005-2.141-2.141-7.143 7.143Zm1.433 4.261L2 12.852.051 18.684a1 1 0 0 0 1.265 1.264L7.147 18l-2.575-2.571Zm14.249-14.25a4.03 4.03 0 0 0-5.693 0L11.7 2.611 17.389 8.3l1.432-1.432a4.029 4.029 0 0 0 0-5.689Z"/>
   </svg>
 			      </a>
 
-            <a title="Application Settings" id="settings-button" class="pl-2 p-1.5  focus:outline-nones transition-colors duration-200 rounded-lg  text-background hover:bg-selection_foreground">
+            <a title="Application Settings" id="settings-button" class="side_button">
 							<svg class="w-8 h-8 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M10.343 3.94c.09-.542.56-.94 1.11-.94h1.093c.55 0 1.02.398 1.11.94l.149.894c.07.424.384.764.78.93.398.164.855.142 1.205-.108l.737-.527a1.125 1.125 0 011.45.12l.773.774c.39.389.44 1.002.12 1.45l-.527.737c-.25.35-.272.806-.107 1.204.165.397.505.71.93.78l.893.15c.543.09.94.56.94 1.109v1.094c0 .55-.397 1.02-.94 1.11l-.893.149c-.425.07-.765.383-.93.78-.165.398-.143.854.107 1.204l.527.738c.32.447.269 1.06-.12 1.45l-.774.773a1.125 1.125 0 01-1.449.12l-.738-.527c-.35-.25-.806-.272-1.203-.107-.397.165-.71.505-.781.929l-.149.894c-.09.542-.56.94-1.11.94h-1.094c-.55 0-1.019-.398-1.11-.94l-.148-.894c-.071-.424-.384-.764-.781-.93-.398-.164-.854-.142-1.204.108l-.738.527c-.447.32-1.06.269-1.45-.12l-.773-.774a1.125 1.125 0 01-.12-1.45l.527-.737c.25-.35.273-.806.108-1.204-.165-.397-.505-.71-.93-.78l-.894-.15c-.542-.09-.94-.56-.94-1.109v-1.094c0-.55.398-1.02.94-1.11l.894-.149c.424-.07.765-.383.93-.78.165-.398.143-.854-.107-1.204l-.527-.738a1.125 1.125 0 01.12-1.45l.773-.773a1.125 1.125 0 011.45-.12l.737.527c.35.25.807.272 1.204.107.397-.165.71-.505.78-.929l.15-.894z" />
