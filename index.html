@@ -16,10 +16,9 @@
     <script src="https://unpkg.com/hydra-synth"></script>
   </head>
   <style>
-
     body {
       font-family: "Arial";
-      background-color: #111827;
+      background-color: "red";
 			overflow: hidden;
 			position: fixed;
 			width: 100vw;
@@ -31,7 +30,6 @@
     .fluid-bg-transition {
       transition: background-color 0.05s ease-in-out;
     }
-
 
     .fullscreencanvas {
       position: fixed; /* ignore margins */
@@ -67,8 +65,7 @@
     }
 
   </style>
-  <body id="all" class="z-0 bg-neutral-800 overflow-y-hidden">
-    <h1 class="text-gutterBackground bg-red-800">Dada</h1>
+  <body id="all" class="z-0 bg-color13 overflow-y-hidden">
 		<!-- The header is hidden on smaller devices -->
     <header class="py-0 block text-white bg-neutral-900">
       <div id="topbar" class="mx-auto flex flex-wrap pl-2 py-1 flex-row items-center">
@@ -129,7 +126,7 @@
 
     <div id="documentation" class="hidden">
       <div id="documentation-page" class="flex flex-row bg-transparent">
-        <aside class="w-1/8 flex-shrink-0 h-screen overflow-y-auto p-1 lg:p-6 bg-neutral-900 text-white">
+        <aside class="w-1/8 flex-shrink-0 h-screen overflow-y-auto p-1 lg:p-6 bg-lineHighlight text-white">
           <nav class="text-xl sm:text-sm overflow-y-scroll mb-24">
             <details class="" open>
               <summary class="font-semibold lg:text-xl text-orange-300">Basics</summary>

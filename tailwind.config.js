@@ -7,17 +7,19 @@ export default {
     },
   ],
   theme: {
-    colors: {
-      background: "var(--background)",
-      lineBackground: "var(--lineBackground)",
-      foreground: "var(--foreground)",
-      caret: "var(--caret)",
-      selection: "var(--selection)",
-      selectionMatch: "var(--selectionMatch)",
-      gutterBackground: "var(--gutterBackground)",
-      gutterForeground: "var(--gutterForeground)",
-      gutterBorder: "var(--gutterBorder)",
-      lineHighlight : "var(--lineHighlight)",
+    extend: {
+      colors: {
+        background: "var(--color0)",
+        lineBackground: "var(--color1)",
+        foreground: "var(--color2)",
+        caret: "var(--color3)",
+        selection: "var(--color4)",
+        selectionMatch: "var(--color5)",
+        gutterBackground: "var(--color6)",
+        gutterForeground: "var(--color7)",
+        gutterBorder: "var(--color8)",
+        lineHighlight : "var(--color9)",
+      },
     },
     extend: {},
     hljs: {
