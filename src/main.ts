@@ -578,12 +578,24 @@ export class Editor {
   }
 
   private updateInterfaceTheme(selected_theme: {[key: string]: string}): void {
-    for (const [key, value] of Object.entries(selected_theme)) {
-      document.documentElement.style.setProperty("--" + key, value);
-    }
-  }
+    function hexToRgb(hex: string): {r: number, g: number, b: number} | null {
+      let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+          return result ? {
+            r: parseInt(result[1], 16),
+            g: parseInt(result[2], 16),
+            b: parseInt(result[3], 16)
+          } : null;
+        };
+        for (const [key, value] of Object.entries(selected_theme)) {
+          let color = hexToRgb(value);
+          if (color) {
+            let colorString = `${color.r} ${color.g} ${color.b}`
+            document.documentElement.style.setProperty("--" + key, colorString);
+          }
+        }
+      }
 
-  getColorScheme(theme_name: string): {[key: string]: string} {
+      getColorScheme(theme_name: string): {[key: string]: string} {
     // Check if the theme exists in colors.json
     let themes: Record<string, { [key: string]: any }> = colors;
     return themes[theme_name];
