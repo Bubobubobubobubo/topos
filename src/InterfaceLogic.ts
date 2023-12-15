@@ -59,9 +59,9 @@ export const installInterfaceLogic = (app: Editor) => {
   for (let i = 0; i < tabs.length; i++) {
     tabs[i].addEventListener("click", (event) => {
       // Updating the CSS accordingly
-      tabs[i].classList.add("bg-orange-300");
+      tabs[i].classList.add("bg-foreground");
       for (let j = 0; j < tabs.length; j++) {
-        if (j != i) tabs[j].classList.remove("bg-orange-300");
+        if (j != i) tabs[j].classList.remove("bg-foreground");
       }
       app.currentFile().candidate = app.view.state.doc.toString();
 

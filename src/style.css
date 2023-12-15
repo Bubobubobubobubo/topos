@@ -1176,6 +1176,11 @@ video {
   background-color: rgb(var(--red) / var(--tw-bg-opacity));
 }
 
+.bg-white {
+  --tw-bg-opacity: 1;
+  background-color: rgb(var(--white) / var(--tw-bg-opacity));
+}
+
 .p-1 {
   padding: 0.25rem;
 }
@@ -1240,6 +1245,11 @@ video {
 .py-4 {
   padding-top: 1rem;
   padding-bottom: 1rem;
+}
+
+.px-8 {
+  padding-left: 2rem;
+  padding-right: 2rem;
 }
 
 .pb-1 {
@@ -1426,6 +1436,11 @@ video {
   color: rgb(var(--selection_background) / var(--tw-text-opacity));
 }
 
+.text-brightred {
+  --tw-text-opacity: 1;
+  color: rgb(var(--brightred) / var(--tw-text-opacity));
+}
+
 .underline {
   text-decoration-line: underline;
 }
@@ -1472,8 +1487,18 @@ video {
   background-color: rgb(var(--background) / var(--tw-bg-opacity));
 }
 
+.hover\:bg-foreground:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(var(--foreground) / var(--tw-bg-opacity));
+}
+
 .hover\:fill-black:hover {
   fill: rgb(var(--black) / 1);
+}
+
+.hover\:text-xl:hover {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
 }
 
 .hover\:text-black:hover {
@@ -1484,6 +1509,16 @@ video {
 .hover\:text-foreground:hover {
   --tw-text-opacity: 1;
   color: rgb(var(--foreground) / var(--tw-text-opacity));
+}
+
+.hover\:text-selection_foreground:hover {
+  --tw-text-opacity: 1;
+  color: rgb(var(--selection_foreground) / var(--tw-text-opacity));
+}
+
+.hover\:text-red:hover {
+  --tw-text-opacity: 1;
+  color: rgb(var(--red) / var(--tw-text-opacity));
 }
 
 .focus\:outline-none:focus {

@@ -92,7 +92,7 @@ export const getCodeMirrorTheme = (theme: {[key: string]: string}): Extension =>
       },
       ".cm-activeLine": {
         // backgroundColor: highlightBackground
-        backgroundColor: `${selection_background}`,
+        backgroundColor: `${selection_foreground}`,
       },
       ".cm-selectionMatch": {
         backgroundColor: yellow,
@@ -123,17 +123,17 @@ export const getCodeMirrorTheme = (theme: {[key: string]: string}): Extension =>
       },
       ".cm-tooltip": {
         border: "none",
-        backgroundColor: yellow,
+        backgroundColor: background,
       },
       ".cm-tooltip .cm-tooltip-arrow:before": {},
       ".cm-tooltip .cm-tooltip-arrow:after": {
-        borderTopColor: yellow,
-        borderBottomColor: yellow,
+        borderTopColor: background,
+        borderBottomColor: background,
       },
       ".cm-tooltip-autocomplete": {
         "& > ul > li[aria-selected]": {
-          backgroundColor: blue,
-          color: blue,
+          backgroundColor: background,
+          color: background,
         },
       },
     },
@@ -141,60 +141,25 @@ export const getCodeMirrorTheme = (theme: {[key: string]: string}): Extension =>
   );
 
   let toposHighlightStyle = HighlightStyle.define([
+    { tag: t.paren, color: brightwhite },
+    { tag: [t.propertyName, t.punctuation, t.variableName], color: brightwhite },
     { tag: t.keyword, color: yellow },
-    {
-      tag: [t.name, t.deleted, t.character, t.macroName],
-      color: red,
-    },
-    { tag: [t.propertyName], color: red },
-    { tag: [t.variableName], color: red },
+    { tag: [t.name, t.deleted, t.character, t.macroName], color: red, },
     { tag: [t.function(t.variableName)], color: blue },
     { tag: [t.labelName], color: red },
-    {
-      tag: [t.color, t.constant(t.name), t.standard(t.name)], color: yellow,
-    },
+    { tag: [t.color, t.constant(t.name), t.standard(t.name)], color: cyan, },
     { tag: [t.definition(t.name), t.separator], color: magenta },
-    { tag: [t.brace], color: magenta },
-    {
-      tag: [t.annotation],
-      color: white ,
-    },
-    {
-      tag: [t.number, t.changed, t.annotation, t.modifier, t.self, t.namespace],
-      color: yellow ,
-    },
-    {
-      tag: [t.typeName, t.className],
-      color: magenta,
-    },
-    {
-      tag: [t.operator, t.operatorKeyword],
-      color: blue ,
-    },
-    {
-      tag: [t.tagName],
-      color: blue,
-    },
-    {
-      tag: [t.squareBracket],
-      color: yellow,
-    },
-    {
-      tag: [t.angleBracket],
-      color: yellow,
-    },
-    {
-      tag: [t.attributeName],
-      color: red,
-    },
-    {
-      tag: [t.regexp],
-      color: brightgreen,
-    },
-    {
-      tag: [t.quote],
-      color: green,
-    },
+    { tag: [t.brace], color: white },
+    { tag: [t.annotation], color: blue, },
+    { tag: [t.number, t.changed, t.annotation, t.modifier, t.self, t.namespace], color: yellow, },
+    { tag: [t.typeName, t.className], color: magenta, },
+    { tag: [t.operator, t.operatorKeyword], color: blue, },
+    { tag: [t.tagName], color: blue, },
+    { tag: [t.squareBracket], color: blue, },
+    { tag: [t.angleBracket], color: blue, },
+    { tag: [t.attributeName], color: red, },
+    { tag: [t.regexp], color: brightgreen, },
+    { tag: [t.quote], color: green, },
     { tag: [t.string], color: green },
     {
       tag: t.link,
@@ -206,14 +171,14 @@ export const getCodeMirrorTheme = (theme: {[key: string]: string}): Extension =>
       tag: [t.url, t.escape, t.special(t.string)],
       color: green,
     },
-    { tag: [t.meta], color: brightblack },
-    { tag: [t.comment], color: brightblack, fontStyle: "italic" },
-    { tag: t.monospace, color: black },
-    { tag: t.strong, fontWeight: "bold", color: magenta },
-    { tag: t.emphasis, fontStyle: "italic", color: magenta },
+    { tag: [t.meta], color: brightwhite },
+    { tag: [t.comment], color: brightwhite, fontStyle: "italic" },
+    { tag: t.monospace, color: brightwhite },
+    { tag: t.strong, fontWeight: "bold", color: white },
+    { tag: t.emphasis, fontStyle: "italic", color: white },
     { tag: t.strikethrough, textDecoration: "line-through" },
-    { tag: t.heading, fontWeight: "bold", color: magenta },
-    { tag: t.heading1, fontWeight: "bold", color: magenta },
+    { tag: t.heading, fontWeight: "bold", color: white },
+    { tag: t.heading1, fontWeight: "bold", color: white },
     {
       tag: [t.heading2, t.heading3, t.heading4],
       fontWeight: "bold",
@@ -237,6 +202,35 @@ export const getCodeMirrorTheme = (theme: {[key: string]: string}): Extension =>
   return [ toposTheme, syntaxHighlighting(toposHighlightStyle),
 ]
 }
+
+const debugTheme = EditorView.theme({
+  ".cm-line span": {
+    position: "relative",
+  },
+  ".cm-line span:hover::after": {
+    position: "absolute",
+    bottom: "100%",
+    left: 0,
+    background: "black",
+    color: "white",
+    border: "solid 2px",
+    borderRadius: "5px",
+    content: "var(--tags)",
+    width: `max-content`,
+    padding: "1px 4px",
+    zIndex: 10,
+    pointerEvents: "none",
+  },
+});
+
+const debugHighlightStyle = HighlightStyle.define(
+  // @ts-ignore
+  Object.entries(t).map(([key, value]) => {
+    return { tag: value, "--tags": `"tag.${key}"` };
+  })
+);
+const debug = [debugTheme, syntaxHighlighting(debugHighlightStyle)];
+
 
 export const jsCompletions = javascriptLanguage.data.of({
   autocomplete: toposCompletions,
@@ -304,6 +298,7 @@ export const installEditor = (app: Editor) => {
     editorSetup,
     app.themeCompartment.of(
       getCodeMirrorTheme(app.getColorScheme("Tomorrow Night Burns")),
+      // debug
     ),
     app.chosenLanguage.of(javascript()),
   ];
