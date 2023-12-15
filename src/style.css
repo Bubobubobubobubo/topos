@@ -2,9 +2,23 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --background: "#262626",
+  --lineBackground: "#3B4252",
+  --foreground: "#BBBBBB" ,
+  --caret: "#4C566A",
+  --selection: "#D8DEE9" ,
+  --selectionMatch: "#E5E9F0" ,
+  --gutterBackground: "#8FBCBB",
+  --gutterForeground: "#BF616A",
+  --gutterBorder: "#D08770",
+  --lineHighlight: "#B48EAD",
+}
+
+
 @layer utilities {
   .striped .col-span-3,
   .striped .col-span-2 {
-    @apply bg-neutral-300;
+    @apply bg-background;
   }
 }

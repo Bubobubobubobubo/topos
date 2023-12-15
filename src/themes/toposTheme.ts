@@ -3,14 +3,14 @@ import { Extension } from "@codemirror/state";
 import { HighlightStyle, syntaxHighlighting } from "@codemirror/language";
 import { tags as t } from "@lezer/highlight";
 
-const base00 = "#262626",
-  base01 = "#3B4252",
-  base02 = "#BBBBBB",
-  base03 = "#4C566A",
-  base04 = "#D8DEE9",
-  base05 = "#E5E9F0",
-  base07 = "#8FBCBB",
-  base_red = "#BF616A",
+const base00      = "#262626",
+  base01          = "#3B4252",
+  base02          = "#BBBBBB",
+  base03          = "#4C566A",
+  base04          = "#D8DEE9",
+  base05          = "#E5E9F0",
+  base07          = "#8FBCBB",
+  base_red        = "#BF616A",
   base_deeporange = "#D08770",
   base_pink = "#B48EAD",
   base_cyan = "#FBCF8B",
