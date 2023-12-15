@@ -71,16 +71,24 @@
       @apply px-2 py-2 bg-selection_background text-selection_foreground rounded-lg hover:bg-background hover:text-foreground
     }
 
+    .subtitle {
+      @apply bg-selection_foreground text-sm lg:text-xl border-b py-4 text-foreground
+    }
 
   </style>
   <body id="all" class="z-0 overflow-y-hidden bg-black">
 		<!-- The header is hidden on smaller devices -->
     <header class="py-0 block">
-      <div id="topbar" class="mx-auto flex flex-wrap pl-2 py-1 flex-row items-center bg-selection_background">
-
+      <div id="topbar" class="mx-auto flex flex-wrap pl-2 py-1 flex-row items-center bg-selection_background text-selection_foreground">
         <a class="flex title-font font-medium items-center mb-0 text-selection_foreground">
-          <img id="topos-logo" src="topos_frog.svg" class="w-12 h-12 text-black p-2 rounded-full bg-foreground" alt="Topos Frog Logo"/>
-         <input id="universe-viewer" class="hidden transparent xl:block ml-4 text-brightwhite text-2xl bg-selection_background" id="renamer" type="text" placeholder="Topos">
+          <img id="topos-logo" src="topos_frog.svg" class="w-12 h-12 text-selection_foreground p-2 rounded-full" alt="Topos Frog Logo"/>
+         <input id="universe-viewer" class="
+          hidden transparent 
+          xl:block ml-4 
+          text-2xl 
+          text-selection_foreground 
+          placeholder-current
+          bg-selection_background" id="renamer" type="text" placeholder="Topos">
         </a>
 
         <nav class="py-2 flex flex-wrap items-center text-base absolute right-0">
@@ -260,10 +268,10 @@
 					<p id="existing-universes" class="text-normal lg:h-auto h-48 overflow-y-auto mb-2"></p>
           <div id="disclaimer" class="pb-4">
           <form id="universe-creator">
-            <label for="search" class="mb-2 text-sm font-medium text-gray-900 sr-only ">Search</label>
+            <label for="search" class="mb-2 text-sm font-medium sr-only ">Search</label>
             <div class="relative">
             <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-            <svg class="w-4 h-4 text-gray-500 text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+            <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
             </svg>
         </div>
@@ -271,7 +279,7 @@
                 <button id="load-universe-button" class="text-black absolute right-2.5 bottom-2.5 white hover:white focus:outline-none font-medium rounded-lg text-sm px-4 py-2">Go</button>
             </div>
           </form>
-              <div class="mt-2 flex space-x-6 border-t border-gray-200 rounded-b border-gray-600 border-spacing-y-4">
+              <div class="mt-2 flex space-x-6 border-t  rounded-b  border-spacing-y-4">
                 <button id="close-universes-button" data-modal-hide="defaultModal" type="button" class="mt-2 hover:neutral-700 neutral-800  focus:ring-4  font-medium rounded-lg text-sm px-5 py-2.5 text-center">Close</button>
               </div>
 
@@ -288,23 +296,19 @@
       >
         <div class="grid w-full grid-col-3">
           <div class="white rounded-lg lg:mx-48 mx-0 lg:space-y-8 space-y-4 lg:px-8 bg-foreground">
-          <h1 class="lg:mt-12 mt-6 font-semibold rounded-lg
-                     gray-800 justify-center lg:text-center lg:pl-0 pl-8 mx-4
-                     bg-selection_foreground
-                     text-sm lg:text-xl border-b py-4 text-color2">Topos Application Settings</h1>
+          <h1 class="lg:mt-12 mt-6 font-semibold rounded-lg justify-center lg:text-center lg:pl-0 pl-8 mx-4 subtitle">Topos Application Settings</h1>
             <div class="flex lg:flex-row flex-col mr-4 ml-4">
             <!-- Font Size Selection -->
-              <div class="gray-200 rounded-lg ml-0 lg:w-1/3 w-full pt-2 pb-1 mb-2 bg-selection_foreground">
-                <p class="font-bold lg:text-xl text-sm ml-4 lg:pb-4 pb-2 underline underline-offset-4 text-color2">Font Settings</p>
+              <div class="rounded-lg ml-0 lg:w-1/3 w-full pt-2 pb-1 mb-2 bg-selection_foreground">
+                <p class="font-bold lg:text-xl text-sm ml-4 lg:pb-4 pb-2 underline underline-offset-4 text-selection_background">Font Settings</p>
                 <div class="mb-6 mx-4 font-semibold">
-                  <label for="default-input" class="block mb-2 ml-1 font-normal sd:text-sm text-color10">Size:</label>
-                  <input type="text" id="font-size-input" type="number" class="gray-50 border border-gray-300 text-gray-900 
-                  text-sm rounded-lg  focus:border-blue-500 block w-full p-2.5 gray-700 
-                  border-gray-600 placeholder-gray-400   focus:border-blue-500">
+                  <label for="default-input" class="block mb-2 ml-1 font-normal sd:text-sm text-foreground">Size:</label>
+                  <input type="text" id="font-size-input" type="number" class="border
+                  text-sm rounded-lg  focus:border-blue-500 block w-full p-2.5 focus:border-blue-500">
                 </div>
-                <label for="font" class="block ml-5 mb-2 font-medium sd:text-sm text-color10">Font:</label>
-                  <select id="font-family" class="gray-50 ml-4 border border-gray-300 mb-2
-                  text-gray-900 text-sm rounded-lg  focus:border-blue-500 block  p-2.5 gray-700 border-gray-600 placeholder-gray-400 ">
+                <label for="font" class="block ml-5 mb-2 font-medium sd:text-sm text-foreground">Font:</label>
+                  <select id="font-family" class=" ml-4 border mb-2
+                  text-sm rounded-lg  focus:border-blue-500 block  p-2.5">
                     <option value="IBM Plex Mono">IBM Plex Mono</option>
                     <option value="Jet Brains">Jet Brains</option>
                     <option value="Courier">Courier</option>
@@ -316,149 +320,148 @@
                     <option value="Steps Mono">Steps Mono</option>
                     <option value="Steps Mono Thin">Steps Mono Thin</option>
                   </select>
-              <div class="gray-200 rounded-lg ml-0 lg:w-1/3 w-full pt-2 pb-1 mb-2">
-                <label for="theme" class="block ml-5 mb-2 font-medium sd:text-sm text-color10">Theme:</label>
-                  <select id="theme-selector" class="gray-50 ml-4 border mb-2
+              <div class="rounded-lg ml-0 lg:w-1/3 w-full pt-2 pb-1 mb-2">
+                <label for="theme" class="block ml-5 mb-2 font-medium sd:text-sm text-foreground">Theme:</label>
+                  <select id="theme-selector" class="ml-4 border mb-2
                   text-sm rounded-lg block  p-2.5">
                   </select>
                   <div id="theme-previewer"></div>
               </div>
               </div>
               <!-- Editor mode selection -->
-            <div class="gray-200 rounded-lg lg:ml-4 lg:w-1/3 w-full pt-2 pb-1 mb-2 bg-selection_foreground">
-              <p class="font-bold lg:text-xl text-sm ml-4 pb-4 underline underline-offset-4 text-color2">Editor options</p>
+            <div class="rounded-lg lg:ml-4 lg:w-1/3 w-full pt-2 pb-1 mb-2 bg-selection_foreground">
+              <p class="font-bold lg:text-xl text-sm ml-4 pb-4 underline underline-offset-4 text-selection_background">Editor options</p>
               <!-- Checkboxes  -->
   					  <div class="pr-4">
 							  <div  class="flex items-center mb-4 ml-5">
-            	    <input id="vim-mode" type="checkbox" value="" class="w-4 h-4 text-blue-600 gray-100 border-gray-300 rounded  focus:ring-blue-600 ring-offset-gray-800 focus:ring-2 gray-700 border-gray-600">
-             	    <label for="default-checkbox" class="ml-2 text-sm font-medium text-color10">Vim Mode</label>
+            	    <input id="vim-mode" type="checkbox" value="" class="w-4 h-4 text-blue-600 rounded focus:ring-blue-600">
+             	    <label for="default-checkbox" class="ml-2 text-sm font-medium text-selection_background">Vim Mode</label>
              	  </div>
 							  <div class="flex items-center mb-4 ml-5">
-             	    <input id="show-line-numbers" type="checkbox" value="" class="w-4 h-4 text-blue-600 gray-100 border-gray-300 rounded  focus:ring-blue-600 ring-offset-gray-800 focus:ring-2 gray-700 border-gray-600">
-             	    <label for="default-checkbox" class="ml-2 text-sm font-medium text-color10">Show Line Numbers</label>
+             	    <input id="show-line-numbers" type="checkbox" value="" class="w-4 h-4 text-blue-600 rounded  focus:ring-blue-600 focus:ring-2">
+             	    <label for="default-checkbox" class="ml-2 text-sm font-medium text-foreground">Show Line Numbers</label>
              	  </div>
              	  <div class="flex items-center mb-4 ml-5">
-             	    <input id="show-time-position" type="checkbox" value="" class="w-4 h-4 text-blue-600 gray-100 border-gray-300 rounded  focus:ring-blue-600 ring-offset-gray-800 focus:ring-2 gray-700 border-gray-600">
-             	    <label for="default-checkbox" class="ml-2 text-sm font-medium text-color10">Show Time Position</label>
+             	    <input id="show-time-position" type="checkbox" value="" class="w-4 h-4 text-blue-600 rounded focus:ring-blue-600 focus:ring-2">
+             	    <label for="default-checkbox" class="ml-2 text-sm font-medium text-foreground">Show Time Position</label>
              	  </div>
              	  <div class="flex items-center mb-4 ml-5">
-             	    <input id="show-tips" type="checkbox" value="" class="w-4 h-4 text-blue-600 gray-100 border-gray-300 rounded  focus:ring-blue-600 ring-offset-gray-800 focus:ring-2 gray-700 border-gray-600">
-             	    <label for="default-checkbox" class="ml-2 text-sm font-medium text-color10">Show Hovering Tips</label>
+             	    <input id="show-tips" type="checkbox" value="" class="w-4 h-4 text-blue-600 rounded  focus:ring-blue-600 focus:ring-2">
+             	    <label for="default-checkbox" class="ml-2 text-sm font-medium text-foreground">Show Hovering Tips</label>
              	  </div>
              	  <div class="flex items-center mb-4 ml-5">
-             	    <input id="show-completions" type="checkbox" value="" class="w-4 h-4 text-blue-600 gray-100 border-gray-300 rounded  focus:ring-blue-600 ring-offset-gray-800 focus:ring-2 gray-700 border-gray-600">
-             	    <label for="default-checkbox" class="ml-2 text-sm font-medium text-color10">Show Completions</label>
+             	    <input id="show-completions" type="checkbox" value="" class="w-4 h-4 text-blue-600 rounded focus:ring-blue-600 focus:ring-2">
+             	    <label for="default-checkbox" class="ml-2 text-sm font-medium text-foreground">Show Completions</label>
              	  </div>
              	  <div class="flex items-center mb-4 ml-5">
-             	    <input id="load-demo-songs" type="checkbox" value="" class="w-4 h-4 text-blue-600 gray-100 border-gray-300 rounded  focus:ring-blue-600 ring-offset-gray-800 focus:ring-2 gray-700 border-gray-600">
-             	    <label for="default-checkbox" class="ml-2 text-sm font-medium text-color10">Load Demo Song</label>
+             	    <input id="load-demo-songs" type="checkbox" value="" class="w-4 h-4 text-blue-600 rounded focus:ring-blue-600">
+             	    <label for="default-checkbox" class="ml-2 text-sm font-medium text-foreground">Load Demo Song</label>
              	  </div>
 						  </div>
             </div>
 
-            <div class="gray-200 rounded-lg lg:ml-4 lg:w-1/3 w-full pt-2 pb-1 mb-2 bg-selection_foreground">
-              <p class="font-bold lg:text-xl text-sm ml-4 pb-4 underline underline-offset-4 text-color2">File Management</p>
+            <div class="rounded-lg lg:ml-4 lg:w-1/3 w-full pt-2 pb-1 mb-2 bg-selection_foreground">
+              <p class="font-bold lg:text-xl text-sm ml-4 pb-4 underline underline-offset-4 text-selection_background">File Management</p>
               <div class="flex flex-col space-y-2 pb-2">
-                <button id="download-universes" class="bg-color3 font-bold lg:py-4 lg:px-2 px-1 py-2 rounded-lg inline-flex items-center mx-4">
+                <button id="download-universes" class="bg-blue font-bold lg:py-4 lg:px-2 px-1 py-2 rounded-lg inline-flex items-center mx-4 text-selection_background">
                   <svg class="fill-current w-4 h-6 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M13 8V2H7v6H2l8 8 8-8h-5zM0 18h20v2H0v-2z"/></svg>
-                  <span class="text-color0">Download universes</span>
+                  <span class="text-selection_background">Download universes</span>
                 </button>
-                <button id="upload-universes" class="bg-color3 font-bold lg:py-4 lg:px-2 px-1 py-2 rounded-lg inline-flex items-center mx-4">
+                <button id="upload-universes" class="bg-blue font-bold lg:py-4 lg:px-2 px-1 py-2 rounded-lg inline-flex items-center mx-4 text-selection_background">
                   <svg class="rotate-180 fill-current w-4 h-6 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M13 8V2H7v6H2l8 8 8-8h-5zM0 18h20v2H0v-2z"/></svg>
-                  <span class="text-color0">Upload universes</span>
+                  <span class="text-selection_background">Upload universes</span>
                 </button>
-                <button id="destroy-universes" class="bg-color7 font-bold lg:px-2 px-1 py-2 rounded-lg inline-flex items-center mx-4">
+                <button id="destroy-universes" class="bg-red font-bold lg:px-2 px-1 py-2 rounded-lg inline-flex items-center mx-4 text-selection_background">
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-6 mr-2">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
                   </svg>
-                  <span class="text-color0">Destroy universes</span>
+                  <span class="text-selection_background">Destroy universes</span>
                 </button>
               </div>
             </div>
           </div>
 
             <!-- Midi settings -->
-            <div id="midi-settings-container" class="gray-200 rounded-lg flex lg:flex-row flex-col mx-4 my-4 pt-4 bg-color bg-selection_foreground">
+            <div id="midi-settings-container" class="rounded-lg flex lg:flex-row flex-col mx-4 my-4 pt-4 bg-color bg-selection_foreground">
             <div class="lg:flex lg:flex-row w-fit">
-            <p class="font-bold lg:text-xl text-sm ml-4 pb-4 underline underline-offset-4 text-color2">MIDI I/O Settings</p>
+            <p class="font-bold lg:text-xl text-sm ml-4 pb-4 underline underline-offset-4 text-selection_background">MIDI I/O Settings</p>
               <div class="flex items-center mb-4 ml-6">
-                <label for="default-checkbox" class="ml-2 text-sm font-medium text-color10">MIDI Clock:&nbsp;</label>
-                <select id="midi-clock-input" class="w-32 h-8 text-sm font-medium text-black gray-100 border-gray-300 rounded  focus:ring-blue-600 ring-offset-gray-800 focus:ring-2">
+                <label for="default-checkbox" class="ml-2 text-sm font-medium text-foreground">MIDI Clock:&nbsp;</label>
+                <select id="midi-clock-input" class="w-32 h-8 text-sm font-medium text-black rounded focus:ring-blue-600">
                   <option value="-1">Internal</option>
                 </select>
               </div>
               <div class="lg:flex block items-center mb-4 ml-6">
-                <label for="default-checkbox" class="ml-2 text-sm font-medium text-color10">Clock PPQN:&nbsp;</label>
-                <select id="midi-clock-ppqn-input" class="w-32 h-8 text-sm font-medium text-black gray-100 border-gray-300 rounded  focus:ring-blue-600 ring-offset-gray-800 focus:ring-2">
+                <label for="default-checkbox" class="ml-2 mr-2 text-sm font-medium text-foreground">Clock PPQN:&nbsp;</label>
+                <select id="midi-clock-ppqn-input" class="w-32 h-8 text-sm font-medium text-black rounded focus:ring-blue-600">
                   <option value="24">24</option>
                   <option value="48">48</option>
                 </select>
               </div>
               <div class="lg:flex block items-center mb-4 ml-6">
-                  <input id="send-midi-clock" type="checkbox" value="" class="lg:w-8 lg:h-8 h-4 w-4 text-blue-600 gray-100 border-gray-300 rounded  focus:ring-blue-600 ring-offset-gray-800 focus:ring-2 gray-700 border-gray-600">
-                  <label for="default-checkbox" class="ml-2 text-sm font-medium text-color10">Send MIDI Clock</label>
+                  <input id="send-midi-clock" type="checkbox" value="" class="lg:w-8 lg:h-8 h-4 w-4 text-blue-600 rounded  focus:ring-blue-600 focus:ring-2">
+                  <label for="default-checkbox" class="ml-2 text-sm font-medium text-foreground">Send MIDI Clock</label>
               </div>
             </div>
             <div class="lg:flex block flex-row">
               <div class="flex items-center mb-4 ml-6">
-                <label for="default-checkbox" class="ml-2 text-sm font-medium text-color10">MIDI input:&nbsp;</label>
-                <select id="default-midi-input" class="w-32 h-8 text-sm font-medium text-black gray-100 border-gray-300 rounded  focus:ring-blue-600 ring-offset-gray-800 focus:ring-2">
+                <label for="default-checkbox" class="ml-2 mr-2 text-sm font-medium text-foreground">MIDI input:&nbsp;</label>
+                <select id="default-midi-input" class="w-32 h-8 text-sm font-medium text-black rounded  focus:ring-blue-600 focus:ring-2">
                   <option value="-1">None</option>
                 </select>
               </div>
               <div class="lg:flex block items-center mb-4 ml-6">
-                <input id="midi-channels-scripts" type="checkbox" value="" class="lg:w-8 lg:h-8 h-4 w-4 text-blue-600 gray-100 border-gray-300 rounded  focus:ring-blue-600 ring-offset-gray-800 focus:ring-2 gray-700 border-gray-600">
-                <label for="default-checkbox" class="ml-2 text-sm font-medium text-color10">Route channels to scripts</label>
+                <input id="midi-channels-scripts" type="checkbox" value="" class="lg:w-8 lg:h-8 h-4 w-4 text-blue-600 rounded focus:ring-blue-600">
+                <label for="default-checkbox" class="ml-2 text-sm font-medium text-foreground">Route channels to scripts</label>
               </div>
             </div>
           </div>
 
           <!-- Audio nudge slider -->
-          <div id="midi-settings-container" class="gray-200 rounded-lg flex flex-col mx-4 my-4 pt-4 pb-2 bg-selection_foreground">
-            <p class="font-bold lg:text-xl text-sm ml-4 pb-4 underline underline-offset-4 text-color2">Audio/Event Nudging</p>
-            <div class="flex flex-column pb-2">
-              <p class="pt-0.5 ml-4 text-color10">Clock:</p>
+          <div id="midi-settings-container" class="rounded-lg flex flex-col mx-4 my-4 pt-4 pb-2 bg-selection_foreground">
+            <p class="font-bold lg:text-xl text-sm ml-4 pb-4 underline underline-offset-4 text-selection_background">Audio/Event Nudging</p> <div class="flex flex-column pb-2">
+              <p class="pt-0.5 ml-4 text-foreground">Clock:</p>
               <input
                 type="range" id="audio_nudge"
                 name="audiorangeInput"
                 min="-200" max="200"
                 value="0"
-                class="w-full ml-4"
+                class="w-full ml-4 text-red"
                 oninput="nudgenumber.value=audio_nudge.value"
               >
               <output 
                 name="nudgenumber" 
                 id="nudgenumber" 
                 for="audiorangeInput" 
-                class="gray-500 rounded-lg ml-2 mr-4 px-4 py-1 text-color10"
+                class="rounded-lg ml-2 mr-4 px-4 py-1 text-foreground"
               >0</output>
             </div>
 
             <div class="flex flex-column">
 
-              <p class="pt-0.5 ml-4 text-color10">Audio:</p>
+              <p class="pt-0.5 ml-4 text-foreground">Audio:</p>
               <input
                 type="range" id="dough_nudge"
                 name="doughrangeInput"
                 min="0" max="100"
                 value="0"
-                class="w-full ml-4 text-color10"
+                class="w-full ml-4 text-foreground"
                 oninput="doughnumber.value=dough_nudge.value"
               >
               <output 
                 name="doughnumber" 
                 id="doughnumber" 
                 for="doughrangeInput" 
-                class="gray-500 rounded-lg ml-2 mr-4 px-4 py-1 text-color10"
+                class="rounded-lg ml-2 mr-4 px-4 py-1 text-foreground"
               >0</output>
             </div>
 
           </div>
 
-          <div class="flex space-x-6 border-t border-gray-200 rounded-b border-gray-600 mx-4 border-spacing-y-4 pb-36 lg:pb-0">
+          <div class="flex space-x-6 border-t rounded-b mx-4 border-spacing-y-4 pb-36 lg:pb-0">
             <button id="close-settings-button" data-modal-hide="defaultModal" type="button" class="
-            hover:bg-background bg-background gray-800 mt-4 mb-4  focus:ring-4
-            font-medium rounded-lg text-sm px-5 py-2.5 text-center">OK</button>
+            hover:bg-background bg-background mt-4 mb-4 focus:ring-4
+            font-medium rounded-lg text-sm px-5 py-2.5 text-center text-selection_background">OK</button>
           </div>
         </div>
       </div>
@@ -517,31 +520,31 @@
         <div class="min-w-screen flex grow flex-col">
           <ul id="local-script-tabs" class=" flex text-xl font-medium text-center  neutral-900 space-x-1 lg:space-x-8">
             <li class="pl-5">
-                <a title="Local Script 1 (F1)" id="tab-1" class="orange-300 inline-block lg:px-4 px-2 py-1  hover:gray-800">1</a>
+                <a title="Local Script 1 (F1)" id="tab-1" class="orange-300 inline-block lg:px-4 px-2 py-1">1</a>
             </li>
             <li class="">
-                <a title="Local Script 2 (F2)" id="tab-2" class="inline-block lg:px-4 px-2 py-1 hover:gray-800">2</a>
+                <a title="Local Script 2 (F2)" id="tab-2" class="inline-block lg:px-4 px-2 py-1">2</a>
             </li>
             <li class="">
-                <a title="Local Script 3 (F3)" id="tab-3" class="inline-block lg:px-4 px-2 py-1 hover:gray-800">3</a>
+                <a title="Local Script 3 (F3)" id="tab-3" class="inline-block lg:px-4 px-2 py-1">3</a>
             </li>
             <li class="">
-                <a title="Local Script 4 (F4)" id="tab-4" class="inline-block lg:px-4 px-2 py-1 hover:gray-800">4</a>
+                <a title="Local Script 4 (F4)" id="tab-4" class="inline-block lg:px-4 px-2 py-1">4</a>
             </li>
             <li class="">
-                <a title="Local Script 5 (F5)" id="tab-5" class="inline-block lg:px-4 px-2 py-1 hover:gray-800">5</a>
+                <a title="Local Script 5 (F5)" id="tab-5" class="inline-block lg:px-4 px-2 py-1">5</a>
             </li>
             <li class="">
-                <a title="Local Script 6 (F6)" id="tab-6" class="inline-block lg:px-4 px-2 py-1 hover:gray-800">6</a>
+                <a title="Local Script 6 (F6)" id="tab-6" class="inline-block lg:px-4 px-2 py-1">6</a>
             </li>
             <li class="">
-                <a title="Local Script 7 (F7)" id="tab-7" class="inline-block lg:px-4 px-2 py-1 hover:gray-800">7</a>
+                <a title="Local Script 7 (F7)" id="tab-7" class="inline-block lg:px-4 px-2 py-1">7</a>
             </li>
             <li class="">
-                <a title="Local Script 8 (F8)" id="tab-8" class="inline-block lg:px-4 px-2 py-1 hover:gray-800">8</a>
+                <a title="Local Script 8 (F8)" id="tab-8" class="inline-block lg:px-4 px-2 py-1">8</a>
             </li>
             <li class="">
-                <a title="Local Script 9 (F9)" id="tab-9" class="inline-block lg:px-4 px-2 py-1 hover:gray-800">9</a>
+                <a title="Local Script 9 (F9)" id="tab-9" class="inline-block lg:px-4 px-2 py-1">9</a>
             </li>
  
          </ul>
