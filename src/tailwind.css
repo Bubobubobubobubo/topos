@@ -4,22 +4,22 @@
 
 @layer base {
     :root {
-        --color0: 40 42 54;
-        --color1: 68 71 90;
-        --color2: 248 248 242;
-        --color3: 98 114 164;
-        --color4: 139 233 253;
-        --color5: 80 250 123;
-        --color6: 255 184 108;
-        --color7: 255 121 198;
-        --color8: 189 147 249;
-        --color9: 255 85 85;
-        --color10: 241 250 140;
-        --color11: 139 233 253;
-        --color12: 80 250 123;
-        --color13: 255 184 108;
-        --color14: 255 121 198;
-        --color15: 189 147 249;
+        --black: 40 42 54;
+        --red: 68 71 90;
+        --green: 248 248 242;
+        --yellow: 98 114 164;
+        --blue: 139 233 253;
+        --magenta: 80 250 123;
+        --cyan: 255 184 108;
+        --white: 255 121 198;
+        --brightblack: 189 147 249;
+        --brightred: 255 85 85;
+        --brightgreen: 241 250 140;
+        --brightyellow: 139 233 253;
+        --brightblue: 80 250 123;
+        --brightmagenta: 255 184 108;
+        --brightcyan: 255 121 198;
+        --brightwhite: 189 147 249;
         --background: 40 42 54;
         --selection_foreground: 68 71 90;
         --cursor: 139 233 253;

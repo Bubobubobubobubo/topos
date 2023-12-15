@@ -294,6 +294,13 @@ export const installInterfaceLogic = (app: Editor) => {
   app.interface.theme_selector.addEventListener("change", () => {
     app.settings.theme = (app.interface.theme_selector as HTMLSelectElement).value;
     app.readTheme(app.settings.theme);
+    // @ts-ignore
+    let selected_theme = colors[app.settings.theme as string];
+    let theme_preview = "";
+    for (const [key, _] of Object.entries(selected_theme)) {
+      theme_preview += `<p class="inline text-${key} bg-${key}">█</div>`;
+    }
+    app.interface.theme_previewer.innerHTML = theme_preview;
   });
 
   app.interface.settings_button.addEventListener("click", () => {
@@ -313,6 +320,17 @@ export const installInterfaceLogic = (app: Editor) => {
     app.interface.theme_selector.innerHTML = all_themes.map((color) => {
       return `<option value="${color}">${color}</option>`
     }).join("");
+    // Set the selected theme in the selector to app.settings.theme
+    // @ts-ignore
+    app.interface.theme_selector.value = app.settings.theme;
+
+    // @ts-ignore
+    let selected_theme = colors[app.settings.theme as string];
+    let theme_preview = "";
+    for (const [key, _] of Object.entries(selected_theme)) {
+      theme_preview += `<p class="inline text-${key} bg-${key}">█</div>`;
+    }
+    app.interface.theme_previewer.innerHTML = theme_preview;
     // Populate the font family selector
     const doughNudgeRange = app.interface.dough_nudge_range as HTMLInputElement;
     doughNudgeRange.value = app.dough_nudge.toString();

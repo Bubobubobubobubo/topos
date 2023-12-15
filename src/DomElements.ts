@@ -44,6 +44,7 @@ export const singleElements = {
   midi_channels_scripts: "midi-channels-scripts",
   midi_clock_ppqn: "midi-clock-ppqn-input",
   theme_selector: "theme-selector",
+  theme_previewer: "theme-previewer",
   load_demo_songs: "load-demo-songs",
   normal_mode_button: "normal-mode",
   vim_mode_button: "vim-mode",

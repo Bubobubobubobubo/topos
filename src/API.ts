@@ -1,6 +1,7 @@
 import { EditorView } from "@codemirror/view";
 import { sendToServer, type OSCMessage, oscMessages } from "./IO/OSC";
 import { getAllScaleNotes, nearScales, seededRandom } from "zifferjs";
+import colorschemes from "./colors.json";
 import {
   MidiCCEvent,
   MidiConnection,
@@ -2275,5 +2276,10 @@ export class UserAPI {
   public theme = (color_scheme: string): void => {
     this.app.readTheme(color_scheme);
     console.log("Changing color scheme for: ", color_scheme)
+  }
+
+  public randomTheme = (): string => {
+    let theme_names = Object.keys(colorschemes);
+    return theme_names[Math.floor(Math.random() * theme_names.length)];
   }
 }
