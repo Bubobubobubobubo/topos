@@ -8,8 +8,6 @@ import {
   drawSelection,
   highlightActiveLine,
   dropCursor,
-  // rectangularSelection,
-  // crosshairCursor,
   highlightActiveLineGutter,
 } from "@codemirror/view";
 import { Extension, EditorState } from "@codemirror/state";
@@ -32,13 +30,12 @@ import { lintKeymap } from "@codemirror/lint";
 import { Compartment } from "@codemirror/state";
 import { Editor } from "./main";
 import { EditorView } from "codemirror";
-import { toposTheme } from "./themes/toposTheme";
 import { javascript } from "@codemirror/lang-javascript";
 import { inlineHoveringTips } from "./documentation/inlineHelp";
 import { toposCompletions, soundCompletions } from "./documentation/inlineHelp";
 import { javascriptLanguage } from "@codemirror/lang-javascript";
 
-export const updateCodeMirrorTheme = (theme: {[key: string]: string}): Extension => {
+export const getCodeMirrorTheme = (theme: {[key: string]: string}): Extension => {
   const color0 = theme["color0"],
         color1 = theme["color1"],
         color2 = theme["color2"],
@@ -300,7 +297,7 @@ export const installEditor = (app: Editor) => {
       app.settings.completions ? [jsCompletions, toposSoundCompletions] : [],
     ),
     editorSetup,
-    toposTheme,
+    getCodeMirrorTheme(app.getColorScheme("Tomorrow Night Burns")),
     app.chosenLanguage.of(javascript()),
   ];
   app.dynamicPlugins = new Compartment();

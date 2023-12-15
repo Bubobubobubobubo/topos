@@ -2272,4 +2272,8 @@ export class UserAPI {
     this.cueTimes[functionName] = this.app.clock.pulses_since_origin;
   };
 
+  public theme = (color_scheme: string): void => {
+    this.app.readTheme(color_scheme);
+    console.log("Changing color scheme for: ", color_scheme)
+  }
 }

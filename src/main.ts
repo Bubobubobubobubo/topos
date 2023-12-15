@@ -5,6 +5,7 @@ import { javascript } from "@codemirror/lang-javascript";
 import { markdown } from "@codemirror/lang-markdown";
 import { Extension } from "@codemirror/state";
 import { outputSocket } from "./IO/OSC";
+import { getCodeMirrorTheme } from "./EditorSetup";
 import {
   initializeSelectedUniverse,
   AppSettings,
@@ -572,19 +573,24 @@ export class Editor {
   }
 
   private updateInterfaceTheme(selected_theme: {[key: string]: string}): void {
-    // We will update CSS variables to change the theme
     for (const [key, value] of Object.entries(selected_theme)) {
-      document.documentElement.style.setProperty(key, value);
+      document.documentElement.style.setProperty("--" + key, value);
     }
   }
 
-  private readTheme(theme_name: string): void {
+  getColorScheme(theme_name: string): {[key: string]: string} {
+    // Check if the theme exists in colors.json
+    let themes: Record<string, { [key: string]: any }> = colors;
+    return themes[theme_name];
+  }
+
+  readTheme(theme_name: string): void {
     // Check if the theme exists in colors.json
     let themes: Record<string, { [key: string]: any }> = colors;
     let selected_theme = themes[theme_name];
-    if (selected_theme) {
+    if (selected_theme) {
       this.updateInterfaceTheme(selected_theme);
-      updateCodeMirrorTheme(selected_theme);
+      let codeMirrorTheme = getCodeMirrorTheme(selected_theme);
     }
   }
 }
