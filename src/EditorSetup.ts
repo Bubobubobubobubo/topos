@@ -18,6 +18,7 @@ import {
   syntaxHighlighting,
   indentOnInput,
   bracketMatching,
+  HighlightStyle,
 } from "@codemirror/language";
 import { defaultKeymap, historyKeymap, history } from "@codemirror/commands";
 import { searchKeymap, highlightSelectionMatches } from "@codemirror/search";
@@ -35,6 +36,15 @@ import { javascript } from "@codemirror/lang-javascript";
 import { inlineHoveringTips } from "./documentation/inlineHelp";
 import { toposCompletions, soundCompletions } from "./documentation/inlineHelp";
 import { javascriptLanguage } from "@codemirror/lang-javascript";
+
+export const updateCodeMirrorTheme = (theme: {[key: string]: string}): Extension => {
+  let toposTheme = EditorView.theme({
+
+  });
+  let toposHighlightStyle = HighlightStyle.define([]);
+  return [ toposTheme, syntaxHighlighting(toposHighlightStyle),
+]
+}
 
 export const jsCompletions = javascriptLanguage.data.of({
   autocomplete: toposCompletions,

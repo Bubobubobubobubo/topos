@@ -32,6 +32,7 @@ import { installWindowBehaviors } from "./WindowBehavior";
 import { makeNumberExtensions } from "./extensions/NumberExtensions";
 // @ts-ignore
 import { registerSW } from "virtual:pwa-register";
+import colors from "./colors.json";
 
 if ("serviceWorker" in navigator) {
   registerSW();
@@ -567,6 +568,23 @@ export class Editor {
     canvas.height = window.innerHeight * dpr;
     if (ctx) {
       ctx.scale(dpr, dpr);
+    }
+  }
+
+  private updateInterfaceTheme(selected_theme: {[key: string]: string}): void {
+    // We will update CSS variables to change the theme
+    for (const [key, value] of Object.entries(selected_theme)) {
+      document.documentElement.style.setProperty(key, value);
+    }
+  }
+
+  private readTheme(theme_name: string): void {
+    // Check if the theme exists in colors.json
+    let themes: Record<string, { [key: string]: any }> = colors;
+    let selected_theme = themes[theme_name];
+    if (selected_theme) {
+      this.updateInterfaceTheme(selected_theme);
+      updateCodeMirrorTheme(selected_theme);
     }
   }
 }
