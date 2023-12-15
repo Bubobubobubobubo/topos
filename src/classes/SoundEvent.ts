@@ -5,6 +5,7 @@ import {
   filterObject,
   arrayOfObjectsToObjectWithArrays,
   objectWithArraysToArrayOfObjects,
+  maybeAtomic,
 } from "../Utils/Generic";
 import { midiToFreq, resolvePitchClass } from "zifferjs";
 
@@ -414,11 +415,11 @@ export class SoundEvent extends AudibleEvent {
 
     const newArrays = arrayOfObjectsToObjectWithArrays(events) as SoundParams;
 
-    this.values.note = newArrays.note;
-    this.values.freq = newArrays.freq;
-    this.values.pitch = newArrays.pitch;
-    this.values.octave = newArrays.octave;
-    this.values.pitchOctave = newArrays.pitchOctave;
+    this.values.note = maybeAtomic(newArrays.note);
+    this.values.freq = maybeAtomic(newArrays.freq);
+    this.values.pitch = maybeAtomic(newArrays.pitch);
+    this.values.octave = maybeAtomic(newArrays.octave);
+    this.values.pitchOctave = maybeAtomic(newArrays.pitchOctave);
 
   };
 

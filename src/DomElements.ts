@@ -52,6 +52,7 @@ export const singleElements = {
   error_line: "error_line",
   hydra_canvas: "hydra-bg",
   feedback: "feedback",
+  drawings: "drawings",
   scope: "scope",
 };
 

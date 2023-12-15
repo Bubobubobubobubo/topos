@@ -463,6 +463,16 @@ export abstract class AudibleEvent extends AbstractEvent {
     return this;
   }
 
+  public draw = (lambda: Function) => {
+    lambda(this.values);
+    return this;
+  }
+
+  public clear = () => {
+    this.app.api.clear();
+    return this;
+  }
+
   freq = (value: number | number[], ...kwargs: number[]): this => {
     /*
      * This function is used to set the frequency of the Event.

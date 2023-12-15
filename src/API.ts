@@ -2187,6 +2187,122 @@ export class UserAPI {
   };
 
   // =============================================================
+  // Canvas Functions
+  // =============================================================
+
+  public clear = (): void => {
+    /**
+     * Clears the canvas after a given timeout.
+     * @param timeout - The timeout in seconds
+     */
+    const canvas: HTMLCanvasElement = this.app.interface.drawings as HTMLCanvasElement;
+      const ctx = canvas.getContext("2d")!;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+
+  public circle = (
+    x: number,
+    y: number,
+    radius: number,
+    fillStyle: string,
+  ): void => {
+    const canvas: HTMLCanvasElement = this.app.interface.drawings as HTMLCanvasElement;
+    const ctx = canvas.getContext("2d")!;
+    ctx.beginPath();
+    ctx.arc(x, y, radius, 0, 2 * Math.PI);
+    ctx.fillStyle = fillStyle;
+    ctx.fill();
+  };
+
+  public triangular = (
+    x: number,
+    y: number,
+    radius: number,
+    fillStyle: string,
+    rotate: number
+  ): void => {
+    const canvas: HTMLCanvasElement = this.app.interface.drawings as HTMLCanvasElement;
+    const ctx = canvas.getContext("2d")!;
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate((rotate * Math.PI) / 180);
+    ctx.beginPath();
+    ctx.moveTo(0, -radius);
+    ctx.lineTo(radius, radius);
+    ctx.lineTo(-radius, radius);
+    ctx.closePath();
+    ctx.fillStyle = fillStyle;
+    ctx.fill();
+    ctx.restore();
+  }
+
+  public star = (
+    x: number,
+    y: number,
+    radius: number,
+    points: number = 5,
+    fillStyle: string = "white",
+    outerRadius: number = 1.0,
+    rotate: number = 0,
+  ): void => {
+     const canvas: HTMLCanvasElement = this.app.interface.drawings as HTMLCanvasElement;
+     if(points<1) return this.circle(x, y, radius+outerRadius, fillStyle);
+     if(points==1) return this.triangular(x, y, radius, fillStyle, 0);
+     const ctx = canvas.getContext("2d")!;
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate((rotate * Math.PI) / 180);
+      ctx.beginPath();
+      ctx.moveTo(0, -radius);
+      for (let i = 0; i < points; i++) {
+        ctx.rotate(Math.PI / points);
+        ctx.lineTo(0, -(radius * outerRadius));
+        ctx.rotate(Math.PI / points);
+        ctx.lineTo(0, -radius);
+      }
+      ctx.closePath();
+      ctx.fillStyle = fillStyle;
+      ctx.fill();
+      ctx.restore();
+  };
+
+  public stroke = (
+    x1: number,
+    y1: number,
+    x2: number,
+    y2: number,
+    fillStyle: string,
+    width: number = 1,
+  ): void => {
+    const canvas: HTMLCanvasElement = this.app.interface.drawings as HTMLCanvasElement;
+    const ctx = canvas.getContext("2d")!;
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    ctx.lineTo(x2, y2);
+    ctx.strokeStyle = fillStyle;
+    ctx.lineWidth = width;
+    ctx.stroke();
+  };
+
+  public rectangle = (
+    x: number,
+    y: number,
+    width: number,
+    height: number,
+    fillStyle: string,
+    rotate: number = 0,
+  ): void => {
+    const canvas: HTMLCanvasElement = this.app.interface.drawings as HTMLCanvasElement;
+    const ctx = canvas.getContext("2d")!;
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate((rotate * Math.PI) / 180);
+    ctx.fillStyle = fillStyle;
+    ctx.fillRect(0, 0, width, height);
+    ctx.restore();
+  }
+
+  // =============================================================
   // OSC Functions
   // =============================================================
 
