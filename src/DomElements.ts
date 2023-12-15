@@ -43,6 +43,7 @@ export const singleElements = {
   midi_clock_checkbox: "send-midi-clock",
   midi_channels_scripts: "midi-channels-scripts",
   midi_clock_ppqn: "midi-clock-ppqn-input",
+  theme_selector: "theme-selector",
   load_demo_songs: "load-demo-songs",
   normal_mode_button: "normal-mode",
   vim_mode_button: "vim-mode",

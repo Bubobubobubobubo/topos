@@ -1,6 +1,7 @@
 import { EditorView } from "codemirror";
 import { vim } from "@replit/codemirror-vim";
 import { type Editor } from "./main";
+import colors from "./colors.json";
 import {
   documentation_factory,
   hideDocumentation,
@@ -24,6 +25,7 @@ import { lineNumbers } from "@codemirror/view";
 import { jsCompletions } from "./EditorSetup";
 import { createDocumentationStyle } from "./DomElements";
 import { saveState } from "./WindowBehavior";
+import { f } from "zifferjs/src/tonnetz";
 
 export const installInterfaceLogic = (app: Editor) => {
   // Initialize style
@@ -289,6 +291,11 @@ export const installInterfaceLogic = (app: Editor) => {
     });
   });
 
+  app.interface.theme_selector.addEventListener("change", () => {
+    app.settings.theme = (app.interface.theme_selector as HTMLSelectElement).value;
+    app.readTheme(app.settings.theme);
+  });
+
   app.interface.settings_button.addEventListener("click", () => {
     // Populate the font selector
     const fontFamilySelect = document.getElementById(
@@ -298,6 +305,14 @@ export const installInterfaceLogic = (app: Editor) => {
       fontFamilySelect.value = app.settings.font;
     }
 
+    app.interface.theme_selector.innerHTML = "";
+    let all_themes = Object.keys(colors);
+    all_themes.sort((a, b) => {
+      return a.toLowerCase().localeCompare(b.toLowerCase());
+    });
+    app.interface.theme_selector.innerHTML = all_themes.map((color) => {
+      return `<option value="${color}">${color}</option>`
+    }).join("");
     // Populate the font family selector
     const doughNudgeRange = app.interface.dough_nudge_range as HTMLInputElement;
     doughNudgeRange.value = app.dough_nudge.toString();
