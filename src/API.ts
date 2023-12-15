@@ -147,8 +147,8 @@ export class UserAPI {
         ? code
         : (this.app.selectedExample as string);
     }
+    this.clearPatternCache();
     this.stop();
-    this.resetAllFromCache();
     this.play();
   };
 
@@ -159,6 +159,7 @@ export class UserAPI {
       current_universe.example.candidate! = "";
       current_universe.example.committed! = "";
     }
+    this.clearPatternCache();
     this.stop();
   };
 
@@ -168,10 +169,10 @@ export class UserAPI {
       current_universe.example.candidate! = "";
       current_universe.example.committed! = "";
     }
+    this.clearPatternCache();
     this.stop();
     this.play();
     this.app.exampleIsPlaying = true;
-    this.resetAllFromCache();
     evaluateOnce(this.app, code as string);
   };
 
