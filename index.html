@@ -1,4 +1,4 @@
-<!doctype html>
+  <!doctype html>
 <html lang="en">
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -65,17 +65,17 @@
     }
 
   </style>
-  <body id="all" class="z-0 overflow-y-hidden bg-color12">
+  <body id="all" class="z-0 overflow-y-hidden bg-background">
 		<!-- The header is hidden on smaller devices -->
     <header class="py-0 block neutral-900">
       <div id="topbar" class="mx-auto flex flex-wrap pl-2 py-1 flex-row items-center">
-        <a class="flex title-font font-medium items-center text-black mb-0">
-          <img id="topos-logo" src="topos_frog.svg" class="w-12 h-12 text-black p-2 white rounded-full" alt="Topos Frog Logo" />
-         <input id="universe-viewer" class="hidden transparent xl:block ml-4 text-2xl  placeholder-white" id="renamer" type="text" placeholder="Topos">
+        <a class="flex title-font font-medium items-center mb-0">
+          <img id="topos-logo" src="topos_frog.svg" class="w-12 h-12 text-black p-2 rounded-full fill-color2" alt="Topos Frog Logo" />
+         <input id="universe-viewer" class="hidden transparent xl:block ml-4 text-2xl placeholder-color2" id="renamer" type="text" placeholder="Topos">
 
         </a>
         <nav class="py-2 flex flex-wrap items-center text-base absolute right-0">
-         <a title="Play button (Ctrl+P)" id="play-button-1" class="flex flex-row mr-2 hover:gray-800 px-2 py-2 rounded-lg">
+         <a title="Play button (Ctrl+P)" id="play-button-1" class="flex flex-row mr-2 hover:gray-800 px-2 py-2 rounded-lg text-color2">
 							<svg id="play-icon" class="w-7 h-7" fill="currentColor" viewBox="0 0 14 16">
 								<path d="M0 .984v14.032a1 1 0 0 0 1.506.845l12.006-7.016a.974.974 0 0 0 0-1.69L1.506.139A1 1 0 0 0 0 .984Z"/>
 							</svg>
@@ -84,35 +84,35 @@
   </svg>
 							<p id="play-label" class="hidden lg:block text-xl pl-2  inline-block">Play</p>
           </a>
-          <a title="Stop button (Ctrl+R)" id="stop-button-1" class="flex flex-row mr-2 hover:gray-800 px-2 py-2 rounded-lg">
+          <a title="Stop button (Ctrl+R)" id="stop-button-1" class="flex flex-row mr-2 hover:gray-800 px-2 py-2 rounded-lg text-color2">
 						<svg class="w-7 h-7 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
   <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Z"/>
   <rect x="6.5" y="6.5" width="7" height="7" fill="black" rx="1" ry="1"/>
 </svg>
 						<p class="hidden lg:block text-xl pl-2  inline-block">Stop</p>
           </a>
-          <a title="Eval button (Ctrl+Enter)" id="eval-button-1" class="flex flex-row mr-2 hover:text-gray-900 hover:gray-800 px-2 py-2 rounded-lg">
+          <a title="Eval button (Ctrl+Enter)" id="eval-button-1" class="flex flex-row mr-2 px-2 py-2 rounded-lg text-color2">
 						<svg class="w-7 h-7 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 20">
     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 1v5h-5M2 19v-5h5m10-4a8 8 0 0 1-14.947 3.97M1 10a8 8 0 0 1 14.947-3.97"/>
   </svg>
 					<p class="hidden lg:block text-xl pl-2  inline-block">Eval</p>
           </a>
 
-          <a title="Clear button" id="clear-button-1" class="flex flex-row mr-2 hover:text-gray-900 hover:gray-800 px-2 py-2 rounded-lg">
+          <a title="Clear button" id="clear-button-1" class="flex flex-row mr-2 px-2 py-2 rounded-lg text-color2">
 						<svg class="w-7 h-7 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 20">
     <path d="M17 4h-4V2a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v2H1a1 1 0 0 0 0 2h1v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V6h1a1 1 0 1 0 0-2ZM7 2h4v2H7V2Zm1 14a1 1 0 1 1-2 0V8a1 1 0 0 1 2 0v8Zm4 0a1 1 0 0 1-2 0V8a1 1 0 0 1 2 0v8Z"/>
   </svg>
 						<p class="hidden lg:block text-xl pl-2  inline-block">Clear</p>
           </a>
 
-          <a title="Share button" id="share-button" class="flex flex-row mr-2 hover:text-gray-900 hover:gray-800 px-2 py-2 rounded-lg">
+          <a title="Share button" id="share-button" class="flex flex-row mr-2 px-2 py-2 rounded-lg text-color2">
 						<svg class="w-7 h-7 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 19 19">
     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.013 7.962a3.519 3.519 0 0 0-4.975 0l-3.554 3.554a3.518 3.518 0 0 0 4.975 4.975l.461-.46m-.461-4.515a3.518 3.518 0 0 0 4.975 0l3.553-3.554a3.518 3.518 0 0 0-4.974-4.975L10.3 3.7"/>
   </svg>
 						<p class="hidden lg:block text-xl pl-2  inline-block">Share</p>
           </a>
 
-          <a title="Open Documentation (Ctrl+D)" id="doc-button-1" class="flex flex-row hover:text-gray-900 hover:gray-800 px-2 py-2 rounded-lg">
+          <a title="Open Documentation (Ctrl+D)" id="doc-button-1" class="flex flex-row px-2 py-2 rounded-lg text-color2">
 						<svg class="w-7 h-7 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
     <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
   </svg>
@@ -126,8 +126,8 @@
 
     <div id="documentation" class="hidden">
       <div id="documentation-page" class="flex flex-row transparent">
-        <aside class="w-1/8 flex-shrink-0 h-screen overflow-y-auto p-1 lg:p-6 lineHighlight ">
-          <nav class="text-xl sm:text-sm overflow-y-scroll mb-24">
+        <aside class="w-1/8 flex-shrink-0 h-screen overflow-y-auto p-1 lg:p-6 lineHighlight bg-color5">
+          <nav class="text-xl sm:text-sm overflow-y-scroll mb-24 bg-color6">
             <details class="" open>
               <summary class="font-semibold lg:text-xl text-orange-300">Basics</summary>
               <div class="flex flex-col">
@@ -255,7 +255,7 @@
                 <button id="load-universe-button" class="text-black absolute right-2.5 bottom-2.5 white hover:white focus:outline-none font-medium rounded-lg text-sm px-4 py-2">Go</button>
             </div>
           </form>
-              <div class="mt-2 flex space-x-6 border-t border-gray-200 rounded-b dark:border-gray-600 border-spacing-y-4">
+              <div class="mt-2 flex space-x-6 border-t border-gray-200 rounded-b border-gray-600 border-spacing-y-4">
                 <button id="close-universes-button" data-modal-hide="defaultModal" type="button" class="mt-2 hover:neutral-700 neutral-800  focus:ring-4  font-medium rounded-lg text-sm px-5 py-2.5 text-center">Close</button>
               </div>
 
@@ -282,12 +282,12 @@
                 <div class="mb-6 mx-4 font-semibold">
                   <label for="default-input" class="block mb-2 ml-1 font-normal sd:text-sm">Size:</label>
                   <input type="text" id="font-size-input" type="number" class="gray-50 border border-gray-300 text-gray-900 
-                  text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:gray-700 
-                  dark:border-gray-600 dark:placeholder-gray-400 dark: dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                  text-sm rounded-lg  focus:border-blue-500 block w-full p-2.5 gray-700 
+                  border-gray-600 placeholder-gray-400   focus:border-blue-500">
                 </div>
                 <label for="font" class="block ml-5 mb-2 font-medium sd:text-sm">Font:</label>
                   <select id="font-family" class="gray-50 ml-4 border border-gray-300 mb-2
-                  text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block  p-2.5 dark:gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:">
+                  text-gray-900 text-sm rounded-lg  focus:border-blue-500 block  p-2.5 gray-700 border-gray-600 placeholder-gray-400 ">
                     <option value="IBM Plex Mono">IBM Plex Mono</option>
                     <option value="Jet Brains">Jet Brains</option>
                     <option value="Courier">Courier</option>
@@ -306,28 +306,28 @@
               <!-- Checkboxes  -->
   					  <div class="pr-4">
 							  <div  class="flex items-center mb-4 ml-5">
-            	    <input id="vim-mode" type="checkbox" value="" class="w-4 h-4 text-blue-600 gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:gray-700 dark:border-gray-600">
-             	    <label for="default-checkbox" class="ml-2 text-sm font-medium text-dark">Vim Mode</label>
+            	    <input id="vim-mode" type="checkbox" value="" class="w-4 h-4 text-blue-600 gray-100 border-gray-300 rounded  focus:ring-blue-600 ring-offset-gray-800 focus:ring-2 gray-700 border-gray-600">
+             	    <label for="default-checkbox" class="ml-2 text-sm font-medium text-">Vim Mode</label>
              	  </div>
 							  <div class="flex items-center mb-4 ml-5">
-             	    <input id="show-line-numbers" type="checkbox" value="" class="w-4 h-4 text-blue-600 gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:gray-700 dark:border-gray-600">
-             	    <label for="default-checkbox" class="ml-2 text-sm font-medium text-dark">Show Line Numbers</label>
+             	    <input id="show-line-numbers" type="checkbox" value="" class="w-4 h-4 text-blue-600 gray-100 border-gray-300 rounded  focus:ring-blue-600 ring-offset-gray-800 focus:ring-2 gray-700 border-gray-600">
+             	    <label for="default-checkbox" class="ml-2 text-sm font-medium text-">Show Line Numbers</label>
              	  </div>
              	  <div class="flex items-center mb-4 ml-5">
-             	    <input id="show-time-position" type="checkbox" value="" class="w-4 h-4 text-blue-600 gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:gray-700 dark:border-gray-600">
-             	    <label for="default-checkbox" class="ml-2 text-sm font-medium text-dark">Show Time Position</label>
+             	    <input id="show-time-position" type="checkbox" value="" class="w-4 h-4 text-blue-600 gray-100 border-gray-300 rounded  focus:ring-blue-600 ring-offset-gray-800 focus:ring-2 gray-700 border-gray-600">
+             	    <label for="default-checkbox" class="ml-2 text-sm font-medium text-">Show Time Position</label>
              	  </div>
              	  <div class="flex items-center mb-4 ml-5">
-             	    <input id="show-tips" type="checkbox" value="" class="w-4 h-4 text-blue-600 gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:gray-700 dark:border-gray-600">
-             	    <label for="default-checkbox" class="ml-2 text-sm font-medium text-dark">Show Hovering Tips</label>
+             	    <input id="show-tips" type="checkbox" value="" class="w-4 h-4 text-blue-600 gray-100 border-gray-300 rounded  focus:ring-blue-600 ring-offset-gray-800 focus:ring-2 gray-700 border-gray-600">
+             	    <label for="default-checkbox" class="ml-2 text-sm font-medium text-">Show Hovering Tips</label>
              	  </div>
              	  <div class="flex items-center mb-4 ml-5">
-             	    <input id="show-completions" type="checkbox" value="" class="w-4 h-4 text-blue-600 gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:gray-700 dark:border-gray-600">
-             	    <label for="default-checkbox" class="ml-2 text-sm font-medium text-dark">Show Completions</label>
+             	    <input id="show-completions" type="checkbox" value="" class="w-4 h-4 text-blue-600 gray-100 border-gray-300 rounded  focus:ring-blue-600 ring-offset-gray-800 focus:ring-2 gray-700 border-gray-600">
+             	    <label for="default-checkbox" class="ml-2 text-sm font-medium text-">Show Completions</label>
              	  </div>
              	  <div class="flex items-center mb-4 ml-5">
-             	    <input id="load-demo-songs" type="checkbox" value="" class="w-4 h-4 text-blue-600 gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:gray-700 dark:border-gray-600">
-             	    <label for="default-checkbox" class="ml-2 text-sm font-medium text-dark">Load Demo Song</label>
+             	    <input id="load-demo-songs" type="checkbox" value="" class="w-4 h-4 text-blue-600 gray-100 border-gray-300 rounded  focus:ring-blue-600 ring-offset-gray-800 focus:ring-2 gray-700 border-gray-600">
+             	    <label for="default-checkbox" class="ml-2 text-sm font-medium text-">Load Demo Song</label>
              	  </div>
 						  </div>
             </div>
@@ -358,33 +358,33 @@
             <div class="lg:flex lg:flex-row w-fit">
             <p class="font-bold lg:text-xl text-sm ml-4 pb-4 underline underline-offset-4">MIDI I/O Settings</p>
               <div class="flex items-center mb-4 ml-6">
-                <label for="default-checkbox" class="ml-2 text-sm font-medium text-dark">MIDI Clock:&nbsp;</label>
-                <select id="midi-clock-input" class="w-32 h-8 text-sm font-medium text-black gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2">
+                <label for="default-checkbox" class="ml-2 text-sm font-medium text-">MIDI Clock:&nbsp;</label>
+                <select id="midi-clock-input" class="w-32 h-8 text-sm font-medium text-black gray-100 border-gray-300 rounded  focus:ring-blue-600 ring-offset-gray-800 focus:ring-2">
                   <option value="-1">Internal</option>
                 </select>
               </div>
               <div class="lg:flex block items-center mb-4 ml-6">
-                <label for="default-checkbox" class="ml-2 text-sm font-medium text-dark">Clock PPQN:&nbsp;</label>
-                <select id="midi-clock-ppqn-input" class="w-32 h-8 text-sm font-medium text-black gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2">
+                <label for="default-checkbox" class="ml-2 text-sm font-medium text-">Clock PPQN:&nbsp;</label>
+                <select id="midi-clock-ppqn-input" class="w-32 h-8 text-sm font-medium text-black gray-100 border-gray-300 rounded  focus:ring-blue-600 ring-offset-gray-800 focus:ring-2">
                   <option value="24">24</option>
                   <option value="48">48</option>
                 </select>
               </div>
               <div class="lg:flex block items-center mb-4 ml-6">
-                  <input id="send-midi-clock" type="checkbox" value="" class="lg:w-8 lg:h-8 h-4 w-4 text-blue-600 gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:gray-700 dark:border-gray-600">
-                  <label for="default-checkbox" class="ml-2 text-sm font-medium text-dark">Send MIDI Clock</label>
+                  <input id="send-midi-clock" type="checkbox" value="" class="lg:w-8 lg:h-8 h-4 w-4 text-blue-600 gray-100 border-gray-300 rounded  focus:ring-blue-600 ring-offset-gray-800 focus:ring-2 gray-700 border-gray-600">
+                  <label for="default-checkbox" class="ml-2 text-sm font-medium text-">Send MIDI Clock</label>
               </div>
             </div>
             <div class="lg:flex block flex-row">
               <div class="flex items-center mb-4 ml-6">
-                <label for="default-checkbox" class="ml-2 text-sm font-medium text-dark">MIDI input:&nbsp;</label>
-                <select id="default-midi-input" class="w-32 h-8 text-sm font-medium text-black gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2">
+                <label for="default-checkbox" class="ml-2 text-sm font-medium text-">MIDI input:&nbsp;</label>
+                <select id="default-midi-input" class="w-32 h-8 text-sm font-medium text-black gray-100 border-gray-300 rounded  focus:ring-blue-600 ring-offset-gray-800 focus:ring-2">
                   <option value="-1">None</option>
                 </select>
               </div>
               <div class="lg:flex block items-center mb-4 ml-6">
-                <input id="midi-channels-scripts" type="checkbox" value="" class="lg:w-8 lg:h-8 h-4 w-4 text-blue-600 gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:gray-700 dark:border-gray-600">
-                <label for="default-checkbox" class="ml-2 text-sm font-medium text-dark">Route channels to scripts</label>
+                <input id="midi-channels-scripts" type="checkbox" value="" class="lg:w-8 lg:h-8 h-4 w-4 text-blue-600 gray-100 border-gray-300 rounded  focus:ring-blue-600 ring-offset-gray-800 focus:ring-2 gray-700 border-gray-600">
+                <label for="default-checkbox" class="ml-2 text-sm font-medium text-">Route channels to scripts</label>
               </div>
             </div>
           </div>
@@ -431,7 +431,7 @@
 
           </div>
 
-          <div class="flex space-x-6 border-t border-gray-200 rounded-b dark:border-gray-600 mx-4 border-spacing-y-4 pb-36 lg:pb-0">
+          <div class="flex space-x-6 border-t border-gray-200 rounded-b border-gray-600 mx-4 border-spacing-y-4 pb-36 lg:pb-0">
             <button id="close-settings-button" data-modal-hide="defaultModal" type="button" class="
             hover:gray-700 gray-800 mt-4 mb-4  focus:ring-4
             font-medium rounded-lg text-sm px-5 py-2.5 text-center">OK</button>
@@ -448,36 +448,36 @@
 					h-screen py-2 border-r 
 					rtl:border-l max-h-fit
 					rtl:border-r-0 neutral-900
-					dark:border-neutral-700 border-none"
+					border-neutral-700 border-none"
 				>
         <nav class="flex flex-col space-y-6">
-            <a title="Local Scripts (Ctrl + L)" id="local-button" class="pl-2 p-1.5 focus:outline-nones transition-colors duration-200 rounded-lg  hover:gray-800">
+            <a title="Local Scripts (Ctrl + L)" id="local-button" class="pl-2 p-1.5 focus:outline-nones transition-colors duration-200 rounded-lg text-color2">
 							<svg class="w-8 h-8 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 18">
     <path d="M18 5H0v11a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5Zm-7.258-2L9.092.8a2.009 2.009 0 0 0-1.6-.8H2.049a2 2 0 0 0-2 2v1h10.693Z"/>
   </svg>
                      </svg>
             </a>
           
-            <a title="Global Script (Ctrl + G)" id="global-button" class="pl-2 p-1.5  focus:outline-nones transition-colors duration-200 rounded-lg hover:gray-800">
+            <a title="Global Script (Ctrl + G)" id="global-button" class="pl-2 p-1.5  focus:outline-nones transition-colors duration-200 rounded-lg text-color2">
 							<svg class="w-8 h-8 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 16">
     <path d="M14.316.051A1 1 0 0 0 13 1v8.473A4.49 4.49 0 0 0 11 9c-2.206 0-4 1.525-4 3.4s1.794 3.4 4 3.4 4-1.526 4-3.4a2.945 2.945 0 0 0-.067-.566c.041-.107.064-.22.067-.334V2.763A2.974 2.974 0 0 1 16 5a1 1 0 0 0 2 0C18 1.322 14.467.1 14.316.051ZM10 3H1a1 1 0 0 1 0-2h9a1 1 0 1 1 0 2Z"/>
     <path d="M10 7H1a1 1 0 0 1 0-2h9a1 1 0 1 1 0 2Zm-5 4H1a1 1 0 0 1 0-2h4a1 1 0 1 1 0 2Z"/>
   </svg>
                    </a>
           
-            <a title="Initialisation Script (Ctrl + I)" id="init-button" class="pl-2 p-1.5 focus:outline-nones transition-colors duration-200 rounded-lg  hover:gray-800">
+            <a title="Initialisation Script (Ctrl + I)" id="init-button" class="pl-2 p-1.5 focus:outline-nones transition-colors duration-200 rounded-lg  text-color2">
 							<svg class="w-8 h-8 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 14">
     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 1v12m0 0 4-4m-4 4L1 9"/>
   </svg>
                    </a>
 
-            <a title="Project notes (Ctrl + N)" id="note-button" class="pl-2 p-1.5  focus:outline-nones transition-colors duration-200 rounded-lg  hover:gray-800">
+            <a title="Project notes (Ctrl + N)" id="note-button" class="pl-2 p-1.5  focus:outline-nones transition-colors duration-200 rounded-lg  text-color2">
 							<svg class="w-8 h-8 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
     <path d="m13.835 7.578-.005.007-7.137 7.137 2.139 2.138 7.143-7.142-2.14-2.14Zm-10.696 3.59 2.139 2.14 7.138-7.137.007-.005-2.141-2.141-7.143 7.143Zm1.433 4.261L2 12.852.051 18.684a1 1 0 0 0 1.265 1.264L7.147 18l-2.575-2.571Zm14.249-14.25a4.03 4.03 0 0 0-5.693 0L11.7 2.611 17.389 8.3l1.432-1.432a4.029 4.029 0 0 0 0-5.689Z"/>
   </svg>
 			      </a>
 
-            <a title="Application Settings" id="settings-button" class="pl-2 p-1.5  focus:outline-nones transition-colors duration-200 rounded-lg  hover:gray-800">
+            <a title="Application Settings" id="settings-button" class="pl-2 p-1.5  focus:outline-nones transition-colors duration-200 rounded-lg  text-color2">
 							<svg class="w-8 h-8 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M10.343 3.94c.09-.542.56-.94 1.11-.94h1.093c.55 0 1.02.398 1.11.94l.149.894c.07.424.384.764.78.93.398.164.855.142 1.205-.108l.737-.527a1.125 1.125 0 011.45.12l.773.774c.39.389.44 1.002.12 1.45l-.527.737c-.25.35-.272.806-.107 1.204.165.397.505.71.93.78l.893.15c.543.09.94.56.94 1.109v1.094c0 .55-.397 1.02-.94 1.11l-.893.149c-.425.07-.765.383-.93.78-.165.398-.143.854.107 1.204l.527.738c.32.447.269 1.06-.12 1.45l-.774.773a1.125 1.125 0 01-1.449.12l-.738-.527c-.35-.25-.806-.272-1.203-.107-.397.165-.71.505-.781.929l-.149.894c-.09.542-.56.94-1.11.94h-1.094c-.55 0-1.019-.398-1.11-.94l-.148-.894c-.071-.424-.384-.764-.781-.93-.398-.164-.854-.142-1.204.108l-.738.527c-.447.32-1.06.269-1.45-.12l-.773-.774a1.125 1.125 0 01-.12-1.45l.527-.737c.25-.35.273-.806.108-1.204-.165-.397-.505-.71-.93-.78l-.894-.15c-.542-.09-.94-.56-.94-1.109v-1.094c0-.55.398-1.02.94-1.11l.894-.149c.424-.07.765-.383.93-.78.165-.398.143-.854-.107-1.204l-.527-.738a1.125 1.125 0 01.12-1.45l.773-.773a1.125 1.125 0 011.45-.12l.737.527c.35.25.807.272 1.204.107.397-.165.71-.505.78-.929l.15-.894z" />
