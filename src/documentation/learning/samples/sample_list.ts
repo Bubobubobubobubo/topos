@@ -148,5 +148,13 @@ This sample pack is only one folder full of french phonems! It sounds super nice
 <div class="lg:pl-6 lg:pr-6 w-fit rounded-lg bg-background mx-6 mt-2 my-6 px-2 py-2 max-h-96 flex flex-row flex-wrap gap-x-2 gap-y-2 overflow-y-scroll">
 ${samples_to_markdown(application, "Juliette")}
 </div>
+
+## Your samples
+
+These samples are the one you have loaded for the duration of the session using the <ic>Import Samples</ic> button in the configuration menu.
+
+<div class="lg:pl-6 lg:pr-6 w-fit rounded-lg bg-background mx-6 mt-2 my-6 px-2 py-2 max-h-96 flex flex-row flex-wrap gap-x-2 gap-y-2 overflow-y-scroll">
+${samples_to_markdown(application, "user")}
+</div>
 `;
 };

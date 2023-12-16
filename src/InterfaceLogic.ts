@@ -25,6 +25,7 @@ import { lineNumbers } from "@codemirror/view";
 import { jsCompletions } from "./EditorSetup";
 import { createDocumentationStyle } from "./DomElements";
 import { saveState } from "./WindowBehavior";
+import { registerSamplesFromDB, samplesDBConfig, uploadSamplesToDB } from "./IO/SampleLoading";
 
 export const installInterfaceLogic = (app: Editor) => {
   // Initialize style
@@ -159,8 +160,16 @@ export const installInterfaceLogic = (app: Editor) => {
     );
   });
 
-  app.interface.upload_samples_button.addEventListener("click", () => {
-    console.log("Uploading audio samples!")
+  app.interface.upload_samples_button.addEventListener("input", async (event) => {
+    console.log("Il se passe quelque chose")
+    let fileInput = event.target as HTMLInputElement;
+    if (!fileInput.files?.length) {
+      return;
+    }
+    console.log(fileInput.files)
+    await uploadSamplesToDB(samplesDBConfig, fileInput.files).then(() => {
+        registerSamplesFromDB(samplesDBConfig, () => {});
+    });
   });
 
   app.interface.upload_universe_button.addEventListener("click", () => {
