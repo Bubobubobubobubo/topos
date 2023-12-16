@@ -261,7 +261,7 @@
 
     <div id="app">
       <!-- This modal is used for switching between buffers -->
-      <div id="modal-buffers" class="invisible opacity-50 flex justify-center items-center absolute top-0 right-0 bottom-0 left-0">
+      <div id="modal-buffers" class="invisible flex justify-center items-center absolute top-0 right-0 bottom-0 left-0">
         <div id="start-button" class="lg:px-16 px-4 lg:pt-4 lg:pb-4 pt-2 pb-2 rounded-md text-center bg-foreground">
 					<p class="text-semibold lg:text-2xl text-sm pb-4 text-selection_foreground">Known universes</p>
 					<p id="existing-universes" class="text-normal lg:h-auto h-48 overflow-y-auto mb-2"></p>
@@ -288,7 +288,7 @@
 
       <!-- This modal is used for settings -->
       <div id="modal-settings" class="invisible flex
-              absolute lg:justify-center lg:items-center 
+              absolute lg:justify-center lg:items-center
               lg:overflow-y-auto lg:overflow-x-auto
               overflow-y-scroll owerflow-x-scroll
               md:top-0 md:bottom-0 h-screen w-full"
@@ -559,7 +559,7 @@
 
       <template id="ui-known-universe-item-template">
         <!-- A known universe button in "opening" interface -->
-        <li class="py-2 px-4 flex justify-between text-cyan">
+        <li class="py-2 px-4 flex justify-between text-brightwhite hover:bg-selection_background hover:text-selection_foreground">
           <button class="universe-name load-universe" title="Load this universe">Universe Name</button>
           <button class="delete-universe" title="Delete this universe">🗑</button>
         </li>
