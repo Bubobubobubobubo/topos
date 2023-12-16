@@ -2188,6 +2188,291 @@ export class UserAPI {
   };
 
   // =============================================================
+  // Canvas Functions
+  // =============================================================
+
+  public clear = (): void => {
+    /**
+     * Clears the canvas after a given timeout.
+     * @param timeout - The timeout in seconds
+     */
+    const canvas: HTMLCanvasElement = this.app.interface.drawings as HTMLCanvasElement;
+      const ctx = canvas.getContext("2d")!;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+
+  public width = (): number => {
+    /**
+     * Returns the width of the canvas.
+     * @returns The width of the canvas
+     */
+    const canvas: HTMLCanvasElement = this.app.interface.drawings as HTMLCanvasElement;
+    return canvas.width;
+  }
+
+  public height = (): number => {
+    /**
+     * Returns the height of the canvas.
+     * @returns The height of the canvas
+     */
+    const canvas: HTMLCanvasElement = this.app.interface.drawings as HTMLCanvasElement;
+    return canvas.height;
+  }
+
+  public background = (color: string|number, ...gb:number[]): void => {
+    /**
+     * Set background color of the canvas.
+     * @param color - The color to set. String or 3 numbers representing RGB values.
+     */
+    const canvas: HTMLCanvasElement = this.app.interface.drawings as HTMLCanvasElement;
+    const ctx = canvas.getContext("2d")!;
+    if(typeof color === "number") color = `rgb(${color},${gb[0]},${gb[1]})`;
+    ctx.fillStyle = color;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+  }
+
+  public linearGradient = (x1: number, y1: number, x2: number, y2: number, ...stops: (number|string)[]) => {
+    /**
+     * Set linear gradient on the canvas.
+     * @param x1 - The x-coordinate of the start point
+     * @param y1 - The y-coordinate of the start point
+     * @param x2 - The x-coordinate of the end point
+     * @param y2 - The y-coordinate of the end point
+     * @param stops - The stops to set. Pairs of numbers representing the position and color of the stop.
+     */
+    const canvas: HTMLCanvasElement = this.app.interface.drawings as HTMLCanvasElement;
+    const ctx = canvas.getContext("2d")!;
+    const gradient = ctx.createLinearGradient(x1, y1, x2, y2);
+    // Parse pairs of values from stops
+    for(let i=0; i<stops.length; i+=2) {
+      let color = stops[i+1];
+      if(typeof color === "number") color = `rgb(${color},${stops[i+2]},${stops[i+3]})`;
+      gradient.addColorStop((stops[i] as number), color);
+    }
+    return gradient;
+  }
+
+  public radialGradient = (x1: number, y1: number, r1: number, x2: number, y2: number, r2: number, ...stops: (number|string)[]) => {
+    /**
+     * Set radial gradient on the canvas.
+     * @param x1 - The x-coordinate of the start circle
+     * @param y1 - The y-coordinate of the start circle
+     * @param r1 - The radius of the start circle
+     * @param x2 - The x-coordinate of the end circle
+     * @param y2 - The y-coordinate of the end circle
+     * @param r2 - The radius of the end circle
+     * @param stops - The stops to set. Pairs of numbers representing the position and color of the stop.
+     */
+    const canvas: HTMLCanvasElement = this.app.interface.drawings as HTMLCanvasElement;
+    const ctx = canvas.getContext("2d")!;
+    const gradient = ctx.createRadialGradient(x1, y1, r1, x2, y2, r2);
+    for(let i=0; i<stops.length; i+=2) {
+      let color = stops[i+1];
+      if(typeof color === "number") color = `rgb(${color},${stops[i+2]},${stops[i+3]})`;
+      gradient.addColorStop((stops[i] as number), color);
+    }
+    return gradient;
+  }
+
+  public conicGradient = (x: number, y: number, angle: number, ...stops: (number|string)[]) => {
+    /**
+     * Set conic gradient on the canvas.
+     * @param x - The x-coordinate of the center of the gradient
+     * @param y - The y-coordinate of the center of the gradient
+     * @param angle - The angle of the gradient, in radians
+     * @param stops - The stops to set. Pairs of numbers representing the position and color of the stop.
+     */
+    const canvas: HTMLCanvasElement = this.app.interface.drawings as HTMLCanvasElement;
+    const ctx = canvas.getContext("2d")!;
+    const gradient = ctx.createConicGradient(x, y, angle);
+    for(let i=0; i<stops.length; i+=2) {
+      let color = stops[i+1];
+      if(typeof color === "number") color = `rgb(${color},${stops[i+2]},${stops[i+3]})`;
+      gradient.addColorStop((stops[i] as number), color);
+    }
+    return gradient;
+  }
+
+  public draw = (func: Function): void => {
+    /**
+     * Draws on the canvas.
+     * @param func - The function to execute
+     */
+    const canvas: HTMLCanvasElement = this.app.interface.drawings as HTMLCanvasElement;
+    const ctx = canvas.getContext("2d")!;
+    func(ctx);
+  }
+
+  public circle = (
+    x: number,
+    y: number,
+    radius: number,
+    fillStyle: string,
+  ): void => {
+    const canvas: HTMLCanvasElement = this.app.interface.drawings as HTMLCanvasElement;
+    const ctx = canvas.getContext("2d")!;
+    ctx.beginPath();
+    ctx.arc(x, y, radius, 0, 2 * Math.PI);
+    ctx.fillStyle = fillStyle;
+    ctx.fill();
+  };
+
+  public triangular = (
+    x: number,
+    y: number,
+    radius: number,
+    fillStyle: string,
+    rotate: number
+  ): void => {
+    const canvas: HTMLCanvasElement = this.app.interface.drawings as HTMLCanvasElement;
+    const ctx = canvas.getContext("2d")!;
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate((rotate * Math.PI) / 180);
+    ctx.beginPath();
+    ctx.moveTo(0, -radius);
+    ctx.lineTo(radius, radius);
+    ctx.lineTo(-radius, radius);
+    ctx.closePath();
+    ctx.fillStyle = fillStyle;
+    ctx.fill();
+    ctx.restore();
+  }
+
+  public star = (
+    x: number,
+    y: number,
+    radius: number,
+    points: number = 5,
+    fillStyle: string = "white",
+    outerRadius: number = 1.0,
+    rotate: number = 0,
+  ): void => {
+     const canvas: HTMLCanvasElement = this.app.interface.drawings as HTMLCanvasElement;
+     if(points<1) return this.circle(x, y, radius+outerRadius, fillStyle);
+     if(points==1) return this.triangular(x, y, radius, fillStyle, 0);
+     const ctx = canvas.getContext("2d")!;
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate((rotate * Math.PI) / 180);
+      ctx.beginPath();
+      ctx.moveTo(0, -radius);
+      for (let i = 0; i < points; i++) {
+        ctx.rotate(Math.PI / points);
+        ctx.lineTo(0, -(radius * outerRadius));
+        ctx.rotate(Math.PI / points);
+        ctx.lineTo(0, -radius);
+      }
+      ctx.closePath();
+      ctx.fillStyle = fillStyle;
+      ctx.fill();
+      ctx.restore();
+  };
+
+  public stroke = (
+    x1: number,
+    y1: number,
+    x2: number,
+    y2: number,
+    fillStyle: string,
+    width: number = 1,
+  ): void => {
+    const canvas: HTMLCanvasElement = this.app.interface.drawings as HTMLCanvasElement;
+    const ctx = canvas.getContext("2d")!;
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    ctx.lineTo(x2, y2);
+    ctx.strokeStyle = fillStyle;
+    ctx.lineWidth = width;
+    ctx.stroke();
+  };
+
+  public rectangle = (
+    x: number,
+    y: number,
+    width: number,
+    height: number,
+    fillStyle: string,
+    rotate: number = 0,
+  ): void => {
+    const canvas: HTMLCanvasElement = this.app.interface.drawings as HTMLCanvasElement;
+    const ctx = canvas.getContext("2d")!;
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate((rotate * Math.PI) / 180);
+    ctx.fillStyle = fillStyle;
+    ctx.fillRect(0, 0, width, height);
+    ctx.restore();
+  }
+
+  public smiley = (
+    x: number,
+    y: number,
+    radius: number,
+    fillStyle: string,
+    eyeSize: number = 1.0,
+    happiness: number = 0.0,
+    rotation: number = 0
+  ): void => {
+    const canvas: HTMLCanvasElement = this.app.interface.drawings as HTMLCanvasElement;
+    const ctx = canvas.getContext("2d")!;
+    // Map the rotation value to an angle within the range of -PI to PI
+    const rotationAngle = rotation/100 * Math.PI;
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate(rotationAngle);
+
+    // Draw face
+    ctx.beginPath();
+    ctx.arc(0, 0, radius, 0, 2 * Math.PI);
+    ctx.fillStyle = fillStyle;
+    ctx.fill();
+    ctx.lineWidth = radius / 20;
+    ctx.strokeStyle = "black";
+    ctx.stroke();
+
+    // Draw eyes
+    const eyeY = -radius / 5;
+    const eyeXOffset = radius / 2.5;
+    const eyeRadiusX = radius / 8;
+    const eyeRadiusY = eyeSize * radius / 10;
+
+    ctx.beginPath();
+    ctx.ellipse(-eyeXOffset, eyeY, eyeRadiusX, eyeRadiusY, 0, 0, 2 * Math.PI);
+    ctx.fillStyle = "black";
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.ellipse(eyeXOffset, eyeY, eyeRadiusX, eyeRadiusY, 0, 0, 2 * Math.PI);
+    ctx.fillStyle = "black";
+    ctx.fill();
+
+    // Draw mouth with happiness number -1.0 to 1.0. 0.0 Should be a straight line.
+    const mouthY = radius / 2;
+    const mouthLength = radius * 0.9;
+    const smileFactor = 0.25; // Adjust for the smile curvature
+  
+    let controlPointX = 0;
+    let controlPointY = 0;
+  
+    if (happiness >= 0) {
+      controlPointY = mouthY + happiness * smileFactor * radius / 2;
+    } else {
+      controlPointY = mouthY + happiness * smileFactor * radius / 2;
+    }
+  
+    ctx.beginPath();
+    ctx.moveTo(-mouthLength / 2, mouthY);
+    ctx.quadraticCurveTo(controlPointX, controlPointY, mouthLength / 2, mouthY);
+    ctx.lineWidth = 10;
+    ctx.strokeStyle = "black";
+    ctx.stroke();
+    ctx.restore();
+
+  }
+
+
+  // =============================================================
   // OSC Functions
   // =============================================================
 

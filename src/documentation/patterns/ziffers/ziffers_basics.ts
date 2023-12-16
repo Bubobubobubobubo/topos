@@ -190,7 +190,7 @@ ${makeExample(
   )}
   
   ${makeExample(
-    "Chord transposition with roman numerals",
+    "Chord inversions with roman numerals",
     `
   z1('i i v%-4 v%-2 vi%-5 vi%-3 iv%-2 iv%-1')
     .sound('triangle').adsr(1/16, 1/5, 0.1, 0)
@@ -201,7 +201,7 @@ ${makeExample(
   )}
   
   ${makeExample(
-    "Chord transposition with named chords",
+    "Chord inversion with named chords",
     `
   z1('1/4 Cmin!3 Fmin!3 Fmin%-1 Fmin%-2 Fmin%-1')
     .sound("sine").bpf(500 + usine(1/4) * 2000)

@@ -69,6 +69,15 @@ export function arrayOfObjectsToObjectWithArrays<T extends Record<string, any>>(
   );
 }
 
+export function maybeAtomic<T>(value: T): T | T[] {
+  /*
+    * Returns first value of array if array of length 1, otherwise returns value
+    * @param {any} value - Value to check
+    * @returns {any} Value or array
+    */
+  return Array.isArray(value) && value.length === 1 ? value[0] : value;
+}
+
 export function filterObject(
   obj: Record<string, any>,
   filter: string[],

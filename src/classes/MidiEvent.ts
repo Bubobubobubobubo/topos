@@ -6,6 +6,7 @@ import {
   filterObject,
   arrayOfObjectsToObjectWithArrays,
   objectWithArraysToArrayOfObjects,
+  maybeAtomic,
 } from "../Utils/Generic";
 
 export type MidiParams = {
@@ -109,8 +110,8 @@ export class MidiEvent extends AudibleEvent {
 
     const newArrays = arrayOfObjectsToObjectWithArrays(events) as MidiParams;
     
-    this.values.note = newArrays.note;
-    if (newArrays.bend) this.values.bend = newArrays.bend;
+    this.values.note = maybeAtomic(newArrays.note);
+    if (newArrays.bend) this.values.bend = maybeAtomic(newArrays.bend);
     return this;
   };
 

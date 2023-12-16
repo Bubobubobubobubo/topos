@@ -127,6 +127,7 @@ export class Editor {
     this.initializeButtonGroups();
     this.setCanvas(this.interface.feedback as HTMLCanvasElement);
     this.setCanvas(this.interface.scope as HTMLCanvasElement);
+    this.setCanvas(this.interface.drawings as HTMLCanvasElement);
     try {
       this.loadHydraSynthAsync();
     } catch (error) {
