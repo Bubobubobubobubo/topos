@@ -2398,7 +2398,7 @@ flip(2) :: beat(2) :: delayr(150, 4, () => sound('east').speed([0.5,.25].beat() 
 `},DY=r=>{const e=Ot(r);return`
 # Generator functions
 
-JavaScript [generators](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Generator) are powerful functions for generating value sequences. They can be used to generate melodies, rhythms or control parameters.
+JavaScript <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Generator" target="_blank">generators</a> are powerful functions for generating value sequences. They can be used to generate melodies, rhythms or control parameters.
 
 In Topos generator functions should be called using the <ic>cache(key, function)</ic> function to store the current state of the generator. This function takes two arguments: the name for the cache and the generator instance. 
 
@@ -2454,11 +2454,11 @@ ${e("Truly scale free chaos inspired by Lorentz attractor",`
 
 ## OEIS integer sequences
 
-To find some inspiration or to enter into a void one can visit [OEIS](https://oeis.org/) to find some interesting integer sequences. Many of the sequences are also included in Topos from [JISG](https://github.com/acerix/jisg/tree/main/src/oeis) (Javascript Integer Sequence Generators) project.
+To find some inspiration - or to enter into the void - one can visit <a href="https://oeis.org/" target="_blank">The On-Line Encyclopedia of Integer Sequences (OEIS)</a> to find some interesting integer sequences. 
 
-One of these implemented generators is the Inventory sequence [A342585](https://github.com/acerix/jisg/blob/main/src/oeis/A342585.ts) made famous by [Neil Sloane](https://www.youtube.com/watch?v=rBU9E-ZOZAI).
+Many of the sequences are implemented by <a href="https://github.com/acerix/jisg/tree/main/src/oeis" target="_blank">JISG</a> (Javascript Integer Sequence Generators) project. Those sequences can be referenced directly with the identifiers using the cache function.
 
-Those OEIS sequences implemented by the **JISG** can be referenced directly with the identifiers in the cache function. For example:
+One of these implemented generators is the Inventory sequence <a href="https://github.com/acerix/jisg/blob/main/src/oeis/A342585.ts" target="_blank">A342585</a> made famous by <a href="https://www.youtube.com/watch?v=rBU9E-ZOZAI" target="_blank">Neil Sloane</a>.
 
 ${e("Inventory sequence",`
     rhythm(0.5,[8,7,5,6].bar(4),9) :: sound("triangle")
