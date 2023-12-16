@@ -307,7 +307,7 @@ export class Editor {
     const tab = tabs[i] as HTMLElement;
     tab.classList.add("bg-foreground");
     for (let j = 0; j < tabs.length; j++) {
-      if (j != i) tabs[j].classList.remove("bg-foreground_selection");
+      if (j != i) tabs[j].classList.remove("bg-foreground");
     }
     let tab_id = tab.id.split("-")[1];
     this.local_index = parseInt(tab_id);
