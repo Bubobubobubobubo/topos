@@ -32,7 +32,7 @@ export const samples_to_markdown = (
 
     markdownList += `
 <button 
-	class="hover:bg-neutral-500 inline px-4 py-2 bg-neutral-700 text-orange-300 text-xl"
+	class="hover:bg-foreground inline px-4 py-2 bg-black text-brightwhite hover:text-background text-xl"
 	onclick="app.api._playDocExampleOnce(app.api.codeExamples['${codeId}'])"
 >
 ${keys[i]}
@@ -75,7 +75,7 @@ beat(0.5)::sound('wt_stereo').n([0, 1].pick()).ad(0, .25).out()
 
 Pick one folder and spend some time exploring it. There is a lot of different waveforms.
 
-<div class="lg:pl-6 lg:pr-6 w-fit rounded-lg bg-neutral-600 mx-6 mt-2 my-6 px-2 py-2 max-h-96 flex flex-row flex-wrap gap-x-2 gap-y-2 overflow-y-scroll">
+<div class="lg:pl-6 lg:pr-6 w-fit rounded-lg bg-background mx-6 mt-2 my-6 px-2 py-2 max-h-96 flex flex-row flex-wrap gap-x-2 gap-y-2 overflow-y-scroll">
 ${samples_to_markdown(application, "Waveforms")}
 </div>
 
@@ -94,7 +94,7 @@ beat(0.5)::sound(['bd', 'cp'].pick()).bank("AkaiLinn").out()
 Here is the complete list of available machines:
 
 
-<div class="lg:pl-6 lg:pr-6 w-fit rounded-lg bg-neutral-600 mx-6 mt-2 my-6 px-2 py-2 max-h-96 flex flex-row flex-wrap gap-x-2 gap-y-2 overflow-y-scroll">
+<div class="lg:pl-6 lg:pr-6 w-fit rounded-lg bg-background mx-6 mt-2 my-6 px-2 py-2 max-h-96 flex flex-row flex-wrap gap-x-2 gap-y-2 overflow-y-scroll">
 ${samples_to_markdown(application, "Machines")}
 </div>
 
@@ -102,7 +102,7 @@ ${samples_to_markdown(application, "Machines")}
 
 The default sample pack used by Ryan Kirkbride's [FoxDot](https://github.com/Qirky/FoxDot). It is a nice curated sample pack that covers all the basic sounds you could want.
 
-<div class="lg:pl-6 lg:pr-6 w-fit rounded-lg bg-neutral-600 mx-6 mt-2 my-6 px-2 py-2 max-h-96 flex flex-row flex-wrap gap-x-2 gap-y-2 overflow-y-scroll">
+<div class="lg:pl-6 lg:pr-6 w-fit rounded-lg bg-background mx-6 mt-2 my-6 px-2 py-2 max-h-96 flex flex-row flex-wrap gap-x-2 gap-y-2 overflow-y-scroll">
 ${samples_to_markdown(application, "FoxDot")}
 </div>
 
@@ -110,7 +110,7 @@ ${samples_to_markdown(application, "FoxDot")}
 
 This set of audio samples is taken from [this wonderful collection](https://archive.org/details/AmigaSoundtrackerSamplePacksst-xx) of **Ultimate Tracker Amiga samples**. They were initially made by Karsten Obarski. These files were processed: pitched down one octave, gain down 6db. The audio has been processed with [SoX](https://github.com/chirlu/sox). The script used to do so is also included in this repository.
 
-<div class="lg:pl-6 lg:pr-6 w-fit rounded-lg bg-neutral-600 mx-6 mt-2 my-6 px-2 py-2 max-h-96 flex flex-row flex-wrap gap-x-2 gap-y-2 overflow-y-scroll">
+<div class="lg:pl-6 lg:pr-6 w-fit rounded-lg bg-background mx-6 mt-2 my-6 px-2 py-2 max-h-96 flex flex-row flex-wrap gap-x-2 gap-y-2 overflow-y-scroll">
 ${samples_to_markdown(application, "Amiga")}
 </div>
 
@@ -128,7 +128,7 @@ beat(4)::sound('amen1').stretch(4).out()
 
 The stretch should be adapted based on the length of each amen break.
 
-<div class="lg:pl-6 lg:pr-6 w-fit rounded-lg bg-neutral-600 mx-6 mt-2 my-6 px-2 py-2 max-h-96 flex flex-row flex-wrap gap-x-2 gap-y-2 overflow-y-scroll">
+<div class="lg:pl-6 lg:pr-6 w-fit rounded-lg bg-background mx-6 mt-2 my-6 px-2 py-2 max-h-96 flex flex-row flex-wrap gap-x-2 gap-y-2 overflow-y-scroll">
 ${samples_to_markdown(application, "Amen")}
 </div>
 
@@ -137,7 +137,7 @@ ${samples_to_markdown(application, "Amen")}
 Many live coders are expecting to find the Tidal sample library wherever they go, so here it is :)
 
 
-<div class="lg:pl-6 lg:pr-6 w-fit rounded-lg bg-neutral-600 mx-6 mt-2 my-6 px-2 py-2 max-h-96 flex flex-row flex-wrap gap-x-2 gap-y-2 overflow-y-scroll">
+<div class="lg:pl-6 lg:pr-6 w-fit rounded-lg bg-background mx-6 mt-2 my-6 px-2 py-2 max-h-96 flex flex-row flex-wrap gap-x-2 gap-y-2 overflow-y-scroll">
 ${samples_to_markdown(application, "Tidal")}
 </div>
 
@@ -145,7 +145,7 @@ ${samples_to_markdown(application, "Tidal")}
 
 This sample pack is only one folder full of french phonems! It sounds super nice.
 
-<div class="lg:pl-6 lg:pr-6 w-fit rounded-lg bg-neutral-600 mx-6 mt-2 my-6 px-2 py-2 max-h-96 flex flex-row flex-wrap gap-x-2 gap-y-2 overflow-y-scroll">
+<div class="lg:pl-6 lg:pr-6 w-fit rounded-lg bg-background mx-6 mt-2 my-6 px-2 py-2 max-h-96 flex flex-row flex-wrap gap-x-2 gap-y-2 overflow-y-scroll">
 ${samples_to_markdown(application, "Juliette")}
 </div>
 `;
