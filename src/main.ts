@@ -272,7 +272,7 @@ export class Editor {
 
     let list = document.createElement("ul");
     list.className =
-      "lg:h-80 lg:text-normal text-sm h-auto lg:w-80 w-auto lg:pb-2 lg:pt-2 overflow-y-scroll text-selection_background bg-background lg:mb-4 border rounded-lg";
+      "lg:h-80 lg:text-normal text-normal h-auto lg:w-80 w-auto lg:pb-2 lg:pt-2 overflow-y-scroll text-brightwhite bg-background lg:mb-4 border rounded-lg";
     list.append(
       ...Object.keys(this.universes).map((it) => {
         let item = itemTemplate.content.cloneNode(true) as DocumentFragment;
