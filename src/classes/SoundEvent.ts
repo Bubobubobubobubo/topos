@@ -382,12 +382,11 @@ export class SoundEvent extends AudibleEvent {
     if (funcResult instanceof Object) return funcResult;
     else {
       func(this.values);
-      this.update();
-      return this;
+      return this.update();
     }
   };
 
-  update = (): void => {
+  update = (): this => {
     const filteredValues = filterObject(this.values, [
       "key",
       "pitch",
@@ -420,7 +419,7 @@ export class SoundEvent extends AudibleEvent {
     this.values.pitch = maybeAtomic(newArrays.pitch);
     this.values.octave = maybeAtomic(newArrays.octave);
     this.values.pitchOctave = maybeAtomic(newArrays.pitchOctave);
-
+    return this;
   };
 
   out = (orbit?: number | number[]): void => {

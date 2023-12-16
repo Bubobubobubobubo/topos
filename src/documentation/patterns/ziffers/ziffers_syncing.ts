@@ -12,14 +12,14 @@ Ziffers patterns can be synced to any event by using **cue**, **sync**, **wait**
 
 The <ic>cue(name: string)</ic> methods can be used to send cue messages for ziffers patterns. The <ic>wait(name: string)</ic> method is used to wait for the cue message to be received before starting the next cycle.
 
-    ${makeExample(
-        "Sending cue from event and wait",
-        `
-        beat(4.0) :: sound("bd").cue("foo").out();
-        z1("e 0 3 2 1 2 1").wait("foo").sound("sine").out();
-        `,
-        true,
-    )}
+${makeExample(
+"Sending cue from event and wait",
+`
+beat(4.0) :: sound("bd").cue("foo").out()
+z1("e 0 3 2 1 2 1").wait("foo").sound("sine").out()
+`,
+true,
+)}
 
 The <ic>sync(name: string)</ic> method is used to sync the ziffers pattern to the cue message. 
 

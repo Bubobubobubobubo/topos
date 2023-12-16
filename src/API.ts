@@ -1,6 +1,7 @@
 import { EditorView } from "@codemirror/view";
 import { sendToServer, type OSCMessage, oscMessages } from "./IO/OSC";
 import { getAllScaleNotes, nearScales, seededRandom } from "zifferjs";
+import colorschemes from "./colors.json";
 import {
   MidiCCEvent,
   MidiConnection,
@@ -87,8 +88,7 @@ export class UserAPI {
   public randomGen = Math.random;
   public currentSeed: string | undefined = undefined;
   public localSeeds = new Map<string, Function>();
-  public patternCache = new LRUCache({ max: 1000, ttl: 1000 * 60 * 5 });
-  public tempCache = new LRUCache({ max: 1000, ttl: 1000 * 60 * 5 });
+  public patternCache = new LRUCache({ max: 10000, ttl: 10000 * 60 * 5 });
   public invalidPatterns: {[key: string]: boolean} = {};
   public cueTimes: { [key: string]: number } = {};
   private errorTimeoutID: number = 0;
@@ -147,8 +147,8 @@ export class UserAPI {
         ? code
         : (this.app.selectedExample as string);
     }
+    this.clearPatternCache();
     this.stop();
-    this.resetAllFromCache();
     this.play();
   };
 
@@ -159,6 +159,7 @@ export class UserAPI {
       current_universe.example.candidate! = "";
       current_universe.example.committed! = "";
     }
+    this.clearPatternCache();
     this.stop();
   };
 
@@ -168,10 +169,10 @@ export class UserAPI {
       current_universe.example.candidate! = "";
       current_universe.example.committed! = "";
     }
+    this.clearPatternCache();
     this.stop();
     this.play();
     this.app.exampleIsPlaying = true;
-    this.resetAllFromCache();
     evaluateOnce(this.app, code as string);
   };
 
@@ -220,7 +221,7 @@ export class UserAPI {
     clearTimeout(this.printTimeoutID);
     clearTimeout(this.errorTimeoutID);
     this.app.interface.error_line.innerHTML = message as string;
-    this.app.interface.error_line.style.color = "white";
+    this.app.interface.error_line.style.color = "red";
     this.app.interface.error_line.classList.remove("hidden");
     // @ts-ignore
     this.printTimeoutID = setTimeout(
@@ -724,7 +725,7 @@ export class UserAPI {
 
   maybeToNumber = (something: any): number|any => {
     // If something is BigInt
-    if(something && typeof something === "bigint") {
+    if(typeof something === "bigint") {
       return Number(something);
     } else {
       return something;
@@ -743,7 +744,7 @@ export class UserAPI {
       if(isGenerator(value)) {
           if(this.patternCache.has(key)) {
             const cachedValue = (this.patternCache.get(key) as Generator<any>).next().value
-            if(!cachedValue) {
+            if(cachedValue!==0 && !cachedValue) {
               const generator = value as unknown as Generator<any>
               this.patternCache.set(key, generator);
               return this.maybeToNumber(generator.next().value);
@@ -757,7 +758,7 @@ export class UserAPI {
         } else if(isGeneratorFunction(value)) {
           if(this.patternCache.has(key)) {
             const cachedValue = (this.patternCache.get(key) as Generator<any>).next().value;
-            if(cachedValue) {
+            if(cachedValue || cachedValue===0 || cachedValue===0n) {
               return this.maybeToNumber(cachedValue);
             } else {
               const generator = value();
@@ -2415,5 +2416,35 @@ export class UserAPI {
     functionName = typeof functionName === "function" ? functionName.name : functionName;
     this.cueTimes[functionName] = this.app.clock.pulses_since_origin;
   };
+
+  public theme = (color_scheme: string): void => {
+    this.app.readTheme(color_scheme);
+    console.log("Changing color scheme for: ", color_scheme)
+  }
+
+  public themeName = (): string => {
+    return this.app.currentThemeName;
+  }
+
+  public randomTheme = (): void => {
+    let theme_names = this.getThemes();
+    let selected_theme = theme_names[Math.floor(Math.random() * theme_names.length)];
+    this.app.readTheme(selected_theme);
+    this.app.api.log(selected_theme);
+  }
+
+  public nextTheme = (): void => {
+    let theme_names = this.getThemes();
+    let current_theme = this.app.api.themeName();
+    let current_theme_idx = theme_names.indexOf(current_theme);
+    let next_theme_idx = (current_theme_idx + 1) % theme_names.length;
+    let next_theme = theme_names[next_theme_idx];
+    this.app.readTheme(next_theme);
+    this.app.api.log(next_theme);
+  }
+
+  public getThemes = (): string[] => {
+    return Object.keys(colorschemes);
+  }
 
 }

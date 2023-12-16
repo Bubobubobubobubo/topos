@@ -67,8 +67,7 @@ export class MidiEvent extends AudibleEvent {
       return funcResult;
     } else {
       func(this.values);
-      this.update();
-      return this;
+      return this.update();
     }
   };
 
@@ -84,7 +83,7 @@ export class MidiEvent extends AudibleEvent {
     return this;
   };
 
-  update = (): void => {
+  update = (): this => {
     const filteredValues = filterObject(this.values, [
       "key",
       "pitch",
@@ -113,6 +112,7 @@ export class MidiEvent extends AudibleEvent {
     
     this.values.note = maybeAtomic(newArrays.note);
     if (newArrays.bend) this.values.bend = maybeAtomic(newArrays.bend);
+    return this;
   };
 
   out = (): void => {

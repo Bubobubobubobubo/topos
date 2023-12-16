@@ -49,6 +49,9 @@ Topos is made to be controlled entirely with a keyboard. It is recommanded to st
 |Force Eval|${key_shortcut(
     "Ctrl + Shift + Enter",
   )}|Force evaluation of the current script|
+  |Clear cache & Eval|${key_shortcut(
+    "Ctrl + Shift + Backspace (Delete)",
+  )}|Clears cache and forces evaluation to update cached scripts|
 	
 ### Special
 
