@@ -27,6 +27,7 @@ import { midi } from "./documentation/learning/midi";
 import { osc } from "./documentation/learning/osc";
 import { patterns } from "./documentation/patterns/patterns";
 import { functions } from "./documentation/patterns/functions";
+import { generators } from "./documentation/patterns/generators";
 import { variables } from "./documentation/patterns/variables";
 import { probabilities } from "./documentation/patterns/probabilities";
 import { lfos } from "./documentation/patterns/lfos";
@@ -106,6 +107,7 @@ export const documentation_factory = (application: Editor) => {
     variables: variables(application),
     probabilities: probabilities(application),
     functions: functions(application),
+    generators: generators(application),
     shortcuts: shortcuts(application),
     amplitude: amplitude(application),
     effects: effects(application),

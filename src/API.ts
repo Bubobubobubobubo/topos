@@ -88,8 +88,7 @@ export class UserAPI {
   public randomGen = Math.random;
   public currentSeed: string | undefined = undefined;
   public localSeeds = new Map<string, Function>();
-  public patternCache = new LRUCache({ max: 1000, ttl: 1000 * 60 * 5 });
-  public tempCache = new LRUCache({ max: 1000, ttl: 1000 * 60 * 5 });
+  public patternCache = new LRUCache({ max: 10000, ttl: 10000 * 60 * 5 });
   public invalidPatterns: {[key: string]: boolean} = {};
   public cueTimes: { [key: string]: number } = {};
   private errorTimeoutID: number = 0;
@@ -148,8 +147,8 @@ export class UserAPI {
         ? code
         : (this.app.selectedExample as string);
     }
+    this.clearPatternCache();
     this.stop();
-    this.resetAllFromCache();
     this.play();
   };
 
@@ -160,6 +159,7 @@ export class UserAPI {
       current_universe.example.candidate! = "";
       current_universe.example.committed! = "";
     }
+    this.clearPatternCache();
     this.stop();
   };
 
@@ -169,10 +169,10 @@ export class UserAPI {
       current_universe.example.candidate! = "";
       current_universe.example.committed! = "";
     }
+    this.clearPatternCache();
     this.stop();
     this.play();
     this.app.exampleIsPlaying = true;
-    this.resetAllFromCache();
     evaluateOnce(this.app, code as string);
   };
 
@@ -725,7 +725,7 @@ export class UserAPI {
 
   maybeToNumber = (something: any): number|any => {
     // If something is BigInt
-    if(something && typeof something === "bigint") {
+    if(typeof something === "bigint") {
       return Number(something);
     } else {
       return something;
@@ -744,7 +744,7 @@ export class UserAPI {
       if(isGenerator(value)) {
           if(this.patternCache.has(key)) {
             const cachedValue = (this.patternCache.get(key) as Generator<any>).next().value
-            if(!cachedValue) {
+            if(cachedValue!==0 && !cachedValue) {
               const generator = value as unknown as Generator<any>
               this.patternCache.set(key, generator);
               return this.maybeToNumber(generator.next().value);
@@ -758,7 +758,7 @@ export class UserAPI {
         } else if(isGeneratorFunction(value)) {
           if(this.patternCache.has(key)) {
             const cachedValue = (this.patternCache.get(key) as Generator<any>).next().value;
-            if(cachedValue) {
+            if(cachedValue || cachedValue===0 || cachedValue===0n) {
               return this.maybeToNumber(cachedValue);
             } else {
               const generator = value();
