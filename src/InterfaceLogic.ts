@@ -1,6 +1,7 @@
 import { EditorView } from "codemirror";
 import { vim } from "@replit/codemirror-vim";
 import { type Editor } from "./main";
+import colors from "./colors.json";
 import {
   documentation_factory,
   hideDocumentation,
@@ -57,9 +58,9 @@ export const installInterfaceLogic = (app: Editor) => {
   for (let i = 0; i < tabs.length; i++) {
     tabs[i].addEventListener("click", (event) => {
       // Updating the CSS accordingly
-      tabs[i].classList.add("bg-orange-300");
+      tabs[i].classList.add("bg-foreground");
       for (let j = 0; j < tabs.length; j++) {
-        if (j != i) tabs[j].classList.remove("bg-orange-300");
+        if (j != i) tabs[j].classList.remove("bg-foreground");
       }
       app.currentFile().candidate = app.view.state.doc.toString();
 
@@ -289,6 +290,18 @@ export const installInterfaceLogic = (app: Editor) => {
     });
   });
 
+  app.interface.theme_selector.addEventListener("change", () => {
+    app.settings.theme = (app.interface.theme_selector as HTMLSelectElement).value;
+    app.readTheme(app.settings.theme);
+    // @ts-ignore
+    let selected_theme = colors[app.settings.theme as string];
+    let theme_preview = "";
+    for (const [key, _] of Object.entries(selected_theme)) {
+      theme_preview += `<p class="inline text-${key} bg-${key}">█</div>`;
+    }
+    app.interface.theme_previewer.innerHTML = theme_preview;
+  });
+
   app.interface.settings_button.addEventListener("click", () => {
     // Populate the font selector
     const fontFamilySelect = document.getElementById(
@@ -298,6 +311,26 @@ export const installInterfaceLogic = (app: Editor) => {
       fontFamilySelect.value = app.settings.font;
     }
 
+    app.interface.theme_selector.innerHTML = "";
+    let all_themes = Object.keys(colors);
+    all_themes.sort((a, b) => {
+      return a.toLowerCase().localeCompare(b.toLowerCase());
+    });
+    app.interface.theme_selector.innerHTML = all_themes.map((color) => {
+      return `<option value="${color}">${color}</option>`
+    }).join("");
+    // Set the selected theme in the selector to app.settings.theme
+    // @ts-ignore
+    app.interface.theme_selector.value = app.settings.theme;
+
+    // @ts-ignore
+    let selected_theme = colors[app.settings.theme as string];
+    let theme_preview = "<div class='ml-6'>";
+    for (const [key, _] of Object.entries(selected_theme)) {
+      theme_preview += `<p class="inline text-${key} bg-${key}">█</p>`;
+    }
+    theme_preview += "</div>";
+    app.interface.theme_previewer.innerHTML = theme_preview;
     // Populate the font family selector
     const doughNudgeRange = app.interface.dough_nudge_range as HTMLInputElement;
     doughNudgeRange.value = app.dough_nudge.toString();

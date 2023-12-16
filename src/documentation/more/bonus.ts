@@ -9,6 +9,24 @@ export const bonus = (application: Editor): string => {
 
 Some features have been included as a bonus. These features are often about patterning over things that are not directly related to sound: pictures, video, etc.
 
+## Editor theme configuration
+
+The editor theme can be changed using the <ic>theme</ic> and <ic>randomTheme</ic> functions. The following example will use a random color scheme for every beat:
+
+${makeExample(
+  "Random theme on each beat",
+  `
+beat(1)::randomTheme()
+`, true)}
+
+You can also pick a theme using the <ic>theme</ic> function with a string as only argument:
+
+${makeExample(
+  "Picking a theme",
+  `
+beat(1)::theme("Batman")
+`, true)}
+
 ## Hydra Visual Live Coding
 
 <div class="mx-12 bg-neutral-600 rounded-lg flex flex-col items-center justify-center">

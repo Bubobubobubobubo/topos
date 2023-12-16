@@ -5,6 +5,7 @@ import { javascript } from "@codemirror/lang-javascript";
 import { markdown } from "@codemirror/lang-markdown";
 import { Extension } from "@codemirror/state";
 import { outputSocket } from "./IO/OSC";
+import { getCodeMirrorTheme } from "./EditorSetup";
 import {
   initializeSelectedUniverse,
   AppSettings,
@@ -32,6 +33,7 @@ import { installWindowBehaviors } from "./WindowBehavior";
 import { makeNumberExtensions } from "./extensions/NumberExtensions";
 // @ts-ignore
 import { registerSW } from "virtual:pwa-register";
+import colors from "./colors.json";
 
 if ("serviceWorker" in navigator) {
   registerSW();
@@ -51,6 +53,7 @@ export class Editor {
   hidden_interface: boolean = false;
   fontSize!: Compartment;
   withLineNumbers!: Compartment;
+  themeCompartment!: Compartment;
   vimModeCompartment!: Compartment;
   hoveringCompartment!: Compartment;
   completionsCompartment!: Compartment;
@@ -205,6 +208,15 @@ export class Editor {
 
     // Loading universe from URL (if needed)
     loadUniverserFromUrl(this);
+
+    // Set the color scheme for the application
+    let available_themes = Object.keys(colors);
+    if (this.settings.theme in available_themes) {
+      this.readTheme(this.settings.theme);
+    } else {
+      this.settings.theme = "Everblush";
+      this.readTheme(this.settings.theme);
+    }
   }
 
   private getBuffer(type: string): any {
@@ -260,7 +272,7 @@ export class Editor {
 
     let list = document.createElement("ul");
     list.className =
-      "lg:h-80 lg:text-normal text-sm h-auto lg:w-80 w-auto lg:pb-2 lg:pt-2 overflow-y-scroll text-white lg:mb-4 border rounded-lg bg-neutral-800";
+      "lg:h-80 lg:text-normal text-normal h-auto lg:w-80 w-auto lg:pb-2 lg:pt-2 overflow-y-scroll text-brightwhite bg-background lg:mb-4 border rounded-lg";
     list.append(
       ...Object.keys(this.universes).map((it) => {
         let item = itemTemplate.content.cloneNode(true) as DocumentFragment;
@@ -292,9 +304,9 @@ export class Editor {
      */
     const tabs = document.querySelectorAll('[id^="tab-"]');
     const tab = tabs[i] as HTMLElement;
-    tab.classList.add("bg-orange-300");
+    tab.classList.add("bg-foreground");
     for (let j = 0; j < tabs.length; j++) {
-      if (j != i) tabs[j].classList.remove("bg-orange-300");
+      if (j != i) tabs[j].classList.remove("bg-foreground_selection");
     }
     let tab_id = tab.id.split("-")[1];
     this.local_index = parseInt(tab_id);
@@ -317,15 +329,15 @@ export class Editor {
     let changeColor = (button: HTMLElement) => {
       interface_buttons.forEach((button) => {
         let svg = button.children[0] as HTMLElement;
-        if (svg.classList.contains("text-orange-300")) {
-          svg.classList.remove("text-orange-300");
-          button.classList.remove("text-orange-300");
+        if (svg.classList.contains("text-foreground_selection")) {
+          svg.classList.remove("text-foreground_selection");
+          button.classList.remove("text-foreground_selection");
         }
       });
       button.children[0].classList.remove("text-white");
-      button.children[0].classList.add("text-orange-300");
-      button.classList.add("text-orange-300");
-      button.classList.add("fill-orange-300");
+      button.children[0].classList.add("text-foreground_selection");
+      button.classList.add("text-foreground_selection");
+      button.classList.add("fill-foreground_selection");
     };
 
     switch (mode) {
@@ -440,7 +452,7 @@ export class Editor {
 
   unfocusPlayButtons() {
     document.querySelectorAll('[id^="play-button-"]').forEach((button) => {
-      button.children[0].classList.remove("fill-orange-300");
+      button.children[0].classList.remove("fill-foreground_selection");
       button.children[0].classList.remove("animate-pulse");
     });
   }
@@ -567,6 +579,44 @@ export class Editor {
     canvas.height = window.innerHeight * dpr;
     if (ctx) {
       ctx.scale(dpr, dpr);
+    }
+  }
+
+  private updateInterfaceTheme(selected_theme: {[key: string]: string}): void {
+    function hexToRgb(hex: string): {r: number, g: number, b: number} | null {
+      let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+          return result ? {
+            r: parseInt(result[1], 16),
+            g: parseInt(result[2], 16),
+            b: parseInt(result[3], 16)
+          } : null;
+        };
+        for (const [key, value] of Object.entries(selected_theme)) {
+          let color = hexToRgb(value);
+          if (color) {
+            let colorString = `${color.r} ${color.g} ${color.b}`
+            document.documentElement.style.setProperty("--" + key, colorString);
+          }
+        }
+      }
+
+      getColorScheme(theme_name: string): {[key: string]: string} {
+    // Check if the theme exists in colors.json
+    let themes: Record<string, { [key: string]: any }> = colors;
+    return themes[theme_name];
+  }
+
+  readTheme(theme_name: string): void {
+    // Check if the theme exists in colors.json
+    let themes: Record<string, { [key: string]: any }> = colors;
+    let selected_theme = themes[theme_name];
+    if (selected_theme) {
+      this.updateInterfaceTheme(selected_theme);
+      let codeMirrorTheme = getCodeMirrorTheme(selected_theme);
+      // Reconfigure the view with the new theme
+      this.view.dispatch({
+        effects: this.themeCompartment.reconfigure(codeMirrorTheme),
+      });
     }
   }
 }

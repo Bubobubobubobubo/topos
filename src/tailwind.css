@@ -1,0 +1,29 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    :root {
+        --black: 40 42 54;
+        --red: 68 71 90;
+        --green: 248 248 242;
+        --yellow: 98 114 164;
+        --blue: 139 233 253;
+        --magenta: 80 250 123;
+        --cyan: 255 184 108;
+        --white: 255 121 198;
+        --brightblack: 189 147 249;
+        --brightred: 255 85 85;
+        --brightgreen: 241 250 140;
+        --brightyellow: 139 233 253;
+        --brightblue: 80 250 123;
+        --brightmagenta: 255 184 108;
+        --brightcyan: 255 121 198;
+        --brightwhite: 189 147 249;
+        --background: 40 42 54;
+        --selection_foreground: 68 71 90;
+        --cursor: 139 233 253;
+        --foreground: 248 248 242;
+        --selection_background: 189 147 249;
+    }
+}

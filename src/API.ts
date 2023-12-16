@@ -1,6 +1,7 @@
 import { EditorView } from "@codemirror/view";
 import { sendToServer, type OSCMessage, oscMessages } from "./IO/OSC";
 import { getAllScaleNotes, nearScales, seededRandom } from "zifferjs";
+import colorschemes from "./colors.json";
 import {
   MidiCCEvent,
   MidiConnection,
@@ -220,7 +221,7 @@ export class UserAPI {
     clearTimeout(this.printTimeoutID);
     clearTimeout(this.errorTimeoutID);
     this.app.interface.error_line.innerHTML = message as string;
-    this.app.interface.error_line.style.color = "white";
+    this.app.interface.error_line.style.color = "red";
     this.app.interface.error_line.classList.remove("hidden");
     // @ts-ignore
     this.printTimeoutID = setTimeout(
@@ -2271,5 +2272,20 @@ export class UserAPI {
     functionName = typeof functionName === "function" ? functionName.name : functionName;
     this.cueTimes[functionName] = this.app.clock.pulses_since_origin;
   };
+
+  public theme = (color_scheme: string): void => {
+    this.app.readTheme(color_scheme);
+    console.log("Changing color scheme for: ", color_scheme)
+  }
+
+  public randomTheme = (): void => {
+    let theme_names = this.getThemes();
+    let selected_theme = theme_names[Math.floor(Math.random() * theme_names.length)];
+    this.app.readTheme(selected_theme);
+  }
+
+  public getThemes = (): string[] => {
+    return Object.keys(colorschemes);
+  }
 
 }

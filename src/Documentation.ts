@@ -37,18 +37,17 @@ import { ziffers_rhythm } from "./documentation/patterns/ziffers/ziffers_rhythm"
 import { ziffers_algorithmic } from "./documentation/patterns/ziffers/ziffers_algorithmic";
 import { ziffers_tonnetz } from "./documentation/patterns/ziffers/ziffers_tonnetz";
 import { ziffers_syncing } from "./documentation/patterns/ziffers/ziffers_syncing";
-
 import { synths } from "./documentation/learning/audio_engine/synths";
-
 // Setting up the Markdown converter with syntax highlighting
 import showdown from "showdown";
 import showdownHighlight from "showdown-highlight";
+import "highlight.js/styles/atom-one-dark-reasonable.min.css";
 import { createDocumentationStyle } from "./DomElements";
 import { filters } from "./documentation/learning/audio_engine/filters";
 showdown.setFlavor("github");
 
 export const key_shortcut = (shortcut: string): string => {
-  return `<kbd class="lg:px-2 lg:py-1.5 px-1 py-1 lg:text-sm text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg dark:bg-gray-600 dark:text-gray-100 dark:border-gray-500">${shortcut}</kbd>`;
+  return `<kbd class="lg:px-2 lg:py-1.5 px-1 py-1 lg:text-sm text-xs font-semibold text-brightwhite bg-brightblack border border-black rounded-lg">${shortcut}</kbd>`;
 };
 
 export const makeExampleFactory = (application: Editor): Function => {
@@ -64,13 +63,11 @@ export const makeExampleFactory = (application: Editor): Function => {
     return `
 <details ${open ? "open" : ""}>
   <summary >${description}
-    <button class="ml-4 py-1 align-top text-base px-4 hover:bg-green-700 bg-emerald-600 inline-block" onclick="app.api._playDocExample(app.api.codeExamples['${codeId}'])">▶️ Play</button>
-    <button class="py-1 text-base px-4 hover:bg-neutral-600 bg-neutral-500 inline-block " onclick="app.api._stopDocExample()">&#x23f8;&#xFE0F; Pause</button>
-    <button class="py-1 text-base px-4 hover:bg-neutral-900 bg-neutral-800 inline-block " onclick="navigator.clipboard.writeText(app.api.codeExamples['${codeId}'])">📎 Copy</button>
+    <button class="ml-4 py-1 align-top text-base px-4 hover:bg-brightgreen bg-green inline-block text-selection_foreground" onclick="app.api._playDocExample(app.api.codeExamples['${codeId}'])">▶️ Play</button>
+    <button class="py-1 text-base px-4 hover:brightyellow bg-yellow text-selection_foreground inline-block" onclick="app.api._stopDocExample()">&#x23f8;&#xFE0F; Pause</button>
+    <button class="py-1 text-base px-4 hover:bg-brightmagenta bg-magenta text-selection_foreground inline-block" onclick="navigator.clipboard.writeText(app.api.codeExamples['${codeId}'])">📎 Copy</button>
   </summary>
-  \`\`\`javascript
-  ${code}
-  \`\`\`
+  <pre><code class="hljs language-javascript">${code.trim()}</code></pre>
 </details>
 `;
   };
@@ -172,12 +169,15 @@ export const updateDocumentationContent = (app: Editor, bindings: any) => {
    * @param app - The editor application.
    * @param bindings - Additional bindings for the showdown converter.
    */
-  let loading_message: string = "<h1 class='border-4 py-2 px-2 mx-48 mt-48 text-center text-2xl text-white'>Loading! <b class='text-red'>Clic to refresh!</b></h1>";
+  let loading_message: string = "<h1 class='border-4 py-2 px-2 mx-48 mt-48 text-center text-2xl text-brightwhite'>Loading! <b class='text-red'>Clic to refresh!</b></h1>";
   const converter = new showdown.Converter({
     emoji: true,
     moreStyling: true,
     backslashEscapesHTMLTags: true,
-    extensions: [showdownHighlight({ auto_detection: true }), ...bindings],
+    extensions: [showdownHighlight({
+      pre: true, 
+      auto_detection: false
+    }), ...bindings],
   });
   console.log(app.currentDocumentationPane);
 
