@@ -110,11 +110,11 @@ export const getCodeMirrorTheme = (theme: {[key: string]: string}): Extension =>
       ".cm-gutters": {
         //backgroundColor: base00,
         backgroundColor: "transparent",
-        color: selection_background,
+        color: foreground,
       },
       ".cm-activeLineGutter": {
-        backgroundColor: foreground,
-        color: white,
+        backgroundColor: selection_background,
+        color: selection_foreground,
       },
 
       ".cm-foldPlaceholder": {
