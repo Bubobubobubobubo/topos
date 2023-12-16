@@ -19,6 +19,7 @@ export const singleElements = {
   download_universe_button: "download-universes",
   upload_universe_button: "upload-universes",
   upload_samples_button: "upload-samples",
+  sample_indicator: "sample-indicator",
   destroy_universes_button: "destroy-universes",
   documentation_button: "doc-button-1",
   eval_button: "eval-button-1",

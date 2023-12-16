@@ -161,14 +161,17 @@ export const installInterfaceLogic = (app: Editor) => {
   });
 
   app.interface.upload_samples_button.addEventListener("input", async (event) => {
-    console.log("Il se passe quelque chose")
     let fileInput = event.target as HTMLInputElement;
     if (!fileInput.files?.length) {
       return;
     }
-    console.log(fileInput.files)
+    app.interface.sample_indicator.innerText = "Loading...";
+    app.interface.sample_indicator.classList.add("animate-pulse");
     await uploadSamplesToDB(samplesDBConfig, fileInput.files).then(() => {
-        registerSamplesFromDB(samplesDBConfig, () => {});
+        registerSamplesFromDB(samplesDBConfig, () => {
+          app.interface.sample_indicator.innerText = "Import samples";
+          app.interface.sample_indicator.classList.remove("animate-pulse");
+        });
     });
   });
 
