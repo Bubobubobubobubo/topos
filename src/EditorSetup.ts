@@ -36,6 +36,7 @@ import { toposCompletions, soundCompletions } from "./documentation/inlineHelp";
 import { javascriptLanguage } from "@codemirror/lang-javascript";
 
 export const getCodeMirrorTheme = (theme: {[key: string]: string}): Extension => {
+  // @ts-ignore
   const black = theme["black"],
         red = theme["red"],
         green = theme["green"],
@@ -44,12 +45,18 @@ export const getCodeMirrorTheme = (theme: {[key: string]: string}): Extension =>
         magenta = theme["magenta"],
         cyan = theme["cyan"],
         white = theme["white"],
+        // @ts-ignore
         brightblack = theme["brightblack"],
+        // @ts-ignore
         brightred = theme["brightred"],
         brightgreen = theme["brightgreen"],
+        // @ts-ignore
         brightyellow = theme["brightyellow"],
+        // @ts-ignore
         brightblue = theme["brightblue"],
+        // @ts-ignore
         brightmagenta = theme["brightmagenta"],
+        // @ts-ignore
         brightcyan = theme["brightcyan"],
         brightwhite = theme["brightwhite"],
         background = theme["background"],
@@ -203,33 +210,33 @@ export const getCodeMirrorTheme = (theme: {[key: string]: string}): Extension =>
 ]
 }
 
-const debugTheme = EditorView.theme({
-  ".cm-line span": {
-    position: "relative",
-  },
-  ".cm-line span:hover::after": {
-    position: "absolute",
-    bottom: "100%",
-    left: 0,
-    background: "black",
-    color: "white",
-    border: "solid 2px",
-    borderRadius: "5px",
-    content: "var(--tags)",
-    width: `max-content`,
-    padding: "1px 4px",
-    zIndex: 10,
-    pointerEvents: "none",
-  },
-});
+// const debugTheme = EditorView.theme({
+//   ".cm-line span": {
+//     position: "relative",
+//   },
+//   ".cm-line span:hover::after": {
+//     position: "absolute",
+//     bottom: "100%",
+//     left: 0,
+//     background: "black",
+//     color: "white",
+//     border: "solid 2px",
+//     borderRadius: "5px",
+//     content: "var(--tags)",
+//     width: `max-content`,
+//     padding: "1px 4px",
+//     zIndex: 10,
+//     pointerEvents: "none",
+//   },
+// });
 
-const debugHighlightStyle = HighlightStyle.define(
-  // @ts-ignore
-  Object.entries(t).map(([key, value]) => {
-    return { tag: value, "--tags": `"tag.${key}"` };
-  })
-);
-const debug = [debugTheme, syntaxHighlighting(debugHighlightStyle)];
+// const debugHighlightStyle = HighlightStyle.define(
+//   // @ts-ignore
+//   Object.entries(t).map(([key, value]) => {
+//     return { tag: value, "--tags": `"tag.${key}"` };
+//   })
+// );
+// const debug = [debugTheme, syntaxHighlighting(debugHighlightStyle)];
 
 
 export const jsCompletions = javascriptLanguage.data.of({
