@@ -79,19 +79,26 @@
       @apply inline-block lg:px-4 px-8 py-1 text-selection_foreground
     }
 
+    .doc_header {
+      @apply pl-2 pr-2 lg:text-xl text-sm py-1 my-1 rounded-lg text-white hover:text-blue hover:bg-red
+    }
+
+    .doc_subheader {
+      @apply pl-2 pr-2 lg:text-xl text-sm ml-6 py-1 my-1 rounded-lg text-white hover:text-blue hover:bg-red
+    }
+
+
   </style>
   <body id="all" class="z-0 overflow-y-hidden bg-black">
 		<!-- The header is hidden on smaller devices -->
     <header class="py-0 block">
-      <div id="topbar" class="mx-auto flex flex-wrap pl-2 py-1 flex-row items-center bg-background text-selection_foreground">
-        <a class="flex title-font font-medium items-center mb-0 text-selection_foreground">
+      <div id="topbar" class="mx-auto flex flex-wrap pl-2 py-1 flex-row items-center bg-background">
+        <a class="flex title-font font-medium items-center mb-0">
           <img id="topos-logo" src="topos_frog.svg" class="w-12 h-12 text-selection_foreground p-2 rounded-full bg-foreground" alt="Topos Frog Logo"/>
-         <input id="universe-viewer" class="hidden transparent xl:block ml-4 text-2xl bg-background" id="renamer" type="text" placeholder="Topos">
+         <input id="universe-viewer" class="hidden transparent xl:block ml-4 text-2xl bg-background text-blue placeholder-blue" id="renamer" type="text" placeholder="Topos">
         </a>
-
         <nav class="py-2 flex flex-wrap items-center text-base absolute right-0">
-
-          <!-- Play Button -->
+         <!-- Play Button -->
          <a title="Play button (Ctrl+P)" id="play-button-1" class="bar_button">
 							<svg id="play-icon" class="w-7 h-7" fill="currentColor" viewBox="0 0 14 16">
 								<path d="M0 .984v14.032a1 1 0 0 0 1.506.845l12.006-7.016a.974.974 0 0 0 0-1.69L1.506.139A1 1 0 0 0 0 .984Z"/>
@@ -147,108 +154,102 @@
 
     <div id="documentation" class="hidden">
       <div id="documentation-page" class="flex flex-row transparent">
-        <aside class="w-1/8 flex-shrink-0 h-screen overflow-y-auto p-1 lg:p-6 bg-foreground">
-          <nav class="text-xl sm:text-sm overflow-y-scroll mb-24 bg-foreground">
+        <aside class="w-1/8 flex-shrink-0 h-screen overflow-y-auto p-1 lg:p-6 bg-background">
+          <nav class="text-xl sm:text-sm overflow-y-scroll mb-24 bg-background">
             <details class="" open>
               <summary class="font-semibold lg:text-xl text-orange-300">Basics</summary>
               <div class="flex flex-col">
-                <p rel="noopener noreferrer" id="docs_introduction" 
-                class="pl-2 pr-2 lg:text-xl text-sm hover:neutral-800 py-1 my-1 rounded-lg text-color1">Welcome </p>
-                <p rel="noopener noreferrer" id="docs_interface" class="pl-2 pr-2 lg:text-xl text-sm hover:neutral-800 py-1 my-1 rounded-lg">Interface</p>
-                <p rel="noopener noreferrer" id="docs_interaction" class="pl-2 pr-2 lg:text-xl text-sm hover:neutral-800 py-1 my-1 rounded-lg">Interaction</p>
-                <p rel="noopener noreferrer" id="docs_shortcuts" class="pl-2 pr-2 lg:text-xl text-sm hover:neutral-800 py-1 my-1 rounded-lg">Keyboard</p>
-                <p rel="noopener noreferrer" id="docs_mouse" class="pl-2 pr-2 lg:text-xl text-sm hover:neutral-800 py-1 my-1 rounded-lg">Mouse</p>
-                <p rel="noopener noreferrer" id="docs_code" class="pl-2 pr-2 lg:text-xl text-sm hover:neutral-800 py-1 my-1 rounded-lg">Coding</p>
+                <p rel="noopener noreferrer" id="docs_introduction" class="doc_header">Welcome </p>
+                <p rel="noopener noreferrer" id="docs_interface" class="doc_header">Interface</p>
+                <p rel="noopener noreferrer" id="docs_interaction" class="doc_header">Interaction</p>
+                <p rel="noopener noreferrer" id="docs_shortcuts" class="doc_header">Keyboard</p>
+                <p rel="noopener noreferrer" id="docs_mouse" class="doc_header">Mouse</p>
+                <p rel="noopener noreferrer" id="docs_code" class="doc_header">Coding</p>
 							</div>
 						</details>
             <details class="space-y-2" open>
               <summary class="font-semibold lg:text-xl pb-1 pt-1 text-orange-300">Learning</summary>
               <div class="flex flex-col">
-
                 <!-- Time -->
                 <details class="space-y-2">
-                  <summary class="ml-2 lg:text-xl pb-1 pt-1 ">Time</summary>
+                  <summary class="ml-2 lg:text-xl pb-1 pt-1 doc_header">Time</summary>
                   <div class="flex flex-col">
-                    <p rel="noopener noreferrer" id="docs_time" class="ml-8 pr-2 lg:text-xl text-sm hover:neutral-800 py-1 my-1 rounded-lg">Dealing with time</p>
-                    <p rel="noopener noreferrer" id="docs_linear" class="ml-8 pr-2 lg:text-xl text-sm hover:neutral-800 py-1 my-1 rounded-lg">Time & Transport</p>
-                    <p rel="noopener noreferrer" id="docs_cyclic" class="ml-8 pr-2 lg:text-xl text-sm hover:neutral-800 py-1 my-1 rounded-lg">Time & Cycles</p>
-                    <p rel="noopener noreferrer" id="docs_longform" class="ml-8 pr-2 lg:text-xl text-sm hover:neutral-800 py-1 my-1 rounded-lg">Time & Structure</p>
+                    <p rel="noopener noreferrer" id="docs_time" class="doc_subheader">Dealing with time</p>
+                    <p rel="noopener noreferrer" id="docs_linear" class="doc_subheader">Time & Transport</p>
+                    <p rel="noopener noreferrer" id="docs_cyclic" class="doc_subheader">Time & Cycles</p>
+                    <p rel="noopener noreferrer" id="docs_longform" class="doc_subheader">Time & Structure</p>
                   </div>
                 </details>
 
                 <!-- Audio Engine -->
                 <details class="space-y-2">
-                  <summary class="ml-2 lg:text-xl pb-1 pt-1 ">Audio Engine</summary>
+                  <summary class="ml-2 lg:text-xl pb-1 pt-1 doc_header">Audio Engine</summary>
                   <div class="flex flex-col">
-                    <p rel="noopener noreferrer" id="docs_audio_basics" class="ml-8 pr-2 lg:text-xl text-sm hover:neutral-800 py-1 my-1 rounded-lg">Playing a sound</p>
-                    <p rel="noopener noreferrer" id="docs_amplitude" class="ml-8 pr-2 lg:text-xl text-sm hover:neutral-800 py-1 my-1 rounded-lg">Amplitude</p>
-                    <p rel="noopener noreferrer" id="docs_sampler" class="ml-8 pr-2 lg:text-xl text-sm hover:neutral-800 py-1 my-1 rounded-lg">Sampler</p>
-                    <p rel="noopener noreferrer" id="docs_synths" class="ml-8 pr-2 lg:text-xl text-sm hover:neutral-800 py-1 my-1 rounded-lg">Synths</p>
-                    <p rel="noopener noreferrer" id="docs_filters" class="ml-8 pr-2 lg:text-xl text-sm hover:neutral-800 py-1 my-1 rounded-lg">Filters</p>
-                    <p rel="noopener noreferrer" id="docs_effects" class="ml-8 pr-2 lg:text-xl text-sm hover:neutral-800 py-1 my-1 rounded-lg">Effects</p>
+                    <p rel="noopener noreferrer" id="docs_audio_basics" class="doc_subheader">Playing a sound</p>
+                    <p rel="noopener noreferrer" id="docs_amplitude" class="doc_subheader">Amplitude</p>
+                    <p rel="noopener noreferrer" id="docs_sampler" class="doc_subheader">Sampler</p>
+                    <p rel="noopener noreferrer" id="docs_synths" class="doc_subheader">Synths</p>
+                    <p rel="noopener noreferrer" id="docs_filters" class="doc_subheader">Filters</p>
+                    <p rel="noopener noreferrer" id="docs_effects" class="doc_subheader">Effects</p>
                   </div>
                 </details>
 
                 <!-- Samples -->
                 <details class="space-y-2">
-                  <summary class="ml-2 lg:text-xl pb-1 pt-1 ">Samples</summary>
+                  <summary class="ml-2 lg:text-xl pb-1 pt-1 doc_header ">Samples</summary>
                   <div class="flex flex-col">
-                    <p rel="noopener noreferrer" id="docs_sample_list" class="ml-8 pr-2 lg:text-xl text-sm hover:neutral-800 py-1 my-1 rounded-lg">List of samples</p>
-                    <p rel="noopener noreferrer" id="docs_loading_samples" class="ml-8 pr-2 lg:text-xl text-sm hover:neutral-800 py-1 my-1 rounded-lg">External samples</p>
+                    <p rel="noopener noreferrer" id="docs_sample_list" class="doc_subheader">List of samples</p>
+                    <p rel="noopener noreferrer" id="docs_loading_samples" class="doc_subheader">External samples</p>
                   </div>
                 </details>
-                <p rel="noopener noreferrer" id="docs_midi" class="pl-2 pr-2 lg:text-xl text-sm hover:neutral-800 py-1 my-1 rounded-lg">MIDI</p>
-                <p rel="noopener noreferrer" id="docs_osc" class="pl-2 pr-2 lg:text-xl text-sm hover:neutral-800 py-1 my-1 rounded-lg">OSC</p>
+                <p rel="noopener noreferrer" id="docs_midi" class="doc_header">MIDI</p>
+                <p rel="noopener noreferrer" id="docs_osc" class="doc_header">OSC</p>
 							</div>
 						</details>
             <details class="space-y-2" open>
               <summary class="font-semibold lg:text-xl pb-1 pt-1 text-orange-300">Patterns</summary>
               <div class="flex flex-col">
 
-                <p rel="noopener noreferrer" id="docs_patterns" class="pl-2 pr-2 lg:text-xl text-sm hover:neutral-800 py-1 my-1 rounded-lg">Array patterns</p>
+                <p rel="noopener noreferrer" id="docs_patterns" class="pl-2 pr-2 lg:text-xl text-sm hover:neutral-800 py-1 my-1 rounded-lg doc_header">Array patterns</p>
                 <!-- Ziffers -->
                 <details class="space-y-2">
-                  <summary class="ml-2 lg:text-xl pb-1 pt-1 ">Ziffers</summary>
+                  <summary class="doc_header">Ziffers</summary>
                   <div class="flex flex-col">
-                    <p rel="noopener noreferrer" id="docs_ziffers_basics" class="ml-8 pr-2 lg:text-xl text-sm hover:neutral-800 py-1 my-1 rounded-lg">Basics</p>
-                    <p rel="noopener noreferrer" id="docs_ziffers_scales" class="ml-8 pr-2 lg:text-xl text-sm hover:neutral-800 py-1 my-1 rounded-lg">Scales</p>
-                    <p rel="noopener noreferrer" id="docs_ziffers_rhythm" class="ml-8 pr-2 lg:text-xl text-sm hover:neutral-800 py-1 my-1 rounded-lg">Rhythm</p>
-                    <p rel="noopener noreferrer" id="docs_ziffers_algorithmic" class="ml-8 pr-2 lg:text-xl text-sm hover:neutral-800 py-1 my-1 rounded-lg">Algorithmic</p>
-                    <p rel="noopener noreferrer" id="docs_ziffers_tonnetz" class="ml-8 pr-2 lg:text-xl text-sm hover:neutral-800 py-1 my-1 rounded-lg">Tonnetz</p>
-                    <p rel="noopener noreferrer" id="docs_ziffers_syncing" class="ml-8 pr-2 lg:text-xl text-sm hover:neutral-800 py-1 my-1 rounded-lg">Syncing</p>
+                    <p rel="noopener noreferrer" id="docs_ziffers_basics" class="doc_subheader">Basics</p>
+                    <p rel="noopener noreferrer" id="docs_ziffers_scales" class="doc_subheader">Scales</p>
+                    <p rel="noopener noreferrer" id="docs_ziffers_rhythm" class="doc_subheader">Rhythm</p>
+                    <p rel="noopener noreferrer" id="docs_ziffers_algorithmic" class="doc_subheader">Algorithmic</p>
+                    <p rel="noopener noreferrer" id="docs_ziffers_tonnetz" class="doc_subheader">Tonnetz</p>
+                    <p rel="noopener noreferrer" id="docs_ziffers_syncing" class="doc_subheader">Syncing</p>
                   </div>
                 </details>
                 
-                <p rel="noopener noreferrer" id="docs_variables" class="pl-2 pr-2 lg:text-xl text-sm hover:neutral-800 py-1 my-1 rounded-lg">Global Variables</p>
-                <p rel="noopener noreferrer" id="docs_lfos" class="pl-2 pr-2 lg:text-xl text-sm hover:neutral-800 py-1 my-1 rounded-lg">Low Freq Oscs.</p>
-                <p rel="noopener noreferrer" id="docs_probabilities" class="pl-2 pr-2 lg:text-xl text-sm hover:neutral-800 py-1 my-1 rounded-lg">Probabilities</p>
-                <p rel="noopener noreferrer" id="docs_chaining" class="pl-2 pr-2 lg:text-xl text-sm hover:neutral-800 py-1 my-1 rounded-lg">Chaining</p>
-                <p rel="noopener noreferrer" id="docs_functions" class="pl-2 pr-2 lg:text-xl text-sm hover:neutral-800 py-1 my-1 rounded-lg">Functions</p>
-
-								<!--
-                <p rel="noopener noreferrer" id="docs_reference" class="pl-2 pr-2 lg:text-xl text-sm hover:neutral-800 py-1 my-1 rounded-lg">Reference</p>
-								-->
+                <p rel="noopener noreferrer" id="docs_variables" class="doc_header">Global Variables</p>
+                <p rel="noopener noreferrer" id="docs_lfos" class="doc_header">Low Freq Oscs.</p>
+                <p rel="noopener noreferrer" id="docs_probabilities" class="doc_header">Probabilities</p>
+                <p rel="noopener noreferrer" id="docs_chaining" class="doc_header">Chaining</p>
+                <p rel="noopener noreferrer" id="docs_functions" class="doc_header">Functions</p>
               </div>
             </details>
             <details class="space-y-2" open>
-              <summary class="font-semibold lg:text-xl text-orange-300">More</summary>
+              <summary class="font-semibold lg:text-xl doc_header">More</summary>
               <div class="flex flex-col">
-                <a rel="noopener noreferrer" id="docs_synchronisation" class="pl-2 pr-2 lg:text-xl text-sm hover:neutral-800 py-1 my-1 rounded-lg">Synchronisation</a>
-                <a rel="noopener noreferrer" id="docs_oscilloscope" class="pl-2 pr-2 lg:text-xl text-sm hover:neutral-800 py-1 my-1 rounded-lg">Oscilloscope</a>
-                <a rel="noopener noreferrer" id="docs_bonus" class="pl-2 pr-2 lg:text-xl text-sm hover:neutral-800 py-1 my-1 rounded-lg">Bonus/Trivia</a>
-                <a rel="noopener noreferrer" id="docs_about" class="pl-2 pr-2 lg:text-xl text-sm hover:neutral-800 py-1 my-1 rounded-lg">About Topos</a>
+                <a rel="noopener noreferrer" id="docs_synchronisation" class="doc_subheader">Synchronisation</a>
+                <a rel="noopener noreferrer" id="docs_oscilloscope" class="doc_subheader">Oscilloscope</a>
+                <a rel="noopener noreferrer" id="docs_bonus" class="doc_header">Bonus/Trivia</a>
+                <a rel="noopener noreferrer" id="docs_about" class="doc_header">About Topos</a>
               </div>
             </details>
             <details class="" open>
               <summary class="font-semibold lg:text-xl text-orange-300">Community</summary>
                 <form action="https://github.com/Bubobubobubobubo/topos">
-                  <input rel="noopener noreferrer" id="github_link" class="pl-2 pr-2 lg:text-xl text-sm hover:neutral-800 py-1 my-1 rounded-lg" type="submit" value="GitHub" />
+                  <input rel="noopener noreferrer" id="github_link" class="doc_header" type="submit" value="GitHub" />
                 </form>
                 <form action="https://discord.gg/6T67DqBNNT">
-                  <input rel="noopener noreferrer" id="discord_link" class="pl-2 pr-2 lg:text-xl text-sm hover:neutral-800 py-1 my-1 rounded-lg" type="submit" value="Discord" />
+                  <input rel="noopener noreferrer" id="discord_link" class="doc_header" type="submit" value="Discord" />
                 </form>
                 <form action="https://ko-fi.com/raphaelbubo">
-                  <input rel="noopener noreferrer" id="support_link" class="pl-2 pr-2 lg:text-xl text-sm hover:neutral-800 py-1 my-1 rounded-lg" type="submit" value="Support" />
+                  <input rel="noopener noreferrer" id="support_link" class="doc_header" type="submit" value="Support" />
                 </form>
             </details>
          </nav>
@@ -551,7 +552,7 @@
             <canvas id="scope" class="fullscreencanvas"></canvas>
             <canvas id="feedback" class="fullscreencanvas"></canvas>
 					</div>
-          <p id="error_line" class="hidden text-red-400 w-screen neutral-900 font-mono absolute bottom-0 pl-2 py-2">Hello kids</p>
+          <p id="error_line" class="hidden w-screen bg-background font-mono absolute bottom-0 pl-2 py-2">Hello kids</p>
         </div>
       </div>
       <script type="module" src="/src/main.ts"></script>

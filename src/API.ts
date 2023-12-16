@@ -221,7 +221,7 @@ export class UserAPI {
     clearTimeout(this.printTimeoutID);
     clearTimeout(this.errorTimeoutID);
     this.app.interface.error_line.innerHTML = message as string;
-    this.app.interface.error_line.style.color = "white";
+    this.app.interface.error_line.style.color = "red";
     this.app.interface.error_line.classList.remove("hidden");
     // @ts-ignore
     this.printTimeoutID = setTimeout(
