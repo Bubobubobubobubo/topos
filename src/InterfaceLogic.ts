@@ -25,7 +25,6 @@ import { lineNumbers } from "@codemirror/view";
 import { jsCompletions } from "./EditorSetup";
 import { createDocumentationStyle } from "./DomElements";
 import { saveState } from "./WindowBehavior";
-import { f } from "zifferjs/src/tonnetz";
 
 export const installInterfaceLogic = (app: Editor) => {
   // Initialize style
