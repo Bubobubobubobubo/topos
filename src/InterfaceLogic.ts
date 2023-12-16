@@ -512,6 +512,7 @@ export const installInterfaceLogic = (app: Editor) => {
     "midi",
     "osc",
     "functions",
+    "generators",
     "lfos",
     "probabilities",
     "variables",
