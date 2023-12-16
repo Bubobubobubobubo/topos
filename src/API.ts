@@ -2200,6 +2200,34 @@ export class UserAPI {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
   }
 
+  public width = (): number => {
+    /**
+     * Returns the width of the canvas.
+     * @returns The width of the canvas
+     */
+    const canvas: HTMLCanvasElement = this.app.interface.drawings as HTMLCanvasElement;
+    return canvas.width;
+  }
+
+  public height = (): number => {
+    /**
+     * Returns the height of the canvas.
+     * @returns The height of the canvas
+     */
+    const canvas: HTMLCanvasElement = this.app.interface.drawings as HTMLCanvasElement;
+    return canvas.height;
+  }
+
+  public draw = (func: Function): void => {
+    /**
+     * Draws on the canvas.
+     * @param func - The function to execute
+     */
+    const canvas: HTMLCanvasElement = this.app.interface.drawings as HTMLCanvasElement;
+    const ctx = canvas.getContext("2d")!;
+    func(ctx);
+  }
+
   public circle = (
     x: number,
     y: number,

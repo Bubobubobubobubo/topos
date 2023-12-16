@@ -464,7 +464,7 @@ export abstract class AudibleEvent extends AbstractEvent {
   }
 
   public draw = (lambda: Function) => {
-    lambda(this.values);
+    lambda(this.values, (this.app.interface.drawings as HTMLCanvasElement).getContext("2d"));
     return this;
   }
 
