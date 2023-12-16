@@ -64,11 +64,11 @@
     }
 
     .bar_button {
-      @apply mx-2 px-2 py-2 flex inline bg-selection_background text-selection_foreground rounded-lg hover:bg-background hover:text-foreground
+      @apply mx-2 px-2 py-2 flex inline rounded-lg bg-background text-foreground  hover:bg-foreground hover:text-background
     }
 
     .side_button {
-      @apply px-2 py-2 bg-selection_background text-selection_foreground rounded-lg hover:bg-background hover:text-foreground
+      @apply px-2 py-2 bg-background text-foreground rounded-lg hover:bg-foreground hover:text-background
     }
 
     .subtitle {
@@ -83,16 +83,10 @@
   <body id="all" class="z-0 overflow-y-hidden bg-black">
 		<!-- The header is hidden on smaller devices -->
     <header class="py-0 block">
-      <div id="topbar" class="mx-auto flex flex-wrap pl-2 py-1 flex-row items-center bg-selection_background text-selection_foreground">
+      <div id="topbar" class="mx-auto flex flex-wrap pl-2 py-1 flex-row items-center bg-background text-selection_foreground">
         <a class="flex title-font font-medium items-center mb-0 text-selection_foreground">
-          <img id="topos-logo" src="topos_frog.svg" class="w-12 h-12 text-selection_foreground p-2 rounded-full" alt="Topos Frog Logo"/>
-         <input id="universe-viewer" class="
-          hidden transparent 
-          xl:block ml-4 
-          text-2xl 
-          text-selection_foreground 
-          placeholder-current
-          bg-selection_background" id="renamer" type="text" placeholder="Topos">
+          <img id="topos-logo" src="topos_frog.svg" class="w-12 h-12 text-selection_foreground p-2 rounded-full bg-foreground" alt="Topos Frog Logo"/>
+         <input id="universe-viewer" class="hidden transparent xl:block ml-4 text-2xl bg-background" id="renamer" type="text" placeholder="Topos">
         </a>
 
         <nav class="py-2 flex flex-wrap items-center text-base absolute right-0">
@@ -477,7 +471,7 @@
 					flex flex-col items-center w-14
 					h-screen py-2 border-r 
 					rtl:border-l max-h-fit
-					rtl:border-r-0 bg-selection_background
+					rtl:border-r-0 bg-background
 					border-neutral-700 border-none"
 				>
         <nav class="flex flex-col space-y-6">

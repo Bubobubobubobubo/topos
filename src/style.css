@@ -1441,6 +1441,11 @@ video {
   color: rgb(var(--brightred) / var(--tw-text-opacity));
 }
 
+.text-brightwhite {
+  --tw-text-opacity: 1;
+  color: rgb(var(--brightwhite) / var(--tw-text-opacity));
+}
+
 .underline {
   text-decoration-line: underline;
 }

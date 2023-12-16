@@ -72,25 +72,25 @@ export const createDocumentationStyle = (app: Editor) => {
    */
 
   return {
-    h1: "text-white lg:text-4xl text-xl lg:ml-4 lg:mx-4 mx-2 lg:my-4 my-2 lg:mb-4 mb-4 border-b-4 pt-4 pb-3 px-2",
-    h2: "text-white lg:text-3xl text-xl lg:ml-4 lg:mx-4 mx-2 lg:my-4 my-2 lg:mb-4 mb-4 border-b-2 pt-12 pb-3 px-2",
-    h3: "text-white lg:text-2xl text-xl lg:ml-4 lg:mx-4 mx-2 lg:my-4 my-2 border-l-2 border-b-2 lg:mb-4 mb-4 pb-2 px-2 lg:mt-16",
+    h1: "text-brightwhite lg:text-4xl text-xl lg:ml-4 lg:mx-4 mx-2 lg:my-4 my-2 lg:mb-4 mb-4 border-b-4 pt-4 pb-3 px-2",
+    h2: "text-brightwhite lg:text-3xl text-xl lg:ml-4 lg:mx-4 mx-2 lg:my-4 my-2 lg:mb-4 mb-4 border-b-2 pt-12 pb-3 px-2",
+    h3: "text-brightwhite lg:text-2xl text-xl lg:ml-4 lg:mx-4 mx-2 lg:my-4 my-2 border-l-2 border-b-2 lg:mb-4 mb-4 pb-2 px-2 lg:mt-16",
     ul: "text-underline ml-12",
-    li: "list-disc lg:text-2xl text-base text-white lg:mx-4 mx-2 my-4 my-2 leading-normal",
-    p: "lg:text-2xl text-base text-white lg:mx-6 mx-2 my-4 leading-normal",
+    li: "list-disc lg:text-2xl text-base text-foreground_selection lg:mx-4 mx-2 my-4 my-2 leading-normal",
+    p: "lg:text-2xl text-base text-background_selection lg:mx-6 mx-2 my-4 leading-normal",
     warning:
       "animate-pulse lg:text-2xl font-bold text-rose-600 lg:mx-6 mx-2 my-4 leading-normal",
     a: "lg:text-2xl text-base text-orange-300",
     code: `lg:my-4 sm:my-1 text-base lg:text-xl block whitespace-pre overflow-x-hidden`,
     icode:
-      "lg:my-1 my-1 lg:text-xl sm:text-xs text-white font-mono bg-neutral-600",
-    ic: "lg:my-1 my-1 lg:text-xl sm:text-xs text-white font-mono bg-neutral-600",
+      "lg:my-1 my-1 lg:text-xl sm:text-xs text-foreground_selection font-mono bg-neutral-600",
+    ic: "lg:my-1 my-1 lg:text-xl sm:text-xs text-foreground_selection font-mono bg-neutral-600",
     blockquote: "text-neutral-200 border-l-4 border-neutral-500 pl-4 my-4 mx-4",
     details:
-      "lg:mx-20 py-2 px-6 lg:text-2xl text-white border-l-8 box-border bg-neutral-900",
+      "lg:mx-20 py-2 px-6 lg:text-2xl text-foreground_selection border-l-8 box-border bg-neutral-900",
     summary: "font-semibold text-xl",
     table:
-      "justify-center lg:my-12 my-2 lg:mx-12 mx-2 lg:text-2xl text-base w-full text-left text-white border-collapse",
+      "justify-center lg:my-12 my-2 lg:mx-12 mx-2 lg:text-2xl text-base w-full text-left text-foreground_selection border-collapse",
     thead:
       "text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400",
     th: "",
