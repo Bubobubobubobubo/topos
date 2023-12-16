@@ -364,17 +364,17 @@
               <div class="flex flex-col space-y-2 pb-2">
                 <button id="download-universes" class="bg-blue font-bold lg:py-4 lg:px-2 px-1 py-2 rounded-lg inline-flex items-center mx-4 text-selection_background">
                   <svg class="fill-current w-4 h-6 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M13 8V2H7v6H2l8 8 8-8h-5zM0 18h20v2H0v-2z"/></svg>
-                  <span class="text-selection_background">Download universes</span>
+                  <span class="text-selection_foreground">Download universes</span>
                 </button>
                 <button id="upload-universes" class="bg-blue font-bold lg:py-4 lg:px-2 px-1 py-2 rounded-lg inline-flex items-center mx-4 text-selection_background">
                   <svg class="rotate-180 fill-current w-4 h-6 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M13 8V2H7v6H2l8 8 8-8h-5zM0 18h20v2H0v-2z"/></svg>
-                  <span class="text-selection_background">Upload universes</span>
+                  <span class="text-selection_foreground">Upload universes</span>
                 </button>
-                <button id="destroy-universes" class="bg-white font-bold lg:px-2 px-1 py-2 rounded-lg inline-flex items-center mx-4">
+                <button id="destroy-universes" class="bg-blue font-bold lg:px-2 px-1 py-2 rounded-lg inline-flex items-center mx-4">
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-6 mr-2">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
                   </svg>
-                  <span class="text-brightred">Destroy universes</span>
+                  <span class="text-selection_foreground">Destroy universes</span>
                 </button>
               </div>
             </div>
@@ -559,7 +559,7 @@
 
       <template id="ui-known-universe-item-template">
         <!-- A known universe button in "opening" interface -->
-        <li class="hover:fill-black hover:white py-2 hover:text-black flex justify-between px-4">
+        <li class="py-2 px-4 flex justify-between text-cyan">
           <button class="universe-name load-universe" title="Load this universe">Universe Name</button>
           <button class="delete-universe" title="Delete this universe">🗑</button>
         </li>

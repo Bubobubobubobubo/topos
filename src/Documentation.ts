@@ -36,12 +36,11 @@ import { ziffers_rhythm } from "./documentation/patterns/ziffers/ziffers_rhythm"
 import { ziffers_algorithmic } from "./documentation/patterns/ziffers/ziffers_algorithmic";
 import { ziffers_tonnetz } from "./documentation/patterns/ziffers/ziffers_tonnetz";
 import { ziffers_syncing } from "./documentation/patterns/ziffers/ziffers_syncing";
-
 import { synths } from "./documentation/learning/audio_engine/synths";
-
 // Setting up the Markdown converter with syntax highlighting
 import showdown from "showdown";
 import showdownHighlight from "showdown-highlight";
+import "highlight.js/styles/atom-one-dark-reasonable.min.css";
 import { createDocumentationStyle } from "./DomElements";
 import { filters } from "./documentation/learning/audio_engine/filters";
 showdown.setFlavor("github");
@@ -67,9 +66,7 @@ export const makeExampleFactory = (application: Editor): Function => {
     <button class="py-1 text-base px-4 hover:bg-neutral-600 bg-neutral-500 inline-block " onclick="app.api._stopDocExample()">&#x23f8;&#xFE0F; Pause</button>
     <button class="py-1 text-base px-4 hover:bg-neutral-900 bg-neutral-800 inline-block " onclick="navigator.clipboard.writeText(app.api.codeExamples['${codeId}'])">📎 Copy</button>
   </summary>
-  \`\`\`javascript
-  ${code}
-  \`\`\`
+  <pre><code class="hljs language-javascript">${code.trim()}</code></pre>
 </details>
 `;
   };
@@ -175,7 +172,10 @@ export const updateDocumentationContent = (app: Editor, bindings: any) => {
     emoji: true,
     moreStyling: true,
     backslashEscapesHTMLTags: true,
-    extensions: [showdownHighlight({ auto_detection: true }), ...bindings],
+    extensions: [showdownHighlight({
+      pre: true, 
+      auto_detection: false
+    }), ...bindings],
   });
   console.log(app.currentDocumentationPane);
 

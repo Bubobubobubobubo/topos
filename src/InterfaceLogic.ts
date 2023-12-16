@@ -326,7 +326,7 @@ export const installInterfaceLogic = (app: Editor) => {
 
     // @ts-ignore
     let selected_theme = colors[app.settings.theme as string];
-    let theme_preview = "<div class='pl-4'>";
+    let theme_preview = "<div class='ml-6'>";
     for (const [key, _] of Object.entries(selected_theme)) {
       theme_preview += `<p class="inline text-${key} bg-${key}">█</p>`;
     }
