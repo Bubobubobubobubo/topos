@@ -2279,8 +2279,13 @@ export class UserAPI {
   }
 
   public randomTheme = (): void => {
-    let theme_names = Object.keys(colorschemes);
+    let theme_names = this.getThemes();
     let selected_theme = theme_names[Math.floor(Math.random() * theme_names.length)];
     this.app.readTheme(selected_theme);
   }
+
+  public getThemes = (): string[] => {
+    return Object.keys(colorschemes);
+  }
+
 }
