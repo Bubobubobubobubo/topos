@@ -214,7 +214,7 @@ export class Editor {
     if (this.settings.theme in available_themes) {
       this.readTheme(this.settings.theme);
     } else {
-      this.settings.theme = "Dracula";
+      this.settings.theme = "Everblush";
       this.readTheme(this.settings.theme);
     }
   }
