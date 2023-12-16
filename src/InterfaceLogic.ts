@@ -159,6 +159,10 @@ export const installInterfaceLogic = (app: Editor) => {
     );
   });
 
+  app.interface.upload_samples_button.addEventListener("click", () => {
+    console.log("Uploading audio samples!")
+  });
+
   app.interface.upload_universe_button.addEventListener("click", () => {
     const fileInput = document.createElement("input");
     fileInput.type = "file";
