@@ -1,3 +1,10 @@
+/**
+ * This code is taken from https://github.com/tidalcycles/strudel/pull/839. The logic is written by 
+ * daslyfe (Jade Rose Rowland). I have tweaked it a bit to fit the needs of this project (TypeScript),
+ * etc... Many thanks for this piece of code! This code is initially part of the Strudel project:
+ * https://github.com/tidalcycles/strudel.
+ */
+
 // @ts-ignore
 import { registerSound, onTriggerSample }  from "superdough";
 
