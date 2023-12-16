@@ -210,7 +210,13 @@ export class Editor {
     loadUniverserFromUrl(this);
 
     // Set the color scheme for the application
-    this.readTheme(this.settings.theme);
+    let available_themes = Object.keys(colors);
+    if (this.settings.theme in available_themes) {
+      this.readTheme(this.settings.theme);
+    } else {
+      this.settings.theme = "Dracula";
+      this.readTheme(this.settings.theme);
+    }
   }
 
   private getBuffer(type: string): any {

@@ -136,7 +136,7 @@ export class AppSettings {
    */
 
   public vimMode: boolean = false;
-  public theme: string = "toposTheme";
+  public theme: string = "Dracula";
   public font: string = "IBM Plex Mono";
   public font_size: number = 24;
   public universes: Universes;
