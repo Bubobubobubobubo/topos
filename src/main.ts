@@ -71,6 +71,7 @@ export class Editor {
   public _mouseX: number = 0;
   public _mouseY: number = 0;
   show_error: boolean = false;
+  currentThemeName: string = "Everblush";
   buttonElements: Record<string, HTMLButtonElement[]> = {};
   interface: ElementMap = {};
   blinkTimeouts: Record<number, number> = {};
@@ -611,6 +612,7 @@ export class Editor {
     let themes: Record<string, { [key: string]: any }> = colors;
     let selected_theme = themes[theme_name];
     if (selected_theme) {
+      this.currentThemeName = theme_name;
       this.updateInterfaceTheme(selected_theme);
       let codeMirrorTheme = getCodeMirrorTheme(selected_theme);
       // Reconfigure the view with the new theme

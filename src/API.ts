@@ -2278,10 +2278,25 @@ export class UserAPI {
     console.log("Changing color scheme for: ", color_scheme)
   }
 
+  public themeName = (): string => {
+    return this.app.currentThemeName;
+  }
+
   public randomTheme = (): void => {
     let theme_names = this.getThemes();
     let selected_theme = theme_names[Math.floor(Math.random() * theme_names.length)];
     this.app.readTheme(selected_theme);
+    this.app.api.log(selected_theme);
+  }
+
+  public nextTheme = (): void => {
+    let theme_names = this.getThemes();
+    let current_theme = this.app.api.themeName();
+    let current_theme_idx = theme_names.indexOf(current_theme);
+    let next_theme_idx = (current_theme_idx + 1) % theme_names.length;
+    let next_theme = theme_names[next_theme_idx];
+    this.app.readTheme(next_theme);
+    this.app.api.log(next_theme);
   }
 
   public getThemes = (): string[] => {
