@@ -62,9 +62,9 @@ export const makeExampleFactory = (application: Editor): Function => {
     return `
 <details ${open ? "open" : ""}>
   <summary >${description}
-    <button class="ml-4 py-1 align-top text-base px-4 hover:bg-brightgreen bg-green inline-block text-brightwhite" onclick="app.api._playDocExample(app.api.codeExamples['${codeId}'])">▶️ Play</button>
-    <button class="py-1 text-base px-4 hover:brightyellow bg-yellow text-brightwhite inline-block" onclick="app.api._stopDocExample()">&#x23f8;&#xFE0F; Pause</button>
-    <button class="py-1 text-base px-4 hover:bg-brightmagenta bg-magenta text-brightwhite inline-block" onclick="navigator.clipboard.writeText(app.api.codeExamples['${codeId}'])">📎 Copy</button>
+    <button class="ml-4 py-1 align-top text-base px-4 hover:bg-brightgreen bg-green inline-block text-selection_foreground" onclick="app.api._playDocExample(app.api.codeExamples['${codeId}'])">▶️ Play</button>
+    <button class="py-1 text-base px-4 hover:brightyellow bg-yellow text-selection_foreground inline-block" onclick="app.api._stopDocExample()">&#x23f8;&#xFE0F; Pause</button>
+    <button class="py-1 text-base px-4 hover:bg-brightmagenta bg-magenta text-selection_foreground inline-block" onclick="navigator.clipboard.writeText(app.api.codeExamples['${codeId}'])">📎 Copy</button>
   </summary>
   <pre><code class="hljs language-javascript">${code.trim()}</code></pre>
 </details>
