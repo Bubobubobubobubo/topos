@@ -2318,6 +2318,16 @@ video {
   background-color: rgb(var(--brightmagenta) / var(--tw-bg-opacity));
 }
 
+.hover\:bg-selection_foreground:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(var(--selection_foreground) / var(--tw-bg-opacity));
+}
+
+.hover\:bg-selection_background:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(var(--selection_background) / var(--tw-bg-opacity));
+}
+
 .hover\:text-background:hover {
   --tw-text-opacity: 1;
   color: rgb(var(--background) / var(--tw-text-opacity));
@@ -2326,6 +2336,11 @@ video {
 .hover\:text-brightwhite:hover {
   --tw-text-opacity: 1;
   color: rgb(var(--brightwhite) / var(--tw-text-opacity));
+}
+
+.hover\:text-selection_foreground:hover {
+  --tw-text-opacity: 1;
+  color: rgb(var(--selection_foreground) / var(--tw-text-opacity));
 }
 
 .focus\:outline-none:focus {
