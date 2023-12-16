@@ -81,7 +81,7 @@ export const getCodeMirrorTheme = (theme: {[key: string]: string}): Extension =>
       },
       "&.cm-focused .cm-selectionBackground, .cm-selectionBackground, .cm-content ::selection":
         {
-          backgroundColor: selection_background,
+          backgroundColor: selection_foreground,
           border: `0.5px solid ${selection_background}`,
         },
       ".cm-panels": {
