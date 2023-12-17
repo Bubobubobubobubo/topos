@@ -83,7 +83,7 @@ export const createDocumentationStyle = (app: Editor) => {
     p: "lg:text-2xl text-base text-white lg:mx-6 mx-2 my-4 leading-normal",
     warning:
       "animate-pulse lg:text-2xl font-bold text-brightred lg:mx-6 mx-2 my-4 leading-normal",
-    a: "lg:text-2xl text-base text-white",
+    a: "lg:text-2xl text-base text-brightred",
     code: `lg:my-4 sm:my-1 text-base lg:text-xl block whitespace-pre overflow-x-hidden`,
     icode:
       "lg:my-1 my-1 lg:text-xl sm:text-xs text-brightwhite font-mono bg-brightblack",
