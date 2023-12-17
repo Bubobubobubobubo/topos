@@ -12,10 +12,10 @@ import {
   Universe,
   loadUniverserFromUrl,
 } from "./FileManagement";
-import { singleElements, buttonGroups, ElementMap } from "./DomElements";
+import { singleElements, buttonGroups, ElementMap, createDocumentationStyle } from "./DomElements";
 import { registerFillKeys, registerOnKeyDown } from "./KeyActions";
 import { installEditor } from "./EditorSetup";
-import { documentation_factory } from "./Documentation";
+import { documentation_factory, documentation_pages, showDocumentation, updateDocumentationContent } from "./Documentation";
 import { EditorView } from "codemirror";
 import { Clock } from "./Clock";
 import { loadSamples, UserAPI } from "./API";
@@ -87,6 +87,8 @@ export class Editor {
     mode: "scope",
     size: 1,
   };
+  bindings: any[] = [];
+  documentationStyle: any = {};
 
   // UserAPI
   api: UserAPI;
@@ -191,7 +193,7 @@ export class Editor {
     // ================================================================================
 
     registerFillKeys(this);
-    registerOnKeyDown(this);
+    registerOnKeyDown(this);    
     installInterfaceLogic(this);
     scriptBlinkers();
 
@@ -219,6 +221,24 @@ export class Editor {
       this.settings.theme = "Everblush";
       this.readTheme(this.settings.theme);
     }
+
+    this.documentationStyle = createDocumentationStyle(this);
+    this.bindings = Object.keys(this.documentationStyle).map((key) => ({
+      type: "output",
+      regex: new RegExp(`<${key}([^>]*)>`, "g"),
+      //@ts-ignore
+      replace: (match, p1) => `<${key} class="${this.documentationStyle[key]}" ${p1}>`,
+    }));
+
+     // Get documentation id from hash parameter
+     const document_id = window.location.hash.slice(1);
+      if(document_id && document_id !== "" && documentation_pages.includes(document_id)) {
+       this.currentDocumentationPane = document_id
+       updateDocumentationContent(this, this.bindings);
+       showDocumentation(this);
+     }
+
+
   }
 
   private getBuffer(type: string): any {

@@ -74,6 +74,46 @@ export const makeExampleFactory = (application: Editor): Function => {
   return make_example;
 };
 
+export const documentation_pages = [
+  "introduction",
+  "sampler",
+  "amplitude",
+  "audio_basics",
+  "filters",
+  "effects",
+  "interface",
+  "interaction",
+  "code",
+  "time",
+  "linear",
+  "cyclic",
+  "longform",
+  "synths",
+  "chaining",
+  "patterns",
+  "ziffers_basics",
+  "ziffers_scales",
+  "ziffers_rhythm",
+  "ziffers_algorithmic",
+  "ziffers_tonnetz",
+  "ziffers_syncing",
+  "midi",
+  "osc",
+  "functions",
+  "generators",
+  "lfos",
+  "probabilities",
+  "variables",
+  "synchronisation",
+  "mouse",
+  "shortcuts",
+  "about",
+  "bonus",
+  "oscilloscope",
+  "sample_list",
+  "loading_samples",
+];
+
 export const documentation_factory = (application: Editor) => {
   /**
    * Creates the documentation for the given application.

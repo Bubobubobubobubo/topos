@@ -4,6 +4,7 @@ import { type Editor } from "./main";
 import colors from "./colors.json";
 import {
   documentation_factory,
+  documentation_pages,
   hideDocumentation,
   showDocumentation,
   updateDocumentationContent,
@@ -23,18 +24,10 @@ import { tryEvaluate } from "./Evaluator";
 import { inlineHoveringTips } from "./documentation/inlineHelp";
 import { lineNumbers } from "@codemirror/view";
 import { jsCompletions } from "./EditorSetup";
-import { createDocumentationStyle } from "./DomElements";
 import { saveState } from "./WindowBehavior";
 
 export const installInterfaceLogic = (app: Editor) => {
   // Initialize style
-  const documentationStyle = createDocumentationStyle(app);
-  const bindings = Object.keys(documentationStyle).map((key) => ({
-    type: "output",
-    regex: new RegExp(`<${key}([^>]*)>`, "g"),
-    //@ts-ignore
-    replace: (match, p1) => `<${key} class="${documentationStyle[key]}" ${p1}>`,
-  }));
 
   (app.interface.line_numbers_checkbox as HTMLInputElement).checked =
     app.settings.line_numbers;
@@ -521,45 +514,7 @@ export const installInterfaceLogic = (app: Editor) => {
 
   tryEvaluate(app, app.universes[app.selected_universe.toString()].init);
 
-  [
-    "introduction",
-    "sampler",
-    "amplitude",
-    "audio_basics",
-    "filters",
-    "effects",
-    "interface",
-    "interaction",
-    "code",
-    "time",
-    "linear",
-    "cyclic",
-    "longform",
-    "synths",
-    "chaining",
-    "patterns",
-    "ziffers_basics",
-    "ziffers_scales",
-    "ziffers_rhythm",
-    "ziffers_algorithmic",
-    "ziffers_tonnetz",
-    "ziffers_syncing",
-    "midi",
-    "osc",
-    "functions",
-    "generators",
-    "lfos",
-    "probabilities",
-    "variables",
-    "synchronisation",
-    "mouse",
-    "shortcuts",
-    "about",
-    "bonus",
-    "oscilloscope",
-    "sample_list",
-    "loading_samples",
-  ].forEach((e) => {
+  documentation_pages.forEach((e) => {
     let name = `docs_` + e;
 
     // Check if the element exists
@@ -568,13 +523,17 @@ export const installInterfaceLogic = (app: Editor) => {
       element.addEventListener("click", async () => {
         if (name !== "docs_sample_list") {
           app.currentDocumentationPane = e;
-          updateDocumentationContent(app, bindings);
+          // Clear query params
+          window.history.replaceState({}, "", window.location.pathname);
+          // Set id as hash paremeter for uri
+          window.location.hash = e;
+          updateDocumentationContent(app, app.bindings);
         } else {
           console.log("Loading samples!");
           await loadSamples().then(() => {
             app.docs = documentation_factory(app);
             app.currentDocumentationPane = e;
-            updateDocumentationContent(app, bindings);
+            updateDocumentationContent(app, app.bindings);
           });
         }
       });
