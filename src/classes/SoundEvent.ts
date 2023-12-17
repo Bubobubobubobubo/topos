@@ -437,7 +437,11 @@ export class SoundEvent extends AudibleEvent {
       if (filteredEvent.freq) {
         delete filteredEvent.note;
       }
-      superdough(filteredEvent, this.app.clock.deadline, filteredEvent.dur);
+      superdough(
+        filteredEvent,  
+        this.nudge - this.app.clock.deviation,
+        filteredEvent.dur
+      );
     }
   };
 
@@ -461,7 +465,7 @@ export class SoundEvent extends AudibleEvent {
         address: oscAddress,
         port: oscPort,
         args: event,
-        timetag: Math.round(Date.now() + this.app.clock.deadline),
+        timetag: Math.round(Date.now() + (this.nudge - this.app.clock.deviation)),
       } as OSCMessage);
     }
   };

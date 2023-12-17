@@ -81,8 +81,8 @@ export const getCodeMirrorTheme = (theme: {[key: string]: string}): Extension =>
       },
       "&.cm-focused .cm-selectionBackground, .cm-selectionBackground, .cm-content ::selection":
         {
-          backgroundColor: selection_foreground,
-          border: `0.5px solid ${selection_background}`,
+          backgroundColor: brightwhite,
+          border: `1px solid ${brightwhite}`,
         },
       ".cm-panels": {
         backgroundColor: selection_background,
@@ -98,18 +98,15 @@ export const getCodeMirrorTheme = (theme: {[key: string]: string}): Extension =>
         backgroundColor: red,
       },
       ".cm-activeLine": {
-        // backgroundColor: highlightBackground
-        backgroundColor: `${selection_foreground}`,
+        backgroundColor: `rgba(${(parseInt(selection_background.slice(1,3), 16))}, ${(parseInt(selection_background.slice(3,5), 16))}, ${(parseInt(selection_background.slice(5,7), 16))}, 0.25)`,
       },
       ".cm-selectionMatch": {
-        backgroundColor: yellow,
-        outline: `1px solid ${red}`,
+        backgroundColor: `rgba(${(parseInt(selection_background.slice(1,3), 16))}, ${(parseInt(selection_background.slice(3,5), 16))}, ${(parseInt(selection_background.slice(5,7), 16))}, 0.25)`,
+        outline: `1px solid ${brightwhite}`,
       },
       "&.cm-focused .cm-matchingBracket": {
-        color: yellow,
-        // outline: `1px solid ${base02}`,
+        color: `rgba(${(parseInt(selection_background.slice(1,3), 16))}, ${(parseInt(selection_background.slice(3,5), 16))}, ${(parseInt(selection_background.slice(5,7), 16))}, 0.25)`,
       },
-
       "&.cm-focused .cm-nonmatchingBracket": {
         color: yellow,
       },
@@ -153,9 +150,9 @@ export const getCodeMirrorTheme = (theme: {[key: string]: string}): Extension =>
     { tag: t.keyword, color: yellow },
     { tag: [t.name, t.deleted, t.character, t.macroName], color: red, },
     { tag: [t.function(t.variableName)], color: blue },
-    { tag: [t.labelName], color: red },
+    { tag: [t.labelName], color: brightwhite },
     { tag: [t.color, t.constant(t.name), t.standard(t.name)], color: cyan, },
-    { tag: [t.definition(t.name), t.separator], color: magenta },
+    { tag: [t.definition(t.name), t.separator], color: brightwhite },
     { tag: [t.brace], color: white },
     { tag: [t.annotation], color: blue, },
     { tag: [t.number, t.changed, t.annotation, t.modifier, t.self, t.namespace], color: yellow, },
@@ -229,7 +226,7 @@ export const getCodeMirrorTheme = (theme: {[key: string]: string}): Extension =>
 //     pointerEvents: "none",
 //   },
 // });
-
+// 
 // const debugHighlightStyle = HighlightStyle.define(
 //   // @ts-ignore
 //   Object.entries(t).map(([key, value]) => {
