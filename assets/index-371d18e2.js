@@ -2460,7 +2460,7 @@ ${e("Infinite frequency generator",`
     beat(.125) && sound("triangle").freq(cache("mathyshit",poly())).out()
 `,!0)};
 
-When you want to dance with a dynamic system in controlled musical chaos, Topos is waiting for you:
+When you want to dance with a dynamical system in controlled musical chaos, Topos is waiting for you:
 
 ${e("Truly scale free chaos inspired by Lorentz attractor",`
   function* strange(x = 0.1, y = 0, z = 0, rho = 28, beta = 8 / 3, zeta = 10) {
@@ -2485,7 +2485,7 @@ ${e("Truly scale free chaos inspired by Lorentz attractor",`
   `,!0)};
 
 ${e("Henon and his discrete music",`
-  function* henonmap(x = 0, y = 0, a = 1.4, b = 0.3) {
+  function* henonMap(x = 0, y = 0, a = 1.4, b = 0.3) {
     while (true) {
       const newX = 1 - a * x ** 2 + y;
       const newY = b * x;
@@ -2497,7 +2497,7 @@ ${e("Henon and his discrete music",`
 
   beat(0.25) :: sound("sawtooth")
     .semitones(1,1,2,2,2,1,2,1)
-    .freq(cache("henonSynth", henonmap()))
+    .freq(cache("Hénon Synth", henonMap()))
     .adsr(0, 0.1, 0.1, 0.5).out()
 
   z0('1 {-2}').octave(-2).sound('bd').out()
@@ -2522,10 +2522,11 @@ ${e("1970s fractal dream",`
   }
 
   beat(0.25) :: sound("triangle")
-    .freq(cache("rossler attractor", rossler(3,4,1)))
+    .freq(cache("Rössler attractor", rossler(3,4,1)))
     .adsr(0,.1,.1,.1)
     .log("freq").out()
   `,!0)};
+
 
 ## OEIS integer sequences
 
