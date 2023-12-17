@@ -14,7 +14,7 @@
     
     
     <script src="https://unpkg.com/hydra-synth"></script>
-    <script type="module" crossorigin src="/assets/index-5cd5d99d.js"></script>
+    <script type="module" crossorigin src="/assets/index-7316e4d2.js"></script>
     <link rel="stylesheet" href="/assets/index-e5dc6b43.css">
   <link rel="manifest" href="/manifest.webmanifest"></head>
   <style>
@@ -494,6 +494,14 @@
                   </svg>
                   <span class="text-selection_foreground">Destroy universes</span>
                 </button>
+                <!-- Upload audio samples -->
+                <p class="font-bold lg:text-xl text-sm ml-4 pb-2 pt-2 underline underline-offset-4 text-selection_background">Audio samples</p>
+
+                <label class="bg-brightwhite font-bold lg:py-4 lg:px-2 px-1 py-2 rounded-lg inline-flex items-center mx-4 text-selection_background">
+                  <svg class="rotate-180 fill-current w-4 h-6 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M13 8V2H7v6H2l8 8 8-8h-5zM0 18h20v2H0v-2z"/></svg>
+                  <input id="upload-samples" type="file" class="hidden" accept="file" webkitdirectory directory multiple>
+                  <span id="sample-indicator" class="text-selection_foreground">Import samples</span>
+                </label>
               </div>
             </div>
           </div>
