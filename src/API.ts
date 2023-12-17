@@ -2481,7 +2481,7 @@ export class UserAPI {
       address: address,
       port: port,
       args: args,
-      timetag: Math.round(Date.now() + this.app.clock.deadline),
+      timetag: Math.round(Date.now() + (this.app.clock.nudge - this.app.clock.deviation)),
     } as OSCMessage);
   };
 
