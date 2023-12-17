@@ -150,9 +150,9 @@ export const getCodeMirrorTheme = (theme: {[key: string]: string}): Extension =>
     { tag: t.keyword, color: yellow },
     { tag: [t.name, t.deleted, t.character, t.macroName], color: red, },
     { tag: [t.function(t.variableName)], color: blue },
-    { tag: [t.labelName], color: red },
+    { tag: [t.labelName], color: brightwhite },
     { tag: [t.color, t.constant(t.name), t.standard(t.name)], color: cyan, },
-    { tag: [t.definition(t.name), t.separator], color: magenta },
+    { tag: [t.definition(t.name), t.separator], color: brightwhite },
     { tag: [t.brace], color: white },
     { tag: [t.annotation], color: blue, },
     { tag: [t.number, t.changed, t.annotation, t.modifier, t.self, t.namespace], color: yellow, },
@@ -226,7 +226,7 @@ export const getCodeMirrorTheme = (theme: {[key: string]: string}): Extension =>
 //     pointerEvents: "none",
 //   },
 // });
-
+// 
 // const debugHighlightStyle = HighlightStyle.define(
 //   // @ts-ignore
 //   Object.entries(t).map(([key, value]) => {
