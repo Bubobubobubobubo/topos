@@ -17,6 +17,7 @@ import { oscilloscope } from "./documentation/more/oscilloscope";
 import { synchronisation } from "./documentation/more/synchronisation";
 import { about } from "./documentation/more/about";
 import { bonus } from "./documentation/more/bonus";
+import { visualization } from "./documentation/more/visualization";
 import { chaining } from "./documentation/patterns/chaining";
 import { interaction } from "./documentation/basics/interaction";
 import { time } from "./documentation/learning/time/time";
@@ -117,6 +118,7 @@ export const documentation_factory = (application: Editor) => {
     audio_basics: audio_basics(application),
     synchronisation: synchronisation(application),
     bonus: bonus(application),
+    visualization: visualization(application),
     sample_list: sample_list(application),
     sample_banks: sample_banks(application),
     loading_samples: loading_samples(application),

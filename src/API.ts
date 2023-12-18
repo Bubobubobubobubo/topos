@@ -73,6 +73,36 @@ export async function loadSamples() {
   ]);
 }
 
+export type ShapeObject = {
+  x: number,
+  y: number,
+  x1: number,
+  y1: number,
+  x2: number,
+  y2: number,
+  radius: number,
+  width: number,
+  height: number,
+  fillStyle: string,
+  secondary: string,
+  strokeStyle: string,
+  rotate: number,
+  points: number,
+  outerRadius: number,
+  rotation: number,
+  eyeSize: number,
+  happiness: number,
+  slices: number,
+  gap: number,
+  font: string,
+  fontSize: number,
+  text: string,
+  filter: string,
+  url: string,
+  curve: number,
+  curves: number,
+}
+
 export class UserAPI {
   /**
    * The UserAPI class is the interface between the user's code and the backend. It provides
@@ -2191,7 +2221,7 @@ export class UserAPI {
   // Canvas Functions
   // =============================================================
 
-  public clear = (): void => {
+  public clear = (): boolean => {
     /**
      * Clears the canvas after a given timeout.
      * @param timeout - The timeout in seconds
@@ -2199,27 +2229,44 @@ export class UserAPI {
     const canvas: HTMLCanvasElement = this.app.interface.drawings as HTMLCanvasElement;
       const ctx = canvas.getContext("2d")!;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
+      return true;
   }
 
-  public width = (): number => {
+  public w = (): number => {
     /**
      * Returns the width of the canvas.
      * @returns The width of the canvas
      */
     const canvas: HTMLCanvasElement = this.app.interface.drawings as HTMLCanvasElement;
-    return canvas.width;
+    return canvas.clientWidth;
   }
 
-  public height = (): number => {
+  public h = (): number => {
     /**
      * Returns the height of the canvas.
      * @returns The height of the canvas
      */
     const canvas: HTMLCanvasElement = this.app.interface.drawings as HTMLCanvasElement;
-    return canvas.height;
+    return canvas.clientHeight;
   }
 
-  public background = (color: string|number, ...gb:number[]): void => {
+  public hc = (): number => {
+    /**
+     * Returns the center y-coordinate of the canvas.
+     * @returns The center y-coordinate of the canvas
+     */
+    return this.h() / 2;
+  }
+
+  public wc = (): number => {
+    /**
+     * Returns the center x-coordinate of the canvas.
+     * @returns The center x-coordinate of the canvas
+     */
+    return this.w() / 2;
+  }
+
+  public background = (color: string|number, ...gb:number[]): boolean => {
     /**
      * Set background color of the canvas.
      * @param color - The color to set. String or 3 numbers representing RGB values.
@@ -2229,7 +2276,9 @@ export class UserAPI {
     if(typeof color === "number") color = `rgb(${color},${gb[0]},${gb[1]})`;
     ctx.fillStyle = color;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
+    return true;
   }
+  bg = this.background;
 
   public linearGradient = (x1: number, y1: number, x2: number, y2: number, ...stops: (number|string)[]) => {
     /**
@@ -2293,37 +2342,112 @@ export class UserAPI {
     return gradient;
   }
 
-  public draw = (func: Function): void => {
+  public draw = (func: Function): boolean => {
     /**
      * Draws on the canvas.
      * @param func - The function to execute
      */
-    const canvas: HTMLCanvasElement = this.app.interface.drawings as HTMLCanvasElement;
-    const ctx = canvas.getContext("2d")!;
-    func(ctx);
+    if(typeof func === "string") {
+      this.drawText (func);
+    } else {
+      const canvas: HTMLCanvasElement = this.app.interface.drawings as HTMLCanvasElement;
+      const ctx = canvas.getContext("2d")!;
+      func(ctx);
+    }
+    return true;
   }
 
-  public circle = (
-    x: number,
-    y: number,
-    radius: number,
-    fillStyle: string,
-  ): void => {
+  public balloid = (
+    curves: number|ShapeObject = 6,
+    radius: number = this.hc()/2,
+    curve: number = 1.5,
+    fillStyle: string = "white",
+    secondary: string = "black",
+    x: number = this.wc(),
+    y: number = this.hc(),
+  ): boolean => {
+    if(typeof curves === "object") {
+      fillStyle = curves.fillStyle || "white";
+      x = curves.x || this.wc();
+      y = curves.y || this.hc();
+      curve = curves.curve || 1.5;
+      radius = curves.radius || this.hc()/2;
+      curves = curves.curves || 6;
+    }
     const canvas: HTMLCanvasElement = this.app.interface.drawings as HTMLCanvasElement;
     const ctx = canvas.getContext("2d")!;
+  
+    // Draw the shape using quadratic Bézier curves
     ctx.beginPath();
-    ctx.arc(x, y, radius, 0, 2 * Math.PI);
     ctx.fillStyle = fillStyle;
-    ctx.fill();
-  };
+  
+    if (curves === 0) {
+      // Draw a circle if curves = 0
+      ctx.arc(x, y, radius, 0, 2 * Math.PI);
+      ctx.closePath();
+      ctx.fill();
+    } else if (curves === 1) {
+      // Draw a single curve (ellipse) if curves = 1
+      ctx.ellipse(x, y, radius*0.8, (radius* curve)*0.7, 0, 0, 2 * Math.PI);
+      ctx.closePath();
+      ctx.fill();
+    } else if (curves === 2) {
+      // Draw a shape with two symmetric curves starting from the top and meeting at the bottom
+      ctx.moveTo(x, y - radius);
 
-  public triangular = (
-    x: number,
-    y: number,
-    radius: number,
-    fillStyle: string,
-    rotate: number
-  ): void => {
+      // First curve
+      ctx.quadraticCurveTo(x + radius * curve, y, x, y + radius);
+  
+      // Second symmetric curve
+      ctx.quadraticCurveTo(x - radius * curve, y, x, y - radius);
+
+      ctx.closePath();
+      ctx.fill();
+    }  else {
+      // Draw the curved shape with the specified number of curves
+      ctx.moveTo(x, y - radius);
+      let points = [];
+      for (let i = 0; i < curves; i++) {
+        const startAngle = (i / curves) * 2 * Math.PI;
+        const endAngle = startAngle + (2 * Math.PI) / curves;
+  
+        const controlX = x + radius * curve * Math.cos(startAngle + Math.PI / curves);
+        const controlY = y + radius * curve * Math.sin(startAngle + Math.PI / curves);
+        points.push([x + radius * Math.cos(startAngle), y + radius * Math.sin(startAngle)]);
+        ctx.moveTo(x + radius * Math.cos(startAngle), y + radius * Math.sin(startAngle));
+        ctx.quadraticCurveTo(controlX, controlY, x + radius * Math.cos(endAngle), y + radius * Math.sin(endAngle));
+      }
+      ctx.closePath();
+      ctx.closePath();
+      ctx.fill();
+
+      ctx.beginPath();
+      ctx.fillStyle = secondary;
+      // Form the shape from points with straight lines and fill it
+      ctx.moveTo(points[0][0], points[0][1]);
+      for(let point of points) ctx.lineTo(point[0], point[1]);
+      // Close and fill
+     
+      ctx.closePath();
+      ctx.fill();
+    }
+    return true;
+  };
+  
+  public equilateral = (
+    radius: number|ShapeObject = this.hc()/3,
+    fillStyle: string = "white",
+    rotate: number = 0,
+    x: number = this.wc(),
+    y: number = this.hc(),
+  ): boolean => {
+    if(typeof radius === "object") {
+      fillStyle = radius.fillStyle || "white";
+      x = radius.x || this.wc();
+      y = radius.y || this.hc();
+      rotate = radius.rotate || 0;
+      radius = radius.radius || this.hc()/3;
+    }
     const canvas: HTMLCanvasElement = this.app.interface.drawings as HTMLCanvasElement;
     const ctx = canvas.getContext("2d")!;
     ctx.save();
@@ -2337,20 +2461,205 @@ export class UserAPI {
     ctx.fillStyle = fillStyle;
     ctx.fill();
     ctx.restore();
+    return true;
   }
 
-  public star = (
-    x: number,
-    y: number,
-    radius: number,
-    points: number = 5,
+  public triangular = (
+    width: number|ShapeObject = this.hc()/3,
+    height: number = this.hc()/3,
     fillStyle: string = "white",
-    outerRadius: number = 1.0,
     rotate: number = 0,
-  ): void => {
+    x: number = this.wc(),
+    y: number = this.hc(),
+  ): boolean => {
+    if(typeof width === "object") {
+      fillStyle = width.fillStyle || "white";
+      x = width.x || this.wc();
+      y = width.y || this.hc();
+      rotate = width.rotate || 0;
+      height = width.height || this.hc()/3;
+      width = width.width || this.hc()/3;
+    }
+    const canvas: HTMLCanvasElement = this.app.interface.drawings as HTMLCanvasElement;
+    const ctx = canvas.getContext("2d")!;
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate((rotate * Math.PI) / 180);
+    ctx.beginPath();
+    ctx.moveTo(0, -height);
+    ctx.lineTo(width, height);
+    ctx.lineTo(-width, height);
+    ctx.closePath();
+    ctx.fillStyle = fillStyle;
+    ctx.fill();
+    ctx.restore();
+    return true;
+  }
+  pointy = this.triangular;
+
+  public ball = (
+    radius: number|ShapeObject = this.hc()/3,
+    fillStyle: string = "white",
+    x: number = this.wc(),
+    y: number = this.hc(),
+  ): boolean => {
+    if(typeof radius === "object") {
+      fillStyle = radius.fillStyle || "white";
+      x = radius.x || this.wc();
+      y = radius.y || this.hc();
+      radius = radius.radius || this.hc()/3;
+    }
+    const canvas: HTMLCanvasElement = this.app.interface.drawings as HTMLCanvasElement;
+    const ctx = canvas.getContext("2d")!;
+    ctx.beginPath();
+    ctx.arc(x, y, radius, 0, 2 * Math.PI);
+    ctx.fillStyle = fillStyle;
+    ctx.fill();
+    return true;
+  }
+  circle = this.ball;
+
+  public donut = (
+    slices: number = 3,
+    eaten: number = 0,
+    radius: number | ShapeObject = this.hc() / 3,
+    hole: number = this.hc() / 12,
+    fillStyle: string = "white",
+    secondary: string = "black",
+    stroke: string = "black",
+    rotate: number = 0,
+    x: number = this.wc(),
+    y: number = this.hc(),
+  ): boolean => {
+    if (typeof radius === "object") {
+      fillStyle = radius.fillStyle || "white";
+      x = radius.x || this.wc();
+      y = radius.y || this.hc();
+      rotate = radius.rotate || 0;
+      slices = radius.slices || 3;
+      radius = radius.radius || this.hc() / 3;
+    }
+  
+    const canvas: HTMLCanvasElement = this.app.interface.drawings as HTMLCanvasElement;
+    const ctx = canvas.getContext("2d")!;
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate((rotate * Math.PI) / 180);
+  
+    // Draw slices as arcs
+    const totalSlices = slices;
+    const sliceAngle = (2 * Math.PI) / totalSlices;
+    for (let i = 0; i < totalSlices; i++) {
+      const startAngle = i * sliceAngle;
+      const endAngle = (i + 1) * sliceAngle;
+  
+      // Calculate the position of the outer arc
+      const outerStartX = hole * Math.cos(startAngle);
+      const outerStartY = hole * Math.sin(startAngle);
+  
+      ctx.beginPath();
+      ctx.moveTo(outerStartX, outerStartY);
+      ctx.arc(0, 0, radius, startAngle, endAngle);
+      ctx.arc(0, 0, hole, endAngle, startAngle, true);
+      ctx.closePath();
+  
+      // Fill and stroke the slices with the specified fill style
+      if (i < slices - eaten) {
+        // Regular slices are white
+        ctx.fillStyle = fillStyle;
+      } else {
+        // Missing slices are black
+        ctx.fillStyle = secondary;
+      }
+      ctx.lineWidth = 2;
+      ctx.fill();
+      ctx.strokeStyle = stroke;
+      ctx.stroke();
+    }
+  
+    ctx.restore();
+    return true;
+  };
+
+  public pie = (
+    slices: number = 3,
+    eaten: number = 0,
+    radius: number | ShapeObject = this.hc() / 3,
+    fillStyle: string = "white",
+    secondary: string = "black",
+    stroke: string = "black",
+    rotate: number = 0,
+    x: number = this.wc(),
+    y: number = this.hc(),
+  ): boolean => {
+    if (typeof radius === "object") {
+      fillStyle = radius.fillStyle || "white";
+      x = radius.x || this.wc();
+      y = radius.y || this.hc();
+      rotate = radius.rotate || 0;
+      slices = radius.slices || 3;
+      radius = radius.radius || this.hc() / 3;
+    }
+  
+    const canvas: HTMLCanvasElement = this.app.interface.drawings as HTMLCanvasElement;
+    const ctx = canvas.getContext("2d")!;
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate((rotate * Math.PI) / 180);
+  
+    // Draw slices as arcs
+    const totalSlices = slices;
+    const sliceAngle = ((2 * Math.PI) / totalSlices);
+    for (let i = 0; i < totalSlices; i++) {
+      const startAngle = i * sliceAngle;
+      const endAngle = (i + 1) * sliceAngle;
+      
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.arc(0, 0, radius, startAngle, endAngle);
+      ctx.closePath();
+  
+      // Fill and stroke the slices with the specified fill style
+      if (i < slices - eaten) {
+        // Regular slices are white
+        ctx.fillStyle = fillStyle;
+      } else {
+        // Missing slices are black
+        ctx.fillStyle = secondary;
+      }
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = stroke;
+      ctx.fill();
+      ctx.stroke();
+      
+    }
+  
+    ctx.restore();
+    return true;
+  };
+
+
+  public star = (
+    points: number|ShapeObject = 5,
+    radius: number = this.hc()/3,
+    fillStyle: string = "white",
+    rotate: number = 0,
+    outerRadius: number = radius/100,
+    x: number = this.wc(),
+    y: number = this.hc(),
+  ): boolean => {
+    if(typeof points === "object") {
+      radius = points.radius || this.hc()/3;
+      fillStyle = points.fillStyle || "white";
+      x = points.x || this.wc();
+      y = points.y || this.hc();
+      rotate = points.rotate || 0;
+      outerRadius = points.outerRadius || radius/100;
+      points = points.points || 5;
+    }
      const canvas: HTMLCanvasElement = this.app.interface.drawings as HTMLCanvasElement;
-     if(points<1) return this.circle(x, y, radius+outerRadius, fillStyle);
-     if(points==1) return this.triangular(x, y, radius, fillStyle, 0);
+     if(points<1) return this.ball(radius, fillStyle, x, y);
+     if(points==1) return this.equilateral(radius, fillStyle, 0, x, y);
      const ctx = canvas.getContext("2d")!;
       ctx.save();
       ctx.translate(x, y);
@@ -2367,34 +2676,59 @@ export class UserAPI {
       ctx.fillStyle = fillStyle;
       ctx.fill();
       ctx.restore();
+      return true;
   };
 
   public stroke = (
-    x1: number,
-    y1: number,
-    x2: number,
-    y2: number,
-    fillStyle: string,
-    width: number = 1,
-  ): void => {
+    width: number|ShapeObject = 1,
+    strokeStyle: string = "white",
+    rotate: number = 0,
+    x1: number = this.wc()-this.wc()/10,
+    y1: number = this.hc(),
+    x2: number = this.wc()+this.wc()/5,
+    y2: number = this.hc(),
+  ): boolean => {
+    if(typeof width === "object") {
+      strokeStyle = width.strokeStyle || "white";
+      x1 = width.x1 || this.wc()-this.wc()/10;
+      y1 = width.y1 || this.hc();
+      x2 = width.x2 || this.wc()+this.wc()/5;
+      y2 = width.y2 || this.hc();
+      rotate = width.rotate || 0;
+      width = width.width || 1;
+    }
     const canvas: HTMLCanvasElement = this.app.interface.drawings as HTMLCanvasElement;
     const ctx = canvas.getContext("2d")!;
+    ctx.save();
+    ctx.translate(x1, y1);
+    ctx.rotate((rotate * Math.PI) / 180);
     ctx.beginPath();
-    ctx.moveTo(x1, y1);
-    ctx.lineTo(x2, y2);
-    ctx.strokeStyle = fillStyle;
+    ctx.moveTo(0, 0);
+    ctx.lineTo(x2-x1, y2-y1);
     ctx.lineWidth = width;
+    ctx.strokeStyle = strokeStyle;
     ctx.stroke();
+    ctx.restore();
+    return true;
   };
 
-  public rectangle = (
-    x: number,
-    y: number,
-    width: number,
-    height: number,
-    fillStyle: string,
+  public box = (
+    width: number|ShapeObject = this.wc()/4,
+    height: number = this.wc()/4,
+    fillStyle: string = "white",
     rotate: number = 0,
-  ): void => {
+    x: number = this.wc()-this.wc()/8,
+    y: number = this.hc()-this.hc()/8,
+  ): boolean => {
+    if(typeof width === "object") {
+      fillStyle = width.fillStyle || "white";
+      x = width.x || this.wc()-this.wc()/4;
+      y = width.y || this.hc()-this.hc()/2;
+      rotate = width.rotate || 0;
+      height = width.height || this.wc()/4;
+      width = width.width || this.wc()/4;
+      
+    }
     const canvas: HTMLCanvasElement = this.app.interface.drawings as HTMLCanvasElement;
     const ctx = canvas.getContext("2d")!;
     ctx.save();
@@ -2403,17 +2737,27 @@ export class UserAPI {
     ctx.fillStyle = fillStyle;
     ctx.fillRect(0, 0, width, height);
     ctx.restore();
+    return true;
   }
 
   public smiley = (
-    x: number,
-    y: number,
-    radius: number,
-    fillStyle: string,
-    eyeSize: number = 1.0,
-    happiness: number = 0.0,
-    rotation: number = 0
-  ): void => {
+    happiness: number|ShapeObject = 2.0,
+    radius: number = this.hc()/3,
+    eyeSize: number = 3.0,
+    fillStyle: string = "yellow",
+    rotation: number = 0,
+    x: number = this.wc(),
+    y: number = this.hc(),
+  ): boolean => {
+    if(typeof happiness === "object") {
+      fillStyle = happiness.fillStyle || "yellow";
+      x = happiness.x || this.wc();
+      y = happiness.y || this.hc();
+      rotation = happiness.rotation || 0;
+      eyeSize = happiness.eyeSize || 3.0;
+      radius = happiness.radius || this.hc()/3;
+      happiness = happiness.happiness || 2.0;
+    }
     const canvas: HTMLCanvasElement = this.app.interface.drawings as HTMLCanvasElement;
     const ctx = canvas.getContext("2d")!;
     // Map the rotation value to an angle within the range of -PI to PI
@@ -2468,8 +2812,103 @@ export class UserAPI {
     ctx.strokeStyle = "black";
     ctx.stroke();
     ctx.restore();
-
+    return true;
   }
+
+  drawText = (
+    text: string|ShapeObject,
+    fontSize: number = 24,
+    rotation: number = 0,
+    font: string = "Arial",
+    x: number = this.wc(),
+    y: number = this.hc(),
+    fillStyle: string = "white",
+    filter: string = "none",
+  ): boolean => {
+    if(typeof text === "object") {
+      fillStyle = text.fillStyle || "white";
+      x = text.x || this.wc();
+      y = text.y || this.hc();
+      rotation = text.rotation || 0;
+      font = text.font || "Arial";
+      fontSize = text.fontSize || 24;
+      filter = text.filter || "none";
+      text = text.text || "";
+    }
+    const canvas: HTMLCanvasElement = this.app.interface.drawings as HTMLCanvasElement;
+    const ctx = canvas.getContext("2d")!;
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate((rotation * Math.PI) / 180);
+    ctx.filter = filter;
+    ctx.font = `${fontSize}px ${font}`;
+    ctx.fillStyle = fillStyle;
+    ctx.fillText(text, 0, 0);
+    ctx.restore();
+    return true;
+  }
+
+  image = (
+    url: string|ShapeObject,
+    width: number = this.wc()/2,
+    height: number = this.hc()/2,
+    rotation: number = 0,
+    x: number = this.wc(),
+    y: number = this.hc(),
+    filter: string = "none",
+  ): boolean => {
+    if(typeof url === "object") {
+      if(!url.url) return true;
+      x = url.x || this.wc();
+      y = url.y || this.hc();
+      rotation = url.rotation || 0;
+      width = url.width || 100;
+      height = url.height || 100;
+      filter = url.filter || "none";
+      url = url.url || "";
+    }
+    const canvas: HTMLCanvasElement = this.app.interface.drawings as HTMLCanvasElement;
+    const ctx = canvas.getContext("2d")!;
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate((rotation * Math.PI) / 180);
+    ctx.filter = filter;
+    const image = new Image();
+    image.src = url;
+    ctx.drawImage(image, -width/2, -height/2, width, height);
+    ctx.restore();
+    return true;
+  }
+
+  randomChar = (length: number= 1, min: number = 0, max: number = 65536): string => {
+    return Array.from(
+
+      { length }, () => String.fromCodePoint(Math.floor(Math.random() * (max - min) + min))
+    ).join('');
+  }
+
+  randomFromRange = (min: number, max: number): string => {
+    const codePoint = Math.floor(Math.random() * (max - min) + min);
+    return String.fromCodePoint(codePoint);
+  };
+  
+  emoji = (n: number = 1): string => {
+    return this.randomChar(n, 0x1f600, 0x1f64f);
+  };
+
+  food = (n: number = 1): string => {
+    return this.randomChar(n, 0x1f32d, 0x1f37f);
+  };
+
+  animals = (n: number = 1): string => {
+    return this.randomChar(n, 0x1f400, 0x1f4d3);
+  };
+
+  expressions = (n: number = 1): string => {
+    return this.randomChar(n, 0x1f910, 0x1f92f);
+  };
+
+
 
 
   // =============================================================

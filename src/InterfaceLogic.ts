@@ -559,6 +559,7 @@ export const installInterfaceLogic = (app: Editor) => {
     "oscilloscope",
     "sample_list",
     "loading_samples",
+    "visualization",
   ].forEach((e) => {
     let name = `docs_` + e;
 
