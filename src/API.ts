@@ -128,6 +128,8 @@ export class UserAPI {
   public MidiConnection: MidiConnection;
   public scale_aid: string | number | undefined = undefined;
   public hydra: any;
+  public onceEvaluator: boolean = true;
+
   load: samples;
 
   constructor(public app: Editor) {
@@ -911,6 +913,18 @@ export class UserAPI {
   // =============================================================
   // Counter and iteration
   // =============================================================
+
+  public once = (): boolean => {
+    /**
+     * Returns true if the code is being evaluated for the first time.
+     *
+     * @returns True if the code is being evaluated for the first time
+     */
+    const firstTime = this.app.api.onceEvaluator; 
+    this.app.api.onceEvaluator = false;
+
+    return firstTime;
+  }
 
   public counter = (
     name: string | number,

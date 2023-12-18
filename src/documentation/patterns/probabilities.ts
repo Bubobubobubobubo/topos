@@ -54,6 +54,7 @@ By default chance operators will be evaluated 48 times within a beat. You can ch
 - <ic>frequently(beats?: number)</ic>: returns true 90% of the time in given number of beats
 - <ic>almostAlways(beats?: number)</ic>: returns true 99% of the time in given number of beats
 - <ic>always(beats?: number)</ic>: returns true. Can be handy when switching between different probabilities
+- <ic>once()</ic>: returns true once, then false until the code is force evaluated (Shift+Ctrl+Enter)
 	
 Examples:
 

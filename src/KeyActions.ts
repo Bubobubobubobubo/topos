@@ -105,6 +105,7 @@ export const registerOnKeyDown = (app: Editor) => {
     if (event.key === "Enter" && event.shiftKey && event.ctrlKey) {
       event.preventDefault();
       app.currentFile().candidate = app.view.state.doc.toString();
+      app.api.onceEvaluator = true;
       tryEvaluate(app, app.currentFile());
       app.flashBackground("#404040", 200);
     }
@@ -114,6 +115,7 @@ export const registerOnKeyDown = (app: Editor) => {
       event.preventDefault();
       app.api.clearPatternCache();
       app.currentFile().candidate = app.view.state.doc.toString();
+      app.api.onceEvaluator = true;
       tryEvaluate(app, app.currentFile());
       app.flashBackground("#404040", 200);
     }

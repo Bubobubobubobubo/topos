@@ -415,6 +415,8 @@ beat(2) :: sound('zzfx').zzfx([3.62,,452,.16,.1,.21,,2.5,,,403,.05,.29,,,,.17,.3
 
 Topos can also speak using the [Web Speech API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Speech_API). There are two ways to use speech synthesis:
 
+Speech synthesis API can crash your browser if you use it too much. To avoid crashing the calls should be limited using methods like beat() or run it only once using once().
+
 - <ic>speak(text: string, lang: string, voice: number, rate: number, pitch: number, volume: number)</ic>
   - <ic>text</ic>: the text you would like to synthesize (_e.g_ <ic>"Wow, Topos can speak!"</ic>).
   - <ic>lang</ic>: language code, for example <ic>en</ic> for English, <ic>fr</ic> for French or with the country code for example British English <ic>en-GB</ic>. See supported values from the [list](https://cloud.google.com/speech-to-text/docs/speech-to-text-supported-languages).
@@ -426,7 +428,7 @@ Topos can also speak using the [Web Speech API](https://developer.mozilla.org/en
 ${makeExample(
   "Hello world!",
   `
-beat(4) :: speak("Hello world!")
+once() && speak("Hello world!")
   `,
   true,
 )}
@@ -434,7 +436,7 @@ beat(4) :: speak("Hello world!")
 ${makeExample(
   "Let's hear people talking about Topos",
   `
-beat(2) :: speak("Topos!","fr",irand(0,5))
+beat(2) && speak("Topos!","fr",irand(0,5))
   `,
   true,
 )}
@@ -445,7 +447,7 @@ You can also use speech by chaining methods to a string:
 ${makeExample(
   "Foobaba is the real deal",
   `
-  onbeat(4) :: "Foobaba".voice(irand(0,10)).speak()
+  onbeat(4) && "Foobaba".voice(irand(0,10)).speak()
   `,
   true,
 )}
@@ -458,7 +460,7 @@ ${makeExample(
   const object = ["happy","sad","tired"].pick()
   const sentence = subject+" "+verb+" "+" "+object
     
-  beat(6) :: sentence.pitch(0).rate(0).voice([0,2].pick()).speak()
+  beat(6) && sentence.pitch(0).rate(0).voice([0,2].pick()).speak()
   `,
   true,
 )}
@@ -474,7 +476,7 @@ ${makeExample(
     "Flamboyant", "Cosmique", "Croissant!"
   ];
   
-  onbeat(4) :: croissant.bar()
+  onbeat(4) && croissant.bar()
       .lang("fr")
       .volume(rand(0.2,2.0))
       .rate(rand(.4,.6))
