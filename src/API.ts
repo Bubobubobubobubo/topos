@@ -86,10 +86,9 @@ export type ShapeObject = {
   fillStyle: string,
   secondary: string,
   strokeStyle: string,
-  rotate: number,
+  rotation: number,
   points: number,
   outerRadius: number,
-  rotation: number,
   eyeSize: number,
   happiness: number,
   slices: number,
@@ -2455,7 +2454,7 @@ export class UserAPI {
   public equilateral = (
     radius: number|ShapeObject = this.hc()/3,
     fillStyle: string = "white",
-    rotate: number = 0,
+    rotation: number = 0,
     x: number = this.wc(),
     y: number = this.hc(),
   ): boolean => {
@@ -2463,14 +2462,14 @@ export class UserAPI {
       fillStyle = radius.fillStyle || "white";
       x = radius.x || this.wc();
       y = radius.y || this.hc();
-      rotate = radius.rotate || 0;
+      rotation = radius.rotation || 0;
       radius = radius.radius || this.hc()/3;
     }
     const canvas: HTMLCanvasElement = this.app.interface.drawings as HTMLCanvasElement;
     const ctx = canvas.getContext("2d")!;
     ctx.save();
     ctx.translate(x, y);
-    ctx.rotate((rotate * Math.PI) / 180);
+    ctx.rotate((rotation * Math.PI) / 180);
     ctx.beginPath();
     ctx.moveTo(0, -radius);
     ctx.lineTo(radius, radius);
@@ -2486,7 +2485,7 @@ export class UserAPI {
     width: number|ShapeObject = this.hc()/3,
     height: number = this.hc()/3,
     fillStyle: string = "white",
-    rotate: number = 0,
+    rotation: number = 0,
     x: number = this.wc(),
     y: number = this.hc(),
   ): boolean => {
@@ -2494,7 +2493,7 @@ export class UserAPI {
       fillStyle = width.fillStyle || "white";
       x = width.x || this.wc();
       y = width.y || this.hc();
-      rotate = width.rotate || 0;
+      rotation = width.rotation || 0;
       height = width.height || this.hc()/3;
       width = width.width || this.hc()/3;
     }
@@ -2502,7 +2501,7 @@ export class UserAPI {
     const ctx = canvas.getContext("2d")!;
     ctx.save();
     ctx.translate(x, y);
-    ctx.rotate((rotate * Math.PI) / 180);
+    ctx.rotate((rotation * Math.PI) / 180);
     ctx.beginPath();
     ctx.moveTo(0, -height);
     ctx.lineTo(width, height);
@@ -2546,7 +2545,7 @@ export class UserAPI {
     fillStyle: string = "white",
     secondary: string = "black",
     stroke: string = "black",
-    rotate: number = 0,
+    rotation: number = 0,
     x: number = this.wc(),
     y: number = this.hc(),
   ): boolean => {
@@ -2554,7 +2553,7 @@ export class UserAPI {
       fillStyle = slices.fillStyle || "white";
       x = slices.x || this.wc();
       y = slices.y || this.hc();
-      rotate = slices.rotate || 0;
+      rotation = slices.rotation || 0;
       radius = slices.radius || this.hc() / 3;
       eaten = slices.eaten || 0;
       hole = slices.hole || this.hc() / 12;
@@ -2567,7 +2566,7 @@ export class UserAPI {
     const ctx = canvas.getContext("2d")!;
     ctx.save();
     ctx.translate(x, y);
-    ctx.rotate((rotate * Math.PI) / 180);
+    ctx.rotate((rotation * Math.PI) / 180);
   
     if(slices<2) {
       ctx.beginPath();
@@ -2629,7 +2628,7 @@ export class UserAPI {
     fillStyle: string = "white",
     secondary: string = "black",
     stroke: string = "black",
-    rotate: number = 0,
+    rotation: number = 0,
     x: number = this.wc(),
     y: number = this.hc(),
   ): boolean => {
@@ -2637,7 +2636,7 @@ export class UserAPI {
       fillStyle = slices.fillStyle || "white";
       x = slices.x || this.wc();
       y = slices.y || this.hc();
-      rotate = slices.rotate || 0;
+      rotation = slices.rotation || 0;
       radius = slices.radius || this.hc() / 3;
       secondary = slices.secondary || "black";
       stroke = slices.stroke || "black";
@@ -2649,7 +2648,7 @@ export class UserAPI {
     const ctx = canvas.getContext("2d")!;
     ctx.save();
     ctx.translate(x, y);
-    ctx.rotate((rotate * Math.PI) / 180);
+    ctx.rotate((rotation * Math.PI) / 180);
   
     if(slices<2) {
       ctx.beginPath();
@@ -2697,7 +2696,7 @@ export class UserAPI {
     points: number|ShapeObject = 5,
     radius: number = this.hc()/3,
     fillStyle: string = "white",
-    rotate: number = 0,
+    rotation: number = 0,
     outerRadius: number = radius/100,
     x: number = this.wc(),
     y: number = this.hc(),
@@ -2707,7 +2706,7 @@ export class UserAPI {
       fillStyle = points.fillStyle || "white";
       x = points.x || this.wc();
       y = points.y || this.hc();
-      rotate = points.rotate || 0;
+      rotation = points.rotation || 0;
       outerRadius = points.outerRadius || radius/100;
       points = points.points || 5;
     }
@@ -2717,7 +2716,7 @@ export class UserAPI {
      const ctx = canvas.getContext("2d")!;
       ctx.save();
       ctx.translate(x, y);
-      ctx.rotate((rotate * Math.PI) / 180);
+      ctx.rotate((rotation * Math.PI) / 180);
       ctx.beginPath();
       ctx.moveTo(0, -radius);
       for (let i = 0; i < points; i++) {
@@ -2736,7 +2735,7 @@ export class UserAPI {
   public stroke = (
     width: number|ShapeObject = 1,
     strokeStyle: string = "white",
-    rotate: number = 0,
+    rotation: number = 0,
     x1: number = this.wc()-this.wc()/10,
     y1: number = this.hc(),
     x2: number = this.wc()+this.wc()/5,
@@ -2748,14 +2747,14 @@ export class UserAPI {
       y1 = width.y1 || this.hc();
       x2 = width.x2 || this.wc()+this.wc()/5;
       y2 = width.y2 || this.hc();
-      rotate = width.rotate || 0;
+      rotation = width.rotation || 0;
       width = width.width || 1;
     }
     const canvas: HTMLCanvasElement = this.app.interface.drawings as HTMLCanvasElement;
     const ctx = canvas.getContext("2d")!;
     ctx.save();
     ctx.translate(x1, y1);
-    ctx.rotate((rotate * Math.PI) / 180);
+    ctx.rotate((rotation * Math.PI) / 180);
     ctx.beginPath();
     ctx.moveTo(0, 0);
     ctx.lineTo(x2-x1, y2-y1);
@@ -2770,7 +2769,7 @@ export class UserAPI {
     width: number|ShapeObject = this.wc()/4,
     height: number = this.wc()/4,
     fillStyle: string = "white",
-    rotate: number = 0,
+    rotation: number = 0,
     x: number = this.wc()-this.wc()/8,
     y: number = this.hc()-this.hc()/8,
   ): boolean => {
@@ -2778,16 +2777,15 @@ export class UserAPI {
       fillStyle = width.fillStyle || "white";
       x = width.x || this.wc()-this.wc()/4;
       y = width.y || this.hc()-this.hc()/2;
-      rotate = width.rotate || 0;
+      rotation = width.rotation || 0;
       height = width.height || this.wc()/4;
       width = width.width || this.wc()/4;
-      
     }
     const canvas: HTMLCanvasElement = this.app.interface.drawings as HTMLCanvasElement;
     const ctx = canvas.getContext("2d")!;
     ctx.save();
     ctx.translate(x, y);
-    ctx.rotate((rotate * Math.PI) / 180);
+    ctx.rotate((rotation * Math.PI) / 180);
     ctx.fillStyle = fillStyle;
     ctx.fillRect(0, 0, width, height);
     ctx.restore();
