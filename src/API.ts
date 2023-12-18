@@ -103,6 +103,7 @@ export type ShapeObject = {
   curves: number,
   stroke: string,
   eaten: number,
+  hole: number,
 }
 
 export class UserAPI {
@@ -2540,6 +2541,10 @@ export class UserAPI {
       y = slices.y || this.hc();
       rotate = slices.rotate || 0;
       radius = slices.radius || this.hc() / 3;
+      eaten = slices.eaten || 0;
+      hole = slices.hole || this.hc() / 12;
+      secondary = slices.secondary || "black";
+      stroke = slices.stroke || "black";
       slices = slices.slices || 3;
     }
   
