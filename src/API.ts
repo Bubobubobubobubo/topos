@@ -2523,9 +2523,9 @@ export class UserAPI {
   circle = this.ball;
 
   public donut = (
-    slices: number = 3,
+    slices: number | ShapeObject = 3,
     eaten: number = 0,
-    radius: number | ShapeObject = this.hc() / 3,
+    radius: number = this.hc() / 3,
     hole: number = this.hc() / 12,
     fillStyle: string = "white",
     secondary: string = "black",
@@ -2534,13 +2534,13 @@ export class UserAPI {
     x: number = this.wc(),
     y: number = this.hc(),
   ): boolean => {
-    if (typeof radius === "object") {
-      fillStyle = radius.fillStyle || "white";
-      x = radius.x || this.wc();
-      y = radius.y || this.hc();
-      rotate = radius.rotate || 0;
-      slices = radius.slices || 3;
-      radius = radius.radius || this.hc() / 3;
+    if (typeof slices === "object") {
+      fillStyle = slices.fillStyle || "white";
+      x = slices.x || this.wc();
+      y = slices.y || this.hc();
+      rotate = slices.rotate || 0;
+      radius = slices.radius || this.hc() / 3;
+      slices = slices.slices || 3;
     }
   
     const canvas: HTMLCanvasElement = this.app.interface.drawings as HTMLCanvasElement;
