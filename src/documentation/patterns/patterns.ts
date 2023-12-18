@@ -152,7 +152,7 @@ ${makeExample(
   "Play pitches from scale created from cent intervals",
   `
   rhythm([0.5,0.25].beat(1),14,16) :: sound('pluck')
-  .stretch(r(1,5)).pitch(r(0,6)).key(57)
+  .stretch(iR(1,5)).pitch(iR(0,6)).key(57)
 .cents(120,270,540,670,785,950,1215).out()
 `,
   true,

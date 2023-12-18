@@ -113,6 +113,7 @@ export const documentation_pages = [
   "oscilloscope",
   "sample_list",
   "loading_samples",
+  "visualization"
 ];
 
 export const documentation_factory = (application: Editor) => {
