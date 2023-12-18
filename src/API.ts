@@ -101,6 +101,8 @@ export type ShapeObject = {
   url: string,
   curve: number,
   curves: number,
+  stroke: string,
+  eaten: number,
 }
 
 export class UserAPI {
@@ -2515,6 +2517,7 @@ export class UserAPI {
     ctx.arc(x, y, radius, 0, 2 * Math.PI);
     ctx.fillStyle = fillStyle;
     ctx.fill();
+    ctx.closePath();
     return true;
   }
   circle = this.ball;
@@ -2546,6 +2549,23 @@ export class UserAPI {
     ctx.translate(x, y);
     ctx.rotate((rotate * Math.PI) / 180);
   
+    if(slices<2) {
+      ctx.beginPath();
+      ctx.arc(0, 0, radius, 0, 2 * Math.PI);
+      ctx.closePath();
+      ctx.fillStyle = slices<1 ? secondary : fillStyle;
+      ctx.fill();
+    
+      ctx.beginPath();
+      ctx.arc(0, 0, hole, 0, 2 * Math.PI);
+      ctx.closePath();
+      ctx.fillStyle = secondary;
+      ctx.fill();
+  
+      ctx.restore();
+      return true;
+    }
+
     // Draw slices as arcs
     const totalSlices = slices;
     const sliceAngle = (2 * Math.PI) / totalSlices;
@@ -2581,10 +2601,11 @@ export class UserAPI {
     return true;
   };
 
+
   public pie = (
-    slices: number = 3,
+    slices: number|ShapeObject = 3,
     eaten: number = 0,
-    radius: number | ShapeObject = this.hc() / 3,
+    radius: number = this.hc() / 3,
     fillStyle: string = "white",
     secondary: string = "black",
     stroke: string = "black",
@@ -2592,13 +2613,16 @@ export class UserAPI {
     x: number = this.wc(),
     y: number = this.hc(),
   ): boolean => {
-    if (typeof radius === "object") {
-      fillStyle = radius.fillStyle || "white";
-      x = radius.x || this.wc();
-      y = radius.y || this.hc();
-      rotate = radius.rotate || 0;
-      slices = radius.slices || 3;
-      radius = radius.radius || this.hc() / 3;
+    if (typeof slices === "object") {
+      fillStyle = slices.fillStyle || "white";
+      x = slices.x || this.wc();
+      y = slices.y || this.hc();
+      rotate = slices.rotate || 0;
+      radius = slices.radius || this.hc() / 3;
+      secondary = slices.secondary || "black";
+      stroke = slices.stroke || "black";
+      eaten = slices.eaten || 0;
+      slices = slices.slices || 3;
     }
   
     const canvas: HTMLCanvasElement = this.app.interface.drawings as HTMLCanvasElement;
@@ -2607,16 +2631,26 @@ export class UserAPI {
     ctx.translate(x, y);
     ctx.rotate((rotate * Math.PI) / 180);
   
+    if(slices<2) {
+      ctx.beginPath();
+      ctx.arc(0, 0, radius, 0, 2 * Math.PI);
+      ctx.closePath();
+      ctx.fillStyle = slices<1 ? secondary : fillStyle;
+      ctx.fill();
+      ctx.restore();
+      return true;
+    }
+
     // Draw slices as arcs
     const totalSlices = slices;
-    const sliceAngle = ((2 * Math.PI) / totalSlices);
+    const sliceAngle = (2 * Math.PI) / totalSlices;
     for (let i = 0; i < totalSlices; i++) {
       const startAngle = i * sliceAngle;
       const endAngle = (i + 1) * sliceAngle;
-      
       ctx.beginPath();
       ctx.moveTo(0, 0);
       ctx.arc(0, 0, radius, startAngle, endAngle);
+      ctx.lineTo(0, 0); // Connect to center
       ctx.closePath();
   
       // Fill and stroke the slices with the specified fill style
@@ -2628,15 +2662,15 @@ export class UserAPI {
         ctx.fillStyle = secondary;
       }
       ctx.lineWidth = 2;
-      ctx.strokeStyle = stroke;
       ctx.fill();
+      ctx.strokeStyle = stroke;
       ctx.stroke();
-      
     }
   
     ctx.restore();
     return true;
   };
+  
 
 
   public star = (

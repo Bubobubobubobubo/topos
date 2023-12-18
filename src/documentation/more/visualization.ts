@@ -7,7 +7,7 @@ export const visualization = (application: Editor): string => {
   return `
 # Vizualisation
 
-While Topos is mainly being developed as a live coding environment for algorithmic music composition, it also includes some features for live code visualizatoins. This section will introduce you to these features.
+While Topos is mainly being developed as a live coding environment for algorithmic music composition, it also includes some features for live code visualizations. This section will introduce you to these features.
 
 ## Hydra Visual Live Coding
 
@@ -50,7 +50,7 @@ ${makeExample(
   false,
 )}
 
-### Documentation
+### Hydra documentation
 
 I won't teach Hydra. You can find some great resources directly on the [Hydra website](https://hydra.ojack.xyz/):
   - [Hydra interactive documentation](https://hydra.ojack.xyz/docs/)
@@ -84,10 +84,13 @@ beat(0.25)::gif({
   false,
 )}
 
-
 ## Canvas live coding
 
-Documentation in progress! Copy the example and run it separately (Showing sualization examples in the documentation not implemented yet).
+Documentation in progress! Copy the example and run it separately (Showing visualization examples in the documentation not implemented yet).
+
+Canvas live coding is a feature that allows you to draw musical events to the canvas. Canvas can be used to create complex visualizations. The feature is based on the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API" target="_blank">Canvas API</a> and the <a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D" target="_blank">CanvasRenderingContext2D</a> interface. The feature is still in development and more functions will be added in the future.
+
+In addition to the standard Canvas API, Topos also includes some pre-defined shapes for convenience. See the Shapes section below for more info.
 
 * <ic>draw(f: Function)</ic> - Draws to a canvas with the given function.
 
@@ -117,6 +120,28 @@ beat(0.5) && clear() && draw(context => {
   false,
 )}
 
+${makeExample(
+"Using draw with events and shapes",
+`
+beat(0.25) && sound("bass1:5").pitch(rI(1,6)).draw(x => {
+donut(x.pitch)
+}).out()
+`,
+false,
+)}  
+
+
+${makeExample(
+"Using draw with ziffers and shapes",
+`
+z1("1/8 (0 2 1 4)+(2 1)").sound("sine").ad(0.05,.25).clear()
+.draw(x => {
+pie({slices:7,eaten:(7-x.pitch-1),fillStyle:"green", rotate: 250})
+}).log("pitch").out()
+`,
+false,
+)}
+
 * <ic<image(url, x, y, width, height, rotation)</ic> - Draws an image to a canvas.
 
 ${makeExample(
@@ -135,6 +160,8 @@ ${makeExample(
 * <ic>hc()</ic> - Returns the center of the canvas height.
 
 ### Text to canvas
+
+Text can be drawn to canvas using the <ic>drawText()</ic> function. The function can take any unicode characters including emojis. The function can also be used to draw random characters from a given unicode range. Different filters can also be applied using the **filter** parameter. See filter in <a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/filter" target="_blank">canvas documentation</a> for more info.
 
 * <ic>drawText(text, fontSize, rotation, font, x, y)</ic> - Draws text to a canvas.
 
@@ -174,7 +201,10 @@ beat(0.5) && clear() && drawText({x: 10, y: epulse()%700, text: food(50)})
 
 ### Shapes
 
-In addition to supporting drawing to canvas directly, Topos also include some pre-defined shapes for convenience. The predefined shapes are:
+In addition to supporting drawing to canvas directly, Topos also include some pre-defined shapes for convenience. Every shape can be defined by either by inputting one object as parameter or by inputting the parameters separately.
+
+The predefined shapes are:
+
 * <ic>smiley(happiness, radius, eyes, fill, rotate, x, y)</ic>
 * <ic>ball(radius,fill,x,y)</ic>
 * <ic>box(width, height, fill, rotate)</ic>
