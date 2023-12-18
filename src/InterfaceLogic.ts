@@ -537,18 +537,16 @@ export const installInterfaceLogic = (app: Editor) => {
     let element = document.getElementById(name);
     if (element) {
       element.addEventListener("click", async () => {
+        // Clear query params & set id as hash paremeter for uri
+        window.history.replaceState({}, "", window.location.pathname);
+        window.location.hash = e;
+        app.docs = documentation_factory(app);
+        app.currentDocumentationPane = e;
         if (name !== "docs_sample_list") {
-          app.currentDocumentationPane = e;
-          // Clear query params
-          window.history.replaceState({}, "", window.location.pathname);
-          // Set id as hash paremeter for uri
-          window.location.hash = e;
           updateDocumentationContent(app, app.bindings);
         } else {
           console.log("Loading samples!");
           await loadSamples().then(() => {
-            app.docs = documentation_factory(app);
-            app.currentDocumentationPane = e;
             updateDocumentationContent(app, app.bindings);
           });
         }

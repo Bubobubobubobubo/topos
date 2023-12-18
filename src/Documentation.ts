@@ -222,13 +222,16 @@ export const updateDocumentationContent = (app: Editor, bindings: any) => {
       auto_detection: false
     }), ...bindings],
   });
-  console.log(app.currentDocumentationPane);
+ 
+  if(Object.keys(app.docs).length === 0) {
+    app.docs = documentation_factory(app);
+  }
 
-  function _update_and_assign(callback: Function) {
+  function _update_and_assign(callback: Function) { 
     const converted_markdown = converter.makeHtml(
       app.docs[app.currentDocumentationPane],
     );
-    callback(converted_markdown)
+     callback(converted_markdown)
   }
   _update_and_assign((e: string)=> { 
     let display_content = e === undefined ? loading_message : e;
