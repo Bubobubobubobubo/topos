@@ -408,8 +408,7 @@ export class Player extends AbstractEvent {
   }
 
   sync(value: string | Function, manualSync: boolean = true) {
-    
-    if(typeof value === "string") {
+    if(typeof value === "string" && manualSync) {
       if(manualSync) {
         const cueTime = this.app.api.cueTimes[value];
         if(cueTime) {
@@ -420,11 +419,11 @@ export class Player extends AbstractEvent {
       }
       return this;
     }
-
     if (this.atTheBeginning() && this.notStarted()) {
       const origin = this.app.clock.pulses_since_origin;
       if (origin > 0) {
-        const syncPattern = this.app.api.patternCache.get(value.name) as Player;
+        const syncName = typeof value === "function" ? value.name : value;
+        const syncPattern = this.app.api.patternCache.get(syncName) as Player;
         if (syncPattern) {
           const syncPatternDuration = syncPattern.ziffers.duration;
           const syncPatternStart = syncPattern.startCallTime;
