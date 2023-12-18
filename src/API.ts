@@ -1377,6 +1377,13 @@ export class UserAPI {
 
   denominator = this.meter;
 
+  pulsesForBar = (): number => {
+    /**
+     * Returns the number of pulses in a given bar
+     */
+    return (this.tempo()*this.ppqn()*this.nominator())/60;
+  }
+
   // =============================================================
   // Fill
   // =============================================================
@@ -2224,6 +2231,14 @@ export class UserAPI {
   // Canvas Functions
   // =============================================================
 
+  public pulseLocation = (): number => {
+    /**
+     * Returns the current pulse location in the current bar.
+     * @returns The current pulse location in the current bar
+     */
+    return ((this.epulse() / this.pulsesForBar())*this.w())%this.w()
+  }
+
   public clear = (): boolean => {
     /**
      * Clears the canvas after a given timeout.
@@ -2780,7 +2795,7 @@ export class UserAPI {
   }
 
   public smiley = (
-    happiness: number|ShapeObject = 2.0,
+    happiness: number|ShapeObject = 0,
     radius: number = this.hc()/3,
     eyeSize: number = 3.0,
     fillStyle: string = "yellow",
@@ -2795,7 +2810,7 @@ export class UserAPI {
       rotation = happiness.rotation || 0;
       eyeSize = happiness.eyeSize || 3.0;
       radius = happiness.radius || this.hc()/3;
-      happiness = happiness.happiness || 2.0;
+      happiness = happiness.happiness || 0;
     }
     const canvas: HTMLCanvasElement = this.app.interface.drawings as HTMLCanvasElement;
     const ctx = canvas.getContext("2d")!;
