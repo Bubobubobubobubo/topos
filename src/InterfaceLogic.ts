@@ -25,6 +25,7 @@ import { lineNumbers } from "@codemirror/view";
 import { jsCompletions } from "./EditorSetup";
 import { createDocumentationStyle } from "./DomElements";
 import { saveState } from "./WindowBehavior";
+import { registerSamplesFromDB, samplesDBConfig, uploadSamplesToDB } from "./IO/SampleLoading";
 
 export const installInterfaceLogic = (app: Editor) => {
   // Initialize style
@@ -157,6 +158,21 @@ export const installInterfaceLogic = (app: Editor) => {
     app.dough_nudge = parseInt(
       (app.interface.dough_nudge_range as HTMLInputElement).value,
     );
+  });
+
+  app.interface.upload_samples_button.addEventListener("input", async (event) => {
+    let fileInput = event.target as HTMLInputElement;
+    if (!fileInput.files?.length) {
+      return;
+    }
+    app.interface.sample_indicator.innerText = "Loading...";
+    app.interface.sample_indicator.classList.add("animate-pulse");
+    await uploadSamplesToDB(samplesDBConfig, fileInput.files).then(() => {
+        registerSamplesFromDB(samplesDBConfig, () => {
+          app.interface.sample_indicator.innerText = "Import samples";
+          app.interface.sample_indicator.classList.remove("animate-pulse");
+        });
+    });
   });
 
   app.interface.upload_universe_button.addEventListener("click", () => {
