@@ -13,7 +13,7 @@
       "type": "image/png"
     }
   ],
-  "start_url": "/",
+  "start_url": "https://topos.live",
   "display": "standalone",
   "id": "toposWebApp",
   "theme_color": "#ffffff",
