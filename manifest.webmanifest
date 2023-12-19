@@ -14,8 +14,7 @@
     }
   ],
   "display": "standalone",
-  "id": "/?source=pwa",
-  "start_url": "/?source=pwa",
+  "start_url": "https://topos.live",
   "scope": "/",
   "theme_color": "#ffffff",
   "background_color": "#ffffff",
