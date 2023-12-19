@@ -53,6 +53,14 @@ export default defineConfig(({ command, mode, ssrBuild }) => {
         port: 8000,
         strictPort: true,
       },
+      build: {
+        outDir: "dist",
+        emptyOutDir: true,
+        cssCodeSplit: true,
+        cssMinify: true,
+        minify: true,
+        publicDir: "favicon",
+      }
     };
   } else {
     return {
@@ -64,6 +72,7 @@ export default defineConfig(({ command, mode, ssrBuild }) => {
         cssCodeSplit: true,
         cssMinify: true,
         minify: true,
+        publicDir: "favicon",
       },
     };
   }
