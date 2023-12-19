@@ -33,7 +33,7 @@ import { installWindowBehaviors } from "./WindowBehavior";
 import { makeNumberExtensions } from "./extensions/NumberExtensions";
 import colors from "./colors.json";
 // @ts-ignore
-const images = import.meta.glob("../assets/*")
+const images = import.meta.glob("./assets/*")
 
 
 
