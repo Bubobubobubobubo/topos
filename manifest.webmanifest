@@ -3,12 +3,12 @@
   "short_name": "Topos",
   "icons": [
     {
-      "src": "favicon/android-chrome-192x192.png",
+      "src": "android-chrome-192x192.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "favicon/android-chrome-512x512.png",
+      "src": "android-chrome-512x512.png",
       "sizes": "512x512",
       "type": "image/png"
     }
@@ -22,14 +22,14 @@
   "description": "Topos is a web based live coding platform",
   "screenshots": [
     {
-      "src": "img/screenshot_miniature.png",
+      "src": "screenshot_miniature.png",
       "sizes": "640x320",
       "type": "image/gif",
       "form_factor": "wide",
       "label": "Topos application"
     },
     {
-      "src": "img/topos_code.png",
+      "src": "topos_code.png",
       "sizes": "1280x768",
       "type": "image/gif",
       "label": "Topos code"
