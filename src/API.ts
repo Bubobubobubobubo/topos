@@ -113,7 +113,6 @@ export class UserAPI {
    * function destined to the user should be placed here.
    */
 
-  private variables: { [key: string]: any } = {};
   public codeExamples: { [key: string]: string } = {};
   private counters: { [key: string]: any } = {};
   private _drunk: DrunkWalk = new DrunkWalk(-100, 100, false);
