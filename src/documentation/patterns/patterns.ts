@@ -120,6 +120,19 @@ beat(1)::sound(['kick', 'fsnare'].dur(3, 1))
   true,
 )}
 
+## Iterating over lists
+
+- <ic>counter(name,limit?,step?)</ic>: return the next value on the list based on counter value. The limit is optional and defaults to the length of the list. The step is optional and defaults to 1. Setting / changing limit will reset the counter.
+- <ic>$(name,limit?,step?)</ic>: shorter alias for the counter.
+
+${makeExample(
+  "Using counter to iterate over a list",
+  `
+  beat(0.5) :: sound("bd").gain(line(0,1,0.01).$("ramp")).out()
+  `,
+  true,
+)}
+
 ## Manipulating notes and scales
 
 - <ic>pitch()</ic>: convert a list of integers to pitch classes
