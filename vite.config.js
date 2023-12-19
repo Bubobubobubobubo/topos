@@ -12,6 +12,7 @@ const vitePWAconfiguration = {
     cleanupOutdatedCaches: false,
     globPatterns: [
       "**/*.{js,js.gz,css,html,gif,png,json,woff,woff2,json,ogg,wav,mp3,ico,png,svg}",
+      "favicon/*.{js,js.gz,css,html,gif,png,json,woff,woff2,json,ogg,wav,mp3,ico,png,svg}",
     ],
     runtimeCaching: [
       {
@@ -34,11 +35,6 @@ const vitePWAconfiguration = {
       },
     ],
   },
-  includeAssets: [
-    "favicon/favicon.icon",
-    "favicon/apple-touch-icon.png",
-    "mask-icon.svg",
-  ],
   manifest: "manifest.webmanifest",
   registerType: "autoUpdate",
   injectRegister: "script-defer",

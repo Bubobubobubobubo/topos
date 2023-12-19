@@ -31,13 +31,8 @@ import { makeStringExtensions } from "./extensions/StringExtensions";
 import { installInterfaceLogic } from "./InterfaceLogic";
 import { installWindowBehaviors } from "./WindowBehavior";
 import { makeNumberExtensions } from "./extensions/NumberExtensions";
-// @ts-ignore
-import { registerSW } from "virtual:pwa-register";
 import colors from "./colors.json";
 
-if ("serviceWorker" in navigator) {
-  registerSW();
-}
 
 export class Editor {
   // Universes and settings
