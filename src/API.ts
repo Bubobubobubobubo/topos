@@ -1526,7 +1526,7 @@ export class UserAPI {
   };
 
   public flipbar = (chunk: number = 1): boolean => {
-    let realFlip = chunk * 2;
+    let realFlip = chunk;
     const time_pos = this.app.clock.time_position.bar;
     const current_chunk = Math.floor(time_pos / realFlip);
     return current_chunk % 2 === 0;
