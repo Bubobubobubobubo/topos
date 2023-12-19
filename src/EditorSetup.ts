@@ -20,7 +20,7 @@ import {
   HighlightStyle,
 } from "@codemirror/language";
 import { defaultKeymap, historyKeymap, history } from "@codemirror/commands";
-import { searchKeymap, highlightSelectionMatches } from "@codemirror/search";
+import { highlightSelectionMatches } from "@codemirror/search";
 import {
   autocompletion,
   closeBrackets,
@@ -259,7 +259,7 @@ export const editorSetup: Extension = (() => [
   highlightActiveLine(),
   highlightSelectionMatches(),
   keymap.of([
-    ...searchKeymap,
+    // ...searchKeymap,
     ...closeBracketsKeymap,
     ...defaultKeymap,
     ...historyKeymap,
