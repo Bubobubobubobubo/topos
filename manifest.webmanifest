@@ -13,9 +13,10 @@
       "type": "image/png"
     }
   ],
-  "start_url": "https://topos.live",
   "display": "standalone",
-  "id": "toposWebApp",
+  "id": "/?source=pwa",
+  "start_url": "/?source=pwa",
+  "scope": "/",
   "theme_color": "#ffffff",
   "background_color": "#ffffff",
   "description": "Topos is a web based live coding platform",
