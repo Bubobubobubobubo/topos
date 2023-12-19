@@ -41,7 +41,7 @@ const vitePWAconfiguration = {
   ],
   manifest: "manifest.webmanifest",
   registerType: "autoUpdate",
-  injectRegister: "auto",
+  injectRegister: "script-defer",
 };
 
 export default defineConfig(({ command, mode, ssrBuild }) => {
