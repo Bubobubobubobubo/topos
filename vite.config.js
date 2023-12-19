@@ -55,7 +55,6 @@ export default defineConfig(({ command, mode, ssrBuild }) => {
         cssCodeSplit: true,
         cssMinify: true,
         minify: true,
-        publicDir: "favicon",
       }
     };
   } else {
@@ -68,7 +67,6 @@ export default defineConfig(({ command, mode, ssrBuild }) => {
         cssCodeSplit: true,
         cssMinify: true,
         minify: true,
-        publicDir: "favicon",
       },
     };
   }
