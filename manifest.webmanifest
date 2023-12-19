@@ -4,8 +4,8 @@
   "theme_color": "#ffffff",
   "background_color": "#ffffff",
   "display": "standalone",
-  "scope": "/",
-  "start_url": "/",
+  "scope": "https://topos.live",
+  "start_url": "https://topos.live",
   "description": "Topos is a web based live coding platform",
   "screenshots": [
     {
