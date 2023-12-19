@@ -121,7 +121,7 @@ export class UserAPI {
   public currentSeed: string | undefined = undefined;
   public localSeeds = new Map<string, Function>();
   public patternCache = new LRUCache({ max: 10000, ttl: 10000 * 60 * 5 });
-  public invalidPatterns: {[key: string]: boolean} = {};
+  public invalidPatterns: { [key: string]: boolean } = {};
   public cueTimes: { [key: string]: number } = {};
   private errorTimeoutID: number = 0;
   private printTimeoutID: number = 0;
@@ -757,15 +757,15 @@ export class UserAPI {
     this.patternCache.delete(id);
   };
 
-  maybeToNumber = (something: any): number|any => {
+  maybeToNumber = (something: any): number | any => {
     // If something is BigInt
-    if(typeof something === "bigint") {
+    if (typeof something === "bigint") {
       return Number(something);
     } else {
       return something;
     }
   }
-  
+
   cache = (key: string, value: any) => {
     /**
      * Gets or sets a value in the cache.
@@ -774,40 +774,40 @@ export class UserAPI {
      * @param value - The value to set
      * @returns The value of the key
      */
-    if(value !== undefined) {
-      if(isGenerator(value)) {
-          if(this.patternCache.has(key)) {
-            const cachedValue = (this.patternCache.get(key) as Generator<any>).next().value
-            if(cachedValue!==0 && !cachedValue) {
-              const generator = value as unknown as Generator<any>
-              this.patternCache.set(key, generator);
-              return this.maybeToNumber(generator.next().value);
-            }
-            return this.maybeToNumber(cachedValue);
-          } else {
+    if (value !== undefined) {
+      if (isGenerator(value)) {
+        if (this.patternCache.has(key)) {
+          const cachedValue = (this.patternCache.get(key) as Generator<any>).next().value
+          if (cachedValue !== 0 && !cachedValue) {
             const generator = value as unknown as Generator<any>
             this.patternCache.set(key, generator);
             return this.maybeToNumber(generator.next().value);
           }
-        } else if(isGeneratorFunction(value)) {
-          if(this.patternCache.has(key)) {
-            const cachedValue = (this.patternCache.get(key) as Generator<any>).next().value;
-            if(cachedValue || cachedValue===0 || cachedValue===0n) {
-              return this.maybeToNumber(cachedValue);
-            } else {
-              const generator = value();
-              this.patternCache.set(key, generator);
-              return this.maybeToNumber(generator.next().value);
-            }
+          return this.maybeToNumber(cachedValue);
+        } else {
+          const generator = value as unknown as Generator<any>
+          this.patternCache.set(key, generator);
+          return this.maybeToNumber(generator.next().value);
+        }
+      } else if (isGeneratorFunction(value)) {
+        if (this.patternCache.has(key)) {
+          const cachedValue = (this.patternCache.get(key) as Generator<any>).next().value;
+          if (cachedValue || cachedValue === 0 || cachedValue === 0n) {
+            return this.maybeToNumber(cachedValue);
           } else {
             const generator = value();
             this.patternCache.set(key, generator);
             return this.maybeToNumber(generator.next().value);
           }
         } else {
-          this.patternCache.set(key, value);
-          return this.maybeToNumber(value);
+          const generator = value();
+          this.patternCache.set(key, generator);
+          return this.maybeToNumber(generator.next().value);
         }
+      } else {
+        this.patternCache.set(key, value);
+        return this.maybeToNumber(value);
+      }
     } else {
       return this.maybeToNumber(this.patternCache.get(key));
     }
@@ -833,27 +833,27 @@ export class UserAPI {
     if (this.app.api.patternCache.has(key)) {
       player = this.app.api.patternCache.get(key) as Player;
 
-      if (typeof input === "string" && 
-          player.input !== input && 
-          player.atTheBeginning()) {
-          replace = true;
+      if (typeof input === "string" &&
+        player.input !== input &&
+        player.atTheBeginning()) {
+        replace = true;
       }
     }
 
     if ((typeof input !== "string" || validSyntax) && (!player || replace)) {
       const newPlayer = new Player(input, options, this.app, zid);
-      if(newPlayer.isValid()) {
+      if (newPlayer.isValid()) {
         player = newPlayer
         this.patternCache.set(key, player);
-      } else if(typeof input === "string") {
+      } else if (typeof input === "string") {
         this.invalidPatterns[input] = true;
       }
     }
 
-    if(player) {
+    if (player) {
 
-      if(player.atTheBeginning()) {
-        if(typeof input === "string" && !validSyntax) this.app.api.log(`Invalid syntax: ${input}`);
+      if (player.atTheBeginning()) {
+        if (typeof input === "string" && !validSyntax) this.app.api.log(`Invalid syntax: ${input}`);
       }
 
       if (player.ziffers.generator && player.ziffers.generatorDone) {
@@ -920,7 +920,7 @@ export class UserAPI {
      *
      * @returns True if the code is being evaluated for the first time
      */
-    const firstTime = this.app.api.onceEvaluator; 
+    const firstTime = this.app.api.onceEvaluator;
     this.app.api.onceEvaluator = false;
 
     return firstTime;
@@ -1394,7 +1394,7 @@ export class UserAPI {
     /**
      * Returns the number of pulses in a given bar
      */
-    return (this.tempo()*this.ppqn()*this.nominator())/60;
+    return (this.tempo() * this.ppqn() * this.nominator()) / 60;
   }
 
   // =============================================================
@@ -1443,7 +1443,7 @@ export class UserAPI {
     const results: boolean[] = nArray.map(
       (value) =>
         (this.app.clock.pulses_since_origin - Math.floor(nudge * this.ppqn())) %
-          Math.floor(value * this.ppqn()) ===
+        Math.floor(value * this.ppqn()) ===
         0,
     );
     return results.some((value) => value === true);
@@ -1463,7 +1463,7 @@ export class UserAPI {
     const results: boolean[] = nArray.map(
       (value) =>
         (this.app.clock.pulses_since_origin - nudgeInPulses) %
-          Math.floor(value * barLength) ===
+        Math.floor(value * barLength) ===
         0,
     );
     return results.some((value) => value === true);
@@ -2061,7 +2061,7 @@ export class UserAPI {
   // =============================================================
 
   register = (name: string, operation: EventOperation<AbstractEvent>): void => {
-    AbstractEvent.prototype[name] = function (
+    AbstractEvent.prototype[name] = function(
       this: AbstractEvent,
       ...args: any[]
     ) {
@@ -2249,7 +2249,7 @@ export class UserAPI {
      * Returns the current pulse location in the current bar.
      * @returns The current pulse location in the current bar
      */
-    return ((this.epulse() / this.pulsesForBar())*this.w())%this.w()
+    return ((this.epulse() / this.pulsesForBar()) * this.w()) % this.w()
   }
 
   public clear = (): boolean => {
@@ -2258,9 +2258,9 @@ export class UserAPI {
      * @param timeout - The timeout in seconds
      */
     const canvas: HTMLCanvasElement = this.app.interface.drawings as HTMLCanvasElement;
-      const ctx = canvas.getContext("2d")!;
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      return true;
+    const ctx = canvas.getContext("2d")!;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    return true;
   }
 
   public w = (): number => {
@@ -2297,21 +2297,21 @@ export class UserAPI {
     return this.w() / 2;
   }
 
-  public background = (color: string|number, ...gb:number[]): boolean => {
+  public background = (color: string | number, ...gb: number[]): boolean => {
     /**
      * Set background color of the canvas.
      * @param color - The color to set. String or 3 numbers representing RGB values.
      */
     const canvas: HTMLCanvasElement = this.app.interface.drawings as HTMLCanvasElement;
     const ctx = canvas.getContext("2d")!;
-    if(typeof color === "number") color = `rgb(${color},${gb[0]},${gb[1]})`;
+    if (typeof color === "number") color = `rgb(${color},${gb[0]},${gb[1]})`;
     ctx.fillStyle = color;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     return true;
   }
   bg = this.background;
 
-  public linearGradient = (x1: number, y1: number, x2: number, y2: number, ...stops: (number|string)[]) => {
+  public linearGradient = (x1: number, y1: number, x2: number, y2: number, ...stops: (number | string)[]) => {
     /**
      * Set linear gradient on the canvas.
      * @param x1 - The x-coordinate of the start point
@@ -2324,15 +2324,15 @@ export class UserAPI {
     const ctx = canvas.getContext("2d")!;
     const gradient = ctx.createLinearGradient(x1, y1, x2, y2);
     // Parse pairs of values from stops
-    for(let i=0; i<stops.length; i+=2) {
-      let color = stops[i+1];
-      if(typeof color === "number") color = `rgb(${color},${stops[i+2]},${stops[i+3]})`;
+    for (let i = 0; i < stops.length; i += 2) {
+      let color = stops[i + 1];
+      if (typeof color === "number") color = `rgb(${color},${stops[i + 2]},${stops[i + 3]})`;
       gradient.addColorStop((stops[i] as number), color);
     }
     return gradient;
   }
 
-  public radialGradient = (x1: number, y1: number, r1: number, x2: number, y2: number, r2: number, ...stops: (number|string)[]) => {
+  public radialGradient = (x1: number, y1: number, r1: number, x2: number, y2: number, r2: number, ...stops: (number | string)[]) => {
     /**
      * Set radial gradient on the canvas.
      * @param x1 - The x-coordinate of the start circle
@@ -2346,15 +2346,15 @@ export class UserAPI {
     const canvas: HTMLCanvasElement = this.app.interface.drawings as HTMLCanvasElement;
     const ctx = canvas.getContext("2d")!;
     const gradient = ctx.createRadialGradient(x1, y1, r1, x2, y2, r2);
-    for(let i=0; i<stops.length; i+=2) {
-      let color = stops[i+1];
-      if(typeof color === "number") color = `rgb(${color},${stops[i+2]},${stops[i+3]})`;
+    for (let i = 0; i < stops.length; i += 2) {
+      let color = stops[i + 1];
+      if (typeof color === "number") color = `rgb(${color},${stops[i + 2]},${stops[i + 3]})`;
       gradient.addColorStop((stops[i] as number), color);
     }
     return gradient;
   }
 
-  public conicGradient = (x: number, y: number, angle: number, ...stops: (number|string)[]) => {
+  public conicGradient = (x: number, y: number, angle: number, ...stops: (number | string)[]) => {
     /**
      * Set conic gradient on the canvas.
      * @param x - The x-coordinate of the center of the gradient
@@ -2365,9 +2365,9 @@ export class UserAPI {
     const canvas: HTMLCanvasElement = this.app.interface.drawings as HTMLCanvasElement;
     const ctx = canvas.getContext("2d")!;
     const gradient = ctx.createConicGradient(x, y, angle);
-    for(let i=0; i<stops.length; i+=2) {
-      let color = stops[i+1];
-      if(typeof color === "number") color = `rgb(${color},${stops[i+2]},${stops[i+3]})`;
+    for (let i = 0; i < stops.length; i += 2) {
+      let color = stops[i + 1];
+      if (typeof color === "number") color = `rgb(${color},${stops[i + 2]},${stops[i + 3]})`;
       gradient.addColorStop((stops[i] as number), color);
     }
     return gradient;
@@ -2378,8 +2378,8 @@ export class UserAPI {
      * Draws on the canvas.
      * @param func - The function to execute
      */
-    if(typeof func === "string") {
-      this.drawText (func);
+    if (typeof func === "string") {
+      this.drawText(func);
     } else {
       const canvas: HTMLCanvasElement = this.app.interface.drawings as HTMLCanvasElement;
       const ctx = canvas.getContext("2d")!;
@@ -2389,29 +2389,29 @@ export class UserAPI {
   }
 
   public balloid = (
-    curves: number|ShapeObject = 6,
-    radius: number = this.hc()/2,
+    curves: number | ShapeObject = 6,
+    radius: number = this.hc() / 2,
     curve: number = 1.5,
     fillStyle: string = "white",
     secondary: string = "black",
     x: number = this.wc(),
     y: number = this.hc(),
   ): boolean => {
-    if(typeof curves === "object") {
+    if (typeof curves === "object") {
       fillStyle = curves.fillStyle || "white";
       x = curves.x || this.wc();
       y = curves.y || this.hc();
       curve = curves.curve || 1.5;
-      radius = curves.radius || this.hc()/2;
+      radius = curves.radius || this.hc() / 2;
       curves = curves.curves || 6;
     }
     const canvas: HTMLCanvasElement = this.app.interface.drawings as HTMLCanvasElement;
     const ctx = canvas.getContext("2d")!;
-  
+
     // Draw the shape using quadratic Bézier curves
     ctx.beginPath();
     ctx.fillStyle = fillStyle;
-  
+
     if (curves === 0) {
       // Draw a circle if curves = 0
       ctx.arc(x, y, radius, 0, 2 * Math.PI);
@@ -2419,7 +2419,7 @@ export class UserAPI {
       ctx.fill();
     } else if (curves === 1) {
       // Draw a single curve (ellipse) if curves = 1
-      ctx.ellipse(x, y, radius*0.8, (radius* curve)*0.7, 0, 0, 2 * Math.PI);
+      ctx.ellipse(x, y, radius * 0.8, (radius * curve) * 0.7, 0, 0, 2 * Math.PI);
       ctx.closePath();
       ctx.fill();
     } else if (curves === 2) {
@@ -2428,20 +2428,20 @@ export class UserAPI {
 
       // First curve
       ctx.quadraticCurveTo(x + radius * curve, y, x, y + radius);
-  
+
       // Second symmetric curve
       ctx.quadraticCurveTo(x - radius * curve, y, x, y - radius);
 
       ctx.closePath();
       ctx.fill();
-    }  else {
+    } else {
       // Draw the curved shape with the specified number of curves
       ctx.moveTo(x, y - radius);
       let points = [];
       for (let i = 0; i < curves; i++) {
         const startAngle = (i / curves) * 2 * Math.PI;
         const endAngle = startAngle + (2 * Math.PI) / curves;
-  
+
         const controlX = x + radius * curve * Math.cos(startAngle + Math.PI / curves);
         const controlY = y + radius * curve * Math.sin(startAngle + Math.PI / curves);
         points.push([x + radius * Math.cos(startAngle), y + radius * Math.sin(startAngle)]);
@@ -2456,28 +2456,28 @@ export class UserAPI {
       ctx.fillStyle = secondary;
       // Form the shape from points with straight lines and fill it
       ctx.moveTo(points[0][0], points[0][1]);
-      for(let point of points) ctx.lineTo(point[0], point[1]);
+      for (let point of points) ctx.lineTo(point[0], point[1]);
       // Close and fill
-     
+
       ctx.closePath();
       ctx.fill();
     }
     return true;
   };
-  
+
   public equilateral = (
-    radius: number|ShapeObject = this.hc()/3,
+    radius: number | ShapeObject = this.hc() / 3,
     fillStyle: string = "white",
     rotation: number = 0,
     x: number = this.wc(),
     y: number = this.hc(),
   ): boolean => {
-    if(typeof radius === "object") {
+    if (typeof radius === "object") {
       fillStyle = radius.fillStyle || "white";
       x = radius.x || this.wc();
       y = radius.y || this.hc();
       rotation = radius.rotation || 0;
-      radius = radius.radius || this.hc()/3;
+      radius = radius.radius || this.hc() / 3;
     }
     const canvas: HTMLCanvasElement = this.app.interface.drawings as HTMLCanvasElement;
     const ctx = canvas.getContext("2d")!;
@@ -2496,20 +2496,20 @@ export class UserAPI {
   }
 
   public triangular = (
-    width: number|ShapeObject = this.hc()/3,
-    height: number = this.hc()/3,
+    width: number | ShapeObject = this.hc() / 3,
+    height: number = this.hc() / 3,
     fillStyle: string = "white",
     rotation: number = 0,
     x: number = this.wc(),
     y: number = this.hc(),
   ): boolean => {
-    if(typeof width === "object") {
+    if (typeof width === "object") {
       fillStyle = width.fillStyle || "white";
       x = width.x || this.wc();
       y = width.y || this.hc();
       rotation = width.rotation || 0;
-      height = width.height || this.hc()/3;
-      width = width.width || this.hc()/3;
+      height = width.height || this.hc() / 3;
+      width = width.width || this.hc() / 3;
     }
     const canvas: HTMLCanvasElement = this.app.interface.drawings as HTMLCanvasElement;
     const ctx = canvas.getContext("2d")!;
@@ -2529,16 +2529,16 @@ export class UserAPI {
   pointy = this.triangular;
 
   public ball = (
-    radius: number|ShapeObject = this.hc()/3,
+    radius: number | ShapeObject = this.hc() / 3,
     fillStyle: string = "white",
     x: number = this.wc(),
     y: number = this.hc(),
   ): boolean => {
-    if(typeof radius === "object") {
+    if (typeof radius === "object") {
       fillStyle = radius.fillStyle || "white";
       x = radius.x || this.wc();
       y = radius.y || this.hc();
-      radius = radius.radius || this.hc()/3;
+      radius = radius.radius || this.hc() / 3;
     }
     const canvas: HTMLCanvasElement = this.app.interface.drawings as HTMLCanvasElement;
     const ctx = canvas.getContext("2d")!;
@@ -2575,26 +2575,26 @@ export class UserAPI {
       stroke = slices.stroke || "black";
       slices = slices.slices || 3;
     }
-  
+
     const canvas: HTMLCanvasElement = this.app.interface.drawings as HTMLCanvasElement;
     const ctx = canvas.getContext("2d")!;
     ctx.save();
     ctx.translate(x, y);
     ctx.rotate((rotation * Math.PI) / 180);
-  
-    if(slices<2) {
+
+    if (slices < 2) {
       ctx.beginPath();
       ctx.arc(0, 0, radius, 0, 2 * Math.PI);
       ctx.closePath();
-      ctx.fillStyle = slices<1 ? secondary : fillStyle;
+      ctx.fillStyle = slices < 1 ? secondary : fillStyle;
       ctx.fill();
-    
+
       ctx.beginPath();
       ctx.arc(0, 0, hole, 0, 2 * Math.PI);
       ctx.closePath();
       ctx.fillStyle = secondary;
       ctx.fill();
-  
+
       ctx.restore();
       return true;
     }
@@ -2605,17 +2605,17 @@ export class UserAPI {
     for (let i = 0; i < totalSlices; i++) {
       const startAngle = i * sliceAngle;
       const endAngle = (i + 1) * sliceAngle;
-  
+
       // Calculate the position of the outer arc
       const outerStartX = hole * Math.cos(startAngle);
       const outerStartY = hole * Math.sin(startAngle);
-  
+
       ctx.beginPath();
       ctx.moveTo(outerStartX, outerStartY);
       ctx.arc(0, 0, radius, startAngle, endAngle);
       ctx.arc(0, 0, hole, endAngle, startAngle, true);
       ctx.closePath();
-  
+
       // Fill and stroke the slices with the specified fill style
       if (i < slices - eaten) {
         // Regular slices are white
@@ -2629,14 +2629,14 @@ export class UserAPI {
       ctx.strokeStyle = stroke;
       ctx.stroke();
     }
-  
+
     ctx.restore();
     return true;
   };
 
 
   public pie = (
-    slices: number|ShapeObject = 3,
+    slices: number | ShapeObject = 3,
     eaten: number = 0,
     radius: number = this.hc() / 3,
     fillStyle: string = "white",
@@ -2657,18 +2657,18 @@ export class UserAPI {
       eaten = slices.eaten || 0;
       slices = slices.slices || 3;
     }
-  
+
     const canvas: HTMLCanvasElement = this.app.interface.drawings as HTMLCanvasElement;
     const ctx = canvas.getContext("2d")!;
     ctx.save();
     ctx.translate(x, y);
     ctx.rotate((rotation * Math.PI) / 180);
-  
-    if(slices<2) {
+
+    if (slices < 2) {
       ctx.beginPath();
       ctx.arc(0, 0, radius, 0, 2 * Math.PI);
       ctx.closePath();
-      ctx.fillStyle = slices<1 ? secondary : fillStyle;
+      ctx.fillStyle = slices < 1 ? secondary : fillStyle;
       ctx.fill();
       ctx.restore();
       return true;
@@ -2685,7 +2685,7 @@ export class UserAPI {
       ctx.arc(0, 0, radius, startAngle, endAngle);
       ctx.lineTo(0, 0); // Connect to center
       ctx.closePath();
-  
+
       // Fill and stroke the slices with the specified fill style
       if (i < slices - eaten) {
         // Regular slices are white
@@ -2699,67 +2699,67 @@ export class UserAPI {
       ctx.strokeStyle = stroke;
       ctx.stroke();
     }
-  
+
     ctx.restore();
     return true;
   };
-  
+
 
 
   public star = (
-    points: number|ShapeObject = 5,
-    radius: number = this.hc()/3,
+    points: number | ShapeObject = 5,
+    radius: number = this.hc() / 3,
     fillStyle: string = "white",
     rotation: number = 0,
-    outerRadius: number = radius/100,
+    outerRadius: number = radius / 100,
     x: number = this.wc(),
     y: number = this.hc(),
   ): boolean => {
-    if(typeof points === "object") {
-      radius = points.radius || this.hc()/3;
+    if (typeof points === "object") {
+      radius = points.radius || this.hc() / 3;
       fillStyle = points.fillStyle || "white";
       x = points.x || this.wc();
       y = points.y || this.hc();
       rotation = points.rotation || 0;
-      outerRadius = points.outerRadius || radius/100;
+      outerRadius = points.outerRadius || radius / 100;
       points = points.points || 5;
     }
-     const canvas: HTMLCanvasElement = this.app.interface.drawings as HTMLCanvasElement;
-     if(points<1) return this.ball(radius, fillStyle, x, y);
-     if(points==1) return this.equilateral(radius, fillStyle, 0, x, y);
-     const ctx = canvas.getContext("2d")!;
-      ctx.save();
-      ctx.translate(x, y);
-      ctx.rotate((rotation * Math.PI) / 180);
-      ctx.beginPath();
-      ctx.moveTo(0, -radius);
-      for (let i = 0; i < points; i++) {
-        ctx.rotate(Math.PI / points);
-        ctx.lineTo(0, -(radius * outerRadius));
-        ctx.rotate(Math.PI / points);
-        ctx.lineTo(0, -radius);
-      }
-      ctx.closePath();
-      ctx.fillStyle = fillStyle;
-      ctx.fill();
-      ctx.restore();
-      return true;
+    const canvas: HTMLCanvasElement = this.app.interface.drawings as HTMLCanvasElement;
+    if (points < 1) return this.ball(radius, fillStyle, x, y);
+    if (points == 1) return this.equilateral(radius, fillStyle, 0, x, y);
+    const ctx = canvas.getContext("2d")!;
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate((rotation * Math.PI) / 180);
+    ctx.beginPath();
+    ctx.moveTo(0, -radius);
+    for (let i = 0; i < points; i++) {
+      ctx.rotate(Math.PI / points);
+      ctx.lineTo(0, -(radius * outerRadius));
+      ctx.rotate(Math.PI / points);
+      ctx.lineTo(0, -radius);
+    }
+    ctx.closePath();
+    ctx.fillStyle = fillStyle;
+    ctx.fill();
+    ctx.restore();
+    return true;
   };
 
   public stroke = (
-    width: number|ShapeObject = 1,
+    width: number | ShapeObject = 1,
     strokeStyle: string = "white",
     rotation: number = 0,
-    x1: number = this.wc()-this.wc()/10,
+    x1: number = this.wc() - this.wc() / 10,
     y1: number = this.hc(),
-    x2: number = this.wc()+this.wc()/5,
+    x2: number = this.wc() + this.wc() / 5,
     y2: number = this.hc(),
   ): boolean => {
-    if(typeof width === "object") {
+    if (typeof width === "object") {
       strokeStyle = width.strokeStyle || "white";
-      x1 = width.x1 || this.wc()-this.wc()/10;
+      x1 = width.x1 || this.wc() - this.wc() / 10;
       y1 = width.y1 || this.hc();
-      x2 = width.x2 || this.wc()+this.wc()/5;
+      x2 = width.x2 || this.wc() + this.wc() / 5;
       y2 = width.y2 || this.hc();
       rotation = width.rotation || 0;
       width = width.width || 1;
@@ -2771,7 +2771,7 @@ export class UserAPI {
     ctx.rotate((rotation * Math.PI) / 180);
     ctx.beginPath();
     ctx.moveTo(0, 0);
-    ctx.lineTo(x2-x1, y2-y1);
+    ctx.lineTo(x2 - x1, y2 - y1);
     ctx.lineWidth = width;
     ctx.strokeStyle = strokeStyle;
     ctx.stroke();
@@ -2780,20 +2780,20 @@ export class UserAPI {
   };
 
   public box = (
-    width: number|ShapeObject = this.wc()/4,
-    height: number = this.wc()/4,
+    width: number | ShapeObject = this.wc() / 4,
+    height: number = this.wc() / 4,
     fillStyle: string = "white",
     rotation: number = 0,
-    x: number = this.wc()-this.wc()/8,
-    y: number = this.hc()-this.hc()/8,
+    x: number = this.wc() - this.wc() / 8,
+    y: number = this.hc() - this.hc() / 8,
   ): boolean => {
-    if(typeof width === "object") {
+    if (typeof width === "object") {
       fillStyle = width.fillStyle || "white";
-      x = width.x || this.wc()-this.wc()/4;
-      y = width.y || this.hc()-this.hc()/2;
+      x = width.x || this.wc() - this.wc() / 4;
+      y = width.y || this.hc() - this.hc() / 2;
       rotation = width.rotation || 0;
-      height = width.height || this.wc()/4;
-      width = width.width || this.wc()/4;
+      height = width.height || this.wc() / 4;
+      width = width.width || this.wc() / 4;
     }
     const canvas: HTMLCanvasElement = this.app.interface.drawings as HTMLCanvasElement;
     const ctx = canvas.getContext("2d")!;
@@ -2807,27 +2807,27 @@ export class UserAPI {
   }
 
   public smiley = (
-    happiness: number|ShapeObject = 0,
-    radius: number = this.hc()/3,
+    happiness: number | ShapeObject = 0,
+    radius: number = this.hc() / 3,
     eyeSize: number = 3.0,
     fillStyle: string = "yellow",
     rotation: number = 0,
     x: number = this.wc(),
     y: number = this.hc(),
   ): boolean => {
-    if(typeof happiness === "object") {
+    if (typeof happiness === "object") {
       fillStyle = happiness.fillStyle || "yellow";
       x = happiness.x || this.wc();
       y = happiness.y || this.hc();
       rotation = happiness.rotation || 0;
       eyeSize = happiness.eyeSize || 3.0;
-      radius = happiness.radius || this.hc()/3;
+      radius = happiness.radius || this.hc() / 3;
       happiness = happiness.happiness || 0;
     }
     const canvas: HTMLCanvasElement = this.app.interface.drawings as HTMLCanvasElement;
     const ctx = canvas.getContext("2d")!;
     // Map the rotation value to an angle within the range of -PI to PI
-    const rotationAngle = rotation/100 * Math.PI;
+    const rotationAngle = rotation / 100 * Math.PI;
     ctx.save();
     ctx.translate(x, y);
     ctx.rotate(rotationAngle);
@@ -2861,16 +2861,16 @@ export class UserAPI {
     const mouthY = radius / 2;
     const mouthLength = radius * 0.9;
     const smileFactor = 0.25; // Adjust for the smile curvature
-  
+
     let controlPointX = 0;
     let controlPointY = 0;
-  
+
     if (happiness >= 0) {
       controlPointY = mouthY + happiness * smileFactor * radius / 2;
     } else {
       controlPointY = mouthY + happiness * smileFactor * radius / 2;
     }
-  
+
     ctx.beginPath();
     ctx.moveTo(-mouthLength / 2, mouthY);
     ctx.quadraticCurveTo(controlPointX, controlPointY, mouthLength / 2, mouthY);
@@ -2882,7 +2882,7 @@ export class UserAPI {
   }
 
   drawText = (
-    text: string|ShapeObject,
+    text: string | ShapeObject,
     fontSize: number = 24,
     rotation: number = 0,
     font: string = "Arial",
@@ -2891,7 +2891,7 @@ export class UserAPI {
     fillStyle: string = "white",
     filter: string = "none",
   ): boolean => {
-    if(typeof text === "object") {
+    if (typeof text === "object") {
       fillStyle = text.fillStyle || "white";
       x = text.x || this.wc();
       y = text.y || this.hc();
@@ -2915,16 +2915,16 @@ export class UserAPI {
   }
 
   image = (
-    url: string|ShapeObject,
-    width: number = this.wc()/2,
-    height: number = this.hc()/2,
+    url: string | ShapeObject,
+    width: number = this.wc() / 2,
+    height: number = this.hc() / 2,
     rotation: number = 0,
     x: number = this.wc(),
     y: number = this.hc(),
     filter: string = "none",
   ): boolean => {
-    if(typeof url === "object") {
-      if(!url.url) return true;
+    if (typeof url === "object") {
+      if (!url.url) return true;
       x = url.x || this.wc();
       y = url.y || this.hc();
       rotation = url.rotation || 0;
@@ -2941,12 +2941,12 @@ export class UserAPI {
     ctx.filter = filter;
     const image = new Image();
     image.src = url;
-    ctx.drawImage(image, -width/2, -height/2, width, height);
+    ctx.drawImage(image, -width / 2, -height / 2, width, height);
     ctx.restore();
     return true;
   }
 
-  randomChar = (length: number= 1, min: number = 0, max: number = 65536): string => {
+  randomChar = (length: number = 1, min: number = 0, max: number = 65536): string => {
     return Array.from(
 
       { length }, () => String.fromCodePoint(Math.floor(Math.random() * (max - min) + min))
@@ -2957,7 +2957,7 @@ export class UserAPI {
     const codePoint = Math.floor(Math.random() * (max - min) + min);
     return String.fromCodePoint(codePoint);
   };
-  
+
   emoji = (n: number = 1): string => {
     return this.randomChar(n, 0x1f600, 0x1f64f);
   };
@@ -3058,7 +3058,7 @@ export class UserAPI {
     this.app.clock.time_signature = [numerator, denominator];
   };
 
-  public cue = (functionName: string|Function): void => {
+  public cue = (functionName: string | Function): void => {
     functionName = typeof functionName === "function" ? functionName.name : functionName;
     this.cueTimes[functionName] = this.app.clock.pulses_since_origin;
   };
@@ -3076,7 +3076,6 @@ export class UserAPI {
     let theme_names = this.getThemes();
     let selected_theme = theme_names[Math.floor(Math.random() * theme_names.length)];
     this.app.readTheme(selected_theme);
-    this.app.api.log(selected_theme);
   }
 
   public nextTheme = (): void => {
