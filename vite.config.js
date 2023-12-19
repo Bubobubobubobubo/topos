@@ -10,6 +10,7 @@ const vitePWAconfiguration = {
   workbox: {
     sourcemap: false,
     cleanupOutdatedCaches: false,
+    maximumFileSizeToCacheInBytes: 10000000,
     globPatterns: [
       "**/*.{js,js.gz,css,html,gif,png,json,woff,woff2,json,ogg,wav,mp3,ico,png,svg}",
       "favicon/*.{js,js.gz,css,html,gif,png,json,woff,woff2,json,ogg,wav,mp3,ico,png,svg}",
@@ -35,7 +36,7 @@ const vitePWAconfiguration = {
       },
     ],
   },
-  manifest: "manifest.webmanifest",
+  manifest: false,
   registerType: "autoUpdate",
   injectRegister: "script-defer",
 };
