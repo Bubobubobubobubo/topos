@@ -33,6 +33,8 @@ declare global {
     gen(min: number, max: number, times: number): number[];
     sometimes(func: Function): number[];
     apply(func: Function): number[];
+    counter(name: string | number, limit?: number, step?: number): number[]
+    $(name: string | number, limit?: number, step?: number): number[];
   }
 }
 
@@ -398,7 +400,30 @@ export const makeArrayExtensions = (api: UserAPI) => {
     return this[Math.floor(api.randomGen() * this.length)];
   };
   Array.prototype.rand = Array.prototype.random;
+
+  Array.prototype.counter = function(
+    name: string | number,
+    limit?: number,
+    step?: number) {
+    /**
+     * @param n - Returns next item in array until the end, then returns the last value.
+     *
+     * @returns the shifted array
+     */
+    const idx = api.counter(name,limit,step);
+    if(limit) {
+      return this[idx % this.length];
+    } else if(idx < this.length) {
+      return this[idx];
+    } else {
+      return this[this.length - 1];
+    }
+  };
+  Array.prototype.$ = Array.prototype.counter;
+
 };
+
+
 
 Array.prototype.scale = function (
   scale: string = "major",

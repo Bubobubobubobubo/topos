@@ -977,6 +977,7 @@ export class UserAPI {
     return this.counters[name].value;
   };
   $ = this.counter;
+  count = this.counter;
 
   // =============================================================
   // Iterator functions (for loops, with evaluation count, etc...)
@@ -1737,11 +1738,20 @@ export class UserAPI {
      * @param step - The step value of the array
      * @returns An array of values between start and end, with a given step
      */
+    function countPlaces(num: number) {
+      var text = num.toString();
+      var index = text.indexOf(".");
+      return index == -1 ? 0 : (text.length - index - 1);
+    }
     const result: number[] = [];
 
     if ((end > start && step > 0) || (end < start && step < 0)) {
       for (let value = start; value <= end; value += step) {
         result.push(value);
+      }
+    } else if((end > start && step < 0) || (end < start && step > 0)) {
+      for (let value = start; value >= end; value -= step) {
+        result.push(parseFloat(value.toFixed(countPlaces(step))));
       }
     } else {
       console.error("Invalid range or step provided.");
