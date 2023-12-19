@@ -4,10 +4,9 @@ import viteCompression from "vite-plugin-compression";
 
 const vitePWAconfiguration = {
   devOptions: {
-    enabled: true,
+    enabled: false,
     suppressWarnings: true,
   },
-
   workbox: {
     sourcemap: false,
     cleanupOutdatedCaches: false,

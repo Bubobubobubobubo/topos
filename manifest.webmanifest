@@ -1,12 +1,21 @@
 {
   "name": "Topos",
   "short_name": "Topos",
-  "description": "Live coding environment",
   "theme_color": "#ffffff",
   "background_color": "#ffffff",
   "display": "standalone",
   "scope": "/",
   "start_url": "/",
+  "description": "Topos is a web based live coding platform",
+  "screenshots": [
+    {
+      "src": "./img/screnshot.png",
+      "sizes": "640x320",
+      "type": "image/gif",
+      "form_factor": "wide",
+      "label": "Topos application"
+    }
+  ],
   "icons": [
     {
       "src": "./favicon/android-chrome-192x192.png",
