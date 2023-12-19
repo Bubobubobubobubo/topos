@@ -7,20 +7,15 @@ export const variables = (application: Editor): string => {
 
 # Variables
 
-By default, each script is independant from each other. Scripts live in their own bubble and you cannot get or set variables affecting a script from any other script.
+By default, each script is independant from each other. The variables defined in **script 1** are not available in **script 2**, etc. Moreover, they are overriden everytime the file is evaluated. It means that you cannot store any state or share information. However, you can use global variables to make that possible.
 
-**However**, everybody knows that global variables are cool and should be used everywhere. Global variables are an incredibely powerful tool to radically alter a composition in a few lines of code.
+There is a <ic>global</ic> object that you can use to store and retrieve information. It is a simple key/value store. You can store any type of data in it:
 	
-- <ic>variable(a: number | string, b?: any)</ic>: if only one argument is provided, the value of the variable will be returned through its name, denoted by the first argument. If a second argument is used, it will be saved as a global variable under the name of the first argument.
-	- <ic>delete_variable(name: string)</ic>: deletes a global variable from storage.
-	- <ic>clear_variables()</ic>: clear **ALL** variables. **This is a destructive operation**!
-	
-**Note:** since this example is running in the documentation, we cannot take advantage of the multiple scripts paradigm. Try to send a variable from the global file to the local file n°6.
-
 ${makeExample(
   "Setting a global variable",
   `
-v('my_cool_variable', 2)
+// This is script n°3
+global.my_variable = 2
 `,
   true,
 )}
@@ -28,15 +23,16 @@ v('my_cool_variable', 2)
 ${makeExample(
   "Getting that variable back and printing!",
   `
-// Note that we just use one argument
-log(v('my_cool_variable'))
+// This is script n°4
+log(global.my_variable)
 `,
-  false,
+  true,
 )}
 
+Now your scripts can share information with each other!
 
 ## Counter and iterators
-	
+
 You will often need to use iterators and/or counters to index over data structures (getting a note from a list of notes, etc...). There are functions ready to be used for this. Each script also comes with its own iterator that you can access using the <ic>i</ic> variable. **Note:** the script iteration count is **not** resetted between sessions. It will continue to increase the more you play, even if you just picked up an old project.
 	
 - <ic>counter(name: number | string, limit?: number, step?: number)</ic>: reads the value of the counter <ic>name</ic>. You can also call this function using the dollar symbol: <ic>$</ic>.
