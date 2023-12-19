@@ -3,32 +3,32 @@
   "short_name": "Topos",
   "icons": [
     {
-      "src": "android-chrome-192x192.png",
+      "src": "src/assets/android-chrome-192x192.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "android-chrome-512x512.png",
+      "src": "src/assets/android-chrome-512x512.png",
       "sizes": "512x512",
       "type": "image/png"
     }
   ],
   "display": "standalone",
-  "start_url": "https://topos.live",
+  "start_url": "/",
   "scope": "/",
   "theme_color": "#ffffff",
   "background_color": "#ffffff",
   "description": "Topos is a web based live coding platform",
   "screenshots": [
     {
-      "src": "screenshot_miniature.png",
+      "src": "src/assets/screenshot_miniature.png",
       "sizes": "640x320",
       "type": "image/gif",
       "form_factor": "wide",
       "label": "Topos application"
     },
     {
-      "src": "topos_code.png",
+      "src": "src/assets/topos_code.png",
       "sizes": "1280x768",
       "type": "image/gif",
       "label": "Topos code"
