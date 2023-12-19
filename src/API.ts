@@ -113,7 +113,6 @@ export class UserAPI {
    * function destined to the user should be placed here.
    */
 
-  private variables: { [key: string]: any } = {};
   public codeExamples: { [key: string]: string } = {};
   private counters: { [key: string]: any } = {};
   private _drunk: DrunkWalk = new DrunkWalk(-100, 100, false);
@@ -1708,7 +1707,7 @@ export class UserAPI {
       for (let value = start; value <= end; value += step) {
         result.push(value);
       }
-    } else if((end > start && step < 0) || (end < start && step > 0)) {
+    } else if ((end > start && step < 0) || (end < start && step > 0)) {
       for (let value = start; value >= end; value -= step) {
         result.push(parseFloat(value.toFixed(countPlaces(step))));
       }
