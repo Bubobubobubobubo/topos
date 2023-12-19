@@ -113,7 +113,6 @@ export class UserAPI {
    * function destined to the user should be placed here.
    */
 
-  private variables: { [key: string]: any } = {};
   public codeExamples: { [key: string]: string } = {};
   private counters: { [key: string]: any } = {};
   private _drunk: DrunkWalk = new DrunkWalk(-100, 100, false);
@@ -131,9 +130,11 @@ export class UserAPI {
   public onceEvaluator: boolean = true;
 
   load: samples;
+  public global: { [key: string]: any };
 
   constructor(public app: Editor) {
     this.MidiConnection = new MidiConnection(this, app.settings);
+    this.global = {};
   }
 
   _loadUniverseFromInterface = (universe: string) => {
@@ -1046,49 +1047,6 @@ export class UserAPI {
   };
 
   // =============================================================
-  // Variable related functions
-  // =============================================================
-
-  public variable = (a: number | string, b?: any): any => {
-    /**
-     * Sets or returns the value of a variable internal to API.
-     *
-     * @param a - The name of the variable
-     * @param b - [optional] The value to set the variable to
-     * @returns The value of the variable
-     */
-    if (typeof a === "string" && b === undefined) {
-      return this.variables[a];
-    } else {
-      this.variables[a] = b;
-      return this.variables[a];
-    }
-  };
-  v = this.variable;
-
-  public delete_variable = (name: string): void => {
-    /**
-     * Deletes a variable internal to API.
-     *
-     * @param name - The name of the variable to delete
-     */
-    delete this.variables[name];
-  };
-  dv = this.delete_variable;
-
-  public clear_variables = (): void => {
-    /**
-     * Clears all variables internal to API.
-     *
-     * @remarks
-     * This function will delete all variables without warning.
-     * Use with caution.
-     */
-    this.variables = {};
-  };
-  cv = this.clear_variables;
-
-  // =============================================================
   // Randomness functions
   // =============================================================
 
@@ -1749,7 +1707,7 @@ export class UserAPI {
       for (let value = start; value <= end; value += step) {
         result.push(value);
       }
-    } else if((end > start && step < 0) || (end < start && step > 0)) {
+    } else if ((end > start && step < 0) || (end < start && step > 0)) {
       for (let value = start; value >= end; value -= step) {
         result.push(parseFloat(value.toFixed(countPlaces(step))));
       }
