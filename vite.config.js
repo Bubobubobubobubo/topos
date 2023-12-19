@@ -4,15 +4,16 @@ import viteCompression from "vite-plugin-compression";
 
 const vitePWAconfiguration = {
   devOptions: {
-    enabled: true,
+    enabled: false,
     suppressWarnings: true,
   },
-
   workbox: {
     sourcemap: false,
     cleanupOutdatedCaches: false,
+    maximumFileSizeToCacheInBytes: 10000000,
     globPatterns: [
       "**/*.{js,js.gz,css,html,gif,png,json,woff,woff2,json,ogg,wav,mp3,ico,png,svg}",
+      "favicon/*.{js,js.gz,css,html,gif,png,json,woff,woff2,json,ogg,wav,mp3,ico,png,svg}",
     ],
     runtimeCaching: [
       {
@@ -35,14 +36,9 @@ const vitePWAconfiguration = {
       },
     ],
   },
-  includeAssets: [
-    "favicon/favicon.icon",
-    "favicon/apple-touch-icon.png",
-    "mask-icon.svg",
-  ],
-  manifest: "manifest.webmanifest",
+  manifest: false,
   registerType: "autoUpdate",
-  injectRegister: "auto",
+  injectRegister: "script-defer",
 };
 
 export default defineConfig(({ command, mode, ssrBuild }) => {
@@ -54,6 +50,13 @@ export default defineConfig(({ command, mode, ssrBuild }) => {
         port: 8000,
         strictPort: true,
       },
+      build: {
+        outDir: "dist",
+        emptyOutDir: true,
+        cssCodeSplit: true,
+        cssMinify: true,
+        minify: true,
+      }
     };
   } else {
     return {
