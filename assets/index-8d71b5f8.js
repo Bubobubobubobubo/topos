@@ -987,25 +987,25 @@ beat(fill() ? 1/4 : 1/2)::sound('cp').out()
 
 `},WB=r=>{const e=St(r);return`
 # Code
-	
+
 Topos scripts are using the [JavaScript](https://en.wikipedia.org/wiki/JavaScript) syntax. This is the language used to write pretty much anything in a web browser. JavaScript is easy to learn, and even faster to learn if you are already familiar with other programming languages. Here are some good resources if you want to learn more about it:
-	
-- [MDN (Mozilla Web Docs)](https://developer.mozilla.org/): it covers pretty much anything and is considered to be a reliable source to learn how the web currently works. Any web developer knows about it. 
-	
+
+- [MDN (Mozilla Web Docs)](https://developer.mozilla.org/): it covers pretty much anything and is considered to be a reliable source to learn how the web currently works. Any web developer knows about it.
+
 - [Learn JS in Y Minutes](https://learnxinyminutes.com/docs/javascript/): a good tour of the language. Can be useful as a refresher.
-	
+
 - [The Modern JavaScript Tutorial](https://javascript.info/): another well known source to learn the language.
-	
-**You do not need to have any prior knowledge of programming** to use Topos**.
-	
+
+**You do not need to have any prior knowledge of programming to use Topos**.
+
 # How is the code evaluated?
-	
+
 The code you enter in any of the scripts is evaluated in strict mode. This tells your browser that the code you run can be optimized quite agressively. We need this because by default, **the global script is evaluated 48 times per beat**. It also means that you can crash at the speed of light :smile:. There are some things to keep in mind:
-	
+
 - **about variables:** the state of your variables is not kept between iterations. If you write <ic>let a = 2</ic> and remove that value from your script, **it will crash**! Variable and state is not preserved between each run of the script. There are other ways to deal with variables and to share variables between scripts! Some variables like **iterators** can keep their state between iterations because they are saved **with the file itself**. There is also **global variables**.
 - **about errors and printing:** your code will crash! Don't worry, we do our best to make it crash in the most gracious way possible. Most errors are caught and displayed in the interface. For weirder bugs, open the dev console with ${ft("Ctrl + Shift + I")}. You cannot directly use <ic>console.log('hello, world')</ic> in the interface but you can use <ic>log(message)</ic> to print a one line message. You will have to open the console as well to see your messages being printed there!
 - **about new syntax:** sometimes, we had some fun with JavaScript's syntax in order to make it easier/faster to write on stage. <ic>&&</ic> can also be written <ic>::</ic> or <ic>-></ic> because it is faster to type or better for the eyes!
-	
+
 # Common idioms
 
 There are some techniques to keep code short and tidy. Don't try to write the shortest possible code! Use shortcuts when it makes sense. Take a look at the following examples:
@@ -1016,8 +1016,8 @@ beat(.75) :: snd('linnhats').n([1,4,5].beat()).out()
 beat(1) :: snd('bd').out()
 //if (true) && log('very true')
 // These two lines are the same:
-// beat(1) && snd('bd').out() 
-//// beat(1) :: snd('bd').out() 
+// beat(1) && snd('bd').out()
+//// beat(1) :: snd('bd').out()
 
 `,!0)}
 
@@ -1035,7 +1035,7 @@ beat(4) ? snd('kick').out() : beat(2) :: snd('snare').out()
 `,!1)}
 
 # About crashes and bugs
-	
+
 Things will crash! It's part of the show! You will learn progressively to avoid mistakes and to write safer code. Do not hesitate to kill the page or to stop the transport if you feel overwhelmed by an algorithm blowing up. There is no safeguard to stop you from doing most things. This is to ensure that you have all the available possible room to write bespoke code and experiment with your ideas through code.
 
 ${e("This example will crash! Who cares?",`
@@ -3448,7 +3448,7 @@ Therefore, you will see that paying attention to the examples will allow you to 
 
 ### Examples:
 ${e("Synthetic 'Morton'",`
-z0('3/4 0 _ q 6 h 4 3 w 2 0 3/4 ^^ 0 _q 6 h 4 3 3/4 2 5/4 0 w r')
+z0('h. 0 q _6 h _4 _3 w _2 _0 h. ^0 q 6 h 4 3 3/4 2 5/4 0 w r')
   .scale("minor").sound('sawtooth').key("A")
   .room(0.9).size(9).phaser(0.25).phaserDepth(0.8)
   .vib(4).vibmod(0.15).out()
@@ -3458,14 +3458,14 @@ z1('w 904')
   .tonnetz('o f l l o f l l o')
   .sound('sine').adsr(0.1, 1, 1, 1.9).out()
 
-z2('w 904')
+z2('904')
   .scale("chromatic")
   .tonnetz('o f l l o f l l o')
   .arpeggio('s 0 2 1 0 1 2 1 0 2 1 0 1 2 0 1 0')
   .sound('sine').pan(rand(1, 0)).adsr(0, 0.125, 0.15, 0.25).out()
 
 z3('e __ 4 s 0 e 1 2 s')
-  .sound('hat').delay(0.5).delayfb(0.35).out()`)}
+  .sound('hat').delay(0.5).delayfb(0.35).out()`,!0)}
 
 ## Different Tonnetz
 
