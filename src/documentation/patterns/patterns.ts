@@ -120,7 +120,26 @@ beat(1)::sound(['kick', 'fsnare'].dur(3, 1))
   true,
 )}
 
-## Iterating over lists
+${makeExample(
+  "Patterning with ternary statements",
+  `
+  const dada = flipbar(2) ? [0,[3,5,-1].bar(3),2,3] : [9,8,9,6]
+beat(0.5) :: sound('wt_hvoice:3')
+  .pitch(dada.beat(0.5))
+  .scale("88.0")
+  .adsr(0.05, 0.05, 0, 0)
+  .cutoff(500 + usine(1/8) * 5000)
+  .room(1.5)
+  .resonance(0.25)
+  .out()
+beat(1) :: sound('kick').n(4).out()
+onbeat([0.5,0.8].beat(1),2) :: sound('snare').out()
+onbeat(0.5,0.8,1,1.5,2,2.5,3,4) :: sound('hh').out()
+`,
+  true,
+)}
+
+## Iteration using a counter
 
 - <ic>counter(name,limit?,step?)</ic>: return the next value on the list based on counter value. The limit is optional and defaults to the length of the list. The step is optional and defaults to 1. Setting / changing limit will reset the counter.
 - <ic>$(name,limit?,step?)</ic>: shorter alias for the counter.
