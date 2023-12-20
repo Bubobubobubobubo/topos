@@ -3363,9 +3363,9 @@ z1("s A=(0 (1,4)) B~(2 (3,8)) A B A B A")
 `},vY=r=>{const e=St(r);return`
 # Tonnetz
 
-The Riemannian Tonnetz is a geometric representation of tonal relationships for applying mathematical operations to analyze harmonic and melodic relationships in tonal music. Ziffers includes an implementation of live coding tonnetz developed together with <a href="https://github.com/edelveart/TypeScriptTonnetz" target="_blank">Edgar Delgado Vega</a>. Live coding tonnetz implementation **combines 67 transformations** to **new explorative notation** that includes all of the traditional triad transformations (PLR functions), extended PLR* transformations, film music transformations and seventh transformations (PLRQ, PLRQ*, ST).
+The Riemannian Tonnetz is a geometric representation of pitches where we apply mathematical operations to analyze harmonic and melodic relationships in tonal music. Ziffers includes an implementation of live coding Tonnetz developed together with <a href="https://github.com/edelveart/TypeScriptTonnetz" target="_blank">Edgar Delgado Vega</a>. Nevertheless, our implementation allows you to play in different chord complexes and **combine 67 transformations** with **new exploratory notation**. You have at your disposal the sets: traditional PLR, film music, extended PLR* and functions for seventh chords PLRQ, PLRQ*, ST.
 
-Tonnetz can be visualized as an <a href="https://numeric-tonnetz-ziffers-6f7c9299bb4e1292f6891b9aceba16d81409236.gitlab.io/" target="_blank">numeric lattice</a> that represents the twelve pitch classes of the chromatic scale. The numeric visualization is a fork of <a href="https://hal.science/hal-03250334/" target="_blank">Web tonnetz</a> by Corentin Guichaou et al. (2021). The lattice can be arranged into multiple tonal pitch spaces which are all supported in Ziffers implementation.
+Tonnetz can be visualized as an <a href="https://numeric-tonnetz-ziffers-6f7c9299bb4e1292f6891b9aceba16d81409236.gitlab.io/" target="_blank">numeric lattice</a> that represents the twelve pitch classes of the chromatic scale. The numeric visualization is a fork of <a href="https://hal.science/hal-03250334/" target="_blank">Web tonnetz</a> by Corentin Guichaou et al. (2021). The lattice can be arranged into multiple pitch spaces which are all supported in Ziffers implementation.
 
 In addition, we have included common graphs and cycles in Neo-Riemmanian theory: HexaCycles (<ic>pl</ic>), OctaCycles (<ic>pr</ic>), Enneacycles (seventh chords), Weitzmann Regions (triad chords), Boretz Regions (triad chords) and OctaTowers (tetrachords). You can explore each of these graphs in great generality over different Tonnetz.
 
@@ -3467,7 +3467,7 @@ z2('904')
 z3('e __ 4 s 0 e 1 2 s')
   .sound('hat').delay(0.5).delayfb(0.35).out()`,!0)}
 
-## Different Tonnetz
+## Different Tonnetz, Chord Complexes
 
 At Ziffers we have strived to have fun and inspire you by exploring new sounds that Neo-Riemannian functions can offer you by changing only one parameter: The Tonnetz in which your chords move. By default, the Tonnetz has this form: <ic>[3, 4, 5]</ic>. Let's try an example as it will clarify this idea for us.
 
