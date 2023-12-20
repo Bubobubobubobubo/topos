@@ -130,7 +130,6 @@ export class UserAPI {
 
   load: samples;
   public global: { [key: string]: any };
-  public g;
 
   constructor(public app: Editor) {
     this.MidiConnection = new MidiConnection(this, app.settings);
@@ -138,6 +137,7 @@ export class UserAPI {
     this.g = this.global;
   }
 
+  public g: any;
 
   _loadUniverseFromInterface = (universe: string) => {
     this.app.selected_universe = universe.trim();
