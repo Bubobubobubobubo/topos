@@ -733,14 +733,20 @@ const completionDatabase: CompletionDatabase = {
   midi: {
     name: "midi",
     category: "midi",
-    description: "Send a MIDI message",
-    example: "midi(144, 60, 100)",
+    description: "Send a MIDI message (note, velocity, channel)",
+    example: "midi(144, 60, 1)",
   },
   control_change: {
     name: "control_change",
     category: "midi",
     description: "Send a MIDI control change message",
     example: "control_change({control: 1, value: 60, channel: 10})",
+  },
+  cc: {
+    name: "cc",
+    category: "midi",
+    description: "Send a MIDI control change message",
+    example: "cc({control: 1, value: 60, channel: 10})",
   },
   program_change: {
     name: "program_change",
@@ -808,11 +814,17 @@ const completionDatabase: CompletionDatabase = {
     description: "Wraps (or not) of the drunk walk (boolean)",
     example: "drunk_wrap(true)",
   },
-  v: {
-    name: "v",
+  global: {
+    name: "global",
     category: "variable",
     description: "Global Variable setter or getter",
-    example: "v('my_var', 10) // Sets global variable 'my_var' to 10",
+    example: "global.my_var = 10; // Sets global variable 'my_var' to 10",
+  },
+  g: {
+    name: "g",
+    category: "variable",
+    description: "Global Variable setter or getter",
+    example: "g.my_var = 10; // Sets global variable 'my_var' to 10",
   },
   delete_variable: {
     name: "delete_variable",
@@ -953,12 +965,12 @@ export const inlineHoveringTips = hoverTooltip(
         let completion =
           completionDatabase[text.slice(start - from, end - from)] || {};
         let divContent = `
-      <h1 class="text-orange-300 text-base pb-1">${completion.name} [<em class="text-white">${completion.category}</em>]</h1>
+      <h1 class="text-brightwhite text-base pb-1">${completion.name} [<em class="text-white">${completion.category}</em>]</h1>
       <p class="text-base pl-4">${completion.description}</p>
       <pre class="-mt-2"><code class="pl-4 text-base">${completion.example}</code></pre></div>
       `;
         let dom = document.createElement("div");
-        dom.classList.add("px-4", "py-2", "bg-neutral-700", "rounded-lg");
+        dom.classList.add("px-4", "py-2", "bg-background", "rounded-lg");
         dom.innerHTML = divContent;
         return { dom };
       },
@@ -978,7 +990,7 @@ export const toposCompletions = (context: CompletionContext) => {
         info: () => {
           let div = document.createElement("div");
           div.innerHTML = `
-      <h1 class="text-orange-300 text-base pb-1">${completionDatabase[key].name} [<em class="text-white">${completionDatabase[key].category}</em>]</h1>
+      <h1 class="text-brightwhite text-base pb-1">${completionDatabase[key].name} [<em class="text-white">${completionDatabase[key].category}</em>]</h1>
       <p class="text-base pl-4">${completionDatabase[key].description}</p>
       <div class="overflow-hidden overflow-scroll rounded px-2 ml-4 mt-2 bg-neutral-800"><code class="text-sm">${completionDatabase[key].example}</code></div>
       `;

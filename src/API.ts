@@ -131,11 +131,14 @@ export class UserAPI {
 
   load: samples;
   public global: { [key: string]: any };
+  public g;
 
   constructor(public app: Editor) {
     this.MidiConnection = new MidiConnection(this, app.settings);
     this.global = {};
+    this.g = this.global;
   }
+
 
   _loadUniverseFromInterface = (universe: string) => {
     this.app.selected_universe = universe.trim();
@@ -535,6 +538,7 @@ export class UserAPI {
      */
     this.MidiConnection.sendMidiControlChange(control, value, channel);
   };
+  public cc = this.control_change;
 
   public midi_panic = (): void => {
     /**
