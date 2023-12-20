@@ -95,6 +95,15 @@ export function filterObject(
   );
 }
 
+export const maybeToNumber = (something: any): number | any => {
+  // If something is BigInt
+  if (typeof something === "bigint") {
+    return Number(something);
+  } else {
+    return something;
+  }
+}
+
 export const GeneratorType = (function*(){yield undefined;}).constructor;
 export const GeneratorIteratorType = (function*(){yield undefined;}).prototype.constructor;
 export const isGenerator = (v:any) => Object.prototype.toString.call(v) === '[object Generator]';
