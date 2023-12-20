@@ -1,4 +1,3 @@
-import { EditorView } from "@codemirror/view";
 import { sendToServer, type OSCMessage, oscMessages } from "./IO/OSC";
 import { getAllScaleNotes, nearScales, seededRandom } from "zifferjs";
 import colorschemes from "./colors.json";
@@ -104,7 +103,10 @@ export class UserAPI {
   constructor(public app: Editor) {
     this.MidiConnection = new MidiConnection(this, app.settings);
     this.global = {};
+    this.g = this.global;
   }
+
+  public g: any;
 
   _loadUniverseFromInterface = (universe: string) => {
     this.app.selected_universe = universe.trim();
@@ -504,6 +506,7 @@ export class UserAPI {
      */
     this.MidiConnection.sendMidiControlChange(control, value, channel);
   };
+  public cc = this.control_change;
 
   public midi_panic = (): void => {
     /**
@@ -1419,10 +1422,6 @@ export class UserAPI {
   };
 
   // =============================================================
-  // Modulo based time filters
-  // =============================================================
-
-  // =============================================================
   // Other core temporal functions
   // =============================================================
 
@@ -1953,38 +1952,6 @@ export class UserAPI {
   };
 
   // =============================================================
-  // Legacy functions
-  // =============================================================
-
-  public divseq = (...args: any): any => {
-    const chunk_size = args[0]; // Get the first argument (chunk size)
-    const elements = args.slice(1); // Get the rest of the arguments as an array
-    const timepos = this.app.clock.pulses_since_origin;
-    const slice_count = Math.floor(
-      timepos / Math.floor(chunk_size * this.ppqn()),
-    );
-    return elements[slice_count % elements.length];
-  };
-
-  public seqbeat = <T>(...array: T[]): T => {
-    /**
-     * Returns an element from an array based on the current beat.
-     *
-     * @param array - The array of values to pick from
-     */
-    return array[this.app.clock.time_position.beat % array.length];
-  };
-
-  public seqbar = <T>(...array: T[]): T => {
-    /**
-     * Returns an element from an array based on the current bar.
-     *
-     * @param array - The array of values to pick from
-     */
-    return array[(this.app.clock.time_position.bar + 1) % array.length];
-  };
-
-  // =============================================================
   // High Order Functions
   // =============================================================
 
@@ -2078,27 +2045,6 @@ export class UserAPI {
       ...this.app.osc,
       ...config,
     };
-  };
-
-  // =============================================================
-  // Ralt144mi section
-  // =============================================================
-
-  raltfont = (mainFont: string, commentFont: string): void => {
-    this.app.view.dispatch({
-      effects: this.app.fontSize.reconfigure(
-        EditorView.theme({
-          "&": { fontFamily: mainFont },
-          ".cm-gutters": { fontFamily: mainFont },
-          ".cm-content": {
-            fontFamily: mainFont,
-          },
-          ".cm-comment": {
-            fontFamily: commentFont,
-          },
-        }),
-      ),
-    });
   };
 
   // =============================================================
@@ -2706,5 +2652,4 @@ export class UserAPI {
   public getThemes = (): string[] => {
     return Object.keys(colorschemes);
   }
-
 }

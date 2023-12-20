@@ -5,7 +5,7 @@ import { javascript } from "@codemirror/lang-javascript";
 import { markdown } from "@codemirror/lang-markdown";
 import { Extension } from "@codemirror/state";
 import { outputSocket } from "./IO/OSC";
-import { getCodeMirrorTheme } from "./EditorSetup";
+import { getCodeMirrorTheme, switchToDebugTheme } from "./EditorSetup";
 import {
   initializeSelectedUniverse,
   AppSettings,
@@ -629,6 +629,10 @@ export class Editor {
 
   readTheme(theme_name: string): void {
     // Check if the theme exists in colors.json
+    if (theme_name == "debug") {
+      switchToDebugTheme(this);
+      return
+    }
     let themes: Record<string, { [key: string]: any }> = colors;
     let selected_theme = themes[theme_name];
     if (selected_theme) {

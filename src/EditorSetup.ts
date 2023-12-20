@@ -123,7 +123,7 @@ export const getCodeMirrorTheme = (theme: {[key: string]: string}): Extension =>
 
       ".cm-foldPlaceholder": {
         border: "none",
-        color: `${blue}`,
+        color: `${brightwhite}`,
       },
       ".cm-tooltip": {
         border: "none",
@@ -137,7 +137,7 @@ export const getCodeMirrorTheme = (theme: {[key: string]: string}): Extension =>
       ".cm-tooltip-autocomplete": {
         "& > ul > li[aria-selected]": {
           backgroundColor: background,
-          color: background,
+          color: brightwhite,
         },
       },
     },
@@ -201,39 +201,57 @@ export const getCodeMirrorTheme = (theme: {[key: string]: string}): Extension =>
       tag: [t.contentSeparator],
       color: green,
     },
-    { tag: t.invalid, color: red, borderBottom: `1px dotted ${red}` },
+    {
+      tag: [t.content],
+      color: brightwhite
+    },
+    { 
+      tag: t.invalid, 
+      color: red, 
+      borderBottom: `1px dotted ${red}` 
+    },
+    {
+      tag: t.null,
+      color: brightwhite,
+    }
   ]);
   return [ toposTheme, syntaxHighlighting(toposHighlightStyle),
 ]
 }
 
-// const debugTheme = EditorView.theme({
-//   ".cm-line span": {
-//     position: "relative",
-//   },
-//   ".cm-line span:hover::after": {
-//     position: "absolute",
-//     bottom: "100%",
-//     left: 0,
-//     background: "black",
-//     color: "white",
-//     border: "solid 2px",
-//     borderRadius: "5px",
-//     content: "var(--tags)",
-//     width: `max-content`,
-//     padding: "1px 4px",
-//     zIndex: 10,
-//     pointerEvents: "none",
-//   },
-// });
-// 
-// const debugHighlightStyle = HighlightStyle.define(
-//   // @ts-ignore
-//   Object.entries(t).map(([key, value]) => {
-//     return { tag: value, "--tags": `"tag.${key}"` };
-//   })
-// );
-// const debug = [debugTheme, syntaxHighlighting(debugHighlightStyle)];
+const debugTheme = EditorView.theme({
+  ".cm-line span": {
+    position: "relative",
+  },
+  ".cm-line span:hover::after": {
+    position: "absolute",
+    bottom: "100%",
+    left: 0,
+    background: "black",
+    color: "white",
+    border: "solid 2px",
+    borderRadius: "5px",
+    content: "var(--tags)",
+    width: `max-content`,
+    padding: "1px 4px",
+    zIndex: 10,
+    pointerEvents: "none",
+  },
+});
+
+const debugHighlightStyle = HighlightStyle.define(
+  // @ts-ignore
+  Object.entries(t).map(([key, value]) => {
+    return { tag: value, "--tags": `"tag.${key}"` };
+  })
+);
+const debug = [debugTheme, syntaxHighlighting(debugHighlightStyle)];
+
+export const switchToDebugTheme = (app: Editor) => {
+  app.view.dispatch({
+    effects: app.themeCompartment.reconfigure(debug),
+  });
+}
 
 
 export const jsCompletions = javascriptLanguage.data.of({
