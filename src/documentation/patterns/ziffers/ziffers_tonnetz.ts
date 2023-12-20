@@ -105,7 +105,7 @@ Therefore, you will see that paying attention to the examples will allow you to 
 ${makeExample(
         "Synthetic 'Morton'",
         `
-z0('3/4 0 _ q 6 h 4 3 w 2 0 3/4 ^^ 0 _q 6 h 4 3 3/4 2 5/4 0 w r')
+z0('h. 0 q _6 h _4 _3 w _2 _0 h. ^0 q 6 h 4 3 3/4 2 5/4 0 w r')
   .scale("minor").sound('sawtooth').key("A")
   .room(0.9).size(9).phaser(0.25).phaserDepth(0.8)
   .vib(4).vibmod(0.15).out()
@@ -115,7 +115,7 @@ z1('w 904')
   .tonnetz('o f l l o f l l o')
   .sound('sine').adsr(0.1, 1, 1, 1.9).out()
 
-z2('w 904')
+z2('904')
   .scale("chromatic")
   .tonnetz('o f l l o f l l o')
   .arpeggio('s 0 2 1 0 1 2 1 0 2 1 0 1 2 0 1 0')
@@ -123,6 +123,7 @@ z2('w 904')
 
 z3('e __ 4 s 0 e 1 2 s')
   .sound('hat').delay(0.5).delayfb(0.35).out()`,
+        true,
     )}
 
 ## Different Tonnetz
