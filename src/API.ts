@@ -1,4 +1,3 @@
-import { EditorView } from "@codemirror/view";
 import { sendToServer, type OSCMessage, oscMessages } from "./IO/OSC";
 import { getAllScaleNotes, nearScales, seededRandom } from "zifferjs";
 import colorschemes from "./colors.json";
