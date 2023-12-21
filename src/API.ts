@@ -1590,6 +1590,7 @@ export class UserAPI {
       this.beat(div) && this._euclidean_cycle(pulses, length, rotate).beat(div)
     );
   };
+  ry = this.rhythm;
 
   _euclidean_cycle(
     pulses: number,
