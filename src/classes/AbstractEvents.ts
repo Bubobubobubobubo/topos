@@ -521,4 +521,13 @@ export abstract class AudibleEvent extends AbstractEvent {
     this.app.api.cue(functionName);
     return this;
   }
+
+  runChain = (): this => {
+    // chainAll is defined using all() in the API
+    if("chainAll" in this && typeof this.chainAll === "function") {
+      this.values = this.chainAll().values;
+    }
+    return this;
+  }
+
 }

@@ -1955,14 +1955,22 @@ export class UserAPI {
   // High Order Functions
   // =============================================================
 
-  register = (name: string, operation: EventOperation<AbstractEvent>): void => {
+  register = (name: string, operation: EventOperation<AbstractEvent>): true => {
     AbstractEvent.prototype[name] = function(
       this: AbstractEvent,
       ...args: any[]
     ) {
       return operation(this, ...args);
     };
+    return true;
   };
+
+  all = (operation: EventOperation<AbstractEvent>): true => {
+    AbstractEvent.prototype.chainAll = function (...args: any[]) {
+      return operation(this, ...args);
+    };
+    return true;
+  }
 
   public shuffle = <T>(array: T[]): T[] => {
     /**

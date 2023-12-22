@@ -115,7 +115,7 @@ export class MidiEvent extends AudibleEvent {
     return this;
   };
 
-  out = (): void => {
+  out = (outChannel?: number|number[]): void => {
     function play(event: MidiEvent, params: MidiParams): void {
       const channel = params.channel ? params.channel : 0;
       const velocity = params.velocity ? params.velocity : 100;
@@ -140,6 +140,9 @@ export class MidiEvent extends AudibleEvent {
         bend,
       );
     }
+
+    this.runChain();
+    if(outChannel) this.channel(outChannel);
 
     const events = objectWithArraysToArrayOfObjects(this.values, [
       "parsedScale",

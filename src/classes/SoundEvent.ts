@@ -423,6 +423,7 @@ export class SoundEvent extends AudibleEvent {
   };
 
   out = (orbit?: number | number[]): void => {
+    this.runChain();
     if (orbit) this.values["orbit"] = orbit;
     const events = objectWithArraysToArrayOfObjects(this.values, [
       "parsedScale",

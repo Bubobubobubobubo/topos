@@ -37,7 +37,7 @@ beat(1)::sound('fhh').juxrev().out()
 This is an extremely powerful construct. For example, you can use it to create synthesizer presets and reuse them later on. You can also define parameters for your registered functions. For example:
 
 ${makeExample(
-  "Re-creating a classic Tidal function",
+  "Creating synth presets",
   `
 // Registering a specific synth architecture
 register('sub', (n,x=4,y=80)=>n.ad(0, .25)
@@ -52,6 +52,26 @@ rhythm(.25, [6, 8].beat(), 12)::sound('sine')
   .note([0, 2, 4, 5].scale('minor', 50).beat(0.5))
   .sub(8).out()`,
   true,
+)}
+
+## Registering chain for all events
+
+The chain can also be registered automatically for all events. This is useful if you want to add a specific effect to all your events.
+
+${makeExample(
+"Registering chain to all events at once",
+`
+z0("h 9 ^ <7 5 3 1>")
+  .sound("sine")
+  .out()
+
+z1("0 4 3 2")
+  .sound("sine")
+  .out()
+
+all(x=>x.room(1).delay(rI(0,0.5)))
+`,
+true,
 )}
 
 ## Logging values from the chain
@@ -119,8 +139,6 @@ There is a growing collection of probability and chance methods you can use:
 | <ic>frequently</ic>   | With a 90% probability. | <ic>.frequently(s => s.note(69))</ic> |
 | <ic>almostAlways</ic> | With a 98.5% probability. | <ic>.almostAlways(s => s.note(70))</ic> |
 | <ic>always</ic>       | Always transforms the Event.  | <ic>.always(s => s.note(71))</ic> |
-
-
 
 ### MIDI Chaining
 
