@@ -78,8 +78,17 @@ z1("s A=(0 (1,4)) B~(2 (3,8)) A B A B A")
     true,
   )}
 
+## Generative functions
 
-
+  * <ic>repeat(amount: number)</ic> Repeat the generated pattern without re-evaluating random patterns
+  * <ic>shuffle()</ic> Shuffle the generated pattern
+  * <ic>deal(amount: number): Shuffle the generated pattern and deal given number of elements
+  * <ic>retrograde()</ic> Reverse the generated pattern
+  * <ic>invert()</ic> Invert the generated pattern
+  * <ic>between(start: number, end: number)</ic> Select a range of elements from the generated pattern
+  * <ic>from(start: number)</ic> Select a range of elements from the start index to the end of the pattern
+  * <ic>to(end: number)</ic> Select a range of elements from the beginning of the pattern to the end index
+  * <ic>every(amount: number)</ic> Select every n-th element from the pattern
 
 `;
 };

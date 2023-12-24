@@ -336,6 +336,56 @@ export class Player extends AbstractEvent {
     return this;
   }
 
+  cubeDance(tonnetz: TonnetzSpaces = [3, 4, 5], repeats: number = 3) {
+    if (this.atTheBeginning()) this.ziffers.cubeDance(tonnetz, repeats);
+    return this;
+  }
+
+  powerTowers(tonnetz: TonnetzSpaces = [3, 4, 5], repeats: number = 3) {
+    if (this.atTheBeginning()) this.ziffers.powerTowers(tonnetz, repeats);
+    return this;
+  }
+
+  shuffle() {
+    if (this.atTheBeginning()) this.ziffers.shuffle();
+    return this;
+  }
+
+  deal(amount: number = this.ziffers.values.length) {
+    if (this.atTheBeginning()) this.ziffers.deal(amount);
+    return this;
+  }
+
+  from(value: number) {
+    if (this.atTheBeginning()) this.ziffers.from(value);
+    return this;
+  }
+
+  to(value: number) {
+    if (this.atTheBeginning()) this.ziffers.to(value);
+    return this;
+  }
+
+  between(value: number, value2: number) {
+    if (this.atTheBeginning()) this.ziffers.between(value, value2+1);
+    return this;
+  }
+
+  keep() {
+    this.ziffers.setRedo(0);
+    return this;
+  }
+
+  repeat(amount: number) {
+    this.ziffers.setRedo(amount);
+    return this;
+  }
+
+  every(amount: number) {
+    if (this.atTheBeginning()) this.ziffers.every(amount);
+    return this;
+  }
+
   tonnetzChord(chord: string) {
     if (this.atTheBeginning()) this.ziffers.tonnetzChords(chord);
     return this;
@@ -363,6 +413,15 @@ export class Player extends AbstractEvent {
 
   retrograde() {
     if (this.atTheBeginning()) this.ziffers.retrograde();
+    return this;
+  }
+
+  rotate(amount: number = 1) {
+    // TODO: Only works for evaluated patterns (setRedo). Fix this for generative patterns. Mod by current cycle?
+    if (this.atTheBeginning()) {
+      this.ziffers.setRedo(0);
+      this.ziffers.rotate(amount);
+    }
     return this;
   }
 
