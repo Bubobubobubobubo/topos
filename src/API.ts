@@ -96,6 +96,7 @@ export class UserAPI {
   public scale_aid: string | number | undefined = undefined;
   public hydra: any;
   public onceEvaluator: boolean = true;
+  public forceEvaluator: boolean = false;
 
   load: samples;
   public global: { [key: string]: any };
@@ -1940,6 +1941,14 @@ export class UserAPI {
     console.log(message);
     this._logMessage(message);
   };
+
+  logOnce = (message: any) => {
+    if(this.onceEvaluator) {
+      console.log(message);
+      this._logMessage(message);
+      this.onceEvaluator = false;
+    }
+  }
 
   scale = getScaleNotes;
 

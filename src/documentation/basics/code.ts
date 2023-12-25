@@ -23,7 +23,7 @@ The code you enter in any of the scripts is evaluated in strict mode. This tells
 - **about variables:** the state of your variables is not kept between iterations. If you write <ic>let a = 2</ic> and remove that value from your script, **it will crash**! Variable and state is not preserved between each run of the script. There are other ways to deal with variables and to share variables between scripts! Some variables like **iterators** can keep their state between iterations because they are saved **with the file itself**. There is also **global variables**.
 - **about errors and printing:** your code will crash! Don't worry, we do our best to make it crash in the most gracious way possible. Most errors are caught and displayed in the interface. For weirder bugs, open the dev console with ${key_shortcut(
     "Ctrl + Shift + I",
-  )}. You cannot directly use <ic>console.log('hello, world')</ic> in the interface but you can use <ic>log(message)</ic> to print a one line message. You will have to open the console as well to see your messages being printed there!
+  )}. You cannot directly use <ic>console.log('hello, world')</ic> in the interface but you can use <ic>log(message)</ic> to print a one line message. You will have to open the console as well to see your messages being printed there! You can also use <ic>logOnce(message)</ic> to print a message only once (or everytime you press Ctrl+Shift+Backspace).
 - **about new syntax:** sometimes, we had some fun with JavaScript's syntax in order to make it easier/faster to write on stage. <ic>&&</ic> can also be written <ic>::</ic> or <ic>-></ic> because it is faster to type or better for the eyes!
 
 # Common idioms

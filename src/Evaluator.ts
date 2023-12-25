@@ -81,6 +81,7 @@ export const tryEvaluate = async (
         );
         addFunctionToCache(candidateCode, newFunction);
       } else {
+        application.api.logOnce("Compilation error!");
         await evaluate(application, code, timeout);
       }
     }
