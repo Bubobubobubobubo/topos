@@ -7,6 +7,7 @@ import { MidiEvent, MidiParams } from "./MidiEvent";
 import { RestEvent } from "./RestEvent";
 import { arrayOfObjectsToObjectWithArrays, isGenerator } from "../Utils/Generic";
 import { TonnetzSpaces } from "zifferjs/src/tonnetz";
+import { safeMod } from "zifferjs/src/utils";
 
 export type InputOptions = { [key: string]: string | number };
 
@@ -31,6 +32,7 @@ export class Player extends AbstractEvent {
     options: InputOptions,
     public app: Editor,
     zid: string = "",
+    waitTime: number = 0,
   ) {
     super(app);
     this.options = options;
@@ -46,7 +48,22 @@ export class Player extends AbstractEvent {
     } else {
       throw new Error("Invalid input");
     }
+    if(waitTime) this.waitTime = waitTime;
     this.zid = zid;
+  }
+
+  updatePattern(input: string, options: InputOptions): boolean {
+    const oldIndex = this.ziffers.index;
+    const newPattern = new Ziffers(input, options);
+    if(newPattern.values.length > 0) {
+      this.ziffers = newPattern;
+      this.ziffers.update();
+      this.ziffers.index = oldIndex;
+      this.input = input;
+      this.options = options;
+      return true;
+    }
+    return false;
   }
 
   isValid() {
@@ -417,10 +434,8 @@ export class Player extends AbstractEvent {
   }
 
   rotate(amount: number = 1) {
-    // TODO: Only works for evaluated patterns (setRedo). Fix this for generative patterns. Mod by current cycle?
     if (this.atTheBeginning()) {
-      this.ziffers.setRedo(0);
-      this.ziffers.rotate(amount);
+      this.ziffers.rotate(amount+safeMod(this.ziffers.cycleIndex,this.ziffers.evaluated.length));
     }
     return this;
   }

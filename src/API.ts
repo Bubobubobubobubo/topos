@@ -800,18 +800,27 @@ export class UserAPI {
 
       if (typeof input === "string" &&
         player.input !== input &&
-        player.atTheBeginning()) {
-        replace = true;
+        (player.atTheBeginning() || this.forceEvaluator)) {
+          replace = true;
       }
     }
 
     if ((typeof input !== "string" || validSyntax) && (!player || replace)) {
-      const newPlayer = new Player(input, options, this.app, zid);
-      if (newPlayer.isValid()) {
-        player = newPlayer
-        this.patternCache.set(key, player);
-      } else if (typeof input === "string") {
-        this.invalidPatterns[input] = true;
+      if(typeof input === "string" && player && this.forceEvaluator) {
+        // If pattern change is forced in the middle of the cycle
+        if(!player.updatePattern(input, options)) {
+          this.logOnce(`Invalid syntax: ${input}`);
+        };
+        this.forceEvaluator = false;
+      } else {
+        // If pattern is not in cache or is to be replaced
+        const newPlayer = player ? new Player(input, options, this.app, zid, player.nextEndTime()) : new Player(input, options, this.app, zid);
+        if (newPlayer.isValid()) {
+           player = newPlayer
+          this.patternCache.set(key, player);
+        } else if (typeof input === "string") {
+          this.invalidPatterns[input] = true;
+        }
       }
     }
 

@@ -32,6 +32,10 @@ z4('1/4 kick kick snare kick').sound().gain(1).cutoff(osci).out()
   true,
 )}
 
+## Evaluation
+
+Evaluation of live coded Ziffers patterns can be done in 3 different ways. Normal evaluation using <ic>Ctrl+Enter</ic> updates the pattern after the current cycle is finished. Evaluation using <ic>Ctrl+Shift+Enter</ic> updates the pattern immediately keeping the current position, which enables to modify future events even within the current cycle. Evaluation using <ic>Ctrl+Shift+Backspace</ic> resets the current pattern and starts from the beginning immediately.
+
 ## Notation
 
 The basic Ziffer notation is entirely written in JavaScript strings (_e.g_ <ic>"0 1 2"</ic>). It consists mostly of numbers and letters. The whitespace character is used as a separator. Instead of note names, Ziffer is using numbers to represent musical pitch and letters to represent musical durations. Alternatively, _floating point numbers_ can also be used to represent durations.
