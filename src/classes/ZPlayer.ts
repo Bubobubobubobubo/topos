@@ -370,11 +370,11 @@ export class Player extends AbstractEvent {
   }
   octaTowers = this.octaTower;
 
-  borentzRegions(tonnetz: TonnetzSpaces = [3, 4, 5]) {
-    if (this.atTheBeginning()) this.ziffers.borentzRegions(tonnetz);
+  boretzRegions(tonnetz: TonnetzSpaces = [3, 4, 5]) {
+    if (this.atTheBeginning()) this.ziffers.boretzRegions(tonnetz);
     return this;
   }
-  borentz = this.borentzRegions;
+  boretz = this.boretzRegions;
 
   weitzmannRegions(tonnetz: TonnetzSpaces = [3, 4, 5]) {
     if (this.atTheBeginning()) this.ziffers.weitzmannRegions(tonnetz);
