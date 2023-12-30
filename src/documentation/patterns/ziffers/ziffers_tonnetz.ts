@@ -14,11 +14,11 @@ In addition, we have included common graphs and cycles in Neo-Riemmanian theory:
 
 ## Explorative notation
 
-Ziffers implements explorative live coding notation that indexes all of the transformations for triad and seventh chords. For more detailed transformations see Triad and Tetra chapters.
+Ziffers implements explorative live coding notation that indexes all of the transformations for triad and seventh chords. For more detailed transformations see Triad and Tetra chapters. Explorative transformations also include cardinal direction transformations (North, South, East, West) as visualized by the <a href="https://numeric-tonnetz-ziffers-6f7c9299bb4e1292f6891b9aceba16d81409236.gitlab.io/" target="_blank">numerical Tonnetz</a> and correspond to different Neo-Riemannian operations depending on the chord type (Major or Minor).
 
 Transformations are applied by grouping operations into a **parameter string** which applies the **transformations** to the chord. The parameter string is a **sequence** of transformations **separated by whitespace**, for example <ic>plr rl2 p3lr</ic>. The numbers after the characters defines the **index for the operation**, as there can be multiple operations of the same type.
 
-Indexed transformations <ic>[plrfsntq][1-9]*</ic>:
+Indexed transformations <ic>[plrfsntqNSEW][1-9]*</ic>:
 
 * p: Parallel
 * l: Leading-tone exchange
@@ -29,6 +29,10 @@ Indexed transformations <ic>[plrfsntq][1-9]*</ic>:
 * h: Film transformation - Hexatonic Pole
 * t: Film transformation - Tritone transposition
 * q: PLR* transformation or PLRQ* transformation
+* N: North transformation
+* S: South transformation
+* E: East transformation
+* W: West transformation
 
 ### Examples:
 
@@ -63,6 +67,16 @@ z1("024")
   .sound("sine")
   .out()`,
         true,
+    )}
+
+${makeExample(
+        "Explorative transformations with cardinal directions",
+        `
+        z1("1/4 i")
+        .tonnetz("p Np N2p N3p plr N3plr E EE EEE E6 NSE3W2")
+        .sound("sine")
+        .out()
+        `
     )}
 
 ## Triad transformations
