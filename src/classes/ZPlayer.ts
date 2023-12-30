@@ -362,6 +362,25 @@ export class Player extends AbstractEvent {
     if (this.atTheBeginning()) this.ziffers.powerTowers(tonnetz, repeats);
     return this;
   }
+  powerTower = this.powerTowers;
+
+  octaTower(tonnetz: TonnetzSpaces = [3, 4, 5], repeats: number = 3) {
+    if (this.atTheBeginning()) this.ziffers.octaTower(tonnetz, repeats);
+    return this;
+  }
+  octaTowers = this.octaTower;
+
+  borentzRegions(tonnetz: TonnetzSpaces = [3, 4, 5]) {
+    if (this.atTheBeginning()) this.ziffers.borentzRegions(tonnetz);
+    return this;
+  }
+  borentz = this.borentzRegions;
+
+  weitzmannRegions(tonnetz: TonnetzSpaces = [3, 4, 5]) {
+    if (this.atTheBeginning()) this.ziffers.weitzmannRegions(tonnetz);
+    return this;
+  }
+  weitzmann = this.weitzmannRegions;
 
   shuffle() {
     if (this.atTheBeginning()) this.ziffers.shuffle();
@@ -388,13 +407,18 @@ export class Player extends AbstractEvent {
     return this;
   }
 
+  at(value: number, ...rest: number[]) {
+    if (this.atTheBeginning()) this.ziffers.at(value, ...rest);
+    return this;
+  }
+
   keep() {
     this.ziffers.setRedo(0);
     return this;
   }
 
   repeat(amount: number) {
-    this.ziffers.setRedo(amount);
+    this.ziffers.setRedo(amount < 0 ? 0 : amount);
     return this;
   }
 

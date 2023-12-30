@@ -8,7 +8,7 @@ export const ziffers_algorithmic = (application: Editor): string => {
 
   Ziffers provides shorthands for **many** numeric and algorithimic operations such as evaluating random numbers and creating sequences using list operations:
   
-  * **List operations:** Cartesian operation (_e.g._ <ic>(3 2 1)+(2 5)</ic>) using the <ic>+</ic> operator. All the arithmetic operators are supported.
+  * **List operations:** Element-wise operation (_e.g._ <ic>(3 2 1)+(2 5)</ic>) using the <ic>+</ic> operator. All the arithmetic operators are supported.
   
   ${makeExample(
     "Element-wise operations for melodic generation",
@@ -80,8 +80,10 @@ z1("s A=(0 (1,4)) B~(2 (3,8)) A B A B A")
 
 ## Generative functions
 
+  * <ic>at(index: number, ...args?: number[])</ic> Get event(s) at given index
   * <ic>repeat(amount: number)</ic> Repeat the generated pattern without re-evaluating random patterns
-  * <ic>shuffle()</ic> Shuffle the generated pattern
+  * <ic>keep()</ic> Keep the generated pattern without re-evaluating random patterns. Same as repeat(0).
+  * <ic>shuffle()</ic> Shuffle the pattern
   * <ic>deal(amount: number): Shuffle the generated pattern and deal given number of elements
   * <ic>retrograde()</ic> Reverse the generated pattern
   * <ic>invert()</ic> Invert the generated pattern
