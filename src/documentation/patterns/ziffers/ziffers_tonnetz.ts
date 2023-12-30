@@ -10,7 +10,7 @@ The Riemannian Tonnetz is a geometric representation of pitches where we apply m
 
 Tonnetz can be visualized as an <a href="https://numeric-tonnetz-ziffers-6f7c9299bb4e1292f6891b9aceba16d81409236.gitlab.io/" target="_blank">numeric lattice</a> that represents the twelve pitch classes of the chromatic scale. The numeric visualization is a fork of <a href="https://hal.science/hal-03250334/" target="_blank">Web tonnetz</a> by Corentin Guichaou et al. (2021). The lattice can be arranged into multiple pitch spaces which are all supported in Ziffers implementation.
 
-In addition, we have included common graphs and cycles in Neo-Riemmanian theory: HexaCycles (<ic>pl</ic>), OctaCycles (<ic>pr</ic>), Enneacycles (seventh chords), Weitzmann Regions (triad chords), Boretz Regions (triad chords) and OctaTowers (tetrachords). You can explore each of these graphs in great generality over different Tonnetz.
+In addition, we have included common graphs and cycles in Neo-Riemmanian theory: HexaCycles, OctaCycles, Enneacycles, Weitzmann Regions, Boretz Regions, OctaTowers, Cube Dance and Power Towers. You can explore each of these graphs in great generality over different Tonnetz.
 
 ## Explorative notation
 
@@ -282,9 +282,9 @@ In addition to the cyclical traversing methods, Ziffers implements traversing me
 
 * <ic>weitzmannRegions(tonnetz: number[])</ic>: Cycles through chords in a Weitzmann region
 * <ic>boretzRegions(tonnetz: number[])</ic>: Cycles through chords in a Boretz region
-* <ic>octaTowers(tonnetz: number[], repeats: number = 3)</ic>: Cycles through chords using the octa towers
-* <ic>cubeDance(tonnetz: number[], repeats: number = 3)</ic>: Cycles through chords in a cube dance
-* <ic>powerTowers(tonnetz: number[], repeats: number = 3)</ic>: Cycles through chords using the power towers
+* <ic>octaTowers(tonnetz: number[], repeats: number = 3)</ic>: Cycles through chords using the octaTowers
+* <ic>cubeDance(tonnetz: number[], repeats: number = 3)</ic>: Cycles through chords in a Cube Dance
+* <ic>powerTowers(tonnetz: number[], repeats: number = 3)</ic>: Cycles through chords using the Power Towers
 
 **Weitzmann Regions** is composed only of three-note chords. Following Richard Cohn's **Weitzmann water bug** graph, the region consists of an augmented chord (body), three major chords, and three minor chords (feet). The latter related to the central chord by a minimal parsimonious movement. A cyclic order of **Nebenverdwandt / R** transformations proposed by Carl Weitzmann himself has been chosen.
 
@@ -344,7 +344,7 @@ z1("s. 0")
     .between(2,8)
     .arpeggio(3,2,1,rI(1,5))
     .sound("sawtooth")
-    .adsr(0.1,0.150, 0.1)
+    .adsr(0.1,0.15,0,0.1)
     .out()
     `,
     true
@@ -372,7 +372,7 @@ z1("1/16 0")
   .at(2,rI(3,7),4,6)
   .arpeggio(1,0,2,rI(1,4))
   .sound("square")
-  .adsr(0.1, 0.1, 0.1, 0.2)
+  .adsr(0.1,0.1,0.1,0.2)
   .out()
 `,
 true
