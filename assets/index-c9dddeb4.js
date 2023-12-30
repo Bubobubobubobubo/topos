@@ -3635,33 +3635,33 @@ By default hexaCycles and enneaCycles have <ic>3</ic> repetitions, while octaCyc
 
 In addition to the cyclical traversing methods, Ziffers implements traversing methods that traverse the Tonnetz in different ways. These methods are:
 
-* <ic>powerTowers(tonnetz: number[], repeats: number = 3)</ic>: Cycles trough chords using the power towers
-* <ic>cubeDance(tonnetz: number[], repeats: number = 3)</ic>: Cycles trough chords in a cube dance
-* <ic>octaTowers(tonnetz: number[], repeats: number = 3)</ic>: Cycles trough chords using the octa towers
-* <ic>weitzmannRegions(tonnetz: number[])</ic>: Cycles trough chords in a Weitzmann region
-* <ic>boretzRegions(tonnetz: number[])</ic>: Cycles trough chords in a Boretz region
+* <ic>weitzmannRegions(tonnetz: number[])</ic>: Cycles through chords in a Weitzmann region
+* <ic>boretzRegions(tonnetz: number[])</ic>: Cycles through chords in a Boretz region
+* <ic>octaTowers(tonnetz: number[], repeats: number = 3)</ic>: Cycles through chords using the octa towers
+* <ic>cubeDance(tonnetz: number[], repeats: number = 3)</ic>: Cycles through chords in a cube dance
+* <ic>powerTowers(tonnetz: number[], repeats: number = 3)</ic>: Cycles through chords using the power towers
 
-**Power Towers** use four-note chords (<ic>halfdim7, m7 and 7 </ic>). The assembly chords are of type <ic>dim7</ic>. One of the many paths for succession has been chosen.
+**Weitzmann Regions** is composed only of three-note chords. Following Richard Cohn's **Weitzmann water bug** graph, the region consists of an augmented chord (body), three major chords, and three minor chords (feet). The latter related to the central chord by a minimal parsimonious movement. A cyclic order of **Nebenverdwandt / R** transformations proposed by Carl Weitzmann himself has been chosen.
 
-**Cube Dance** is another graph that is built primarily with HexaCycles, except that it adds <ic>augmented</ic> triads as assemblers. As with Power Towers, one possible path has been selected.
+**Boretz Regions** is the four-note analogue of the Weitzmann regions. Richard Cohn draws them in **Boretz Spiders**, a graph consisting of 8 feet between 7th and half-diminished 7th chords. The body (prosoma-opisthosoma) is a <ic>dim7</ic> chord, related to the others by a semitonal movement.
 
-**Octa Towers** TBD.
+**OctaTowers** is a graph composed of **12** chords, whose types are <ic>halfdim7, m7 and 7</ic>. A reading from left to right in an ascending diagonal has been chosen.
 
-**Weitzmann Regions** TBD.
+**Cube Dance** is another graph of **28** chords that is built primarily with HexaCycles, except that it adds <ic>augmented</ic> triads as assemblers. As with Power Towers, one possible path has been selected.
 
-**Boretz Regions** TBD.
+**Power Towers** use **39** four-note chords (<ic>halfdim7, m7 and 7</ic>). As you can notice, it is composed of 3 OctaTowers assembled by  <ic>dim7</ic> type chords. One of the many paths for succession has been chosen.
 
-Both Cube Dance and Power Towers have many chords, so sometimes it will be convenient to slice up fragments of the cycles. We encourage you to explore these methods and their different parameters. The tonnetz traversing methods can be used in combination with the Ziffers generative methods to sequence, arpeggiate and to randomize the chords in different ways.
+As you have noticed, all these graphs usually have many chords, so sometimes it will be convenient to slice up fragments of the cycles. We encourage you to explore these methods and their different parameters. The tonnetz traversing methods can be used in combination with the Ziffers generative methods to sequence, arpeggiate and to randomize the chords in different ways.
 
 ${e("Cube Dance swing",`
-  z1("0").cubeDance([3,4,5])
+z1("0").cubeDance([3,4,5])
   .sound("sine")
   .ad(r(0.1,0.5),0.1)
   .out()
   `,!0)}
 
 ${e("Selecting subset of chords from the cube dance",`
-  z1("1/2 0")
+z1("1/2 0")
   .cubeDance([3,4,5],4)
   .at(0,8,2,rI(9,14))
   .sound("triangle")
@@ -3671,13 +3671,23 @@ ${e("Selecting subset of chords from the cube dance",`
 `,!0)}
 
 ${e("Power Towers with pulse",`
-  z1("1/4 2").powerTowers([2,3,7])
+z1("1/4 2").powerTowers([2,3,7])
   .between(5,11)
   .arpeggio("e 0 3 1 2")
   .sound("sine")
   .adsr(0.01,0.1,0.1,0.9)
   .out()
   `,!0)}
+
+${e("Between an OctaTower",`
+z1("s. 0")
+    .octaTowers()
+    .between(2,8)
+    .arpeggio(3,2,1,rI(1,5))
+    .sound("sawtooth")
+    .adsr(0.1,0.150, 0.1)
+    .out()
+    `,!0)}
 
 ${e("Selecting chords from the weitzmann region",`
 z1("1/8 0")
@@ -3688,6 +3698,18 @@ z1("1/8 0")
   .ad(0.15,0.15)
   .out()
 `,!0)}
+
+${e("Boretz Spider",`
+z1("1/16 0")
+  .boretzRegions([1,4,7])
+  .at(2,rI(3,7),4,6)
+  .arpeggio(1,0,2,rI(1,4))
+  .sound("square")
+  .adsr(0.1, 0.1, 0.1, 0.2)
+  .out()
+`,!0)}
+
+* Remark F: You can find more details about Weitzmann and Boretz regions in chapters 4 and 7 of Richard Cohn's book [Audacious Euphony: Chromatic Harmony and the Triad's Second Nature (2012)](https://books.google.com.pe/books?id=rZxZCMRiO9EC&pg=PA59&hl=es&source=gbs_toc_r&cad=2#v=onepage&q&f=false).
 
 `},yY=r=>{const e=St(r);return`
 # Synchronization
