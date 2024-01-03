@@ -338,18 +338,18 @@ export class Player extends AbstractEvent {
     return this;
   }
 
-  octaCycle(tonnetz: TonnetzSpaces = [3, 4, 5], repeats: number = 4) {
-    if (this.atTheBeginning()) this.ziffers.octaCycle(tonnetz, repeats);
+  octaCycle(tonnetz: TonnetzSpaces = [3, 4, 5], repeats: number = 4, components: number = 1) {
+    if (this.atTheBeginning()) this.ziffers.octaCycle(tonnetz, repeats, components);
     return this;
   }
 
-  hexaCycle(tonnetz: TonnetzSpaces = [3, 4, 5], repeats: number = 3) {
-    if (this.atTheBeginning()) this.ziffers.hexaCycle(tonnetz, repeats);
+  hexaCycle(tonnetz: TonnetzSpaces = [3, 4, 5], repeats: number = 3, components: number = 1) {
+    if (this.atTheBeginning()) this.ziffers.hexaCycle(tonnetz, repeats, components);
     return this;
   }
 
-  enneaCycle(tonnetz: TonnetzSpaces = [3, 4, 5], repeats: number = 3) {
-    if (this.atTheBeginning()) this.ziffers.enneaCycle(tonnetz, repeats);
+  enneaCycle(tonnetz: TonnetzSpaces = [3, 4, 5], repeats: number = 3, components: number = 1) {
+    if (this.atTheBeginning()) this.ziffers.enneaCycle(tonnetz, repeats, components);
     return this;
   }
 
@@ -364,8 +364,8 @@ export class Player extends AbstractEvent {
   }
   powerTower = this.powerTowers;
 
-  octaTower(tonnetz: TonnetzSpaces = [3, 4, 5], repeats: number = 3) {
-    if (this.atTheBeginning()) this.ziffers.octaTower(tonnetz, repeats);
+  octaTower(tonnetz: TonnetzSpaces = [3, 4, 5], repeats: number = 3, components: number = 1) {
+    if (this.atTheBeginning()) this.ziffers.octaTower(tonnetz, repeats, components);
     return this;
   }
   octaTowers = this.octaTower;
