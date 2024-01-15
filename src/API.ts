@@ -1655,8 +1655,6 @@ export class UserAPI {
   // Low Frequency Oscillators
   // =============================================================
 
-  public range = (v: number, a: number, b: number): number => v * (b - a) + a;
-
   public line = (start: number, end: number, step: number = 1): number[] => {
     /**
      * Returns an array of values between start and end, with a given step.
@@ -1688,58 +1686,45 @@ export class UserAPI {
     return result;
   };
 
-  public sine = (
-    freq: number = 1,
-    times: number = 1,
-    offset: number = 0,
-  ): number => {
+  public sine = (freq: number = 1, phase: number = 0): number => {
     /**
      * Returns a sine wave between -1 and 1.
      *
      * @param freq - The frequency of the sine wave
-     * @param offset - The offset of the sine wave
+     * @param phase - The phase of the sine wave
      * @returns A sine wave between -1 and 1
      */
-    return (
-      (Math.sin(this.app.clock.ctx.currentTime * Math.PI * 2 * freq) + offset) *
-      times
-    );
+    return Math.sin(2 * Math.PI * freq * (this.app.clock.ctx.currentTime - phase));
   };
 
-  public usine = (
-    freq: number = 1,
-    times: number = 1,
-    offset: number = 0,
-  ): number => {
+  public usine = (freq: number = 1, phase: number = 0): number => {
     /**
      * Returns a sine wave between 0 and 1.
      *
      * @param freq - The frequency of the sine wave
-     * @param offset - The offset of the sine wave
+     * @param phase - The phase of the sine wave
      * @returns A sine wave between 0 and 1
      * @see sine
      */
-    return ((this.sine(freq, times, offset) + 1) / 2) * times;
+    return ((this.sine(freq, phase) + 1) / 2);
   };
 
-  saw = (freq: number = 1, times: number = 1, offset: number = 0): number => {
+  saw = (freq: number = 1, phase: number = 0): number => {
     /**
      * Returns a saw wave between -1 and 1.
      *
      * @param freq - The frequency of the saw wave
-     * @param offset - The offset of the saw wave
+     * @param phase - The phase of the saw wave
      * @returns A saw wave between -1 and 1
      * @see triangle
      * @see square
      * @see sine
      * @see noise
      */
-    return (
-      (((this.app.clock.ctx.currentTime * freq) % 1) * 2 - 1 + offset) * times
-    );
+    return (((this.app.clock.ctx.currentTime * freq + phase) % 1) * 2 - 1);
   };
 
-  usaw = (freq: number = 1, times: number = 1, offset: number = 0): number => {
+  usaw = (freq: number = 1, phase: number = 0): number => {
     /**
      * Returns a saw wave between 0 and 1.
      *
@@ -1748,14 +1733,10 @@ export class UserAPI {
      * @returns A saw wave between 0 and 1
      * @see saw
      */
-    return ((this.saw(freq, times, offset) + 1) / 2) * times;
+    return ((this.saw(freq, phase) + 1) / 2);
   };
 
-  triangle = (
-    freq: number = 1,
-    times: number = 1,
-    offset: number = 0,
-  ): number => {
+  triangle = (freq: number = 1, phase: number = 0): number => {
     /**
      * Returns a triangle wave between -1 and 1.
      *
@@ -1765,14 +1746,10 @@ export class UserAPI {
      * @see sine
      * @see noise
      */
-    return (Math.abs(this.saw(freq, times, offset)) * 2 - 1) * times;
+    return (Math.abs(this.saw(freq, phase)) * 2 - 1);
   };
 
-  utriangle = (
-    freq: number = 1,
-    times: number = 1,
-    offset: number = 0,
-  ): number => {
+  utriangle = (freq: number = 1, phase: number = 0): number => {
     /**
      * Returns a triangle wave between 0 and 1.
      *
@@ -1781,13 +1758,11 @@ export class UserAPI {
      * @returns A triangle wave between 0 and 1
      * @see triangle
      */
-    return ((this.triangle(freq, times, offset) + 1) / 2) * times;
+    return ((this.triangle(freq, phase) + 1) / 2);
   };
 
   square = (
     freq: number = 1,
-    times: number = 1,
-    offset: number = 0,
     duty: number = 0.5,
   ): number => {
     /**
@@ -1800,16 +1775,11 @@ export class UserAPI {
      * @see noise
      */
     const period = 1 / freq;
-    const t = (Date.now() / 1000 + offset) % period;
-    return (t / period < duty ? 1 : -1) * times;
+    const t = (Date.now() / 1000 ) % period;
+    return (t / period < duty ? 1 : -1);
   };
 
-  usquare = (
-    freq: number = 1,
-    times: number = 1,
-    offset: number = 0,
-    duty: number = 0.5,
-  ): number => {
+  usquare = (freq: number = 1, duty: number = 0.5): number => {
     /**
      * Returns a square wave between 0 and 1.
      *
@@ -1818,10 +1788,10 @@ export class UserAPI {
      * @returns A square wave between 0 and 1
      * @see square
      */
-    return ((this.square(freq, times, offset, duty) + 1) / 2) * times;
+    return ((this.square(freq, duty) + 1) / 2);
   };
 
-  noise = (times: number = 1): number => {
+  noise = (): number => {
     /**
      * Returns a random value between -1 and 1.
      *
@@ -1832,7 +1802,17 @@ export class UserAPI {
      * @see sine
      * @see noise
      */
-    return (this.randomGen() * 2 - 1) * times;
+    return (this.randomGen() * 2 - 1);
+  };
+
+  unoise = (): number => {
+    /**
+     * Returns a random value between 0 and 1.
+     *
+     * @returns A random value between 0 and 1
+     * @see noise
+     */
+    return ((this.noise() + 1) / 2);
   };
 
   // =============================================================

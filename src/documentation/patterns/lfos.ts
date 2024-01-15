@@ -8,11 +8,10 @@ export const lfos = (application: Editor): string => {
 
 Low Frequency Oscillators (_LFOs_) are an important piece in any digital audio workstation or synthesizer. Topos implements some basic waveforms you can play with to automatically modulate your paremeters. 
 	
-- <ic>sine(freq: number = 1, times: number = 1, offset: number= 0): number</ic>: returns a sinusoïdal oscillation between <ic>-1</ic> and <ic>1</ic>.
+- <ic>sine(freq: number = 1, phase: number = 0): number</ic>: returns a sinusoïdal oscillation between <ic>-1</ic> and <ic>1</ic>.
   - <ic>freq</ic> : frequency in hertz.
-  - <ic>times</ic> : output value multiplier.
-  - <ic>offset</ic>: linear offset.
-- <ic>usine(freq: number = 1, times: number = 1, offset: number= 0): number</ic>: returns a sinusoïdal oscillation between <ic>0</ic> and <ic>1</ic>. The <ic>u</ic> stands for _unipolar_.
+  - <ic>phase</ic> : phase amount (adds or substract from current time point).
+- <ic>usine(freq: number = 1, phase: number = 0): number</ic>: returns a sinusoïdal oscillation between <ic>0</ic> and <ic>1</ic>. The <ic>u</ic> stands for _unipolar_.
 	
 ${makeExample(
   "Modulating the speed of a sample player using a sine LFO",
@@ -20,8 +19,8 @@ ${makeExample(
   true,
 )};
 
-- <ic>triangle(freq: number = 1, times: number = 1, offset: number= 0): number</ic>: returns a triangle oscillation between <ic>-1</ic> and <ic>1</ic>.
-- <ic>utriangle(freq: number = 1, times: number = 1, offset: number= 0): number</ic>: returns a triangle oscillation between <ic>0</ic> and <ic>1</ic>. The <ic>u</ic> stands for _unipolar_.
+- <ic>triangle(freq: number = 1, phase: number = 0): number</ic>: returns a triangle oscillation between <ic>-1</ic> and <ic>1</ic>.
+- <ic>utriangle(freq: number = 1, phase: number = 0): number</ic>: returns a triangle oscillation between <ic>0</ic> and <ic>1</ic>. The <ic>u</ic> stands for _unipolar_.
 
 ${makeExample(
   "Modulating the speed of a sample player using a triangle LFO",
@@ -29,8 +28,8 @@ ${makeExample(
   true,
 )}
 	
-- <ic>saw(freq: number = 1, times: number = 1, offset: number= 0): number</ic>: returns a sawtooth-like oscillation between <ic>-1</ic> and <ic>1</ic>.
-- <ic>usaw(freq: number = 1, times: number = 1, offset: number= 0): number</ic>: returns a sawtooth-like oscillation between <ic>0</ic> and <ic>1</ic>. The <ic>u</ic> stands for _unipolar_.
+- <ic>saw(freq: number = 1, phase: number = 0): number</ic>: returns a sawtooth-like oscillation between <ic>-1</ic> and <ic>1</ic>.
+- <ic>usaw(freq: number = 1, phase: number = 0): number</ic>: returns a sawtooth-like oscillation between <ic>0</ic> and <ic>1</ic>. The <ic>u</ic> stands for _unipolar_.
 
 ${makeExample(
   "Modulating the speed of a sample player using a saw LFO",
@@ -38,8 +37,8 @@ ${makeExample(
   true,
 )}
 	
-- <ic>square(freq: number = 1, times: number = 1, offset: number= 0, duty: number = .5): number</ic>: returns a square wave oscillation between <ic>-1</ic> and <ic>1</ic>. You can also control the duty cycle using the <ic>duty</ic> parameter.
-- <ic>usquare(freq: number = 1, times: number = 1, offset: number= 0, duty: number = .5): number</ic>: returns a square wave oscillation between <ic>0</ic> and <ic>1</ic>. The <ic>u</ic> stands for _unipolar_. You can also control the duty cycle using the <ic>duty</ic> parameter.
+- <ic>square(freq: number = 1, duty: number = .5): number</ic>: returns a square wave oscillation between <ic>-1</ic> and <ic>1</ic>. You can also control the duty cycle using the <ic>duty</ic> parameter.
+- <ic>usquare(freq: number = 1, duty: number = .5): number</ic>: returns a square wave oscillation between <ic>0</ic> and <ic>1</ic>. The <ic>u</ic> stands for _unipolar_. You can also control the duty cycle using the <ic>duty</ic> parameter.
 	
 ${makeExample(
   "Modulating the speed of a sample player using a square LFO",
@@ -48,6 +47,7 @@ ${makeExample(
 )};
 	
 - <ic>noise(times: number = 1)</ic>: returns a random value between -1 and 1.
+- <ic>unoise(times: number = 1)</ic>: returns a random value between 0 and 1.
 	
 ${makeExample(
   "Modulating the speed of a sample player using noise",

@@ -37,6 +37,25 @@ beat(1) :: script(1, 3, 5)
 - <ic>mean(...values: number[]): number</ic>: returns the arithmetic mean of a list of numbers.
 - <ic>limit(value: number, min: number, max: number): number</ic>: Limits a value between a minimum and a maximum. 
 	
+### Scaling functions
+
+There are some very useful scaling methods taken from **SuperCollider**. You can call these on any number:
+
+- <ic>.linlin(inMin: number, inMax: number, outMin: number, outMax: number)</ic>: scale linearly from one range to another.
+- <ic>.linexp(inMin: number, inMax: number, outMin: number, outMax: number)</ic>: scale a linear range to an exponential range.
+- <ic>.explin(inMin: number, inMax: number, outMin: number, outMax: number)</ic>: scale an exponential range to a linear range.
+- <ic>.expexp(inMin: number, inMax: number, outMin: number, outMax: number)</ic>: scale an exponential range to another exponential range.
+- <ic>.lincurve(inMin: number, inMax: number, outMin: number, outMax: number, curve: number)</ic>: scale a number from one range to another following a specific curve.
+  - <ic>curve: number</ic>: <ic>0</ic> is linear,  <ic>< 0</ic> is concave, negatively curved, <ic>> 0</ic> is convex, positively curved
+
+${makeExample(
+  "Scaling an LFO",
+  `usine(1/2).linlin(0, 1, 0, 100)`,
+  true,
+)}
+
+
+
 ## Delay functions
 	
 - <ic>delay(ms: number, func: Function): void</ic>: Delays the execution of a function by a given number of milliseconds.
