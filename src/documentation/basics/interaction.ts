@@ -20,57 +20,57 @@ MIDI input can be enabled in the settings panel. Once you have done that, you ca
 * <ic>active_notes(channel?: number)</ic>: returns array of the active notes / pressed keys as an array of MIDI note numbers (0-127). Returns undefined if no notes are active.
 
 ${makeExample(
-  "Play active notes as chords",
-  `
+    "Play active notes as chords",
+    `
   beat(1) && active_notes() && sound('sine').chord(active_notes()).out()
   `,
-  true,
-)}
+    true,
+  )}
 
 ${makeExample(
-  "Play active notes as arpeggios",
-  `
+    "Play active notes as arpeggios",
+    `
   beat(0.25) && active_notes() && sound('juno').note(
     active_notes().beat(0.5)+[12,24].beat(0.25)
   ).cutoff(300 + usine(1/4) * 2000).out()
   `,
-  false,
-)}
+    false,
+  )}
 
 
 * <ic>sticky_notes(channel?: number)</ic>: returns array of the last pressed keys as an array of MIDI note numbers (0-127). Notes are added and removed from the list with the "Note on"-event. Returns undefined if no keys have been pressed.
 
 ${makeExample(
-  "Play continous arpeggio with sticky notes",
-  `
+    "Play continous arpeggio with sticky notes",
+    `
   beat(0.25) && sticky_notes() && sound('arp')
   .note(sticky_notes().palindrome().beat(0.25)).out()
   `,
-  true,
-)}
+    true,
+  )}
 
 * <ic>last_note(channel?: number)</ic>: returns the last note that has been received. Returns 60 if no other notes have been received.
 
 ${makeExample(
-  "Play last note",
-  `
+    "Play last note",
+    `
   beat(0.5) && sound('sawtooth').note(last_note())
   .vib([1, 3, 5].beat(1))
   .vibmod([1,3,2,4].beat(2)).out()
   `,
-  false,
-)}
+    false,
+  )}
 
 * <ic>buffer()</ic>: return true if there are notes in the buffer.
 * <ic>buffer_note(channel?: number)</ic>: returns last unread note that has been received. Note is fetched and removed from start of the buffer once this is called. Returns undefined if no notes have been received.
 
 ${makeExample(
-  "Play buffered note",
-  `
+    "Play buffered note",
+    `
   beat(1) && buffer() && sound('sine').note(buffer_note()).out()
   `,
-  false,
-)}
+    false,
+  )}
 
 
 
@@ -80,33 +80,33 @@ ${makeExample(
 Midi CC messages can be used to control any value in Topos. MIDI input can be defined in Settings and last received CC message can be used to control any numeric value within Topos.
 
 Currently supported methods for CC input are:
-* <ic>last_cc(control: number, channel?: number)</ic>: Returns last received CC value for given control number (and optional channel). By default last CC value is last value from ANY channel or 64 if no CC messages have been received.
+* <ic>ccIn(control: number, channel?: number)</ic>: Returns last received CC value for given control number (and optional channel). By default last CC value is last value from ANY channel or 64 if no CC messages have been received.
 
 ${makeExample(
-  "Play notes with cc",
-  `
-  beat(0.5) && sound('arp').note(last_cc(74)).out()
+    "Play notes with cc",
+    `
+  beat(0.5) && sound('arp').note(ccin(74)).out()
   `,
-  true,
-)}
+    true,
+  )}
 
 ${makeExample(
-  "Control everything with CCs",
-  `
+    "Control everything with CCs",
+    `
   beat(0.5) :: sound('sine')
-  .freq(last_cc(75)*3)
-  .cutoff(last_cc(76)*2*usine())
+  .freq(ccIn(75)*3)
+  .cutoff(ccIn(76)*2*usine())
   .sustain(1.0)
   .out()
 
-beat(last_cc(74)/127*.5) :: sound('sine')
-  .freq(last_cc(75)*6)
-  .cutoff(last_cc(76)*3*usine())
-  .sustain(last_cc(74)/127*.25)
+beat(ccIn(74)/127*.5) :: sound('sine')
+  .freq(ccIn(75)*6)
+  .cutoff(ccIn(76)*3*usine())
+  .sustain(ccIn(74)/127*.25)
   .out()
   `,
-  false,
-)}
+    false,
+  )}
 
 
 ## Run scripts with MIDI
@@ -126,10 +126,10 @@ Topos can output scales to external keyboards lighted keys using the following f
 - <ic>show_scale(key: string, scale: string|int, channel?: number, port?: string|number, soundOff?: boolean): void</ic>: sends the scale as midi on messages to specified port and channel to light the keys of external keyboard. If soundOff is true, all sound off message will be sent after every note on message. This can be useful with some keyboards not supporting external channel for lightning or routing for the midi in to suppress the sound from incoming note on messages.
 
 ${makeExample(
-  "Show scale on external keyboard",
-  `show_scale("F","aeolian",0,4)`,
-  true,
-)}
+    "Show scale on external keyboard",
+    `show_scale("F","aeolian",0,4)`,
+    true,
+  )}
 
 ${makeExample("Hide scale", `hide_scale("F","aeolian",0,4)`, true)}
 

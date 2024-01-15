@@ -619,7 +619,7 @@ export class UserAPI {
     return note ? note.note : 60;
   };
 
-  public last_cc = (control: number, channel?: number): number => {
+  public ccIn = (control: number, channel?: number): number => {
     /**
      * @returns Returns last received cc
      */
@@ -801,14 +801,14 @@ export class UserAPI {
       if (typeof input === "string" &&
         player.input !== input &&
         (player.atTheBeginning() || this.forceEvaluator)) {
-          replace = true;
+        replace = true;
       }
     }
 
     if ((typeof input !== "string" || validSyntax) && (!player || replace)) {
-      if(typeof input === "string" && player && this.forceEvaluator) {
+      if (typeof input === "string" && player && this.forceEvaluator) {
         // If pattern change is forced in the middle of the cycle
-        if(!player.updatePattern(input, options)) {
+        if (!player.updatePattern(input, options)) {
           this.logOnce(`Invalid syntax: ${input}`);
         };
         this.forceEvaluator = false;
@@ -816,7 +816,7 @@ export class UserAPI {
         // If pattern is not in cache or is to be replaced
         const newPlayer = player ? new Player(input, options, this.app, zid, player.nextEndTime()) : new Player(input, options, this.app, zid);
         if (newPlayer.isValid()) {
-           player = newPlayer
+          player = newPlayer
           this.patternCache.set(key, player);
         } else if (typeof input === "string") {
           this.invalidPatterns[input] = true;
@@ -1952,7 +1952,7 @@ export class UserAPI {
   };
 
   logOnce = (message: any) => {
-    if(this.onceEvaluator) {
+    if (this.onceEvaluator) {
       console.log(message);
       this._logMessage(message);
       this.onceEvaluator = false;
@@ -1985,7 +1985,7 @@ export class UserAPI {
   };
 
   all = (operation: EventOperation<AbstractEvent>): true => {
-    AbstractEvent.prototype.chainAll = function (...args: any[]) {
+    AbstractEvent.prototype.chainAll = function(...args: any[]) {
       return operation(this, ...args);
     };
     return true;
