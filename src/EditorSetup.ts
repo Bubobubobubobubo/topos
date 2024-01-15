@@ -35,112 +35,114 @@ import { inlineHoveringTips } from "./documentation/inlineHelp";
 import { toposCompletions, soundCompletions } from "./documentation/inlineHelp";
 import { javascriptLanguage } from "@codemirror/lang-javascript";
 
-export const getCodeMirrorTheme = (theme: {[key: string]: string}): Extension => {
+export const getCodeMirrorTheme = (theme: { [key: string]: string }): Extension => {
   // @ts-ignore
   const black = theme["black"],
-        red = theme["red"],
-        green = theme["green"],
-        yellow = theme["yellow"],
-        blue = theme["blue"],
-        magenta = theme["magenta"],
-        cyan = theme["cyan"],
-        white = theme["white"],
-        // @ts-ignore
-        brightblack = theme["brightblack"],
-        // @ts-ignore
-        brightred = theme["brightred"],
-        brightgreen = theme["brightgreen"],
-        // @ts-ignore
-        brightyellow = theme["brightyellow"],
-        // @ts-ignore
-        brightblue = theme["brightblue"],
-        // @ts-ignore
-        brightmagenta = theme["brightmagenta"],
-        // @ts-ignore
-        brightcyan = theme["brightcyan"],
-        brightwhite = theme["brightwhite"],
-        background = theme["background"],
-        selection_foreground = theme["selection_foreground"],
-        cursor = theme["cursor"],
-        foreground = theme["foreground"],
-        selection_background = theme["selection_background"];
-  const toposTheme = EditorView.theme( {
-      "&": {
-        color: background,
-        // backgroundColor: background,
-        backgroundColor: "transparent",
-        fontSize: "24px",
-        fontFamily: "IBM Plex Mono",
-      },
-      ".cm-content": {
-        caretColor: cursor,
-        fontFamily: "IBM Plex Mono",
-      },
-      ".cm-cursor, .cm-dropCursor": {
-        borderLeftColor: cursor,
-      },
-      "&.cm-focused .cm-selectionBackground, .cm-selectionBackground, .cm-content ::selection":
-        {
-          backgroundColor: brightwhite,
-          border: `1px solid ${brightwhite}`,
-        },
-      ".cm-panels": {
-        backgroundColor: selection_background,
-        color: red,
-      },
-      ".cm-panels.cm-panels-top": { borderBottom: "2px solid black" },
-      ".cm-panels.cm-panels-bottom": { borderTop: "2px solid black" },
-      ".cm-search.cm-panel": { backgroundColor: "transparent" },
-      ".cm-searchMatch": {
-        outline: `1px solid ${magenta}`,
-      },
-      ".cm-searchMatch.cm-searchMatch-selected": {
-        backgroundColor: red,
-      },
-      ".cm-activeLine": {
-        backgroundColor: `rgba(${(parseInt(selection_background.slice(1,3), 16))}, ${(parseInt(selection_background.slice(3,5), 16))}, ${(parseInt(selection_background.slice(5,7), 16))}, 0.25)`,
-      },
-      ".cm-selectionMatch": {
-        backgroundColor: `rgba(${(parseInt(selection_background.slice(1,3), 16))}, ${(parseInt(selection_background.slice(3,5), 16))}, ${(parseInt(selection_background.slice(5,7), 16))}, 0.25)`,
-        outline: `1px solid ${brightwhite}`,
-      },
-      "&.cm-focused .cm-matchingBracket": {
-        color: `rgba(${(parseInt(selection_background.slice(1,3), 16))}, ${(parseInt(selection_background.slice(3,5), 16))}, ${(parseInt(selection_background.slice(5,7), 16))}, 0.25)`,
-      },
-      "&.cm-focused .cm-nonmatchingBracket": {
-        color: yellow,
-      },
+    red = theme["red"],
+    green = theme["green"],
+    yellow = theme["yellow"],
+    blue = theme["blue"],
+    magenta = theme["magenta"],
+    cyan = theme["cyan"],
+    white = theme["white"],
+    // @ts-ignore
+    brightblack = theme["brightblack"],
+    // @ts-ignore
+    brightred = theme["brightred"],
+    brightgreen = theme["brightgreen"],
+    // @ts-ignore
+    brightyellow = theme["brightyellow"],
+    // @ts-ignore
+    brightblue = theme["brightblue"],
+    // @ts-ignore
+    brightmagenta = theme["brightmagenta"],
+    // @ts-ignore
+    brightcyan = theme["brightcyan"],
+    brightwhite = theme["brightwhite"],
+    background = theme["background"],
+    selection_foreground = theme["selection_foreground"],
+    cursor = theme["cursor"],
+    foreground = theme["foreground"],
+    selection_background = theme["selection_background"];
+  const toposTheme = EditorView.theme({
+    "&": {
+      color: background,
+      backgroundColor: "transparent",
+      fontSize: "24px",
+      fontFamily: "IBM Plex Mono",
+    },
+    ".cm-content": {
+      caretColor: cursor,
+      fontFamily: "IBM Plex Mono",
+    },
+    ".cm-line": {
+      color: `${brightwhite}`,
+    },
+    ".cm-cursor, .cm-dropCursor": {
+      borderLeftColor: cursor,
+    },
+    "&.cm-focused .cm-selectionBackground, .cm-selectionBackground, .cm-content ::selection":
+    {
+      backgroundColor: brightwhite,
+      border: `1px solid ${brightwhite}`,
+    },
+    ".cm-panels": {
+      backgroundColor: selection_background,
+      color: red,
+    },
+    ".cm-panels.cm-panels-top": { borderBottom: "2px solid black" },
+    ".cm-panels.cm-panels-bottom": { borderTop: "2px solid black" },
+    ".cm-search.cm-panel": { backgroundColor: "transparent" },
+    ".cm-searchMatch": {
+      outline: `1px solid ${magenta}`,
+    },
+    ".cm-searchMatch.cm-searchMatch-selected": {
+      backgroundColor: red,
+    },
+    ".cm-activeLine": {
+      backgroundColor: `rgba(${(parseInt(selection_background.slice(1, 3), 16))}, ${(parseInt(selection_background.slice(3, 5), 16))}, ${(parseInt(selection_background.slice(5, 7), 16))}, 0.25)`,
+    },
+    ".cm-selectionMatch": {
+      backgroundColor: `rgba(${(parseInt(selection_background.slice(1, 3), 16))}, ${(parseInt(selection_background.slice(3, 5), 16))}, ${(parseInt(selection_background.slice(5, 7), 16))}, 0.25)`,
+      outline: `1px solid ${brightwhite}`,
+    },
+    "&.cm-focused .cm-matchingBracket": {
+      color: `rgba(${(parseInt(selection_background.slice(1, 3), 16))}, ${(parseInt(selection_background.slice(3, 5), 16))}, ${(parseInt(selection_background.slice(5, 7), 16))}, 0.25)`,
+    },
+    "&.cm-focused .cm-nonmatchingBracket": {
+      color: yellow,
+    },
 
-      ".cm-gutters": {
-        //backgroundColor: base00,
-        backgroundColor: "transparent",
-        color: foreground,
-      },
-      ".cm-activeLineGutter": {
-        backgroundColor: selection_background,
-        color: selection_foreground,
-      },
+    ".cm-gutters": {
+      //backgroundColor: base00,
+      backgroundColor: "transparent",
+      color: foreground,
+    },
+    ".cm-activeLineGutter": {
+      backgroundColor: selection_background,
+      color: selection_foreground,
+    },
 
-      ".cm-foldPlaceholder": {
-        border: "none",
-        color: `${brightwhite}`,
-      },
-      ".cm-tooltip": {
-        border: "none",
+    ".cm-foldPlaceholder": {
+      border: "none",
+      color: `${brightwhite}`,
+    },
+    ".cm-tooltip": {
+      border: "none",
+      backgroundColor: background,
+    },
+    ".cm-tooltip .cm-tooltip-arrow:before": {},
+    ".cm-tooltip .cm-tooltip-arrow:after": {
+      borderTopColor: background,
+      borderBottomColor: background,
+    },
+    ".cm-tooltip-autocomplete": {
+      "& > ul > li[aria-selected]": {
         backgroundColor: background,
-      },
-      ".cm-tooltip .cm-tooltip-arrow:before": {},
-      ".cm-tooltip .cm-tooltip-arrow:after": {
-        borderTopColor: background,
-        borderBottomColor: background,
-      },
-      ".cm-tooltip-autocomplete": {
-        "& > ul > li[aria-selected]": {
-          backgroundColor: background,
-          color: brightwhite,
-        },
+        color: brightwhite,
       },
     },
+  },
     { dark: true },
   );
 
@@ -192,7 +194,7 @@ export const getCodeMirrorTheme = (theme: {[key: string]: string}): Extension =>
       tag: [t.heading5, t.heading6],
       color: red,
     },
-    { tag: [t.atom, t.bool, t.special(t.variableName)], color: green},
+    { tag: [t.atom, t.bool, t.special(t.variableName)], color: green },
     {
       tag: [t.processingInstruction, t.inserted],
       color: green,
@@ -205,18 +207,18 @@ export const getCodeMirrorTheme = (theme: {[key: string]: string}): Extension =>
       tag: [t.content],
       color: brightwhite
     },
-    { 
-      tag: t.invalid, 
-      color: red, 
-      borderBottom: `1px dotted ${red}` 
+    {
+      tag: t.invalid,
+      color: red,
+      borderBottom: `1px dotted ${red}`
     },
     {
       tag: t.null,
       color: brightwhite,
     }
   ]);
-  return [ toposTheme, syntaxHighlighting(toposHighlightStyle),
-]
+  return [toposTheme, syntaxHighlighting(toposHighlightStyle),
+  ]
 }
 
 const debugTheme = EditorView.theme({
