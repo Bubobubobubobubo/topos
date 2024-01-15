@@ -214,7 +214,7 @@ export class UserAPI {
     clearTimeout(this.errorTimeoutID);
     clearTimeout(this.printTimeoutID);
     this.app.interface.error_line.innerHTML = errorMessage;
-    this.app.interface.error_line.style.color = "color-red-800";
+    this.app.interface.error_line.style.color = "red";
     this.app.interface.error_line.classList.remove("hidden");
     // @ts-ignore
     this.errorTimeoutID = setTimeout(
@@ -223,12 +223,12 @@ export class UserAPI {
     );
   };
 
-  _logMessage = (message: any): void => {
+  _logMessage = (message: any, error: boolean = false): void => {
     console.log(message);
     clearTimeout(this.printTimeoutID);
     clearTimeout(this.errorTimeoutID);
     this.app.interface.error_line.innerHTML = message as string;
-    this.app.interface.error_line.style.color = "red";
+    this.app.interface.error_line.style.color = error ? "red" : "white";
     this.app.interface.error_line.classList.remove("hidden");
     // @ts-ignore
     this.printTimeoutID = setTimeout(
@@ -421,7 +421,7 @@ export class UserAPI {
      *
      * @returns A list of available MIDI outputs
      */
-    this._logMessage(this.MidiConnection.listMidiOutputs());
+    this._logMessage(this.MidiConnection.listMidiOutputs(), false);
   };
 
   public midi_output = (outputName: string): void => {
@@ -1948,13 +1948,13 @@ export class UserAPI {
 
   log = (message: any) => {
     console.log(message);
-    this._logMessage(message);
+    this._logMessage(message, false);
   };
 
   logOnce = (message: any) => {
     if (this.onceEvaluator) {
       console.log(message);
-      this._logMessage(message);
+      this._logMessage(message, false);
       this.onceEvaluator = false;
     }
   }
