@@ -240,11 +240,14 @@ export class SoundEvent extends AudibleEvent {
     bpf: function(self: SoundEvent, value: number, resonance?: number) {
       self.updateValue("bandf", value);
       if (resonance) {
-        self.updateValue("bandq", resonance);
+        self.updateValue("bandq", resonance * 50);
       }
       return self;
     },
-    bandq: ["bandq", "bpq"],
+    bpq: function(self: SoundEvent, value: number) {
+      self.updateValue("bandq", value * 50);
+      return self;
+    },
     bpadsr: function(
       self: SoundEvent,
       depth: number,
