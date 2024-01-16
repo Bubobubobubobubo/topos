@@ -13,34 +13,36 @@ Topos comes by default with a forever-increasing number of synthesis capabilitie
 The <ic>sound</ic> function can take the name of a synthesizer or waveform as first argument. This has for effect to turn the sampler we all know and love into a synthesizer. <ic>sine</ic>, <ic>sawtooth</ic>,<ic>triangle</ic>, <ic>square</ic> are the names used to select classic oscillator waveforms. Note that you can also make use of filters and envelopes to shape the sound to your liking.
 
 ${makeExample(
-  "Listening to the different waveforms from the sweetest to the harshest",
-  `
+    "Listening to the different waveforms from the sweetest to the harshest",
+    `
 beat(.5) && snd(['sine', 'triangle', 'sawtooth', 'square'].beat()).freq(100).out()
 `,
-  true,
-)}
+    true,
+  )}
 
 Note that you can also use noise if you do not want to use a periodic oscillator:
 
 ${makeExample(
-  "Listening to the different types of noise",
-  `
-beat(.5) && snd(['brown', 'pink', 'white'].beat()).adsr(0,.1,0,0).out()
+    "Listening to the different types of noise",
+    `
+beat(.5) && snd(['brown', 'pink', 'white', 'crackle'].beat()).adsr(0,.1,0,0).out()
 `,
-  true,
-)}
+    true,
+  )}
+
+The <ic>crackle</ic> type can be controlled using the <ic>density</ic> parameter.
 
 Two functions are primarily used to control the frequency of the synthesizer:
 - <ic>freq(hz: number)</ic>: sets the frequency of the oscillator.
 - <ic>note(note: number|string)</ic>: sets the MIDI note of the oscillator (MIDI note converted to hertz).
 
 ${makeExample(
-  "Selecting a pitch",
-  `
+    "Selecting a pitch",
+    `
 beat(.5) && snd('triangle').freq([100,200,400].beat(2)).out()
 `,
-  true,
-)}
+    true,
+  )}
 
   ${makeExample(
     "Selecting a note",
@@ -55,20 +57,20 @@ Chords can also played using different parameters:
 - <ic>chord(string||number[]|...number)</ic>: parses and sets notes for the chord
 
 ${makeExample(
-  "Playing a named chord",
-  `
+    "Playing a named chord",
+    `
     beat(1) && snd('triangle').chord(["C","Em7","Fmaj7","Emin"].beat(2)).adsr(0,.2).out()
 `,
-  true,
-)}  
+    true,
+  )}  
 
 ${makeExample(
-  "Playing a chord from a list of notes and doing inversions",
-  `
+    "Playing a chord from a list of notes and doing inversions",
+    `
     beat(.5) && snd('triangle').chord(60,64,67,72).invert([1,-3,4,-5].pick()).adsr(0,.2).out()
 `,
-  true,
-)}
+    true,
+  )}
 
 # Controlling amplitude
 
@@ -77,16 +79,16 @@ Controlling the amplitude and duration of the sound can be done using various te
 - <ic>velocity(velocity: number)</ic>: sets the velocity of the oscillator (velocity is a multiple of gain).
 
 ${makeExample(
-  "Setting the gain",
-  `beat(0.25) :: sound('sawtooth').gain([0.0, 1/8, 1/4, 1/2, 1].beat(0.5)).out()`,
-  true,
-)}
+    "Setting the gain",
+    `beat(0.25) :: sound('sawtooth').gain([0.0, 1/8, 1/4, 1/2, 1].beat(0.5)).out()`,
+    true,
+  )}
 
 ${makeExample(
-  "Setting the velocity",
-  `beat(0.25) :: sound('sawtooth').velocity([0.0, 1/8, 1/4, 1/2, 1].beat(0.5)).out()`,
-  true,
-)}
+    "Setting the velocity",
+    `beat(0.25) :: sound('sawtooth').velocity([0.0, 1/8, 1/4, 1/2, 1].beat(0.5)).out()`,
+    true,
+  )}
 
 ## Envelopes
 
@@ -101,45 +103,45 @@ ${makeExample(
 - <ic>release(release: number)</ic> / <ic>rel(rel: number)</ic>: sets the release time of the envelope.
 
 ${makeExample(
-  "Using decay and sustain to set the ADSR envelope",
-  `
+    "Using decay and sustain to set the ADSR envelope",
+    `
 beat(0.5) :: sound('wt_piano')
   .cutoff(1000 + usine() * 4000)
   .freq(100).decay(.2)
   .sustain([0.1,0.5].beat(4))
   .out()`,
-  true,
-)}
+    true,
+  )}
 
 This ADSR envelope design is important to know because it is used for other aspects of the synthesis engine such as the filters that we are now going to talk about. But wait, I've kept the best for the end. The <ic>adsr()</ic> combines all the parameters together. It is a shortcut for setting the ADSR envelope:
 
 - <ic>adsr(attack: number, decay: number, sustain: number, release: number)</ic>: sets the ADSR envelope.
 
 ${makeExample(
-  "Replacing the previous example with the adsr() method",
-  `
+    "Replacing the previous example with the adsr() method",
+    `
 beat(0.5) :: sound('wt_piano')
   .cutoff(1000 + usine() * 4000)
   .freq(100)
   .adsr(0, .2, [0.1,0.5].beat(4), 0)
   .out()
 `,
-  true,
-)}
+    true,
+  )}
 
 - <ic>ad(attack: number, decay: number)</ic>: sets the attack and decay phases, setting sustain and release to <ic>0</ic>.
 
 ${makeExample(
-  "Two segment envelope",
-  `
+    "Two segment envelope",
+    `
 beat(0.5) :: sound('wt_piano')
   .cutoff(1000 + usine() * 4000)
   .freq(100)
   .ad(0, .2)
   .out()
 `,
-  true,
-)}
+    true,
+  )}
 
 ## Substractive synthesis using filters
 
@@ -148,36 +150,36 @@ The most basic synthesis technique used since the 1970s is called substractive s
 See the Filters page for details on lowpass, highpass and bandpass filters. I also encourage you to study these simple examples to get more familiar with the construction of basic substractive synthesizers:
 
 ${makeExample(
-  "Filtering the high frequencies of an oscillator",
-  `beat(.5) :: sound('sawtooth').cutoff(50 + usine(1/8) * 2000).out()`,
-  true,
-)}
+    "Filtering the high frequencies of an oscillator",
+    `beat(.5) :: sound('sawtooth').cutoff(50 + usine(1/8) * 2000).out()`,
+    true,
+  )}
 
 ${makeExample(
-  "Simple synthesizer voice with filter",
-  `
+    "Simple synthesizer voice with filter",
+    `
 beat(.5) && snd('sawtooth')
   .cutoff([2000,500].pick() + usine(.5) * 4000)
   .resonance(0.2).freq([100,150].pick())
   .out()
 	`,
-  true,
-)}
+    true,
+  )}
 
 ${makeExample(
-  "Blessed by the square wave",
-  `
+    "Blessed by the square wave",
+    `
 beat(4) :: [100,101].forEach((freq) => sound('square').freq(freq).sustain(0.1).out())
 beat(.5) :: [100,101].forEach((freq) => sound('square').freq(freq*2).sustain(0.01).out())
 beat([.5, .75, 2].beat()) :: [100,101].forEach((freq) => sound('square')
   .freq(freq*4 + usquare(2) * 200).sustain(0.125).out())
 beat(.25) :: sound('square').freq(100*[1,2,4,8].beat()).sustain(0.1).out()`,
-  false,
-)}
+    false,
+  )}
 
 ${makeExample(
-  "Ghost carillon (move your mouse!)",
-  `
+    "Ghost carillon (move your mouse!)",
+    `
 beat(1/8)::sound('sine')
   .velocity(rand(0.0, 1.0))
   .delay(0.75).delayt(.5)
@@ -186,16 +188,16 @@ beat(1/8)::sound('sine')
   .freq(mouseX())
 	.gain(0.25)
   .out()`,
-  false,
-)}
+    false,
+  )}
 
 ## Noise
 
 A certain amount of brown noise can be added by using the <ic>.noise</ic> key:
 
 ${makeExample(
-  "Different vibrato settings",
-  `
+    "Different vibrato settings",
+    `
 tempo(140);
 beat(1) :: sound('triangle')
   .freq(400).release(0.2)
@@ -203,16 +205,16 @@ beat(1) :: sound('triangle')
   .vib([1/2, 1, 2, 4].beat())
   .vibmod([1,2,4,8].beat(2))
   .out()`,
-  true,
-)}
+    true,
+  )}
 
 ## Wavetable synthesis
 
 Topos can also do wavetable synthesis. Wavetable synthesis allows you to use any sound file as a source to build an oscillator. By default, Topos comes with more than 1000 waveforms thanks to the awesome [AKWF](https://www.adventurekid.se/akrt/waveforms/adventure-kid-waveforms/) pack made by Kristoffer Ekstrand. Any sample name that contains <ic>wt_</ic> as a prefix will be interpreted by the sampler as a wavetable and thus as an oscillator. See for yourself:
 
 ${makeExample(
-  "Acidity test",
-  `
+    "Acidity test",
+    `
 beat(.25) :: sound('wt_symetric:8').note([50,55,57,60].beat(.25) - [12,0]
   .pick()).ftype('12db').adsr(0.05/4, 1/16, 0.25/4, 0)
   .cutoff(1500 + usine(1/8) * 5000).lpadsr(16, 0.2, 0.2, 0.125/2, 0)
@@ -220,15 +222,15 @@ beat(.25) :: sound('wt_symetric:8').note([50,55,57,60].beat(.25) - [12,0]
 beat(1) :: sound('kick').n(4).out()
 beat(2) :: sound('snare').out()
 beat(.5) :: sound('hh').out()`,
-  true,
-)}
+    true,
+  )}
 	
 
 Let's explore the galaxy of possible waveforms. It can be hard to explore them all, there is a **lot** of them:
 
 ${makeExample(
-  "Let's explore some wavetables",
-  `
+    "Let's explore some wavetables",
+    `
 // Exploring a vast galaxy of waveforms
 let collection = [
   'wt_sinharm', 'wt_linear', 'wt_bw_sawrounded',
@@ -238,8 +240,8 @@ beat(2) :: v('selec', irand(1, 100))
 beat(2) :: v('swave', collection.pick())
 beat(0.5) :: sound(v('swave')).n(v('selec')).out()
 `,
-  true,
-)}
+    true,
+  )}
 
 You can work with them just like with any other waveform. Having so many of them makes them also very useful for generating sound effects, percussive, sounds, etc...
 	
@@ -254,8 +256,8 @@ Another really useful technique to know about is FM synthesis, FM standing for _
 There is also an additional parameter, <ic>fm</ic> that combines <ic>fmi</ic> and <ic>fmh</ic> using strings: <ic>fm('2:4')</ic>. Think of it as a static shortcut for getting some timbres more quickly.
 
 ${makeExample(
-  "80s nostalgia",
-  `
+    "80s nostalgia",
+    `
 beat([.5, 1].beat(8)) && snd('triangle').adsr(0.02, 0.5, 0.5, 0.25)
   .fmi(2).fmh(1.5).note([60,55, 60, 63].beat() - 12)
   .pan(noise()).out()
@@ -264,23 +266,23 @@ beat(.25) && snd('triangle').adsr(0.02, 0.1, 0.1, 0.1)
   .pan(noise()).note([60,55, 60, 63].beat() + [0, 7].pick()).out()
 beat(2) :: sound('cp').room(1).sz(1).out()
 	`,
-  true,
-)}
+    true,
+  )}
 
 ${makeExample(
-  "Giving some love to ugly inharmonic sounds",
-  `
+    "Giving some love to ugly inharmonic sounds",
+    `
 beat([.5, .25].bar()) :: sound('sine').fm('2.2183:3.18293').sustain(0.05).out()
 beat([4].bar()) :: sound('sine').fm('5.2183:4.5').sustain(0.05).out()
 beat(.5) :: sound('sine')
   .fmh([1, 1.75].beat())
   .fmi($(1) % 30).orbit(2).room(0.5).out()`,
-  true,
-)}
+    true,
+  )}
 
 ${makeExample(
-  "Peace and serenity through FM synthesis",
-  `
+    "Peace and serenity through FM synthesis",
+    `
 beat(0.25) :: sound('sine')
   .note([60, 67, 70, 72, 77].beat() - [0,12].bar())
   .attack(0.2).release(0.5).gain(0.25)
@@ -289,8 +291,8 @@ beat(0.25) :: sound('sine')
   .cutoff(1500).delay(0.5).delayt(0.125)
   .delayfb(0.8).fmh(Math.floor(usine(.5) * 4))
   .out()`,
-  true,
-)}
+    true,
+  )}
 
 **Note:** you can also set the _modulation index_ and the _harmonic ratio_ with the <ic>fm</ic> argument. You will have to feed both as a string: <ic>fm('2:4')</ic>. If you only feed one number, only the _modulation index_ will be updated.
 
@@ -301,8 +303,8 @@ There is also a more advanced set of parameters you can use to control the envel
 - <ic>fmrelease</ic> / <ic>fmrel</ic>: release time of the modulator envelope.
 
 ${makeExample(
-  "FM Synthesis with envelope control",
-  `
+    "FM Synthesis with envelope control",
+    `
 beat(.5) :: sound('sine')
   .note([50,53,55,57].beat(.5) - 12)
   .fmi(0.5 + usine(.25) * 1.5)
@@ -310,8 +312,8 @@ beat(.5) :: sound('sine')
   .fmwave('triangle')
   .fmsus(0).fmdec(0.2).out()
   `,
-  true,
-)}
+    true,
+  )}
 
 ## ZzFX
 
@@ -320,15 +322,15 @@ beat(.5) :: sound('sine')
 ZZfX can be triggered by picking a default ZZfX waveform in the following list: <ic>z_sine</ic>, <ic>z_triangle</ic>, <ic>z_sawtooth</ic>, <ic>z_tan</ic>, <ic>z_noise</ic>.
 
 ${makeExample(
-  "Picking a waveform",
-  `
+    "Picking a waveform",
+    `
 beat(.5) :: sound(['z_sine', 'z_triangle', 'z_sawtooth', 'z_tan', 'z_noise'].beat()).out()
 `,
-  true,
-)}
+    true,
+  )}
 ${makeExample(
-  "Minimalist chiptune",
-  `
+    "Minimalist chiptune",
+    `
 beat(.5) :: sound('z_triangle')
   .note([60, 67, 72, 63, 65, 70].beat(.5))
   .zrand(0).curve([1,2,3,4].beat(1))
@@ -338,8 +340,8 @@ beat(.5) :: sound('z_triangle')
   .room(0.5).size(0.9)
   .pitchJumpTime(0.01).out() 
 `,
-  true,
-)}
+    true,
+  )}
 
 It comes with a set of parameters that can be used to tweak the sound. Don't underestimate this synth! It is very powerful for generating anything ranging from chaotic noise sources to lush pads:
 
@@ -365,8 +367,8 @@ It comes with a set of parameters that can be used to tweak the sound. Don't und
 |<ic>duration</ic>|| Total sound duration (overrides envelope) |
 
 ${makeExample(
-  "Chaotic Noise source",
-  `
+    "Chaotic Noise source",
+    `
 beat(.25) :: sound('z_tan')
   .note(40).noise(rand(0.0, 1.0))
   .pitchJump(84).pitchJumpTime(rand(0.0, 1.0))
@@ -376,21 +378,21 @@ beat(.25) :: sound('z_tan')
   .sustain(0).decay([0.2, 0.1].pick())
   .out() 
 `,
-  true,
-)}
+    true,
+  )}
 ${makeExample(
-  "What is happening to me?",
-  `
+    "What is happening to me?",
+    `
 beat(1) :: snd('zzfx').zzfx([
   [4.77,,25,,.15,.2,3,.21,,2.4,,,,,,,.23,.35],
   [1.12,,97,.11,.16,.01,4,.77,,,30,.17,,,-1.9,,.01,.67,.2]
   ].beat()).out()
 `,
-  false,
-)}
+    false,
+  )}
 ${makeExample(
-  "Les voitures dans le futur",
-  `
+    "Les voitures dans le futur",
+    `
 beat(1) :: sound(['z_triangle', 'z_sine'].pick())
   .note([60,63,72,75].pick()).tremolo(16)
   .zmod([0, 1/2, 1/8].div(2).pick())
@@ -398,18 +400,18 @@ beat(1) :: sound(['z_triangle', 'z_sine'].pick())
   .room(0.9).size(0.9)
   .delayt(0.75).delayfb(0.5).out()
 `,
-  false,
-)}
+    false,
+  )}
 
 Note that you can also design sounds [on this website](https://killedbyapixel.github.io/ZzFX/) and copy the generated code in Topos. To do so, please use the <ic>zzfx</ic> method with the generated array:
 ${makeExample(
-  "Designing a sound on the ZzFX website",
-  `
+    "Designing a sound on the ZzFX website",
+    `
  
 beat(2) :: sound('zzfx').zzfx([3.62,,452,.16,.1,.21,,2.5,,,403,.05,.29,,,,.17,.34,.22,.68]).out()
 `,
-  true,
-)}
+    true,
+  )}
 
 # Speech synthesis
 
@@ -426,35 +428,35 @@ Speech synthesis API can crash your browser if you use it too much. To avoid cra
   - <ic>volume(number)</ic>: speaking volume, from <ic>0.0</ic> to <ic>1.0</ic>.
 
 ${makeExample(
-  "Hello world!",
-  `
+    "Hello world!",
+    `
 once() && speak("Hello world!")
   `,
-  true,
-)}
+    true,
+  )}
 
 ${makeExample(
-  "Let's hear people talking about Topos",
-  `
+    "Let's hear people talking about Topos",
+    `
 beat(2) && speak("Topos!","fr",irand(0,5))
   `,
-  true,
-)}
+    true,
+  )}
 
 
 You can also use speech by chaining methods to a string:
 
 ${makeExample(
-  "Foobaba is the real deal",
-  `
+    "Foobaba is the real deal",
+    `
   onbeat(4) && "Foobaba".voice(irand(0,10)).speak()
   `,
-  true,
-)}
+    true,
+  )}
 
 ${makeExample(
-  "Building string and chaining",
-  `
+    "Building string and chaining",
+    `
   const subject = ["coder","user","loser"].pick()
   const verb = ["is", "was", "isnt"].pick()
   const object = ["happy","sad","tired"].pick()
@@ -462,12 +464,12 @@ ${makeExample(
     
   beat(6) && sentence.pitch(0).rate(0).voice([0,2].pick()).speak()
   `,
-  true,
-)}
+    true,
+  )}
 
 ${makeExample(
-  "Live coded poetry with array and string chaining",
-  `
+    "Live coded poetry with array and string chaining",
+    `
   tempo(70)
 
   const croissant = [
@@ -482,7 +484,7 @@ ${makeExample(
       .rate(rand(.4,.6))
       .speak();
   `,
-  true,
-)}
+    true,
+  )}
 `;
 };
