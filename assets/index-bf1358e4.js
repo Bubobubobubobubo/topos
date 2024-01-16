@@ -3830,8 +3830,10 @@ beat(.5) && snd(['sine', 'triangle', 'sawtooth', 'square'].beat()).freq(100).out
 Note that you can also use noise if you do not want to use a periodic oscillator:
 
 ${e("Listening to the different types of noise",`
-beat(.5) && snd(['brown', 'pink', 'white'].beat()).adsr(0,.1,0,0).out()
+beat(.5) && snd(['brown', 'pink', 'white', 'crackle'].beat()).adsr(0,.1,0,0).out()
 `,!0)}
+
+The <ic>crackle</ic> type can be controlled using the <ic>density</ic> parameter.
 
 Two functions are primarily used to control the frequency of the synthesizer:
 - <ic>freq(hz: number)</ic>: sets the frequency of the oscillator.
