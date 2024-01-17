@@ -65,12 +65,12 @@ On this page, you will find an exhaustive list of all the samples currently load
 A very large collection of wavetables for wavetable synthesis. This collection has been released by Kristoffer Ekstrand: [AKWF Waveforms](https://www.adventurekid.se/akrt/waveforms/adventure-kid-waveforms/). Every sound sample that starts with <ic>wt_</ic> will be looped. Look at this demo:
 
 ${makeExample(
-  "Wavetable synthesis made easy :)",
-  `
+    "Wavetable synthesis made easy :)",
+    `
 beat(0.5)::sound('wt_stereo').n([0, 1].pick()).ad(0, .25).out()
 `,
-  true,
-)}
+    true,
+  )}
 
 
 Pick one folder and spend some time exploring it. There is a lot of different waveforms.
@@ -81,15 +81,16 @@ ${samples_to_markdown(application, "Waveforms")}
 
 ## Drum machines sample pack
 
-A set of 72 classic drum machines created by **Geikha**: [Geikha Drum Machines](https://github.com/geikha/tidal-drum-machines). To use them efficiently, it is best to use the <ic>.bank()</ic> parameter like so:
+A set of 72 classic drum machines created by **Geikha**: [Geikha Drum Machines](https://github.com/geikha/tidal-drum-machines). To use them efficiently, it is best 
+to use the <ic>.bank()</ic> parameter like so:
 
 ${makeExample(
-  "Using a classic drum machine",
-  `
+    "Using a classic drum machine",
+    `
 beat(0.5)::sound(['bd', 'cp'].pick()).bank("AkaiLinn").out()
 `,
-  true,
-)}
+    true,
+  )}
 
 Here is the complete list of available machines:
 
@@ -97,6 +98,41 @@ Here is the complete list of available machines:
 <div class="lg:pl-6 lg:pr-6 w-fit rounded-lg bg-background mx-6 mt-2 my-6 px-2 py-2 max-h-96 flex flex-row flex-wrap gap-x-2 gap-y-2 overflow-y-scroll">
 ${samples_to_markdown(application, "Machines")}
 </div>
+
+In practice, using them will lead you to write short two letters long sample names, each one for a different piece of the kit:
+
+| Kit Piece | Short name     |
+|-----------|----------------|
+|
+| **Bass/kick drum** | <ic>bd</ic> |
+| **Snare drum**     | <ic>sd</ic> |
+| **Rimshot** | <ic>rim</ic> |
+| **Clap** | <ic>cp</ic> |
+| **Closed hi-hat** | <ic>hh</ic> |
+| **Open hi-hat** | <ic>oh</ic> |
+| **Crash** | <ic>cr</ic> |
+| **Ride** | <ic>rd</ic> |
+| **Shakers (and maracas, cabasas, etc)** | <ic>sh</ic> |
+| **High tom** | <ic>ht</ic> |
+| **Medium tom** | <ic>mt</ic> |
+| **Low tom** | <ic>lt</ic> |
+| **Cowbell** | <ic>cb</ic> |
+| **Tambourine** | <ic>tb</ic> |
+| **Other percussions** | <ic>perc</ic> |
+| **Miscellaneous samples** | <ic>misc</ic> |
+| **Effects** | <ic>fx</ic> |
+
+Note that there is also a <ic>drumMachine</ic> function that allows you to play a random drum machine without even typing the name.
+It takes a single argument, a number, that will pick a machine for you in the list:
+
+${makeExample(
+    "Using a classic drum machine",
+    `
+beat(1/2)::sound(['bd', 'cp'].pick()).drumMachine(1).out()
+`,
+    true,
+  )}
+
 
 ## FoxDot sample pack
 
@@ -119,12 +155,12 @@ ${samples_to_markdown(application, "Amiga")}
 A collection of many different amen breaks. Use <ic>.stretch()</ic> to play with these:
 
 ${makeExample(
-  "Stretching an amen break",
-  `
+    "Stretching an amen break",
+    `
 beat(4)::sound('amen1').stretch(4).out()
 `,
-  true,
-)}
+    true,
+  )}
 
 The stretch should be adapted based on the length of each amen break.
 
