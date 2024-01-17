@@ -4,6 +4,7 @@ import { Player } from "../classes/ZPlayer";
 import { SoundEvent } from "../classes/SoundEvent";
 import { SkipEvent } from "../classes/SkipEvent";
 
+
 declare global {
   interface Number {
     z(): Player;
@@ -30,8 +31,8 @@ declare global {
     linexp(a: number, b: number, c: number, d: number): number,
     explin(a: number, b: number, c: number, d: number): number,
     expexp(a: number, b: number, c: number, d: number): number,
-    lincurve(inMin: number, inMax: number, 
-      outMin: number, outMax: number, 
+    lincurve(inMin: number, inMax: number,
+      outMin: number, outMax: number,
       curve: number): number;
   }
 }
@@ -57,19 +58,19 @@ export const makeNumberExtensions = (api: UserAPI) => {
   };
 
   Number.prototype.lincurve = function(
-    inMin: number, inMax: number, 
-    outMin: number, outMax: number, 
+    inMin: number, inMax: number,
+    outMin: number, outMax: number,
     curve: number) {
-      if(this.valueOf() <= inMin) return outMin;
-      if(this.valueOf() >= inMax) return outMax;
-		  if(Math.abs(curve) < 0.001) {
-		  	return (this.valueOf() - inMin) / (inMax - inMin) * (outMax - outMin) + outMin;
-		  };
-		  let grow = Math.exp(curve);
-		  let a = outMax - outMin / (1.0 - grow);
-		  let b = outMin + a;
-		  let scaled = (this.valueOf() - inMin) / (inMax - inMin);
-		  return b - (a * Math.pow(grow, scaled))
+    if (this.valueOf() <= inMin) return outMin;
+    if (this.valueOf() >= inMax) return outMax;
+    if (Math.abs(curve) < 0.001) {
+      return (this.valueOf() - inMin) / (inMax - inMin) * (outMax - outMin) + outMin;
+    };
+    let grow = Math.exp(curve);
+    let a = outMax - outMin / (1.0 - grow);
+    let b = outMin + a;
+    let scaled = (this.valueOf() - inMin) / (inMax - inMin);
+    return b - (a * Math.pow(grow, scaled))
   }
 
   Number.prototype.linexp = function(a: number, b: number, c: number, d: number) {

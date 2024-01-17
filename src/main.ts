@@ -192,7 +192,7 @@ export class Editor {
     // ================================================================================
 
     registerFillKeys(this);
-    registerOnKeyDown(this);    
+    registerOnKeyDown(this);
     installInterfaceLogic(this);
     scriptBlinkers();
 
@@ -229,13 +229,13 @@ export class Editor {
       replace: (match, p1) => `<${key} class="${this.documentationStyle[key]}" ${p1}>`,
     }));
 
-     // Get documentation id from hash parameter
-     const document_id = window.location.hash.slice(1);
-      if(document_id && document_id !== "" && documentation_pages.includes(document_id)) {
-       this.currentDocumentationPane = document_id
-       updateDocumentationContent(this, this.bindings);
-       showDocumentation(this);
-     }
+    // Get documentation id from hash parameter
+    const document_id = window.location.hash.slice(1);
+    if (document_id && document_id !== "" && documentation_pages.includes(document_id)) {
+      this.currentDocumentationPane = document_id
+      updateDocumentationContent(this, this.bindings);
+      showDocumentation(this);
+    }
 
 
   }
@@ -565,7 +565,7 @@ export class Editor {
       console.log("Hydra loaded successfully");
       this.initializeHydra();
     };
-    script.onerror = function () {
+    script.onerror = function() {
       console.error("Error loading Hydra script");
     };
     document.head.appendChild(script);
@@ -578,12 +578,13 @@ export class Editor {
     // @ts-ignore
     this.hydra_backend = new Hydra({
       canvas: this.interface.hydra_canvas as HTMLCanvasElement,
+      width: 1280,
+      height: 768,
       detectAudio: false,
       enableStreamCapture: false,
     });
     this.hydra = this.hydra_backend.synth;
     (globalThis as any).hydra = this.hydra;
-    this.hydra.setResolution(1024, 768);
   }
 
   private setCanvas(canvas: HTMLCanvasElement): void {
@@ -603,25 +604,25 @@ export class Editor {
     }
   }
 
-  private updateInterfaceTheme(selected_theme: {[key: string]: string}): void {
-    function hexToRgb(hex: string): {r: number, g: number, b: number} | null {
+  private updateInterfaceTheme(selected_theme: { [key: string]: string }): void {
+    function hexToRgb(hex: string): { r: number, g: number, b: number } | null {
       let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-          return result ? {
-            r: parseInt(result[1], 16),
-            g: parseInt(result[2], 16),
-            b: parseInt(result[3], 16)
-          } : null;
-        };
-        for (const [key, value] of Object.entries(selected_theme)) {
-          let color = hexToRgb(value);
-          if (color) {
-            let colorString = `${color.r} ${color.g} ${color.b}`
-            document.documentElement.style.setProperty("--" + key, colorString);
-          }
-        }
+      return result ? {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16)
+      } : null;
+    };
+    for (const [key, value] of Object.entries(selected_theme)) {
+      let color = hexToRgb(value);
+      if (color) {
+        let colorString = `${color.r} ${color.g} ${color.b}`
+        document.documentElement.style.setProperty("--" + key, colorString);
       }
+    }
+  }
 
-      getColorScheme(theme_name: string): {[key: string]: string} {
+  getColorScheme(theme_name: string): { [key: string]: string } {
     // Check if the theme exists in colors.json
     let themes: Record<string, { [key: string]: any }> = colors;
     return themes[theme_name];
