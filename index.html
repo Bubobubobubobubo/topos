@@ -15,7 +15,7 @@
     
     
     <script src="https://unpkg.com/hydra-synth"></script>
-    <script type="module" crossorigin src="/assets/index-0e0e6d70.js"></script>
+    <script type="module" crossorigin src="/assets/index-dc53173b.js"></script>
     <link rel="stylesheet" href="/assets/index-e5dc6b43.css">
   <script id="vite-plugin-pwa:register-sw" src="/registerSW.js" defer></script></head>
   <style>
@@ -31,6 +31,18 @@
 
     .fluid-transition {
       transition: background-color 0.05s ease-in-out;
+    }
+
+    .hydracanvas {
+      position: fixed; /* ignore margins */
+      top: 0px;
+      left: 0px;
+      width: 100%; /* fill screen */
+      height: 100%;
+      background-size: cover;
+      overflow-y: hidden;
+      z-index: -5; /* place behind everything else */
+      display: block;
     }
 
     .fullscreencanvas {
@@ -677,9 +689,9 @@
          <!-- Here comes the editor itself -->
           <div id="editor" class="relative flex flex-row h-screen overflow-y-hidden">
             <canvas id="scope" class="fullscreencanvas"></canvas>
-            <canvas id="hydra-bg" class="fullscreencanvas"></canvas>
             <canvas id="feedback" class="fullscreencanvas"></canvas>
             <canvas id="drawings" class="fullscreencanvas"></canvas>
+            <canvas id="hydra-bg" class="hydracanvas"></canvas>
 					</div>
           <p id="error_line" class="hidden w-screen bg-background font-mono absolute bottom-0 pl-2 py-2">Hello kids</p>
         </div>
