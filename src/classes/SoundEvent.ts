@@ -62,6 +62,7 @@ export class SoundEvent extends AudibleEvent {
     znoise: ["znoise"],
     address: ["address", "add"],
     port: ["port"],
+    density: ["density"],
     noise: ["noise"],
     zmod: ["zmod"],
     zcrush: ["zcrush"],
