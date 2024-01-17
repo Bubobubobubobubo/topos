@@ -801,7 +801,8 @@ ${ii(r,"Waveforms")}
 
 ## Drum machines sample pack
 
-A set of 72 classic drum machines created by **Geikha**: [Geikha Drum Machines](https://github.com/geikha/tidal-drum-machines). To use them efficiently, it is best to use the <ic>.bank()</ic> parameter like so:
+A set of 72 classic drum machines created by **Geikha**: [Geikha Drum Machines](https://github.com/geikha/tidal-drum-machines). To use them efficiently, it is best 
+to use the <ic>.bank()</ic> parameter like so:
 
 ${e("Using a classic drum machine",`
 beat(0.5)::sound(['bd', 'cp'].pick()).bank("AkaiLinn").out()
@@ -813,6 +814,37 @@ Here is the complete list of available machines:
 <div class="lg:pl-6 lg:pr-6 w-fit rounded-lg bg-background mx-6 mt-2 my-6 px-2 py-2 max-h-96 flex flex-row flex-wrap gap-x-2 gap-y-2 overflow-y-scroll">
 ${ii(r,"Machines")}
 </div>
+
+In practice, using them will lead you to write short two letters long sample names, each one for a different piece of the kit:
+
+| Kit Piece | Short name     |
+|-----------|----------------|
+|
+| **Bass/kick drum** | <ic>bd</ic> |
+| **Snare drum**     | <ic>sd</ic> |
+| **Rimshot** | <ic>rim</ic> |
+| **Clap** | <ic>cp</ic> |
+| **Closed hi-hat** | <ic>hh</ic> |
+| **Open hi-hat** | <ic>oh</ic> |
+| **Crash** | <ic>cr</ic> |
+| **Ride** | <ic>rd</ic> |
+| **Shakers (and maracas, cabasas, etc)** | <ic>sh</ic> |
+| **High tom** | <ic>ht</ic> |
+| **Medium tom** | <ic>mt</ic> |
+| **Low tom** | <ic>lt</ic> |
+| **Cowbell** | <ic>cb</ic> |
+| **Tambourine** | <ic>tb</ic> |
+| **Other percussions** | <ic>perc</ic> |
+| **Miscellaneous samples** | <ic>misc</ic> |
+| **Effects** | <ic>fx</ic> |
+
+Note that there is also a <ic>drumMachine</ic> function that allows you to play a random drum machine without even typing the name.
+It takes a single argument, a number, that will pick a machine for you in the list:
+
+${e("Using a classic drum machine",`
+beat(1/2)::sound(['bd', 'cp'].pick()).drumMachine(1).out()
+`,!0)}
+
 
 ## FoxDot sample pack
 
