@@ -788,7 +788,7 @@ const completionDatabase: CompletionDatabase = {
     name: "counter",
     category: "patterns",
     description: "Counter/iterator",
-    example: "counter('my_counter_, 20, 1)",
+    example: "counter('my_counter', 20, 1)",
   },
   drunk: {
     name: "drunk",

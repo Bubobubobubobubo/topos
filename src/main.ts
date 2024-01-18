@@ -578,12 +578,11 @@ export class Editor {
     // @ts-ignore
     this.hydra_backend = new Hydra({
       canvas: this.interface.hydra_canvas as HTMLCanvasElement,
-      width: 1280,
-      height: 768,
       detectAudio: false,
       enableStreamCapture: false,
     });
     this.hydra = this.hydra_backend.synth;
+    this.hydra.setResolution(1280, 768);
     (globalThis as any).hydra = this.hydra;
   }
 

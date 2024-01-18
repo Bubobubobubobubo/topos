@@ -1,34 +1,34 @@
 /**
- * This code is taken from https://github.com/tidalcycles/strudel/pull/839. The logic is written by 
+ * This code is taken from https://github.com/tidalcycles/strudel/pull/839. The logic is written by
  * daslyfe (Jade Rose Rowland). I have tweaked it a bit to fit the needs of this project (TypeScript),
  * etc... Many thanks for this piece of code! This code is initially part of the Strudel project:
  * https://github.com/tidalcycles/strudel.
  */
 
 // @ts-ignore
-import { registerSound, onTriggerSample }  from "superdough";
+import { registerSound, onTriggerSample } from "superdough";
 
 export const isAudioFile = (filename: string) => ['wav', 'mp3'].includes(filename.split('.').slice(-1)[0]);
 
 interface samplesDBConfig {
-    dbName: string,
-    table: string,
-    columns: string[],
-    version: number
+  dbName: string,
+  table: string,
+  columns: string[],
+  version: number
 }
 
 export const samplesDBConfig = {
-    dbName: 'samples',
-    table: 'usersamples',
-    columns: ['data_url', 'title'],
-    version: 1
+  dbName: 'samples',
+  table: 'usersamples',
+  columns: ['data_url', 'title'],
+  version: 1
 }
 
 async function bufferToDataUrl(buf: Buffer) {
   return new Promise((resolve) => {
     var blob = new Blob([buf], { type: 'application/octet-binary' });
     var reader = new FileReader();
-    reader.onload = function (event: Event) {
+    reader.onload = function(event: Event) {
       // @ts-ignore
       resolve(event.target.result);
     };
@@ -65,7 +65,7 @@ const processFilesForIDB = async (files: FileList) => {
 };
 
 
-export const registerSamplesFromDB = (config: samplesDBConfig, onComplete = () => {}) => {
+export const registerSamplesFromDB = (config: samplesDBConfig, onComplete = () => { }) => {
   openDB(config, (objectStore: IDBObjectStore) => {
     let query = objectStore.getAll();
     query.onsuccess = (event: Event) => {
@@ -107,49 +107,49 @@ export const registerSamplesFromDB = (config: samplesDBConfig, onComplete = () =
 };
 
 export const openDB = (config: samplesDBConfig, onOpened: Function) => {
-    const { dbName, version, table, columns } = config
+  const { dbName, version, table, columns } = config
 
-    if (!('indexedDB' in window)) {
-        console.log('This browser doesn\'t support IndexedDB')
-        return
-    }
-    const dbOpen = indexedDB.open(dbName, version);
+  if (!('indexedDB' in window)) {
+    console.log('This browser doesn\'t support IndexedDB')
+    return
+  }
+  const dbOpen = indexedDB.open(dbName, version);
 
 
-    dbOpen.onupgradeneeded = (_event) => {
-      const db = dbOpen.result;
-      const objectStore = db.createObjectStore(table, { keyPath: 'id', autoIncrement: false });
-      columns.forEach((c: any) => {
-        objectStore.createIndex(c, c, { unique: false });
-      });
+  dbOpen.onupgradeneeded = (_event) => {
+    const db = dbOpen.result;
+    const objectStore = db.createObjectStore(table, { keyPath: 'id', autoIncrement: false });
+    columns.forEach((c: any) => {
+      objectStore.createIndex(c, c, { unique: false });
+    });
+  };
+  dbOpen.onerror = function(err: Event) {
+    console.log('Error opening DB: ', (err.target as IDBOpenDBRequest).error);
+  }
+  dbOpen.onsuccess = function(_event: Event) {
+    const db = dbOpen.result;
+    db.onversionchange = function() {
+      db.close();
+      alert("Database is outdated, please reload the page.")
     };
-    dbOpen.onerror = function (err: Event) {
-        console.log('Error opening DB: ', (err.target as IDBOpenDBRequest).error);
-    }
-    dbOpen.onsuccess = function (_event: Event) {
-        const db = dbOpen.result;
-        db.onversionchange = function() {
-            db.close();
-            alert("Database is outdated, please reload the page.")
-        };
-        const writeTransaction = db.transaction([table], 'readwrite'),
-              objectStore = writeTransaction.objectStore(table);
-        // Writing in the database here!
-        onOpened(objectStore)
-    }
+    const writeTransaction = db.transaction([table], 'readwrite'),
+      objectStore = writeTransaction.objectStore(table);
+    // Writing in the database here!
+    onOpened(objectStore)
+  }
 }
 
 export const uploadSamplesToDB = async (config: samplesDBConfig, files: FileList) => {
   await processFilesForIDB(files).then((files) => {
     const onOpened = (objectStore: IDBObjectStore, _db: IDBDatabase) => {
-            // @ts-ignore
-            files.forEach((file: File) => {
-                if (file == null) {
-                    return;
-                }
-                objectStore.put(file);
-            });
-        };
-        openDB(config, onOpened);
+      // @ts-ignore
+      files.forEach((file: File) => {
+        if (file == null) {
+          return;
+        }
+        objectStore.put(file);
+      });
+    };
+    openDB(config, onOpened);
   });
 };

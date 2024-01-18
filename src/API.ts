@@ -1650,6 +1650,7 @@ export class UserAPI {
     let tobin: boolean[] = convert.split("").map((x: string) => x === "1");
     return this.beat(div) && tobin.beat(div);
   };
+  bry = this.binrhythm;
 
   // =============================================================
   // Low Frequency Oscillators
@@ -1775,7 +1776,7 @@ export class UserAPI {
      * @see noise
      */
     const period = 1 / freq;
-    const t = (Date.now() / 1000 ) % period;
+    const t = (Date.now() / 1000) % period;
     return (t / period < duty ? 1 : -1);
   };
 
@@ -2659,4 +2660,5 @@ export class UserAPI {
   public getThemes = (): string[] => {
     return Object.keys(colorschemes);
   }
+
 }
