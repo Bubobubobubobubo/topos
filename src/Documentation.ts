@@ -3,6 +3,7 @@ import { type Editor } from "./main";
 import { introduction } from "./documentation/basics/welcome";
 import { loading_samples } from "./documentation/learning/samples/loading_samples";
 import { amplitude } from "./documentation/learning/audio_engine/amplitude";
+import { pitch } from "./documentation/learning/audio_engine/pitch";
 import { effects } from "./documentation/learning/audio_engine/effects";
 import { sampler } from "./documentation/learning/audio_engine/sampler";
 import { sample_banks } from "./documentation/learning/samples/sample_banks";
@@ -152,6 +153,7 @@ export const documentation_factory = (application: Editor) => {
     generators: generators(application),
     shortcuts: shortcuts(application),
     amplitude: amplitude(application),
+    pitch: pitch(application),
     effects: effects(application),
     sampler: sampler(application),
     mouse: mouse(application),
@@ -218,24 +220,24 @@ export const updateDocumentationContent = (app: Editor, bindings: any) => {
     moreStyling: true,
     backslashEscapesHTMLTags: true,
     extensions: [showdownHighlight({
-      pre: true, 
+      pre: true,
       auto_detection: false
     }), ...bindings],
   });
- 
-  if(Object.keys(app.docs).length === 0) {
+
+  if (Object.keys(app.docs).length === 0) {
     app.docs = documentation_factory(app);
   }
 
-  function _update_and_assign(callback: Function) { 
+  function _update_and_assign(callback: Function) {
     const converted_markdown = converter.makeHtml(
       app.docs[app.currentDocumentationPane],
     );
-     callback(converted_markdown)
+    callback(converted_markdown)
   }
-  _update_and_assign((e: string)=> { 
+  _update_and_assign((e: string) => {
     let display_content = e === undefined ? loading_message : e;
-    document.getElementById("documentation-content")!.innerHTML = display_content; 
+    document.getElementById("documentation-content")!.innerHTML = display_content;
   })
   if (document.getElementById("documentation-content")!.innerHTML.replace(/"/g, "'") == loading_message.replace(/"/g, "'")) {
     setTimeout(() => {
