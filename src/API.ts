@@ -27,6 +27,10 @@ import {
   soundMap,
   // @ts-ignore
 } from "superdough";
+import {
+  registerSoundfonts
+  // @ts-ignore
+} from "@strudel/soundfonts";
 import { Speaker } from "./extensions/StringExtensions";
 import { getScaleNotes } from "zifferjs";
 import { OscilloscopeConfig } from "./Visuals/Oscilloscope";
@@ -70,6 +74,7 @@ export async function loadSamples() {
     samples("github:Bubobubobubobubo/Dough-Waveforms/main", undefined, {
       tag: "Waveforms",
     }),
+    registerSoundfonts(),
   ]);
 }
 
