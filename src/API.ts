@@ -1602,6 +1602,20 @@ export class UserAPI {
   };
   ry = this.rhythm;
 
+
+  public nrhythm = (
+    div: number,
+    pulses: number,
+    length: number,
+    rotate: number = 0,
+  ): boolean => {
+    let rhythm = this._euclidean_cycle(pulses, length, rotate).map(n => !n)
+    return (
+      this.beat(div) && rhythm.beat(div)
+    );
+  };
+  nry = this.nrhythm;
+
   _euclidean_cycle(
     pulses: number,
     length: number,
