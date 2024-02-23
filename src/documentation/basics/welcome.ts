@@ -1,7 +1,6 @@
 import { makeExampleFactory, key_shortcut } from "../../Documentation";
 import { type Editor } from "../../main";
 import { examples } from "../../examples/excerpts";
-import pdf from "./TOPOS_COMMANDS.pdf";
 
 export const introduction = (application: Editor): string => {
   const makeExample = makeExampleFactory(application);
