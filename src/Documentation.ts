@@ -1,6 +1,7 @@
 import { type Editor } from "./main";
 // Basics
 import { introduction } from "./documentation/basics/welcome";
+import { atelier } from "./documentation/basics/atelier";
 import { loading_samples } from "./documentation/learning/samples/loading_samples";
 import { amplitude } from "./documentation/learning/audio_engine/amplitude";
 import { effects } from "./documentation/learning/audio_engine/effects";
@@ -77,6 +78,7 @@ export const makeExampleFactory = (application: Editor): Function => {
 
 export const documentation_pages = [
   "introduction",
+  "atelier",
   "sampler",
   "amplitude",
   "audio_basics",
@@ -126,6 +128,7 @@ export const documentation_factory = (application: Editor) => {
 
   return {
     introduction: introduction(application),
+    atelier: atelier(application),
     interface: software_interface(application),
     interaction: interaction(application),
     code: code(application),
@@ -218,24 +221,24 @@ export const updateDocumentationContent = (app: Editor, bindings: any) => {
     moreStyling: true,
     backslashEscapesHTMLTags: true,
     extensions: [showdownHighlight({
-      pre: true, 
+      pre: true,
       auto_detection: false
     }), ...bindings],
   });
- 
-  if(Object.keys(app.docs).length === 0) {
+
+  if (Object.keys(app.docs).length === 0) {
     app.docs = documentation_factory(app);
   }
 
-  function _update_and_assign(callback: Function) { 
+  function _update_and_assign(callback: Function) {
     const converted_markdown = converter.makeHtml(
       app.docs[app.currentDocumentationPane],
     );
-     callback(converted_markdown)
+    callback(converted_markdown)
   }
-  _update_and_assign((e: string)=> { 
+  _update_and_assign((e: string) => {
     let display_content = e === undefined ? loading_message : e;
-    document.getElementById("documentation-content")!.innerHTML = display_content; 
+    document.getElementById("documentation-content")!.innerHTML = display_content;
   })
   if (document.getElementById("documentation-content")!.innerHTML.replace(/"/g, "'") == loading_message.replace(/"/g, "'")) {
     setTimeout(() => {
