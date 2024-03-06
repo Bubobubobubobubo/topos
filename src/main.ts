@@ -213,14 +213,8 @@ export class Editor {
     loadUniverserFromUrl(this);
 
     // Set the color scheme for the application
-    let available_themes = Object.keys(colors);
-    if (this.settings.theme in available_themes) {
-      this.readTheme(this.settings.theme);
-    } else {
-      this.settings.theme = "Everblush";
-      this.readTheme(this.settings.theme);
-    }
-
+    this.readTheme(this.settings.theme);
+    
     this.documentationStyle = createDocumentationStyle(this);
     this.bindings = Object.keys(this.documentationStyle).map((key) => ({
       type: "output",
