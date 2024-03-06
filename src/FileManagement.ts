@@ -1,6 +1,6 @@
 // import { tutorial_universe } from "./universes/tutorial";
 import { gzipSync, decompressSync, strFromU8 } from "fflate";
-import { examples } from "./examples/excerpts";
+// import { examples } from "./examples/excerpts";
 import { type Editor } from "./main";
 import { uniqueNamesGenerator, colors, animals } from "unique-names-generator";
 import { tryEvaluate } from "./Evaluator";
