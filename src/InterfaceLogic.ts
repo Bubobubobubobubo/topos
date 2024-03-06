@@ -44,8 +44,8 @@ export const installInterfaceLogic = (app: Editor) => {
     app.settings.midi_channels_scripts;
   (app.interface.midi_clock_ppqn as HTMLInputElement).value =
     app.settings.midi_clock_ppqn.toString();
-  (app.interface.load_demo_songs as HTMLInputElement).checked =
-    app.settings.load_demo_songs;
+  // (app.interface.load_demo_songs as HTMLInputElement).checked =
+  //   app.settings.load_demo_songs;
 
   const tabs = document.querySelectorAll('[id^="tab-"]');
   // Iterate over the tabs with an index
@@ -373,8 +373,8 @@ export const installInterfaceLogic = (app: Editor) => {
     midiChannelsScripts.checked = app.settings.midi_channels_scripts;
     const midiClockPpqn = app.interface.midi_clock_ppqn as HTMLInputElement;
     midiClockPpqn.value = app.settings.midi_clock_ppqn.toString();
-    const loadDemoSongs = app.interface.load_demo_songs as HTMLInputElement;
-    loadDemoSongs.checked = app.settings.load_demo_songs;
+    // const loadDemoSongs = app.interface.load_demo_songs as HTMLInputElement;
+    // loadDemoSongs.checked = app.settings.load_demo_songs;
     const vimModeCheckbox = app.interface.vim_mode_checkbox as HTMLInputElement;
     vimModeCheckbox.checked = app.settings.vimMode;
 
@@ -502,12 +502,12 @@ export const installInterfaceLogic = (app: Editor) => {
     app.settings.midi_clock_ppqn = value;
   });
 
-  app.interface.load_demo_songs.addEventListener("change", () => {
-    let checked = (app.interface.load_demo_songs as HTMLInputElement).checked
-      ? true
-      : false;
-    app.settings.load_demo_songs = checked;
-  });
+  // app.interface.load_demo_songs.addEventListener("change", () => {
+  //   let checked = (app.interface.load_demo_songs as HTMLInputElement).checked
+  //     ? true
+  //     : false;
+  //   app.settings.load_demo_songs = checked;
+  // });
 
   app.interface.universe_creator.addEventListener("submit", (event) => {
     event.preventDefault();

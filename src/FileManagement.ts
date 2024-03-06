@@ -63,7 +63,7 @@ export interface Settings {
   selected_universe: string;
   line_numbers: boolean;
   time_position: boolean;
-  load_demo_songs: boolean;
+  // load_demo_songs: boolean;
   tips: boolean;
   completions: boolean;
   send_clock: boolean;
@@ -150,7 +150,7 @@ export class AppSettings {
   public midi_clock_input: string | undefined = undefined;
   public default_midi_input: string | undefined = undefined;
   public midi_clock_ppqn: number = 24;
-  public load_demo_songs: boolean = true;
+  // public load_demo_songs: boolean = true;
 
   constructor() {
     const settingsFromStorage = JSON.parse(
@@ -174,7 +174,7 @@ export class AppSettings {
       this.midi_clock_input = settingsFromStorage.midi_clock_input;
       this.midi_clock_ppqn = settingsFromStorage.midi_clock_ppqn || 24;
       this.default_midi_input = settingsFromStorage.default_midi_input;
-      this.load_demo_songs = settingsFromStorage.load_demo_songs;
+      // this.load_demo_songs = settingsFromStorage.load_demo_songs;
     } else {
       this.universes = template_universes;
     }
@@ -204,7 +204,7 @@ export class AppSettings {
       midi_clock_input: this.midi_clock_input,
       midi_clock_ppqn: this.midi_clock_ppqn,
       default_midi_input: this.default_midi_input,
-      load_demo_songs: this.load_demo_songs,
+      // load_demo_songs: this.load_demo_songs,
     };
   }
 
@@ -232,7 +232,7 @@ export class AppSettings {
     this.midi_clock_input = settings.midi_clock_input;
     this.midi_clock_ppqn = settings.midi_clock_ppqn;
     this.default_midi_input = settings.default_midi_input;
-    this.load_demo_songs = settings.load_demo_songs;
+    // this.load_demo_songs = settings.load_demo_songs;
     localStorage.setItem("topos", JSON.stringify(this.data));
   }
 }
@@ -245,23 +245,22 @@ export const initializeSelectedUniverse = (app: Editor): void => {
    * @param app - The main application
    * @returns void
    */
-  if (app.settings.load_demo_songs) {
-    let random_example = examples[Math.floor(Math.random() * examples.length)];
-    app.selected_universe = "Demo";
+  // if (app.settings.load_demo_songs) {
+  //   let random_example = examples[Math.floor(Math.random() * examples.length)];
+  //   app.selected_universe = "Demo";
+  //   app.universes[app.selected_universe] = structuredClone(template_universe);
+  //   app.universes[app.selected_universe].global.committed = random_example;
+  //   app.universes[app.selected_universe].global.candidate = random_example;
+  // } else {
+  try {
+    app.selected_universe = app.settings.selected_universe;
+    if (app.universes[app.selected_universe] === undefined)
+      app.universes[app.selected_universe] =
+        structuredClone(template_universe);
+  } catch (error) {
+    app.settings.selected_universe = "Welcome";
+    app.selected_universe = app.settings.selected_universe;
     app.universes[app.selected_universe] = structuredClone(template_universe);
-    app.universes[app.selected_universe].global.committed = random_example;
-    app.universes[app.selected_universe].global.candidate = random_example;
-  } else {
-    try {
-      app.selected_universe = app.settings.selected_universe;
-      if (app.universes[app.selected_universe] === undefined)
-        app.universes[app.selected_universe] =
-          structuredClone(template_universe);
-    } catch (error) {
-      app.settings.selected_universe = "Welcome";
-      app.selected_universe = app.settings.selected_universe;
-      app.universes[app.selected_universe] = structuredClone(template_universe);
-    }
   }
   (
     app.interface.universe_viewer as HTMLInputElement
