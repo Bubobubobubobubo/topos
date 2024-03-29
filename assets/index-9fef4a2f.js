@@ -460,7 +460,7 @@ beat(2)::sound('triangle')
   .note([50,55,57,62,66, 69, 74].mouseX())
   .fmi(usine(1/4)).fmh([1,2,0.5].beat())
   .ad(1/16, 1.5).delay(0.5).delayt(0.75)
-  .room(0.5).size(8).lpf(usine(1/3)*4000)`,!0)}
+  .room(0.5).size(8).lpf(usine(1/3)*4000).out()`,!0)}
 
 ## Compléments
 
