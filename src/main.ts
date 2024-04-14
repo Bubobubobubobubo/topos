@@ -12,8 +12,8 @@ import {
   Universe,
   loadUniverserFromUrl,
 } from "./FileManagement";
-import { singleElements, buttonGroups, ElementMap, createDocumentationStyle } from "./DomElements";
-import { registerFillKeys, registerOnKeyDown } from "./Keyboard";
+import { singleElements, buttonGroups, ElementMap, createDocumentationStyle } from "./DOM/DomElements";
+import { registerFillKeys, registerOnKeyDown } from "./DOM/Keyboard";
 import { installEditor } from "./EditorSetup";
 import { documentation_factory, documentation_pages, showDocumentation, updateDocumentationContent } from "./documentation/Documentation";
 import { EditorView } from "codemirror";
@@ -28,8 +28,8 @@ import { tryEvaluate } from "./Evaluator";
 // @ts-ignore
 import showdown from "showdown";
 import { makeStringExtensions } from "./extensions/StringExtensions";
-import { installInterfaceLogic } from "./UILogic";
-import { installWindowBehaviors } from "./WindowBehavior";
+import { installInterfaceLogic } from "./DOM/UILogic";
+import { installWindowBehaviors } from "./DOM/WindowBehavior";
 import { makeNumberExtensions } from "./extensions/NumberExtensions";
 import colors from "./colors.json";
 // @ts-ignore

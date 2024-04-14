@@ -1,8 +1,8 @@
-import { type Editor } from "./main";
+import { type Editor } from "../main";
 import { vim } from "@replit/codemirror-vim";
-import { tryEvaluate } from "./Evaluator";
-import { hideDocumentation, showDocumentation } from "./documentation/Documentation";
-import { openSettingsModal, openUniverseModal } from "./FileManagement";
+import { tryEvaluate } from "../Evaluator";
+import { hideDocumentation, showDocumentation } from "../documentation/Documentation";
+import { openSettingsModal, openUniverseModal } from "../FileManagement";
 
 export const registerFillKeys = (app: Editor) => {
   document.addEventListener("keydown", (event) => {

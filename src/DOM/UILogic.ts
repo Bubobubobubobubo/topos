@@ -1,14 +1,14 @@
 import { EditorView } from "codemirror";
 import { vim } from "@replit/codemirror-vim";
-import { type Editor } from "./main";
-import colors from "./colors.json";
+import { type Editor } from "../main";
+import colors from "../colors.json";
 import {
   documentation_factory,
   documentation_pages,
   hideDocumentation,
   showDocumentation,
   updateDocumentationContent,
-} from "./documentation/Documentation";
+} from "../documentation/Documentation";
 import {
   type Universe,
   template_universe,
@@ -18,14 +18,14 @@ import {
   share,
   closeUniverseModal,
   openUniverseModal,
-} from "./FileManagement";
-import { loadSamples } from "./API";
-import { tryEvaluate } from "./Evaluator";
-import { inlineHoveringTips } from "./documentation/inlineHelp";
+} from "../FileManagement";
+import { loadSamples } from "../API";
+import { tryEvaluate } from "../Evaluator";
+import { inlineHoveringTips } from "../documentation/inlineHelp";
 import { lineNumbers } from "@codemirror/view";
-import { jsCompletions } from "./EditorSetup";
+import { jsCompletions } from "../EditorSetup";
 import { saveState } from "./WindowBehavior";
-import { registerSamplesFromDB, samplesDBConfig, uploadSamplesToDB } from "./IO/SampleLoading";
+import { registerSamplesFromDB, samplesDBConfig, uploadSamplesToDB } from "../IO/SampleLoading";
 
 export const installInterfaceLogic = (app: Editor) => {
   // Initialize style
@@ -153,7 +153,7 @@ export const installInterfaceLogic = (app: Editor) => {
     );
   });
 
-  app.interface.upload_samples_button.addEventListener("input", async (event) => {
+  app.interface.upload_samples_button.addEventListener("input", async (event: Event) => {
     let fileInput = event.target as HTMLInputElement;
     if (!fileInput.files?.length) {
       return;
@@ -509,7 +509,7 @@ export const installInterfaceLogic = (app: Editor) => {
   //   app.settings.load_demo_songs = checked;
   // });
 
-  app.interface.universe_creator.addEventListener("submit", (event) => {
+  app.interface.universe_creator.addEventListener("submit", (event: Event) => {
     event.preventDefault();
 
     let data = new FormData(app.interface.universe_creator as HTMLFormElement);

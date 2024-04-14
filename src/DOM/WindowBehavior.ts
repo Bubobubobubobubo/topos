@@ -1,5 +1,5 @@
-import { type Editor } from "./main";
-import { outputSocket, inputSocket } from "./IO/OSC";
+import { type Editor } from "../main";
+import { outputSocket, inputSocket } from "../IO/OSC";
 
 const handleResize = (canvas: HTMLCanvasElement) => {
   if (!canvas) return;
@@ -45,8 +45,8 @@ export const installWindowBehaviors = (
     handleResize(app.interface.feedback as HTMLCanvasElement),
   );
   window.addEventListener("resize", () =>
-  handleResize(app.interface.drawings as HTMLCanvasElement),
-);
+    handleResize(app.interface.drawings as HTMLCanvasElement),
+  );
   window.addEventListener("beforeunload", (event) => {
     event.preventDefault();
     saveBeforeExit(app);
@@ -60,7 +60,7 @@ export const installWindowBehaviors = (
     localStorage.openpages = Date.now();
     window.addEventListener(
       "storage",
-      function (e) {
+      function(e) {
         if (e.key == "openpages") {
           // Listen if anybody else is opening the same page!
           localStorage.page_available = Date.now();

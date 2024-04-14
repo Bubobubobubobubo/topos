@@ -23,7 +23,7 @@ import { patterns } from "./patterns/patterns";
 import showdown from "showdown";
 import showdownHighlight from "showdown-highlight";
 import "highlight.js/styles/atom-one-dark-reasonable.min.css";
-import { createDocumentationStyle } from "../DomElements";
+import { createDocumentationStyle } from "../DOM/DomElements";
 showdown.setFlavor("github");
 
 type StyleBinding = {
