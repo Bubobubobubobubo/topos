@@ -28,11 +28,10 @@ import {
 } from "@codemirror/autocomplete";
 import { lintKeymap } from "@codemirror/lint";
 import { Compartment } from "@codemirror/state";
-import { Editor } from "./main";
+import { Editor } from "../main";
 import { EditorView } from "codemirror";
 import { javascript } from "@codemirror/lang-javascript";
-import { inlineHoveringTips } from "./documentation/inlineHelp";
-import { toposCompletions, soundCompletions } from "./documentation/inlineHelp";
+import { inlineHoveringTips, toposCompletions, soundCompletions } from "../documentation/inlineHelp";
 import { javascriptLanguage } from "@codemirror/lang-javascript";
 
 export const getCodeMirrorTheme = (theme: { [key: string]: string }): Extension => {

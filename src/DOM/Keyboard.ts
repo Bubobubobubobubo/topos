@@ -2,7 +2,7 @@ import { type Editor } from "../main";
 import { vim } from "@replit/codemirror-vim";
 import { tryEvaluate } from "../Evaluator";
 import { hideDocumentation, showDocumentation } from "../documentation/Documentation";
-import { openSettingsModal, openUniverseModal } from "../FileManagement";
+import { openSettingsModal, openUniverseModal } from "../Editor/FileManagement";
 
 export const registerFillKeys = (app: Editor) => {
   document.addEventListener("keydown", (event) => {

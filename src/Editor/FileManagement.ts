@@ -1,7 +1,7 @@
 import { gzipSync, decompressSync, strFromU8 } from "fflate";
-import { type Editor } from "./main";
+import { type Editor } from "../main";
 import { uniqueNamesGenerator, colors, animals } from "unique-names-generator";
-import { tryEvaluate } from "./Evaluator";
+import { tryEvaluate } from "../Evaluator";
 export type Universes = { [key: string]: Universe };
 
 export interface Universe {

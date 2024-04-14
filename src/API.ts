@@ -1,6 +1,6 @@
 import { sendToServer, type OSCMessage, oscMessages } from "./IO/OSC";
 import { getAllScaleNotes, nearScales, seededRandom } from "zifferjs";
-import colorschemes from "./colors.json";
+import colorschemes from "./Editor/colors.json";
 import {
   MidiCCEvent,
   MidiConnection,
@@ -18,7 +18,7 @@ import {
   loadUniverse,
   openUniverseModal,
   template_universes,
-} from "./FileManagement";
+} from "./Editor/FileManagement";
 import {
   samples,
   initAudioOnFirstClick,
@@ -29,12 +29,12 @@ import {
 } from "superdough";
 import { Speaker } from "./extensions/StringExtensions";
 import { getScaleNotes } from "zifferjs";
-import { OscilloscopeConfig } from "./Visuals/Oscilloscope";
-import { blinkScript } from "./Visuals/Blinkers";
+import { OscilloscopeConfig } from "./DOM/Visuals/Oscilloscope";
+import { blinkScript } from "./DOM/Visuals/Blinkers";
 import { SkipEvent } from "./classes/SkipEvent";
 import { AbstractEvent, EventOperation } from "./classes/AbstractEvents";
 import drums from "./tidal-drum-machines.json";
-import { ShapeObject, createConicGradient, createLinearGradient, createRadialGradient, drawBackground, drawBall, drawBalloid, drawDonut, drawEquilateral, drawImage, drawPie, drawSmiley, drawStar, drawStroke, drawText, drawTriangular } from "./Visuals/CanvasVisuals";
+import { ShapeObject, createConicGradient, createLinearGradient, createRadialGradient, drawBackground, drawBall, drawBalloid, drawDonut, drawEquilateral, drawImage, drawPie, drawSmiley, drawStar, drawStroke, drawText, drawTriangular } from "./DOM/Visuals/CanvasVisuals";
 
 interface ControlChange {
   channel: number;

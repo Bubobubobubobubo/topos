@@ -1,7 +1,7 @@
 import { EditorView } from "codemirror";
 import { vim } from "@replit/codemirror-vim";
 import { type Editor } from "../main";
-import colors from "../colors.json";
+import colors from "../Editor/colors.json";
 import {
   documentation_factory,
   documentation_pages,
@@ -18,12 +18,12 @@ import {
   share,
   closeUniverseModal,
   openUniverseModal,
-} from "../FileManagement";
+} from "../Editor/FileManagement";
 import { loadSamples } from "../API";
 import { tryEvaluate } from "../Evaluator";
 import { inlineHoveringTips } from "../documentation/inlineHelp";
 import { lineNumbers } from "@codemirror/view";
-import { jsCompletions } from "../EditorSetup";
+import { jsCompletions } from "../Editor/EditorSetup";
 import { saveState } from "./WindowBehavior";
 import { registerSamplesFromDB, samplesDBConfig, uploadSamplesToDB } from "../IO/SampleLoading";
 

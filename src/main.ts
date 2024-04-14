@@ -1,20 +1,20 @@
-import { OscilloscopeConfig, runOscilloscope } from "./Visuals/Oscilloscope";
+import { OscilloscopeConfig, runOscilloscope } from "./DOM/Visuals/Oscilloscope";
 import { EditorState, Compartment } from "@codemirror/state";
-import { scriptBlinkers } from "./Visuals/Blinkers";
+import { scriptBlinkers } from "./DOM/Visuals/Blinkers";
 import { javascript } from "@codemirror/lang-javascript";
 import { markdown } from "@codemirror/lang-markdown";
 import { Extension } from "@codemirror/state";
 import { outputSocket } from "./IO/OSC";
-import { getCodeMirrorTheme, switchToDebugTheme } from "./EditorSetup";
+import { getCodeMirrorTheme, switchToDebugTheme } from "./Editor/EditorSetup";
 import {
   initializeSelectedUniverse,
   AppSettings,
   Universe,
   loadUniverserFromUrl,
-} from "./FileManagement";
+} from "./Editor/FileManagement";
 import { singleElements, buttonGroups, ElementMap, createDocumentationStyle } from "./DOM/DomElements";
 import { registerFillKeys, registerOnKeyDown } from "./DOM/Keyboard";
-import { installEditor } from "./EditorSetup";
+import { installEditor } from "./Editor/EditorSetup";
 import { documentation_factory, documentation_pages, showDocumentation, updateDocumentationContent } from "./documentation/Documentation";
 import { EditorView } from "codemirror";
 import { Clock } from "./clock/Clock";
@@ -23,7 +23,7 @@ import * as oeis from "jisg";
 import * as zpatterns from "zifferjs/src/patterns.ts";
 import { makeArrayExtensions } from "./extensions/ArrayExtensions";
 import "./style.css";
-import { Universes, File } from "./FileManagement";
+import { Universes, File } from "./Editor/FileManagement";
 import { tryEvaluate } from "./Evaluator";
 // @ts-ignore
 import showdown from "showdown";
@@ -31,7 +31,7 @@ import { makeStringExtensions } from "./extensions/StringExtensions";
 import { installInterfaceLogic } from "./DOM/UILogic";
 import { installWindowBehaviors } from "./DOM/WindowBehavior";
 import { makeNumberExtensions } from "./extensions/NumberExtensions";
-import colors from "./colors.json";
+import colors from "./Editor/colors.json";
 // @ts-ignore
 const images = import.meta.glob("./assets/*")
 
