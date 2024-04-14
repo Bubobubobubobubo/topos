@@ -80,75 +80,71 @@ export const makeNumberExtensions = (api: UserAPI) => {
   };
 
   Number.prototype.z0 = function(options: { [key: string]: any } = {}) {
-    return api.z0(this.valueOf().toString().split("").join(" "), options);
+    return api.z0(this.valueOf().toString().split("").join(" "), options, "z0");
   };
 
   Number.prototype.z1 = function(options: { [key: string]: any } = {}) {
-    return api.z1(this.valueOf().toString().split("").join(" "), options);
+    return api.z1(this.valueOf().toString().split("").join(" "), options, "z1");
   };
 
   Number.prototype.z2 = function(options: { [key: string]: any } = {}) {
-    return api.z2(this.valueOf().toString().split("").join(" "), options);
+    return api.z2(this.valueOf().toString().split("").join(" "), options, "z2");
   };
 
   Number.prototype.z3 = function(options: { [key: string]: any } = {}) {
-    return api.z3(this.valueOf().toString().split("").join(" "), options);
+    return api.z3(this.valueOf().toString().split("").join(" "), options, "z3");
   };
 
   Number.prototype.z4 = function(options: { [key: string]: any } = {}) {
-    return api.z4(this.valueOf().toString().split("").join(" "), options);
+    return api.z4(this.valueOf().toString().split("").join(" "), options, "z4");
   };
 
   Number.prototype.z5 = function(options: { [key: string]: any } = {}) {
-    return api.z5(this.valueOf().toString().split("").join(" "), options);
+    return api.z5(this.valueOf().toString().split("").join(" "), options, "z5");
   };
 
   Number.prototype.z6 = function(options: { [key: string]: any } = {}) {
-    return api.z6(this.valueOf().toString().split("").join(" "), options);
+    return api.z6(this.valueOf().toString().split("").join(" "), options, "z6");
   };
 
   Number.prototype.z7 = function(options: { [key: string]: any } = {}) {
-    return api.z7(this.valueOf().toString().split("").join(" "), options);
+    return api.z7(this.valueOf().toString().split("").join(" "), options, "z7");
   };
 
   Number.prototype.z8 = function(options: { [key: string]: any } = {}) {
-    return api.z8(this.valueOf().toString().split("").join(" "), options);
+    return api.z8(this.valueOf().toString().split("").join(" "), options, "z8");
   };
 
   Number.prototype.z9 = function(options: { [key: string]: any } = {}) {
-    return api.z9(this.valueOf().toString().split("").join(" "), options);
+    return api.z9(this.valueOf().toString().split("").join(" "), options, "z9");
   };
 
   Number.prototype.z10 = function(options: { [key: string]: any } = {}) {
-    return api.z10(this.valueOf().toString().split("").join(" "), options);
+    return api.z10(this.valueOf().toString().split("").join(" "), options, "z10");
   };
 
   Number.prototype.z11 = function(options: { [key: string]: any } = {}) {
-    return api.z11(this.valueOf().toString().split("").join(" "), options);
+    return api.z11(this.valueOf().toString().split("").join(" "), options, "z11");
   };
 
   Number.prototype.z12 = function(options: { [key: string]: any } = {}) {
-    return api.z12(this.valueOf().toString().split("").join(" "), options);
+    return api.z12(this.valueOf().toString().split("").join(" "), options, "z12");
   };
 
   Number.prototype.z13 = function(options: { [key: string]: any } = {}) {
-    return api.z13(this.valueOf().toString().split("").join(" "), options);
+    return api.z13(this.valueOf().toString().split("").join(" "), options, "z13");
   };
 
   Number.prototype.z14 = function(options: { [key: string]: any } = {}) {
-    return api.z14(this.valueOf().toString().split("").join(" "), options);
+    return api.z14(this.valueOf().toString().split("").join(" "), options, "z14");
   };
 
   Number.prototype.z15 = function(options: { [key: string]: any } = {}) {
-    return api.z15(this.valueOf().toString().split("").join(" "), options);
+    return api.z15(this.valueOf().toString().split("").join(" "), options, "z15");
   };
 
   Number.prototype.z16 = function(options: { [key: string]: any } = {}) {
-    return api.z16(this.valueOf().toString().split("").join(" "), options);
-  };
-
-  Number.prototype.midi = function(...kwargs: any[]) {
-    return api.midi(this.valueOf(), ...kwargs);
+    return api.z16(this.valueOf().toString().split("").join(" "), options, "z16");
   };
 
   Number.prototype.sound = function(name: string): SoundEvent | SkipEvent {

@@ -40,9 +40,7 @@ import {
   soundMap,
   // @ts-ignore
 } from "superdough";
-import { Speaker } from "../Extensions/StringExtensions";
 import { getScaleNotes } from "zifferjs";
-import { AbstractEvent, EventOperation } from "../Classes/AbstractEvents";
 import drums from "../tidal-drum-machines.json";
 
 export async function loadSamples() {
@@ -85,7 +83,9 @@ export class UserAPI {
    */
 
   public codeExamples: { [key: string]: string } = {};
+  //@ts-ignore
   private counters: { [key: string]: any } = {};
+  //@ts-ignore
   private _drunk: DrunkWalk = new DrunkWalk(-100, 100, false);
   public randomGen = Math.random;
   public currentSeed: string | undefined = undefined;
@@ -241,6 +241,34 @@ export class UserAPI {
   snd: any;
   log: (message: any) => void;
   logOnce: (message: any) => void;
+  speak: (text: string, lang?: string, voiceIndex?: number, rate?: number, pitch?: number) => void;
+  cbar: () => number;
+  ctick: () => number;
+  cpulse: () => number;
+  cbeat: () => number;
+  ebeat: () => number;
+  epulse: () => number;
+  nominator: () => number;
+  meter: () => number;
+  denominator: () => number;
+  pulsesForBar: () => number;
+  z0!: (input: string | Generator<number>, options: InputOptions, id: number | string) => Player;
+  z1!: (input: string | Generator<number>, options: InputOptions, id: number | string) => Player;
+  z2!: (input: string | Generator<number>, options: InputOptions, id: number | string) => Player;
+  z3!: (input: string | Generator<number>, options: InputOptions, id: number | string) => Player;
+  z4!: (input: string | Generator<number>, options: InputOptions, id: number | string) => Player;
+  z5!: (input: string | Generator<number>, options: InputOptions, id: number | string) => Player;
+  z6!: (input: string | Generator<number>, options: InputOptions, id: number | string) => Player;
+  z7!: (input: string | Generator<number>, options: InputOptions, id: number | string) => Player;
+  z8!: (input: string | Generator<number>, options: InputOptions, id: number | string) => Player;
+  z9!: (input: string | Generator<number>, options: InputOptions, id: number | string) => Player;
+  z10!: (input: string | Generator<number>, options: InputOptions, id: number | string) => Player;
+  z11!: (input: string | Generator<number>, options: InputOptions, id: number | string) => Player;
+  z12!: (input: string | Generator<number>, options: InputOptions, id: number | string) => Player;
+  z13!: (input: string | Generator<number>, options: InputOptions, id: number | string) => Player;
+  z14!: (input: string | Generator<number>, options: InputOptions, id: number | string) => Player;
+  z15!: (input: string | Generator<number>, options: InputOptions, id: number | string) => Player;
+  z16!: (input: string | Generator<number>, options: InputOptions, id: number | string) => Player;
 
   constructor(public app: Editor) {
     this.MidiConnection = new MidiConnection(this, app.settings);
@@ -295,7 +323,7 @@ export class UserAPI {
     this.food = Canvas.food();
     this.animals = Canvas.animals();
     this.expressions = Canvas.expressions();
-    this.generateCacheKey = Cache.generateCacheKey(this.app);
+    this.generateCacheKey = Cache.generateCacheKey();
     this.resetAllFromCache = Cache.resetAllFromCache(this.app);
     this.clearPatternCache = Cache.clearPatternCache(this.app);
     this.removePatternFromCache = Cache.removePatternFromCache(this.app);
@@ -314,11 +342,11 @@ export class UserAPI {
     this.drunk_wrap = Drunk.drunk_wrap(this.app);
     this.warp = Warp.warp(this.app);
     this.beat_warp = Warp.beat_warp(this.app);
-    this.min = Mathematics.min(this.app);
-    this.max = Mathematics.max(this.app);
-    this.mean = Mathematics.mean(this.app);
-    this.limit = Mathematics.limit(this.app);
-    this.abs = Mathematics.abs(this.app);
+    this.min = Mathematics.min();
+    this.max = Mathematics.max();
+    this.mean = Mathematics.mean();
+    this.limit = Mathematics.limit();
+    this.abs = Mathematics.abs();
     this.z = Ziffers.z(this.app);
     Object.assign(this, Ziffers.generateZFunctions(this.app));
     this.fullseq = Filters.fullseq();
@@ -334,7 +362,7 @@ export class UserAPI {
     this.onbeat = Filters.onbeat(this.app);
     this.oncount = Filters.oncount(this.app);
     this.oneuclid = Filters.oneuclid(this.app);
-    this.euclid = Filters.euclid(this.app);
+    this.euclid = Filters.euclid();
     this.ec = this.euclid;
     this.rhythm = Filters.rhythm(this.app);
     this.ry = this.rhythm;
@@ -343,21 +371,21 @@ export class UserAPI {
     this.bin = Filters.bin();
     this.binrhythm = Filters.binrhythm(this.app);
     this.bry = this.binrhythm;
-    this.line = LFO.line(this.app);
+    this.line = LFO.line();
     this.sine = LFO.sine(this.app);
     this.usine = LFO.usine(this.app);
     this.saw = LFO.saw(this.app);
     this.usaw = LFO.usaw(this.app);
     this.triangle = LFO.triangle(this.app);
     this.utriangle = LFO.utriangle(this.app);
-    this.square = LFO.square(this.app);
-    this.usquare = LFO.usquare(this.app);
+    this.square = LFO.square();
+    this.usquare = LFO.usquare();
     this.noise = LFO.noise(this.app);
     this.unoise = LFO.unoise(this.app);
     this.prob = Probability.prob(this.app);
     this.toss = Probability.toss(this.app);
     this.odds = Probability.odds(this.app);
-    this.never = Probability.never(this.app);
+    this.never = Probability.never();
     this.almostNever = Probability.almostNever(this.app);
     this.rarely = Probability.rarely(this.app);
     this.scarcely = Probability.scarcely(this.app);
@@ -365,7 +393,7 @@ export class UserAPI {
     this.often = Probability.often(this.app);
     this.frequently = Probability.frequently(this.app);
     this.almostAlways = Probability.almostAlways(this.app);
-    this.always = Probability.always(this.app);
+    this.always = Probability.always();
     this.dice = Probability.dice(this.app);
     this.osc = OSC.osc(this.app);
     this.getOSC = OSC.getOSC(this.app);
@@ -382,10 +410,20 @@ export class UserAPI {
     this.count = this.counter;
     this.i = Counter.i(this.app);
     this.sound = Sound.sound(this.app);
-    this.snd = this.sound;  // Alias
-    this.speak = Sound.speak(this.app);
+    this.snd = this.sound;  
+    this.speak = Sound.speak();
     this.log = Console.log(this.app);
     this.logOnce = Console.logOnce(this.app);
+    this.cbar = Transport.cbar(this.app);
+    this.ctick = Transport.ctick(this.app);
+    this.cpulse = Transport.cpulse(this.app);
+    this.cbeat = Transport.cbeat(this.app);
+    this.ebeat = Transport.ebeat(this.app);
+    this.epulse = Transport.epulse(this.app);
+    this.nominator = Transport.nominator(this.app);
+    this.meter = Transport.meter(this.app);
+    this.denominator = Transport.denominator(this.app);  // Alias for meter
+    this.pulsesForBar = Transport.pulsesForBar(this.app);
 
  }
 
@@ -519,8 +557,6 @@ export class UserAPI {
     );
   };
 
-
-
   // =============================================================
   // Quantification functions
   // =============================================================
@@ -562,79 +598,6 @@ export class UserAPI {
   // =============================================================
   // Time markers
   // =============================================================
-
-  cbar = (): number => {
-    /**
-     * Returns the current bar number
-     *
-     * @returns The current bar number
-     */
-    return this.app.clock.time_position.bar + 1;
-  };
-
-  ctick = (): number => {
-    /**
-     * Returns the current tick number
-     *
-     * @returns The current tick number
-     */
-    return this.app.clock.tick + 1;
-  };
-
-  cpulse = (): number => {
-    /**
-     * Returns the current pulse number
-     *
-     * @returns The current pulse number
-     */
-    return this.app.clock.time_position.pulse + 1;
-  };
-
-  cbeat = (): number => {
-    /**
-     * Returns the current beat number
-     *
-     * @returns The current beat number
-     */
-    return this.app.clock.time_position.beat + 1;
-  };
-
-  ebeat = (): number => {
-    /**
-     * Returns the current beat number since the origin of time
-     */
-    return this.app.clock.beats_since_origin + 1;
-  };
-
-  epulse = (): number => {
-    /**
-     * Returns the current number of pulses elapsed since origin of time
-     */
-    return this.app.clock.pulses_since_origin + 1;
-  };
-
-  nominator = (): number => {
-    /**
-     * Returns the current nominator of the time signature
-     */
-    return this.app.clock.time_signature[0];
-  };
-
-  meter = (): number => {
-    /**
-     * Returns the current meter (denominator of the time signature)
-     */
-    return this.app.clock.time_signature[1];
-  };
-
-  denominator = this.meter;
-
-  pulsesForBar = (): number => {
-    /**
-     * Returns the number of pulses in a given bar
-     */
-    return (this.tempo() * this.ppqn() * this.nominator()) / 60;
-  }
 
   // =============================================================
   // Fill

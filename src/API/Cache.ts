@@ -2,7 +2,7 @@ import { isGenerator, isGeneratorFunction, maybeToNumber } from "../Utils/Generi
 import { type Player } from "../Classes/ZPlayer";
 
 
-export const generateCacheKey = (app: any) => (...args: any[]): string => {
+export const generateCacheKey = () => (...args: any[]): string => {
     return args.map((arg) => JSON.stringify(arg)).join(",");
 };
 

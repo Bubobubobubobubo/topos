@@ -1,4 +1,4 @@
-export const line = (app: any) => (start: number, end: number, step: number = 1): number[] => {
+export const line = () => (start: number, end: number, step: number = 1): number[] => {
     const countPlaces = (num: number) => {
         var text = num.toString();
         var index = text.indexOf(".");
@@ -46,14 +46,14 @@ export const utriangle = (app: any) => (freq: number = 1, phase: number = 0): nu
     return ((triangle(app)(freq, phase) + 1) / 2);
 };
 
-export const square = (app: any) => (freq: number = 1, duty: number = 0.5): number => {
+export const square = () => (freq: number = 1, duty: number = 0.5): number => {
     const period = 1 / freq;
     const t = (Date.now() / 1000) % period;
     return (t / period < duty ? 1 : -1);
 };
 
-export const usquare = (app: any) => (freq: number = 1, duty: number = 0.5): number => {
-    return ((square(app)(freq, duty) + 1) / 2);
+export const usquare = () => (freq: number = 1, duty: number = 0.5): number => {
+    return ((square()(freq, duty) + 1) / 2);
 };
 
 export const noise = (app: any) => (): number => {

@@ -74,3 +74,41 @@ export const time_signature = (app: any) => (numerator: number, denominator: num
         app.clock.time_signature = [numerator, denominator];
     }
 };
+
+export const cbar = (app: any) => (): number => {
+    return app.clock.time_position.bar + 1;
+};
+
+export const ctick = (app: any) => (): number => {
+    return app.clock.tick + 1;
+};
+
+export const cpulse = (app: any) => (): number => {
+    return app.clock.time_position.pulse + 1;
+};
+
+export const cbeat = (app: any) => (): number => {
+    return app.clock.time_position.beat + 1;
+};
+
+export const ebeat = (app: any) => (): number => {
+    return app.clock.beats_since_origin + 1;
+};
+
+export const epulse = (app: any) => (): number => {
+    return app.clock.pulses_since_origin + 1;
+};
+
+export const nominator = (app: any) => (): number => {
+    return app.clock.time_signature[0];
+};
+
+export const meter = (app: any) => (): number => {
+    return app.clock.time_signature[1];
+};
+
+export const denominator = meter;  // Alias for meter
+
+export const pulsesForBar = (app: any) => (): number => {
+    return (app.clock.bpm * app.clock.ppqn * nominator(app)()) / 60;
+};

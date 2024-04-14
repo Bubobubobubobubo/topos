@@ -5,7 +5,7 @@ import { generateCacheKey, removePatternFromCache } from "./Cache"
 // ziffersFunctions.ts
 export const z = (app: any) => (input: string | Generator<number>, options: InputOptions = {}, id: number | string = ""): Player => {
     const zid = "z" + id.toString();
-    const key = id === "" ? generateCacheKey(app)(input, options) : zid;
+    const key = id === "" ? generateCacheKey()(input, options) : zid;
 
     const validSyntax = typeof input === "string" && !app.invalidPatterns[input]
 

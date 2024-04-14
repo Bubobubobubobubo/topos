@@ -82,75 +82,75 @@ export const makeStringExtensions = (api: UserAPI) => {
   };
 
   String.prototype.z = function (options: { [key: string]: any } = {}) {
-    return api.z(this.valueOf(), options);
+    return api.z(this.valueOf(), options, "x");
   };
 
   String.prototype.z0 = function (options: { [key: string]: any } = {}) {
-    return api.z0(this.valueOf(), options);
+    return api.z0(this.valueOf(), options, "z0");
   };
 
   String.prototype.z1 = function (options: { [key: string]: any } = {}) {
-    return api.z1(this.valueOf(), options);
+    return api.z1(this.valueOf(), options, "z1");
   };
 
   String.prototype.z2 = function (options: { [key: string]: any } = {}) {
-    return api.z2(this.valueOf(), options);
+    return api.z2(this.valueOf(), options, "z2");
   };
 
   String.prototype.z3 = function (options: { [key: string]: any } = {}) {
-    return api.z3(this.valueOf(), options);
+    return api.z3(this.valueOf(), options, "z3");
   };
 
   String.prototype.z4 = function (options: { [key: string]: any } = {}) {
-    return api.z4(this.valueOf(), options);
+    return api.z4(this.valueOf(), options, "z4");
   };
 
   String.prototype.z5 = function (options: { [key: string]: any } = {}) {
-    return api.z5(this.valueOf(), options);
+    return api.z5(this.valueOf(), options, "z5");
   };
 
   String.prototype.z6 = function (options: { [key: string]: any } = {}) {
-    return api.z6(this.valueOf(), options);
+    return api.z6(this.valueOf(), options, "z6");
   };
 
   String.prototype.z7 = function (options: { [key: string]: any } = {}) {
-    return api.z7(this.valueOf(), options);
+    return api.z7(this.valueOf(), options, "z7");
   };
 
   String.prototype.z8 = function (options: { [key: string]: any } = {}) {
-    return api.z8(this.valueOf(), options);
+    return api.z8(this.valueOf(), options, "z8");
   };
 
   String.prototype.z9 = function (options: { [key: string]: any } = {}) {
-    return api.z9(this.valueOf(), options);
+    return api.z9(this.valueOf(), options, "z9");
   };
 
   String.prototype.z10 = function (options: { [key: string]: any } = {}) {
-    return api.z10(this.valueOf(), options);
+    return api.z10(this.valueOf(), options, "z10");
   };
 
   String.prototype.z11 = function (options: { [key: string]: any } = {}) {
-    return api.z11(this.valueOf(), options);
+    return api.z11(this.valueOf(), options, "z11");
   };
 
   String.prototype.z12 = function (options: { [key: string]: any } = {}) {
-    return api.z12(this.valueOf(), options);
+    return api.z12(this.valueOf(), options, "z12");
   };
 
   String.prototype.z13 = function (options: { [key: string]: any } = {}) {
-    return api.z13(this.valueOf(), options);
+    return api.z13(this.valueOf(), options, "z13");
   };
 
   String.prototype.z14 = function (options: { [key: string]: any } = {}) {
-    return api.z14(this.valueOf(), options);
+    return api.z14(this.valueOf(), options, "z14");
   };
 
   String.prototype.z15 = function (options: { [key: string]: any } = {}) {
-    return api.z15(this.valueOf(), options);
+    return api.z15(this.valueOf(), options, "z15");
   };
 
   String.prototype.z16 = function (options: { [key: string]: any } = {}) {
-    return api.z16(this.valueOf(), options);
+    return api.z16(this.valueOf(), options, "z16");
   };
 
   String.prototype.note = function () {

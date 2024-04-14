@@ -13,7 +13,7 @@ export const sound = (app: any) => (sound: string | string[] | null | undefined)
 
 export const snd = sound;
 
-export const speak = (app: any) => (text: string, lang: string = "en-US", voiceIndex: number = 0, rate: number = 1, pitch: number = 1): void => {
+export const speak = () => (text: string, lang: string = "en-US", voiceIndex: number = 0, rate: number = 1, pitch: number = 1): void => {
     /**
      * Speaks the given text using the browser's speech synthesis API.
      * @param text - The text to speak.

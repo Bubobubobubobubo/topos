@@ -161,7 +161,7 @@ export const show_scale = (app: any) => (
   soundOff: boolean = false,
 ): void => {
   if (!app.scale_aid || scale !== app.scale_aid) {
-    hide_scale(app)(root, scale, channel, port);
+    hide_scale(app)(channel, port);
     const scaleNotes = getAllScaleNotes(scale, root);
     scaleNotes.forEach((note) => {
       app.MidiConnection.sendMidiOn(note, channel, 1, port);
@@ -172,8 +172,6 @@ export const show_scale = (app: any) => (
 };
 
 export const hide_scale = (app: any) => (
-  root: number | string = 0,
-  scale: number | string = 0,
   channel: number = 0,
   port: number | string = app.MidiConnection.currentOutputIndex || 0,
 ): void => {

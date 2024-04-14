@@ -12,7 +12,7 @@ export const odds = (app: any) => (n: number, beats: number = 1): boolean => {
     return app.randomGen() < (n * app.ppqn()) / (app.ppqn() * beats);
 };
 
-export const never = (app: any) => (beats: number = 1): boolean => {
+export const never = () => (): boolean => {
     return false;
 };
 
@@ -44,7 +44,7 @@ export const almostAlways = (app: any) => (beats: number = 1): boolean => {
     return app.randomGen() < (0.985 * app.ppqn()) / (app.ppqn() * beats);
 };
 
-export const always = (app: any) => (beats: number = 1): boolean => {
+export const always = () => (): boolean => {
     return true;
 };
 

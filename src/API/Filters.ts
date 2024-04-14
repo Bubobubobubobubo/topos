@@ -146,7 +146,7 @@ export const oncount = (app: any) => (beats: number[] | number, count: number): 
 };
 
 export const oneuclid = (app: any) => (pulses: number, length: number, rotate: number = 0): boolean => {
-    const cycle = app._euclidean_cycle(pulses, length, rotate);
+    const cycle = _euclidean_cycle(pulses, length, rotate);
     const beats = cycle.reduce((acc: number[], x: boolean, i: number) => {
         if (x) acc.push(i + 1);
         return acc;
@@ -154,11 +154,11 @@ export const oneuclid = (app: any) => (pulses: number, length: number, rotate: n
     return oncount(app)(beats, length);
 };
 
-export const euclid = (app: any) => (iterator: number, pulses: number, length: number, rotate: number = 0): boolean => {
+export const euclid = () => (iterator: number, pulses: number, length: number, rotate: number = 0): boolean => {
     /**
      * Returns a Euclidean cycle of size length, with n pulses, rotated or not.
      */
-    return app._euclidean_cycle(pulses, length, rotate)[iterator % length];
+    return _euclidean_cycle(pulses, length, rotate)[iterator % length];
 };
 export const ec = euclid;
 
@@ -167,7 +167,7 @@ export const rhythm = (app: any) => (div: number, pulses: number, length: number
      * Returns a rhythm based on Euclidean cycle.
      */
     return (
-      app.beat(div) && app._euclidean_cycle(pulses, length, rotate).beat(div)
+      app.beat(div) && _euclidean_cycle(pulses, length, rotate).beat(div)
     );
 };
 export const ry = rhythm;
@@ -176,7 +176,7 @@ export const nrhythm = (app: any) => (div: number, pulses: number, length: numbe
     /**
      * Returns a negated rhythm based on Euclidean cycle.
      */
-    let rhythm = app._euclidean_cycle(pulses, length, rotate).map((n: any) => !n);
+    let rhythm = _euclidean_cycle(pulses, length, rotate).map((n: any) => !n);
     return (
       app.beat(div) && rhythm.beat(div)
     );
