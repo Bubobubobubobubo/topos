@@ -228,6 +228,8 @@ export class UserAPI {
   scope: (config: OscilloscopeConfig) => void;
   randI: any;
   rand: any;
+  ir: any;
+  r: any;
   seed: any;
   localSeededRandom: any;
   clearLocalSeed: any;
@@ -282,7 +284,6 @@ export class UserAPI {
     this.bpb = Transport.bpb(this.app);
     this.ppqn = Transport.ppqn(this.app);
     this.time_signature = Transport.time_signature(this.app);
-    this.onMouseMove = Mouse.onmousemove(this.app);
     this.mouseX = Mouse.mouseX(this.app);
     this.mouseY = Mouse.mouseY(this.app);
     this.noteX = Mouse.noteX(this.app);
@@ -399,7 +400,9 @@ export class UserAPI {
     this.gif = Canvas.gif(this.app);
     this.scope = Canvas.scope(this.app);
     this.randI = Randomness.randI(this);
+    this.ir = this.randI;
     this.rand = Randomness.rand(this);
+    this.r = this.rand;
     this.seed = Randomness.seed(this);
     this.localSeededRandom = Randomness.localSeededRandom(this);
     this.clearLocalSeed = Randomness.clearLocalSeed(this);
@@ -609,5 +612,11 @@ export class UserAPI {
   public cue = (functionName: string | Function): void => {
     functionName = typeof functionName === "function" ? functionName.name : functionName;
     this.cueTimes[functionName] = this.app.clock.pulses_since_origin;
+  };
+
+
+  onmousemove = (e: MouseEvent) => {
+    this.app._mouseX = e.pageX;
+    this.app._mouseY = e.pageY;
   };
 }

@@ -1,11 +1,5 @@
 import { Editor } from "../main";
 
-// mouse.ts
-export const onmousemove = (app: Editor) => (e: MouseEvent): void => {
-  app._mouseX = e.pageX;
-  app._mouseY = e.pageY;
-};
-
 export const mouseX = (app: Editor) => (): number => {
   /**
    * @returns The current x position of the mouse

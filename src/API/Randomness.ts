@@ -8,6 +8,7 @@ export const randI = (api: UserAPI) => (min: number, max: number): number => {
 export const rand = (api: UserAPI) => (min: number, max: number): number => {
   return api.randomGen() * (max - min) + min;
 };
+export const r = rand
 
 export const seed = (api: UserAPI) => (seed: string | number): void => {
   if (typeof seed === "number") seed = seed.toString();
