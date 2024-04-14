@@ -1,5 +1,5 @@
 import { type Editor } from "../../main";
-import { makeExampleFactory } from "../../Documentation";
+import { makeExampleFactory } from "../Documentation";
 
 // @ts-ignore
 export const interaction = (application: Editor): string => {

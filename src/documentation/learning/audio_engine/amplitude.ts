@@ -1,5 +1,5 @@
 import { type Editor } from "../../../main";
-import { makeExampleFactory } from "../../../Documentation";
+import { makeExampleFactory } from "../../Documentation";
 
 export const amplitude = (application: Editor): string => {
   // @ts-ignore
@@ -17,11 +17,11 @@ Controlling the volume is probably the most important concept you need to know a
 | <ic>dbgain</ic>   | db    | Attenuation in dB from <ic>-inf</ic> to <ic>+10</ic> (acts as a sound mixer fader).|
 	
 ${makeExample(
-  "Velocity manipulated by a counter",
-  `
+    "Velocity manipulated by a counter",
+    `
 beat(.5)::snd('cp').vel($(1)%10 / 10).out()`,
-  true,
-)}
+    true,
+  )}
 	
 ## Amplitude Enveloppe
 	
@@ -38,8 +38,8 @@ beat(.5)::snd('cp').vel($(1)%10 / 10).out()`,
 Note that the **sustain** value is not a duration but an amplitude value (how loud). The other values are the time for each stage to take place. Here is a fairly complete example using the <ic>sawtooth</ic> basic waveform.
 	
 ${makeExample(
-  "Simple synthesizer",
-  `
+    "Simple synthesizer",
+    `
 register("smooth", x => x.cutoff(r(100,500))
   .lpadsr(usaw(1/8) * 8, 0.05, .125, 0, 0)
   .gain(r(0.25, 0.4)).adsr(0, r(.2,.4), r(0,0.5), 0)
@@ -51,15 +51,15 @@ beat(.25)::sound('sawtooth')
 .note([50,57,55,60].add(12).beat(1.5))
 .smooth().out();
 	`,
-  true,
-)};
+    true,
+  )};
 
 Sometimes, using a full ADSR envelope is a bit overkill. There are other simpler controls to manipulate the envelope like the <ic>.ad</ic> method:
 
 
 ${makeExample(
-  "Replacing .adsr by .ad",
-  `
+    "Replacing .adsr by .ad",
+    `
 register("smooth", x => x.cutoff(r(100,500))
   .lpadsr(usaw(1/8) * 8, 0.05, .125, 0, 0)
   .gain(r(0.25, 0.4)).ad(0, 0.25)
@@ -71,8 +71,8 @@ beat(.25)::sound('sawtooth')
 .note([50,57,55,60].add(12).beat(1.5))
 .smooth().out();
 	`,
-  true,
-)};
+    true,
+  )};
 
 `;
 };

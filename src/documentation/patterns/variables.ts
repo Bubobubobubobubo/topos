@@ -1,5 +1,5 @@
 import { type Editor } from "../../main";
-import { makeExampleFactory } from "../../Documentation";
+import { makeExampleFactory } from "../Documentation";
 
 export const variables = (application: Editor): string => {
   const makeExample = makeExampleFactory(application);
@@ -12,22 +12,22 @@ By default, each script is independant from each other. The variables defined in
 There is a <ic>global</ic> object that you can use to store and retrieve information. It is a simple key/value store. You can store any type of data in it:
 	
 ${makeExample(
-  "Setting a global variable",
-  `
+    "Setting a global variable",
+    `
 // This is script n°3
 global.my_variable = 2
 `,
-  true,
-)}
+    true,
+  )}
 
 ${makeExample(
-  "Getting that variable back and printing!",
-  `
+    "Getting that variable back and printing!",
+    `
 // This is script n°4
 log(global.my_variable)
 `,
-  true,
-)}
+    true,
+  )}
 
 Now your scripts can share information with each other!
 
@@ -47,30 +47,30 @@ You will often need to use iterators and/or counters to index over data structur
 **Note:** Counters also come with a secret syntax. They can be called with the **$** symbol!
 
 ${makeExample(
-  "Iterating over a list of samples using a counter",
-  `
+    "Iterating over a list of samples using a counter",
+    `
 rhythm(.25, 6, 8) :: sound('dr').n($(1)).end(.25).out()
 `,
-  true,
-)}
+    true,
+  )}
 
 ${makeExample(
-  "Using a more complex counter",
-  `
+    "Using a more complex counter",
+    `
 // Limit is 20, step is 5
 rhythm(.25, 6, 8) :: sound('dr').n($(1, 20, 5)).end(.25).out()
 `,
-  false,
-)}
+    false,
+  )}
 
 ${makeExample(
-  "Calling the drunk mechanism",
-  `
+    "Calling the drunk mechanism",
+    `
 // Limit is 20, step is 5
 rhythm(.25, 6, 8) :: sound('dr').n(drunk()).end(.25).out()
 `,
-  false,
-)}
+    false,
+  )}
 
 
 

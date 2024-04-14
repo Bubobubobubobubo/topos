@@ -1,7 +1,6 @@
-// @ts-ignore
-import { TransportNode } from "./TransportNode";
-import TransportProcessor from "./TransportProcessor?worker&url";
-import { Editor } from "./main";
+import { TransportNode } from "./ClockNode";
+import TransportProcessor from "./ClockProcessor?worker&url";
+import { Editor } from "../main";
 
 export interface TimePosition {
   /**
@@ -57,7 +56,7 @@ export class Clock {
     this.logicalTime = 0;
     this.tick = 0;
     this._bpm = 120;
-    this._ppqn = 48;
+    this._ppqn = 48 * 2;
     this.transportNode = null;
     this.ctx = ctx;
     this.running = true;
@@ -189,6 +188,11 @@ export class Clock {
   }
 
   public incrementTick(bpm: number) {
+    /**
+    * Increment the clock tick by 1.
+    * @param bpm - The current beats per minute value
+    * @returns void
+    */
     this.tick++;
     this.logicalTime += this.pulse_duration_at_bpm(bpm);
   }

@@ -1,15 +1,12 @@
 import type { Editor } from "./main";
 import type { File } from "./FileManagement";
 
-const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-const codeReplace = (code: string): string => {
-  return code.replace(/->|::/g, "&&");
-};
+const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+const codeReplace = (code: string): string => code.replace(/->|::/g, "&&");
+const cache = new Map<string, Function>();
+const MAX_CACHE_SIZE = 40;
 
-const tryCatchWrapper = async (
-  application: Editor,
-  code: string,
-): Promise<boolean> => {
+async function tryCatchWrapper(application: Editor, code: string): Promise<boolean> {
   /**
    * Wraps the provided code in a try-catch block and executes it.
    *
@@ -17,21 +14,15 @@ const tryCatchWrapper = async (
    * @param code - The code to be executed.
    * @returns A promise that resolves to a boolean indicating whether the code executed successfully or not.
    */
-
   try {
-    await new Function(`"use strict"; ${codeReplace(code)}`).call(
-      application.api,
-    );
+    await new Function(`"use strict"; ${codeReplace(code)}`).call(application.api);
     return true;
   } catch (error) {
     application.interface.error_line.innerHTML = error as string;
     application.api._reportError(error as string);
     return false;
   }
-};
-
-const cache = new Map<string, Function>();
-const MAX_CACHE_SIZE = 40;
+}
 
 const addFunctionToCache = (code: string, fn: Function) => {
   /**
@@ -45,11 +36,8 @@ const addFunctionToCache = (code: string, fn: Function) => {
   cache.set(code, fn);
 };
 
-export const tryEvaluate = async (
-  application: Editor,
-  code: File,
-  timeout = 5000,
-): Promise<void> => {
+
+export async function tryEvaluate(application: Editor, code: File, timeout = 5000): Promise<void> {
   /**
    * Tries to evaluate the provided code within a specified timeout period.
    * Increments the evaluation count of the code file.
@@ -63,39 +51,30 @@ export const tryEvaluate = async (
   code.evaluations!++;
   const candidateCode = code.candidate;
 
-  try {
-    const cachedFunction = cache.get(candidateCode);
-    if (cachedFunction) {
-      cachedFunction.call(application.api);
-    } else {
-      const wrappedCode = `let i = ${code.evaluations}; ${candidateCode}`;
-      const isCodeValid = await Promise.race([
-        tryCatchWrapper(application, wrappedCode),
-        delay(timeout),
-      ]);
-
-      if (isCodeValid) {
-        code.committed = code.candidate;
-        const newFunction = new Function(
-          `"use strict"; ${codeReplace(wrappedCode)}`,
-        );
-        addFunctionToCache(candidateCode, newFunction);
-      } else {
-        application.api.logOnce("Compilation error!");
-        await evaluate(application, code, timeout);
-      }
-    }
-  } catch (error) {
-    application.interface.error_line.innerHTML = error as string;
-    application.api._reportError(error as string);
+  const cachedFunction = cache.get(candidateCode);
+  if (cachedFunction) {
+    cachedFunction.call(application.api);
+    return;
   }
-};
 
-export const evaluate = async (
-  application: Editor,
-  code: File,
-  timeout = 1000,
-): Promise<void> => {
+  const wrappedCode = `let i = ${code.evaluations}; ${candidateCode}`;
+  const isCodeValid = await Promise.race([
+    tryCatchWrapper(application, wrappedCode),
+    delay(timeout)
+  ]);
+
+  if (isCodeValid) {
+    code.committed = candidateCode;
+    const newFunction = new Function(`"use strict"; ${codeReplace(wrappedCode)}`);
+    addFunctionToCache(candidateCode, newFunction);
+  } else {
+    application.api.logOnce("Compilation error!");
+    await delay(100);
+    await tryEvaluate(application, code, timeout);
+  }
+}
+
+export async function evaluate(application: Editor, code: File, timeout = 1000): Promise<void> {
   /**
    * Evaluates the given code using the provided application and timeout.
    * @param application The editor application.
@@ -103,18 +82,17 @@ export const evaluate = async (
    * @param timeout The timeout value in milliseconds (default: 1000).
    * @returns A Promise that resolves when the evaluation is complete.
    */
-
   try {
     await Promise.race([
       tryCatchWrapper(application, code.committed as string),
-      delay(timeout),
+      delay(timeout)
     ]);
-    if (code.evaluations) code.evaluations++;
+    code.evaluations!++;
   } catch (error) {
     application.interface.error_line.innerHTML = error as string;
-    console.log(error);
+    console.error(error);
   }
-};
+}
 
 export const evaluateOnce = async (
   application: Editor,

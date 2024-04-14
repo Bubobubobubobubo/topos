@@ -1,5 +1,5 @@
 import { type Editor } from "../../main";
-import { key_shortcut, makeExampleFactory } from "../../Documentation";
+import { key_shortcut, makeExampleFactory } from "../Documentation";
 
 export const visualization = (application: Editor): string => {
   const makeExample = makeExampleFactory(application);
@@ -18,10 +18,10 @@ While Topos is mainly being developed as a live coding environment for algorithm
 [Hydra](https://hydra.ojack.xyz/?sketch_id=mahalia_1) is a popular live-codable video synthesizer developed by [Olivia Jack](https://ojack.xyz/) and other contributors. It follows an analog synthesizer patching metaphor to encourage live coding complex shaders. Being very easy to use, extremely powerful and also very rewarding to use, Hydra has become a popular choice for adding visuals into a live code performance.
 
 ${makeExample(
-  "Hydra integration",
-  `beat(4) :: hydra.osc(3, 0.5, 2).out()`,
-  false,
-)}
+    "Hydra integration",
+    `beat(4) :: hydra.osc(3, 0.5, 2).out()`,
+    false,
+  )}
 
 Close the documentation to see the effect: ${key_shortcut(
     "Ctrl+D",
@@ -32,23 +32,23 @@ Be careful not to call <ic>hydra</ic> too often as it can impact performances. Y
 Stopping **Hydra** is simple:
 
 ${makeExample(
-  "Stopping Hydra",
-  `
+    "Stopping Hydra",
+    `
 beat(4) :: stop_hydra()     // this one
 beat(4) :: hydra.hush() // or this one
 `,
-  false,
-)}
+    false,
+  )}
 
 ### Changing the resolution
 
 You can change Hydra resolution using this simple method:
 
 ${makeExample(
-  "Changing Hydra resolution",
-  `hydra.setResolution(1024, 768)`,
-  false,
-)}
+    "Changing Hydra resolution",
+    `hydra.setResolution(1024, 768)`,
+    false,
+  )}
 
 ### Hydra documentation
 
@@ -68,8 +68,8 @@ ${makeExample("Hydra namespace", `hydra.voronoi(20).out()`, true)}
 Topos embeds a small <ic>.gif</ic> picture player with a small API. GIFs are automatically fading out after the given duration. Look at the following example:
 
 ${makeExample(
-  "Playing many gifs",
-  `
+    "Playing many gifs",
+    `
 beat(0.25)::gif({
   url:v('gif')[$(1)%6], // Any URL will do!
   opacity: r(0.5, 1), // Opacity (0-1)
@@ -81,8 +81,8 @@ beat(0.25)::gif({
   posX: ir(1,1200), // CSS Horizontal Position
   posY: ir(1, 800), // CSS Vertical Position
 `,
-  false,
-)}
+    false,
+  )}
 
 ## Canvas live coding
 
@@ -95,8 +95,8 @@ In addition to the standard Canvas API, Topos also includes some pre-defined sha
 * <ic>draw(f: Function)</ic> - Draws to a canvas with the given function.
 
 ${makeExample(
-  "Drawing to canvas",
-  `
+    "Drawing to canvas",
+    `
 beat(0.5) && clear() && draw(context => {
     context.fillStyle = 'red';
 
@@ -117,30 +117,30 @@ beat(0.5) && clear() && draw(context => {
     context.fill();
 })
 `,
-  false,
-)}
+    false,
+  )}
 
 ${makeExample(
-"Using draw with events and shapes",
-`
+    "Using draw with events and shapes",
+    `
 beat(0.25) && sound("bass1:5").pitch(rI(1,6)).draw(x => {
 donut(x.pitch)
 }).out()
 `,
-false,
-)}  
+    false,
+  )}  
 
 
 ${makeExample(
-"Using draw with ziffers and shapes",
-`
+    "Using draw with ziffers and shapes",
+    `
 z1("1/8 (0 2 1 4)+(2 1)").sound("sine").ad(0.05,.25).clear()
 .draw(x => {
 pie({slices:7,eaten:(7-x.pitch-1),fillStyle:"green", rotate: 250})
 }).log("pitch").out()
 `,
-false,
-)}
+    false,
+  )}
 
 * <ic<image(url, x, y, width, height, rotation)</ic> - Draws an image to a canvas.
 
@@ -150,7 +150,7 @@ ${makeExample(
     beat(0.5) && clear() && image("http://localhost:8000/topos_frog.svg",200,200+epulse()%15)
     `,
     false,
-    )}
+  )}
 
 * <ic>clear()</ic> - Clears the canvas.
 * <ic>background(fill: string)</ic> - Sets the background color, image or gradient.
@@ -166,22 +166,22 @@ Text can be drawn to canvas using the <ic>drawText()</ic> function. The function
 * <ic>drawText(text, fontSize, rotation, font, x, y)</ic> - Draws text to a canvas.
 
 ${makeExample(
-"Writing to canvas",
-`
+    "Writing to canvas",
+    `
 beat(0.5) && clear() && drawText("Hello world!", 100, 0, "Arial", 100, 100)
 `,
-false,
-)}
+    false,
+  )}
 
 * <ic>randomChar(number, min, max)</ic> - Returns a number of random characters from given unicode range.
 
 ${makeExample(
-"Drawing random characters to canvas",
-`
+    "Drawing random characters to canvas",
+    `
 beat(0.5) && clear() && drawText(randomChar(10,1000,2000),30)
 `,
-false,
-)}
+    false,
+  )}
 
 * <ic>emoji(size)</ic> - Returns a random emojis as text.
 
@@ -195,7 +195,7 @@ ${makeExample(
 beat(0.5) && clear() && drawText({x: 10, y: epulse()%700, text: food(50)})
 `,
     false,
-    )}
+  )}
 
 * <ic>expression(size)</ic> - Returns a random expression emojis as text.
 

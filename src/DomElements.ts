@@ -2,14 +2,14 @@ import { type Editor } from "./main";
 
 export type ElementMap = {
   [key: string]:
-    | HTMLElement
-    | HTMLButtonElement
-    | HTMLDivElement
-    | HTMLInputElement
-    | HTMLSelectElement
-    | HTMLCanvasElement
-    | HTMLFormElement
-    | HTMLInputElement;
+  | HTMLElement
+  | HTMLButtonElement
+  | HTMLDivElement
+  | HTMLInputElement
+  | HTMLSelectElement
+  | HTMLCanvasElement
+  | HTMLFormElement
+  | HTMLInputElement;
 };
 
 export const singleElements = {
@@ -57,7 +57,6 @@ export const singleElements = {
   hydra_canvas: "hydra-bg",
   feedback: "feedback",
   drawings: "drawings",
-  scope: "scope",
 };
 
 export const buttonGroups = {

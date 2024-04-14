@@ -1,4 +1,4 @@
-import { tryEvaluate } from "./Evaluator";
+import { tryEvaluate } from "../Evaluator";
 const zeroPad = (num, places) => String(num).padStart(places, "0");
 
 export class TransportNode extends AudioWorkletNode {
@@ -12,9 +12,9 @@ export class TransportNode extends AudioWorkletNode {
 
   /** @type {(this: MessagePort, ev: MessageEvent<any>) => any} */
   handleMessage = (message) => {
-    if(message.data) {
+    if (message.data) {
       if (message.data.type === "bang") {
-        if(this.app.clock.running) {
+        if (this.app.clock.running) {
           if (this.app.settings.send_clock) {
             this.app.api.MidiConnection.sendMidiClock();
           }
@@ -60,6 +60,6 @@ export class TransportNode extends AudioWorkletNode {
   }
 
   stop() {
-    this.port.postMessage({type: "stop" });
+    this.port.postMessage({ type: "stop" });
   }
 }

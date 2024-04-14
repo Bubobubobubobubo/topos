@@ -1,5 +1,5 @@
 import { type Editor } from "../../../main";
-import { makeExampleFactory } from "../../../Documentation";
+import { makeExampleFactory } from "../../Documentation";
 
 export const synths = (application: Editor): string => {
   const makeExample = makeExampleFactory(application);

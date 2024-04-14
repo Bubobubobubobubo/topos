@@ -8,7 +8,7 @@ import {
   hideDocumentation,
   showDocumentation,
   updateDocumentationContent,
-} from "./Documentation";
+} from "./documentation/Documentation";
 import {
   type Universe,
   template_universe,
@@ -161,10 +161,10 @@ export const installInterfaceLogic = (app: Editor) => {
     app.interface.sample_indicator.innerText = "Loading...";
     app.interface.sample_indicator.classList.add("animate-pulse");
     await uploadSamplesToDB(samplesDBConfig, fileInput.files).then(() => {
-        registerSamplesFromDB(samplesDBConfig, () => {
-          app.interface.sample_indicator.innerText = "Import samples";
-          app.interface.sample_indicator.classList.remove("animate-pulse");
-        });
+      registerSamplesFromDB(samplesDBConfig, () => {
+        app.interface.sample_indicator.innerText = "Import samples";
+        app.interface.sample_indicator.classList.remove("animate-pulse");
+      });
     });
   });
 

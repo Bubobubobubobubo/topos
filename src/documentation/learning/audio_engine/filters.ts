@@ -1,5 +1,5 @@
 import { type Editor } from "../../../main";
-import { makeExampleFactory } from "../../../Documentation";
+import { makeExampleFactory } from "../../Documentation";
 
 export const filters = (application: Editor): string => {
   const makeExample = makeExampleFactory(application);
@@ -13,10 +13,10 @@ Filters can be applied to both synthesizers and samples. They are used to shape 
 - **bandpass filter**: filters the low and high frequencies around a frequency band, keeping what's in the middle.
 
 ${makeExample(
-  "Filtering the high frequencies of an oscillator",
-  `beat(.5) :: sound('sawtooth').cutoff(50 + usine(1/8) * 2000).out()`,
-  true,
-)}
+    "Filtering the high frequencies of an oscillator",
+    `beat(.5) :: sound('sawtooth').cutoff(50 + usine(1/8) * 2000).out()`,
+    true,
+  )}
 
 These filters all come with their own set of parameters. Note that we are describing the parameters of the three different filter types here. Choose the right parameters depending on the filter type you are using:
 
@@ -29,10 +29,10 @@ These filters all come with their own set of parameters. Note that we are descri
 | <ic>resonance</ic>  | <ic>lpq</ic>       | resonance of the lowpass filter (0-1) |
 
 ${makeExample(
-  "Filtering a bass",
-  `beat(.5) :: sound('jvbass').lpf([250,1000,8000].beat()).out()`,
-  true,
-)}
+    "Filtering a bass",
+    `beat(.5) :: sound('jvbass').lpf([250,1000,8000].beat()).out()`,
+    true,
+  )}
 
 ### Highpass filter
 
@@ -42,10 +42,10 @@ ${makeExample(
 | <ic>hresonance</ic>  | <ic>hpq</ic>       | resonance of the highpass filter (0-1) |
 
 ${makeExample(
-  "Filtering a noise source",
-  `beat(.5) :: sound('gtr').hpf([250,1000, 2000, 3000, 4000].beat()).end(0.5).out()`,
-  true,
-)}
+    "Filtering a noise source",
+    `beat(.5) :: sound('gtr').hpf([250,1000, 2000, 3000, 4000].beat()).end(0.5).out()`,
+    true,
+  )}
 
 ### Bandpass filter
 
@@ -55,10 +55,10 @@ ${makeExample(
 | <ic>bandq</ic>      | <ic>bpq</ic>       | resonance of the bandpass filter (0-1) |
 
 ${makeExample(
-  "Sweeping the filter on the same guitar sample",
-  `beat(.5) :: sound('gtr').bandf(100 + usine(1/8) * 4000).end(0.5).out()`,
-  true,
-)}
+    "Sweeping the filter on the same guitar sample",
+    `beat(.5) :: sound('gtr').bandf(100 + usine(1/8) * 4000).end(0.5).out()`,
+    true,
+  )}
 
 Alternatively, <ic>lpf</ic>, <ic>hpf</ic> and <ic>bpf</ic> can take a second argument, the **resonance**.
 
@@ -69,10 +69,10 @@ You can also use the <ic>ftype</ic> method to change the filter type (order). Th
 - <ic>ftype(type: string)</ic>: sets the filter type (order), either <ic>12db</ic> or <ic>24db</ic>.
 
 ${makeExample(
-  "Filtering a bass",
-  `beat(.5) :: sound('jvbass').ftype(['12db', '24db'].beat(4)).lpf([250,1000,8000].beat()).out()`,
-  true,
-)}
+    "Filtering a bass",
+    `beat(.5) :: sound('jvbass').ftype(['12db', '24db'].beat(4)).lpf([250,1000,8000].beat()).out()`,
+    true,
+  )}
 
 ## Filter envelopes
 
@@ -91,12 +91,12 @@ The examples we have studied so far are static. They filter the sound around a f
 
 
 ${makeExample(
-  "Filtering a sawtooth wave dynamically",
-  `beat(.5) :: sound('sawtooth').note([48,60].beat())
+    "Filtering a sawtooth wave dynamically",
+    `beat(.5) :: sound('sawtooth').note([48,60].beat())
   .cutoff(5000).lpa([0.05, 0.25, 0.5].beat(2))
   .lpenv(-8).lpq(10).out()`,
-  true,
-)}
+    true,
+  )}
 
 ### Highpass envelope
 
@@ -111,12 +111,12 @@ ${makeExample(
 
 
 ${makeExample(
-  "Let's use another filter using the same example",
-  `beat(.5) :: sound('sawtooth').note([48,60].beat())
+    "Let's use another filter using the same example",
+    `beat(.5) :: sound('sawtooth').note([48,60].beat())
   .hcutoff(1000).hpa([0.05, 0.25, 0.5].beat(2))
   .hpenv(8).hpq(10).out()`,
-  true,
-)}
+    true,
+  )}
 
 ### Bandpass envelope
 
@@ -131,14 +131,14 @@ ${makeExample(
 
 
 ${makeExample(
-  "And the bandpass filter, just for fun",
-  `beat(.5) :: sound('sawtooth').note([48,60].beat())
+    "And the bandpass filter, just for fun",
+    `beat(.5) :: sound('sawtooth').note([48,60].beat())
   .bandf([500,1000,2000].beat(2))
   .bpa([0.25, 0.125, 0.5].beat(2) * 4)
   .bpenv(-4).release(2).out()
   `,
-  true,
-)}
+    true,
+  )}
 
 
 `;

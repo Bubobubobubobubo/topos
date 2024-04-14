@@ -1,5 +1,5 @@
 import { type Editor } from "../../../main";
-import { makeExampleFactory } from "../../../Documentation";
+import { makeExampleFactory } from "../../Documentation";
 
 export const ziffers_scales = (application: Editor): string => {
   const makeExample = makeExampleFactory(application);
@@ -80,8 +80,8 @@ export const ziffers_scales = (application: Editor): string => {
   )}
 
 ${makeExample(
-  "Werckmeister scale in Scala format",
-  `
+    "Werckmeister scale in Scala format",
+    `
   const werckmeister = "107.82 203.91 311.72 401.955 503.91 605.865 701.955 809.775 900. 1007.82 1103.91 1200."
 
   z0('s (0,3) ^ 0 3 ^ 0 (3,6) 0 _ (3,5) 0 _ 3 ^ 0 (3,5) ^ 0 6 0 _ 3 0')
@@ -94,8 +94,8 @@ ${makeExample(
   
   onbeat(1,1.5,3) :: sound('bd').cutoff(100 + usine(.25) * 1000).out()
 `,
-  true,
-)}
+    true,
+  )}
 
 `;
 };

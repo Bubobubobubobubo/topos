@@ -1,5 +1,5 @@
 import { type Editor } from "../../main";
-import { makeExampleFactory } from "../../Documentation";
+import { makeExampleFactory } from "../Documentation";
 
 export const probabilities = (application: Editor): string => {
   const makeExample = makeExampleFactory(application);
@@ -13,12 +13,12 @@ There are some simple functions to play with probabilities.
 - <ic>irand(min: number, max:number)</ic>: returns a random integer between <ic>min</ic> and <ic>max</ic>. Shorthands <ic>ir()</ic> or <ic>rI()</ic>.
 
 ${makeExample(
-  "Bleep bloop, what were you expecting?",
-  `
+    "Bleep bloop, what were you expecting?",
+    `
 rhythm(0.125, 10, 16) :: sound('sid').n(4).note(50 + irand(50, 62) % 8).out()
 `,
-  true,
-)}
+    true,
+  )}
 
 
 - <ic>prob(p: number)</ic>: return <ic>true</ic> _p_% of time, <ic>false</ic> in other cases.
@@ -26,14 +26,14 @@ rhythm(0.125, 10, 16) :: sound('sid').n(4).note(50 + irand(50, 62) % 8).out()
 
 
 ${makeExample(
-  "The Teletype experience!",
-  `
+    "The Teletype experience!",
+    `
 prob(50) :: script(1);
 prob(60) :: script(2);
 prob(80) :: script(toss() ? script(3) : script(4))
 `,
-  true,
-)}
+    true,
+  )}
 
 - <ic>seed(val: number|string)</ic>: sets the seed of the random number generator. You can use a number or a string. The same seed will always return the same sequence of random numbers.
 
@@ -59,28 +59,28 @@ By default chance operators will be evaluated 48 times within a beat. You can ch
 Examples:
 
 ${makeExample(
-  "Using chance operators",
-  `
+    "Using chance operators",
+    `
   rarely() :: sound('hh').out(); // Rarely 48 times is still a lot
   rarely(4) :: sound('bd').out(); // Rarely in 4 beats is bit less
   rarely(8) :: sound('east').out(); // Rarely in 8 beats is even less
   `,
-  true,
-)}
+    true,
+  )}
 
 ${makeExample(
-  "Using chance with other operators",
-  `
+    "Using chance with other operators",
+    `
   frequently() :: beat(1) :: sound('kick').out();
   often() :: beat(0.5) :: sound('hh').out();
   sometimes() :: onbeat(1,3) :: sound('snare').out();
   `,
-  false,
-)}
+    false,
+  )}
 
 ${makeExample(
-  "Using chance with chaining",
-  `
+    "Using chance with chaining",
+    `
   beat(0.5) && sound("bd")
   .freq(100)
   .sometimes(s=>s.crush(2.5))
@@ -92,7 +92,7 @@ ${makeExample(
   .almostNever(n=>n.freq(400))
   .out()
   `,
-  false,
-)}
+    false,
+  )}
 `;
 };

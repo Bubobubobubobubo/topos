@@ -1,5 +1,5 @@
 import { type Editor } from "../../main";
-import { makeExampleFactory } from "../../Documentation";
+import { makeExampleFactory } from "../Documentation";
 
 export const generators = (application: Editor): string => {
   const makeExample = makeExampleFactory(application);
@@ -15,8 +15,8 @@ Once the generator is cached the values will be returned from the named cache ev
 The resulted values can be played using either <ic>pitch()</ic> or <ic>freq()</ic> or as Ziffers patterns. When playing the values using <ic>pitch()</ic> different scales and chained methods can be used to alter the result, for example <ic>mod(value: number)</ic> to limit the integer range or <ic>scale(name: string)</ic> etc. to change the resulting note.
 
 ${makeExample(
-"Simple looping generator function",
-`
+    "Simple looping generator function",
+    `
 function* simple() {
     let x = 0;
     while (x < 12) {
@@ -27,12 +27,12 @@ function* simple() {
 
 beat(.25) && sound("triangle").pitch(cache("simple",simple())).scale("minor").out()
 `,
-true,
-)};
+    true,
+  )};
 
 ${makeExample(
-"Infinite frequency generator",
-`
+    "Infinite frequency generator",
+    `
     function* poly(x=0) {
      while (true) {
         const s = Math.tan(x/10)+Math.sin(x/20);
@@ -43,14 +43,14 @@ ${makeExample(
 
     beat(.125) && sound("triangle").freq(cache("mathyshit",poly())).out()
 `,
-true,
-)};
+    true,
+  )};
 
 When you want to dance with a dynamical system in controlled musical chaos, Topos is waiting for you:
 
 ${makeExample(
-  "Truly scale free chaos inspired by Lorentz attractor",
-  `
+    "Truly scale free chaos inspired by Lorentz attractor",
+    `
   function* strange(x = 0.1, y = 0, z = 0, rho = 28, beta = 8 / 3, zeta = 10) {
     while (true) {
       const dx = 10 * (y - x);
@@ -71,8 +71,8 @@ ${makeExample(
     .adsr(.15,.1,.1,.1)
     .log("freq").out()
   `,
-  true,
-)};
+    true,
+  )};
 
 ${makeExample(
     "Henon and his discrete music",
@@ -100,8 +100,8 @@ ${makeExample(
   )};
 
 ${makeExample(
-  "1970s fractal dream",
-  `
+    "1970s fractal dream",
+    `
   function* rossler(x = 0.1, y = 0.1, z = 0.1, a = 0.2, b = 0.2, c = 5.7) {
     while (true) {
       const dx = - y - z;
@@ -122,8 +122,8 @@ ${makeExample(
     .adsr(0,.1,.1,.1)
     .log("freq").out()
   `,
-  true,
-)};
+    true,
+  )};
 
 
 ## OEIS integer sequences
@@ -145,7 +145,7 @@ ${makeExample(
     .gain(1).out()
     `,
     true,
-    )};
+  )};
 
 ## Using generators with Ziffers
 
@@ -153,7 +153,7 @@ Alternatively generators can be used with Ziffers to generate longer patterns. I
 
 ${makeExample(
     "Ziffers patterns using a generator functions",
-`
+    `
 function* poly(x) {
     while (true) {
       yield 64 * Math.pow(x, 6) - 480 * Math.pow(x, 4) + 720 * Math.pow(x, 2);

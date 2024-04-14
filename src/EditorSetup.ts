@@ -321,7 +321,7 @@ export const installEditor = (app: Editor) => {
     ),
     editorSetup,
     app.themeCompartment.of(
-      getCodeMirrorTheme(app.getColorScheme("Tomorrow Night Burns")),
+      getCodeMirrorTheme(app.getColorScheme("Batman")),
       // debug
     ),
     app.chosenLanguage.of(javascript()),

@@ -1,5 +1,5 @@
 import { type Editor } from "../../main";
-import { makeExampleFactory } from "../../Documentation";
+import { makeExampleFactory } from "../Documentation";
 
 export const osc = (application: Editor): string => {
   // @ts-ignore
@@ -24,52 +24,52 @@ Send an **OSC** message to the server from another application or device at the 
 You can access the last 1000 messages using the <ic>getOsc()</ic> function without any argument. This is raw data, you will need to parse it yourself:
 
 ${makeExample(
-  "Reading the last OSC messages",
-  `
+    "Reading the last OSC messages",
+    `
 beat(1)::getOsc()
 // 0 : {data: Array(2), address: '/lala'}
 // 1 : {data: Array(2), address: '/lala'}
 // 2 : {data: Array(2), address: '/lala'}`,
-  true,
-)}
+    true,
+  )}
 
 ### Filtered messages
 
 The <ic>getOsc()</ic> can receive an address filter as an argument. This will return only the messages that match the filter:
 
 ${makeExample(
-  "Reading the last OSC messages (filtered)",
-  `
+    "Reading the last OSC messages (filtered)",
+    `
 beat(1)::getOsc("/lala")
 // 0 : (2) [89, 'bob']
 // 1 : (2) [84, 'bob']
 // 2 : (2) [82, 'bob']
          `,
-  true,
-)}
+    true,
+  )}
 
 ## Output
 
 Once the server is loaded, you are ready to send an **OSC** message:
 
 ${makeExample(
-  "Sending a simple OSC message",
-  `
+    "Sending a simple OSC message",
+    `
 beat(1)::sound('cp').speed(2).vel(0.5).osc()
     `,
-  true,
-)}
+    true,
+  )}
 
 This is a simple **OSC** message that will inherit all the properties of the sound. You can also send customized OSC messages using the <ic>osc()</ic> function:
 
 ${makeExample(
-  "Sending a customized OSC message",
-  `
+    "Sending a customized OSC message",
+    `
 // osc(address, port, ...message)
 osc('/my/osc/address', 5000, 1, 2, 3)
     `,
-  true,
-)}
+    true,
+  )}
 
 `;
 };

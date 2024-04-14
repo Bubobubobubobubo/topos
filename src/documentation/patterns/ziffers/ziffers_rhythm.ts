@@ -1,5 +1,5 @@
 import { type Editor } from "../../../main";
-import { makeExampleFactory } from "../../../Documentation";
+import { makeExampleFactory } from "../../Documentation";
 
 export const ziffers_rhythm = (application: Editor): string => {
   const makeExample = makeExampleFactory(application);
@@ -9,30 +9,30 @@ export const ziffers_rhythm = (application: Editor): string => {
 Ziffers combines rhythmic and melodic notation into a single pattern language. This means that you can use the same pattern to describe both the rhythm and the melody of a musical phrase similarly to the way it is done in traditional music notation.
 
 ${makeExample(
-  "Duration chars",
-  `
+    "Duration chars",
+    `
   z1('q 0 0 4 4 5 5 h4 q 3 3 2 2 1 1 h0').sound('sine').out()
 `,
-  true,
-)}
+    true,
+  )}
 
 ${makeExample(
-  "Fraction durations",
-  `
+    "Fraction durations",
+    `
   z1('1/4 0 0 4 4 5 5 2/4 4 1/4 3 3 2 2 1 1 2/4 0')
   .sound('sine').out()
 `,
-  true,
-)}
+    true,
+  )}
 
 ${makeExample(
-  "Decimal durations",
-  `
+    "Decimal durations",
+    `
 z1('0.25 5 1 2 6 0.125 3 8 0.5 4 1.0 0')
 .sound('sine').scale("galian").out()
 `,
-  true,
-)}
+    true,
+  )}
 
 ## List of all duration characters
 
@@ -90,68 +90,68 @@ Ziffers maps the following duration characters to the corresponding note lengths
 Samples can be patterned using the sample names or using <c>@</c>-operator for assigning sample to a pitch. Sample index can be changed using the <c>:</c> operator.
 
 ${makeExample(
-  "Sampled drums",
-  `
+    "Sampled drums",
+    `
   z1('bd [hh hh]').octave(-2).sound('sine').out()
   `,
-  true,
-)}
+    true,
+  )}
 
 ${makeExample(
-  "More complex pattern",
-  `
+    "More complex pattern",
+    `
   z1('bd [hh <hh <cp cp:2>>]').octave(-2).sound('sine').out()
   `,
-  true,
-)}
+    true,
+  )}
 
 ${makeExample(
-  "Pitched samples",
-  `
+    "Pitched samples",
+    `
   z1('0@sax 3@sax 2@sax 6@sax')
     .octave(-1).sound()
     .adsr(0.25,0.125,0.125,0.25).out()
   `,
-  true,
-)}
+    true,
+  )}
 
 ${makeExample(
-  "Pitched samples from list operation",
-  `
+    "Pitched samples from list operation",
+    `
   z1('e (0 3 -1 4)+(-1 0 2 1)@sine')
   .key('G4')
   .scale('110 220 320 450')
   .sound().out()
   `,
-  true,
-)}
+    true,
+  )}
 
 ${makeExample(
-  "Pitched samples with list notation",
-  `
+    "Pitched samples with list notation",
+    `
   z1('e (0 2 6 3 5 -2)@sax (0 2 6 3 5 -2)@arp')
     .octave(-1).sound()
     .adsr(0.25,0.125,0.125,0.25).out()
   `,
-  true,
-)}
+    true,
+  )}
 
 ${makeExample(
-  "Sample indices",
-  `
+    "Sample indices",
+    `
   z1('e 1:2 4:3 6:2')
   .octave(-1).sound("east").out()
   `,
-  true,
-)}
+    true,
+  )}
 
 ${makeExample(
-  "Pitched samples with sample indices",
-  `
+    "Pitched samples with sample indices",
+    `
 z1('_e 1@east:2 4@bd:3 6@arp:2 9@baa').sound().out()
 `,
-  true,
-)}
+    true,
+  )}
 
 `;
 };

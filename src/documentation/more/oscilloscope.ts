@@ -1,5 +1,5 @@
 import { type Editor } from "../../main";
-import { makeExampleFactory } from "../../Documentation";
+import { makeExampleFactory } from "../Documentation";
 
 export const oscilloscope = (application: Editor): string => {
   const makeExample = makeExampleFactory(application);
@@ -10,18 +10,18 @@ You can turn on the oscilloscope to generate interesting visuals or to inspect a
 You need to manually feed the scope with the sounds you want to inspect:
 
 ${makeExample(
-  "Feeding a sine to the oscilloscope",
-  `
+    "Feeding a sine to the oscilloscope",
+    `
 beat(1)::sound('sine').freq(200).ad(0, .2).scope().out()
 `,
-  true,
-)}
+    true,
+  )}
 
 Here is a layout of the scope configuration options:
 
 ${makeExample(
-  "Oscilloscope configuration",
-  `
+    "Oscilloscope configuration",
+    `
 scope({
     enabled: true, // off by default
     color: "#fdba74", // any valid CSS color or "random"
@@ -35,12 +35,12 @@ scope({
     refresh: 1 // refresh rate (in pulses)
 })
   `,
-  true,
-)}
+    true,
+  )}
 
 ${makeExample(
-  "Demo with multiple scope mode",
-  `
+    "Demo with multiple scope mode",
+    `
 rhythm(.5, [4,5].dur(4*3, 4*1), 8)::sound('fhardkick').out()
 beat(0.25)::sound('square').freq([
   [250, 250/2, 250/4].pick(),
@@ -56,8 +56,8 @@ scope({enabled: true, thickness: 8,
   color: ['purple', 'green', 'random'].beat(), 
   size: 0.5, fftSize: 2048}) 
     `,
-  true,
-)}
+    true,
+  )}
 
 Note that these values can be patterned as well! You can transform the oscilloscope into its own light show if you want. The picture is not stable anyway so you won't have much use of it for precision work :)
 

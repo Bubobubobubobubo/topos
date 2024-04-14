@@ -1,5 +1,5 @@
 import { type Editor } from "../../main";
-import { makeExampleFactory } from "../../Documentation";
+import { makeExampleFactory } from "../Documentation";
 
 export const functions = (application: Editor): string => {
   const makeExample = makeExampleFactory(application);
@@ -15,20 +15,20 @@ You can control scripts programatically. This is the core concept of Topos after
 - <ic>copy_script(from: number, to: number)</ic>: copies a local script denoted by its number to another local script. **This is a destructive operation!**
 
 ${makeExample(
-  "Calling a script! The most important feature!",
-  `
+    "Calling a script! The most important feature!",
+    `
 beat(1) :: script(1)
 `,
-  true,
-)}
+    true,
+  )}
 
 ${makeExample(
-  "Calling mutliple scripts at the same time.",
-  `
+    "Calling mutliple scripts at the same time.",
+    `
 beat(1) :: script(1, 3, 5)
 `,
-  false,
-)}
+    false,
+  )}
 
 ## Math functions
 	
@@ -49,10 +49,10 @@ There are some very useful scaling methods taken from **SuperCollider**. You can
   - <ic>curve: number</ic>: <ic>0</ic> is linear,  <ic>< 0</ic> is concave, negatively curved, <ic>> 0</ic> is convex, positively curved
 
 ${makeExample(
-  "Scaling an LFO",
-  `usine(1/2).linlin(0, 1, 0, 100)`,
-  true,
-)}
+    "Scaling an LFO",
+    `usine(1/2).linlin(0, 1, 0, 100)`,
+    true,
+  )}
 
 
 
@@ -61,24 +61,24 @@ ${makeExample(
 - <ic>delay(ms: number, func: Function): void</ic>: Delays the execution of a function by a given number of milliseconds.
 
 ${makeExample(
-  "Phased woodblocks",
-  `
+    "Phased woodblocks",
+    `
 // Some very low-budget version of phase music
 beat(.5) :: delay(usine(.125) * 80, () => sound('east').out())
 beat(.5) :: delay(50, () => sound('east').out())
 `,
-  true,
-)}
+    true,
+  )}
 
 - <ic>delayr(ms: number, nb: number, func: Function): void</ic>: Delays the execution of a function by a given number of milliseconds, repeated a given number of times.
 
 ${makeExample(
-  "Another woodblock texture",
-  `
+    "Another woodblock texture",
+    `
 beat(1) :: delayr(50, 4, () => sound('east').speed([0.5,.25].beat()).out())
 flip(2) :: beat(2) :: delayr(150, 4, () => sound('east').speed([0.5,.25].beat() * 4).out())
 `,
-  true,
-)};
+    true,
+  )};
 `;
 };

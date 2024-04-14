@@ -1,9 +1,9 @@
 import { type Editor } from "../../../main";
-import { makeExampleFactory } from "../../../Documentation";
+import { makeExampleFactory } from "../../Documentation";
 
 export const ziffers_tonnetz = (application: Editor): string => {
-    const makeExample = makeExampleFactory(application);
-    return `
+  const makeExample = makeExampleFactory(application);
+  return `
 # Tonnetz
 
 The Riemannian Tonnetz is a geometric representation of pitches where we apply mathematical operations to analyze harmonic and melodic relationships in tonal music. Ziffers includes an implementation of live coding Tonnetz developed together with <a href="https://github.com/edelveart/TypeScriptTonnetz" target="_blank">Edgar Delgado Vega</a>. Nevertheless, our implementation allows you to play in different chord complexes and **combine 67 transformations** with **new exploratory notation**. You have at your disposal the sets: traditional PLR, film music, extended PLR* and functions for seventh chords PLRQ, PLRQ*, ST.
@@ -37,47 +37,47 @@ Indexed transformations <ic>[plrfsntqNSEW][1-9]*</ic>:
 ### Examples:
 
 ${makeExample(
-        "Explorative transformations with roman chords",
-        `
+    "Explorative transformations with roman chords",
+    `
 z1('i i7').tonnetz("p1 p2 plr2")
   .sound('wt_stereo')
   .adsr(0, .1, 0, 0)
   .out()`,
-        true,
-    )}
+    true,
+  )}
 
 ${makeExample(
-        "Arpeggiated explorative transformations",
-        `
+    "Arpeggiated explorative transformations",
+    `
 z1("i7")
   .tonnetz("p l2 r3 rp4l")
   .arpeggio("e _ 0 1 s ^ 0 2 1 3 h _ 012 s ^ 2 1")
   .sound("sine")
   .out()`,
-        true,
-    )}
+    true,
+  )}
 
 ${makeExample(
-        "Arpeggios and note lengths with parameters",
-        `
+    "Arpeggios and note lengths with parameters",
+    `
 z1("024")
   .tonnetz("p lr rp lrp")
   .arpeggio(0,2,1,2)
   .noteLength(1/16,1/8)
   .sound("sine")
   .out()`,
-        true,
-    )}
+    true,
+  )}
 
 ${makeExample(
-        "Explorative transformations with cardinal directions",
-        `
+    "Explorative transformations with cardinal directions",
+    `
         z1("1/4 i")
         .tonnetz("p Np N2p N3p plr N3plr E EE EEE E6 NSE3W2")
         .sound("sine")
         .out()
         `
-    )}
+  )}
 
 ## Triad transformations
 
@@ -117,8 +117,8 @@ Therefore, you will see that paying attention to the examples will allow you to 
 
 ### Examples:
 ${makeExample(
-        "Synthetic 'Morton'",
-        `
+    "Synthetic 'Morton'",
+    `
 z0('h. 0 q _6 h _4 _3 w _2 _0 h. ^0 q 6 h 4 3 3/4 2 5/4 0 w r')
   .scale("minor").sound('sawtooth').key("A")
   .room(0.9).size(9).phaser(0.25).phaserDepth(0.8)
@@ -137,8 +137,8 @@ z2('904')
 
 z3('e __ 4 s 0 e 1 2 s')
   .sound('hat').delay(0.5).delayfb(0.35).out()`,
-        true,
-    )}
+    true,
+  )}
 
 ## Different Tonnetz, Chord Complexes
 
@@ -204,8 +204,8 @@ So that you can incorporate this new musical machinery into your game, all the p
 ### Examples
 
 ${makeExample(
-        "Transform seventh chord from chromatic scale",
-        `
+    "Transform seventh chord from chromatic scale",
+    `
 z1("1.0 047{10}")
   .scale('chromatic')
   .tetraTonnetz("o p18 q15 l13 n51 p19 q15")
@@ -214,8 +214,8 @@ z1("1.0 047{10}")
   .adsr(.5,0.05,0.25,0.5)
   .dur(2.0)
   .out()`,
-        true,
-    )}
+    true,
+  )}
 
 ## Cyclic methods
 
@@ -236,8 +236,8 @@ Unlike HexaCycles and OctaCycles, **EnneaCycles** are four-note chord sequences.
 ### Examples:
 
 ${makeExample(
-        "Arpeggio with ennea cycle",
-        `
+    "Arpeggio with ennea cycle",
+    `
 z1("0 2 -1 3")
   .enneaCycle()
   .arpeggio(0,2,1)
@@ -246,20 +246,20 @@ z1("0 2 -1 3")
   .sound("sine")
   .adsr(0.1,0.15,0.25,0.1)
   .out()`,
-        true,
-    )}
+    true,
+  )}
 
 ${makeExample(
-        "Variating arpeggios",
-        `
+    "Variating arpeggios",
+    `
 z1("s 0 3 2 1")
   .octaCycle()
   .arpeggio([0,[0,2],[1,0],[0,1,2]].beat(0.15))
   .sound("triangle")
   .adsr(0.1,0.1,0.13,0.15)
   .out()`,
-        true,
-    )}
+    true,
+  )}
 
 ## Cycles with vitamins and repetitions
 
@@ -278,15 +278,15 @@ As you can verify it manually, you will see that this is not the case. Upon reac
 To play the chords without jumps in our hexaCycle (although the prefix "hexa" would no longer have a precise meaning), we add a number of repetitions.
 
 ${makeExample(
-        "HexaCycles with vitamins",
-        `
+    "HexaCycles with vitamins",
+    `
 z1("0")
 .scale("chromatic")
 .hexaCycle([2,3,7],4)
 .sound("sine").out()
 `,
-        true
-    )}
+    true
+  )}
 
 By default hexaCycles and enneaCycles have <ic>3</ic> repetitions, while octaCycles has <ic>4</ic> repetitions. We have specified a **chromatic scale** although this is the **default scale**. Try changing the **repeats and scales** when playing with different Tonnetz.
 
@@ -315,19 +315,19 @@ In addition to the cyclical traversing methods, Ziffers implements traversing me
 As you have noticed, all these graphs usually have many chords, so sometimes it will be convenient to slice up fragments of the cycles. We encourage you to explore these methods and their different parameters. The tonnetz traversing methods can be used in combination with the Ziffers generative methods to sequence, arpeggiate and to randomize the chords in different ways.
 
 ${makeExample(
-        "Cube Dance swing",
-        `
+    "Cube Dance swing",
+    `
 z1("0").cubeDance([3,4,5])
   .sound("sine")
   .ad(r(0.1,0.5),0.1)
   .out()
   `,
-        true,
-    )}
+    true,
+  )}
 
 ${makeExample(
-        "Selecting subset of chords from the cube dance",
-        `
+    "Selecting subset of chords from the cube dance",
+    `
 z1("1/2 0")
   .cubeDance([3,4,5],4)
   .at(0,8,2,rI(9,14))
@@ -336,12 +336,12 @@ z1("1/2 0")
   .delay(2)
   .out()
 `,
-        true
-    )}
+    true
+  )}
 
 ${makeExample(
-        "Power Towers with pulse",
-        `
+    "Power Towers with pulse",
+    `
 z1("1/4 2").powerTowers([2,3,7])
   .between(5,11)
   .arpeggio("e 0 3 1 2")
@@ -349,12 +349,12 @@ z1("1/4 2").powerTowers([2,3,7])
   .adsr(0.01,0.1,0.1,0.9)
   .out()
   `,
-        true,
-    )}
+    true,
+  )}
 
 ${makeExample(
-        "Between an OctaTower",
-        `
+    "Between an OctaTower",
+    `
 z1("s. 0")
     .octaTower()
     .between(2,8)
@@ -363,12 +363,12 @@ z1("s. 0")
     .adsr(0.1,0.15,0,0.1)
     .out()
     `,
-        true
-    )}
+    true
+  )}
 
 ${makeExample(
-        "Selecting chords from the weitzmann region",
-        `
+    "Selecting chords from the weitzmann region",
+    `
 z1("1/8 0")
   .weitzmannRegions()
   .at(1,rI(0,7),4,6)
@@ -377,12 +377,12 @@ z1("1/8 0")
   .ad(0.15,0.15)
   .out()
 `,
-        true
-    )}
+    true
+  )}
 
 ${makeExample(
-        "Boretz Spider",
-        `
+    "Boretz Spider",
+    `
 z1("1/16 0")
   .boretzRegions([1,4,7])
   .at(2,rI(3,7),4,6)
@@ -391,8 +391,8 @@ z1("1/16 0")
   .adsr(0.1,0.1,0.1,0.2)
   .out()
 `,
-        true
-    )}
+    true
+  )}
 
 * Remark F: You can find more details about Weitzmann and Boretz regions in chapters 4 and 7 of Richard Cohn's book [Audacious Euphony: Chromatic Harmony and the Triad's Second Nature (2012)](https://books.google.com.pe/books?id=rZxZCMRiO9EC&pg=PA59&hl=es&source=gbs_toc_r&cad=2#v=onepage&q&f=false).
 

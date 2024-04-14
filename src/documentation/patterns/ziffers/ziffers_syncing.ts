@@ -1,5 +1,5 @@
 import { type Editor } from "../../../main";
-import { makeExampleFactory } from "../../../Documentation";
+import { makeExampleFactory } from "../../Documentation";
 
 export const ziffers_syncing = (application: Editor): string => {
   const makeExample = makeExampleFactory(application);
@@ -13,19 +13,19 @@ Ziffers patterns can be synced to any event by using **cue**, **sync**, **wait**
 The <ic>cue(name: string)</ic> methods can be used to send cue messages for ziffers patterns. The <ic>wait(name: string)</ic> method is used to wait for the cue message to be received before starting the next cycle.
 
 ${makeExample(
-"Sending cue from event and wait",
-`
+    "Sending cue from event and wait",
+    `
 beat(4.0) :: sound("bd").cue("foo").out()
 z1("e 0 3 2 1 2 1").wait("foo").sound("sine").out()
 `,
-true,
-)}
+    true,
+  )}
 
 The <ic>sync(name: string)</ic> method is used to sync the ziffers pattern to the cue message. 
 
     ${makeExample(
-        "Delayed start using individual cue",
-        `
+    "Delayed start using individual cue",
+    `
         register('christmas', n=>n.room(0.25).size(2).speed([0.5, 0.25, 0.125])
             .delay(0.5).delayt(1/3).delayfb(0.5).bpf(200+usine(1/3)*500).out())
         onbar(1) :: cue("bar")
@@ -33,21 +33,21 @@ The <ic>sync(name: string)</ic> method is used to sync the ziffers pattern to th
         z1("<0.25 0.125> 0 4 2 -2").sync("bar").sound("ST40:25").christmas()
         z2("<0.25 0.125> 0 6 4 -4").sync("baz").sound("ST40:25").christmas()
         `,
-        true,
-    )}
+    true,
+  )}
 
 The <ic>listen(name: string)</ic> method can be used to listen for the cue messages and play one event from the pattern for every cue.
 
     ${makeExample(
-        "Delayed start using individual cue",
-        `
+    "Delayed start using individual cue",
+    `
         beat(1.0) :: cue("boom")
 
         z1("bd <hh ho>").listen("boom")
           .sound().out()        
         `,
-        true,
-    )}
+    true,
+  )}
 
 
 ## Sync with beat
@@ -65,7 +65,7 @@ beat([2.0,0.5,1.5].bar(1)) ::
     .dur(0.5).out()
     `,
     true,
-)}
+  )}
 
 ## Automatic sync for ziffers patterns
 

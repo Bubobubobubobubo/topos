@@ -1,6 +1,6 @@
-import { key_shortcut } from "../../Documentation";
+import { key_shortcut } from "../Documentation";
 import { type Editor } from "../../main";
-import { makeExampleFactory } from "../../Documentation";
+import { makeExampleFactory } from "../Documentation";
 
 export const shortcuts = (app: Editor): string => {
   let makeExample = makeExampleFactory(app);
@@ -69,12 +69,12 @@ By pressing the ${key_shortcut(
   )} when playing this example:
 
 ${makeExample(
-  "Claping twice as fast with fill",
-  `
+    "Claping twice as fast with fill",
+    `
 beat(fill() ? 1/4 : 1/2)::sound('cp').out()
 `,
-  true,
-)}
+    true,
+  )}
 
 `;
 };

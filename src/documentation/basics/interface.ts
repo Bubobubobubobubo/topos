@@ -1,4 +1,4 @@
-import { key_shortcut, makeExampleFactory } from "../../Documentation";
+import { key_shortcut, makeExampleFactory } from "../Documentation";
 import { type Editor } from "../../main";
 import topos_arch from "./topos_arch.svg";
 import many_universes from "./many_universes.svg";
@@ -38,24 +38,24 @@ Every Topos session is composed of **local**, **global** and **init** scripts. T
 	
 
 ${makeExample(
-  "Calling scripts to form a musical piece",
-  `
+    "Calling scripts to form a musical piece",
+    `
 beat(1) :: script(1) // Calling local script n°1 
 flip(4) :: beat(.5) :: script(2) // Calling script n°2
 `,
-  true,
-)}
+    true,
+  )}
 
 ${makeExample(
-  "Script execution can become musical too!",
-  `
+    "Script execution can become musical too!",
+    `
 // Use algorithms to pick a script.
 beat(1) :: script([1, 3, 5].pick())
 flip(4) :: beat([.5, .25].beat(16)) :: script(
   [5, 6, 7, 8].beat())
 `,
-  false,
-)}
+    false,
+  )}
 
 ### Navigating the interface
 

@@ -13,11 +13,11 @@ import {
   loadUniverserFromUrl,
 } from "./FileManagement";
 import { singleElements, buttonGroups, ElementMap, createDocumentationStyle } from "./DomElements";
-import { registerFillKeys, registerOnKeyDown } from "./KeyActions";
+import { registerFillKeys, registerOnKeyDown } from "./Keyboard";
 import { installEditor } from "./EditorSetup";
-import { documentation_factory, documentation_pages, showDocumentation, updateDocumentationContent } from "./Documentation";
+import { documentation_factory, documentation_pages, showDocumentation, updateDocumentationContent } from "./documentation/Documentation";
 import { EditorView } from "codemirror";
-import { Clock } from "./Clock";
+import { Clock } from "./clock/Clock";
 import { loadSamples, UserAPI } from "./API";
 import * as oeis from "jisg";
 import * as zpatterns from "zifferjs/src/patterns.ts";
@@ -28,7 +28,7 @@ import { tryEvaluate } from "./Evaluator";
 // @ts-ignore
 import showdown from "showdown";
 import { makeStringExtensions } from "./extensions/StringExtensions";
-import { installInterfaceLogic } from "./InterfaceLogic";
+import { installInterfaceLogic } from "./UILogic";
 import { installWindowBehaviors } from "./WindowBehavior";
 import { makeNumberExtensions } from "./extensions/NumberExtensions";
 import colors from "./colors.json";
@@ -124,7 +124,6 @@ export class Editor {
     this.initializeElements();
     this.initializeButtonGroups();
     this.setCanvas(this.interface.feedback as HTMLCanvasElement);
-    this.setCanvas(this.interface.scope as HTMLCanvasElement);
     this.setCanvas(this.interface.drawings as HTMLCanvasElement);
     try {
       this.loadHydraSynthAsync();
@@ -198,7 +197,7 @@ export class Editor {
     // ================================================================================
 
     installEditor(this);
-    runOscilloscope(this.interface.scope as HTMLCanvasElement, this);
+    runOscilloscope(this.interface.feedback as HTMLCanvasElement, this);
 
     // First evaluation of the init file
     tryEvaluate(this, this.universes[this.selected_universe.toString()].init);
@@ -581,7 +580,6 @@ export class Editor {
   private setCanvas(canvas: HTMLCanvasElement): void {
     /**
      * Sets the canvas element and configures its size and context.
-     *
      * @param canvas - The HTMLCanvasElement to set.
      */
     if (!canvas) return;

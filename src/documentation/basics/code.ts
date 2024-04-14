@@ -1,5 +1,5 @@
 import { type Editor } from "../../main";
-import { makeExampleFactory, key_shortcut } from "../../Documentation";
+import { makeExampleFactory, key_shortcut } from "../Documentation";
 
 export const code = (application: Editor): string => {
   const makeExample = makeExampleFactory(application);
@@ -31,8 +31,8 @@ The code you enter in any of the scripts is evaluated in strict mode. This tells
 There are some techniques to keep code short and tidy. Don't try to write the shortest possible code! Use shortcuts when it makes sense. Take a look at the following examples:
 
 ${makeExample(
-  "Shortening your if conditions",
-  `
+    "Shortening your if conditions",
+    `
 // The && symbol (overriden by :: in Topos) is very often used for conditions!
 beat(.75) :: snd('linnhats').n([1,4,5].beat()).out()
 beat(1) :: snd('bd').out()
@@ -42,42 +42,42 @@ beat(1) :: snd('bd').out()
 //// beat(1) :: snd('bd').out()
 
 `,
-  true,
-)}
+    true,
+  )}
 
 ${makeExample(
-  "More complex conditions using ?",
-  `
+    "More complex conditions using ?",
+    `
 // The ? symbol can be used to write a if/true/false condition
 beat(4) ? snd('kick').out() : beat(2) :: snd('snare').out()
 // (true) ? log('very true') : log('very false')
 `,
-  false,
-)}
+    false,
+  )}
 
 
 ${makeExample(
-  "Using not and other short symbols",
-  `
+    "Using not and other short symbols",
+    `
 // The ! symbol can be used to reverse a condition
 beat(4) ? snd('kick').out() : beat(2) :: snd('snare').out()
 !beat(2) :: beat(0.5) :: snd('clap').out()
 `,
-  false,
-)}
+    false,
+  )}
 
 # About crashes and bugs
 
 Things will crash! It's part of the show! You will learn progressively to avoid mistakes and to write safer code. Do not hesitate to kill the page or to stop the transport if you feel overwhelmed by an algorithm blowing up. There is no safeguard to stop you from doing most things. This is to ensure that you have all the available possible room to write bespoke code and experiment with your ideas through code.
 
 ${makeExample(
-  "This example will crash! Who cares?",
-  `
+    "This example will crash! Who cares?",
+    `
 // This is crashing. See? No harm!
 qjldfqsdklqsjdlkqjsdlqkjdlksjd
 `,
-  true,
-)}
+    true,
+  )}
 
 `;
 };

@@ -1,5 +1,5 @@
 import { type Editor } from "../../../main";
-import { makeExampleFactory } from "../../../Documentation";
+import { makeExampleFactory } from "../../Documentation";
 
 export const ziffers_basics = (application: Editor): string => {
   const makeExample = makeExampleFactory(application);
@@ -13,8 +13,8 @@ Ziffers is a **musical number based notation** tuned for _live coding_. It is a 
 - embracing a different mindset and approach to time and **patterning**.
 
 ${makeExample(
-  "Super Fancy Ziffers example",
-  `
+    "Super Fancy Ziffers example",
+    `
 z1('1/8 024!3 035 024 0124').sound('wt_stereo')
   .adsr(0, .4, 0.5, .4).gain(0.1)
   .lpadsr(4, 0, .2, 0, 0)
@@ -29,8 +29,8 @@ let osci = 1500 + usine(1/2) * 2000;
 z3('can can:2').sound().gain(1).cutoff(osci).out()
 z4('1/4 kick kick snare kick').sound().gain(1).cutoff(osci).out()
 `,
-  true,
-)}
+    true,
+  )}
 
 ## Evaluation
 
@@ -58,57 +58,57 @@ The basic Ziffer notation is entirely written in JavaScript strings (_e.g_ <ic>"
 **Note:** Some features are experimental and some are still unsupported. For full / prior syntax see article about <a href="https://zenodo.org/record/7841945" target="_blank">Ziffers</a>.
 
 ${makeExample(
-  "Pitches from 0 to 9",
-  `
+    "Pitches from 0 to 9",
+    `
 z1('0.25 0 1 2 3 4 5 6 7 8 9').sound('wt_stereo')
   .adsr(0, .1, 0, 0).out()`,
-  true,
-)}
+    true,
+  )}
 
 ${makeExample(
-  "Escaped pitches using curly brackets",
-  `z1('_ _ 0 {9 10 11} 4 {12 13 14}')
+    "Escaped pitches using curly brackets",
+    `z1('_ _ 0 {9 10 11} 4 {12 13 14}')
   .sound('wt_05').pan(r(0,1))
   .cutoff(usaw(1/2) * 4000)
   .room(0.9).size(0.9).out()`,
-  false,
-)}
+    false,
+  )}
 
 ${makeExample(
-  "Durations using fractions and floating point numbers",
-  `
+    "Durations using fractions and floating point numbers",
+    `
 z1('1/8 0 2 4 0 2 4 1/4 0 3 5 0.25 _ 0 7 0 7')
   .sound('square').delay(0.5).delayt(1/8)
   .adsr(0, .1, 0, 0).delayfb(0.45).out()
 `,
-  false,
-)}
+    false,
+  )}
 
 ${makeExample(
-  "Disco was invented thanks to Ziffers",
-  `
+    "Disco was invented thanks to Ziffers",
+    `
 z1('e _ _ 0 ^ 0 _ 0 ^ 0').sound('jvbass').out()
 beat(1)::snd('bd').out(); beat(2)::snd('sd').out()
 beat(3) :: snd('cp').room(0.5).size(0.5).orbit(2).out()
 `,
-  false,
-)}
+    false,
+  )}
 
 ${makeExample(
-  "Accidentals and rests for nice melodies",
-  `
+    "Accidentals and rests for nice melodies",
+    `
 z1('^ 1/8 0 1 b2 3 4 _ 4 b5 4 3 b2 1 0')
   .scale('major').sound('triangle')
   .cutoff(500).lpadsr(5, 0, 1/12, 0, 0)
   .fmi(0.5).fmh(2).delay(0.5).delayt(1/3)
   .adsr(0, .1, 0, 0).out()
 `,
-  false,
-)}
+    false,
+  )}
 
 ${makeExample(
-  "Repeat items n-times",
-  `
+    "Repeat items n-times",
+    `
 z1('1/8 _ _ 0!4 3!4 4!4 3!4')
   .scale('major').sound('wt_oboe')
   .shape(0.2).sustain(0.1).out()
@@ -116,38 +116,38 @@ z2('1/8 _ 0!4 5!4 4!2 7!2')
   .scale('major').sound('wt_oboe')
   .shape(0.2).sustain(0.1).out()
 `,
-  false,
-)}
+    false,
+  )}
 
 ${makeExample(
-  "Subdivided durations",
-  `
+    "Subdivided durations",
+    `
 z1('w [0 [5 [3 7]]] h [0 4]')
   .scale('major').sound('sine')
   .fmi(usine(.5)).fmh(2).out()
 `,
-  false,
-)}
+    false,
+  )}
 
 ## Rests
 
 ${makeExample(
-  "Rest and octaves",
-  `
+    "Rest and octaves",
+    `
 z1('q 0 ^ e0 r _ 0 _ r 4 ^4 4')
 .sound('sine').scale("godian").out()
 `,
-  true,
-)}
+    true,
+  )}
 
 ${makeExample(
-  "Rests with durations",
-  `
+    "Rests with durations",
+    `
  z1('q 0 4 e^r 3 e3 0.5^r h4 1/4^r e 5 r 0.125^r 0')
  .sound('sine').scale("aeryptian").out()
  `,
-  true,
-)}
+    true,
+  )}
 
 ## Chords
 
@@ -161,7 +161,7 @@ ${makeExample(
     .room(0.5).size(0.9)
     .scale("minor").out()
   `,
-  true
+    true
   )}
   
   ${makeExample(
@@ -171,7 +171,7 @@ ${makeExample(
     .sound('triangle').adsr(0.2, 0.3, 0, 0)
     .room(0.5).size(0.9).scale("major").out()
   `,
-  true
+    true
   )}
   
   ${makeExample(
@@ -182,7 +182,7 @@ ${makeExample(
     .lpadsr(4, 0, .4, 0, 0).size(0.9)
     .scale("major").out()
   `,
-  true
+    true
   )}
   
   ${makeExample(
@@ -227,74 +227,74 @@ ${makeExample(
 Chords can be arpeggiated using the @-character within the ziffers notation or by using <ic>arpeggio</ic> method.
 
 ${makeExample(
-  "Arpeggio using the mini-notation",
-  `
+    "Arpeggio using the mini-notation",
+    `
   z1("(i v vi%-3 iv%-2)@(s 0 2 0 1 2 1 0 2)")
   .sound("sine").out()
   `,
-)}
+  )}
 
 ${makeExample(
-  "Arpeggio from named chords with durations",
-  `
+    "Arpeggio from named chords with durations",
+    `
 z1("_ Gm7 ^ C9 D7 Gm7")
   .arpeggio("e 0 2 q 3 e 1 2")
   .sound("sine").out()
   `,
-)}
+  )}
 
 ${makeExample(
-  "Arpeggio from roman chords with inversions",
-  `
+    "Arpeggio from roman chords with inversions",
+    `
   z1("i v%-1 vi%-1 iv%-2")
     .arpeggio(0,2,1,2)
     .noteLength(0.125)
     .sound("sine").out()
   `,
-)}
+  )}
 
 ## Chaining
 	
 - Basic notation
 	
 ${makeExample(
-  "Simple method chaining",
-  `
+    "Simple method chaining",
+    `
 z1('0 1 2 3').key('G3')
   .scale('minor').sound('sine').out()
 `,
-  true,
-)}
+    true,
+  )}
 
 ${makeExample(
-  "More complex chaining",
-  `
+    "More complex chaining",
+    `
 z1('0 1 2 3 4').key('G3').scale('minor').sound('sine').often(n => n.pitch+=3).rarely(s => s.delay(0.5)).out()
 `,
-  true,
-)}
+    true,
+  )}
 
 ${makeExample(
-  "Alternative way for inputting options",
-  `
+    "Alternative way for inputting options",
+    `
 z1('0 3 2 4',{key: 'D3', scale: 'minor pentatonic'}).sound('sine').out()
 `,
-  true,
-)}
+    true,
+  )}
 
 ## String prototypes
 
 You can also use string prototypes as an alternative syntax for creating Ziffers patterns
 
 ${makeExample(
-  "String prototypes",
-  `
+    "String prototypes",
+    `
   "q 0 e 5 2 6 2 q 3".z0().sound('sine').out()
   "q 2 7 8 6".z1().octave(-1).sound('sine').out()
   "q 2 7 8 6".z2({key: "C2", scale: "aeolian"}).sound('sine').scale("minor").out()
 `,
-  true,
-)}  
+    true,
+  )}  
 
 `;
 };
