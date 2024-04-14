@@ -26,5 +26,5 @@ export const nextTheme = (app: Editor) => (): void => {
 };
 
 export const getThemes = () => (): string[] => {
-  return Object.keys(colorschemes); 
+  return Object.keys(colorschemes);
 };

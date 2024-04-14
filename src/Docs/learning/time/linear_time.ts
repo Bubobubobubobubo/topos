@@ -126,7 +126,7 @@ beat([.25,.125].beat(2))::snd('arpy')
   .cutoff(usine(.5) * 5000).resonance(20).gain(0.3)
   .end(0.8).room(0.9).size(0.9).n(3).out();
 beat(.5) :: snd('arpy').note(
-  [30, 33, 35].repeatAll(4).beat(1) - [12,0].beat(0.5)).out()
+  [30, 33, 35].repeat(4).beat(1) - [12,0].beat(0.5)).out()
 // Comment me to stop warping!
 beat(1) :: beat_warp([2,4,5,10,11].pick())
 `,
