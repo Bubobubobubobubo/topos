@@ -2599,8 +2599,9 @@ export class UserAPI {
      */
     if (n === undefined) return this.app.clock.bpm;
 
-    if (n < 1 || n > 500) console.log(`Setting bpm to ${n}`);
-    this.app.clock.bpm = n;
+    if (n < 1 || n > 500) {
+      this.app.clock.bpm = n;
+    }
     return n;
   };
   // tempo = this.bpm;
@@ -2648,7 +2649,6 @@ export class UserAPI {
 
   public theme = (color_scheme: string): void => {
     this.app.readTheme(color_scheme);
-    console.log("Changing color scheme for: ", color_scheme)
   }
 
   public themeName = (): string => {

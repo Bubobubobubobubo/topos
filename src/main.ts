@@ -35,9 +35,6 @@ import colors from "./colors.json";
 // @ts-ignore
 const images = import.meta.glob("./assets/*")
 
-
-
-
 export class Editor {
   // Universes and settings
   settings: AppSettings = new AppSettings();
@@ -214,7 +211,7 @@ export class Editor {
 
     // Set the color scheme for the application
     this.readTheme(this.settings.theme);
-    
+
     this.documentationStyle = createDocumentationStyle(this);
     this.bindings = Object.keys(this.documentationStyle).map((key) => ({
       type: "output",
@@ -578,6 +575,7 @@ export class Editor {
     this.hydra = this.hydra_backend.synth;
     this.hydra.setResolution(1280, 768);
     (globalThis as any).hydra = this.hydra;
+    // Hydra is overriding the bpm function
   }
 
   private setCanvas(canvas: HTMLCanvasElement): void {

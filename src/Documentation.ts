@@ -1,4 +1,4 @@
-import { type Editor } from "./main";
+import { Editor } from "./main";
 // Basics
 import { introduction } from "./documentation/basics/welcome";
 import { atelier } from "./documentation/basics/atelier";
@@ -47,6 +47,12 @@ import "highlight.js/styles/atom-one-dark-reasonable.min.css";
 import { createDocumentationStyle } from "./DomElements";
 import { filters } from "./documentation/learning/audio_engine/filters";
 showdown.setFlavor("github");
+
+type StyleBinding = {
+  type: string;
+  regex: RegExp;
+  replace: (match: string, p1: string) => string;
+};
 
 export const key_shortcut = (shortcut: string): string => {
   return `<kbd class="lg:px-2 lg:py-1.5 px-1 py-1 lg:text-sm text-xs font-semibold text-brightwhite bg-brightblack border border-black rounded-lg">${shortcut}</kbd>`;
@@ -170,33 +176,67 @@ export const documentation_factory = (application: Editor) => {
   };
 };
 
-export const showDocumentation = (app: Editor) => {
-  /**
-   * Shows or hides the documentation based on the current state of the app.
-   * @param app - The Editor instance.
-   */
-  if (document.getElementById("app")?.classList.contains("hidden")) {
-    document.getElementById("app")?.classList.remove("hidden");
-    document.getElementById("documentation")?.classList.add("hidden");
+
+
+export const showDocumentation = (app: Editor): void => {
+  const toggleElementVisibility = (elementId: string, shouldHide: boolean): void => {
+    const element = document.getElementById(elementId);
+    if (element) {
+      element.classList.toggle("hidden", shouldHide);
+    }
+  };
+
+  const applyStyleBindings = (style: Record<string, string>, updateContent: (bindings: StyleBinding[]) => void): void => {
+    const bindings: StyleBinding[] = Object.keys(style).map((key) => ({
+      type: "output",
+      regex: new RegExp(`<${key}([^>]*)>`, "g"),
+      replace: (_, p1) => `<${key} class="${style[key]}" ${p1}>`
+    }));
+    updateContent(bindings);
+  };
+
+  const appHidden = document.getElementById("app")?.classList.contains("hidden");
+  if (appHidden) {
+    toggleElementVisibility("app", false);
+    toggleElementVisibility("documentation", true);
     app.exampleIsPlaying = false;
   } else {
-    document.getElementById("app")?.classList.add("hidden");
-    document.getElementById("documentation")?.classList.remove("hidden");
-    // Load and convert Markdown content from the documentation file
-    let style = createDocumentationStyle(app);
-
-    function update_and_assign(callback: Function) {
-      let bindings = Object.keys(style).map((key) => ({
-        type: "output",
-        regex: new RegExp(`<${key}([^>]*)>`, "g"),
-        //@ts-ignore
-        replace: (match, p1) => `<${key} class="${style[key]}" ${p1}>`,
-      }));
-      callback(bindings)
-    }
-    update_and_assign((e: Object) => updateDocumentationContent(app, e));
+    toggleElementVisibility("app", true);
+    toggleElementVisibility("documentation", false);
+    const style = createDocumentationStyle(app);
+    applyStyleBindings(style, (bindings: StyleBinding[]) => updateDocumentationContent(app, bindings));
   }
+
+  // Reset the URL to the base URL
+  window.history.pushState({}, '', '/');
 };
+
+// export const showDocumentation = (app: Editor) => {
+//   /**
+//    * Shows or hides the documentation based on the current state of the app.
+//    * @param app - The Editor instance.
+//    */
+//   if (document.getElementById("app")?.classList.contains("hidden")) {
+//     document.getElementById("app")?.classList.remove("hidden");
+//     document.getElementById("documentation")?.classList.add("hidden");
+//     app.exampleIsPlaying = false;
+//   } else {
+//     document.getElementById("app")?.classList.add("hidden");
+//     document.getElementById("documentation")?.classList.remove("hidden");
+//     // Load and convert Markdown content from the documentation file
+//     let style = createDocumentationStyle(app);
+//     function update_and_assign(callback: Function) {
+//       let bindings = Object.keys(style).map((key) => ({
+//         type: "output",
+//         regex: new RegExp(`<${key}([^>]*)>`, "g"),
+//         //@ts-ignore
+//         replace: (match, p1) => `<${key} class="${style[key]}" ${p1}>`,
+//       }));
+//       callback(bindings)
+//     }
+//     update_and_assign((e: Object) => updateDocumentationContent(app, e));
+//   }
+// };
 
 export const hideDocumentation = () => {
   /**
