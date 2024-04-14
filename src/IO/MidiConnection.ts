@@ -1,5 +1,5 @@
 import { UserAPI } from "../API";
-import { AppSettings } from "../FileManagement";
+import { AppSettings } from "../Editor/FileManagement";
 
 export type MidiNoteEvent = {
   note: number;
@@ -578,8 +578,7 @@ export class MidiConnection {
     if (typeof output === "number") {
       if (output < 0 || output >= this.midiOutputs.length) {
         console.error(
-          `Invalid MIDI output index. Index must be in the range 0-${
-            this.midiOutputs.length - 1
+          `Invalid MIDI output index. Index must be in the range 0-${this.midiOutputs.length - 1
           }.`,
         );
         return this.currentOutputIndex;
@@ -608,8 +607,7 @@ export class MidiConnection {
     if (typeof input === "number") {
       if (input < 0 || input >= this.midiInputs.length) {
         console.error(
-          `Invalid MIDI input index. Index must be in the range 0-${
-            this.midiInputs.length - 1
+          `Invalid MIDI input index. Index must be in the range 0-${this.midiInputs.length - 1
           }.`,
         );
         return -1;

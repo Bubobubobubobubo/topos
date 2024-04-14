@@ -6,8 +6,8 @@ import {
   resolvePitchBend,
   safeScale,
 } from "zifferjs";
-import { SkipEvent } from "./SkipEvent";
-import { SoundParams } from "./SoundEvent";
+import { SkipEvent } from "../Classes/SkipEvent";
+import { SoundParams } from "../Classes/SoundEvent";
 import { centsToSemitones, edoToSemitones, ratiosToSemitones } from "zifferjs/src/scale";
 import { safeMod } from "zifferjs/src/utils";
 

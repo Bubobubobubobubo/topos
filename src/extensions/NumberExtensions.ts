@@ -1,8 +1,8 @@
 import { type UserAPI } from "../API";
-import { MidiEvent } from "../classes/MidiEvent";
-import { Player } from "../classes/ZPlayer";
-import { SoundEvent } from "../classes/SoundEvent";
-import { SkipEvent } from "../classes/SkipEvent";
+import { MidiEvent } from "../Classes/MidiEvent";
+import { Player } from "../Classes/ZPlayer";
+import { SoundEvent } from "../Classes/SoundEvent";
+import { SkipEvent } from "../Classes/SkipEvent";
 
 
 declare global {

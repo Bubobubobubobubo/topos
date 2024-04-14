@@ -8,7 +8,7 @@ import {
   hideDocumentation,
   showDocumentation,
   updateDocumentationContent,
-} from "../documentation/Documentation";
+} from "../Docs/Documentation";
 import {
   type Universe,
   template_universe,
@@ -21,7 +21,7 @@ import {
 } from "../Editor/FileManagement";
 import { loadSamples } from "../API";
 import { tryEvaluate } from "../Evaluator";
-import { inlineHoveringTips } from "../documentation/inlineHelp";
+import { inlineHoveringTips } from "../Docs/inlineHelp";
 import { lineNumbers } from "@codemirror/view";
 import { jsCompletions } from "../Editor/EditorSetup";
 import { saveState } from "./WindowBehavior";

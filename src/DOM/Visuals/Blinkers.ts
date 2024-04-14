@@ -1,4 +1,4 @@
-import { type Editor } from "../main";
+import { type Editor } from "../../main";
 
 export const drawCircle = (
   /**

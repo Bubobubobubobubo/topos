@@ -1,5 +1,5 @@
 import type { Editor } from "./main";
-import type { File } from "./FileManagement";
+import type { File } from "./Editor/FileManagement";
 
 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 const codeReplace = (code: string): string => code.replace(/->|::/g, "&&");

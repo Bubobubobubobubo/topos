@@ -15,25 +15,25 @@ import {
 import { singleElements, buttonGroups, ElementMap, createDocumentationStyle } from "./DOM/DomElements";
 import { registerFillKeys, registerOnKeyDown } from "./DOM/Keyboard";
 import { installEditor } from "./Editor/EditorSetup";
-import { documentation_factory, documentation_pages, showDocumentation, updateDocumentationContent } from "./documentation/Documentation";
+import { documentation_factory, documentation_pages, showDocumentation, updateDocumentationContent } from "./Docs/Documentation";
 import { EditorView } from "codemirror";
-import { Clock } from "./clock/Clock";
+import { Clock } from "./Clock/Clock";
 import { loadSamples, UserAPI } from "./API";
 import * as oeis from "jisg";
 import * as zpatterns from "zifferjs/src/patterns.ts";
-import { makeArrayExtensions } from "./extensions/ArrayExtensions";
+import { makeArrayExtensions } from "./Extensions/ArrayExtensions";
 import "./style.css";
 import { Universes, File } from "./Editor/FileManagement";
 import { tryEvaluate } from "./Evaluator";
 // @ts-ignore
 import showdown from "showdown";
-import { makeStringExtensions } from "./extensions/StringExtensions";
+import { makeStringExtensions } from "./Extensions/StringExtensions";
 import { installInterfaceLogic } from "./DOM/UILogic";
 import { installWindowBehaviors } from "./DOM/WindowBehavior";
-import { makeNumberExtensions } from "./extensions/NumberExtensions";
+import { makeNumberExtensions } from "./Extensions/NumberExtensions";
 import colors from "./Editor/colors.json";
 // @ts-ignore
-const images = import.meta.glob("./assets/*")
+const images = import.meta.glob("./Assets/*")
 
 export class Editor {
   // Universes and settings

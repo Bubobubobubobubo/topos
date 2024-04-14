@@ -1,7 +1,7 @@
 import { type Editor } from "../main";
 import { vim } from "@replit/codemirror-vim";
 import { tryEvaluate } from "../Evaluator";
-import { hideDocumentation, showDocumentation } from "../documentation/Documentation";
+import { hideDocumentation, showDocumentation } from "../Docs/Documentation";
 import { openSettingsModal, openUniverseModal } from "../Editor/FileManagement";
 
 export const registerFillKeys = (app: Editor) => {

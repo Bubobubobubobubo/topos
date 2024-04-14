@@ -9,10 +9,10 @@ import {
 import { tryEvaluate, evaluateOnce } from "./Evaluator";
 import { DrunkWalk } from "./Utils/Drunk";
 import { Editor } from "./main";
-import { SoundEvent } from "./classes/SoundEvent";
-import { MidiEvent, MidiParams } from "./classes/MidiEvent";
+import { SoundEvent } from "./Classes/SoundEvent";
+import { MidiEvent, MidiParams } from "./Classes/MidiEvent";
 import { LRUCache } from "lru-cache";
-import { InputOptions, Player } from "./classes/ZPlayer";
+import { InputOptions, Player } from "./Classes/ZPlayer";
 import { isGenerator, isGeneratorFunction, maybeToNumber } from "./Utils/Generic";
 import {
   loadUniverse,
@@ -27,12 +27,12 @@ import {
   soundMap,
   // @ts-ignore
 } from "superdough";
-import { Speaker } from "./extensions/StringExtensions";
+import { Speaker } from "./Extensions/StringExtensions";
 import { getScaleNotes } from "zifferjs";
 import { OscilloscopeConfig } from "./DOM/Visuals/Oscilloscope";
 import { blinkScript } from "./DOM/Visuals/Blinkers";
-import { SkipEvent } from "./classes/SkipEvent";
-import { AbstractEvent, EventOperation } from "./classes/AbstractEvents";
+import { SkipEvent } from "./Classes/SkipEvent";
+import { AbstractEvent, EventOperation } from "./Classes/AbstractEvents";
 import drums from "./tidal-drum-machines.json";
 import { ShapeObject, createConicGradient, createLinearGradient, createRadialGradient, drawBackground, drawBall, drawBalloid, drawDonut, drawEquilateral, drawImage, drawPie, drawSmiley, drawStar, drawStroke, drawText, drawTriangular } from "./DOM/Visuals/CanvasVisuals";
 

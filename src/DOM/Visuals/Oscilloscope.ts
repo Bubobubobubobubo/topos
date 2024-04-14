@@ -1,6 +1,6 @@
 // @ts-ignore
 import { getAnalyser } from "superdough";
-import { Editor } from "../main";
+import { Editor } from "../../main";
 
 export interface OscilloscopeConfig {
   enabled: boolean;

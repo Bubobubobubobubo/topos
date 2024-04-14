@@ -1,10 +1,10 @@
 import { Chord, Pitch, Rest as ZRest, Ziffers } from "zifferjs";
 import { Editor } from "../main";
-import { AbstractEvent } from "./AbstractEvents";
-import { SkipEvent } from "./SkipEvent";
-import { SoundEvent, SoundParams } from "./SoundEvent";
-import { MidiEvent, MidiParams } from "./MidiEvent";
-import { RestEvent } from "./RestEvent";
+import { AbstractEvent } from "../Classes/AbstractEvents";
+import { SkipEvent } from "../Classes/SkipEvent";
+import { SoundEvent, SoundParams } from "../Classes/SoundEvent";
+import { MidiEvent, MidiParams } from "../Classes/MidiEvent";
+import { RestEvent } from "../Classes/RestEvent";
 import { arrayOfObjectsToObjectWithArrays, isGenerator } from "../Utils/Generic";
 import { TonnetzSpaces } from "zifferjs/src/tonnetz";
 import { safeMod } from "zifferjs/src/utils";
