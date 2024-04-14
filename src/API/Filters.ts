@@ -50,15 +50,15 @@ export const beat = (app: any) => (n: number | number[] = 1, nudge: number = 0):
     const nArray = Array.isArray(n) ? n : [n];
     const results: boolean[] = nArray.map(
         (value) =>
-        (app.clock.pulses_since_origin - Math.floor(nudge * app.ppqn())) %
-        Math.floor(value * app.ppqn()) === 0,
+        (app.clock.pulses_since_origin - Math.floor(nudge * app.clock.ppqn)) %
+        Math.floor(value * app.clock.ppqn) === 0,
     );
     return results.some((value) => value === true);
 };
 
 export const bar = (app: any) => (n: number | number[] = 1, nudge: number = 0): boolean => {
     const nArray = Array.isArray(n) ? n : [n];
-    const barLength = app.clock.time_signature[1] * app.ppqn();
+    const barLength = app.clock.time_signature[1] * app.clock.ppqn;
     const nudgeInPulses = Math.floor(nudge * barLength);
     const results: boolean[] = nArray.map(
         (value) =>
@@ -93,7 +93,7 @@ export const dur = (app: any) => (n: number | number[]): boolean => {
 export const flip = (app: any) => (chunk: number, ratio: number = 50): boolean => {
     let realChunk = chunk * 2;
     const time_pos = app.clock.pulses_since_origin;
-    const full_chunk = Math.floor(realChunk * app.ppqn());
+    const full_chunk = Math.floor(realChunk * app.clock.ppqn);
     const threshold = Math.floor((ratio / 100) * full_chunk);
     const pos_within_chunk = time_pos % full_chunk;
     return pos_within_chunk < threshold;
@@ -122,9 +122,9 @@ export const onbeat = (app: any) => (...beat: number[]): boolean => {
         let beatNumber = b % app.nominator() || app.nominator();
         let integral_part = Math.floor(beatNumber);
         integral_part = integral_part === 0 ? app.nominator() : integral_part;
-        let decimal_part = Math.floor((beatNumber - integral_part) * app.ppqn() + 1);
+        let decimal_part = Math.floor((beatNumber - integral_part) * app.clock.ppqn + 1);
         if (decimal_part <= 0)
-            decimal_part += app.ppqn() * app.nominator();
+            decimal_part += app.clock.ppqn * app.nominator();
         final_pulses.push(
             integral_part === app.cbeat() && app.cpulse() === decimal_part,
         );
@@ -138,8 +138,8 @@ export const oncount = (app: any) => (beats: number[] | number, count: number): 
     let final_pulses: boolean[] = [];
     beats.forEach((b) => {
         b = b < 1 ? 0 : b - 1;
-        const beatInTicks = Math.ceil(b * app.ppqn());
-        const meterPosition = origin % (app.ppqn() * count);
+        const beatInTicks = Math.ceil(b * app.clock.ppqn);
+        const meterPosition = origin % (app.clock.ppqn * count);
         final_pulses.push(meterPosition === beatInTicks);
     });
     return final_pulses.some((p) => p === true);
@@ -167,7 +167,7 @@ export const rhythm = (app: any) => (div: number, pulses: number, length: number
      * Returns a rhythm based on Euclidean cycle.
      */
     return (
-      app.beat(div) && _euclidean_cycle(pulses, length, rotate).beat(div)
+      beat(app)(div) && _euclidean_cycle(pulses, length, rotate).beat(div)
     );
 };
 export const ry = rhythm;
@@ -178,7 +178,7 @@ export const nrhythm = (app: any) => (div: number, pulses: number, length: numbe
      */
     let rhythm = _euclidean_cycle(pulses, length, rotate).map((n: any) => !n);
     return (
-      app.beat(div) && rhythm.beat(div)
+      beat(app)(div) && rhythm.beat(div)
     );
 };
 export const nry = nrhythm;
@@ -198,6 +198,6 @@ export const binrhythm = (app: any) => (div: number, n: number): boolean => {
      */
     let convert: string = n.toString(2);
     let tobin: boolean[] = convert.split("").map((x: string) => x === "1");
-    return app.beat(div) && tobin.beat(div);
+    return beat(app)(div) && tobin.beat(div);
 };
 export const bry = binrhythm;
