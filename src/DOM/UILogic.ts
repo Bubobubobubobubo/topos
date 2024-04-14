@@ -19,7 +19,7 @@ import {
   closeUniverseModal,
   openUniverseModal,
 } from "../Editor/FileManagement";
-import { loadSamples } from "../API";
+import { loadSamples } from "../API/API";
 import { tryEvaluate } from "../Evaluator";
 import { inlineHoveringTips } from "../Docs/inlineHelp";
 import { lineNumbers } from "@codemirror/view";

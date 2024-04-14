@@ -1,5 +1,5 @@
 import { type Editor } from "../main";
-import { AudibleEvent } from "./AbstractEvents";
+import { AudibleEvent } from "../Classes/AbstractEvents";
 import { sendToServer, type OSCMessage } from "../IO/OSC";
 import {
   filterObject,

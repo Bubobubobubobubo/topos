@@ -1,4 +1,4 @@
-import { type UserAPI } from "../API";
+import { type UserAPI } from "../API/API";
 import { MidiEvent } from "../Classes/MidiEvent";
 import { Player } from "../Classes/ZPlayer";
 import { SoundEvent } from "../Classes/SoundEvent";

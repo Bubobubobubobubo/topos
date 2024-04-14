@@ -18,7 +18,7 @@ import { installEditor } from "./Editor/EditorSetup";
 import { documentation_factory, documentation_pages, showDocumentation, updateDocumentationContent } from "./Docs/Documentation";
 import { EditorView } from "codemirror";
 import { Clock } from "./Clock/Clock";
-import { loadSamples, UserAPI } from "./API";
+import { loadSamples, UserAPI } from "./API/API";
 import * as oeis from "jisg";
 import * as zpatterns from "zifferjs/src/patterns.ts";
 import { makeArrayExtensions } from "./Extensions/ArrayExtensions";

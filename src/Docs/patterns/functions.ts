@@ -53,32 +53,5 @@ ${makeExample(
     `usine(1/2).linlin(0, 1, 0, 100)`,
     true,
   )}
-
-
-
-## Delay functions
-	
-- <ic>delay(ms: number, func: Function): void</ic>: Delays the execution of a function by a given number of milliseconds.
-
-${makeExample(
-    "Phased woodblocks",
-    `
-// Some very low-budget version of phase music
-beat(.5) :: delay(usine(.125) * 80, () => sound('east').out())
-beat(.5) :: delay(50, () => sound('east').out())
-`,
-    true,
-  )}
-
-- <ic>delayr(ms: number, nb: number, func: Function): void</ic>: Delays the execution of a function by a given number of milliseconds, repeated a given number of times.
-
-${makeExample(
-    "Another woodblock texture",
-    `
-beat(1) :: delayr(50, 4, () => sound('east').speed([0.5,.25].beat()).out())
-flip(2) :: beat(2) :: delayr(150, 4, () => sound('east').speed([0.5,.25].beat() * 4).out())
-`,
-    true,
-  )};
 `;
 };
