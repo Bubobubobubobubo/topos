@@ -346,8 +346,8 @@ export class UserAPI {
     this.mean = Mathematics.mean();
     this.limit = Mathematics.limit();
     this.abs = Mathematics.abs();
-    this.z = Ziffers.z(this.app);
-    Object.assign(this, Ziffers.generateZFunctions(this.app));
+    this.z = Ziffers.z(this);
+    Object.assign(this, Ziffers.generateZFunctions(this));
     this.fullseq = Filters.fullseq();
     this.seq = Filters.seq(this.app);
     this.beat = Filters.beat(this.app);
@@ -395,14 +395,14 @@ export class UserAPI {
     this.always = Probability.always();
     this.dice = Probability.dice(this);
     this.osc = OSC.osc(this.app);
-    this.getOSC = OSC.getOSC(this.app);
+    this.getOSC = OSC.getOSC();
     this.gif = Canvas.gif(this.app);
     this.scope = Canvas.scope(this.app);
-    this.randI = Randomness.randI(this.app);
-    this.rand = Randomness.rand(this.app);
-    this.seed = Randomness.seed(this.app);
-    this.localSeededRandom = Randomness.localSeededRandom(this.app);
-    this.clearLocalSeed = Randomness.clearLocalSeed(this.app);
+    this.randI = Randomness.randI(this);
+    this.rand = Randomness.rand(this);
+    this.seed = Randomness.seed(this);
+    this.localSeededRandom = Randomness.localSeededRandom(this);
+    this.clearLocalSeed = Randomness.clearLocalSeed(this);
     this.once = Counter.once(this);
     this.counter = Counter.counter(this);
     this.$ = this.counter;
@@ -421,9 +421,8 @@ export class UserAPI {
     this.epulse = Transport.epulse(this.app);
     this.nominator = Transport.nominator(this.app);
     this.meter = Transport.meter(this.app);
-    this.denominator = Transport.denominator(this.app);  // Alias for meter
+    this.denominator = Transport.denominator(this.app);
     this.pulsesForBar = Transport.pulsesForBar(this.app);
-
   }
 
   public g: any;

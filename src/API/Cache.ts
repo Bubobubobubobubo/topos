@@ -8,7 +8,7 @@ export const generateCacheKey = () => (...args: any[]): string => {
 };
 
 export const resetAllFromCache = (api: UserAPI) => (): void => {
-  api.patternCache.forEach((player: Player) => player.reset());
+  api.patternCache.forEach((player) => (player as Player).reset());
 };
 
 export const clearPatternCache = (api: UserAPI) => (): void => {
