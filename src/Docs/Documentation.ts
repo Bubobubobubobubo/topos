@@ -54,8 +54,7 @@ export const makeExampleFactory = (application: Editor): Function => {
     <button class="py-1 text-base px-4 hover:bg-brightmagenta bg-magenta text-selection_foreground inline-block" onclick="navigator.clipboard.writeText(app.api.codeExamples['${codeId}'])">📎 Copy</button>
   </summary>
   <pre><code class="hljs language-javascript">${code.trim()}</code></pre>
-</details>
-`;
+</details> `;
   };
   return make_example;
 };

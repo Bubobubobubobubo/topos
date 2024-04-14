@@ -107,7 +107,6 @@ export class UserAPI {
   pause: () => void;
   stop: () => void;
   silence: () => void;
-  onMouseMove: (e: MouseEvent) => void;
   mouseX: () => number;
   mouseY: () => number;
   noteX: () => number;
@@ -478,8 +477,15 @@ export class UserAPI {
         : (this.app.selectedExample as string);
     }
     this.patternCache.clear();
-    this.stop();
-    this.play();
+    if (this.app.isPlaying) {
+    } else {
+      this.app.setButtonHighlighting("play", true);
+      this.app.isPlaying = !this.app.isPlaying;
+      this.app.clock.start();
+      this.app.api.MidiConnection.sendStartMessage();
+    }
+
+    // this.app.clock.start();
   };
 
   _stopDocExample = () => {
@@ -615,7 +621,6 @@ export class UserAPI {
     functionName = typeof functionName === "function" ? functionName.name : functionName;
     this.cueTimes[functionName] = this.app.clock.pulses_since_origin;
   };
-
 
   onmousemove = (e: MouseEvent) => {
     this.app._mouseX = e.pageX;
