@@ -184,7 +184,7 @@ ${makeExample(
     "Play pitches from scale created from cent intervals",
     `
   rhythm([0.5,0.25].beat(1),14,16) :: sound('pluck')
-  .stretch(iR(1,5)).pitch(iR(0,6)).key(57)
+  .stretch(ir(1,5)).pitch(ir(0,6)).key(57)
 .cents(120,270,540,670,785,950,1215).out()
 `,
     true,
@@ -213,8 +213,8 @@ flipbar(1) :: rhythm(.25,14,16) :: sound("ST10:30").stretch(3).gain(0.5)
     .octave(r(-6,6))
     .edo(666,"rocritonic")
     .out()
-rhythm(2.0,26,32) :: sound("ST20").n([22,5,24,34,31,5,11,19].pick()).stretch(rI(1,6))
-.pitch(rI(127,300))
+rhythm(2.0,26,32) :: sound("ST20").n([22,5,24,34,31,5,11,19].pick()).stretch(ir(1,6))
+.pitch(ir(127,300))
     .edo(666)
     .out()
 `,

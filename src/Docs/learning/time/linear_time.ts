@@ -177,7 +177,7 @@ oncount([1,3,5.5,7,7.5,8],8) :: sound('hh').gain(irand(1.0,4.0)).out()
 ${makeExample(
     "Using oncount to create rhythms with a custom meter",
     `
-bpm(200)
+tempo(200)
 oncount([1, 5, 9, 13],16) :: sound('808bd').n(4).shape(0.5).gain(1.0).out()
 oncount([5, 6, 13],16) :: sound('shaker').room(0.25).gain(0.9).out()
 oncount([2, 3, 3.5, 6, 7, 10, 15],16) :: sound('hh').n(8).gain(0.8).out()

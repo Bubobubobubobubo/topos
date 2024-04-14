@@ -229,6 +229,7 @@ export class UserAPI {
   randI: any;
   rand: any;
   ir: any;
+  irand: any;
   r: any;
   seed: any;
   localSeededRandom: any;
@@ -401,6 +402,7 @@ export class UserAPI {
     this.scope = Canvas.scope(this.app);
     this.randI = Randomness.randI(this);
     this.ir = this.randI;
+    this.irand = this.randI;
     this.rand = Randomness.rand(this);
     this.r = this.rand;
     this.seed = Randomness.seed(this);
