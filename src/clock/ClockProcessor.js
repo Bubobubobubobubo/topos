@@ -30,7 +30,7 @@ class TransportProcessor extends AudioWorkletProcessor {
     }
   };
 
-  process(inputs, outputs, parameters) {
+  process() {
     if (this.started) {
       const adjustedCurrentTime = currentTime + this.nudge / 100;
       const beatNumber = adjustedCurrentTime / (60 / this.bpm);

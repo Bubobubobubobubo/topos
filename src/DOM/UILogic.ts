@@ -442,18 +442,6 @@ export const installInterfaceLogic = (app: Editor) => {
     });
   });
 
-  app.interface.time_position_checkbox.addEventListener("change", () => {
-    let timeviewer = document.getElementById("timeviewer") as HTMLElement;
-    let checked = (app.interface.time_position_checkbox as HTMLInputElement)
-      .checked
-      ? true
-      : false;
-    app.settings.time_position = checked;
-    checked
-      ? timeviewer.classList.remove("hidden")
-      : timeviewer.classList.add("hidden");
-  });
-
   app.interface.tips_checkbox.addEventListener("change", () => {
     let checked = (app.interface.tips_checkbox as HTMLInputElement).checked
       ? true
