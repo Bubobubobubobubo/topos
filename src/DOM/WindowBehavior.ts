@@ -45,7 +45,7 @@ export const installWindowBehaviors = (
     handleResize(app.interface.feedback as HTMLCanvasElement),
   );
   window.addEventListener("resize", () =>
-    handleResize(app.interface.drawings as HTMLCanvasElement),
+    handleResize(app.interface.feedback as HTMLCanvasElement),
   );
   window.addEventListener("beforeunload", (event) => {
     event.preventDefault();

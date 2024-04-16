@@ -104,6 +104,7 @@ export class Editor {
   public hydra: any;
 
   constructor() {
+
     /**
      * This is the entry point of the application. The Editor instance is created when the page is loaded.
      * It is responsible for:
@@ -124,12 +125,7 @@ export class Editor {
     this.initializeElements();
     this.initializeButtonGroups();
     this.setCanvas(this.interface.feedback as HTMLCanvasElement);
-    this.setCanvas(this.interface.drawings as HTMLCanvasElement);
-    try {
-      this.loadHydraSynthAsync();
-    } catch (error) {
-      console.log("Couldn't start Hydra: ", error);
-    }
+    this.loadHydraSynthAsync();
 
     // ================================================================================
     // Loading the universe from local storage
@@ -137,7 +133,6 @@ export class Editor {
 
     this.universes = {
       ...this.settings.universes,
-      //...template_universes,
     };
     initializeSelectedUniverse(this);
 
@@ -541,24 +536,38 @@ export class Editor {
     }
   }
 
+
   private loadHydraSynthAsync(): void {
-    /**
-     * Loads the Hydra Synth asynchronously by creating a script element
-     * and appending it to the document head.  * Once the script is
-     * loaded successfully, it initializes the Hydra Synth. If there
-     * is an error loading the script, it logs an error message.
-     */
+    const timeoutDuration = 1000;
     var script = document.createElement("script");
     script.src = "https://unpkg.com/hydra-synth";
     script.async = true;
+
+    let timeoutHandle = setTimeout(() => {
+      script.onerror = null;
+      script.onload = null;
+      document.head.removeChild(script);
+      console.error("Hydra loading timed out");
+      this.handleLoadingError();
+    }, timeoutDuration);
+
     script.onload = () => {
+      clearTimeout(timeoutHandle);
       console.log("Hydra loaded successfully");
       this.initializeHydra();
-    };
-    script.onerror = function() {
+    }
+
+    script.onerror = () => {
+      clearTimeout(timeoutHandle);
       console.error("Error loading Hydra script");
-    };
+      this.handleLoadingError();
+    }
+
     document.head.appendChild(script);
+  }
+
+  private handleLoadingError(): void {
+    console.error("Handling error after failed script load.");
   }
 
   private initializeHydra(): void {
@@ -582,10 +591,8 @@ export class Editor {
      * Sets the canvas element and configures its size and context.
      * @param canvas - The HTMLCanvasElement to set.
      */
-    if (!canvas) return;
     const ctx = canvas.getContext("2d");
     const dpr = window.devicePixelRatio || 1;
-    // Assuming the canvas takes up the whole window
     canvas.width = window.innerWidth * dpr;
     canvas.height = window.innerHeight * dpr;
     if (ctx) {

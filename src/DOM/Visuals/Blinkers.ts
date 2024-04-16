@@ -40,7 +40,7 @@ export const blinkScript = (
   const blinkDuration =
     (app.clock.bpm / 60 / app.clock.time_signature[1]) * 200;
   // @ts-ignore
-  const ctx = app.interface.feedback.getContext("2d"); // Assuming a canvas context
+  const ctx = app.interface.feedback.getContext("2d");
 
   /**
    * Draws a circle at a given shift.

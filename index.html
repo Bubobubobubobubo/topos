@@ -32,26 +32,22 @@
     }
 
     .hydracanvas {
-      position: fixed; /* ignore margins */
-      top: 0px;
-      left: 0px;
-      width: 100%; /* fill screen */
-      height: 100%;
+      position: fixed;
+      top: 0px; left: 0px;
+      width: 100%; height: 100%;
       background-size: cover;
       overflow-y: hidden;
-      z-index: -5; /* place behind everything else */
+      z-index: -5;
       display: block;
     }
 
     .fullscreencanvas {
-      position: fixed; /* ignore margins */
-      top: 0px;
-      left: 0px;
-      width: 100%; /* fill screen */
-      height: 100%;
+      position: fixed;
+      top: 0px; left: 0px;
+      width: 100%; height: 100%;
       background-size: cover;
       overflow-y: hidden;
-      z-index: -1; /* place behind everything else */
+      z-index: -1;
       display: block;
     }
 
@@ -576,7 +572,6 @@
           <div id="editor" class="relative flex flex-row h-screen overflow-y-hidden">
             <canvas id="scope" class="fullscreencanvas"></canvas>
             <canvas id="feedback" class="fullscreencanvas"></canvas>
-            <canvas id="drawings" class="fullscreencanvas"></canvas>
             <canvas id="hydra-bg" class="hydracanvas"></canvas>
 					</div>
           <p id="error_line" class="hidden w-screen bg-background font-mono absolute bottom-0 pl-2 py-2">Hello kids</p>
