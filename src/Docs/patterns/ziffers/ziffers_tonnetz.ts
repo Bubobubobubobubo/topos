@@ -208,14 +208,17 @@ ${makeExample(
     `
 z1("1.0 047{10}")
   .scale('chromatic')
-  .tetraTonnetz("o p18 q15 l13 n51 p19 q15")
+  .tetraTonnetz("o p18 q15 p14p47r76 l13 n51 x p19rr39 r12")
   .sound("sawtooth")
   .cutoff(500 + usine(1/8) * 2000)
   .adsr(.5,0.05,0.25,0.5)
   .dur(2.0)
+  .log("pitch")
   .out()`,
     true,
   )}
+
+It is quite convenient to observe the resulting chords using <ic>log("pitch")</ic> when you have many operations. As with functions for triads, the way to **compose functions** is to write them **without spaces**. Note that text strings that are not functions operate like the **identity transformation**. Only enabled functions will alter the final result.
 
 ## Cyclic methods
 
