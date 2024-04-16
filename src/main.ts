@@ -100,6 +100,7 @@ export class Editor {
   outputSocket: WebSocket = outputSocket;
 
   // Hydra
+  public hydra_loaded: boolean = false;
   public hydra_backend: any;
   public hydra: any;
 
@@ -125,7 +126,7 @@ export class Editor {
     this.initializeElements();
     this.initializeButtonGroups();
     this.setCanvas(this.interface.feedback as HTMLCanvasElement);
-    this.loadHydraSynthAsync();
+    // this.loadHydraSynthAsync();
 
     // ================================================================================
     // Loading the universe from local storage
@@ -536,38 +537,46 @@ export class Editor {
     }
   }
 
-
-  private loadHydraSynthAsync(): void {
-    const timeoutDuration = 1000;
-    var script = document.createElement("script");
-    script.src = "https://unpkg.com/hydra-synth";
-    script.async = true;
-
-    let timeoutHandle = setTimeout(() => {
-      script.onerror = null;
-      script.onload = null;
-      document.head.removeChild(script);
-      console.error("Hydra loading timed out");
-      this.handleLoadingError();
-    }, timeoutDuration);
-
-    script.onload = () => {
-      clearTimeout(timeoutHandle);
-      console.log("Hydra loaded successfully");
-      this.initializeHydra();
+  public ensureHydraLoaded(): Promise<void> {
+    if (this.hydra_loaded) {
+      return Promise.resolve();
     }
 
-    script.onerror = () => {
-      clearTimeout(timeoutHandle);
-      console.error("Error loading Hydra script");
-      this.handleLoadingError();
+    if (this.hydra_backend) {
+      return Promise.resolve();
     }
 
-    document.head.appendChild(script);
-  }
+    // Starts the loading process
+    return new Promise((resolve, reject) => {
+      const timeoutDuration = 1000;
+      var script = document.createElement("script");
+      script.src = "https://unpkg.com/hydra-synth";
+      script.async = true;
 
-  private handleLoadingError(): void {
-    console.error("Handling error after failed script load.");
+      let timeoutHandle = setTimeout(() => {
+        script.onerror = null;
+        script.onload = null;
+        document.head.removeChild(script);
+        console.error("Hydra loading timed out");
+        reject(new Error("Hydra loading timed out"));
+      }, timeoutDuration);
+
+      script.onload = () => {
+        clearTimeout(timeoutHandle);
+        console.log("Hydra loaded successfully");
+        this.initializeHydra();
+        this.hydra_loaded = true;
+        resolve();
+      };
+
+      script.onerror = () => {
+        clearTimeout(timeoutHandle);
+        console.error("Error loading Hydra script");
+        reject(new Error("Error loading Hydra script"));
+      };
+
+      document.head.appendChild(script);
+    });
   }
 
   private initializeHydra(): void {
@@ -583,7 +592,6 @@ export class Editor {
     this.hydra = this.hydra_backend.synth;
     this.hydra.setResolution(1280, 768);
     (globalThis as any).hydra = this.hydra;
-    // Hydra is overriding the bpm function
   }
 
   private setCanvas(canvas: HTMLCanvasElement): void {

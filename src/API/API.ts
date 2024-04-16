@@ -122,6 +122,7 @@ export class UserAPI {
   getThemes: () => string[];
   pulseLocation: () => number;
   clear: () => boolean;
+  loadHydra: () => void;
   w: () => number;
   h: () => number;
   hc: () => number;
@@ -294,6 +295,7 @@ export class UserAPI {
     this.nextTheme = Theme.nextTheme(this.app);
     this.getThemes = Theme.getThemes();
     this.pulseLocation = Canvas.pulseLocation(this.app);
+    this.loadHydra = Canvas.loadHydra(this.app);
     this.clear = Canvas.clear(this.app);
     this.w = Canvas.w(this.app);
     this.h = Canvas.h(this.app);

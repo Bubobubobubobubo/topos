@@ -19,8 +19,11 @@ While Topos is mainly being developed as a live coding environment for algorithm
 
 ${makeExample(
     "Hydra integration",
-    `beat(4) :: hydra.osc(3, 0.5, 2).out()`,
-    false,
+    `
+loadHydra() // Load Hydra first!
+beat(4) :: hydra.osc(3, 0.5, 2).out()
+`,
+    true,
   )}
 
 Close the documentation to see the effect: ${key_shortcut(
@@ -34,7 +37,6 @@ Stopping **Hydra** is simple:
 ${makeExample(
     "Stopping Hydra",
     `
-beat(4) :: stop_hydra()     // this one
 beat(4) :: hydra.hush() // or this one
 `,
     false,

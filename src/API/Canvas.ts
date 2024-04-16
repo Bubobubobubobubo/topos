@@ -2,6 +2,11 @@ import { OscilloscopeConfig } from "../DOM/Visuals/Oscilloscope";
 import { ShapeObject, createConicGradient, createLinearGradient, createRadialGradient, drawBackground, drawBox, drawBall, drawBalloid, drawDonut, drawEquilateral, drawImage, drawPie, drawSmiley, drawStar, drawStroke, drawText, drawTriangular } from "../DOM/Visuals/CanvasVisuals";
 import { Editor } from "../main";
 
+
+export const loadHydra = (app: Editor) => (): void => {
+  app.ensureHydraLoaded()
+}
+
 export const w = (app: Editor) => (): number => {
   const canvas: HTMLCanvasElement = app.interface.feedback as HTMLCanvasElement;
   return canvas.clientWidth;

@@ -42,6 +42,7 @@ class TransportProcessor extends AudioWorkletProcessor {
     }
     return true;
   }
+
 }
 
 registerProcessor("transport", TransportProcessor);

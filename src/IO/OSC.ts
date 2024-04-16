@@ -9,6 +9,17 @@ export interface OSCMessage {
 export let outputSocket = new WebSocket("ws://localhost:3000");
 export let inputSocket = new WebSocket("ws://localhost:3001");
 
+
+outputSocket.onerror = (error: Event) => {
+  console.log("[Topos] Failed to connect to OSC daemon:", error.type);
+  console.log("[Topos] Note: the daemon must be started before Topos");
+};
+
+inputSocket.onerror = (error: Event) => {
+  console.log("[Topos] Failed to connect to OSC daemon:", error.type);
+  console.log("[Topos] Note: the daemon must be started before Topos");
+};
+
 export let oscMessages: any[] = [];
 inputSocket.addEventListener("message", (event) => {
   let data = JSON.parse(event.data);
@@ -19,7 +30,7 @@ inputSocket.addEventListener("message", (event) => {
 });
 
 // @ts-ignore
-outputSocket.onopen = function (event) {
+outputSocket.onopen = function(event) {
   console.log("Connected to WebSocket Server");
   // Send an OSC-like message
   outputSocket.send(
@@ -30,11 +41,11 @@ outputSocket.onopen = function (event) {
     }),
   );
 
-  outputSocket.onerror = function (error) {
+  outputSocket.onerror = function(error) {
     console.log("Websocket Error:", error);
   };
 
-  outputSocket.onmessage = function (event) {
+  outputSocket.onmessage = function(event) {
     console.log("Received: ", event.data);
   };
 };
