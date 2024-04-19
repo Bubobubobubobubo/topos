@@ -39,13 +39,10 @@ export const installWindowBehaviors = (
   preventMultipleTabs: boolean = false,
 ) => {
   window.addEventListener("resize", () =>
+    handleResize(app.interface.feedback as HTMLCanvasElement),
+  );
+  window.addEventListener("resize", () =>
     handleResize(app.interface.scope as HTMLCanvasElement),
-  );
-  window.addEventListener("resize", () =>
-    handleResize(app.interface.feedback as HTMLCanvasElement),
-  );
-  window.addEventListener("resize", () =>
-    handleResize(app.interface.feedback as HTMLCanvasElement),
   );
   window.addEventListener("beforeunload", (event) => {
     event.preventDefault();
@@ -57,13 +54,13 @@ export const installWindowBehaviors = (
   });
 
   if (preventMultipleTabs) {
-    localStorage.openpages = Date.now();
+    localStorage["openpages"] = Date.now();
     window.addEventListener(
       "storage",
       function(e) {
         if (e.key == "openpages") {
           // Listen if anybody else is opening the same page!
-          localStorage.page_available = Date.now();
+          localStorage["page_available"] = Date.now();
         }
         if (e.key == "page_available") {
           document.getElementById("all")!.classList.add("invisible");

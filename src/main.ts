@@ -69,7 +69,8 @@ export class Editor {
   show_error: boolean = false;
   currentThemeName: string = "Everblush";
   buttonElements: Record<string, HTMLButtonElement[]> = {};
-  interface!: ElementMap;
+  // @ts-ignore
+  interface: ElementMap = {};
   blinkTimeouts: Record<number, number> = {};
   osc: OscilloscopeConfig = {
     enabled: false,

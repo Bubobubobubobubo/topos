@@ -250,6 +250,7 @@ export class Player extends AbstractEvent {
     } else {
       return SkipEvent.createSkipProxy();
     }
+    return
   }
 
   public midi(value: number | undefined = undefined) {
@@ -282,6 +283,7 @@ export class Player extends AbstractEvent {
     } else {
       return SkipEvent.createSkipProxy();
     }
+    return null;
   }
 
   scale(name: string|number[]) {
@@ -475,6 +477,7 @@ export class Player extends AbstractEvent {
       }
       return this;
     }
+    return this
   }
 
   wait(value: number | string | Function) {

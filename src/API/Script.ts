@@ -9,7 +9,7 @@ export const script = (app: Editor) => (...args: number[]): void => {
       blinkScript(app, "local", arg);
       tryEvaluate(
         app,
-        app.universes[app.selected_universe].locals[arg],
+        app.universes[app.selected_universe]!.locals[arg]!,
       );
     }
   });
@@ -18,7 +18,7 @@ export const script = (app: Editor) => (...args: number[]): void => {
 export const s = script;
 
 export const delete_script = (app: Editor) => (script: number): void => {
-  app.universes[app.selected_universe].locals[script] = {
+  app.universes[app.selected_universe]!.locals[script] = {
     candidate: "",
     committed: "",
     evaluations: 0,
@@ -27,7 +27,7 @@ export const delete_script = (app: Editor) => (script: number): void => {
 
 export const copy_script = (app: Editor) => (from: number, to: number): void => {
   app.universes[app.selected_universe].locals[to] = {
-    ...app.universes[app.selected_universe].locals[from],
+    ...app.universes[app.selected_universe]!.locals[from],
   };
 };
 

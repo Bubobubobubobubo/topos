@@ -44,6 +44,7 @@ export const singleElements = {
   error_line: "error_line",
   hydra_canvas: "hydra-bg",
   feedback: "feedback",
+  scope: "scope",
 } as const;
 
 export type SingleElementsKeys = keyof typeof singleElements;
