@@ -292,8 +292,8 @@ export class SoundEvent extends AudibleEvent {
         self.values["fmi"] = value;
       } else {
         let values = value.split(":");
-        self.values["fmi"] = parseFloat(values[0]);
-        if (values.length > 1) self.values["fmh"] = parseFloat(values[1]);
+        self.values["fmi"] = parseFloat(values[0]!);
+        if (values.length > 1) self.values["fmh"] = parseFloat(values[1]!);
       }
       return self;
     },
@@ -365,7 +365,7 @@ export class SoundEvent extends AudibleEvent {
 
   constructor(
     sound: string | string[] | SoundParams,
-    public app: Editor,
+    app: Editor,
   ) {
     super(app);
     this.nudge = app.dough_nudge / 100;
@@ -374,25 +374,13 @@ export class SoundEvent extends AudibleEvent {
       if (typeof keys === "object" && Symbol.iterator in Object(keys)) {
         for (const key of keys as string[]) {
           // Using arrow function to maintain 'this' context
-          this[key] = (value: number) => this.updateValue(keys[0], value);
+          this[key] = (value: number) => this.updateValue(keys[0]!, value);
         }
       } else {
         // @ts-ignore
         this[methodName] = (...args) => keys(this, ...args);
       }
     }
-
-    // for (const [methodName, keys] of Object.entries(SoundEvent.methodMap)) {
-    //   if (typeof keys === "object" && Symbol.iterator in Object(keys)) {
-    //     for (const key of keys as string[]) {
-    //       // @ts-ignore
-    //       this[key] = (value: number) => this.updateValue(this, keys[0], value);
-    //     }
-    //   } else {
-    //     // @ts-ignore
-    //     this[methodName] = keys;
-    //   }
-    // }
     this.values = this.processSound(sound);
   }
 
@@ -400,7 +388,7 @@ export class SoundEvent extends AudibleEvent {
   // AbstactEvent overrides
   // ================================================================================
 
-  modify = (func: Function): this => {
+  override modify = (func: Function): this => {
     const funcResult = func(this);
     if (funcResult instanceof Object) return funcResult;
     else {
@@ -409,7 +397,7 @@ export class SoundEvent extends AudibleEvent {
     }
   };
 
-  update = (): this => {
+  override update = (): this => {
     const filteredValues = filterObject(this.values, [
       "key",
       "pitch",
@@ -424,24 +412,24 @@ export class SoundEvent extends AudibleEvent {
     ]);
     events.forEach((soundEvent) => {
       const resolvedPitchClass = resolvePitchClass(
-        (soundEvent.key || "C4"),
-        (soundEvent.originalPitch || soundEvent.pitch || 0),
-        (soundEvent.parsedScale || soundEvent.scale || "MAJOR"),
-        (soundEvent.paramOctave || 0) + (soundEvent.addedOctave || 0)
+        (soundEvent['key'] || "C4"),
+        (soundEvent['originalPitch'] || soundEvent['pitch'] || 0),
+        (soundEvent['parsedScale'] || soundEvent['scale'] || "MAJOR"),
+        (soundEvent['paramOctave'] || 0) + (soundEvent['addedOctave'] || 0)
       );
-      soundEvent.note = resolvedPitchClass.note;
-      soundEvent.freq = midiToFreq(resolvedPitchClass.note);
-      soundEvent.pitch = resolvedPitchClass.pitch;
-      soundEvent.octave = resolvedPitchClass.octave;
+      soundEvent['note'] = resolvedPitchClass.note;
+      soundEvent['freq'] = midiToFreq(resolvedPitchClass.note);
+      soundEvent['pitch'] = resolvedPitchClass.pitch;
+      soundEvent['octave'] = resolvedPitchClass.octave;
     });
 
     const newArrays = arrayOfObjectsToObjectWithArrays(events) as SoundParams;
 
-    this.values.note = maybeAtomic(newArrays.note);
-    this.values.freq = maybeAtomic(newArrays.freq);
-    this.values.pitch = maybeAtomic(newArrays.pitch);
-    this.values.octave = maybeAtomic(newArrays.octave);
-    this.values.pitchOctave = maybeAtomic(newArrays.pitchOctave);
+    this.values['note'] = maybeAtomic(newArrays.note);
+    this.values['freq'] = maybeAtomic(newArrays.freq);
+    this.values['pitch'] = maybeAtomic(newArrays.pitch);
+    this.values['octave'] = maybeAtomic(newArrays.octave);
+    this.values['pitchOctave'] = maybeAtomic(newArrays.pitchOctave);
     return this;
   };
 
@@ -458,13 +446,13 @@ export class SoundEvent extends AudibleEvent {
       // const filteredEvent = filterObject(event, ["analyze","note","dur","freq","s"]);
       const filteredEvent = event;
       // No need for note if there is freq
-      if (filteredEvent.freq) {
-        delete filteredEvent.note;
+      if (filteredEvent['freq']) {
+        delete filteredEvent['note'];
       }
       superdough(
         filteredEvent,
         this.nudge - this.app.clock.deviation,
-        filteredEvent.dur
+        filteredEvent['dur']
       );
     }
   };
@@ -477,13 +465,13 @@ export class SoundEvent extends AudibleEvent {
     for (const event of events) {
       const filteredEvent = event;
 
-      let oscAddress = "address" in event ? event.address : "/topos";
+      let oscAddress = "address" in event ? event['address'] : "/topos";
       oscAddress = oscAddress?.startsWith("/") ? oscAddress : "/" + oscAddress;
 
-      let oscPort = "port" in event ? event.port : 57120;
+      let oscPort = "port" in event ? event['port'] : 57120;
 
-      if (filteredEvent.freq) {
-        delete filteredEvent.note;
+      if (filteredEvent['freq']) {
+        delete filteredEvent['note'];
       }
       sendToServer({
         address: oscAddress,

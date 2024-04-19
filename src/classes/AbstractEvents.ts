@@ -319,9 +319,9 @@ export abstract class AudibleEvent extends AbstractEvent {
     }
     this.values["paramOctave"] = value;
     if (
-      this.values.key &&
-      (this.values.pitch || this.values.pitch === 0) &&
-      this.values.parsedScale
+      this.values['key'] &&
+      (this.values['pitch'] || this.values['pitch'] === 0) &&
+      this.values['parsedScale']
     ) {
       return this.update();
     }
@@ -340,8 +340,8 @@ export abstract class AudibleEvent extends AbstractEvent {
     }
     this.values["key"] = value;
     if (
-      (this.values.pitch || this.values.pitch === 0) &&
-      this.values.parsedScale
+      (this.values['pitch'] || this.values['pitch'] === 0) &&
+      this.values['parsedScale']
     ) {
       return this.update();
     }
@@ -350,9 +350,9 @@ export abstract class AudibleEvent extends AbstractEvent {
   };
 
   defaultPitchKeyScale() {
-    if (!this.values.key) this.values.key = 60;
-    if (!(this.values.pitch || this.values.pitch === 0)) this.values.pitch = 0;
-    if (!this.values.parsedScale) this.values.parsedScale = safeScale("major");
+    if (!this.values["key"]) this.values["key"] = 60;
+    if (!(this.values["pitch"] || this.values["pitch"] === 0)) this.values["pitch"] = 0;
+    if (!this.values["parsedScale"]) this.values["parsedScale"] = safeScale("major");
   }
 
   scale = (
@@ -368,9 +368,9 @@ export abstract class AudibleEvent extends AbstractEvent {
       value = Array.isArray(value) ? value.concat(kwargs) : [value, ...kwargs];
     }
     if (typeof value === "string" || typeof value === "number") {
-      this.values.parsedScale = safeScale(value) as number[];
+      this.values["parsedScale"] = safeScale(value) as number[];
     } else if (Array.isArray(value)) {
-      this.values.parsedScale = value.map((v) => safeScale(v));
+      this.values["parsedScale"] = value.map((v) => safeScale(v));
     }
     this.defaultPitchKeyScale();
     return this.update();
@@ -378,7 +378,7 @@ export abstract class AudibleEvent extends AbstractEvent {
 
   semitones(values: number|number[], ...rest: number[]) {
     const scaleValues = typeof values === "number" ? [values, ...rest] : values;
-    this.values.parsedScale = safeScale(scaleValues);
+    this.values["parsedScale"] = safeScale(scaleValues);
     this.defaultPitchKeyScale();
     return this.update();
   }
@@ -386,20 +386,20 @@ export abstract class AudibleEvent extends AbstractEvent {
 
   cents(values: number|number[], ...rest: number[]) {
     const scaleValues = typeof values === "number" ? [values, ...rest] : values;
-    this.values.parsedScale = safeScale(centsToSemitones(scaleValues));
+    this.values["parsedScale"] = safeScale(centsToSemitones(scaleValues));
     this.defaultPitchKeyScale();
     return this.update();
   }
 
   ratios(values: number|number[], ...rest: number[]) {
     const scaleValues = typeof values === "number" ? [values, ...rest] : values;
-    this.values.parsedScale = safeScale(ratiosToSemitones(scaleValues));
+    this.values["parsedScale"] = safeScale(ratiosToSemitones(scaleValues));
     this.defaultPitchKeyScale();
     return this.update();
   }
 
   edo(value: number, intervals: string|number[] = new Array(value).fill(1)) {
-    this.values.parsedScale = edoToSemitones(value, intervals);
+    this.values["parsedScale"] = edoToSemitones(value, intervals);
     this.defaultPitchKeyScale();
     return this.update();
   } 
@@ -436,8 +436,8 @@ export abstract class AudibleEvent extends AbstractEvent {
 
   public invert = (howMany: number = 0) => {
     if(howMany === 0) return this;
-    if (this.values.note) {
-      let notes = [...this.values.note];
+    if (this.values["note"]) {
+      let notes = [...this.values["note"]];
       notes = howMany < 0 ? [...notes].reverse() : notes;
       for (let i = 0; i < Math.abs(howMany); i++) {
         notes[i % notes.length] += howMany <= 0 ? -12 : 12;
@@ -468,7 +468,7 @@ export abstract class AudibleEvent extends AbstractEvent {
   }
 
   public draw = (lambda: Function) => {
-    lambda(this.values, (this.app.interface.drawings as HTMLCanvasElement).getContext("2d"));
+    lambda(this.values, (this.app.interface.feedback as HTMLCanvasElement).getContext("2d"));
     return this;
   }
 
@@ -499,7 +499,7 @@ export abstract class AudibleEvent extends AbstractEvent {
           this.values["note"].push(midiNote);
         }
       }
-      if (this.values.bend.length === 0) delete this.values.bend;
+      if (this.values["bend"].length === 0) delete this.values["bend"];
     } else {
       const midiNote = freqToMidi(value);
       if (midiNote % 1 !== 0) {
