@@ -32,7 +32,7 @@
     "fflate": "^0.8.0",
     "highlight.js": "^11.9.0",
     "jisg": "^0.9.7",
-    "lru-cache": "^10.0.1",
+    "lru-cache": "^10.2.0",
     "marked": "^7.0.3",
     "osc": "^2.4.4",
     "postcss": "^8.4.27",

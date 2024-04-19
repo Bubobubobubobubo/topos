@@ -53,8 +53,8 @@ export const beat = (app: Editor) => (n: number | number[] = 1, nudge: number = 
   const nArray = Array.isArray(n) ? n : [n];
   const results: boolean[] = nArray.map(
     (value) =>
-      (app.clock.pulses_since_origin - Math.floor(nudge * app.clock.ppqn)) %
-      Math.floor(value * app.clock.ppqn) === 0,
+      (app.clock.pulses_since_origin - Math.round(nudge * app.clock.ppqn)) %
+      Math.round(value * app.clock.ppqn) === 0,
   );
   return results.some((value) => value === true);
 };

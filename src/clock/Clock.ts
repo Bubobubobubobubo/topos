@@ -12,28 +12,10 @@ export interface TimePosition {
    */
   bar: number;
   beat: number;
-  pulse: number;
+  tick: number;
 }
 
 export class Clock {
-  /**
-   * The Clock Class is responsible for keeping track of the current time.
-   * It is also responsible for starting and stopping the Clock TransportNode.
-   *
-   * @param app - The main application instance
-   * @param ctx - The current AudioContext used by app
-   * @param transportNode - The TransportNode helper
-   * @param bpm - The current beats per minute value
-   * @param time_signature - The time signature
-   * @param time_position - The current time position
-   * @param ppqn - The pulses per quarter note
-   * @param tick - The current tick since origin
-   * @param running - Is the clock running?
-   * @param lastPauseTime - The last time the clock was paused
-   * @param lastPlayPressTime - The last time the clock was started
-   * @param totalPauseTime - The total time the clock has been paused / stopped
-   */
-
   ctx: AudioContext;
   logicalTime: number;
   transportNode: TransportNode | null;
@@ -51,7 +33,7 @@ export class Clock {
     public app: Editor,
     ctx: AudioContext,
   ) {
-    this.time_position = { bar: 0, beat: 0, pulse: 0 };
+    this.time_position = { bar: 0, beat: 0, tick: 0 };
     this.time_signature = [4, 4];
     this.logicalTime = 0;
     this.tick = 0;
@@ -75,19 +57,15 @@ export class Clock {
       });
   }
 
-  convertTicksToTimeposition(ticks: number): TimePosition {
-    /**
-     * Converts ticks to a TimePosition object.
-     * @param ticks The number of ticks to convert.
-     * @returns The TimePosition object representing the converted ticks.
-     */
 
+
+  convertTicksToTimeposition(ticks: number): TimePosition {
     const beatsPerBar = this.app.clock.time_signature[0]!;
-    const ppqnPosition = ticks % this.app.clock.ppqn;
+    const tickPosition = ticks % this.app.clock.ppqn;
     const beatNumber = Math.floor(ticks / this.app.clock.ppqn);
     const barNumber = Math.floor(beatNumber / beatsPerBar);
     const beatWithinBar = Math.floor(beatNumber % beatsPerBar);
-    return { bar: barNumber, beat: beatWithinBar, pulse: ppqnPosition };
+    return { bar: barNumber, beat: beatWithinBar, tick: tickPosition };
   }
 
   get ticks_before_new_bar(): number {
@@ -97,7 +75,7 @@ export class Clock {
      *
      * @returns number of ticks until next bar
      */
-    const ticskMissingFromBeat = this.ppqn - this.time_position.pulse;
+    const ticskMissingFromBeat = this.ppqn - this.time_position.tick;
     const beatsMissingFromBar = this.beats_per_bar - this.time_position.beat;
     return beatsMissingFromBar * this.ppqn + ticskMissingFromBeat;
   }
@@ -109,7 +87,7 @@ export class Clock {
      *
      * @returns number of ticks until next beat
      */
-    return this.app.clock.pulses_since_origin + this.time_position.pulse;
+    return this.app.clock.pulses_since_origin + this.time_position.tick;
   }
 
   get beats_per_bar(): number {
@@ -183,7 +161,7 @@ export class Clock {
     if (ppqn > 0 && this._ppqn !== ppqn) {
       this._ppqn = ppqn;
       this.transportNode?.setPPQN(ppqn);
-      this.logicalTime = this.realTime;
+      this.logicalTime = this.tick * this.pulse_duration_at_bpm(this.bpm);
     }
   }
 
@@ -256,7 +234,7 @@ export class Clock {
     this.tick = 0;
     this.lastPauseTime = this.app.audioContext.currentTime;
     this.logicalTime = this.realTime;
-    this.time_position = { bar: 0, beat: 0, pulse: 0 };
+    this.time_position = { bar: 0, beat: 0, tick: 0 };
     this.app.api.MidiConnection.sendStopMessage();
     this.transportNode?.stop();
   }

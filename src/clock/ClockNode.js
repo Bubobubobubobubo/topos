@@ -1,5 +1,4 @@
 import { tryEvaluate } from "../Evaluator";
-const zeroPad = (num, places) => String(num).padStart(places, "0");
 
 export class TransportNode extends AudioWorkletNode {
 
@@ -13,28 +12,41 @@ export class TransportNode extends AudioWorkletNode {
 
   /** @type {(this: MessagePort, ev: MessageEvent<any>) => any} */
   handleMessage = (message) => {
+    let clock = this.app.clock;
+    const startTime = performance.now();
+  
+  
+    if (message.data.type === "time") {
+     console.log(message.data)
+     clock.time_position = {
+        tick: message.data.tick,
+        beat: message.data.beat,
+        bar: message.data.bar,
+        time: message.data.time,
+     }
+    } 
+
+  
     if (message.data.type === "bang") {
       if (this.app.clock.running) {
-
-        if (this.app.settings.send_clock) {
-          this.app.api.MidiConnection.sendMidiClock();
-        }
-
-        const futureTimeStamp = this.app.clock.convertTicksToTimeposition(
-          this.app.clock.tick
+        clock.time_position = clock.convertTicksToTimeposition(clock.tick);
+        this.app.settings.send_clock ?? this.app.api.MidiConnection.sendMidiClock();
+      
+        tryEvaluate(
+          this.app,
+          this.app.exampleIsPlaying
+            ? this.app.example_buffer
+            : this.app.global_buffer
         );
-        this.app.clock.time_position = futureTimeStamp;
-
-        if (this.app.exampleIsPlaying) {
-          tryEvaluate(this.app, this.app.example_buffer);
-        } else {
-          tryEvaluate(this.app, this.app.global_buffer);
-        }
-
-        this.app.clock.incrementTick(message.data.bpm);
+      
+        clock.incrementTick(message.data.bpm);
       }
     }
-  };
+
+  const endTime = performance.now();
+  const executionTime = endTime - startTime;
+  console.log(`Execution time: ${executionTime}ms`);
+};
 
   start() {
     this.port.postMessage({ type: "start" });

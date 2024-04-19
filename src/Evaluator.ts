@@ -49,24 +49,23 @@ export async function tryEvaluate(application: Editor, code: File, timeout = 500
    * @returns A Promise that resolves when the evaluation is complete.
    */
   code.evaluations!++;
-  const candidateCode = code.candidate;
 
-  const cachedFunction = cache.get(candidateCode);
+  const cachedFunction = cache.get(code.candidate);
   if (cachedFunction) {
     cachedFunction.call(application.api);
     return;
   }
 
-  const wrappedCode = `let i = ${code.evaluations}; ${candidateCode}`;
+  const wrappedCode = `let i = ${code.evaluations}; ${code.candidate}`;
   const isCodeValid = await Promise.race([
     tryCatchWrapper(application, wrappedCode),
     delay(timeout)
   ]);
 
   if (isCodeValid) {
-    code.committed = candidateCode;
+    code.committed = code.candidate;
     const newFunction = new Function(`"use strict"; ${codeReplace(wrappedCode)}`);
-    addFunctionToCache(candidateCode, newFunction);
+    addFunctionToCache(code.candidate, newFunction);
   } else {
     application.api.logOnce("Compilation error!");
     await delay(100);
@@ -107,3 +106,7 @@ export const evaluateOnce = async (
    */
   await tryCatchWrapper(application, code);
 };
+
+
+
+
