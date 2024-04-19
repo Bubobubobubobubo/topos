@@ -2,10 +2,10 @@ import { getAllScaleNotes } from 'zifferjs';
 import {
   MidiCCEvent,
   MidiNoteEvent,
-} from "../IO/MidiConnection";
-import { MidiEvent, MidiParams } from "../Classes/MidiEvent";
-import { UserAPI } from './API';
-import { Editor } from '../main';
+} from "../../IO/MidiConnection";
+import { MidiEvent, MidiParams } from "../../Classes/MidiEvent";
+import { UserAPI } from '../API';
+import { Editor } from '../../main';
 
 interface ControlChange {
   channel: number;
@@ -136,9 +136,9 @@ export const last_note = (api: UserAPI) => (channel?: number): number => {
 export const ccIn = (api: UserAPI) => (control: number, channel?: number): number => {
   if (channel) {
     if (api.MidiConnection.lastCCInChannel[channel]) {
-      return api.MidiConnection.lastCCInChannel[channel][control];
+      return api.MidiConnection.lastCCInChannel[channel]?.[control] ?? 0;
     } else return 0;
-  } else return api.MidiConnection.lastCC[control] || 0;
+  } else return api.MidiConnection.lastCC[control] ?? 0;
 };
 
 export const has_cc = (api: UserAPI) => (channel?: number): boolean => {

@@ -11,7 +11,7 @@ import * as Ziffers from './Ziffers';
 import * as Filters from './Time/Filters';
 import * as LFO from './LFO';
 import * as Probability from './Probabilities';
-import * as OSC from './OSC';
+import * as OSC from './IO/OSC';
 import * as Randomness from './Randomness';
 import * as Counter from './Counter';
 import * as Sound from './Sound';

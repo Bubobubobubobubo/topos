@@ -125,7 +125,7 @@ export class Editor {
 
     this.initializeElements();
     this.initializeButtonGroups();
-    this.setCanvas(this.interface.feedback as HTMLCanvasElement);
+    this.setCanvas(this.interface["feedback"] as HTMLCanvasElement);
     // this.loadHydraSynthAsync();
 
     // ================================================================================
@@ -193,10 +193,10 @@ export class Editor {
     // ================================================================================
 
     installEditor(this);
-    runOscilloscope(this.interface.feedback as HTMLCanvasElement, this);
+    runOscilloscope(this.interface['feedback'] as HTMLCanvasElement, this);
 
     // First evaluation of the init file
-    tryEvaluate(this, this.universes[this.selected_universe.toString()].init);
+    tryEvaluate(this, this.universes[this.selected_universe.toString()]!.init);
 
     // Changing to global when opening
     this.changeModeFromInterface("global");
@@ -234,8 +234,8 @@ export class Editor {
      */
     const universe = this.universes[this.selected_universe.toString()];
     return type === "locals"
-      ? universe[type][this.local_index]
-      : universe[type as keyof Universe];
+      ? universe![type][this.local_index]
+      : universe![type as keyof Universe];
   }
 
   get note_buffer() {
@@ -313,10 +313,10 @@ export class Editor {
     const tab = tabs[i] as HTMLElement;
     tab.classList.add("bg-foreground");
     for (let j = 0; j < tabs.length; j++) {
-      if (j != i) tabs[j].classList.remove("bg-foreground");
+      if (j !== i && tabs[j]) tabs[j]!.classList.remove("bg-foreground");
     }
     let tab_id = tab.id.split("-")[1];
-    this.local_index = parseInt(tab_id);
+    this.local_index = parseInt(tab_id as string);
     this.updateEditorView();
   }
 
@@ -327,10 +327,10 @@ export class Editor {
      * @param mode - The mode to change to. Can be one of "global", "local", "init", or "notes".
      */
     const interface_buttons: HTMLElement[] = [
-      this.interface.local_button,
-      this.interface.global_button,
-      this.interface.init_button,
-      this.interface.note_button,
+      (this.interface['local_button'] as HTMLElement),
+      (this.interface['global_button'] as HTMLElement),
+      (this.interface['init_button'] as HTMLElement),
+      (this.interface['note_button'] as HTMLElement),
     ];
 
     let changeColor = (button: HTMLElement) => {
@@ -341,16 +341,16 @@ export class Editor {
           button.classList.remove("text-foreground_selection");
         }
       });
-      button.children[0].classList.remove("text-white");
-      button.children[0].classList.add("text-foreground_selection");
+      button.children[0]!.classList.remove("text-white");
+      button.children[0]!.classList.add("text-foreground_selection");
       button.classList.add("text-foreground_selection");
       button.classList.add("fill-foreground_selection");
     };
 
     switch (mode) {
       case "local":
-        if (this.interface.local_script_tabs.classList.contains("hidden")) {
-          this.interface.local_script_tabs.classList.remove("hidden");
+        if (this.interface['local_script_tabs']!.classList.contains("hidden")) {
+          this.interface['local_script_tabs']!.classList.remove("hidden");
         }
         this.editor_mode = "local";
         this.local_index = 0;
@@ -459,8 +459,10 @@ export class Editor {
 
   unfocusPlayButtons() {
     document.querySelectorAll('[id^="play-button-"]').forEach((button) => {
-      button.children[0].classList.remove("fill-foreground_selection");
-      button.children[0].classList.remove("animate-pulse");
+      if (button.children[0]) {
+        button.children[0].classList.remove("fill-foreground_selection");
+        button.children[0].classList.remove("animate-pulse");
+      }
     });
   }
 
@@ -585,7 +587,7 @@ export class Editor {
      */
     // @ts-ignore
     this.hydra_backend = new Hydra({
-      canvas: this.interface.hydra_canvas as HTMLCanvasElement,
+      canvas: this.interface["hydra_canvas"] as HTMLCanvasElement,
       detectAudio: false,
       enableStreamCapture: false,
     });
@@ -612,9 +614,9 @@ export class Editor {
     function hexToRgb(hex: string): { r: number, g: number, b: number } | null {
       let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
       return result ? {
-        r: parseInt(result[1], 16),
-        g: parseInt(result[2], 16),
-        b: parseInt(result[3], 16)
+        r: parseInt(result[1] || '0', 16),
+        g: parseInt(result[2] || '0', 16),
+        b: parseInt(result[3] || '0', 16)
       } : null;
     };
     for (const [key, value] of Object.entries(selected_theme)) {
@@ -628,8 +630,8 @@ export class Editor {
 
   getColorScheme(theme_name: string): { [key: string]: string } {
     // Check if the theme exists in colors.json
-    let themes: Record<string, { [key: string]: any }> = colors;
-    return themes[theme_name];
+    let themes: Record<string, { [key: string]: string }> = colors;
+    return themes[theme_name] || {};
   }
 
   readTheme(theme_name: string): void {

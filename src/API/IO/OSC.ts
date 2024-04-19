@@ -1,6 +1,6 @@
-import { sendToServer, type OSCMessage } from "../IO/OSC";
-import { Editor } from "../main";
-import { oscMessages } from "../IO/OSC";
+import { sendToServer, type OSCMessage } from "../../IO/OSC";
+import { Editor } from "../../main";
+import { oscMessages } from "../../IO/OSC";
 
 export const osc = (app: Editor) => (address: string, port: number, ...args: any[]): void => {
   /**

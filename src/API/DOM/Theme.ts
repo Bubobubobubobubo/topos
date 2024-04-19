@@ -12,7 +12,9 @@ export const themeName = (app: Editor) => (): string => {
 export const randomTheme = (app: Editor) => (): void => {
   let theme_names = getThemes()();
   let selected_theme = theme_names[Math.floor(Math.random() * theme_names.length)];
-  app.readTheme(selected_theme);
+  if (selected_theme) {
+    app.readTheme(selected_theme);
+  }
 };
 
 export const nextTheme = (app: Editor) => (): void => {
@@ -21,7 +23,7 @@ export const nextTheme = (app: Editor) => (): void => {
   let current_theme_idx = theme_names.indexOf(current_theme);
   let next_theme_idx = (current_theme_idx + 1) % theme_names.length;
   let next_theme = theme_names[next_theme_idx];
-  app.readTheme(next_theme);
+  app.readTheme(next_theme!);
   app.api.log(next_theme);
 };
 

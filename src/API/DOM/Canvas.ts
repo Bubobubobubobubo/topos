@@ -1,6 +1,38 @@
 import { OscilloscopeConfig } from "../../DOM/Visuals/Oscilloscope";
-import { ShapeObject, createConicGradient, createLinearGradient, createRadialGradient, drawBackground, drawBox, drawBall, drawBalloid, drawDonut, drawEquilateral, drawImage, drawPie, drawSmiley, drawStar, drawStroke, drawText, drawTriangular } from "../DOM/Visuals/CanvasVisuals";
+import { createConicGradient, createLinearGradient, createRadialGradient, drawBackground, drawBox, drawBall, drawBalloid, drawDonut, drawEquilateral, drawImage, drawPie, drawSmiley, drawStar, drawStroke, drawText, drawTriangular } from "../../DOM/Visuals/CanvasVisuals";
 import { Editor } from "../../main";
+
+export type ShapeObject = {
+  x: number;
+  y: number;
+  x1: number;
+  y1: number;
+  x2: number;
+  y2: number;
+  radius: number;
+  width: number;
+  height: number;
+  fillStyle: string;
+  secondary: string;
+  strokeStyle: string;
+  rotation: number;
+  points: number;
+  outerRadius: number;
+  eyeSize: number;
+  happiness: number;
+  slices: number;
+  gap: number;
+  font: string;
+  fontSize: number;
+  text: string;
+  filter: string;
+  url: string;
+  curve: number;
+  curves: number;
+  stroke: string;
+  eaten: number;
+  hole: number;
+};
 
 
 export const loadHydra = (app: Editor) => (): void => {
@@ -8,7 +40,7 @@ export const loadHydra = (app: Editor) => (): void => {
 }
 
 export const w = (app: Editor) => (): number => {
-  const canvas: HTMLCanvasElement = app.interface.feedback as HTMLCanvasElement;
+  const canvas: HTMLCanvasElement = app.interface["feedback"] as HTMLCanvasElement;
   return canvas.clientWidth;
 };
 
@@ -17,7 +49,7 @@ export const pulseLocation = (app: Editor) => (): number => {
 };
 
 export const clear = (app: Editor) => (): boolean => {
-  const canvas: HTMLCanvasElement = app.interface.feedback as HTMLCanvasElement;
+  const canvas: HTMLCanvasElement = app.interface["feedback"] as HTMLCanvasElement;
   const ctx = canvas.getContext("2d")!;
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   return true;
@@ -25,7 +57,7 @@ export const clear = (app: Editor) => (): boolean => {
 
 
 export const h = (app: Editor) => (): number => {
-  const canvas: HTMLCanvasElement = app.interface.feedback as HTMLCanvasElement;
+  const canvas: HTMLCanvasElement = app.interface["feedback"] as HTMLCanvasElement;
   return canvas.clientHeight;
 };
 
@@ -38,28 +70,28 @@ export const wc = (app: Editor) => (): number => {
 };
 
 export const background = (app: Editor) => (color: string | number, ...gb: number[]): boolean => {
-  drawBackground(app.interface.feedback as HTMLCanvasElement, color, ...gb);
+  drawBackground(app.interface["feedback"] as HTMLCanvasElement, color, ...gb);
   return true;
 };
 export const bg = background;
 
 export const linearGradient = (app: Editor) => (x1: number, y1: number, x2: number, y2: number, ...stops: (number | string)[]): CanvasGradient => {
-  return createLinearGradient(app.interface.feedback as HTMLCanvasElement, x1, y1, x2, y2, ...stops);
+  return createLinearGradient(app.interface["feedback"] as HTMLCanvasElement, x1, y1, x2, y2, ...stops);
 };
 
 export const radialGradient = (app: Editor) => (x1: number, y1: number, r1: number, x2: number, y2: number, r2: number, ...stops: (number | string)[]) => {
-  return createRadialGradient(app.interface.feedback as HTMLCanvasElement, x1, y1, r1, x2, y2, r2, ...stops);
+  return createRadialGradient(app.interface["feedback"] as HTMLCanvasElement, x1, y1, r1, x2, y2, r2, ...stops);
 };
 
 export const conicGradient = (app: Editor) => (x: number, y: number, angle: number, ...stops: (number | string)[]) => {
-  return createConicGradient(app.interface.feedback as HTMLCanvasElement, x, y, angle, ...stops);
+  return createConicGradient(app.interface["feedback"] as HTMLCanvasElement, x, y, angle, ...stops);
 };
 
 export const draw = (app: Editor) => (func: Function): boolean => {
   if (typeof func === "string") {
-    drawText(app.interface.feedback as HTMLCanvasElement, func, 24, 0, "Arial", wc(app)(), hc(app)(), "white", "none");
+    drawText(app.interface["feedback"] as HTMLCanvasElement, func, 24, 0, "Arial", wc(app)(), hc(app)(), "white", "none");
   } else {
-    const canvas: HTMLCanvasElement = app.interface.feedback as HTMLCanvasElement;
+    const canvas: HTMLCanvasElement = app.interface["feedback"] as HTMLCanvasElement;
     const ctx = canvas.getContext("2d")!;
     func(ctx);
   }
@@ -84,7 +116,7 @@ export const balloid = (app: Editor) => (
     radius = curves.radius || hc(app)() / 2;
     curves = curves.curves || 6;
   }
-  drawBalloid(app.interface.feedback as HTMLCanvasElement, curves, radius, curve, fillStyle, secondary, x, y);
+  drawBalloid(app.interface["feedback"] as HTMLCanvasElement, curves, radius, curve, fillStyle, secondary, x, y);
   return true;
 };
 
@@ -102,7 +134,7 @@ export const equilateral = (app: Editor) => (
     rotation = radius.rotation || 0;
     radius = radius.radius || hc(app)() / 3;
   }
-  drawEquilateral(app.interface.feedback as HTMLCanvasElement, radius, fillStyle, rotation, x, y);
+  drawEquilateral(app.interface["feedback"] as HTMLCanvasElement, radius, fillStyle, rotation, x, y);
   return true;
 };
 
@@ -122,7 +154,7 @@ export const triangular = (app: Editor) => (
     height = width.height || hc(app)() / 3;
     width = width.width || hc(app)() / 3;
   }
-  drawTriangular(app.interface.feedback as HTMLCanvasElement, width, height, fillStyle, rotation, x, y);
+  drawTriangular(app.interface['feedback'] as HTMLCanvasElement, width, height, fillStyle, rotation, x, y);
   return true;
 };
 export const pointy = triangular;
@@ -139,7 +171,7 @@ export const ball = (app: Editor) => (
     y = radius.y || hc(app)();
     radius = radius.radius || hc(app)() / 3;
   }
-  drawBall(app.interface.feedback as HTMLCanvasElement, radius, fillStyle, x, y);
+  drawBall(app.interface['feedback'] as HTMLCanvasElement, radius, fillStyle, x, y);
   return true;
 };
 export const circle = ball;
@@ -168,7 +200,7 @@ export const donut = (app: Editor) => (
     stroke = slices.stroke || "black";
     slices = slices.slices || 3;
   }
-  drawDonut(app.interface.feedback as HTMLCanvasElement, slices, eaten, radius, hole, fillStyle, secondary, stroke, rotation, x, y);
+  drawDonut(app.interface['feedback'] as HTMLCanvasElement, slices, eaten, radius, hole, fillStyle, secondary, stroke, rotation, x, y);
   return true;
 };
 
@@ -194,7 +226,7 @@ export const pie = (app: Editor) => (
     eaten = slices.eaten || 0;
     slices = slices.slices || 3;
   }
-  drawPie(app.interface.feedback as HTMLCanvasElement, slices, eaten, radius, fillStyle, secondary, stroke, rotation, x, y);
+  drawPie(app.interface['feedback'] as HTMLCanvasElement, slices, eaten, radius, fillStyle, secondary, stroke, rotation, x, y);
   return true;
 };
 
@@ -216,7 +248,7 @@ export const star = (app: Editor) => (
     outerRadius = points.outerRadius || radius / 100;
     points = points.points || 5;
   }
-  drawStar(app.interface.feedback as HTMLCanvasElement, points, radius, fillStyle, rotation, outerRadius, x, y);
+  drawStar(app.interface['feedback'] as HTMLCanvasElement, points, radius, fillStyle, rotation, outerRadius, x, y);
   return true;
 };
 
@@ -238,7 +270,7 @@ export const stroke = (app: Editor) => (
     rotation = width.rotation || 0;
     width = width.width || 1;
   }
-  drawStroke(app.interface.feedback as HTMLCanvasElement, width, strokeStyle, rotation, x1, y1, x2, y2);
+  drawStroke(app.interface['feedback'] as HTMLCanvasElement, width, strokeStyle, rotation, x1, y1, x2, y2);
   return true;
 };
 
@@ -258,7 +290,7 @@ export const box = (app: Editor) => (
     height = width.height || wc(app)() / 4;
     width = width.width || wc(app)() / 4;
   }
-  drawBox(app.interface.feedback as HTMLCanvasElement, width, height, fillStyle, rotation, x, y);
+  drawBox(app.interface['feedback'] as HTMLCanvasElement, width, height, fillStyle, rotation, x, y);
   return true;
 };
 
@@ -280,7 +312,7 @@ export const smiley = (app: Editor) => (
     radius = happiness.radius || hc(app)() / 3;
     happiness = happiness.happiness || 0;
   }
-  drawSmiley(app.interface.feedback as HTMLCanvasElement, happiness, radius, eyeSize, fillStyle, rotation, x, y);
+  drawSmiley(app.interface['feedback'] as HTMLCanvasElement, happiness, radius, eyeSize, fillStyle, rotation, x, y);
   return true;
 };
 
@@ -304,7 +336,7 @@ export const text = (app: Editor) => (
     filter = text.filter || "none";
     text = text.text || "";
   }
-  drawText(app.interface.feedback as HTMLCanvasElement, text, fontSize, rotation, font, x, y, fillStyle, filter);
+  drawText(app.interface['feedback'] as HTMLCanvasElement, text, fontSize, rotation, font, x, y, fillStyle, filter);
   return true;
 };
 
@@ -327,7 +359,7 @@ export const image = (app: Editor) => (
     filter = url.filter || "none";
     url = url.url || "";
   }
-  drawImage(app.interface.feedback as HTMLCanvasElement, url, width, height, rotation, x, y, filter);
+  drawImage(app.interface['feedback'] as HTMLCanvasElement, url, width, height, rotation, x, y, filter);
   return true;
 };
 

@@ -1,35 +1,3 @@
-export type ShapeObject = {
-  x: number;
-  y: number;
-  x1: number;
-  y1: number;
-  x2: number;
-  y2: number;
-  radius: number;
-  width: number;
-  height: number;
-  fillStyle: string;
-  secondary: string;
-  strokeStyle: string;
-  rotation: number;
-  points: number;
-  outerRadius: number;
-  eyeSize: number;
-  happiness: number;
-  slices: number;
-  gap: number;
-  font: string;
-  fontSize: number;
-  text: string;
-  filter: string;
-  url: string;
-  curve: number;
-  curves: number;
-  stroke: string;
-  eaten: number;
-  hole: number;
-};
-
 export const drawBackground = (
   canvas: HTMLCanvasElement,
   color: string | number,
@@ -60,7 +28,7 @@ export const createLinearGradient = (
     let color = stops[i + 1];
     if (typeof color === "number")
       color = `rgb(${color},${stops[i + 2]},${stops[i + 3]})`;
-    gradient.addColorStop(stops[i] as number, color);
+    gradient.addColorStop(stops[i] as number, color as string);
   }
   return gradient;
 };
@@ -91,7 +59,7 @@ export const createRadialGradient = (
     let color = stops[i + 1];
     if (typeof color === "number")
       color = `rgb(${color},${stops[i + 2]},${stops[i + 3]})`;
-    gradient.addColorStop(stops[i] as number, color);
+    gradient.addColorStop(stops[i] as number, color as string);
   }
   return gradient;
 };
@@ -116,7 +84,7 @@ export const createConicGradient = (
     let color = stops[i + 1];
     if (typeof color === "number")
       color = `rgb(${color},${stops[i + 2]},${stops[i + 3]})`;
-    gradient.addColorStop(stops[i] as number, color);
+    gradient.addColorStop(stops[i] as number, color as string);
   }
   return gradient;
 };
@@ -221,10 +189,11 @@ export const drawBalloid = (
     ctx.beginPath();
     ctx.fillStyle = secondary;
     // Form the shape from points with straight lines and fill it
-    ctx.moveTo(points[0][0], points[0][1]);
-    for (let point of points) ctx.lineTo(point[0], point[1]);
+    if (points[0]) {
+      ctx.moveTo(points[0][0] as number, points[0][1] as number);
+      for (let point of points) ctx.lineTo(point[0] as number, point[1] as number);
+    }
     // Close and fill
-
     ctx.closePath();
     ctx.fill();
   }

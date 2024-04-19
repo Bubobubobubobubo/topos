@@ -104,7 +104,13 @@ export class MidiConnection {
       this.currentOutputIndex >= 0 &&
       this.currentOutputIndex < this.midiOutputs.length
     ) {
-      return this.midiOutputs[this.currentOutputIndex].name;
+      const output = this.midiOutputs[this.currentOutputIndex];
+      if (output) {
+        return output.name;
+      } else {
+        console.error("MIDI output is undefined.");
+        return null;
+      }
     } else {
       console.error("No MIDI output selected or available.");
       return null;
@@ -253,7 +259,7 @@ export class MidiConnection {
           this.midiClockInput = this.midiInputs[clockInputIndex];
           this.registerMidiInputListener(clockInputIndex);
           this.settings.midi_clock_input =
-            this.midiClockInput.name || undefined;
+            this.midiClockInput?.name ?? undefined;
         }
       });
 
@@ -277,7 +283,7 @@ export class MidiConnection {
           this.currentInputIndex = parseInt(value);
           this.registerMidiInputListener(this.currentInputIndex);
           this.settings.default_midi_input =
-            this.midiInputs[this.currentInputIndex].name || undefined;
+            this.midiInputs[this.currentInputIndex]?.name || undefined;
         }
       });
     }

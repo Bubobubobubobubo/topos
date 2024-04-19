@@ -10,7 +10,7 @@ const _euclidean_cycle = (
   function startsDescent(list: number[], i: number): boolean {
     const length = list.length;
     const nextIndex = (i + 1) % length;
-    return list[i] > list[nextIndex] ? true : false;
+    return list[i]! > list[nextIndex]!? true : false;
   }
   if (pulses >= length) return [true];
   const resList = Array.from(
@@ -61,7 +61,7 @@ export const beat = (app: Editor) => (n: number | number[] = 1, nudge: number = 
 
 export const bar = (app: Editor) => (n: number | number[] = 1, nudge: number = 0): boolean => {
   const nArray = Array.isArray(n) ? n : [n];
-  const barLength = app.clock.time_signature[1] * app.clock.ppqn;
+  const barLength = (app.clock.time_signature?.[1] ?? 4) * app.clock.ppqn;
   const nudgeInPulses = Math.floor(nudge * barLength);
   const results: boolean[] = nArray.map(
     (value) =>
@@ -111,7 +111,7 @@ export const flipbar = (app: Editor) => (chunk: number = 1): boolean => {
 
 export const onbar = (app: Editor) => (
   bars: number[] | number,
-  n: number = app.clock.time_signature[0],
+  n: number = app.clock.time_signature[0] || 4,
 ): boolean => {
   let current_bar = (app.clock.time_position.bar % n) + 1;
   return typeof bars === "number"
@@ -161,7 +161,8 @@ export const euclid = () => (iterator: number, pulses: number, length: number, r
   /**
    * Returns a Euclidean cycle of size length, with n pulses, rotated or not.
    */
-  return _euclidean_cycle(pulses, length, rotate)[iterator % length];
+  const cycle = _euclidean_cycle(pulses, length, rotate);
+  return cycle && cycle[iterator % length] === true;
 };
 export const ec = euclid;
 
@@ -192,7 +193,7 @@ export const bin = () => (iterator: number, n: number): boolean => {
    */
   let convert: string = n.toString(2);
   let tobin: boolean[] = convert.split("").map((x: string) => x === "1");
-  return tobin[iterator % tobin.length];
+  return tobin[iterator % tobin.length] || false;
 };
 
 export const binrhythm = (app: Editor) => (div: number, n: number): boolean => {
