@@ -1,4 +1,4 @@
-import { Editor } from "../main";
+import { Editor } from "../../main";
 
 export const warp = (app: Editor) => (n: number): void => {
   /**

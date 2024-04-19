@@ -1,14 +1,14 @@
-import * as Transport from './Transport';
+import * as Transport from './Time/Transport';
 import * as Mouse from './DOM/Mouse';
 import * as Theme from './DOM/Theme';
 import * as Canvas from './DOM/Canvas';
 import * as Cache from './Cache';
 import * as Script from './Script';
 import * as Drunk from './Drunk';
-import * as Warp from './Warp';
+import * as Warp from './Time/Warp';
 import * as Mathematics from './Math';
 import * as Ziffers from './Ziffers';
-import * as Filters from './Filters';
+import * as Filters from './Time/Filters';
 import * as LFO from './LFO';
 import * as Probability from './Probabilities';
 import * as OSC from './OSC';

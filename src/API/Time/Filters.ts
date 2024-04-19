@@ -1,5 +1,5 @@
-import { type Editor } from "../main";
-import { UserAPI } from "./API";
+import { type Editor } from "../../main";
+import { UserAPI } from "../API";
 
 const _euclidean_cycle = (
   pulses: number,

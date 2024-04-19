@@ -1,5 +1,5 @@
-import { type UserAPI } from "./API";
-import { type Editor } from "../main";
+import { type UserAPI } from "../API";
+import { type Editor } from "../../main";
 
 export const time = (api: UserAPI) => (): number => {
   return api.app.audioContext.currentTime;
