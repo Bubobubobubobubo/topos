@@ -18,7 +18,7 @@ async function tryCatchWrapper(application: Editor, code: string): Promise<boole
     await new Function(`"use strict"; ${codeReplace(code)}`).call(application.api);
     return true;
   } catch (error) {
-    application.interface.error_line.innerHTML = error as string;
+    application.interface["error_line"].innerHTML = error as string;
     application.api._reportError(error as string);
     return false;
   }
@@ -89,7 +89,7 @@ export async function evaluate(application: Editor, code: File, timeout = 1000):
     ]);
     code.evaluations!++;
   } catch (error) {
-    application.interface.error_line.innerHTML = error as string;
+    application.interface["error_line"].innerHTML = error as string;
     console.error(error);
   }
 }

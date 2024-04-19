@@ -69,7 +69,7 @@ export class Editor {
   show_error: boolean = false;
   currentThemeName: string = "Everblush";
   buttonElements: Record<string, HTMLButtonElement[]> = {};
-  interface: ElementMap = {};
+  interface!: ElementMap;
   blinkTimeouts: Record<number, number> = {};
   osc: OscilloscopeConfig = {
     enabled: false,
@@ -126,7 +126,6 @@ export class Editor {
     this.initializeElements();
     this.initializeButtonGroups();
     this.setCanvas(this.interface["feedback"] as HTMLCanvasElement);
-    // this.loadHydraSynthAsync();
 
     // ================================================================================
     // Loading the universe from local storage
@@ -356,29 +355,29 @@ export class Editor {
         this.local_index = 0;
         document.getElementById("editor")!.style.height = "calc(100% - 100px)";
         this.changeToLocalBuffer(this.local_index);
-        changeColor(this.interface.local_button);
+        changeColor(this.interface["local_button"]);
         break;
       case "global":
-        if (!this.interface.local_script_tabs.classList.contains("hidden")) {
-          this.interface.local_script_tabs.classList.add("hidden");
+        if (!this.interface["local_script_tabs"].classList.contains("hidden")) {
+          this.interface["local_script_tabs"].classList.add("hidden");
         }
         this.editor_mode = "global";
         document.getElementById("editor")!.style.height = "100%";
-        changeColor(this.interface.global_button);
+        changeColor(this.interface["global_button"]);
         break;
       case "init":
-        if (!this.interface.local_script_tabs.classList.contains("hidden")) {
-          this.interface.local_script_tabs.classList.add("hidden");
+        if (!this.interface["local_script_tabs"].classList.contains("hidden")) {
+          this.interface["local_script_tabs"].classList.add("hidden");
         }
         this.editor_mode = "init";
-        changeColor(this.interface.init_button);
+        changeColor(this.interface["init_button"]);
         break;
       case "notes":
-        if (!this.interface.local_script_tabs.classList.contains("hidden")) {
-          this.interface.local_script_tabs.classList.add("hidden");
+        if (!this.interface["local_script_tabs"].classList.contains("hidden")) {
+          this.interface["local_script_tabs"].classList.add("hidden");
         }
         this.editor_mode = "notes";
-        changeColor(this.interface.note_button);
+        changeColor(this.interface["note_button"]);
         break;
     }
 
@@ -441,19 +440,26 @@ export class Editor {
         selector = 3;
         break;
     }
-    document
-      .querySelectorAll(possible_selectors[selector])
-      .forEach((button) => {
-        if (highlight) button.children[0].classList.add("animate-pulse");
-      });
+    const selectorValue = possible_selectors[selector];
+    if (selectorValue) {
+      document
+        .querySelectorAll(selectorValue)
+        .forEach((button) => {
+          if (highlight && button.children[0]) button.children[0].classList.add("animate-pulse");
+        });
+    }
     // All other buttons must lose the highlighting
     document
       .querySelectorAll(
         possible_selectors.filter((_, index) => index != selector).join(","),
       )
       .forEach((button) => {
-        button.children[0].classList.remove("animate-pulse");
-        button.children[1].classList.remove("animate-pulse");
+        if (button.children[0]) {
+          button.children[0].classList.remove("animate-pulse");
+        }
+        if (button.children[1]) {
+          button.children[1].classList.remove("animate-pulse");
+        }
       });
   }
 
@@ -525,7 +531,7 @@ export class Editor {
 
   private initializeElements(): void {
     for (const [key, value] of Object.entries(singleElements)) {
-      this.interface[key] = document.getElementById(
+      this.interface[key as keyof ElementMap] = document.getElementById(
         value,
       ) as ElementMap[keyof ElementMap];
     }

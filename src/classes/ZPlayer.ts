@@ -30,7 +30,7 @@ export class Player extends AbstractEvent {
   constructor(
     input: string | number | Generator<number>,
     options: InputOptions,
-    public app: Editor,
+    app: Editor,
     zid: string = "",
     waitTime: number = 0,
   ) {
@@ -191,7 +191,7 @@ export class Player extends AbstractEvent {
     }
   }
 
-  sound(name?: string | string[] | SoundParams | SoundParams[]) {
+  public sound(name?: string | string[] | SoundParams | SoundParams[]) {
     if (this.areWeThereYet()) {
       this.checkCue();
       const event = this.next() as Pitch | Chord | ZRest;
@@ -252,7 +252,7 @@ export class Player extends AbstractEvent {
     }
   }
 
-  midi(value: number | undefined = undefined) {
+  public midi(value: number | undefined = undefined) {
     if (this.areWeThereYet()) {
       this.checkCue();
       const event = this.next() as Pitch | Chord | ZRest;

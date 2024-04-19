@@ -71,7 +71,7 @@ export const runOscilloscope = (
 
     for (let i = 0; i < numBars; i++) {
       barHeight = Math.floor(
-        freqDataArray[Math.floor((i * freqDataArray.length) / numBars)] *
+        freqDataArray[Math.floor((i * freqDataArray.length) / numBars)]! *
           ((height / 256) * app.osc.size),
       );
 
@@ -165,9 +165,9 @@ export const runOscilloscope = (
     let startIndex = 0;
     for (let i = 1; i < dataArray.length; ++i) {
       let currentType = null;
-      if (dataArray[i] >= 0 && dataArray[i - 1] < 0) {
+      if (dataArray[i]! >= 0 && dataArray[i - 1]! < 0) {
         currentType = "negToPos";
-      } else if (dataArray[i] < 0 && dataArray[i - 1] >= 0) {
+      } else if (dataArray[i]! < 0 && dataArray[i - 1]! >= 0) {
         currentType = "posToNeg";
       }
 
@@ -187,8 +187,8 @@ export const runOscilloscope = (
       drawFrequencyScope(WIDTH, HEIGHT, OFFSET_HEIGHT, OFFSET_WIDTH);
     } else if (app.osc.mode === "3D") {
       for (let i = startIndex; i < dataArray.length; i += 2) {
-        const x = (dataArray[i] * WIDTH * app.osc.size) / 2 + WIDTH / 4;
-        const y = (dataArray[i + 1] * HEIGHT * app.osc.size) / 2 + HEIGHT / 4;
+        const x = (dataArray[i]! * WIDTH * app.osc.size) / 2 + WIDTH / 4;
+        const y = (dataArray[i + 1]! * HEIGHT * app.osc.size) / 2 + HEIGHT / 4;
         i === startIndex ? canvasCtx.moveTo(x, y) : canvasCtx.lineTo(x, y);
       }
     } else if (
@@ -199,7 +199,7 @@ export const runOscilloscope = (
       const yOffset = HEIGHT / 4;
       let x = 0;
       for (let i = startIndex; i < dataArray.length; i++) {
-        const v = dataArray[i] * 0.5 * HEIGHT * app.osc.size;
+        const v = dataArray[i]! * 0.5 * HEIGHT * app.osc.size;
         const y = v + yOffset;
         i === startIndex ? canvasCtx.moveTo(x, y) : canvasCtx.lineTo(x, y);
         x += sliceWidth;
@@ -210,7 +210,7 @@ export const runOscilloscope = (
       const xOffset = WIDTH / 4;
       let y = 0;
       for (let i = startIndex; i < dataArray.length; i++) {
-        const v = dataArray[i] * 0.5 * WIDTH * app.osc.size;
+        const v = dataArray[i]! * 0.5 * WIDTH * app.osc.size;
         const x = v + xOffset;
         i === startIndex ? canvasCtx.moveTo(x, y) : canvasCtx.lineTo(x, y);
         y += sliceHeight;

@@ -8,7 +8,10 @@
 // @ts-ignore
 import { registerSound, onTriggerSample } from "superdough";
 
-export const isAudioFile = (filename: string) => ['wav', 'mp3'].includes(filename.split('.').slice(-1)[0]);
+export const isAudioFile = (filename: string) => {
+  const extension = filename.split('.').slice(-1)[0];
+  return extension !== undefined && ['wav', 'mp3'].includes(extension);
+};
 
 interface samplesDBConfig {
   dbName: string,

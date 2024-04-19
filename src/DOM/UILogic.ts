@@ -50,30 +50,30 @@ export const installInterfaceLogic = (app: Editor) => {
   const tabs = document.querySelectorAll('[id^="tab-"]');
   // Iterate over the tabs with an index
   for (let i = 0; i < tabs.length; i++) {
-    tabs[i].addEventListener("click", (event) => {
+    tabs[i]!.addEventListener("click", (event) => {
       // Updating the CSS accordingly
-      tabs[i].classList.add("bg-foreground");
-      tabs[i].classList.add("text-selection_foreground");
+      tabs[i]!.classList.add("bg-foreground");
+      tabs[i]!.classList.add("text-selection_foreground");
       for (let j = 0; j < tabs.length; j++) {
-        if (j != i) tabs[j].classList.remove("bg-foreground");
-        if (j != i) tabs[j].classList.remove("text-selection_foreground");
+        if (j != i) tabs[j]!.classList.remove("bg-foreground");
+        if (j != i) tabs[j]!.classList.remove("text-selection_foreground");
       }
       app.currentFile().candidate = app.view.state.doc.toString();
 
       let tab = event.target as HTMLElement;
       let tab_id = tab.id.split("-")[1];
-      app.local_index = parseInt(tab_id);
+      app.local_index = parseInt(tab_id!);
       app.updateEditorView();
     });
   }
 
-  app.interface.topos_logo.addEventListener("click", () => {
+  app.interface['logo'].addEventListener("click", () => {
     hideDocumentation();
     app.updateKnownUniversesView();
     openUniverseModal();
   });
 
-  app.buttonElements.play_buttons.forEach((button) => {
+  app.buttonElements['play_buttons']!.forEach((button) => {
     button.addEventListener("click", () => {
       if (app.isPlaying) {
         app.setButtonHighlighting("pause", true);
@@ -89,7 +89,7 @@ export const installInterfaceLogic = (app: Editor) => {
     });
   });
 
-  app.buttonElements.clear_buttons.forEach((button) => {
+  app.buttonElements['clear_buttons']!.forEach((button) => {
     button.addEventListener("click", () => {
       app.setButtonHighlighting("clear", true);
       if (confirm("Do you want to reset the current universe?")) {
@@ -239,7 +239,7 @@ export const installInterfaceLogic = (app: Editor) => {
     app.flashBackground("#404040", 200);
   });
 
-  app.buttonElements.stop_buttons.forEach((button) => {
+  app.buttonElements['stop_buttons']!.forEach((button) => {
     button.addEventListener("click", () => {
       app.setButtonHighlighting("stop", true);
       app.isPlaying = false;
@@ -516,7 +516,7 @@ export const installInterfaceLogic = (app: Editor) => {
     }
   });
 
-  tryEvaluate(app, app.universes[app.selected_universe.toString()].init);
+  tryEvaluate(app, app.universes[app.selected_universe.toString()]!.init);
 
   documentation_pages.forEach((e) => {
     let name = `docs_` + e;

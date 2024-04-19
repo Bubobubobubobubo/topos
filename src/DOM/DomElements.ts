@@ -1,19 +1,7 @@
 import { type Editor } from "../main";
 
-export type ElementMap = {
-  [key: string]:
-  | HTMLElement
-  | HTMLButtonElement
-  | HTMLDivElement
-  | HTMLInputElement
-  | HTMLSelectElement
-  | HTMLCanvasElement
-  | HTMLFormElement
-  | HTMLInputElement;
-};
-
 export const singleElements = {
-  topos_logo: "topos-logo",
+  logo: "topos_logo",
   fill_viewer: "fillviewer",
   load_universe_button: "load-universe-button",
   download_universe_button: "download-universes",
@@ -56,6 +44,20 @@ export const singleElements = {
   error_line: "error_line",
   hydra_canvas: "hydra-bg",
   feedback: "feedback",
+} as const;
+
+export type SingleElementsKeys = keyof typeof singleElements;
+
+export type ElementMap = {
+  [K in SingleElementsKeys]:
+  | HTMLElement
+  | HTMLButtonElement
+  | HTMLDivElement
+  | HTMLInputElement
+  | HTMLSelectElement
+  | HTMLCanvasElement
+  | HTMLFormElement
+  | HTMLInputElement;
 };
 
 export const buttonGroups = {

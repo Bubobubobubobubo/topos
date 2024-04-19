@@ -179,7 +179,7 @@ export class AppSettings {
   }
 
   get_universe() {
-    this.universes.universe_name;
+    this.universes["universe_name"];
   }
 
   get data(): Settings {
@@ -356,7 +356,7 @@ export const loadUniverse = (
   // Updating the editor View to reflect the selected universe
   app.updateEditorView();
   // Evaluating the initialisation script for the selected universe
-  tryEvaluate(app, app.universes[app.selected_universe.toString()].init);
+  tryEvaluate(app, app.universes[app.selected_universe.toString()]!.init);
 };
 
 export const openUniverseModal = (): void => {

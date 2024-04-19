@@ -249,7 +249,7 @@ export const updateDocumentationContent = (app: Editor, bindings: any) => {
 
   function _update_and_assign(callback: Function) {
     const converted_markdown = converter.makeHtml(
-      app.docs[app.currentDocumentationPane],
+      app.docs[app.currentDocumentationPane]!,
     );
     callback(converted_markdown)
   }

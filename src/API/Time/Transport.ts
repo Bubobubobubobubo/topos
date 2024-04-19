@@ -43,7 +43,7 @@ export const bpb = (app: Editor) => (n?: number): number => {
   /**
    * Sets or returns the number of beats per bar.
    */
-  if (n === undefined) return app.clock.time_signature[0];
+  if (n === undefined) return app.clock.time_signature[0] || 4;
 
   if (n >= 1) {
     app.clock.time_signature[0] = n;
@@ -103,11 +103,11 @@ export const epulse = (app: Editor) => (): number => {
 };
 
 export const nominator = (app: Editor) => (): number => {
-  return app.clock.time_signature[0];
+  return app.clock.time_signature[0] || 4;
 };
 
 export const meter = (app: Editor) => (): number => {
-  return app.clock.time_signature[1];
+  return app.clock.time_signature[1] || 4;
 };
 
 export const denominator = meter;

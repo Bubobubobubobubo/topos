@@ -38,7 +38,7 @@ export const blinkScript = (
 ) => {
   if (no !== undefined && no < 1 && no > 9) return;
   const blinkDuration =
-    (app.clock.bpm / 60 / app.clock.time_signature[1]) * 200;
+    (app.clock.bpm / 60 / app.clock.time_signature[1]!) * 200;
   // @ts-ignore
   const ctx = app.interface.feedback.getContext("2d");
 

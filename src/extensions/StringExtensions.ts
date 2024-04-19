@@ -187,7 +187,7 @@ export class Speaker {
         utterance.pitch = this.options.pitch || 1;
         utterance.volume = this.options.volume || 1;
         if (this.options.voice) {
-          utterance.voice = synth.getVoices()[this.options.voice];
+          utterance.voice = synth.getVoices()[this.options.voice]!;
         }
         if (this.options.lang) {
           // Check if language has country code

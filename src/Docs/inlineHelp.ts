@@ -940,7 +940,7 @@ const completionDatabase: CompletionDatabase = {
     description: "Noise amount in the signal (0-1)",
     example: "sound('triangle').noise(.25).out()",
   },
-};
+} as const;
 
 export const inlineHoveringTips = hoverTooltip(
   (view: any, pos: any, side: any) => {
@@ -962,8 +962,7 @@ export const inlineHoveringTips = hoverTooltip(
         ) {
           return { dom: document.createElement("div") };
         }
-        let completion =
-          completionDatabase[text.slice(start - from, end - from)] || {};
+        let completion = completionDatabase[text.slice(start - from, end - from)]!;
         let divContent = `
       <h1 class="text-brightwhite text-base pb-1">${completion.name} [<em class="text-white">${completion.category}</em>]</h1>
       <p class="text-base pl-4">${completion.description}</p>
@@ -986,13 +985,13 @@ export const toposCompletions = (context: CompletionContext) => {
       from: word.from,
       options: Object.keys(completionDatabase).map((key) => ({
         label: key,
-        type: completionDatabase[key].category,
+        type: completionDatabase[key]!.category,
         info: () => {
           let div = document.createElement("div");
           div.innerHTML = `
-      <h1 class="text-brightwhite text-base pb-1">${completionDatabase[key].name} [<em class="text-white">${completionDatabase[key].category}</em>]</h1>
-      <p class="text-base pl-4">${completionDatabase[key].description}</p>
-      <div class="overflow-hidden overflow-scroll rounded px-2 ml-4 mt-2 bg-neutral-800"><code class="text-sm">${completionDatabase[key].example}</code></div>
+      <h1 class="text-brightwhite text-base pb-1">${completionDatabase[key]!.name} [<em class="text-white">${completionDatabase[key]!.category}</em>]</h1>
+      <p class="text-base pl-4">${completionDatabase[key]!.description}</p>
+      <div class="overflow-hidden overflow-scroll rounded px-2 ml-4 mt-2 bg-neutral-800"><code class="text-sm">${completionDatabase[key]!.example}</code></div>
       `;
           div.classList.add("px-4", "py-2", "rounded-lg", "w-92");
           return div;
@@ -1000,6 +999,7 @@ export const toposCompletions = (context: CompletionContext) => {
       })),
     };
   }
+  return null
 };
 
 export const soundCompletions = (context: CompletionContext) => {

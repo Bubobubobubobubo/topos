@@ -462,7 +462,7 @@ export class UserAPI {
      *
      * @param code - The code example to play (identifier)
      */
-    let current_universe = this.app.universes[this.app.selected_universe];
+    let current_universe = this.app.universes[this.app.selected_universe]!;
     this.app.exampleIsPlaying = true;
     if (!current_universe.example) {
       current_universe.example = {
@@ -525,7 +525,7 @@ export class UserAPI {
         for (const line of stackLines) {
           if (line.includes("<anonymous>")) {
             const match = line.match(/<anonymous>:(\d+):(\d+)/);
-            if (match)
+            if (match as RegExpMatchArray)
               return {
                 line: parseInt(match[1], 10),
                 column: parseInt(match[2], 10),

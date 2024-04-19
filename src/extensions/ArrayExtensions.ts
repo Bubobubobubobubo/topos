@@ -47,8 +47,7 @@ export const makeArrayExtensions = (api: UserAPI) => {
     const screenWidth = window.innerWidth;
     const zoneWidth = screenWidth / this.length;
     const zoneIndex = Math.floor(mouse_position / zoneWidth);
-
-    return this[zoneIndex];
+    return this[zoneIndex]!;
   };
 
   Array.prototype.mouseY = function <T>(this: T[]): T {
@@ -56,8 +55,7 @@ export const makeArrayExtensions = (api: UserAPI) => {
     const screenHeight = window.innerHeight;
     const zoneHeight = screenHeight / this.length;
     const zoneIndex = Math.floor(mouse_position / zoneHeight);
-
-    return this[zoneIndex];
+    return this[zoneIndex]!;
   };
 
   Array.prototype.square = function(): number[] {
@@ -175,7 +173,7 @@ export const makeArrayExtensions = (api: UserAPI) => {
   Array.prototype.dur = function(...durations: number[]) {
     const timepos = api.app.clock.pulses_since_origin;
     const ppqn = api.ppqn();
-    const adjustedDurations: number[] = this.map(
+    const adjustedDurations = this.map(
       (_, index) => durations[index % durations.length],
     );
     const totalDurationInPulses = adjustedDurations.reduce(
@@ -183,7 +181,7 @@ export const makeArrayExtensions = (api: UserAPI) => {
       (acc, duration) => acc + duration * ppqn,
       0,
     );
-    const loopPosition = timepos % totalDurationInPulses;
+    const loopPosition = timepos % totalDurationInPulses!;
     let cumulativeDuration = 0;
     for (let i = 0; i < this.length; i++) {
       const valueDurationInPulses = (adjustedDurations[i] as any) * ppqn;
@@ -295,12 +293,12 @@ export const makeArrayExtensions = (api: UserAPI) => {
     let result = [];
     for (let i = 0; i < this.length; i++) {
       for (let j = 0; j < amount; j++) {
-        result.push(this[i]);
+        result.push(this[i] as T);
       }
     }
 
     this.length = 0;
-    this.push(...result);
+    this.push(...result as T[]);
     return this;
   };
 
@@ -322,15 +320,15 @@ export const makeArrayExtensions = (api: UserAPI) => {
       // If the index is even, repeat the element
       if (i % 2 === 0) {
         for (let j = 0; j < amount; j++) {
-          result.push(this[i]);
+          result.push(this[i] as T);
         }
       } else {
-        result.push(this[i]);
+        result.push(this[i] as T);
       }
     }
 
     this.length = 0;
-    this.push(...result);
+    this.push(...result as T[]);
     return this;
   };
 
@@ -355,10 +353,10 @@ export const makeArrayExtensions = (api: UserAPI) => {
       // If the index is odd, repeat the element
       if (i % 2 !== 0) {
         for (let j = 0; j < amount; j++) {
-          result.push(this[i]);
+          result.push(this[i] as T);
         }
       } else {
-        result.push(this[i]);
+        result.push(this[i] as T);
       }
     }
 
@@ -442,7 +440,7 @@ Array.prototype.scale = function(
   return this.map((value) => {
     const octaveShift = Math.floor(value / selected_scale.length) * 12;
     return (
-      selected_scale[mod(Math.floor(value), selected_scale.length)] +
+      selected_scale[mod(Math.floor(value), selected_scale.length)]! +
       base_note +
       octaveShift
     );

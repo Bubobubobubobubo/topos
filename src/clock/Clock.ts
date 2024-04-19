@@ -82,7 +82,7 @@ export class Clock {
      * @returns The TimePosition object representing the converted ticks.
      */
 
-    const beatsPerBar = this.app.clock.time_signature[0];
+    const beatsPerBar = this.app.clock.time_signature[0]!;
     const ppqnPosition = ticks % this.app.clock.ppqn;
     const beatNumber = Math.floor(ticks / this.app.clock.ppqn);
     const barNumber = Math.floor(beatNumber / beatsPerBar);
@@ -116,7 +116,7 @@ export class Clock {
     /**
      * Returns the number of beats per bar.
      */
-    return this.time_signature[0];
+    return this.time_signature[0] || 4;
   }
 
   get beats_since_origin(): number {

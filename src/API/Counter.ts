@@ -36,8 +36,8 @@ export const counter = (api: UserAPI) => (name: string | number, limit?: number,
 
 export const i = (app: Editor) => (n?: number) => {
   if (n !== undefined) {
-    app.universes[app.selected_universe].global.evaluations = n;
+    app.universes[app.selected_universe]!.global.evaluations = n;
     return app.universes[app.selected_universe];
   }
-  return app.universes[app.selected_universe].global.evaluations as number;
+  return app.universes[app.selected_universe]!.global.evaluations as number;
 };
