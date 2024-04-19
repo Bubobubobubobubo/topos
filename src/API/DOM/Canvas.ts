@@ -1,6 +1,6 @@
-import { OscilloscopeConfig } from "../DOM/Visuals/Oscilloscope";
+import { OscilloscopeConfig } from "../../DOM/Visuals/Oscilloscope";
 import { ShapeObject, createConicGradient, createLinearGradient, createRadialGradient, drawBackground, drawBox, drawBall, drawBalloid, drawDonut, drawEquilateral, drawImage, drawPie, drawSmiley, drawStar, drawStroke, drawText, drawTriangular } from "../DOM/Visuals/CanvasVisuals";
-import { Editor } from "../main";
+import { Editor } from "../../main";
 
 
 export const loadHydra = (app: Editor) => (): void => {

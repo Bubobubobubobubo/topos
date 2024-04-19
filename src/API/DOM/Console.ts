@@ -1,4 +1,4 @@
-import { type UserAPI } from "./API";
+import { type UserAPI } from "../API";
 
 export const log = (api: UserAPI) => (message: any) => {
   /**

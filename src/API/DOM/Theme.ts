@@ -1,5 +1,5 @@
-import { type Editor } from '../main';
-import colorschemes from "../Editor/colors.json";
+import { type Editor } from '../../main';
+import colorschemes from "../../Editor/colors.json";
 
 export const theme = (app: Editor) => (color_scheme: string): void => {
   app.readTheme(color_scheme);
