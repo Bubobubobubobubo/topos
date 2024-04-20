@@ -1,3 +1,5 @@
+import { blinkScript } from "../DOM/Visuals/Blinkers";
+
 class TransportProcessor extends AudioWorkletProcessor {
   constructor(options) {
     super(options);
@@ -38,6 +40,11 @@ class TransportProcessor extends AudioWorkletProcessor {
       this.bpm = message.data.value;
     } else if (message.data.type === "ppqn") {
       this.ppqn = message.data.value;
+    } else if (message.data.type === "timeSignature") {
+      this.timeSignature = [
+        message.data.num,
+        message.data.den
+      ]
     } else if (message.data.type === "nudge") {
       this.nudge = message.data.value;
     } else if (message.data.type === "timeSignature") {
@@ -64,11 +71,16 @@ class TransportProcessor extends AudioWorkletProcessor {
         const currentBar = Math.floor(this.currentPulsePosition / ticksPerBar);
 
         this.port.postMessage({
+          bpm: this.bpm,
+          ppqn: this.ppqn,
           type: 'time',
           time: currentTime,
           tick: currentTick,
           beat: currentBeat,
-          bar: currentBar
+          bar: currentBar,
+          bpm: this.bpm,
+          num: this.timeSignature[0],
+          den: this.timeSignature[1],
         });
       }
     }

@@ -451,7 +451,7 @@ export class SoundEvent extends AudibleEvent {
       }
       superdough(
         filteredEvent,
-        this.nudge - this.app.clock.deviation,
+        0.2,
         filteredEvent['dur']
       );
     }
@@ -477,7 +477,7 @@ export class SoundEvent extends AudibleEvent {
         address: oscAddress,
         port: oscPort,
         args: event,
-        timetag: Math.round(Date.now() + (this.nudge - this.app.clock.deviation)),
+        timetag: Math.round(Date.now()),
       } as OSCMessage);
     }
   };

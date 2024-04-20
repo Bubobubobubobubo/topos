@@ -1,6 +1,6 @@
 import { tryEvaluate } from "../Evaluator";
 
-export class TransportNode extends AudioWorkletNode {
+export class ClockNode extends AudioWorkletNode {
 
   constructor(context, options, application) {
     super(context, "transport", options);
@@ -13,39 +13,25 @@ export class TransportNode extends AudioWorkletNode {
   /** @type {(this: MessagePort, ev: MessageEvent<any>) => any} */
   handleMessage = (message) => {
     let clock = this.app.clock;
-    const startTime = performance.now();
-  
-  
     if (message.data.type === "time") {
-     console.log(message.data)
-     clock.time_position = {
+      clock.time_position = {
+        bpm: message.data.bpm,
+        ppqn: message.data.ppqn,
+        time: message.data.time,
         tick: message.data.tick,
         beat: message.data.beat,
         bar: message.data.bar,
-        time: message.data.time,
-     }
-    } 
-
-  
-    if (message.data.type === "bang") {
-      if (this.app.clock.running) {
-        clock.time_position = clock.convertTicksToTimeposition(clock.tick);
-        this.app.settings.send_clock ?? this.app.api.MidiConnection.sendMidiClock();
-      
-        tryEvaluate(
-          this.app,
-          this.app.exampleIsPlaying
-            ? this.app.example_buffer
-            : this.app.global_buffer
-        );
-      
-        clock.incrementTick(message.data.bpm);
+        num: message.data.num,
+        den: message.data.den,
       }
-    }
-
-  const endTime = performance.now();
-  const executionTime = endTime - startTime;
-  console.log(`Execution time: ${executionTime}ms`);
+      this.app.settings.send_clock ?? this.app.api.MidiConnection.sendMidiClock();
+      tryEvaluate(
+        this.app,
+        this.app.exampleIsPlaying
+          ? this.app.example_buffer
+          : this.app.global_buffer
+      );
+    } 
 };
 
   start() {
@@ -61,11 +47,16 @@ export class TransportNode extends AudioWorkletNode {
   }
 
   setBPM(bpm) {
+    console.log("Changement du bpm")
     this.port.postMessage({ type: "bpm", value: bpm });
   }
 
   setPPQN(ppqn) {
     this.port.postMessage({ type: "ppqn", value: ppqn });
+  }
+
+  setSignature(num, den) {
+    this.port.postMessage({ type: "timeSignature", num: num, den: den });
   }
 
   setNudge(nudge) {
