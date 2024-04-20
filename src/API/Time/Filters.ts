@@ -53,15 +53,15 @@ export const beat = (app: Editor) => (n: number | number[] = 1, nudge: number = 
   const nArray = Array.isArray(n) ? n : [n];
   const results: boolean[] = nArray.map(
     (value) =>
-      (app.clock.pulses_since_origin - Math.round(nudge * app.clock.ppqn)) %
-      Math.round(value * app.clock.ppqn) === 0,
+      (app.clock.time_position.grain - Math.round(nudge * app.clock.time_position.ppqn)) %
+      Math.round(value * app.clock.time_position.ppqn) === 0,
   );
   return results.some((value) => value === true);
 };
 
 export const bar = (app: Editor) => (n: number | number[] = 1, nudge: number = 0): boolean => {
   const nArray = Array.isArray(n) ? n : [n];
-  const barLength = (app.clock.time_signature?.[1] ?? 4) * app.clock.ppqn;
+  const barLength = app.clock.time_position.num * app.clock.ppqn;
   const nudgeInPulses = Math.floor(nudge * barLength);
   const results: boolean[] = nArray.map(
     (value) =>
@@ -82,7 +82,7 @@ export const pulse = (app: Editor) => (n: number | number[] = 1, nudge: number =
 export const tick = (app: Editor) => (tick: number | number[], offset: number = 0): boolean => {
   const nArray = Array.isArray(tick) ? tick : [tick];
   const results: boolean[] = nArray.map(
-    (value) => app.clock.time_position.pulse === value + offset,
+    (value) => app.clock.time_position.tick === value + offset,
   );
   return results.some((value) => value === true);
 };
@@ -111,7 +111,7 @@ export const flipbar = (app: Editor) => (chunk: number = 1): boolean => {
 
 export const onbar = (app: Editor) => (
   bars: number[] | number,
-  n: number = app.clock.time_signature[0] || 4,
+  n: number = app.clock.time_position.num,
 ): boolean => {
   let current_bar = (app.clock.time_position.bar % n) + 1;
   return typeof bars === "number"

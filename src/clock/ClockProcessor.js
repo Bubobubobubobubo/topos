@@ -1,5 +1,3 @@
-import { blinkScript } from "../DOM/Visuals/Blinkers";
-
 class TransportProcessor extends AudioWorkletProcessor {
   constructor(options) {
     super(options);
@@ -13,6 +11,7 @@ class TransportProcessor extends AudioWorkletProcessor {
     this.currentPulsePosition = 0;
     this.startTime = 0;
     this.pauseTime = 0;
+    this.grain = 0;
     this.totalPauseTime = 0;
   }
 
@@ -59,6 +58,7 @@ class TransportProcessor extends AudioWorkletProcessor {
       const currentPulsePosition = Math.round(beatNumber * this.ppqn);
 
       if (currentPulsePosition > this.currentPulsePosition) {
+        this.grain += 1;
         this.currentPulsePosition = currentPulsePosition;
 
         // Calculate current tick, beat, and bar
@@ -81,6 +81,7 @@ class TransportProcessor extends AudioWorkletProcessor {
           bpm: this.bpm,
           num: this.timeSignature[0],
           den: this.timeSignature[1],
+          grain: this.grain,
         });
       }
     }

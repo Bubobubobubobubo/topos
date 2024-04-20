@@ -23,6 +23,7 @@ export class ClockNode extends AudioWorkletNode {
         bar: message.data.bar,
         num: message.data.num,
         den: message.data.den,
+        grain: message.data.grain,
       }
       this.app.settings.send_clock ?? this.app.api.MidiConnection.sendMidiClock();
       tryEvaluate(

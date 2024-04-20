@@ -3,14 +3,9 @@ import TransportProcessor from "./ClockProcessor?worker&url";
 import { Editor } from "../main";
 
 export interface TimePosition {
-  bpm: number;
-  ppqn: number;
-  time: number;
-  tick: number;
-  beat: number;
-  bar: number;
-  num: number;
-  den: number;
+  bpm: number; ppqn: number; time: number;
+  tick: number; beat: number; bar: number;
+  num: number; den: number; grain: number;
 }
 
 export class Clock {
@@ -31,6 +26,7 @@ export class Clock {
       bar: 0, 
       num: 0,
       den: 0,
+      grain: 0,
     };
     this.transportNode = null;
     this.ctx = ctx;
@@ -46,6 +42,10 @@ export class Clock {
       });
   }
 
+  get grain(): number {
+    return this.time_position.grain;
+  }
+
   get ticks_before_new_bar(): number {
     /**
      * This function returns the number of ticks separating the current moment
@@ -53,9 +53,9 @@ export class Clock {
      *
      * @returns number of ticks until next bar
      */
-    const ticksMissingFromBeat = this.ppqn - this.time_position.tick;
+    const ticksMissingFromBeat = this.time_position.ppqn - this.time_position.tick;
     const beatsMissingFromBar = this.beats_per_bar - this.time_position.beat;
-    return beatsMissingFromBar * this.ppqn + ticksMissingFromBeat;
+    return beatsMissingFromBar * this.time_position.ppqn + ticksMissingFromBeat;
   }
 
   get next_beat_in_ticks(): number {
@@ -65,7 +65,7 @@ export class Clock {
      *
      * @returns number of ticks until next beat
      */
-    return this.app.clock.pulses_since_origin + this.time_position.tick;
+    return this.time_position.grain + this.time_position.tick;
   }
 
   get beats_per_bar(): number {
@@ -82,15 +82,6 @@ export class Clock {
      * @returns number of beats since origin
      */
     return Math.floor(this.time_position.tick / this.ppqn)
-  }
-
-  get pulses_since_origin(): number {
-    /**
-     * Returns the number of pulses since the origin.
-     *
-     * @returns number of pulses since origin
-     */
-    return this.time_position.tick;
   }
 
   get pulse_duration(): number {
@@ -169,6 +160,7 @@ export class Clock {
   }
 
   public stop(): void {
+    this.app.api.MidiConnection.sendStopMessage();
     this.transportNode?.stop() 
   }
 
