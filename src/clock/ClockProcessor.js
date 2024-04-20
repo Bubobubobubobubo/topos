@@ -37,6 +37,8 @@ class TransportProcessor extends AudioWorkletProcessor {
       this.currentPulsePosition = 0;
     } else if (message.data.type === "bpm") {
       this.bpm = message.data.value;
+      this.startTime = currentTime;
+      this.currentPulsePosition = 0;
     } else if (message.data.type === "ppqn") {
       this.ppqn = message.data.value;
     } else if (message.data.type === "timeSignature") {

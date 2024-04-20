@@ -162,7 +162,7 @@ export const makeArrayExtensions = (api: UserAPI) => {
 
   Array.prototype.beat = function(divisor: number = 1) {
     const chunk_size = divisor;
-    const timepos = api.app.clock.pulses_since_origin;
+    const timepos = api.app.clock.grain;
     const slice_count = Math.floor(
       timepos / Math.floor(chunk_size * api.ppqn()),
     );
@@ -171,7 +171,7 @@ export const makeArrayExtensions = (api: UserAPI) => {
   Array.prototype.b = Array.prototype.beat;
 
   Array.prototype.dur = function(...durations: number[]) {
-    const timepos = api.app.clock.pulses_since_origin;
+    const timepos = api.app.clock.grain;
     const ppqn = api.ppqn();
     const adjustedDurations = this.map(
       (_, index) => durations[index % durations.length],

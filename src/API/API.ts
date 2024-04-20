@@ -21,7 +21,7 @@ import { type SkipEvent } from '../Classes/SkipEvent';
 import { OscilloscopeConfig } from "../DOM/Visuals/Oscilloscope";
 import { Player } from "../Classes/ZPlayer";
 import { InputOptions } from "../Classes/ZPlayer";
-import { type ShapeObject } from "../DOM/Visuals/CanvasVisuals";
+import { type ShapeObject } from "../API/DOM/Canvas";
 import { nearScales } from "zifferjs";
 import { MidiConnection } from "../IO/MidiConnection";
 import { evaluateOnce } from "../Evaluator";
@@ -112,7 +112,6 @@ export class UserAPI {
   noteX: () => number;
   noteY: () => number;
   tempo: (n?: number | undefined) => number;
-  bpb: (n?: number | undefined) => number;
   ppqn: (n?: number | undefined) => number;
   time_signature: (numerator: number, denominator: number) => void;
   theme: (color_scheme: string) => void;
@@ -282,7 +281,6 @@ export class UserAPI {
     this.stop = Transport.stop(this);
     this.silence = Transport.silence(this);
     this.tempo = Transport.tempo(this.app);
-    this.bpb = Transport.bpb(this.app);
     this.ppqn = Transport.ppqn(this.app);
     this.time_signature = Transport.time_signature(this.app);
     this.mouseX = Mouse.mouseX(this.app);
@@ -527,8 +525,10 @@ export class UserAPI {
             const match = line.match(/<anonymous>:(\d+):(\d+)/);
             if (match as RegExpMatchArray)
               return {
+                // @ts-ignore
                 line: parseInt(match[1], 10),
-                column: parseInt(match[2], 10),
+                // @ts-ignore
+                column: parseInt(match[2]!, 10),
               };
           }
         }
@@ -583,13 +583,13 @@ export class UserAPI {
     if (quantization.length === 0) {
       return value;
     }
-    let closest = quantization[0];
+    let closest: number | undefined = quantization[0];
     quantization.forEach((q) => {
-      if (Math.abs(q - value) < Math.abs(closest - value)) {
+      if (Math.abs(q - value) < Math.abs(closest! - value)) {
         closest = q;
       }
     });
-    return closest;
+    return closest!;
   };
   quant = this.quantize;
 
@@ -621,7 +621,7 @@ export class UserAPI {
 
   public cue = (functionName: string | Function): void => {
     functionName = typeof functionName === "function" ? functionName.name : functionName;
-    this.cueTimes[functionName] = this.app.clock.pulses_since_origin;
+    this.cueTimes[functionName] = this.app.clock.grain;
   };
 
   onmousemove = (e: MouseEvent) => {

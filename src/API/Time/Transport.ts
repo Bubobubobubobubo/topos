@@ -39,20 +39,6 @@ export const tempo = (app: Editor) => (n?: number): number => {
   return n;
 };
 
-export const bpb = (app: Editor) => (n?: number): number => {
-  /**
-   * Sets or returns the number of beats per bar.
-   */
-  if (n === undefined) return app.clock.time_signature[0] || 4;
-
-  if (n >= 1) {
-    app.clock.time_signature[0] = n;
-  } else {
-    console.error("Beats per bar must be at least 1.");
-  }
-  return n;
-};
-
 export const ppqn = (app: Editor) => (n?: number): number => {
   /**
    * Sets or returns the number of pulses per quarter note.
@@ -74,7 +60,7 @@ export const time_signature = (app: Editor) => (numerator: number, denominator: 
   if (numerator < 1 || denominator < 1) {
     console.error("Time signature values must be at least 1.");
   } else {
-    app.clock.time_signature = [numerator, denominator];
+    app.clock.setSignature(numerator, denominator);
   }
 };
 
@@ -83,11 +69,11 @@ export const cbar = (app: Editor) => (): number => {
 };
 
 export const ctick = (app: Editor) => (): number => {
-  return app.clock.tick + 1;
+  return app.clock.grain + 1;
 };
 
 export const cpulse = (app: Editor) => (): number => {
-  return app.clock.time_position.pulse + 1;
+  return app.clock.time_position.tick + 1;
 };
 
 export const cbeat = (app: Editor) => (): number => {
@@ -99,15 +85,15 @@ export const ebeat = (app: Editor) => (): number => {
 };
 
 export const epulse = (app: Editor) => (): number => {
-  return app.clock.pulses_since_origin + 1;
+  return app.clock.grain + 1;
 };
 
 export const nominator = (app: Editor) => (): number => {
-  return app.clock.time_signature[0] || 4;
+  return app.clock.time_position.num;
 };
 
 export const meter = (app: Editor) => (): number => {
-  return app.clock.time_signature[1] || 4;
+  return app.clock.time_position.den;
 };
 
 export const denominator = meter;

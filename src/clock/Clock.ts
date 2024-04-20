@@ -132,6 +132,22 @@ export class Clock {
 
     return remainingTime;
   }
+  
+  public convertTicksToTimeposition(n: number): TimePosition {
+    /**
+     * TODO: probably incorrect
+     */
+    const ppqn = this.time_position.ppqn;
+    const bpm = this.time_position.bpm;
+    const num = this.time_position.num;
+    const den = this.time_position.den;
+    const tick = n % ppqn;
+    const grain = n;
+    const beat = Math.floor(n / ppqn) % num;
+    const bar = Math.floor(n / ppqn / num);
+    const time = n * this.pulse_duration;
+    return { bpm, ppqn, time, tick, beat, bar, num, den, grain };
+  }
 
   public convertPulseToSecond(n: number): number {
     /**
@@ -155,7 +171,7 @@ export class Clock {
     this.transportNode?.pause() 
   }
 
-  public signature(num: number, den: number): void {
+  public setSignature(num: number, den: number): void {
     this.transportNode?.setSignature(num, den);
   }
 

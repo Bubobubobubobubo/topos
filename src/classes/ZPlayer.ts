@@ -93,7 +93,7 @@ export class Player extends AbstractEvent {
 
   updateLastCallTime(): void {
     if (this.notStarted() || this.played) {
-      this.lastCallTime = this.app.clock.pulses_since_origin;
+      this.lastCallTime = this.app.clock.grain;
       this.played = false;
     }
   }
@@ -121,11 +121,11 @@ export class Player extends AbstractEvent {
   };
 
   origin = (): number => {
-    return this.app.clock.pulses_since_origin + 1;
+    return this.app.clock.grain + 1;
   };
 
   pulse = (): number => {
-    return this.app.clock.time_position.pulse;
+    return this.app.clock.time_position.tick;
   };
 
   beat = (): number => {
@@ -143,7 +143,7 @@ export class Player extends AbstractEvent {
   // Check if it's time to play the event
   areWeThereYet = (): boolean => {
     // If clock has stopped
-    if (this.app.clock.pulses_since_origin < this.lastCallTime) {
+    if (this.app.clock.grain < this.lastCallTime) {
       this.app.api.resetAllFromCache();
     }
 
@@ -171,11 +171,11 @@ export class Player extends AbstractEvent {
     this.index = areWeThereYet ? this.index + 1 : this.index;
 
     if (areWeThereYet && this.notStarted()) {
-      this.initCallTime = this.app.clock.pulses_since_origin;
+      this.initCallTime = this.app.clock.grain;
     }
 
     if (this.atTheBeginning()) {
-      this.startCallTime = this.app.clock.pulses_since_origin;
+      this.startCallTime = this.app.clock.grain;
     }
 
     return areWeThereYet;
@@ -470,7 +470,7 @@ export class Player extends AbstractEvent {
     if(typeof value === "string") {
       const cueTime = this.app.api.cueTimes[value];
       this.cueName = value;
-      if(cueTime && this.app.clock.pulses_since_origin <= cueTime) {
+      if(cueTime && this.app.clock.grain <= cueTime) {
         this.waitTime = cueTime;
       } else {
           this.waitTime = -1;
@@ -485,7 +485,7 @@ export class Player extends AbstractEvent {
     if(typeof value === "string") {
       const cueTime = this.app.api.cueTimes[value];
       this.cueName = value;
-      if(cueTime && this.app.clock.pulses_since_origin <= cueTime) {
+      if(cueTime && this.app.clock.grain <= cueTime) {
         this.waitTime = cueTime;
       } else if(this.atTheBeginning()){
           this.waitTime = -1;
@@ -521,7 +521,7 @@ export class Player extends AbstractEvent {
       return this;
     }
     if (this.atTheBeginning() && this.notStarted()) {
-      const origin = this.app.clock.pulses_since_origin;
+      const origin = this.app.clock.grain;
       if (origin > 0) {
         const syncName = typeof value === "function" ? value.name : value;
         const syncPattern = this.app.api.patternCache.get(syncName) as Player;

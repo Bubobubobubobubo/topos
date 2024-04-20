@@ -65,7 +65,7 @@ export const bar = (app: Editor) => (n: number | number[] = 1, nudge: number = 0
   const nudgeInPulses = Math.floor(nudge * barLength);
   const results: boolean[] = nArray.map(
     (value) =>
-      (app.clock.pulses_since_origin - nudgeInPulses) %
+      (app.clock.grain - nudgeInPulses) %
       Math.floor(value * barLength) === 0,
   );
   return results.some((value) => value === true);
@@ -74,7 +74,7 @@ export const bar = (app: Editor) => (n: number | number[] = 1, nudge: number = 0
 export const pulse = (app: Editor) => (n: number | number[] = 1, nudge: number = 0): boolean => {
   const nArray = Array.isArray(n) ? n : [n];
   const results: boolean[] = nArray.map(
-    (value) => (app.clock.pulses_since_origin - nudge) % value === 0,
+    (value) => (app.clock.grain - nudge) % value === 0,
   );
   return results.some((value) => value === true);
 };
@@ -95,7 +95,7 @@ export const dur = (app: Editor) => (n: number | number[]): boolean => {
 
 export const flip = (app: Editor) => (chunk: number, ratio: number = 50): boolean => {
   let realChunk = chunk * 2;
-  const time_pos = app.clock.pulses_since_origin;
+  const time_pos = app.clock.grain;
   const full_chunk = Math.floor(realChunk * app.clock.ppqn);
   const threshold = Math.floor((ratio / 100) * full_chunk);
   const pos_within_chunk = time_pos % full_chunk;
@@ -137,7 +137,7 @@ export const onbeat = (api: UserAPI) => (...beat: number[]): boolean => {
 
 export const oncount = (app: Editor) => (beats: number[] | number, count: number): boolean => {
   if (typeof beats === "number") beats = [beats];
-  const origin = app.clock.pulses_since_origin;
+  const origin = app.clock.grain;
   let final_pulses: boolean[] = [];
   beats.forEach((b) => {
     b = b < 1 ? 0 : b - 1;

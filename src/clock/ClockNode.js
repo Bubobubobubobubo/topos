@@ -48,7 +48,6 @@ export class ClockNode extends AudioWorkletNode {
   }
 
   setBPM(bpm) {
-    console.log("Changement du bpm")
     this.port.postMessage({ type: "bpm", value: bpm });
   }
 
