@@ -23,7 +23,7 @@ export class MidiEvent extends AudibleEvent {
 
   constructor(
     input: MidiParams,
-    public app: Editor,
+    app: Editor,
   ) {
     super(app);
     this.values = input;
@@ -57,11 +57,11 @@ export class MidiEvent extends AudibleEvent {
   };
 
   add = (value: number): this => {
-    this.values.note += value;
+    this.values["note"] += value;
     return this;
   };
 
-  modify = (func: Function): this => {
+  override modify = (func: Function): this => {
     const funcResult = func(this);
     if (funcResult instanceof Object) {
       return funcResult;
@@ -83,7 +83,7 @@ export class MidiEvent extends AudibleEvent {
     return this;
   };
 
-  update = (): this => {
+  override update = (): this => {
     const filteredValues = filterObject(this.values, [
       "key",
       "pitch",
@@ -98,20 +98,20 @@ export class MidiEvent extends AudibleEvent {
 
     events.forEach((soundEvent) => {
       const resolvedPitchClass = resolvePitchClass(
-        (soundEvent.key || "C4"),
-        (soundEvent.originalPitch || soundEvent.pitch || 0),
-        (soundEvent.parsedScale || soundEvent.scale || "MAJOR"),
-        (soundEvent.addedOctave || 0)
+        (soundEvent['key'] || "C4"),
+        (soundEvent['originalPitch'] || soundEvent['pitch'] || 0),
+        (soundEvent['parsedScale'] || soundEvent['scale'] || "MAJOR"),
+        (soundEvent['addedOctave'] || 0)
       );
-      soundEvent.note = resolvedPitchClass.note;
-      soundEvent.pitch = resolvedPitchClass.pitch;
-      soundEvent.octave = resolvedPitchClass.octave;
+      soundEvent['note'] = resolvedPitchClass.note;
+      soundEvent['pitch'] = resolvedPitchClass.pitch;
+      soundEvent['octave'] = resolvedPitchClass.octave;
     });
 
     const newArrays = arrayOfObjectsToObjectWithArrays(events) as MidiParams;
     
-    this.values.note = maybeAtomic(newArrays.note);
-    if (newArrays.bend) this.values.bend = maybeAtomic(newArrays.bend);
+    this.values['note'] = maybeAtomic(newArrays.note);
+    if (newArrays.bend) this.values['bend'] = maybeAtomic(newArrays.bend);
     return this;
   };
 

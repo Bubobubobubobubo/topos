@@ -139,7 +139,7 @@ export const runOscilloscope = (
 
     canvasCtx.fillStyle = "rgba(0, 0, 0, 0)";
     canvasCtx.fillRect(0, 0, WIDTH, HEIGHT);
-    if (app.clock.time_position.pulse % app.osc.refresh == 0) {
+    if (app.clock.time_position.tick % app.osc.refresh == 0) {
       canvasCtx.clearRect(
         -OFFSET_WIDTH,
         -OFFSET_HEIGHT,
@@ -150,14 +150,14 @@ export const runOscilloscope = (
     canvasCtx.lineWidth = app.osc.thickness;
 
     if (app.osc.color === "random") {
-      if (app.clock.time_position.pulse % 16 === 0) {
+      if (app.clock.time_position.tick % 16 === 0) {
         canvasCtx.strokeStyle = `hsl(${Math.random() * 360}, 100%, 50%)`;
       }
     } else {
       canvasCtx.strokeStyle = app.osc.color;
     }
     const remainingRefreshTime =
-      app.clock.time_position.pulse % app.osc.refresh;
+      app.clock.time_position.tick % app.osc.refresh;
     const opacityRatio = 1 - remainingRefreshTime / app.osc.refresh;
     canvasCtx.globalAlpha = opacityRatio;
     canvasCtx.beginPath();

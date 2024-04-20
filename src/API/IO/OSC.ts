@@ -1,8 +1,7 @@
 import { sendToServer, type OSCMessage } from "../../IO/OSC";
-import { Editor } from "../../main";
 import { oscMessages } from "../../IO/OSC";
 
-export const osc = (app: Editor) => (address: string, port: number, ...args: any[]): void => {
+export const osc = () => (address: string, port: number, ...args: any[]): void => {
   /**
    * Sends an OSC message to the server.
    */
@@ -10,7 +9,7 @@ export const osc = (app: Editor) => (address: string, port: number, ...args: any
     address: address,
     port: port,
     args: args,
-    timetag: Math.round(Date.now() + (app.clock.nudge - app.clock.deviation)),
+    timetag: Math.round(Date.now()),
   } as OSCMessage);
 };
 
