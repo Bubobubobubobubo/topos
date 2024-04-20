@@ -1,4 +1,5 @@
 import { UserAPI } from "../API/API";
+import { MidiEvent } from "../Classes/MidiEvent";
 import { AppSettings } from "../Editor/FileManagement";
 
 export type MidiNoteEvent = {
@@ -297,36 +298,37 @@ export class MidiConnection {
       const input = this.midiInputs[inputIndex];
       if (input && !input.onmidimessage) {
         input.onmidimessage = (event: Event) => {
-          const message = event as MIDIMessageEvent;
+          // @ts-ignore
+          const message: MidiEvent = event as MIDIMessageEvent;
           /* MIDI CLOCK */
           if (input.name === this.settings.midi_clock_input) {
-            if (message.data![0] === 0xf8) {
+            if (message['data'][0] === 0xf8) {
               if (this.skipOnError > 0) {
                 this.skipOnError -= 1;
               } else {
                 this.onMidiClock(event.timeStamp);
               }
-            } else if (message.data![0] === 0xfa) {
+            } else if (message["data"]![0] === 0xfa) {
               console.log("MIDI start received");
               this.api.stop();
               this.api.play();
-            } else if (message.data![0] === 0xfc) {
+            } else if (message["data"]![0] === 0xfc) {
               console.log("MIDI stop received");
               this.api.pause();
-            } else if (message.data![0] === 0xfb) {
+            } else if (message["data"]![0] === 0xfb) {
               console.log("MIDI continue received");
               this.api.play();
-            } else if (message.data![0] === 0xfe) {
+            } else if (message["data"]![0] === 0xfe) {
               console.log("MIDI active sensing received");
             }
           }
           /* DEFAULT MIDI INPUT */
           if (input.name === this.settings.default_midi_input) {
             // If message is one of note ons
-            if (message.data![0] >= 0x90 && message.data![0] <= 0x9f) {
-              const channel = message.data![0] - 0x90 + 1;
-              const note = message.data![1];
-              const velocity = message.data![2];
+            if (message["data"][0] >= 0x90 && message["data"]![0] <= 0x9f) {
+              const channel = message["data"]![0] - 0x90 + 1;
+              const note = message["data"]![1];
+              const velocity = message["data"]![2];
 
               this.lastNote = {
                 note,
@@ -367,24 +369,24 @@ export class MidiConnection {
             }
 
             // If note off
-            if (message.data![0] >= 0x80 && message.data![0] <= 0x8f) {
-              const channel = message.data![0] - 0x80 + 1;
-              const note = message.data![1];
+            if (message["data"]![0] >= 0x80 && message["data"]![0] <= 0x8f) {
+              const channel = message["data"]![0] - 0x80 + 1;
+              const note = message["data"]![1];
               this.removeFromActiveNotes(note, channel);
             }
 
             // If message is one of CCs
-            if (message.data![0] >= 0xb0 && message.data![0] <= 0xbf) {
-              const channel = message.data![0] - 0xb0 + 1;
-              const control = message.data![1];
-              const value = message.data![2];
+            if (message["data"]![0] >= 0xb0 && message["data"]![0] <= 0xbf) {
+              const channel = message["data"]![0] - 0xb0 + 1;
+              const control = message["data"]![1];
+              const value = message["data"]![2];
 
               this.lastCC[control] = value;
               if (this.lastCCInChannel[channel]) {
-                this.lastCCInChannel[channel][control] = value;
+                this.lastCCInChannel[channel]![control] = value;
               } else {
                 this.lastCCInChannel[channel] = {};
-                this.lastCCInChannel[channel][control] = value;
+                this.lastCCInChannel[channel]![control] = value;
               }
 
               //console.log(`CC: ${control} VALUE: ${value} CHANNEL: ${channel}`);

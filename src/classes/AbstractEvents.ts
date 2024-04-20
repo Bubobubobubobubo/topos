@@ -211,12 +211,12 @@ export class AbstractEvent {
      * @param func - The function to be applied to the Event
      * @returns The transformed Event
      */
-    return this.modify(func).update();
+    return this.modify(func)["update"]();
   };
 
   mod = (value: number): AbstractEvent => {
-    this.values.originalPitch = safeMod(this.values.originalPitch, value);
-    return this.update();
+    this.values["originalPitch"] = safeMod(this.values["originalPitch"], value);
+    return this["update"]();
   }
 
   noteLength = (
@@ -230,17 +230,18 @@ export class AbstractEvent {
       value = Array.isArray(value) ? value.concat(kwargs) : [value, ...kwargs];
     }
     if (Array.isArray(value)) {
-      this.values.dur = value.map((v) =>
+      this.values["dur"] = value.map((v) =>
         this.app.clock.convertPulseToSecond(v * 4 * this.app.clock.ppqn),
       );
     } else {
-      this.values.dur = this.app.clock.convertPulseToSecond(
+      this.values["dur"] = this.app.clock.convertPulseToSecond(
         value * 4 * this.app.clock.ppqn,
       );
     }
-    if(this.current) {
-      value = Array.isArray(value) ? value[this.index%value.length] : value;
-      this.current.duration = value;
+    if(this["current"]) {
+      // @ts-ignore
+      value = Array.isArray(value) ? value[this["index"]%value.length] : value;
+      this["current"].duration = value;
     }
     return this;
   };
@@ -253,7 +254,9 @@ export class AbstractEvent {
       const n: number[] = [];
       sound.forEach((str) => {
         const parts = (str as string).split(":");
-        s.push(parts[0]);
+        if (parts[0] !== undefined) {
+          s.push(parts[0]);
+        }
         if (parts[1]) {
           n.push(parseInt(parts[1]));
         }
@@ -273,7 +276,7 @@ export class AbstractEvent {
       if (sound.includes(":")) {
         const vals = sound.split(":");
         const s = vals[0];
-        const n = parseInt(vals[1]);
+        const n = parseInt(vals[1] ?? '');
         return {
           s,
           n,
@@ -472,7 +475,7 @@ export abstract class AudibleEvent extends AbstractEvent {
     return this;
   }
 
-  public clear = () => {
+  public override clear = () => {
     this.app.api.clear();
     return this;
   }
@@ -524,8 +527,8 @@ export abstract class AudibleEvent extends AbstractEvent {
 
   runChain = (): this => {
     // chainAll is defined using all() in the API
-    if("chainAll" in this && typeof this.chainAll === "function") {
-      this.values = this.chainAll().values;
+    if("chainAll" in this && typeof this["chainAll"] === "function") {
+      this.values = this["chainAll"]().values;
     }
     return this;
   }

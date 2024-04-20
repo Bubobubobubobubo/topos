@@ -8,7 +8,6 @@
       "DOM.Iterable"
     ],
     "skipLibCheck": true,
-    // Strict mode (9)
     "strict": true,
     "alwaysStrict": true,
     "noImplicitAny": true,
@@ -32,16 +31,19 @@
     "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
+    "maxNodeModuleJsDepth": 0,
     "noEmit": true,
-    // Others (5)
+    // Others
     "noUncheckedIndexedAccess": true,
     "noPropertyAccessFromIndexSignature": true,
     "noFallthroughCasesInSwitch": true,
-    "exactOptionalPropertyTypes": true,
     "forceConsistentCasingInFileNames": true
   },
   "include": [
-    "src",
+    "src/**/*",
     "../definitions/"
+  ],
+  "exclude": [
+    "node_modules/**/*",
   ]
 }

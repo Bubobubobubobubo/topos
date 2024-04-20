@@ -1,3 +1,4 @@
+// @ts-ignore
 import { ClockNode } from "./ClockNode";
 import TransportProcessor from "./ClockProcessor?worker&url";
 import { Editor } from "../main";

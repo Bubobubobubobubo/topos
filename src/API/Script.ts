@@ -26,15 +26,15 @@ export const delete_script = (app: Editor) => (script: number): void => {
 };
 
 export const copy_script = (app: Editor) => (from: number, to: number): void => {
+  //@ts-ignore
   app.universes[app.selected_universe].locals[to] = {
     ...app.universes[app.selected_universe]!.locals[from],
   };
 };
 
 export const copy_universe = (app: Editor) => (from: string, to: string): void => {
-  app.universes[to] = {
-    ...app.universes[from],
-  };
+  //@ts-ignore
+  app.universes[to] = { ...app.universes[from], };
 };
 
 export const delete_universe = (app: Editor) => (universe: string): void => {

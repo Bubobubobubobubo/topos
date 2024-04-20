@@ -65,29 +65,29 @@ export const getCodeMirrorTheme = (theme: { [key: string]: string }): Extension 
     selection_background = theme["selection_background"];
   const toposTheme = EditorView.theme({
     "&": {
-      color: background,
+      color: background || "",
       backgroundColor: "transparent",
       fontSize: "24px",
       fontFamily: "IBM Plex Mono",
     },
     ".cm-content": {
-      caretColor: cursor,
+      caretColor: cursor || '',
       fontFamily: "IBM Plex Mono",
     },
     ".cm-line": {
       color: `${brightwhite}`,
     },
     ".cm-cursor, .cm-dropCursor": {
-      borderLeftColor: cursor,
+      borderLeftColor: cursor || 'white',
     },
     "&.cm-focused .cm-selectionBackground, .cm-selectionBackground, .cm-content ::selection":
     {
-      backgroundColor: brightwhite,
+      backgroundColor: brightwhite || 'black',
       border: `1px solid ${brightwhite}`,
     },
     ".cm-panels": {
-      backgroundColor: selection_background,
-      color: red,
+      backgroundColor: selection_background || 'gray',
+      color: red || '',
     },
     ".cm-panels.cm-panels-top": { borderBottom: "2px solid black" },
     ".cm-panels.cm-panels-bottom": { borderTop: "2px solid black" },
@@ -96,30 +96,30 @@ export const getCodeMirrorTheme = (theme: { [key: string]: string }): Extension 
       outline: `1px solid ${magenta}`,
     },
     ".cm-searchMatch.cm-searchMatch-selected": {
-      backgroundColor: red,
+      backgroundColor: red || '',
     },
     ".cm-activeLine": {
-      backgroundColor: `rgba(${(parseInt(selection_background.slice(1, 3), 16))}, ${(parseInt(selection_background.slice(3, 5), 16))}, ${(parseInt(selection_background.slice(5, 7), 16))}, 0.25)`,
+      backgroundColor: `rgba(${(parseInt(selection_background!.slice(1, 3), 16))}, ${(parseInt(selection_background!.slice(3, 5), 16))}, ${(parseInt(selection_background!.slice(5, 7), 16))}, 0.25)`,
     },
     ".cm-selectionMatch": {
-      backgroundColor: `rgba(${(parseInt(selection_background.slice(1, 3), 16))}, ${(parseInt(selection_background.slice(3, 5), 16))}, ${(parseInt(selection_background.slice(5, 7), 16))}, 0.25)`,
+      backgroundColor: `rgba(${(parseInt(selection_background!.slice(1, 3), 16))}, ${(parseInt(selection_background!.slice(3, 5), 16))}, ${(parseInt(selection_background!.slice(5, 7), 16))}, 0.25)`,
       outline: `1px solid ${brightwhite}`,
     },
     "&.cm-focused .cm-matchingBracket": {
-      color: `rgba(${(parseInt(selection_background.slice(1, 3), 16))}, ${(parseInt(selection_background.slice(3, 5), 16))}, ${(parseInt(selection_background.slice(5, 7), 16))}, 0.25)`,
+      color: `rgba(${(parseInt(selection_background!.slice(1, 3), 16))}, ${(parseInt(selection_background!.slice(3, 5), 16))}, ${(parseInt(selection_background!.slice(5, 7), 16))}, 0.25)`,
     },
     "&.cm-focused .cm-nonmatchingBracket": {
-      color: yellow,
+      color: yellow || '',
     },
 
     ".cm-gutters": {
       //backgroundColor: base00,
       backgroundColor: "transparent",
-      color: foreground,
+      color: foreground || '',
     },
     ".cm-activeLineGutter": {
-      backgroundColor: selection_background,
-      color: selection_foreground,
+      backgroundColor: selection_background || '',
+      color: selection_foreground || '',
     },
 
     ".cm-foldPlaceholder": {
@@ -128,17 +128,17 @@ export const getCodeMirrorTheme = (theme: { [key: string]: string }): Extension 
     },
     ".cm-tooltip": {
       border: "none",
-      backgroundColor: background,
+      backgroundColor: background || '',
     },
     ".cm-tooltip .cm-tooltip-arrow:before": {},
     ".cm-tooltip .cm-tooltip-arrow:after": {
-      borderTopColor: background,
-      borderBottomColor: background,
+      borderTopColor: background || '',
+      borderBottomColor: background || '',
     },
     ".cm-tooltip-autocomplete": {
       "& > ul > li[aria-selected]": {
-        backgroundColor: background,
-        color: brightwhite,
+        backgroundColor: background || '',
+        color: brightwhite || '',
       },
     },
   },
@@ -343,7 +343,7 @@ export const installEditor = (app: Editor) => {
       ),
       keymap.of([indentWithTab]),
     ],
-    doc: app.universes[app.selected_universe].global.candidate,
+    doc: app.universes[app.selected_universe]!.global.candidate,
   });
   app.view = new EditorView({
     parent: document.getElementById("editor") as HTMLElement,

@@ -395,7 +395,7 @@ export class UserAPI {
     this.almostAlways = Probability.almostAlways(this);
     this.always = Probability.always();
     this.dice = Probability.dice(this);
-    this.osc = OSC.osc(this.app);
+    this.osc = OSC.osc();
     this.getOSC = OSC.getOSC();
     this.gif = Canvas.gif(this.app);
     this.scope = Canvas.scope(this.app);
