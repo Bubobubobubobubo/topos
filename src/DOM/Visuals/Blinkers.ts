@@ -1,5 +1,10 @@
 import { type Editor } from "../../main";
 
+const HORIZONTALOFFSETPERCENT = 0.025;
+const VERTICALOFFSETPERCENT = 0.025;
+const RADIUSPERCENT = 0.010;
+const SHIFTPERCENT = 0.025;
+
 export const drawCircle = (
   /**
    * Draw a circle at a specific position on the canvas.
@@ -17,6 +22,7 @@ export const drawCircle = (
   // @ts-ignore
   const canvas: HTMLCanvasElement = app.interface.feedback;
   const ctx = canvas.getContext("2d");
+  console.log(`Canvas size: ${canvas.width}x${canvas.height}`);
   if (!ctx) return;
 
   ctx.beginPath();
@@ -42,34 +48,32 @@ export const blinkScript = (
   // @ts-ignore
   const ctx = app.interface.feedback.getContext("2d");
 
-  /**
-   * Draws a circle at a given shift.
-   * @param shift - The pixel distance from the origin.
-   */
   const _drawBlinker = (shift: number) => {
-    const horizontalOffset = 50;
+    const horizontalOffsetPercent = HORIZONTALOFFSETPERCENT;
+    const verticalOffsetPercent = VERTICALOFFSETPERCENT;
+    const radiusPercent = RADIUSPERCENT;
     drawCircle(
       app,
-      horizontalOffset + shift,
-      app.interface.feedback.clientHeight - 15,
-      8,
+      (app.interface.feedback as HTMLCanvasElement).width * horizontalOffsetPercent + shift,
+      (app.interface.feedback as HTMLCanvasElement).height * (1 - verticalOffsetPercent),
+      (app.interface.feedback as HTMLCanvasElement).width * radiusPercent,
       "#fdba74",
     );
   };
 
   const _clearBlinker = (shift: number) => {
-    /**
-     * Clears the circle at a given shift.
-     * @param shift - The pixel distance from the origin.
-     */
-    const x = 50 + shift;
-    const y = app.interface.feedback.clientHeight - 15;
-    const radius = 8;
+    const horizontalOffsetPercent = HORIZONTALOFFSETPERCENT;
+    const verticalOffsetPercent = VERTICALOFFSETPERCENT;
+    const radiusPercent = RADIUSPERCENT;
+    const x = (app.interface.feedback as HTMLCanvasElement).width * horizontalOffsetPercent + shift;
+    const y = (app.interface.feedback as HTMLCanvasElement).height * (1 - verticalOffsetPercent);
+    const radius = (app.interface.feedback as HTMLCanvasElement).width * radiusPercent;
     ctx.clearRect(x - radius, y - radius, radius * 2, radius * 2);
   };
 
   if (script === "local" && no !== undefined) {
-    const shiftAmount = no * 25;
+    const shiftPercent = SHIFTPERCENT;
+    const shiftAmount = no * (app.interface.feedback as HTMLCanvasElement).width * shiftPercent;
 
     // Clear existing timeout if any
     if (app.blinkTimeouts[shiftAmount]) {
