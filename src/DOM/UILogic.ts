@@ -310,7 +310,6 @@ export const installInterfaceLogic = (app: Editor) => {
     for (const [key, _] of Object.entries(selected_theme)) {
       theme_preview += `<p class="inline text-${key} bg-${key}">█</div>`;
     }
-    app.interface.theme_previewer.innerHTML = theme_preview;
   });
 
   app.interface.settings_button.addEventListener("click", () => {
@@ -336,12 +335,6 @@ export const installInterfaceLogic = (app: Editor) => {
 
     // @ts-ignore
     let selected_theme = colors[app.settings.theme as string];
-    let theme_preview = "<div class='ml-6'>";
-    for (const [key, _] of Object.entries(selected_theme)) {
-      theme_preview += `<p class="inline text-${key} bg-${key}">█</p>`;
-    }
-    theme_preview += "</div>";
-    app.interface.theme_previewer.innerHTML = theme_preview;
     // Populate the font family selector
     const doughNudgeRange = app.interface.dough_nudge_range as HTMLInputElement;
     doughNudgeRange.value = app.dough_nudge.toString();
