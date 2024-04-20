@@ -24,9 +24,11 @@ export class ClockNode extends AudioWorkletNode {
         num: message.data.num,
         den: message.data.den,
         grain: message.data.grain,
+        tick_duration: message.data.tick_duration,
       }
       this.app.settings.send_clock ?? this.app.api.MidiConnection.sendMidiClock();
-      tryEvaluate(
+      this.updateTransportViewer();
+     tryEvaluate(
         this.app,
         this.app.exampleIsPlaying
           ? this.app.example_buffer
@@ -34,7 +36,16 @@ export class ClockNode extends AudioWorkletNode {
       );
     } 
 };
-
+updateTransportViewer() {
+  const { bar, beat, tick } = this.app.clock.time_position;
+  const paddedBar = String(bar).padStart(2, '0');
+  const paddedBeat = String(beat).padStart(2, '0');
+  const paddedTick = String(tick).padStart(2, '0');
+  requestAnimationFrame(() => {
+    this.app.interface.transport_viewer.innerHTML = `<span class="text-xl text-neutral">${paddedBar}:${paddedBeat}:${paddedTick}</span>`;
+  });
+}
+ 
   start() {
     this.port.postMessage({ type: "start" });
   }

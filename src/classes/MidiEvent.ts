@@ -122,8 +122,8 @@ export class MidiEvent extends AudibleEvent {
       const note = params.note ? params.note : 60;
 
       const sustain = params.sustain
-        ? params.sustain * event.app.clock.pulse_duration * event.app.api.ppqn()
-        : event.app.clock.pulse_duration * event.app.api.ppqn();
+        ? params.sustain * event.app.clock.time_position.tick_duration * event.app.api.ppqn()
+        : event.app.clock.time_position.tick_duration * event.app.api.ppqn();
 
       const bend = params.bend ? params.bend : undefined;
 

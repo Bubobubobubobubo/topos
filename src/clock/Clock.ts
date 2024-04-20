@@ -7,12 +7,16 @@ export interface TimePosition {
   bpm: number; ppqn: number; time: number;
   tick: number; beat: number; bar: number;
   num: number; den: number; grain: number;
+  tick_duration: number;
 }
 
 export class Clock {
   ctx: AudioContext;
   transportNode: ClockNode | null;
   time_position: TimePosition;
+  startTime: number | null = null;
+  elapsedTime: number = 0;
+  state: 'running' | 'paused' | 'stopped' = 'stopped';
 
   constructor(
     public app: Editor,
@@ -28,6 +32,7 @@ export class Clock {
       num: 0,
       den: 0,
       grain: 0,
+      tick_duration: 0,
     };
     this.transportNode = null;
     this.ctx = ctx;
@@ -41,6 +46,53 @@ export class Clock {
       .catch((e) => {
         console.log("Error loading TransportProcessor.js:", e);
       });
+  }
+
+  public play(): void {
+    if (this.state !== 'running') {
+      this.elapsedTime = 0;
+      this.state = 'running';
+    }
+    this.startTime = performance.now();
+    this.app.api.MidiConnection.sendStartMessage();
+    this.transportNode?.start();
+  }
+  
+  public pause(): void {
+    this.state = 'paused';
+    if (this.startTime !== null) {
+      this.elapsedTime += performance.now() - this.startTime;
+      this.startTime = null;
+    }
+    this.app.api.MidiConnection.sendStopMessage();
+    this.transportNode?.pause();
+  }
+ 
+  public resume(): void {
+    if (this.state === 'stopped' || this.state === 'paused') {
+      this.startTime = performance.now();
+      this.state = 'running';
+      this.app.api.MidiConnection.sendStartMessage();
+      this.transportNode?.start();
+    } else if (this.state === 'running') {
+      this.state = 'paused';
+      if (this.startTime !== null) {
+        this.elapsedTime += performance.now() - this.startTime;
+        this.startTime = null;
+      }
+      this.app.api.MidiConnection.sendStopMessage();
+      this.transportNode?.pause();
+    }
+  }
+
+  public stop(): void {
+    if (this.startTime !== null) {
+      this.elapsedTime += performance.now() - this.startTime;
+      this.startTime = null;
+    }
+    this.state = 'stopped';
+    this.app.api.MidiConnection.sendStopMessage();
+    this.transportNode?.stop();
   }
 
   get grain(): number {
@@ -85,20 +137,6 @@ export class Clock {
     return Math.floor(this.time_position.tick / this.ppqn)
   }
 
-  get pulse_duration(): number {
-    /**
-     * Returns the duration of a pulse in seconds.
-     */
-    return 60 / this.time_position.bpm / this.time_position.ppqn;
-  }
-
-  public pulse_duration_at_bpm(bpm: number = this.bpm): number {
-    /**
-     * Returns the duration of a pulse in seconds at a specific bpm.
-     */
-    return 60 / bpm / this.time_position.ppqn;
-  }
-
   get bpm(): number {
     return this.time_position.bpm;
   }
@@ -126,7 +164,7 @@ export class Clock {
      * @param nudge - nudge in the future (in seconds)
      * @returns remainingTime
      */
-    const pulseDuration = this.pulse_duration;
+    const pulseDuration = this.time_position.tick_duration;
     const nudgedTime = time + nudge;
     const nextTickTime = Math.ceil(nudgedTime / pulseDuration) * pulseDuration;
     const remainingTime = nextTickTime - nudgedTime;
@@ -146,39 +184,35 @@ export class Clock {
     const grain = n;
     const beat = Math.floor(n / ppqn) % num;
     const bar = Math.floor(n / ppqn / num);
-    const time = n * this.pulse_duration;
-    return { bpm, ppqn, time, tick, beat, bar, num, den, grain };
+    const time = n * this.time_position.tick_duration;
+    const tick_duration = this.time_position.tick_duration;
+    return { bpm, ppqn, time, tick, beat, bar, num, den, grain, tick_duration };
   }
 
   public convertPulseToSecond(n: number): number {
     /**
      * Converts a pulse to a second.
      */
-    return n * this.pulse_duration;
+    return n * this.time_position.tick_duration;
   }
 
-  public start(): void {
-    /**
-     * Starts the TransportNode (starts the clock).
-     *
-     * @remark also sends a MIDI message if a port is declared
-     */
-    this.app.api.MidiConnection.sendStartMessage();
-    this.transportNode?.start();
-  }
-
-  public pause(): void {
-    this.app.api.MidiConnection.sendStopMessage();
-    this.transportNode?.pause() 
-  }
 
   public setSignature(num: number, den: number): void {
     this.transportNode?.setSignature(num, den);
   }
 
-  public stop(): void {
-    this.app.api.MidiConnection.sendStopMessage();
-    this.transportNode?.stop() 
+  public getElapsed(): number {
+    if (this.startTime === null) {
+      return this.elapsedTime;
+    } else {
+      return this.elapsedTime + (performance.now() - this.startTime);
+    }
   }
 
+  public getTimeDeviation(grain: number, tick_duration: number): number {
+    const idealTime = grain * tick_duration;
+    const elapsedTime = this.getElapsed();
+    const timeDeviation = elapsedTime - idealTime;
+    return timeDeviation;
+  }
 }

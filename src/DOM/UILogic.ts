@@ -73,32 +73,21 @@ export const installInterfaceLogic = (app: Editor) => {
     openUniverseModal();
   });
 
-  app.buttonElements['play_buttons']!.forEach((button) => {
-    button.addEventListener("click", () => {
-      if (app.isPlaying) {
-        app.setButtonHighlighting("pause", true);
-        app.isPlaying = !app.isPlaying;
-        app.clock.pause();
-        app.api.MidiConnection.sendStopMessage();
-      } else {
-        app.setButtonHighlighting("play", true);
-        app.isPlaying = !app.isPlaying;
-        app.clock.start();
-        app.api.MidiConnection.sendStartMessage();
-      }
-    });
+  app.interface['play_button'].addEventListener("click", () => {
+    if (app.isPlaying) {
+      app.clock.pause();
+    } else {
+      app.clock.resume()
+    }
+    updatePlayButton(app);
   });
 
-  app.buttonElements['clear_buttons']!.forEach((button) => {
-    button.addEventListener("click", () => {
-      app.setButtonHighlighting("clear", true);
-      if (confirm("Do you want to reset the current universe?")) {
-        app.universes[app.selected_universe] =
-          structuredClone(template_universe);
-        app.updateEditorView();
-      }
-    });
+  app.interface['stop_button'].addEventListener("click", () => { 
+    app.isPlaying = false;
+    app.clock.stop();
+    updatePlayButton(app);
   });
+
 
   app.interface.documentation_button.addEventListener("click", () => {
     showDocumentation(app);
@@ -138,13 +127,6 @@ export const installInterfaceLogic = (app: Editor) => {
         (app.interface.universe_viewer as HTMLInputElement).value = "";
       }
     }
-  });
-
-  app.interface.audio_nudge_range.addEventListener("input", () => {
-    // TODO: rebuild this
-    // app.clock.nudge = parseInt(
-    //   (app.interface.audio_nudge_range as HTMLInputElement).value,
-    // );
   });
 
   app.interface.dough_nudge_range.addEventListener("input", () => {
@@ -237,14 +219,6 @@ export const installInterfaceLogic = (app: Editor) => {
   app.interface.eval_button.addEventListener("click", () => {
     app.currentFile().candidate = app.view.state.doc.toString();
     app.flashBackground("#404040", 200);
-  });
-
-  app.buttonElements['stop_buttons']!.forEach((button) => {
-    button.addEventListener("click", () => {
-      app.setButtonHighlighting("stop", true);
-      app.isPlaying = false;
-      app.clock.stop();
-    });
   });
 
   app.interface.local_button.addEventListener("click", () =>
@@ -537,3 +511,43 @@ export const installInterfaceLogic = (app: Editor) => {
     }
   });
 };
+
+export const updatePlayButton = (app: Editor) => {
+  switch (app.clock.state) {
+    case 'stopped':
+      app.interface.play_label.innerText = "Play";
+      updatePlayPauseIcon(app, "play");
+      break;
+    case 'paused':
+      app.interface.play_label.innerText = "Resume";
+      updatePlayPauseIcon(app, "play");
+      break;
+    case 'running':
+      app.interface.play_label.innerText = "Pause";
+      updatePlayPauseIcon(app, "pause");
+      break;
+  }
+}
+
+export const updatePlayPauseIcon = (app: Editor, state: "play" | "pause"): void => {
+  const { play_icon, pause_icon } = app.interface;
+
+  const isPlayIconHidden = play_icon.classList.contains("hidden");
+  const isPauseIconHidden = pause_icon.classList.contains("hidden");
+
+  if (state === "play" && isPlayIconHidden) {
+    play_icon.classList.remove("hidden");
+    pause_icon.classList.add("hidden");
+  } else if (state === "pause" && isPauseIconHidden) {
+    play_icon.classList.add("hidden");
+    pause_icon.classList.remove("hidden");
+  }
+}
+
+export const resetTransportView = (app: Editor) => {
+  requestAnimationFrame(() => {
+    app.interface.transport_viewer.innerHTML = `<span class="text-xl text-neutral">00:00:00</span>`;
+  });
+
+
+}

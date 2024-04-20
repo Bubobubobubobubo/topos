@@ -404,7 +404,7 @@ export const gif = (app: Editor) => (options: any): void => {
     duration = 10
   } = options;
 
-  let real_duration = duration * app.clock.pulse_duration * app.clock.ppqn;
+  let real_duration = duration * app.clock.time_position.tick_duration * app.clock.ppqn;
   let fadeOutDuration = real_duration * 0.1;
   let visibilityDuration = real_duration - fadeOutDuration;
   const gifElement = document.createElement("img");

@@ -3,6 +3,7 @@ import { vim } from "@replit/codemirror-vim";
 import { tryEvaluate } from "../Evaluator";
 import { hideDocumentation, showDocumentation } from "../Docs/Documentation";
 import { openSettingsModal, openUniverseModal } from "../Editor/FileManagement";
+import { resetTransportView, updatePlayButton } from "./UILogic";
 
 export const registerFillKeys = (app: Editor) => {
   document.addEventListener("keydown", (event) => {
@@ -53,21 +54,21 @@ export const registerOnKeyDown = (app: Editor) => {
 
     if (event.ctrlKey && event.key === "s") {
       event.preventDefault();
-      app.setButtonHighlighting("stop", true);
-      app.clock.stop();
+      app.flashBackground("#404040", 200);
+      requestAnimationFrame (() => {
+        updatePlayButton(app);
+        resetTransportView(app);
+      });
+      app.clock.stop()
     }
 
     if (event.ctrlKey && event.key === "p") {
       event.preventDefault();
-      if (app.isPlaying) {
-        app.isPlaying = false;
-        app.setButtonHighlighting("pause", true);
-        app.clock.pause();
-      } else {
-        app.isPlaying = true;
-        app.setButtonHighlighting("play", true);
-        app.clock.start();
-      }
+      app.flashBackground("#404040", 200);
+      requestAnimationFrame(() => {
+        updatePlayButton(app);
+      });
+      app.clock.resume()
     }
 
     // Ctrl + Shift + V: Vim Mode

@@ -12,7 +12,7 @@ import {
   Universe,
   loadUniverserFromUrl,
 } from "./Editor/FileManagement";
-import { singleElements, buttonGroups, ElementMap, createDocumentationStyle } from "./DOM/DomElements";
+import { singleElements, ElementMap, createDocumentationStyle } from "./DOM/DomElements";
 import { registerFillKeys, registerOnKeyDown } from "./DOM/Keyboard";
 import { installEditor } from "./Editor/EditorSetup";
 import { documentation_factory, documentation_pages, showDocumentation, updateDocumentationContent } from "./Docs/Documentation";
@@ -125,7 +125,6 @@ export class Editor {
     // ================================================================================
 
     this.initializeElements();
-    this.initializeButtonGroups();
     this.setCanvas(this.interface["feedback"] as HTMLCanvasElement);
 
     // ================================================================================
@@ -393,86 +392,6 @@ export class Editor {
     this.updateEditorView();
   }
 
-  setButtonHighlighting(
-    button: "play" | "pause" | "stop" | "clear",
-    highlight: boolean,
-  ) {
-    /**
-     * Sets the highlighting for a specific button.
-     *
-     * @param button - The button to highlight ("play", "pause", "stop", or "clear").
-     * @param highlight - A boolean indicating whether to highlight the button or not.
-     */
-    document.getElementById("play-label")!.textContent =
-      button !== "pause" ? "Pause" : "Play";
-    if (button !== "pause") {
-      document.getElementById("pause-icon")!.classList.remove("hidden");
-      document.getElementById("play-icon")!.classList.add("hidden");
-    } else {
-      document.getElementById("pause-icon")!.classList.add("hidden");
-      document.getElementById("play-icon")!.classList.remove("hidden");
-    }
-
-    if (button === "stop") {
-      this.isPlaying == false;
-      document.getElementById("play-label")!.textContent = "Play";
-      document.getElementById("pause-icon")!.classList.add("hidden");
-      document.getElementById("play-icon")!.classList.remove("hidden");
-    }
-
-    this.flashBackground("#404040", 200);
-    const possible_selectors = [
-      '[id^="play-button-"]',
-      '[id^="clear-button-"]',
-      '[id^="stop-button-"]',
-    ];
-    let selector: number;
-    switch (button) {
-      case "play":
-        selector = 0;
-        break;
-      case "pause":
-        selector = 1;
-        break;
-      case "clear":
-        selector = 2;
-        break;
-      case "stop":
-        selector = 3;
-        break;
-    }
-    const selectorValue = possible_selectors[selector];
-    if (selectorValue) {
-      document
-        .querySelectorAll(selectorValue)
-        .forEach((button) => {
-          if (highlight && button.children[0]) button.children[0].classList.add("animate-pulse");
-        });
-    }
-    // All other buttons must lose the highlighting
-    document
-      .querySelectorAll(
-        possible_selectors.filter((_, index) => index != selector).join(","),
-      )
-      .forEach((button) => {
-        if (button.children[0]) {
-          button.children[0].classList.remove("animate-pulse");
-        }
-        if (button.children[1]) {
-          button.children[1].classList.remove("animate-pulse");
-        }
-      });
-  }
-
-  unfocusPlayButtons() {
-    document.querySelectorAll('[id^="play-button-"]').forEach((button) => {
-      if (button.children[0]) {
-        button.children[0].classList.remove("fill-foreground_selection");
-        button.children[0].classList.remove("animate-pulse");
-      }
-    });
-  }
-
   updateEditorView(): void {
     this.view.dispatch({
       changes: {
@@ -535,14 +454,6 @@ export class Editor {
       this.interface[key as keyof ElementMap] = document.getElementById(
         value,
       ) as ElementMap[keyof ElementMap];
-    }
-  }
-
-  private initializeButtonGroups(): void {
-    for (const [key, ids] of Object.entries(buttonGroups)) {
-      this.buttonElements[key] = ids.map(
-        (id) => document.getElementById(id) as HTMLButtonElement,
-      );
     }
   }
 

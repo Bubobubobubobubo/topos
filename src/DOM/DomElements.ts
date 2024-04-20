@@ -29,6 +29,7 @@ export const singleElements = {
   line_numbers_checkbox: "show-line-numbers",
   time_position_checkbox: "show-time-position",
   tips_checkbox: "show-tips",
+  transport_viewer: "transport_viewer",
   completion_checkbox: "show-completions",
   midi_clock_checkbox: "send-midi-clock",
   midi_channels_scripts: "midi-channels-scripts",
@@ -44,6 +45,11 @@ export const singleElements = {
   hydra_canvas: "hydra-bg",
   feedback: "feedback",
   scope: "scope",
+  play_button: "play-button",
+  play_label: "play-label",
+  stop_button: "stop-button",
+  play_icon: "play-icon",
+  pause_icon: "pause-icon",
 } as const;
 
 export type SingleElementsKeys = keyof typeof singleElements;
@@ -58,12 +64,6 @@ export type ElementMap = {
   | HTMLCanvasElement
   | HTMLFormElement
   | HTMLInputElement;
-};
-
-export const buttonGroups = {
-  play_buttons: ["play-button-1"],
-  stop_buttons: ["stop-button-1"],
-  clear_buttons: ["clear-button-1"],
 };
 
 //@ts-ignore

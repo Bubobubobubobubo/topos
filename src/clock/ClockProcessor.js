@@ -35,6 +35,7 @@ class TransportProcessor extends AudioWorkletProcessor {
       this.pauseTime = 0;
       this.totalPauseTime = 0;
       this.currentPulsePosition = 0;
+      this.grain = 0;
     } else if (message.data.type === "bpm") {
       this.bpm = message.data.value;
       this.startTime = currentTime;
@@ -78,7 +79,8 @@ class TransportProcessor extends AudioWorkletProcessor {
           bpm: this.bpm,
           ppqn: this.ppqn,
           type: 'time',
-          time: currentTime,
+          //time: currentTime,
+          time: adjustedCurrentTime,
           tick: currentTick,
           beat: currentBeat,
           bar: currentBar,
@@ -86,6 +88,7 @@ class TransportProcessor extends AudioWorkletProcessor {
           num: this.timeSignature[0],
           den: this.timeSignature[1],
           grain: this.grain,
+          tick_duration: 60 / this.bpm / this.ppqn,
         });
       }
     }
