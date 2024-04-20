@@ -36,6 +36,7 @@ export type ShapeObject = {
 
 
 export const loadHydra = (app: Editor) => (): void => {
+  app.api.log("Hydra is now loaded!")
   app.ensureHydraLoaded()
 }
 
