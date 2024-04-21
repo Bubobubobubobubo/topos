@@ -24,7 +24,6 @@ import { InputOptions } from "../Classes/ZPlayer";
 import { type ShapeObject } from "../API/DOM/Canvas";
 import { nearScales } from "zifferjs";
 import { MidiConnection } from "../IO/MidiConnection";
-import { evaluateOnce } from "../Evaluator";
 import { DrunkWalk } from "../Utils/Drunk";
 import { Editor } from "../main";
 import { LRUCache } from "lru-cache";
@@ -42,6 +41,7 @@ import {
 } from "superdough";
 import { getScaleNotes } from "zifferjs";
 import drums from "../tidal-drum-machines.json";
+import { updatePlayPauseIcon } from '../DOM/UILogic';
 
 export async function loadSamples() {
   return Promise.all([
@@ -395,7 +395,7 @@ export class UserAPI {
     this.almostAlways = Probability.almostAlways(this);
     this.always = Probability.always();
     this.dice = Probability.dice(this);
-    this.osc = OSC.osc();
+    this.osc = OSC.osc(this.app);
     this.getOSC = OSC.getOSC();
     this.gif = Canvas.gif(this.app);
     this.scope = Canvas.scope(this.app);
@@ -479,9 +479,8 @@ export class UserAPI {
     this.patternCache.clear();
     if (this.app.isPlaying) {
     } else {
-      this.app.setButtonHighlighting("play", true);
-      this.app.isPlaying = !this.app.isPlaying;
-      this.app.clock.start();
+      this.app.clock.resume();
+      updatePlayPauseIcon(this.app, "play");
       this.app.api.MidiConnection.sendStartMessage();
     }
 

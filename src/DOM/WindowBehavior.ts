@@ -44,10 +44,10 @@ export const installWindowBehaviors = (
   window.addEventListener("resize", () =>
     handleResize(app.interface.scope as HTMLCanvasElement),
   );
-  window.addEventListener("beforeunload", (event) => {
-    event.preventDefault();
-    saveBeforeExit(app);
-  });
+  // window.addEventListener("beforeunload", (event) => {
+  //   event.preventDefault();
+  //   saveBeforeExit(app);
+  // });
   window.addEventListener("visibilitychange", (event) => {
     event.preventDefault();
     saveState(app);

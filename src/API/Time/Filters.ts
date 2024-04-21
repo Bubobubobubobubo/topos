@@ -59,6 +59,14 @@ export const beat = (app: Editor) => (n: number | number[] = 1, nudge: number = 
   return results.some((value) => value === true);
 };
 
+// export const beat = (app: Editor) => (n: number | number[] = 1, nudge: number = 0): boolean => {
+//   const nArray = !Array.isArray(n) ? [n] : n;
+//   return nArray.some(
+//     (value) =>
+//       !((app.clock.time_position.grain - nudge * app.clock.time_position.ppqn) % Math.floor(value * app.clock.time_position.ppqn))
+//   );
+// };
+
 export const bar = (app: Editor) => (n: number | number[] = 1, nudge: number = 0): boolean => {
   const nArray = Array.isArray(n) ? n : [n];
   const barLength = app.clock.time_position.num * app.clock.ppqn;
